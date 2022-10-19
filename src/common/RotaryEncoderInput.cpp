@@ -2,9 +2,9 @@
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
  * @brief Everything about input from relative rotary encoders
- * 
+ *
  * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
- * 
+ *
  */
 
 #include <Arduino.h>
@@ -34,7 +34,7 @@ void IRAM_ATTR isrh(void *instance)
     RotaryEncoderInput *rotary = (RotaryEncoderInput *)instance;
     int clk = gpio_get_level(rotary->clkPin);
     int dt = gpio_get_level(rotary->dtPin);
-    portCLEAR_INTERRUPT_MASK_FROM_ISR( lock );
+    portCLEAR_INTERRUPT_MASK_FROM_ISR(lock);
     // taskEXIT_CRITICAL_FROM_ISR(lock);
 
     uint8_t output = OUTPUT_NONE;
@@ -71,34 +71,31 @@ void rotaryDaemonLoop(void *instance)
 {
     RotaryEncoderInput *rotary = (RotaryEncoderInput *)instance;
     uint8_t event;
-    inputBitmap_t bitmap,mask;
+    inputBitmap_t bitmap;
     while (true)
     {
         if (xQueueReceive(rotary->eventQueue, &event, portMAX_DELAY))
         {
-            mask = BITMASK(2,rotary->cwButtonNumber);
             if (event == OUTPUT_CW)
             {
                 // Clockwise rotation
                 bitmap = BITMAP(rotary->cwButtonNumber);
-                //mask = BITMASK(1,rotary->cwButtonNumber);
             }
             else if (event == OUTPUT_CCW)
             {
                 // Counter-clockwise rotation
-                bitmap = BITMAP(rotary->cwButtonNumber+1);
-                //mask = BITMASK(1,rotary->cwButtonNumber+1);
+                bitmap = BITMAP(rotary->ccwButtonNumber);
             }
             else
                 // Should not happen
                 abort();
 
             // Send button push event
-            inputs::notifyInputEvent(mask, bitmap);
+            inputs::notifyInputEvent(rotary->mask, bitmap);
             // wait
             vTaskDelay(ROTARY_CLICK_TICKS);
             // Send button release event
-            inputs::notifyInputEvent(mask, 0);
+            inputs::notifyInputEvent(rotary->mask, 0);
 
         } // end if
     }     // end while
@@ -111,18 +108,31 @@ void rotaryDaemonLoop(void *instance)
 RotaryEncoderInput::RotaryEncoderInput(
     gpio_num_t clkPin,
     gpio_num_t dtPin,
-    inputNumber_t cwButtonNumber)
+    inputNumber_t cwButtonNumber,
+    inputNumber_t ccwButtonNumber)
 {
     // Check parameters
     GPIO_IS_VALID_GPIO(clkPin);
     GPIO_IS_VALID_GPIO(dtPin);
     if (clkPin == dtPin)
+    {
+        log_e("clkPin and dtPin must not match in RotaryEncoderInput::RotaryEncoderInput()");
         abort();
+    }
+    if (ccwButtonNumber == UNSPECIFIED_INPUT_NUMBER)
+        ccwButtonNumber = cwButtonNumber + 1;
+    if ((cwButtonNumber > MAX_INPUT_NUMBER) or (ccwButtonNumber > MAX_INPUT_NUMBER))
+    {
+        log_e("Invalid button number(s) in RotaryEncoderInput::RotaryEncoderInput()");
+        abort();
+    }
 
     // Initialize properties
     this->clkPin = clkPin;
     this->dtPin = dtPin;
     this->cwButtonNumber = cwButtonNumber;
+    this->ccwButtonNumber = ccwButtonNumber;
+    mask = ~(BITMAP(cwButtonNumber) | BITMAP(ccwButtonNumber));
     code = 0;
     sequence = 0;
 
@@ -142,7 +152,7 @@ RotaryEncoderInput::RotaryEncoderInput(
     // Config dtPin
     ESP_ERROR_CHECK(gpio_set_direction(dtPin, GPIO_MODE_INPUT));
     ESP_ERROR_CHECK(gpio_set_pull_mode(dtPin, GPIO_PULLUP_ONLY));
-    
+
     // Initialize state
     isrh(this);
     isrh(this);

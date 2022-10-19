@@ -47,7 +47,7 @@ void setup()
     Serial.begin(115200);
     while (!Serial) ;
     Serial.println("-- READY --");
-    new RotaryEncoderInput(TEST_ROTARY_CLK,TEST_ROTARY_DT,5,true);
+    new RotaryEncoderInput(TEST_ROTARY_CLK,TEST_ROTARY_DT,5);
     Serial.println("-- GO --");
 }
 

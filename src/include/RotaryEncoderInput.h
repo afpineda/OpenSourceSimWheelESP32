@@ -41,6 +41,8 @@ private:
   uint8_t code;
   uint16_t sequence;
   inputNumber_t cwButtonNumber;
+  inputNumber_t ccwButtonNumber;
+  inputBitmap_t mask;
 
 private:
   friend void IRAM_ATTR isrh(void *instance);
@@ -53,10 +55,12 @@ public:
    * @param[in] clkPin GPIO pin attached to the "CLK" (or "A") pin of the encoder. 
    * @param[in] dtPin GPIO pin attached to the "DT" (or "B") pin of the encoder.
    * @param[in] cwButtonNumber A number for the "virtual button" of a clockwise rotation event. 
+   * @param[in] cwButtonNumber A number for the "virtual button" of a counter-clockwise rotation event. 
+   *                           If not given, `cwButtonNumber`+1 is used.
    * The button number for the counter-clockwise rotation event is `cwButtonNumber+1`.
    * (interal pullup resistors will be enabled).
    */
-  RotaryEncoderInput(gpio_num_t clkPin, gpio_num_t dtPin, inputNumber_t cwButtonNumber);
+  RotaryEncoderInput(gpio_num_t clkPin, gpio_num_t dtPin, inputNumber_t cwButtonNumber, inputNumber_t ccwButtonNumber = UNSPECIFIED_INPUT_NUMBER);
 };
 
 #endif

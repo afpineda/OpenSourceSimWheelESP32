@@ -28,7 +28,8 @@ typedef uint64_t inputBitmap_t;
  */
 typedef uint8_t inputNumber_t;
 
-#define UNSPECIFIED_INPUT_NUMBER 0xFF
+#define UNSPECIFIED_INPUT_NUMBER 0xFF /// Input number is not required or is implicit or is unknown
+#define MAX_INPUT_NUMBER 63 /// Maximun allowed input number, including itself
 
 /**
  * @brief The value of a joystick's axis
