@@ -37,16 +37,29 @@ private:
     gpio_num_t selectorPin[MAX_MATRIX_SELECTOR_COUNT];
     gpio_num_t inputPin[MAX_MATRIX_INPUT_COUNT];
     BaseType_t debounce[MAX_MATRIX_SELECTOR_COUNT][MAX_MATRIX_INPUT_COUNT];
-
+    inputNumber_t *buttonNumbersArray;
 public:
     /**
-     * @brief Construct a new Button Matrix Input object
+     * @brief Construct a new Button Matrix Input object where input numbers are 
+     *        correlative
      *
      * @param firstButtonNumber Assigned number to the first button. Following buttons
      *                          will get numbered in ascending order.
-     * @param nextInChain Another instance to build a chain, or nullptr
+     * @param nextInChain Another instance to build a chain, or nullptr.
      */
     ButtonMatrixInput(int firstButtonNumber = 0, PolledInput *nextInChain = nullptr);
+
+    /**
+     * @brief Construct a new Button Matrix Input object where input numbers are
+     *        explicitly given
+     *
+     * @param buttonNumbersArray A pointer to an array of input numbers. Array length should match
+     *                           the product of the numbers of input pins and selector pins.
+     *                           Mandatory (not null).
+     * @param buttonsCount Number of items (buttons) in the previous array.
+     * @param nextInChain Another instance to build a chain, or nullptr.
+     */
+    ButtonMatrixInput(inputNumber_t *buttonNumbersArray, uint8_t buttonsCount, PolledInput *nextInChain = nullptr );
 
     /**
      * @brief Set a selector (output) pin

@@ -42,6 +42,14 @@ protected:
      */
     void updateMask(uint8_t inputsCount);
 
+    /**
+     * @brief Compute a mask for an array of input numbers. 
+     * 
+     * @param inputNumbersArray A pointer to an array of input numbers.
+     * @param inputsCount Number of items (input numbers) in the previous array.
+     */
+    void PolledInput::updateMask(inputNumber_t *inputNumbersArray, uint8_t inputsCount)
+
 public:
     /**
      * @brief Construct a new Polled Input object

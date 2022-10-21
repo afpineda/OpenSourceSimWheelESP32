@@ -26,10 +26,10 @@ PolledInput::PolledInput(
     // Param check
     if (firstInputNumber > 63)
     {
-        log_e("ERROR at PolledInput: button number out of range = %d",firstInputNumber);
+        log_e("ERROR at PolledInput: button number out of range = %d", firstInputNumber);
         abort();
     }
-    
+
     // Initialization
     this->firstInputNumber = firstInputNumber;
     this->nextInChain = nextInChain;
@@ -57,6 +57,28 @@ void PolledInput::updateMask(uint8_t inputsCount)
         abort();
     }
     mask = BITMASK(inputsCount, firstInputNumber);
+}
+
+void PolledInput::updateMask(inputNumber_t *inputNumbersArray, uint8_t inputsCount)
+{
+    if (inputNumbersArray == nullptr)
+    {
+        mask = ~0ULL;
+        return;
+    }
+
+    mask = 0ULL;
+    for (uint8_t i = 0; i < inputsCount; i++)
+    {
+        if (inputNumbersArray[i] > MAX_INPUT_NUMBER)
+        {
+            log_e("Invalid input number at PolledInput::updateMask()");
+            abort();
+        }
+        inputBitmap_t currentBitmap = BITMAP(inputNumbersArray[i]);
+        mask = mask | currentBitmap;
+    }
+    mask = ~mask;
 }
 
 // ----------------------------------------------------------------------------
