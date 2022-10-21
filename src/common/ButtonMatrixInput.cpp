@@ -29,8 +29,8 @@ ButtonMatrixInput::ButtonMatrixInput(
         log_e("First button number is too high at ButtonMatrixInput's constructor");
         abort();
     }
-    selectorCount = 0;
-    inputCount = 0;
+    selectorPinCount = 0;
+    inputPinCount = 0;
     for (int r = 0; r < MAX_MATRIX_SELECTOR_COUNT; r++)
         for (int c = 0; c < MAX_MATRIX_INPUT_COUNT; c++)
             debounce[r][c] = 0;
@@ -47,7 +47,7 @@ void ButtonMatrixInput::addSelectorPin(gpio_num_t aPin)
         log_e("Requested GPIO %d at ButtonMatrixInput::addSelectorPin() can't be used as output",aPin);
         abort();
     }
-    else if (selectorCount < MAX_MATRIX_SELECTOR_COUNT)
+    else if (selectorPinCount < MAX_MATRIX_SELECTOR_COUNT)
     {
         //ESP_ERROR_CHECK(gpio_set_direction(aPin, GPIO_MODE_OUTPUT));
         gpio_config_t io_conf = {};
@@ -59,8 +59,8 @@ void ButtonMatrixInput::addSelectorPin(gpio_num_t aPin)
         ESP_ERROR_CHECK(gpio_config(&io_conf));
 
         gpio_set_level(aPin, 0);
-        selectorPin[selectorCount++] = aPin;
-        updateMask(inputCount * selectorCount);
+        selectorPin[selectorPinCount++] = aPin;
+        updateMask(inputPinCount * selectorPinCount);
     }
     else
     {
@@ -76,7 +76,7 @@ void ButtonMatrixInput::addInputPin(gpio_num_t aPin)
         log_e("Requested GPIO %d at ButtonMatrixInput::addInputPin() can't be used as input",aPin);
         abort();
     }
-    else if (inputCount < MAX_MATRIX_INPUT_COUNT)
+    else if (inputPinCount < MAX_MATRIX_INPUT_COUNT)
     {
         //ESP_ERROR_CHECK(gpio_set_direction(aPin, GPIO_MODE_INPUT));
         //ESP_ERROR_CHECK(gpio_set_pull_mode(aPin, GPIO_PULLDOWN_ONLY));
@@ -88,8 +88,8 @@ void ButtonMatrixInput::addInputPin(gpio_num_t aPin)
         io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
         ESP_ERROR_CHECK(gpio_config(&io_conf));
 
-        inputPin[inputCount++] = aPin;
-        updateMask(inputCount * selectorCount);
+        inputPin[inputPinCount++] = aPin;
+        updateMask(inputPinCount * selectorPinCount);
     }
     else
     {
@@ -105,15 +105,15 @@ void ButtonMatrixInput::addInputPin(gpio_num_t aPin)
 inputBitmap_t ButtonMatrixInput::read(inputBitmap_t lastState)
 {
     inputBitmap_t state = 0;
-    for (int selectorIndex = 0; selectorIndex < selectorCount ; selectorIndex++)
+    for (int selectorIndex = 0; selectorIndex < selectorPinCount ; selectorIndex++)
     {
         gpio_set_level(selectorPin[selectorIndex], 1);
         // Wait for the signal to change from LOW to HIGH due to parasite capacitances. 
         vTaskDelay(SIGNAL_CHANGE_DELAY_TICKS);
-        for (int inputIndex = 0; inputIndex < inputCount; inputIndex++)
+        for (int inputIndex = 0; inputIndex < inputPinCount; inputIndex++)
         {
-            //inputNumber_t n = (selectorIndex * inputCount) + inputIndex + firstInputNumber;
-            inputNumber_t n = (inputIndex * selectorCount) + selectorIndex + firstInputNumber;
+            //inputNumber_t n = (selectorIndex * inputPinCount) + inputIndex + firstInputNumber;
+            inputNumber_t n = (inputIndex * selectorPinCount) + selectorIndex + firstInputNumber;
             if (debounce[selectorIndex][inputIndex] > 0)
             {
                 BaseType_t now = xTaskGetTickCount();
