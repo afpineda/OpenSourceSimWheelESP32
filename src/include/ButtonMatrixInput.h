@@ -33,7 +33,7 @@
 class ButtonMatrixInput : public PolledInput
 {
 private:
-    int selectorCount, inputCount;
+    int selectorPinCount, inputPinCount;
     gpio_num_t selectorPin[MAX_MATRIX_SELECTOR_COUNT];
     gpio_num_t inputPin[MAX_MATRIX_INPUT_COUNT];
     BaseType_t debounce[MAX_MATRIX_SELECTOR_COUNT][MAX_MATRIX_INPUT_COUNT];
