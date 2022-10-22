@@ -20,18 +20,9 @@
 // ----------------------------------------------------------------------------
 
 PolledInput::PolledInput(
-    inputNumber_t firstInputNumber,
     PolledInput *nextInChain)
 {
-    // Param check
-    if (firstInputNumber > 63)
-    {
-        log_e("ERROR at PolledInput: button number out of range = %d", firstInputNumber);
-        abort();
-    }
-
     // Initialization
-    this->firstInputNumber = firstInputNumber;
     this->nextInChain = nextInChain;
     this->mask = ~(0ULL);
 }
@@ -49,7 +40,7 @@ PolledInput *PolledInput::getNextInChain()
 // Setters
 // ----------------------------------------------------------------------------
 
-void PolledInput::updateMask(uint8_t inputsCount)
+void PolledInput::updateMask(uint8_t inputsCount, inputNumber_t firstInputNumber)
 {
     if (inputsCount > (64 - firstInputNumber))
     {
@@ -136,13 +127,13 @@ DigitalButton::DigitalButton(
     inputNumber_t buttonNumber,
     bool pullupOrPulldown,
     bool enableInternalPull,
-    PolledInput *nextInChain) : PolledInput(buttonNumber, nextInChain)
+    PolledInput *nextInChain) : PolledInput(nextInChain)
 {
     // initalize
-    updateMask(1);
+    updateMask(1,buttonNumber);
     this->pinNumber = pinNumber;
     this->pullupOrPulldown = pullupOrPulldown;
-    bitmap = BITMAP(firstInputNumber);
+    bitmap = BITMAP(buttonNumber);
     debouncing = false;
 
     // Pin setup
@@ -200,13 +191,14 @@ AnalogInput::AnalogInput(
     analogReading_t *minReading,
     analogReading_t *maxReading,
     uint8_t arrayLength,
-    PolledInput *nextInChain) : PolledInput(firstInputNumber, nextInChain)
+    PolledInput *nextInChain) : PolledInput(nextInChain)
 {
     // Pin setup
     ESP_ERROR_CHECK(gpio_set_direction(pinNumber, GPIO_MODE_INPUT));
     ESP_ERROR_CHECK(gpio_set_pull_mode(pinNumber, GPIO_FLOATING));
 
     // Initialization
+    this->firstInputNumber = firstInputNumber;
     this->pinNumber = pinNumber;
     this->arrayLength = arrayLength;
     this->minReading = minReading;

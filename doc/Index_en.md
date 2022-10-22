@@ -39,8 +39,8 @@
   
   - Code for custom projects will be rejected. Provide code that everyone can benefit from.
   - All relevant quality controls must be updated along with the new code.
-  - You must run all quality controls.
-  - Provide an explicit declaration that all quality controls failed (so, the software passed the Q controls).
+  - You must run all relevant quality controls.
+  - Provide an explicit declaration that all relevant quality controls failed (so, the software passed the Q controls).
   - You must contribute to the firmware documentation as you do with code.
 
 ## Firmware documentation

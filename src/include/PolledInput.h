@@ -30,25 +30,26 @@ private:
 
 public:
     // for read only
-    inputNumber_t firstInputNumber;
     inputBitmap_t mask;
 
 protected:
     /**
-     * @brief Compute a proper mask. Will abort execution if the resulting mask
+     * @brief Compute a proper mask for consecutive inputs. Will abort execution if the resulting mask
      *        exceeds 64 bits
      *
      * @param inputsCount Number of inputs that will be reported by `read()`
+     * @param firstButtonNumber Assigned number to the first input. Inputs are assumed to be numbered
+     *                          in ascending order.
      */
-    void updateMask(uint8_t inputsCount);
+    void updateMask(uint8_t inputsCount, inputNumber_t firstInputNumber);
 
     /**
-     * @brief Compute a mask for an array of input numbers. 
+     * @brief Compute a mask for an array of input numbers.
      * 
      * @param inputNumbersArray A pointer to an array of input numbers.
      * @param inputsCount Number of items (input numbers) in the previous array.
      */
-    void PolledInput::updateMask(inputNumber_t *inputNumbersArray, uint8_t inputsCount)
+    void updateMask(inputNumber_t *inputNumbersArray, uint8_t inputsCount);
 
 public:
     /**
@@ -57,9 +58,7 @@ public:
      * @param[in] firstInputNumber A number for the first input
      * @param[in] nextInChain Another instance to build a chain, or nullptr
      */
-    PolledInput(
-        inputNumber_t firstInputNumber,
-        PolledInput *nextInChain = nullptr);
+    PolledInput(PolledInput *nextInChain = nullptr);
 
     /**
      * @brief Read the current state of the inputs (pressed or released)
@@ -142,7 +141,8 @@ public:
 };
 
 /**
- * @brief Base class for all inputs attached to an ADC pin
+ * @brief Base class for all inputs attached to an ADC pin. Note that this class is not
+ *        needed. Provided for further development, if required.
  *
  * @note This class is not tested. It is not used since the underlying circuit
  *       is not suitable for this project.
@@ -150,8 +150,9 @@ public:
 class AnalogInput : public PolledInput
 {
 protected:
+    inputNumber_t firstInputNumber;
     gpio_num_t pinNumber;
-    inputNumber_t arrayLength;
+    uint8_t arrayLength;
     analogReading_t *minReading;
     analogReading_t *maxReading;
 protected:

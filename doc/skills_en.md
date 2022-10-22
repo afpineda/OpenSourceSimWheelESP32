@@ -5,7 +5,8 @@
 Indispensable:
 
 - [Arduino IDE](https://www.arduino.cc/en/software). Choose an stable release and follow instructions.
-- Required [libraries for Arduino IDE](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries). Install their dependencies as well.
+- Official [Arduino-ESP32 support package](https://docs.espressif.com/projects/arduino-esp32/en/latest/getting_started.html). Follow [this link](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html) for installation instructions.
+- Indispensable [Arduino libraries](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries) for this project. Install their dependencies as well.
   - [NimBLE-Arduino](https://www.arduino.cc/reference/en/libraries/nimble-arduino/)
   - [ss_oled](https://www.arduino.cc/reference/en/libraries/ss_oled/)
 - [DIY layout creator](https://bancika.github.io/diy-layout-creator/). [Alternate link](https://github.com/bancika/diy-layout-creator/releases).
@@ -13,8 +14,11 @@ Indispensable:
 
 Recommended:
 
-- [Planet pointy's joystick test application](http://www.planetpointy.co.uk/joystick-test-application/) (for Windows)
+- [Planet pointy's joystick test application](http://www.planetpointy.co.uk/joystick-test-application/) (for Windows).
 - "nRF Connect" from [Nordic semiconductors](https://www.nordicsemi.com/). Available for multiple platforms.
+- [Visual Studio Code](https://code.visualstudio.com/), as an alternative to Arduino IDE. Requires other tools:
+  - [Arduino CLI](https://blog.arduino.cc/2020/03/13/arduino-cli-an-introduction/)
+  - [Arduino extension for VSCode](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.vscode-arduino). Installable from VSCode itself.
 
 ## Hardware tools
 

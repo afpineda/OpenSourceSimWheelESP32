@@ -31,6 +31,21 @@ typedef uint8_t inputNumber_t;
 #define UNSPECIFIED_INPUT_NUMBER 0xFF /// Input number is not required or is implicit or is unknown
 #define MAX_INPUT_NUMBER 63 /// Maximun allowed input number, including itself
 
+// Well-known input numbers for PC game controllers
+#define JOY_A 0
+#define JOY_B 1
+#define JOY_X 2
+#define JOY_Y 3
+#define JOY_LB 4
+#define JOY_RB 5
+#define JOY_LSHIFT_PADDLE 4
+#define JOY_RSHIFT_PADDLE 5
+#define JOY_BACK 6
+#define JOY_START 7
+#define JOY_LTHUMBSTICK_CLICK 8
+#define JOY_RTHUMBSTICK_CLICK 9
+
+
 /**
  * @brief The value of a joystick's axis
  *

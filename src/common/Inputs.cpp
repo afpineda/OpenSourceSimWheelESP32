@@ -66,6 +66,8 @@ inputNumber_t abortAtAdd()
   return UNSPECIFIED_INPUT_NUMBER;
 }
 
+// ----------------------------------------------------------------------------
+
 inputNumber_t inputs::addDigital(
     gpio_num_t pinNumber,
     bool pullupOrPulldown,
@@ -81,6 +83,20 @@ inputNumber_t inputs::addDigital(
     return abortAtAdd();
 }
 
+void inputs::addDigitalExt(
+    gpio_num_t pinNumber,
+    inputNumber_t inputNumber,
+    bool pullupOrPulldown,
+    bool enableInternalPull)
+{
+  if ((pollingTask == nullptr))
+    polledInputChain = new DigitalButton(pinNumber, inputNumber, pullupOrPulldown, enableInternalPull, polledInputChain);
+  else
+    abortAtAdd();
+}
+
+// ----------------------------------------------------------------------------
+
 inputNumber_t inputs::addRotaryEncoder(
     gpio_num_t clkPin,
     gpio_num_t dtPin)
@@ -95,6 +111,22 @@ inputNumber_t inputs::addRotaryEncoder(
   else
     return abortAtAdd();
 }
+
+void inputs::addRotaryEncoderExt(
+    gpio_num_t clkPin,
+    gpio_num_t dtPin,
+    inputNumber_t cwInputNumber,
+    inputNumber_t ccwInputNumber)
+{
+  if (pollingTask == nullptr)
+  {
+    new RotaryEncoderInput(clkPin, dtPin, cwInputNumber, ccwInputNumber);
+  }
+  else
+    abortAtAdd();
+}
+
+// ----------------------------------------------------------------------------
 
 inputNumber_t inputs::setButtonMatrix(
     const gpio_num_t selectorPins[],
@@ -112,20 +144,43 @@ inputNumber_t inputs::setButtonMatrix(
     }
     else
     {
-      int buttonNumber = globalButtonCount;
-      ButtonMatrixInput *btnMatrix = new ButtonMatrixInput(buttonNumber, polledInputChain);
-      polledInputChain = btnMatrix;
-      for (int i = 0; i < selectorPinCount; i++)
-        btnMatrix->addSelectorPin(selectorPins[i]);
-      for (int i = 0; i < inputPinCount; i++)
-        btnMatrix->addInputPin(inputPins[i]);
+      int firstButtonNumber = globalButtonCount;
+      polledInputChain = new ButtonMatrixInput(
+          selectorPins,
+          selectorPinCount,
+          inputPins,
+          inputPinCount,
+          nullptr,
+          firstButtonNumber);
       globalButtonCount += (inputPinCount * selectorPinCount);
       buttonMatrixAlreadySet = true;
-      return buttonNumber;
+      return firstButtonNumber;
     }
   }
   else
     return abortAtAdd();
+}
+
+void inputs::addButtonMatrixExt(
+    const gpio_num_t selectorPins[],
+    const uint8_t selectorPinCount,
+    const gpio_num_t inputPins[],
+    const uint8_t inputPinCount,
+    inputNumber_t *buttonNumbersArray)
+{
+  if (pollingTask != nullptr)
+  {
+    polledInputChain = new ButtonMatrixInput(
+        selectorPins,
+        selectorPinCount,
+        inputPins,
+        inputPinCount,
+        buttonNumbersArray,
+        UNSPECIFIED_INPUT_NUMBER,
+        polledInputChain);
+  }
+  else
+    abortAtAdd();
 }
 
 // ----------------------------------------------------------------------------

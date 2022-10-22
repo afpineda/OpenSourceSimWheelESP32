@@ -39,8 +39,8 @@
   
   - Se rechazará el código para proyectos personalizados. Proporcione un código del que todos se puedan beneficiar.
   - Todos los controles de calidad relevantes deben actualizarse junto con el nuevo código.
-  - Debes pasar todos los controles de calidad.
-  - Proporcione una declaración explícita de que todos los controles de calidad fallaron (por lo tanto, el software pasó los controles de calidad).
+  - Debes ejecutar todos los controles de calidad relevantes.
+  - Proporcione una declaración explícita de que todos los controles de calidad relevantes fallaron (por lo tanto, el software pasó los controles de calidad).
   - Debe contribuir a la documentación del firmware como lo hace con el código.
 
 ## Documentación del firmware (sólo en inglés)
