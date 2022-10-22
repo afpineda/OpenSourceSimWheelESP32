@@ -8,13 +8,14 @@ To test correct identification of rotary encoder events: clockwise and counter-c
 
 Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
 
-Relative rotary encoder:
+Relative rotary encoders (choose one of them, or both):
+- KY-040 type (with external pull up resistors). `CLK` pin attached to `TEST_ROTARY_CLK`. `DT` pin attached to `TEST_ROTARY_DT`. `V+` and `GND` pins as usual.
+- ALPS RKJX series (no external pull up resistors). `A` pin attached to `TEST_ROTARY_ALT_A`, `B` pin attached to `TEST_ROTARY_ALT_DT`. `ENCODER COM` pin attached to `GND`.
 
-- KY-040 type (with external pull up resistors).
-- `CLK` pin attached to `TEST_ROTARY_CLK`
-- `DT` pin attached to `TEST_ROTARY_DT`
+Note that this procedure works the same for both rotary encoders. Test one first, then the other.
 
 Output through USB serial port at 115200 bauds.
+
 
 ## Procedure and expected output
 

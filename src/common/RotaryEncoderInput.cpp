@@ -64,6 +64,66 @@ void IRAM_ATTR isrh(void *instance)
 }
 
 // ----------------------------------------------------------------------------
+
+void IRAM_ATTR isrhAlternateEncoding(void *instance)
+{
+    // UBaseType_t lock = taskENTER_CRITICAL_FROM_ISR();
+    UBaseType_t lock = portSET_INTERRUPT_MASK_FROM_ISR();
+    RotaryEncoderInput *rotary = (RotaryEncoderInput *)instance;
+    int clk = gpio_get_level(rotary->clkPin);
+    int dt = gpio_get_level(rotary->dtPin);
+    portCLEAR_INTERRUPT_MASK_FROM_ISR(lock);
+    // taskEXIT_CRITICAL_FROM_ISR(lock);
+
+    uint8_t output = OUTPUT_NONE;
+//    uint8_t reading = ((!clk << 1) | !dt);
+    uint8_t reading = ((clk << 1) | dt);
+    uint8_t nextCode = ((rotary->code << 2) | reading) & 0b1111;
+    uint8_t transition = (rotary->code << 4) | nextCode;
+
+    if ((transition == 0b00111101) ||
+        (transition == 0b11010100) ||
+        (transition == 0b00000010) ||
+        (transition == 0b00101011) ||
+        (transition == 0b00111110) ||
+        (transition == 0b11101000) ||
+        (transition == 0b00000001) ||
+        (transition == 0b00010111))
+    {
+        if (transition == 0b11010100) 
+        {
+            rotary->code = 0;
+            output = OUTPUT_CW;
+        }
+        else if (transition == 0b00101011)
+        {
+            rotary->code = 0b11;
+            output = OUTPUT_CW;
+        }
+        else if (transition == 0b11101000)
+        {
+            rotary->code = 0;
+            output = OUTPUT_CCW;
+        }
+        else if (transition == 0b00010111)
+        {
+            rotary->code = 0b11;
+            output = OUTPUT_CCW;
+        }
+        else
+            rotary->code = nextCode;
+    }
+
+    if (output != OUTPUT_NONE)
+    {
+        BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+        xQueueSendFromISR(rotary->eventQueue, &output, &xHigherPriorityTaskWoken);
+        if (xHigherPriorityTaskWoken)
+            portYIELD_FROM_ISR();
+    }
+}
+
+// ----------------------------------------------------------------------------
 // Service task for rotary encoders
 // ----------------------------------------------------------------------------
 
@@ -109,7 +169,8 @@ RotaryEncoderInput::RotaryEncoderInput(
     gpio_num_t clkPin,
     gpio_num_t dtPin,
     inputNumber_t cwButtonNumber,
-    inputNumber_t ccwButtonNumber)
+    inputNumber_t ccwButtonNumber,
+    bool useAlternateEncoding)
 {
     // Check parameters
     GPIO_IS_VALID_GPIO(clkPin);
@@ -133,7 +194,6 @@ RotaryEncoderInput::RotaryEncoderInput(
     this->cwButtonNumber = cwButtonNumber;
     this->ccwButtonNumber = ccwButtonNumber;
     mask = ~(BITMAP(cwButtonNumber) | BITMAP(ccwButtonNumber));
-    code = 0;
     sequence = 0;
 
     // Config task and queue
@@ -154,16 +214,32 @@ RotaryEncoderInput::RotaryEncoderInput(
     ESP_ERROR_CHECK(gpio_set_pull_mode(dtPin, GPIO_PULLUP_ONLY));
 
     // Initialize state
-    isrh(this);
-    isrh(this);
+    if (useAlternateEncoding)
+    {
+        code = 0b11;
+        isrhAlternateEncoding(this);
+        isrhAlternateEncoding(this);
+    }
+    else
+    {
+        code = 0;
+        isrh(this);
+        isrh(this);
+    }
 
     // Enable IRQ for dtPin
     ESP_ERROR_CHECK(gpio_set_intr_type(dtPin, GPIO_INTR_ANYEDGE));
-    ESP_ERROR_CHECK(gpio_isr_handler_add(dtPin, isrh, (void *)this));
+    if (useAlternateEncoding)
+        ESP_ERROR_CHECK(gpio_isr_handler_add(dtPin, isrhAlternateEncoding, (void *)this));
+    else
+        ESP_ERROR_CHECK(gpio_isr_handler_add(dtPin, isrh, (void *)this));
     ESP_ERROR_CHECK(gpio_intr_enable(dtPin));
 
     // Enable IRQ for clkPin
     ESP_ERROR_CHECK(gpio_set_intr_type(clkPin, GPIO_INTR_ANYEDGE));
-    ESP_ERROR_CHECK(gpio_isr_handler_add(clkPin, isrh, (void *)this));
+    if (useAlternateEncoding)
+        ESP_ERROR_CHECK(gpio_isr_handler_add(clkPin, isrhAlternateEncoding, (void *)this));
+    else
+        ESP_ERROR_CHECK(gpio_isr_handler_add(clkPin, isrh, (void *)this));
     ESP_ERROR_CHECK(gpio_intr_enable(clkPin));
 };

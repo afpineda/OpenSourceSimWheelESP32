@@ -300,15 +300,17 @@ namespace inputs
      *
      * @param clkPin pin number attached to CLK or A
      * @param dtPin pin number attached to DT or B
+     * @param[in] useAlternateEncoding Set to true in order to use the signal encoding of
+     *                                 ALPS RKJX series of rotary encoders, and the alike.
      * @return inputNumber_t Number assigned to the clockwise rotation. `Number+1` is the
      *         assigned number to the counter-clockwise rotation.
-     *
      * @note Only rotation events are considered for input. Rotary's push button must be added
      *       with `addDigital()`
      */
     inputNumber_t addRotaryEncoder(
         gpio_num_t clkPin,
-        gpio_num_t dtPin);
+        gpio_num_t dtPin,
+        bool useAlternateEncoding = true);
 
     /**
      * @brief Add incremental rotary encoder inputs bound to specific input numbers.
@@ -318,6 +320,8 @@ namespace inputs
      * @param dtPin pin number attached to DT or B
      * @param[in] cwButtonNumber A number for the "virtual button" of a clockwise rotation event.
      * @param[in] ccwButtonNumber A number for the "virtual button" of a counter-clockwise rotation event.
+     * @param[in] useAlternateEncoding Set to true in order to use the signal encoding of
+     *                                 ALPS RKJX series of rotary encoders, and the alike.
      *
      * @note Only rotation events are considered for input. Rotary's push button must be added
      *       with `addDigital()`
@@ -326,7 +330,8 @@ namespace inputs
         gpio_num_t clkPin,
         gpio_num_t dtPin,
         inputNumber_t cwInputNumber,
-        inputNumber_t ccwInputNumber);
+        inputNumber_t ccwInputNumber,
+        bool useAlternateEncoding = true);
 
     /**
      * @brief Setup a single button matrix. Must be called before `start()`
@@ -344,7 +349,7 @@ namespace inputs
         const uint8_t inputPinCount);
 
     /**
-     * @brief Add a button matrix bound to specific button numbers. 
+     * @brief Add a button matrix bound to specific button numbers.
      *        Must be called before `start()`. You can have more than one.
      *
      * @param selectorPins Array of GPIO numbers for selector pins.

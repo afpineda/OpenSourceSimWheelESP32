@@ -1,7 +1,7 @@
 /**
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
- * @brief Unit Test. See [README](./README.md)
+ * @brief Input from rotary encoders 
  * 
  * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
  * 
@@ -47,7 +47,17 @@ void setup()
     Serial.begin(115200);
     while (!Serial) ;
     Serial.println("-- READY --");
+    
+    // Uncomment the following line when testing alterante enconding
+    // and vice-versa
+
+    new RotaryEncoderInput(TEST_ROTARY_ALT_A,TEST_ROTARY_ALT_B,5,6,true);
+    
+    // Comment out the following line when not testing alternate encoding
+    // and vice-versa
+
     new RotaryEncoderInput(TEST_ROTARY_CLK,TEST_ROTARY_DT,5);
+
     Serial.println("-- GO --");
 }
 

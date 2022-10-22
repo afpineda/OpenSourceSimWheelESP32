@@ -99,12 +99,13 @@ void inputs::addDigitalExt(
 
 inputNumber_t inputs::addRotaryEncoder(
     gpio_num_t clkPin,
-    gpio_num_t dtPin)
+    gpio_num_t dtPin,
+    bool useAlternateEncoding)
 {
   if (pollingTask == nullptr)
   {
     int buttonNumber = globalButtonCount;
-    new RotaryEncoderInput(clkPin, dtPin, buttonNumber);
+    new RotaryEncoderInput(clkPin, dtPin, buttonNumber,UNSPECIFIED_INPUT_NUMBER, useAlternateEncoding);
     globalButtonCount += 2;
     return buttonNumber;
   }
@@ -116,11 +117,12 @@ void inputs::addRotaryEncoderExt(
     gpio_num_t clkPin,
     gpio_num_t dtPin,
     inputNumber_t cwInputNumber,
-    inputNumber_t ccwInputNumber)
+    inputNumber_t ccwInputNumber,
+    bool useAlternateEncoding)
 {
   if (pollingTask == nullptr)
   {
-    new RotaryEncoderInput(clkPin, dtPin, cwInputNumber, ccwInputNumber);
+    new RotaryEncoderInput(clkPin, dtPin, cwInputNumber, ccwInputNumber, useAlternateEncoding);
   }
   else
     abortAtAdd();

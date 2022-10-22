@@ -40,12 +40,14 @@ private:
   TaskHandle_t daemon;
   uint8_t code;
   uint16_t sequence;
+
   inputNumber_t cwButtonNumber;
   inputNumber_t ccwButtonNumber;
   inputBitmap_t mask;
 
 private:
   friend void IRAM_ATTR isrh(void *instance);
+  friend void IRAM_ATTR isrhAlternateEncoding(void *instance);
   friend void rotaryDaemonLoop(void *instance);
 
 public:
@@ -57,13 +59,16 @@ public:
    * @param[in] cwButtonNumber A number for the "virtual button" of a clockwise rotation event.
    * @param[in] ccwButtonNumber A number for the "virtual button" of a counter-clockwise rotation event.
    *                           If not given, `cwButtonNumber`+1 is used.
+   * @param[in] useAlternateEncoding Set to true in order to use the signal encoding of 
+   *                                 ALPS RKJX series of rotary encoders, and the alike.
    * @note Interal pullup resistors will be enabled when available.
    */
   RotaryEncoderInput(
       gpio_num_t clkPin,
       gpio_num_t dtPin,
       inputNumber_t cwButtonNumber,
-      inputNumber_t ccwButtonNumber = UNSPECIFIED_INPUT_NUMBER);
+      inputNumber_t ccwButtonNumber = UNSPECIFIED_INPUT_NUMBER,
+      bool useAlternateEncoding = false);
 };
 
 #endif

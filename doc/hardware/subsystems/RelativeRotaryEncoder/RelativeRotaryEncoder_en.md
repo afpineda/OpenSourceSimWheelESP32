@@ -26,6 +26,12 @@ Each rotary encoder requires two dedicated pins at the DevKit board, no matter i
 
 ![External pullup resistors](./ExternalPullupEncoder.png)
 
+## Signal encoding
+
+Some encoders use ["incremental Encoder Quadrature Output Waveform"](https://www.allaboutcircuits.com/projects/how-to-use-a-rotary-encoder-in-a-mcu-based-project/). This is the case of KY-040. 
+Others seems to use a different signal encoding. **This is the case of [ALPS RKJX](https://docs.rs-online.com/5b4c/0900766b8152c2e9.pdf) series of funky switches**. Such encoding is called "alterante encoding" in this project.
+The firmware is ready to use both.
+
 ## Firmware customization
 
 Customization takes place at file [CustomSetup.ino](../../../../src/Firmware/CustomSetup/CustomSetup.ino).
@@ -33,6 +39,7 @@ Edit the body of `simWheelSetup()` and place a call to `inputs::addRotaryEncoder
 
 - First parameter is the GPIO assigned to `CLK` or `A`.
 - Second parameter is the GPIO assigned to `DT` or `B`.
+- Third paramater must be set to `true` when "alternate encoding" is in place (optional parameter, defaults to `false`). Give a try to this parameter if your encoder does not work properly.
 
 For example, let's say that a bare bone rotary encoder has `A` attached to GPIO 33 and `B` attached to GPIO 25:
 
@@ -41,6 +48,17 @@ void simWheelSetup()
 {
    ...
    inputs::addRotaryEncoder(GPIO_NUM_33,GPIO_NUM_25);
+   ...
+}
+```
+
+For example, let's say that an ALPS funky switch encoder has `A` attached to GPIO 33 and `B` attached to GPIO 25:
+
+```c
+void simWheelSetup()
+{
+   ...
+   inputs::addRotaryEncoder(GPIO_NUM_33,GPIO_NUM_25,true);
    ...
 }
 ```
