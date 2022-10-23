@@ -72,4 +72,4 @@ Locate the line `#define BATTERY_ENABLE_READ_GPIO` and write a GPIO number to th
 
 Only a rough estimation of battery charge can be provided out of the box. Battery level will be unreliable until the battery is fully charged for the first time.
 
-For accurate battery levels, a battery calibration procedure may be followed, which is extensively documented [here](../../../../src/firmware/BatteryTools/BatteryCalibration/README_en.md) along with the required Arduino sketch.
+For accurate battery levels, a battery calibration procedure may be followed, which is extensively documented [here](../../../../src/Firmware/BatteryTools/BatteryCalibration/README_en.md) along with the required Arduino sketch.
