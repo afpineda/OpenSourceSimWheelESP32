@@ -61,7 +61,7 @@ And this is the powerboost module used for testing in this project (note there i
 
 There is no circuit involved, however, some wires have to be soldered. If possible, use pin headers instead, for flexibility. These labels will be used from now on along this project:
 
-- **POWERBOOST_3V3**: named as "3V3" or "3V" at the powerboost module.
+- **POWERBOOST_3V3**: named as `3V3` or `3V` at the powerboost module.
 - **POWERBOOST_GND**: named `GND`.
 - **EXTERNAL_5V**: named as `5V` or `5V0` at the powerboost module.
 - **EXTERNAL_GND**: named `GND`.

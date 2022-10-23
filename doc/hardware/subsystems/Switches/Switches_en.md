@@ -50,7 +50,7 @@ This is a button matrix with 5 selector pins and 5 input pins, giving 25 inputs,
 
 Needed parts (not counting input hardware like push buttons):
 
-- *Schottky diodes*: x25. Any kind should work but choose low forward voltage ($V_F$). Suggested: [1N4148](https://www.alldatasheet.com/datasheet-pdf/pdf/15021/PHILIPS/1N4148.html) ($V_F=0.6V$).
+- *Schottky diodes*: x25. Any kind should work but choose low forward voltage ( $V_F$ ). Suggested: [1N4148](https://www.alldatasheet.com/datasheet-pdf/pdf/15021/PHILIPS/1N4148.html) ( $V_F=0.6V$ ).
 - *Dupond pin headers* (male or female):
   - 25x2 (=50) for external inputs
   - 5x1 (=5) for input pins

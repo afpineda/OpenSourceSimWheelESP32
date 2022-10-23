@@ -35,7 +35,7 @@ Locate the following line at *CustomSetup.ino*:
 const gpio_num_t WAKEUP_PINS[] = {};
 ```
 
-Put inside the curly brackets a comma-separated list of GPIO numbers. Those GPIO numbers must be attached to a `CLK`, `DT` or `SW` pin. **Any other pulled up input may be used, too.**. For example:
+Put inside the curly brackets a comma-separated list of GPIO numbers. Those GPIO numbers must be attached to a `CLK`, `DT` or `SW` pin. **Any other pulled up input may be used, too**. For example:
 
 ```c
 const gpio_num_t WAKEUP_PINS[] = {GPIO_NUM_39, GPIO_NUM_32};
