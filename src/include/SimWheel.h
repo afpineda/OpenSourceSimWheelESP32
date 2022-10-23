@@ -287,7 +287,7 @@ namespace inputs
      *                             FALSE if a pulldown resistor is used (HIGH signal when pressed)
      * @param[in] enableInternalPull TRUE if the internal pullup or pulldown resistor must be enabled.
      *                               Ignored if the GPIO pin does not provide a pull resistor.
-     * @param[in] inputNumber Rquested input number for this button
+     * @param[in] inputNumber Requested input number for this button
      */
     void addDigitalExt(
         gpio_num_t pinNumber,
