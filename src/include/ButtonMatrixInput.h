@@ -33,40 +33,42 @@
 class ButtonMatrixInput : public PolledInput
 {
 private:
-    int selectorPinCount, inputPinCount;
-    gpio_num_t selectorPin[MAX_MATRIX_SELECTOR_COUNT];
-    gpio_num_t inputPin[MAX_MATRIX_INPUT_COUNT];
+    uint8_t selectorPinCount, inputPinCount;
+    const gpio_num_t *selectorPins;
+    const gpio_num_t *inputPins;
     BaseType_t debounce[MAX_MATRIX_SELECTOR_COUNT][MAX_MATRIX_INPUT_COUNT];
+    inputNumber_t *buttonNumbersArray;
+    inputNumber_t alternateFirstInputNumber;
+
+    void checkAndInitializeSelectorPin(gpio_num_t aPin);
+    void checkAndInitializeInputPin(gpio_num_t aPin);
 
 public:
+
     /**
      * @brief Construct a new Button Matrix Input object
      *
-     * @param firstButtonNumber Assigned number to the first button. Following buttons
-     *                          will get numbered in ascending order.
-     * @param nextInChain Another instance to build a chain, or nullptr
+     * @param selectorPins Array of GPIO numbers for selector pins.
+     * @param selectorPinCount Length of `selectorPins` array.
+     * @param inputPins Array of GPIO numbers for input pins
+     * @param inputPinCount Length of `inputPins`array.
+     * @param buttonNumbersArray Array of input numbers to be assigned to every button.
+     *                           The length of this array is expected to match the
+     *                           product of `selectorPinCount` and `inputPinCount`. If NULL,
+     *                           `alternateFirstInputNumber` is used instead.
+     * @param alternateFirstInputNumber Assign a number to every button starting from this
+     *                                  parameter, in ascending order. Ignored if `buttonNumbersArray`
+     *                                  is not null.
+     * @param nextInChain Another instance to build a chain, or nullptr.
      */
-    ButtonMatrixInput(int firstButtonNumber = 0, PolledInput *nextInChain = nullptr);
-
-    /**
-     * @brief Set a selector (output) pin
-     *
-     * @param aPin GPIO number of a selector pin.
-     *
-     * @attention This method should not be called more times than MAX_MATRIX_SELECTOR_COUNT
-     *            Do not call twice with the same parameter. Must be called before `read()`.
-     */
-    void addSelectorPin(gpio_num_t aPin);
-
-    /**
-     * @brief Set an input pin
-     *
-     * @param aPin GPIO number of an input
-     *
-     * @attention This method should not be called more times than MAX_MATRIX_INPUT_COUNT
-     *            Do not call twice with the same parameter. Must be called before `read()`.
-     */
-    void addInputPin(gpio_num_t aPin);
+    ButtonMatrixInput(
+        const gpio_num_t selectorPins[],
+        const uint8_t selectorPinCount,
+        const gpio_num_t inputPins[],
+        const uint8_t inputPinCount,
+        inputNumber_t *buttonNumbersArray = nullptr,
+        inputNumber_t alternateFirstInputNumber = UNSPECIFIED_INPUT_NUMBER,
+        PolledInput *nextInChain = nullptr);
 
     /**
      * @brief Read the current state of the matrix

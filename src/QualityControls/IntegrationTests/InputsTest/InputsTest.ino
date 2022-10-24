@@ -46,6 +46,7 @@ void setup()
     // n = 6
     Serial.println(n);
     n = inputs::addRotaryEncoder(TEST_ROTARY_CLK,TEST_ROTARY_DT);
+    //n = inputs::addRotaryEncoder(TEST_ROTARY_ALT_A,TEST_ROTARY_ALT_B,true);
     // n = 7
     Serial.println(n);
 

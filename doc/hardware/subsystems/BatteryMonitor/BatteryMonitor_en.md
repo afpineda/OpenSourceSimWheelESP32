@@ -39,7 +39,7 @@ And one output:
 
 ![Battery monitor circuit](./BatteryMonitor_falstad.png)
 
-[This simulation at falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKABcQmwVxieHCAFl48eEGAkJhsKFGEEJKmSGCQS80yNjx4peFUPJg4IACZ0AZgEMArgBs2LAOacZIXMIZuZVXywDunPogwQzBfgBOUCG+4BiE0YIYcCxRVGDx0Zg8VEkpUUyZYHyczGIl6fCQqZxC4Ny1whkJlVUBrjweHSDZ4O1UvV6iGDntAsKDdWh4UOyN9fx1wdilnBLGxIQofMSCKEkYBGvQCATYW4TYgnh8CKorxlTm1vaOADKlRSUMKJIi0RBrHYAM50dzQFbVQIMa4xaLhFgAeQBRUETSKs2hbkmExGswAHqVIJ4VgwMMREiAEgAjKxsNh0CIATwAFAAdAAOAEoWISfggjIQkD9IGJCDMmjNafSAKIAOV5VIpYCF4EEyvFIElIGlbAASjKAIIAERYAGUgrEmIRYlQEkDQdEMCw9aUbZxYUxvrDYoJaNFfCcXW6qENOLISTlErkA1Ag67raGVaVvsnfVRsNByLb4yHwAkvWLY373LGJMHE9Efvsy1qMxCy7nK25q8I3OmelnGwgKyrcjNC1qZh2UA2cz2+YNBAXfhAYSsmlQALKGgAaiq8e1cc9+oZQEuQIAAwgALKwRJwASwAdk42cCAPT3o-npxWa+mAD2G+w2GFDX5UMKUXY8zwvOhTHvJ9gRfC8rFMKwfyuGhw1kCgF0PY1L2BABjMCnAgqD72NOhcNfeDEOpVxp1qMRkLqao+S2D16gHCAmgSM1LwAW3sOlCOBXVGSZe8ADdPwcKwCI3DAIAycA0LQLV8xAAA1CS2CsAArOh73Me9pUZABbqx72BHi+K-FggA) shows how it works, but note that the rectangle is not part of the circuit.
+[This simulation at falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKABcQmwVxieHCAFl48eEGJTAE8g4pDQJshLFGiKEmfJG4oEgsJGLIqAEzoAzAIYBXADZsWAc07YeuYQ1chXVXywDunHhUwUG+UCwATlAgoVRgGIQxghhwUTEJSVSYPFQpadFMiSKczGJ8GfAFnELg3DXCmZVVAS5ukB5eOeCt2Rj8Xf0RgQLC3aMgaHgRHBNlDbFU2KWcEgZ4OPJggpAIxNgeEgTYlMRSBpDYUo1wIGZWdg4AMqXFYBUMuknvueAgVrYAM50bzQZaQVoMQTTOKLCIAeQyb0EjTewzakyGE26EIAHqUOi5OBgjHkQEkAEaWNhsOiRACeAAoADoABwAlCx8Z8EOQwIQkJ95OBCNNGtMqTSAKIAOS55KM-KQ20VopA4pAkrYACUpQBBAAiLAAymEYkxCOEqEkAcCYhgWNrSpbONDSh83eEdtQrWpHc6qJ5+CgUJ1fnkyb6EP6LYH+e7+PGvUtoOQozH+fEkkwKknkksYr4-U7Y+aQ8IreqU+DC8WA95g6GG4Wq5NUy2JBmXW6czxPfm2zWi9HueNBNndBAocsbiAALJ6gAa8s8ggGU90gZQYuQIAAwgALSyRRwASwAdo5mYCAPTXvfHxyWc8mAD2K+wJ1KwconCMs8PR86BMa870BB8T0sExLA-A4aE4EMeEUdVdwNU9AQAYyPE9gNA68DToTDHygmCKRcccajEODajxSjXTqaYmBQ+NjVPABbOxqVwwEtTpelrwAN1fexLEcOgVwwCAEnAENJjJeMADVhLYSwACs6GvMxr0lOkAFvLGvQF2M4t8WCAA) shows how it works, but note that the rectangle is not part of the circuit.
 
 Needed parts:
 
@@ -72,4 +72,4 @@ Locate the line `#define BATTERY_ENABLE_READ_GPIO` and write a GPIO number to th
 
 Only a rough estimation of battery charge can be provided out of the box. Battery level will be unreliable until the battery is fully charged for the first time.
 
-For accurate battery levels, a battery calibration procedure may be followed, which is extensively documented [here](../../../../src/firmware/BatteryTools/BatteryCalibration/README_en.md) along with the required Arduino sketch.
+For accurate battery levels, a battery calibration procedure may be followed, which is extensively documented [here](../../../../src/Firmware/BatteryTools/BatteryCalibration/README_en.md) along with the required Arduino sketch.

@@ -21,6 +21,8 @@ void serialPrintf(const char *fmt, ...);
 #define TEST_ROTARY_CLK GPIO_NUM_39
 #define TEST_ROTARY_DT GPIO_NUM_34
 #define TEST_ROTARY_SW GPIO_NUM_35
+#define TEST_ROTARY_ALT_A GPIO_NUM_16
+#define TEST_ROTARY_ALT_B GPIO_NUM_17
 
 // Button matrix pins for testing
 #define TEST_BTNMTX_ROW1 GPIO_NUM_25

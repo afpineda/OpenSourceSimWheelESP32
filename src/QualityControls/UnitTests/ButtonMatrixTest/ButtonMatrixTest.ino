@@ -2,9 +2,9 @@
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-03-03
  * @brief Unit Test. See [README](./README.md)
- * 
+ *
  * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
- * 
+ *
  */
 
 #include <Arduino.h>
@@ -19,6 +19,8 @@
 ButtonMatrixInput *btns;
 inputBitmap_t state = 0;
 
+inputNumber_t btnNumbers[] = {3, 4, 5, 6, 7, 8, 9};
+
 //------------------------------------------------------------------
 // Arduino entry point
 //------------------------------------------------------------------
@@ -29,12 +31,22 @@ void setup()
     while (!Serial)
         ;
     Serial.println("-- READY --");
-    btns = new ButtonMatrixInput(3);
-    btns->addInputPin(TEST_BTNMTX_COL1);
-    btns->addInputPin(TEST_BTNMTX_COL2);
-    btns->addSelectorPin(TEST_BTNMTX_ROW1);
-    btns->addSelectorPin(TEST_BTNMTX_ROW2);
-    btns->addSelectorPin(TEST_BTNMTX_ROW3);
+
+    // btns = new ButtonMatrixInput(
+    //     mtxSelectors,
+    //     sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
+    //     mtxInputs,
+    //     sizeof(mtxInputs) / sizeof(mtxInputs[0]),
+    //     nullptr,
+    //     3);
+
+    btns = new ButtonMatrixInput(
+        mtxSelectors,
+        sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
+        mtxInputs,
+        sizeof(mtxInputs) / sizeof(mtxInputs[0]),
+        btnNumbers);
+
     Serial.println("MASK:");
     debugPrintBool(btns->mask);
     Serial.println("");
@@ -50,6 +62,6 @@ void loop()
         debugPrintBool(state);
         Serial.println("");
     }
-//    delay(100);
+    //    delay(100);
     vTaskDelay(DEBOUNCE_TICKS);
 }

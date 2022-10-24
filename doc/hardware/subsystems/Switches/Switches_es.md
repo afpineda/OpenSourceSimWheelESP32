@@ -50,7 +50,7 @@ Esta es una matriz de botones con 5 pines selectores y 5 pines de entrada, lo qu
 
 Piezas necesarias (sin contar el hardware de entrada como los botones pulsadores):
 
-- *Diodos Schottky*: x25. Cualquier tipo debería funcionar, pero elija un voltaje directo bajo ($V_F$). Sugerido: [1N4148](https://www.alldatasheet.com/datasheet-pdf/pdf/15021/PHILIPS/1N4148.html) ($V_F=0.6V$).
+- *Diodos Schottky*: x25. Cualquier tipo debería funcionar, pero elija un voltaje directo bajo ( $V_F$ ). Sugerido: [1N4148](https://www.alldatasheet.com/datasheet-pdf/pdf/15021/PHILIPS/1N4148.html) ( $V_F=0.6V$ ).
 - *Cabezales de pines Dupond* (macho o hembra):
   - 25x2 (=50) para entradas externas
   - 5x1 (=5) para pines de entrada

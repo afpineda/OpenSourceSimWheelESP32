@@ -2,14 +2,14 @@
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
  * @brief Main header for common sources
- *  
+ *
  * @section DESCRIPTION
- * 
+ *
  * This file declares all the namespaces that builds the system architecture.
  * See the [Firmware Architecture document](../../doc/firmware/FirmwareArchitecture_en.md).
- * 
+ *
  * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
- * 
+ *
  */
 
 #ifndef __SIMWHEEL_H__
@@ -25,32 +25,32 @@
  */
 namespace language
 {
-    /** 
+    /**
      * @brief Must be called before anything else in this namespace. Will
      *        load the configured UI language from flash memory.
      *
-    **/
+     **/
     void begin();
 
     /**
      * @brief Set the current language for the UI. Will be stored in flash memory.
-     * 
+     *
      * @param lang Language
      */
     void setLanguage(language_t lang);
 
     /**
      * @brief Retrieve the current language for the UI
-     * 
+     *
      * @return language_t Current language for the UI
      */
     language_t getLanguage();
 }
 
 /**
- * @brief Calibrate and measure battery charge 
- * 
- * @note This namespace provides two algorithms to map a battery reading into a 
+ * @brief Calibrate and measure battery charge
+ *
+ * @note This namespace provides two algorithms to map a battery reading into a
  *       battery level percentage:
  *       - Calibrated: a calibration procedure is required
  *       - Auto-calibrated: fallback arlogorithm based on LiPo characterization data.
@@ -60,43 +60,42 @@ namespace batteryCalibration
 {
     /**
      * @brief Check if the calibration procedure is in progress. Exposed for testing. DO NOT TOUCH.
-     * 
+     *
      */
     extern volatile bool calibrationInProgress;
 
     /**
      * @brief Load or initialize calibration data. Must be called at system startup.
-     * 
+     *
      */
     void begin();
 
     /**
-     * @brief Clear calibration data (but may persist in flash memory). 
-     * 
+     * @brief Clear calibration data (but may persist in flash memory).
+     *
      */
     void clear();
-
 
     /**
      * @brief Add an ADC reading to calibration data. The battery should get fully charged
      *        before first call. Will clear previous data at first call.
      *        Calibration data will **not** be available until `save()` is called.
-     * 
+     *
      * @param reading An ADC reading of current battery(+) voltage.
      */
     void addSample(int reading);
 
     /**
      * @brief Get calibration data. For internal use.
-     * 
+     *
      * @param index Internal index of data
      * @return uint16_t -1 if there is no calibration data for such an index. A positive number, otherwise
      */
     int getCalibration(uint8_t index);
-    
+
     /**
      * @brief Set calibration data all at once. For internal use.
-     * 
+     *
      * @param data Array of calibration data. Array size is 32.
      */
     void restoreCalibrationData(const uint16_t data[]);
@@ -105,50 +104,50 @@ namespace batteryCalibration
      * @brief Save calibration data to flash memory.
      *        The battery should get fully depleted before calling.
      *        Calibration data will be available from now on.
-     * 
+     *
      */
     void save();
 
     /**
      * @brief Get a percentage of battery charge based on calibration data.
-     * 
+     *
      * @param reading An ADC reading of current battery(+) voltage.
-     * @return int -1 if the battery has not been calibrated. Otherwise, 
+     * @return int -1 if the battery has not been calibrated. Otherwise,
      *             a percentage in the range 0%-100%.
      */
     int getBatteryLevel(int reading);
 
-     /**
+    /**
      * @brief Maximun battery reading ever. Exposed for testing. DO NOT TOUCH.
-     * 
+     *
      */
     extern volatile int maxBatteryReadingEver;
 
-   /**
-     * @brief Get a rough estimation of the battery charge based on 
+    /**
+     * @brief Get a rough estimation of the battery charge based on
      *        LiPo battery characterization data. Not accurate, but allways available.
-     * 
+     *
      * @param reading An ADC reading of current battery(+) voltage.
      * @return int A percentage in the range 0%-100%
-     * 
+     *
      * @note Based on https://blog.ampow.com/lipo-voltage-chart/
      */
     int getGenericLiPoBatteryLevel(int reading);
-   
+
     /**
      * @brief Restart autocalibration algorithm.
-     * 
+     *
      */
     void restartAutoCalibration();
-    
+
     /**
      * @brief Get a percentage of battery charge using auto-calibration.
      *        Based on `getGenericLiPoBatteryLevel()`. Will provide incorrect
      *        battery levels (higher) until the battery is fully charged.
      *        Anyway, this algorithm is not accurate.
-     * 
+     *
      * @param reading An ADC reading of current battery(+) voltage
-     * 
+     *
      * @return If auto-calibration is available, a percentage in the range 0%-100%.
      *         Otherwise, the constant `UNKNOWN_BATTERY_LEVEL`.
      */
@@ -160,31 +159,31 @@ namespace power
 {
     /**
      * @brief Initialize power management
-     * 
+     *
      * @param wakeUpPins Array of RTC-capable GPIO pins to wake up the system after deep sleep.
      * @param wakeUpPinCount Number of pins in `wakeUpPins`. If no pins are provided, a system
      *                       reset is required for wakeup.
-     * @param AnyHighOrAllLow If *true*, wakeup happens when *any* given pin are set to high voltage. 
+     * @param AnyHighOrAllLow If *true*, wakeup happens when *any* given pin are set to high voltage.
      *                        If *false*, wakeup happens when *all* given pins are set to low voltage.
      */
     void begin(
-        const gpio_num_t wakeUpPins[], 
-        const uint8_t wakeUpPinCount, 
+        const gpio_num_t wakeUpPins[],
+        const uint8_t wakeUpPinCount,
         bool AnyHighOrAllLow = true);
 
     /**
      * @brief Initialize power management for single button wake up
-     * 
+     *
      * @param wakeUpPin RTC-capable GPIO pin to wake up the system after deep sleep.
      * @param wakeUpHighOrLow If *true*, wakeup happens when `wakeUpPin` is set to high voltage.
      *                        If *false*, wakeup happens when `wakeUpPin` is set to low voltage.
      */
     void begin(
-        const gpio_num_t wakeUpPin,  bool wakeUpHighOrLow = true);
-        
+        const gpio_num_t wakeUpPin, bool wakeUpHighOrLow = true);
+
     /**
      * @brief Configure an external latch circuit for power on and off
-     * 
+     *
      * @param latchPin Output-capable GPIO that drives power on/off.
      * @param mode Expected behaviour of 'latchPin' to keep power on or go to power off.
      * @param waitTicks A delay to wait for power off to happen, in milliseconds.
@@ -193,20 +192,20 @@ namespace power
 
     /**
      * @brief Enable monitorization of battery charge. Do not call if there is no battery.
-     * 
+     *
      * @param battENPin Output pin to enable/disable the battery monitor circuit
      * @param battREADPin ADC pin used to read battery voltage
      * @param testing Set to TRUE for unit testing. Will get a battery sample every 5 seconds.
      */
     void startBatteryMonitor(
-        gpio_num_t battENPin, 
+        gpio_num_t battENPin,
         gpio_num_t battREADPin,
         bool testing = false);
 
     /**
      * @brief Get ADC reading of the battery pin for testing porpouses. Must **not** be called while
      *        the battery monitor is running
-     * 
+     *
      * @param battENPin Output-capable GPIO pin to enable battery readings. Must have been properly initialized.
      * @param battREADPin ADC pin for reading. Must have been properly initialized.
      * @return int ADC reading
@@ -215,14 +214,14 @@ namespace power
 
     /**
      * @brief Get last known battery level
-     * 
+     *
      * @return int Percentage of battery charge
      */
     int getLastBatteryLevel();
 
     /**
      * @brief Check if the battery monitor is running
-     * 
+     *
      * @return true If the battery monitor is running
      * @return false Otherwise
      */
@@ -231,7 +230,7 @@ namespace power
     /**
      * @brief If an external power latch circuit is in place, the system will be powered off.
      *        Otherwise, deep sleep mode will be enabled.
-     * 
+     *
      * @param forced Set to TRUE when requested by the user, FALSE otherwise.
      */
     void powerOff(bool forced = false);
@@ -281,23 +280,62 @@ namespace inputs
         bool enableInternalPull = true);
 
     /**
+     * @brief Add a digital button bound to a specific input number. Must be called before `start()`
+     *
+     * @param[in] pinNumber Pin where the digital button is attached to
+     * @param[in] pullupOrPulldown TRUE if a pullup resistor is used (LOW signal when pressed).
+     *                             FALSE if a pulldown resistor is used (HIGH signal when pressed)
+     * @param[in] enableInternalPull TRUE if the internal pullup or pulldown resistor must be enabled.
+     *                               Ignored if the GPIO pin does not provide a pull resistor.
+     * @param[in] inputNumber Requested input number for this button
+     */
+    void addDigitalExt(
+        gpio_num_t pinNumber,
+        inputNumber_t inputNumber,
+        bool pullupOrPulldown = true,
+        bool enableInternalPull = true);
+
+    /**
      * @brief Add incremental rotary encoder inputs. Must be called before `start()`
      *
      * @param clkPin pin number attached to CLK or A
      * @param dtPin pin number attached to DT or B
+     * @param[in] useAlternateEncoding Set to true in order to use the signal encoding of
+     *                                 ALPS RKJX series of rotary encoders, and the alike.
      * @return inputNumber_t Number assigned to the clockwise rotation. `Number+1` is the
      *         assigned number to the counter-clockwise rotation.
-     *
      * @note Only rotation events are considered for input. Rotary's push button must be added
      *       with `addDigital()`
      */
     inputNumber_t addRotaryEncoder(
         gpio_num_t clkPin,
-        gpio_num_t dtPin);
+        gpio_num_t dtPin,
+        bool useAlternateEncoding = true);
+
+    /**
+     * @brief Add incremental rotary encoder inputs bound to specific input numbers.
+     *        Must be called before `start()`
+     *
+     * @param clkPin pin number attached to CLK or A
+     * @param dtPin pin number attached to DT or B
+     * @param[in] cwButtonNumber A number for the "virtual button" of a clockwise rotation event.
+     * @param[in] ccwButtonNumber A number for the "virtual button" of a counter-clockwise rotation event.
+     * @param[in] useAlternateEncoding Set to true in order to use the signal encoding of
+     *                                 ALPS RKJX series of rotary encoders, and the alike.
+     *
+     * @note Only rotation events are considered for input. Rotary's push button must be added
+     *       with `addDigital()`
+     */
+    void addRotaryEncoderExt(
+        gpio_num_t clkPin,
+        gpio_num_t dtPin,
+        inputNumber_t cwInputNumber,
+        inputNumber_t ccwInputNumber,
+        bool useAlternateEncoding = true);
 
     /**
      * @brief Setup a single button matrix. Must be called before `start()`
-     * 
+     *
      * @param selectorPins Array of pin numbers used as selector pins
      * @param selectorPinCount Length of the `selectorPins` array
      * @param inputPins Array of pin numbers used as input pins
@@ -305,11 +343,29 @@ namespace inputs
      * @return inputNumber_t Number assigned to the first button.
      */
     inputNumber_t setButtonMatrix(
-        const gpio_num_t selectorPins[], 
+        const gpio_num_t selectorPins[],
         const uint8_t selectorPinCount,
         const gpio_num_t inputPins[],
         const uint8_t inputPinCount);
 
+    /**
+     * @brief Add a button matrix bound to specific button numbers.
+     *        Must be called before `start()`. You can have more than one.
+     *
+     * @param selectorPins Array of GPIO numbers for selector pins.
+     * @param selectorPinCount Length of `selectorPins` array.
+     * @param inputPins Array of GPIO numbers for input pins
+     * @param inputPinCount Length of `inputPins`array.
+     * @param buttonNumbersArray Array of input numbers to be assigned to every button.
+     *                           The length of this array is expected to match the
+     *                           product of `selectorPinCount` and `inputPinCount`.
+     */
+    void addButtonMatrixExt(
+        const gpio_num_t selectorPins[],
+        const uint8_t selectorPinCount,
+        const gpio_num_t inputPins[],
+        const uint8_t inputPinCount,
+        inputNumber_t *buttonNumbersArray);
 }
 
 /**
@@ -372,7 +428,7 @@ namespace inputHub
     bool hasALTButtons();
 
     /**
-     * @brief Set the bitmap for all ALT buttons. For example: 
+     * @brief Set the bitmap for all ALT buttons. For example:
      *        `setALTBitmap(BITMAP(3)|BITMAP(4))`.
      *
      * @param altBmp Bitmap of ALT buttons.
@@ -408,7 +464,7 @@ namespace inputHub
     /**
      * @brief Set a function for the ALT buttons
      *
-     * @param altFunction TRUE if ALT buttons must enable alternate mode. FALSE if 
+     * @param altFunction TRUE if ALT buttons must enable alternate mode. FALSE if
      *        ALT button inputs are to be reported as regular inputs. Default is TRUE.
      * @param save Request autosave
      */
@@ -433,9 +489,9 @@ namespace inputHub
         const inputNumber_t rightClutchNumber);
 
     /**
-     * @brief Set a button number to invoke the configuration menu. 
+     * @brief Set a button number to invoke the configuration menu.
      *        May be used instead of `setMenuBitmap()`.
-     *        
+     *
      * @note This button must be pressed for two seconds or more, and then released, for the menu to show up
      *       No other button must be pressed at the same time.
      *       If no long press is detected, it will be reported as a regular button.
@@ -451,7 +507,7 @@ namespace inputHub
      *
      * @note These buttons must be pressed for two seconds or more, and then released, for the menu to show up.
      *       If no long press is detected, they will be reported as regular buttons.
-     * 
+     *
      * @param menuButtonsBitmap Bitmap of buttons assigned to the menu function
      */
     void setMenuBitmap(const inputBitmap_t menuButtonsBitmap);
@@ -464,7 +520,7 @@ namespace inputHub
 
     /**
      * @brief Configure directional pad buttons
-     * 
+     *
      * @param padUpNumber Button number assigned to "up" direction
      * @param padDownNumber Button number assigned to "down" direction
      * @param padLeftNumber Button number assigned to "left" direction
@@ -473,7 +529,7 @@ namespace inputHub
      * @param padUpRightNumber Button number assigned to "up and right" direction (optional)
      * @param padDownLeftNumber Button number assigned to "down and left" direction (optional)
      * @param padDownRightNumber Button number assigned to "down and right" direction (optional)
-     * 
+     *
      * @note Just one pad button can be pressed at a time, except if "diagonal" button numbers are **not** provided.
      *       In such a case, the software will combine pressed buttons from different axis.
      *       If two buttons in the same axis are pressed, nothing will be reported to the HID implementation.
@@ -486,8 +542,7 @@ namespace inputHub
         inputNumber_t padUpLeftNumber = UNSPECIFIED_INPUT_NUMBER,
         inputNumber_t padUpRightNumber = UNSPECIFIED_INPUT_NUMBER,
         inputNumber_t padDownLeftNumber = UNSPECIFIED_INPUT_NUMBER,
-        inputNumber_t padDownRightNumber = UNSPECIFIED_INPUT_NUMBER
-    );
+        inputNumber_t padDownRightNumber = UNSPECIFIED_INPUT_NUMBER);
 }
 
 /**
@@ -526,16 +581,16 @@ namespace uiManager
 
     /**
      * @brief Acquire a buffer for the frame server daemon.
-     *        Must be called from a single thread. Reserved for use by a frame server. 
-     * 
+     *        Must be called from a single thread. Reserved for use by a frame server.
+     *
      * @return uint8_t* buffer used to draw the screen. Must not be shared betweeen threads.
      */
     uint8_t *getFrameServerBuffer();
-    
+
     /**
-     * @brief Display the buffer assigned to the frame server. 
+     * @brief Display the buffer assigned to the frame server.
      *        Must be called from a single thread. Reserved for use by a frame server.
-     * 
+     *
      */
     void unsafeDisplayFrameServerBuffer();
 
@@ -558,7 +613,7 @@ namespace ui
 {
     /**
      * @brief Initialize display
-     * 
+     *
      * @param pixels_width Resolution width in pixels
      * @param pixels_height Resolution height in pixels
      * @param displayType Type of display controller
@@ -567,9 +622,9 @@ namespace ui
      * @return false OLED is not available
      */
     bool begin(
-        int pixels_width = 128, 
-        int pixels_height = 64, 
-        displayType_t displayType = SSOLED_132x64, 
+        int pixels_width = 128,
+        int pixels_height = 64,
+        displayType_t displayType = SSOLED_132x64,
         bool flipUpsideDown = false);
 
     /**
@@ -648,7 +703,7 @@ namespace ui
 
     /**
      * @brief Macro to warn the user that the battery charge is about to deplete
-     * 
+     *
      */
     void showLowBatteryNotice();
 
@@ -661,14 +716,14 @@ namespace ui
     /**
      * @brief Activate or deactivate the frame server in order to
      *        display simulation data (low priority)
-     * 
+     *
      * @param state TRUE to enable, FALSE to disable
      */
     void frameServerSetEnabled(bool state);
 
     /**
      * @brief  Check if the OLED is available
-     * 
+     *
      * @return true Available
      * @return false Not available
      */
@@ -691,17 +746,17 @@ namespace configMenu
 
     /**
      * @brief Route input events to the configuration menu, when shown
-     * 
-     * @param globalState input bitmap 
+     *
+     * @param globalState input bitmap
      * @param changes bitmap of inputs that have changed since last report
-     * 
+     *
      * @note Called exclusivelly from `inputHub`
      */
     void onInput(inputBitmap_t globalState, inputBitmap_t changes);
 
     /**
      * @brief Configured buttons used to navigate through menu options
-     * 
+     *
      * @param prevButtonNumber button number for previous option or submenu
      * @param nextButtonNumber button number for next option or submenu
      * @param selectButtonNumber button number to select current option or enter submenu
@@ -722,7 +777,7 @@ namespace hidImplementation
 {
     /**
      * @brief Initialize bluetooth device
-     * 
+     *
      * @param deviceName Name of this device shown to the host computer
      * @param deviceManufacturer Name of the manufacturer of this device
      * @param enableAutoPowerOff True to power off when not connected within a certain time lapse. Set to FALSE for testing.
@@ -732,7 +787,7 @@ namespace hidImplementation
 
     /**
      * @brief Tell if there is a Bluetooth connection
-     * 
+     *
      * @return true when connected to a computer
      * @return false when not connected
      */
@@ -740,35 +795,35 @@ namespace hidImplementation
 
     /**
      * @brief Report current battery level to the host computer
-     * 
+     *
      * @param batteryLevel Remaining battery charge as a percentage (0-100)
      */
     void reportBatteryLevel(int batteryLevel);
 
     /**
      * @brief Report HID inputs
-     * 
+     *
      * @param globalState input bitmap
      * @param altEnabled TRUE if ALT is enabled
      * @param clutchValue Current value of the clutch axis
-     * @param POVtate State of the hat switch (POV or DPAD), this is, a button number 
+     * @param POVtate State of the hat switch (POV or DPAD), this is, a button number
      *                in the range 0 (no input) to 8 (up-left)
      */
     void reportInput(
-        inputBitmap_t globalState, 
-        bool altEnabled, 
-        clutchValue_t clutchValue, 
-        uint8_t POVstate=0);
+        inputBitmap_t globalState,
+        bool altEnabled,
+        clutchValue_t clutchValue,
+        uint8_t POVstate = 0);
 
     /**
      * @brief Report all inputs as not active
-     * 
+     *
      */
     void reset();
 
     /**
      * @brief Send text through the UaS protocol
-     * 
+     *
      * @param text text to be sent
      * @return true if sucessfull
      * @return false on error
@@ -785,8 +840,8 @@ namespace uartServer
     void onReceive(char *text);
 
     // For read only
-    extern volatile char gear; 
-    extern volatile uint8_t rpmPercent; 
+    extern volatile char gear;
+    extern volatile uint8_t rpmPercent;
     extern volatile uint16_t speed;
     extern volatile uint8_t engineMap;
     extern volatile uint8_t absLevel;

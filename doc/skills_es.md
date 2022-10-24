@@ -5,7 +5,8 @@
 Indispensable:
 
 - [IDE de Arduino](https://www.arduino.cc/en/software). Elija una versión estable y siga las instrucciones.
-- [Bibliotecas para Arduino IDE](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries). Instale sus dependencias también.
+- [Paquete de soporte oficial para Arduino-ESP32](https://docs.espressif.com/projects/arduino-esp32/en/latest/getting_started.html). Siga [este enlace](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html) para instrucciones de instalación (en inglés).
+- [Bibliotecas Arduino](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries) indispensables para este proyecto. Instale sus dependencias también.
   - [NimBLE-Arduino](https://www.arduino.cc/reference/en/libraries/nimble-arduino/)
   - [ss_oled](https://www.arduino.cc/reference/en/libraries/ss_oled/)
 - [DIY layout creator](https://bancika.github.io/diy-layout-creator/). [Enlace alternativo](https://github.com/bancika/diy-layout-creator/releases).
@@ -15,6 +16,9 @@ Recomendado:
 
 - [Aplicación de prueba de joysticks de Planet Pointy](http://www.planetpointy.co.uk/joystick-test-application/) (para Windows)
 - "nRF Connect" de [Nordic semiconductors](https://www.nordicsemi.com/). Disponible para múltiples plataformas.
+- [Visual Studio Code](https://code.visualstudio.com/), como alternativa al IDE de Arduino. Requiere otras herramientas:
+  - [Arduino CLI](https://blog.arduino.cc/2020/03/13/arduino-cli-an-introduction/)
+  - [Extensión Arduino para VSCode](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.vscode-arduino). Se puede instalar desde el propio VSCode.
 
 ## Herramientas de ferretería
 
