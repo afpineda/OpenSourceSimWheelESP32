@@ -221,9 +221,9 @@ void hubLoop(void *unused)
 void inputs::start()
 {
   void *dummy;
-  if ((hubTask == nullptr) || (globalButtonCount == 0))
+  if (hubTask == nullptr) 
   {
-    log_e("inputs::start() called before inputs::begin() or inputs::add*()");
+    log_e("inputs::start() called before inputs::begin()");
     abort();
   }
   if (pollingTask == nullptr)
