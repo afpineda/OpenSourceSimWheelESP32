@@ -71,6 +71,8 @@ When using a GPIO as a digital input, just one switch can be accommodated in it.
 
 - **Multiplexed switches**. Those are digital circuits, so they are not prone to error. The number of switches this circuit can hold depends on which [multiplexer](https://en.wikipedia.org/wiki/Multiplexer) is chosen and how they are combined. For example, four multiplexers, three selectors each, can hold $4*2^{3}=32$ buttons with $4+3=7$ pins. This project does not support multiplexed switches right now.
 
+- **PISO shift registers**. _"PISO"_ means _"parallel input - serial output"_. Those are digital circuits, so they are not prone to error. There is almost *no limit* to the number of switches this circuit can hold and it takes just 3 pins. This project does not support shift registers right now. 
+
 ## Analog circuits
 
 In global terms, analog circuits may seem a good idea, but they **may fail** to identify the correct inputs due to:
@@ -188,14 +190,32 @@ Which can hold up to 24 push buttons. [Test this circuit at Falstad.com](https:/
 
 The number of required pins could be further reduced, in some cases, by placing another multiplexer for the input pins. 
 
+
+## Shift registers
+
+The idea behind shift registers is to capture the state of every button in parallel and send it through a single input pin, in sequence. This can be done because shift registers have memory. There are just 3 pins involved:
+- Load (LD): a pulse at this pin will capture the state of all buttons at the same time and store it into memory as individual bits.
+- Input: read the value of a single bit (this is, the state of a single button)
+- Clock (CLK): a pulse at this pin will move to the next bit, this is, the state of the next button.
+
+Tipicall shift registers stores 8 bits, but they may be chained together to achieve any number of bits. This is an electrical circuit for two shift registers, 4 bits each one:
+
+![PISO shift registers](./pictures/PISO.png)
+
+Note that pulldown resistors are needed for each button, which is unpractical. It will require extra space at the PCB, too.
+
+[Test this circuit at Falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKDD0JG207Ty8L8+IPGGIAWEJOzRsUNhxFVhzFCGGiJUrrPkB3LpEkpxVbr3zyATuHGTx-QpLAp+VMPBYBnW-f5i1Bmw1dxAAMwBDABsvOhYDMDspfySwDE5IePB07M40zgdrXOSQYjzXKGQ4b2LClBMQIJDKyJi4m2E6vH8K908DTqFLfKKTKkLg916qzJ9B9QROJsqqVtiasZLXfmXQtbiE4kDg9QbdrPrJZZRFxpPMgdvr7ruQrIDX0qX7lgBzECc4AqgLAhCo4JYACUvp9CrtKqYdHJwVBoAgWABZChg9SIsFCRHKNHvCz8PDKSwPJS49ycSb6Lg8GnqDBqelU0FcNAstnczIAGR5XLMTPZLWisSRDPJQs52AQbwM5iFmDZCoZcvVqq46oFQvlbNFuvA4QldClmQAHgD2CzHBgIK4IMZJABJAB2AAcAK4AFxY1rBdMg5BIZg82gaAFF3b6rBEACYRANcDBmBqUaSYSOSfkAe0TAB0vAxiwBjCJWX7J608fjy-gIbD1wjO3EgABydEtvuLpa8AGUAJa-b1DuixuL-TkqXiE+T-MpA-hL0EozL-bbL9QvNcrP7C7f0vcQgaIuqIkZU8RLwo3vI5DcUHIuRsvnEQ-4IVIVb-OD8LjqaivkB4AAdecInFu5wGAgLifH+nzXjKyxwccipSJBagOFQ5w+PeJSIfCED7DU4iAoUaFIeKbQsDYBGUS+0weNUBjkX4Uggo+dGcRxiEgX01T4Scd4ofcNHrPRIn1uqAkzFk4gnCMinYW4ClwCUpjuNx+EaXeWGVCRZo8VpJTHsxnhAA)
+
+
 ## Summary of input hardware
 
-| Circuitry       | Required pins                | Number of switches | Best suited for                           | Advantages                  | Disadvantages                    |
-|:---------------:|:----------------------------:|:------------------:|:-----------------------------------------:|:---------------------------:|:-------------------------------- |
-| None            | 1                            | 1                  | Rotary encoders                           | Easy and error-free         | Not enough pins for many buttons |
-| Button Matrix   | $N$                          | $(N/2)^{2}$        | Push buttons and DPADS                    | Many buttons and error-free | Complex wiring                   |
-| Multiplexers    | $S$ selectors and $I$ inputs | $2^{S}*I$          | Push buttons and DPADS                    | Many buttons and error-free | Extra cost and space at the PCB  |
-| Voltage ladder  | 1                            | enough             | DPADS, rotary switches and funky switches | Single pin for many inputs  | Requires calibration             |
-| Voltage divider | 1                            | 2                  | Push buttons                              | None                        | Prone to error                   |
+|      Circuitry       |        Required pins         | Number of switches |              Best suited for              |         Advantages          | Disadvantages                    |
+| :------------------: | :--------------------------: | :----------------: | :---------------------------------------: | :-------------------------: | :------------------------------- |
+|         None         |              1               |         1          |              Rotary encoders              |     Easy and error-free     | Not enough pins for many buttons |
+|    Button Matrix     |             $N$              |    $(N/2)^{2}$     |          Push buttons and DPADS           | Many buttons and error-free | Complex wiring                   |
+|     Multiplexers     | $S$ selectors and $I$ inputs |     $2^{S}*I$      |          Push buttons and DPADS           | Many buttons and error-free | Extra cost and space at the PCB  |
+|    Voltage ladder    |              1               |       enough       | DPADS, rotary switches and funky switches | Single pin for many inputs  | Requires calibration             |
+|   Voltage divider    |              1               |         2          |               Push buttons                |            None             | Prone to error                   |
+| PISO shift registers |              3               |     unlimited      |          Push buttons and DPADS           | Many buttons and error-free | Extra cost and space at the PCB  |
 
 Input circuitry takes some space inside the housing. Their physical layout must be carefully designed to fit into the steering wheel (or button box). 
