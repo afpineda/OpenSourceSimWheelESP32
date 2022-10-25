@@ -1,0 +1,58 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# visual studio code
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+src/UnitTests/InputHubTest/debugUtils.cpp
+src/UnitTests/InputHubTest/debugUtils.h
+src/UnitTests/InputHubTest/InputHub.cpp
+src/UnitTests/InputHubTest/Inputs.cpp
+src/UnitTests/InputHubTest/PolledInput.cpp
+src/UnitTests/InputHubTest/PolledInput.h
+src/UnitTests/InputHubTest/RotaryEncoderInput.cpp
+src/UnitTests/InputHubTest/RotaryEncoderInput.h
+src/UnitTests/InputHubTest/SimWheel.h
+src/UnitTests/InputHubTest/SimWheelTypes.h
