@@ -64,6 +64,28 @@ void IRAM_ATTR isrh(void *instance)
 }
 
 // ----------------------------------------------------------------------------
+// state = xyXY
+// where xy = previous input, XY = current input, x or X=CLK, y or Y=DT
+//
+// States and transitions (mermaid graph):
+// graph TD
+//  0011 --01--> 1101 --00--> 0100 --CCW--> 0000 
+//  0000 --10--> 0010 --11--> 1011 --CCW--> 0011
+//  0011 --10--> 1110 --00--> 1000 --CW--> 0000
+//  0000 --01--> 0001 --11--> 0111 --CW--> 0011
+//
+// trasition = aaaabbbb
+// where aaaa=previous state, bbbb=current state
+//
+// Valid transitions:
+// 00111101
+// 11010100 (CCW to 0000)
+// 00000010
+// 00101011 (CCW to 0011)
+// 00111110
+// 11101000 (CW to 0000)
+// 00000001
+// 00010111 (CW to 0011)
 
 void IRAM_ATTR isrhAlternateEncoding(void *instance)
 {
@@ -76,7 +98,6 @@ void IRAM_ATTR isrhAlternateEncoding(void *instance)
     // taskEXIT_CRITICAL_FROM_ISR(lock);
 
     uint8_t output = OUTPUT_NONE;
-//    uint8_t reading = ((!clk << 1) | !dt);
     uint8_t reading = ((clk << 1) | dt);
     uint8_t nextCode = ((rotary->code << 2) | reading) & 0b1111;
     uint8_t transition = (rotary->code << 4) | nextCode;
@@ -146,9 +167,11 @@ void rotaryDaemonLoop(void *instance)
                 // Counter-clockwise rotation
                 bitmap = BITMAP(rotary->ccwButtonNumber);
             }
-            else
+            else {
                 // Should not happen
+                log_e("unknown event at rotaryDaemonLoop()");
                 abort();
+            }
 
             // Send button push event
             inputs::notifyInputEvent(rotary->mask, bitmap);
