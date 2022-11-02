@@ -13,3 +13,7 @@ First release.
 ## 1.1.1
 
 - Fixed bug in `inputs::start()` that was casuing a wrong call to `abort()` in some circumstances.
+
+## 1.1.2
+
+- Fixed minor documentation errata.

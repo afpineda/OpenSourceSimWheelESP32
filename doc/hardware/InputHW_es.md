@@ -71,6 +71,8 @@ Cuando se usa un pin GPIO como entrada digital, solo se puede acomodar un interr
 
 - **Multiplexores**. Son circuitos digitales, por lo que no son propensos a errores. La cantidad de interruptores que puede contener este circuito depende de qué [multiplexor](https://es.wikipedia.org/wiki/Multiplexor) se elija y cómo se combinen. Por ejemplo, cuatro multiplexores, tres selectores cada uno, pueden contener $4*2^{3}=32$ botones con $4+3=7$ pines. Este proyecto no admite multiplexores en este momento.
 
+- **Registros de desplazamiento PISO**. _"PISO"_ significa _"parallel input - serial output"_. Son circuitos digitales, por lo que no son propensos a errores. Casi *no hay límite* en el número de interruptores que puede albergar y sólo necesita 3 pines. Este proyecto no admite registros de desplazamiento en este momento.
+ 
 ## Circuitos analógicos
 
 En términos globales, los circuitos analógicos pueden parecer una buena idea, pero **pueden fallar** al identificar las entradas correctas debido a:
@@ -189,14 +191,33 @@ Que puede albergar hasta 24 pulsadores. [Prueba de este circuito en Falstad.com]
 
 La cantidad de pines requeridos podría reducirse aún más, en algunos casos, colocando otro multiplexor para los pines de entrada.
 
+
+## Registros de desplazamiento
+
+La idea tras los registros de desplazamiento es capturar el estado de cada botón en paralelo y enviarlo a través de un único pin, en secuencia. Se puede hacer gracias a que los registros de desplazamiento tienen memoria. Solamente hay tres pines involucrados:
+- Load (LD): un pulso en este pin capturará el estado de todos los botones al mismo tiempo y lo almacenará en memoria como bits individuales.
+- Input: lee el valor de un único bit (es decir, el estado de un único botón).
+- Clock (CLK): un pulso en este pin transitará al siguiente bit, es decir, al estado del siguiente botón.
+
+Habitualmente los registros de desplazamiento almacenan 8 bits, pero se pueden encadenar juntos para alcanzar cualquier número de bits. Este es un circuito eléctrico para dos registros de desplazamiento con 4 bits cada uno:
+
+![registros de desplazamiento PISO](./pictures/PISO.png)
+
+Observe que son necesarias resistencias de pulldown para cada botón, lo que no es práctico. Además, necesitará espacio extra en la placa perforada.
+
+[Pruebe este circuito en Falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKDD0JG207Ty8L8+IPGGIAWEJOzRsUNhxFVhzFCGGiJUrrPkB3LpEkpxVbr3zyATuHGTx-QpLAp+VMPBYBnW-f5i1Bmw1dxAAMwBDABsvOhYDMDspfySwDE5IePB07M40zgdrXOSQYjzXKGQ4b2LClBMQIJDKyJi4m2E6vH8K908DTqFLfKKTKkLg916qzJ9B9QROJsqqVtiasZLXfmXQtbiE4kDg9QbdrPrJZZRFxpPMgdvr7ruQrIDX0qX7lgBzECc4AqgLAhCo4JYACUvp9CrtKqYdHJwVBoAgWABZChg9SIsFCRHKNHvCz8PDKSwPJS49ycSb6Lg8GnqDBqelU0FcNAstnczIAGR5XLMTPZLWisSRDPJQs52AQbwM5iFmDZCoZcvVqq46oFQvlbNFuvA4QldClmQAHgD2CzHBgIK4IMZJABJAB2AAcAK4AFxY1rBdMg5BIZg82gaAFF3b6rBEACYRANcDBmBqUaSYSOSfkAe0TAB0vAxiwBjCJWX7J608fjy-gIbD1wjO3EgABydEtvuLpa8AGUAJa-b1DuixuL-TkqXiE+T-MpA-hL0EozL-bbL9QvNcrP7C7f0vcQgaIuqIkZU8RLwo3vI5DcUHIuRsvnEQ-4IVIVb-OD8LjqaivkB4AAdecInFu5wGAgLifH+nzXjKyxwccipSJBagOFQ5w+PeJSIfCED7DU4iAoUaFIeKbQsDYBGUS+0weNUBjkX4Uggo+dGcRxiEgX01T4Scd4ofcNHrPRIn1uqAkzFk4gnCMinYW4ClwCUpjuNx+EaXeWGVCRZo8VpJTHsxnhAA)
+
+
+
 ## Resumen del hardware de entrada
 
-|     Circuitería     |       Pines requeridos        | Número de interruptores |                Más adecuado para                 |            Ventajas            | Desventajas                                  |
-| :-----------------: | :---------------------------: | :---------------------: | :----------------------------------------------: | :----------------------------: | :------------------------------------------- |
-|       Ninguna       |               1               |            1            |             Codificadores rotativos              |      Fácil y sin errores       | No hay suficientes pines para muchos botones |
-|  Matriz de botones  |              $N$              |       $(N/2)^{2}$       |                Pulsadores y DPADS                |  Muchos botones y sin errores  | Cableado complejo                            |
-|    Multiplexores    | $S$ selectores y $E$ entradas |        $2^{S}*E$        |                Pulsadores y DPADS                |  Muchos botones y sin errores  | Coste extra y espacio en la PCB              |
-| Escalera de voltaje |               1               |       suficientes       | DPADS, interruptores giratorios y funky switches | Pin único para muchas entradas | Requiere calibración                         |
-| Divisor de voltaje  |               1               |            2            |                    Pulsadores                    |            Ninguno             | Propenso a error                             |
+|         Circuitería         |       Pines requeridos        | Número de interruptores |                Más adecuado para                 |            Ventajas            | Desventajas                                  |
+| :-------------------------: | :---------------------------: | :---------------------: | :----------------------------------------------: | :----------------------------: | :------------------------------------------- |
+|           Ninguna           |               1               |            1            |             Codificadores rotativos              |      Fácil y sin errores       | No hay suficientes pines para muchos botones |
+|      Matriz de botones      |              $N$              |       $(N/2)^{2}$       |                Pulsadores y DPADS                |  Muchos botones y sin errores  | Cableado complejo                            |
+|        Multiplexores        | $S$ selectores y $E$ entradas |        $2^{S}*E$        |                Pulsadores y DPADS                |  Muchos botones y sin errores  | Coste extra y espacio en la PCB              |
+|     Escalera de voltaje     |               1               |       suficientes       | DPADS, interruptores giratorios y funky switches | Pin único para muchas entradas | Requiere calibración                         |
+|     Divisor de voltaje      |               1               |            2            |                    Pulsadores                    |            Ninguno             | Propenso a error                             |
+| Registros de desplazamiento |               3               |        ilimitado        |                Pulsadores y DPADS                |  Muchos botones y sin errores  | Coste extra y espacio en la PCB              |
 
 El circuito de entrada ocupa algo de espacio dentro de la carcasa. Su disposición física debe estar cuidadosamente diseñada para encajar en el volante (o botonera).

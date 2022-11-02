@@ -9,11 +9,15 @@ Indispensable:
 - [Bibliotecas Arduino](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries) indispensables para este proyecto. Instale sus dependencias también.
   - [NimBLE-Arduino](https://www.arduino.cc/reference/en/libraries/nimble-arduino/)
   - [ss_oled](https://www.arduino.cc/reference/en/libraries/ss_oled/)
-- [DIY layout creator](https://bancika.github.io/diy-layout-creator/). [Enlace alternativo](https://github.com/bancika/diy-layout-creator/releases).
 - [Powershell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.2). Ya instalado en Windows.
+
+Puede ser necesario:
+
+- [Controladores de ESP32](http://esp32.net/usb-uart/) para Windows. Tutorial (en inglés): [Installing drivers for the ESP32](https://www.bromleysat.com/installing-drivers-for-the-esp32/). 
 
 Recomendado:
 
+- [DIY layout creator](https://bancika.github.io/diy-layout-creator/). [Enlace alternativo](https://github.com/bancika/diy-layout-creator/releases).
 - [Aplicación de prueba de joysticks de Planet Pointy](http://www.planetpointy.co.uk/joystick-test-application/) (para Windows)
 - "nRF Connect" de [Nordic semiconductors](https://www.nordicsemi.com/). Disponible para múltiples plataformas.
 - [Visual Studio Code](https://code.visualstudio.com/), como alternativa al IDE de Arduino. Requiere otras herramientas:
