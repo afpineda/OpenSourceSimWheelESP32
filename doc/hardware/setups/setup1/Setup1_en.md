@@ -60,7 +60,7 @@ Read this document from start to end before building anything. Ensure you unders
 |                    Push button                     |                      1                      | For power on. Not required if there is no external power latch circuit      |
 |                    Push button                     |                      1                      | For RESET. Optional.                                                        |
 |                Pin header (female)                 |                     35                      | For a DevKit board with male pins already soldered                          |
-|       Pin header (male or female up to you)        |                     84                      | For external wiring                                                         |
+|       Pin header (male or female up to you)        |                     63                      | For external wiring                                                         |
 |                  Schottky diodes                   |                     27                      | 1N4148 recommended                                                          |
 |                  NPN transistors                   |                      1                      | BC637 recommended                                                           |
 |                  PNP transistors                   |                      2                      | BC640 recommended                                                           |
