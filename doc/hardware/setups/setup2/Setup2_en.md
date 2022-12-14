@@ -8,7 +8,7 @@ Read this document from start to end before building anything. Ensure you unders
 
 - Bluetooth Low Energy
 
-- Powered through USB
+- Powered through USB (or, optionally, external power source)
 
 - Button box (64 inputs):
   - Up to 52 general porpouse push buttons
@@ -21,7 +21,7 @@ Read this document from start to end before building anything. Ensure you unders
 |              Barebone Rotary encoder               |   up to 4    |                                                               |
 |        Standard perfboard sized 24x18 holes        |      1       |                                                               |
 |                    Push buttons                    |   up to 52   | General porpouse (up to you)                                  |
-|       Pin header (male or female up to you)        |     133      | For external wiring                                           |
+|       Pin header (male or female up to you)        |     136      | For external wiring                                           |
 |                  Schottky diodes                   |      56      | 1N4148 recommended                                            |
 |      Resistor (any impedance 4K to 100K-ohms)      |      4       |                                                               |
 |           ESP32-WROOM-32UE/E (DevKit-C)            |      1       | Male pins already soldered. Choose built-in/external antenna. |
@@ -87,6 +87,7 @@ Notes and build tips:
 
 - Some components may look very small, not matching their actual size. This is not a mistake. They must be placed in vertical position, so they lie in a minimal surface of the perfboard. All resistors and diodes should fit in 1x4 holes when they lay in horizontal position.
 - There is a lot of wiring, which is prone to human error. Check wiring and traces twice before soldering.
+- Choose one and only one power source (USB, `EXTERNAL_5V0` or `EXTERNAL_3V3`). Your board could get damaged if using two power sources at the same time. `EXTERNAL_GND` must be used along with `EXTERNAL_5V0` or `EXTERNAL_3V3` (but not both).
 
 ### External wiring
 

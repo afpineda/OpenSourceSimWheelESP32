@@ -8,7 +8,7 @@ Lea este documento de principio a fin antes de construir cualquier cosa. Asegúr
 
 - Bluetooth de bajo consumo
 
-- Alimentado a través de USB
+- Alimentado a través de USB (opcionalmente, fuente de alimentación externa)
 
 - Botonera (64 entradas):
   - Hasta 52 pulsadores de uso general
@@ -21,7 +21,7 @@ Lea este documento de principio a fin antes de construir cualquier cosa. Asegúr
 |             Codificador rotatorio desnudo              |   hasta 4    |                                                            |
 |       Placa perforada estándar de 24x18 agujeros       |      1       |                                                            |
 |                       Pulsadores                       |   hasta 52   | De propósito general (a su elección)                       |
-|     Cabezal de pines (macho/hembra a su elección)      |     133      | Para cableado externo                                      |
+|     Cabezal de pines (macho/hembra a su elección)      |     136      | Para cableado externo                                      |
 |                    Diodos Schottky                     |      56      | 1N4148 recomendado                                         |
 | Resistencia (cualquier impedancia de 4K a 100K-ohmios) |      4       |                                                            |
 |             ESP32-WROOM-32UE/E (DevKit-C)              |      1       | Pines macho ya soldados. Elija antena incorporada/externa. |
@@ -88,6 +88,7 @@ Notas y consejos de construcción:
 
 - Algunos componentes pueden parecer muy pequeños y no coincidir con su tamaño real. Esto no es un error. Deben colocarse en posición vertical, de modo que queden en una superficie mínima de la placa perforada. Todas las resistencias y diodos deben caber en agujeros de 1x4 cuando estén en posición horizontal.
 - Hay mucho cableado, que es propenso a errores humanos. Verifique el cableado y las trazas dos veces antes de soldar.
+- Elija una y solamente una fuente de alimentación (USB, `EXTERNAL_5V0` or `EXTERNAL_3V3`). Su placa puede resultar dañada si se usan dos fuentes de alimentación al mismo tiempo. `EXTERNAL_GND` debe usarse junto a `EXTERNAL_5V0` o `EXTERNAL_3V3` (pero no ambos).
 
 ### Cableado externo
 

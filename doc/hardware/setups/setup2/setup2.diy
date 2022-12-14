@@ -2,8 +2,8 @@
 <project>
   <fileVersion>
     <major>4</major>
-    <minor>23</minor>
-    <build>0</build>
+    <minor>30</minor>
+    <build>1</build>
   </fileVersion>
   <title>Setup #1</title>
   <author>Ángel Fernández Pineda.Madrid.Spain.2022</author>
@@ -2748,9 +2748,9 @@
       <name>Trace75</name>
       <alpha>127</alpha>
       <points>
-        <point x="3.0" y="2.2"/>
+        <point x="3.0" y="1.9"/>
         <point x="3.0" y="2.6"/>
-        <point x="3.0" y="2.4"/>
+        <point x="3.0" y="2.25"/>
       </points>
       <bodyColor hex="ffffff"/>
       <borderColor hex="000000"/>
@@ -5008,9 +5008,9 @@
       <name>Trace199</name>
       <alpha>127</alpha>
       <points>
-        <point x="4.6" y="2.2"/>
+        <point x="4.6" y="1.9"/>
         <point x="4.6" y="2.6"/>
-        <point x="4.6" y="2.4"/>
+        <point x="4.6" y="2.25"/>
       </points>
       <bodyColor hex="ffffff"/>
       <borderColor hex="000000"/>
@@ -7872,6 +7872,78 @@
       <name>LN18</name>
       <alpha>127</alpha>
       <points>
+        <point x="5.2" y="5.0"/>
+        <point x="5.0" y="5.0"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN19</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="5.2" y="5.1"/>
+        <point x="5.0" y="5.1"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN20</name>
+      <alpha>127</alpha>
+      <points>
         <point x="5.2" y="5.2"/>
         <point x="5.0" y="5.2"/>
         <point x="0.0" y="0.0"/>
@@ -7905,7 +7977,7 @@
       <arrowEnd>false</arrowEnd>
     </diylc.connectivity.Line>
     <diylc.connectivity.Line>
-      <name>LN19</name>
+      <name>LN21</name>
       <alpha>127</alpha>
       <points>
         <point x="5.2" y="5.3"/>
@@ -7941,83 +8013,11 @@
       <arrowEnd>false</arrowEnd>
     </diylc.connectivity.Line>
     <diylc.connectivity.Line>
-      <name>LN20</name>
+      <name>LN23</name>
       <alpha>127</alpha>
       <points>
         <point x="5.2" y="5.4"/>
         <point x="5.0" y="5.4"/>
-        <point x="0.0" y="0.0"/>
-      </points>
-      <bodyColor hex="ffffff"/>
-      <borderColor hex="000000"/>
-      <labelColor hex="000000"/>
-      <leadColor hex="cccccc"/>
-      <display>NAME</display>
-      <flipStanding>false</flipStanding>
-      <labelOriantation>Directional</labelOriantation>
-      <moveLabel>false</moveLabel>
-      <hideShortLeads>false</hideShortLeads>
-      <color hex="000000"/>
-      <style>SOLID</style>
-      <thickness value="1.0" unit="px"/>
-      <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
-      <arrowStart>false</arrowStart>
-      <arrowEnd>false</arrowEnd>
-    </diylc.connectivity.Line>
-    <diylc.connectivity.Line>
-      <name>LN21</name>
-      <alpha>127</alpha>
-      <points>
-        <point x="5.2" y="5.5"/>
-        <point x="5.0" y="5.5"/>
-        <point x="0.0" y="0.0"/>
-      </points>
-      <bodyColor hex="ffffff"/>
-      <borderColor hex="000000"/>
-      <labelColor hex="000000"/>
-      <leadColor hex="cccccc"/>
-      <display>NAME</display>
-      <flipStanding>false</flipStanding>
-      <labelOriantation>Directional</labelOriantation>
-      <moveLabel>false</moveLabel>
-      <hideShortLeads>false</hideShortLeads>
-      <color hex="000000"/>
-      <style>SOLID</style>
-      <thickness value="1.0" unit="px"/>
-      <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
-      <arrowStart>false</arrowStart>
-      <arrowEnd>false</arrowEnd>
-    </diylc.connectivity.Line>
-    <diylc.connectivity.Line>
-      <name>LN23</name>
-      <alpha>127</alpha>
-      <points>
-        <point x="5.2" y="5.6"/>
-        <point x="5.0" y="5.6"/>
         <point x="0.0" y="0.0"/>
       </points>
       <bodyColor hex="ffffff"/>
@@ -8283,9 +8283,9 @@
       <value></value>
       <controlPoints>
         <point x="4.2" y="7.5"/>
-        <point x="4.3" y="7.4"/>
+        <point x="4.3" y="7.3"/>
       </controlPoints>
-      <firstPoint x="4.2" y="7.4"/>
+      <firstPoint x="4.2" y="7.3"/>
       <secondPoint x="4.3" y="7.5"/>
       <color hex="ff0033"/>
       <borderColor hex="ff0000"/>
@@ -8745,42 +8745,6 @@
       <points>
         <point x="4.5" y="8.8"/>
         <point x="4.3" y="8.8"/>
-        <point x="0.0" y="0.0"/>
-      </points>
-      <bodyColor hex="ffffff"/>
-      <borderColor hex="000000"/>
-      <labelColor hex="000000"/>
-      <leadColor hex="cccccc"/>
-      <display>NAME</display>
-      <flipStanding>false</flipStanding>
-      <labelOriantation>Directional</labelOriantation>
-      <moveLabel>false</moveLabel>
-      <hideShortLeads>false</hideShortLeads>
-      <color hex="000000"/>
-      <style>SOLID</style>
-      <thickness value="1.0" unit="px"/>
-      <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
-      <arrowStart>false</arrowStart>
-      <arrowEnd>false</arrowEnd>
-    </diylc.connectivity.Line>
-    <diylc.connectivity.Line>
-      <name>LN39</name>
-      <alpha>127</alpha>
-      <points>
-        <point x="4.5" y="7.3"/>
-        <point x="4.3" y="7.3"/>
         <point x="0.0" y="0.0"/>
       </points>
       <bodyColor hex="ffffff"/>
@@ -9626,6 +9590,9 @@
       <alpha>63</alpha>
       <orientation>DEFAULT</orientation>
       <controlPoints>
+        <point x="3.0" y="1.9"/>
+        <point x="3.0" y="2.0"/>
+        <point x="3.0" y="2.1"/>
         <point x="3.0" y="2.2"/>
         <point x="3.0" y="2.3"/>
         <point x="3.0" y="2.4"/>
@@ -9633,17 +9600,92 @@
         <point x="3.0" y="2.6"/>
       </controlPoints>
       <rowCount>1</rowCount>
-      <columnCount>5</columnCount>
+      <columnCount>8</columnCount>
       <spacing value="0.1" unit="in"/>
       <shrouded>false</shrouded>
       <bodyColor hex="000000"/>
       <shroudColor hex="595959"/>
     </diylc.electromechanical.PinHeader>
+    <diylc.connectivity.Line>
+      <name>LN8</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="5.2" y="5.5"/>
+        <point x="5.0" y="5.5"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN22</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="5.2" y="5.6"/>
+        <point x="5.0" y="5.6"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
     <diylc.electromechanical.PinHeader>
       <name>PH20</name>
       <alpha>63</alpha>
       <orientation>DEFAULT</orientation>
       <controlPoints>
+        <point x="5.0" y="4.9"/>
+        <point x="5.0" y="5.0"/>
+        <point x="5.0" y="5.1"/>
         <point x="5.0" y="5.2"/>
         <point x="5.0" y="5.3"/>
         <point x="5.0" y="5.4"/>
@@ -9651,12 +9693,156 @@
         <point x="5.0" y="5.6"/>
       </controlPoints>
       <rowCount>1</rowCount>
-      <columnCount>5</columnCount>
+      <columnCount>8</columnCount>
       <spacing value="0.1" unit="in"/>
       <shrouded>false</shrouded>
       <bodyColor hex="000000"/>
       <shroudColor hex="595959"/>
     </diylc.electromechanical.PinHeader>
+    <diylc.connectivity.Line>
+      <name>LN51</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="5.2" y="4.9"/>
+        <point x="5.0" y="4.9"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN39</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="3.3" y="8.4"/>
+        <point x="3.1" y="8.4"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN52</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="3.3" y="9.0"/>
+        <point x="3.1" y="9.0"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN53</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="4.5" y="9.0"/>
+        <point x="4.3" y="9.0"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
     <diylc.misc.Label>
       <name>L3</name>
       <point x="1.8" y="0.4"/>
@@ -9945,8 +10131,8 @@
     </diylc.misc.Label>
     <diylc.misc.Label>
       <name>L84</name>
-      <point x="5.2" y="5.6"/>
-      <text>GND (DevKit)</text>
+      <point x="5.2" y="5.4"/>
+      <text>GND1</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
       <center>false</center>
@@ -9956,7 +10142,7 @@
     </diylc.misc.Label>
     <diylc.misc.Label>
       <name>L85</name>
-      <point x="5.2" y="5.2"/>
+      <point x="5.2" y="5.0"/>
       <text>Rotary #1 GND</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
@@ -9967,7 +10153,7 @@
     </diylc.misc.Label>
     <diylc.misc.Label>
       <name>L86</name>
-      <point x="5.2" y="5.3"/>
+      <point x="5.2" y="5.1"/>
       <text>Rotary #2 GND</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
@@ -9978,7 +10164,7 @@
     </diylc.misc.Label>
     <diylc.misc.Label>
       <name>L87</name>
-      <point x="5.2" y="5.4"/>
+      <point x="5.2" y="5.2"/>
       <text>Rotary #3 GND</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
@@ -9989,7 +10175,7 @@
     </diylc.misc.Label>
     <diylc.misc.Label>
       <name>L88</name>
-      <point x="5.2" y="5.5"/>
+      <point x="5.2" y="5.3"/>
       <text>Rotary #4 GND</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
@@ -10373,39 +10559,6 @@
       <orientation>_180</orientation>
     </diylc.misc.Label>
     <diylc.misc.Label>
-      <name>L127</name>
-      <point x="4.2" y="7.3"/>
-      <text>GND</text>
-      <font name="Dialog.plain" size="10" style="0"/>
-      <color hex="3300cc"/>
-      <center>false</center>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>L128</name>
-      <point x="4.5" y="7.7"/>
-      <text>GND (DevKit)</text>
-      <font name="Dialog.plain" size="12" style="0"/>
-      <color hex="000000"/>
-      <center>false</center>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>L129</name>
-      <point x="4.5" y="7.3"/>
-      <text>EXTERNAL_GND (optional - opcional)</text>
-      <font name="Dialog.plain" size="12" style="0"/>
-      <color hex="000000"/>
-      <center>false</center>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
       <name>L130</name>
       <point x="4.5" y="7.2"/>
       <text>EXTERNAL_5V0 (optional - opcional)</text>
@@ -10713,72 +10866,176 @@
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
     </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>L9</name>
+      <point x="5.2" y="5.5"/>
+      <text>GND2</text>
+      <font name="Dialog.plain" size="12" style="0"/>
+      <color hex="000000"/>
+      <center>false</center>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>L18</name>
+      <point x="5.2" y="5.6"/>
+      <text>GND3</text>
+      <font name="Dialog.plain" size="12" style="0"/>
+      <color hex="000000"/>
+      <center>false</center>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>L129</name>
+      <point x="5.2" y="4.9"/>
+      <text>EXTERNAL_GND (optional - opcional)</text>
+      <font name="Dialog.plain" size="12" style="0"/>
+      <color hex="000000"/>
+      <center>false</center>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>L20</name>
+      <point x="4.5" y="7.7"/>
+      <text>GND1</text>
+      <font name="Dialog.plain" size="12" style="0"/>
+      <color hex="000000"/>
+      <center>false</center>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>L19</name>
+      <point x="3.1" y="8.4"/>
+      <text>GND2</text>
+      <font name="Dialog.plain" size="12" style="0"/>
+      <color hex="000000"/>
+      <center>false</center>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>L21</name>
+      <point x="3.1" y="9.0"/>
+      <text>GND3</text>
+      <font name="Dialog.plain" size="12" style="0"/>
+      <color hex="000000"/>
+      <center>false</center>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>L22</name>
+      <point x="4.5" y="9.0"/>
+      <text>EXTERNAL_3V3 (optional - opcional)</text>
+      <font name="Dialog.plain" size="12" style="0"/>
+      <color hex="000000"/>
+      <center>false</center>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
   </components>
   <groups>
     <set>
       <null/>
     </set>
+    <set/>
     <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[58]"/>
-      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[3]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[63]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[47]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[33]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[56]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[66]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[50]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[61]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[51]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[35]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[55]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[40]"/>
-      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[62]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[38]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[42]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[39]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[52]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[53]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[48]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[36]"/>
-      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[4]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[65]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[37]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[41]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[60]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[32]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[64]"/>
-      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[49]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[45]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[54]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[59]"/>
-      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[2]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[57]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[43]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[46]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[44]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[34]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[7]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[7]"/>
     </set>
     <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[59]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[23]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[55]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[19]"/>
     </set>
     <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[18]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[54]"/>
-    </set>
-    <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[29]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[81]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[25]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[77]"/>
     </set>
     <set>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[57]"/>
       <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[21]"/>
     </set>
     <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[2]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[30]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[14]"/>
+    </set>
+    <set>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[25]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[9]"/>
+    </set>
+    <set>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[29]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[13]"/>
+    </set>
+    <set>
       <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[2]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[2]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[6]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[6]"/>
+    </set>
+    <set>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[4]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[4]"/>
+    </set>
+    <set>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[80]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[28]"/>
+    </set>
+    <set>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[59]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[23]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[24]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[76]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[12]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[28]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[29]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[81]"/>
+    </set>
+    <set>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[58]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[22]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[18]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[54]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[17]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[53]"/>
+    </set>
+    <set>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[56]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[20]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[26]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[78]"/>
+    </set>
+    <set>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[5]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[5]"/>
+    </set>
+    <set>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[3]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[3]"/>
     </set>
     <set>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[48]"/>
@@ -10789,93 +11046,63 @@
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[26]"/>
     </set>
     <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[5]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[5]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[8]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[24]"/>
     </set>
     <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[14]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[30]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[77]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[25]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[25]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[9]"/>
-    </set>
-    <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[26]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[78]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[80]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[28]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[6]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[6]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[27]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[11]"/>
     </set>
     <set>
       <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[30]"/>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[82]"/>
     </set>
     <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[28]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[12]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[47]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[56]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[38]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[35]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[60]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[39]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[57]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[41]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[53]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[61]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[59]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[63]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[36]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[65]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[52]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[40]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[50]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[62]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[49]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[33]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[64]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[34]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[48]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[58]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[37]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[46]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[54]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[55]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[51]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[42]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[32]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[45]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[44]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[43]"/>
     </set>
     <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[3]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[3]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad"/>
     </set>
     <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[4]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[4]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[56]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[20]"/>
-    </set>
-    <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[22]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[58]"/>
-    </set>
-    <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[11]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[27]"/>
-    </set>
-    <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[8]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[24]"/>
-    </set>
-    <set/>
-    <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[19]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[55]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[29]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[13]"/>
-    </set>
-    <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[17]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[53]"/>
-    </set>
-    <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[27]"/>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[79]"/>
-    </set>
-    <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[24]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[76]"/>
-    </set>
-    <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[7]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[7]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[27]"/>
     </set>
   </groups>
   <lockedLayers/>
