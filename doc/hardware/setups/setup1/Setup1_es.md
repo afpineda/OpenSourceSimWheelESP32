@@ -61,7 +61,7 @@ Lea este documento de principio a fin antes de construir cualquier cosa. Asegúr
 |                     Pulsador                     |                     1                     | Para encendido. No se requiere si no hay un circuito de "power latch" externo                     |
 |                     Pulsador                     |                     1                     | Para REINICIAR. Opcional.                                                                         |
 |            Cabezal de pines (hembra)             |                    35                     | Para una placa DevKit con pines macho ya soldados                                                 |
-|  Cabezal de pines (macho/hembra a su elección)   |                    84                     | Para cableado externo                                                                             |
+|  Cabezal de pines (macho/hembra a su elección)   |                    63                     | Para cableado externo                                                                             |
 |                 Diodos Schottky                  |                    27                     | 1N4148 recomendado                                                                                |
 |                 Transistores NPN                 |                     1                     | BC637 recomendado                                                                                 |
 |                 Transistores PNP                 |                     2                     | BC640 recomendado                                                                                 |
