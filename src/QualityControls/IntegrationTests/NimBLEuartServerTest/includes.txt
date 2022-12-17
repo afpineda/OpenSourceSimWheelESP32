@@ -1,5 +1,6 @@
 SimWheelTypes.h
 SimWheel.h
+HID_definitions.h
 hidImplementation_NimBLE.cpp
 power_mock.cpp
 uartServer.cpp

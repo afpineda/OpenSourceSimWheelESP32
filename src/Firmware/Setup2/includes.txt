@@ -3,6 +3,7 @@ SimWheel.h
 ButtonMatrixInput.h
 RotaryEncoderInput.h
 PolledInput.h
+HID_definitions.h
 ButtonMatrixInput.cpp
 RotaryEncoderInput.cpp
 PolledInput.cpp

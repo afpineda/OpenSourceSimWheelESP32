@@ -21,3 +21,6 @@ First release.
 ## 1.1.3
 
 - Issue #1: fixed boot up problem with external power sources and a misleading tag in all hardware designs.
+
+# 1.2.0
+

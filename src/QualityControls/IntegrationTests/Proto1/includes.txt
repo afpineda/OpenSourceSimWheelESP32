@@ -6,6 +6,7 @@ ButtonMatrixInput.h
 debugUtils.h
 Inputs.cpp
 strings.h
+HID_definitions.h
 PolledInput.cpp
 RotaryEncoderInput.cpp
 ButtonMatrixInput.cpp

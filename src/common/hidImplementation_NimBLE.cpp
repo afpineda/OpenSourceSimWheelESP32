@@ -25,6 +25,7 @@
 #include "NimBLECharacteristic.h"
 
 #include "SimWheel.h"
+#include "HID_definitions.h"
 //#include <Arduino.h>
 
 // ----------------------------------------------------------------------------
@@ -42,99 +43,12 @@ static esp_timer_handle_t autoPowerOffTimer = nullptr;
 NimBLEService *uartService = nullptr;
 NimBLECharacteristic *uartTXCharacteristic = nullptr;
 
-// Related to HID profile
-//
-#define HID_REPORT_ID 3
-#define CONTROLLER_TYPE_GAMEPAD 0x05
-#define CONTROLLER_TYPE_JOYSTICK 0x04
-#define BUTTON_COUNT 128
-//#define CUSTOM_REPORT_SIZE 17 // For old descriptor
-#define CUSTOM_REPORT_SIZE 18
-
+// Related to HID device
 static NimBLEHIDDevice *hid = nullptr;
 static NimBLECharacteristic *inputGamepad = nullptr;
+static NimBLECharacteristic *configReport = nullptr;
+static NimBLECharacteristic *capabilitiesReport = nullptr;
 static NimBLEServer *pServer = nullptr;
-
-// HID DESCRIPTOR
-/* first working descriptor
-static const uint8_t hid_descriptor[] = {
-    0x05, 0x01, // USAGE_PAGE (Generic Desktop)
-    0x15, 0x00, // LOGICAL_MINIMUM (0)
-    0x09, CONTROLLER_TYPE_GAMEPAD,
-    //    0x09, CONTROLLER_TYPE_JOYSTICK, // USAGE (Joystick)
-    0xa1, 0x01,          // COLLECTION (Application)
-    0x85, HID_REPORT_ID, // REPORT ID
-    0x05, 0x09,          //   USAGE_PAGE (Button)
-    0x19, 0x01,          //   USAGE_MINIMUM (Button 1)
-    0x29, BUTTON_COUNT,  //   USAGE_MAXIMUM
-    0x15, 0x00,          //   LOGICAL_MINIMUM (0)
-    0x25, 0x01,          //   LOGICAL_MAXIMUM (1)
-    0x75, 0x01,          //   REPORT_SIZE (1)
-    0x95, BUTTON_COUNT,  //   REPORT_COUNT
-    0x55, 0x00,          //   UNIT_EXPONENT (0)
-    0x65, 0x00,          //   UNIT (None)
-    0x81, 0x02,          //   INPUT (Data,Var,Abs)
-    0x05, 0x02,          //   USAGE_PAGE (Simulation Controls)
-    0x15, 0x81,          // LOGICAL_MINIMUM (-127)
-    0x25, 0x7F,          // LOGICAL MAXIMUM (127)
-    0x75, 0x08,          // REPORT_SIZE (8)
-    0x95, 0x01,          // REPORT_COUNT (simulationCount) = 1
-    0xA1, 0x00,          // COLLECTION (Physical)
-    0x09, 0xBB,          // USAGE (Throttle)
-    0x81, 0x02,          // INPUT (Data,Var,Abs)
-    0xc0,                // END_COLLECTION (Physical)
-    0xc0                 // END_COLLECTION (Application)
-};
-*/
-
-static const uint8_t hid_descriptor[] = {
-    0x05, 0x01, // USAGE_PAGE (Generic Desktop)
-    0x15, 0x00, // LOGICAL_MINIMUM (0)
-    0x09, CONTROLLER_TYPE_GAMEPAD,
-    //    0x09, CONTROLLER_TYPE_JOYSTICK, // USAGE (Joystick)
-    0xa1, 0x01,          // COLLECTION (Application)
-    0x85, HID_REPORT_ID, // REPORT ID
-
-    // __ Buttons __ (16 bytes=128 bits)
-    0x05, 0x09,         //   USAGE_PAGE (Button)
-    0x19, 0x01,         //   USAGE_MINIMUM (Button 1)
-    0x29, BUTTON_COUNT, //   USAGE_MAXIMUM
-    0x15, 0x00,         //   LOGICAL_MINIMUM (0)
-    0x25, 0x01,         //   LOGICAL_MAXIMUM (1)
-    0x75, 0x01,         //   REPORT_SIZE (1)
-    0x95, BUTTON_COUNT, //   REPORT_COUNT
-    0x55, 0x00,         //   UNIT_EXPONENT (0)
-    0x65, 0x00,         //   UNIT (None)
-    0x81, 0x02,         //   INPUT (Data,Var,Abs)
-
-    // __ Clutch __ (1 byte)
-    0x05, 0x02, //   USAGE_PAGE (Simulation Controls)
-    0x15, 0x81, // LOGICAL_MINIMUM (-127)
-    0x25, 0x7F, // LOGICAL MAXIMUM (127)
-    0x75, 0x08, // REPORT_SIZE (8)
-    0x95, 0x01, // REPORT_COUNT (1)
-    0xA1, 0x00, // COLLECTION (Physical)
-    // 0x02, 0xC6, // USAGE (Clutch)
-    0x09, 0xBB, // USAGE (Throttle)
-    0x81, 0x02, // INPUT (Data,Var,Abs)
-    0xc0,       // END_COLLECTION (Physical)
-
-    // __ Hat swith (DPAD) __ (1 byte)
-    0xA1, 0x00,       // COLLECTION (Physical)
-    0x05, 0x01,       // USAGE_PAGE (Generic Desktop)
-    0x09, 0x39,       // USAGE (Hat Switch)
-    0x15, 0x01,       // Logical Min (1)
-    0x25, 0x08,       // Logical Max (8)
-    0x35, 0x00,       // Physical Min (0)
-    0x46, 0x3B, 0x01, // Physical Max (315)
-    0x65, 0x12,       // Unit (SI Rot : Ang Pos)
-    0x75, 0x08,       // Report Size (8)
-    0x95, 0x01,       // Report count (1)
-    0x81, 0x42,       // Input (Data, Variable, Absolute)
-    0xc0,             // END_COLLECTION (Physical)
-
-    0xc0 // END_COLLECTION (Application)
-};
 
 // ----------------------------------------------------------------------------
 // BLE Server callbacks and advertising
@@ -194,6 +108,66 @@ class UARTCallbacks : public NimBLECharacteristicCallbacks
 } uartHandler;
 
 // ----------------------------------------------------------------------------
+// HID FEATURE REQUEST callbacks
+// ----------------------------------------------------------------------------
+
+class ConfigFRCallbacks : public NimBLECharacteristicCallbacks
+{
+    // RECEIVE DATA
+    void onWrite(NimBLECharacteristic *pCharacteristic)
+    {
+        int size = pCharacteristic->getValue().length();
+        const uint8_t *data = pCharacteristic->getValue().data();
+        if ((size>0) && (data[0]>=CF_CLUTCH) && (data[0]<=CF_BUTTON)) { 
+            // clutch function
+            inputHub::setClutchFunction((clutchFunction_t)data[0],true);
+        }
+        if ((size>1) && (data[1]!=0x80)  {
+            // ALT Buttons mode
+            inputHub::setALTFunction((bool)data[1],true);
+        }
+        if ((size>2) && ((clutchValue_t)data[2]>=CLUTCH_NONE_VALUE) && ((clutchValue_t)data[2]<=CLUTCH_FULL_VALUE)) {
+            // Bite point
+            inputHub::setClutchBitePoint((clutchValue_t)data[2],true);
+        }
+    };
+
+    // SEND REQUESTED DATA
+    void onRead(NimBLECharacteristic *pCharacteristic)
+    {
+        uint8_t data[3];
+        data[0] = (uint8_t)inputHub::getClutchFunction();
+        data[1] = (uint8_t)inputHub::getALTFunction();
+        data[2] = (uint8_t)inputHub::getClutchBitePoint();
+        pCharacteristic->setValue(data, sizeof(data));
+    }
+} configFRCallbacks;
+
+class CapabilitiesFRCallbacks : public NimBLECharacteristicCallbacks
+{
+    // RECEIVE DATA
+    void onWrite(NimBLECharacteristic *pCharacteristic)
+    {
+        // IGNORED: Data is read-only
+    };
+
+    // SEND REQUESTED DATA
+    void onRead(NimBLECharacteristic *pCharacteristic)
+    {
+        uint8_t data[4];
+        data[0] = 0;
+        data[1] = 0;
+        data[2] = 0;
+        data[3] = 0;
+        if (inputHub::hasClutchPaddles())
+            data[0] = data[0] | 0x01;
+        if (inputHub::hasALTButtons())
+            data[0] = data[0] | 0x02;
+        pCharacteristic->setValue(data, sizeof(data));
+    }
+} capabilitiesFRCallbacks;
+
+// ----------------------------------------------------------------------------
 // Auto power-off
 // ----------------------------------------------------------------------------
 
@@ -232,14 +206,23 @@ void hidImplementation::begin(
 
         // HID initialization
         hid = new NimBLEHIDDevice(pServer);
-        inputGamepad = hid->inputReport(HID_REPORT_ID);
         hid->manufacturer()->setValue(deviceManufacturer);
-        hid->pnp(0x01, 0x02e5, 0xabbb, 0x0110);
+        hid->pnp(0x00, OPEN_SOURCE_VENDOR_ID, PROJECT_PRODUCT_ID, PRODUCT_REVISION);
         hid->hidInfo(0x00, 0x01);
         NimBLESecurity *pSecurity = new NimBLESecurity();
         pSecurity->setAuthenticationMode(ESP_LE_AUTH_BOND);
         hid->reportMap((uint8_t *)hid_descriptor, sizeof(hid_descriptor));
         hid->setBatteryLevel(100);
+
+        inputGamepad = hid->inputReport(RID_INPUT_GAMEPAD);
+        configReport = hid->featureReport(RID_FEATURE_CONFIG);
+        capabilitiesReport = hid->featureReport(RID_FEATURE_CAPABILITIES);
+        if (!inputGamepad || !configReport || !capabilitiesReport) {
+            log_e("Unable to create HID report characteristics");
+            abort();
+        }
+        configReport->setCallbacks(&configFRCallbacks);
+        capabilitiesReport->setCallbacks(&capabilitiesFRCallbacks);
 
         if (enableUART)
         {
@@ -275,7 +258,7 @@ void hidImplementation::reset()
 {
     if (connectionStatus.connected)
     {
-        uint8_t report[CUSTOM_REPORT_SIZE];
+        uint8_t report[GAMEPAD_REPORT_SIZE];
         report[0] = 0;
         report[1] = 0;
         report[2] = 0;
@@ -294,7 +277,7 @@ void hidImplementation::reset()
         report[15] = 0;
         report[16] = CLUTCH_NONE_VALUE;
         report[17] = 0;
-        inputGamepad->setValue((const uint8_t *)report, CUSTOM_REPORT_SIZE);
+        inputGamepad->setValue((const uint8_t *)report, GAMEPAD_REPORT_SIZE);
         inputGamepad->notify();
     }
 }
@@ -307,7 +290,7 @@ void hidImplementation::reportInput(
 {
     if (connectionStatus.connected)
     {
-        uint8_t report[CUSTOM_REPORT_SIZE];
+        uint8_t report[GAMEPAD_REPORT_SIZE];
         if (altEnabled)
         {
             report[0] = 0;
@@ -348,7 +331,7 @@ void hidImplementation::reportInput(
         }
         report[16] = (uint8_t)clutchValue;
         report[17] = POVstate;
-        inputGamepad->setValue((const uint8_t *)report, CUSTOM_REPORT_SIZE);
+        inputGamepad->setValue((const uint8_t *)report, GAMEPAD_REPORT_SIZE);
         inputGamepad->notify();
     }
 }

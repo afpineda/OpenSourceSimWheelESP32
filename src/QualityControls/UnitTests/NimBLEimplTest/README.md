@@ -14,8 +14,9 @@ Output through USB serial port at 115200 bauds.
 Computer:
 
 - Windows 10 or later
-- Bluetooth 4.0 or later
+- Bluetooth 4.2 or later
 - Joystick testing software from Planet's Pointy ( [http://www.planetpointy.co.uk/joystick-test-application/](http://www.planetpointy.co.uk/joystick-test-application/) ) or any other able to display 128 buttons. Note that Window's device property page is not suitable for this.
+- SimpleHIDWrite.exe: available at [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm). There is a modern clone at [https://github.com/Robmaister/SimplerHidWrite](https://github.com/Robmaister/SimplerHidWrite).
 
 Mobile device:
 
@@ -25,24 +26,25 @@ Mobile device:
 
 ## Procedure and expected output
 
-_Note_: Ignore this output message while running this test: `(Waiting for connection)` 
+_Note_: Ignore this output message while running this test: `(Waiting for connection)`
 
 ### Part 1: auto power off
 
-If the device is paired because of a previous test, unpair it first (delete from the bluetooth control panel). 
+If the device is paired because of a previous test, unpair it first (delete from the bluetooth control panel). Will show as "SimWheelTest".
 
 1. Reset
 2. Output must match:
-   
-   ```
+
+   ```text
    --START--
    *** DISCOVERING ***
    --GO--
    ```
+
 3. Wait for a minute or so.
 4. Output must match:
-   
-   ```
+
+   ```text
    *** POWER OFF ***
    (Reset required)
    ```
@@ -52,18 +54,20 @@ If the device is paired because of a previous test, unpair it first (delete from
 1. Open the joystick test application and keep it visible.
 2. Reset.
 3. Output must match:
-   
-   ```
+
+   ```text
    --START--
    *** DISCOVERING ***
    --GO--
    ```
-4. Before a minute elapses, pair and connect with the device using the bluetooth controls in your computer. 
+
+4. Before a minute elapses, pair and connect with the device using the bluetooth controls in your computer.
 5. Output must match:
-   
-   ```
+
+   ```text
    *** CONNECTED ***
    ```
+
 6. Throttle bar should increase each second. At max value, should return to zero.
 
 ### Part 3: buttons
@@ -71,22 +75,24 @@ If the device is paired because of a previous test, unpair it first (delete from
 1. Open the joystick test application and keep it visible.
 2. Reset.
 3. Output must match:
-   
-   ```
+
+   ```text
    --START--
    *** DISCOVERING ***
    --GO--
    ```
-4. Before a minute elapses, pair and connect with the device using the bluetooth controls in your computer. 
+
+4. Before a minute elapses, pair and connect with the device using the bluetooth controls in your computer.
 5. Output must match:
-   
-   ```
+
+   ```text
    *** CONNECTED ***
    ```
+
 6. Buttons should be pressed and released every second. Pressed buttons must follow this timed pattern:
    - First, buttons in the range 1-64
    - Then, buttons in the range 65-128
-   - Back to first 
+   - Back to first
 7. Pressed buttons also follows a binary pattern starting from 0. So check this sequence at the very connection time (pressed button numbers):
    - None
    - 64
@@ -117,18 +123,20 @@ If the device is paired because of a previous test, unpair it first (delete from
 
 1. Reset.
 2. Output must match:
-   
-   ```
+
+   ```text
    --START--
    *** DISCOVERING ***
    --GO--
    ```
-3. Before a minute elapses, pair and connect with the device using the bluetooth controls in your computer. 
+
+3. Before a minute elapses, pair and connect with the device using the bluetooth controls in your computer.
 4. Output must match:
-   
-   ```
+
+   ```text
    *** CONNECTED ***
    ```
+
 5. Battery level must match 100%.
 6. Battery level should decrease 1% every second. At 50%, will reset to 100% and continue decreasing.
    Note: Battery level may not update at the computer side.
@@ -148,7 +156,39 @@ If the device is paired because of a previous test, unpair it first (delete from
 14. Locate the "RX Characteristic" and click on the arrow icon.
 15. Type the following text and send: `testing`.
 16. The following line must appear at the serial monitor:
-    
-    ```
+
+    ```text
     COMMAND: testing
     ```
+
+# Part 6: HID feature request
+
+17. Reset.
+18. Output must match:
+
+   ```text
+   --START--
+   *** DISCOVERING ***
+   --GO--
+   ```
+
+19. Before a minute elapses, pair and connect with the device using the bluetooth controls in your computer.
+20. Output must match:
+
+   ```text
+   *** CONNECTED ***
+   ```
+
+21. Open "SimpleHidWriter.exe". Locate `Device VID=501D` in the top area, and click on it.
+22. You should see continuous report lines starting with `RD 01`. Ignore them. Click on `Clear` from time to time.
+23. Enter `02` at field `ReportID`.
+26. Enter `FF FF 01 FF` at fields below `ReportID`.
+27. Click on `Set Feature` , then on `Get Feature`.
+28. Must show the following line: `RD 02  00 01 01 00`.
+29. Enter `01 00 80 FF` at fields below `ReportID`.
+30. Click on `Set Feature` , then on `Get Feature`.
+31. Must show the following line: `RD 02  01 00 01 00`.
+32. Enter `03` at field `ReportID`.
+29. Enter `00 00 00 00` at fields below `ReportID`.
+33. Click on `Set Feature` , then on `Get Feature`.
+34. Must show the following line: `RD 03 03 00 00 00`.

@@ -48,4 +48,5 @@
 - [Glossary of terms and definitions](./firmware/glossary_en.md)
 - [Firmware architecture](./firmware/FirmwareArchitecture_en.md)
 - [Overview of Quality Controls](./firmware/FirmwareTesting_en.md)
+- [Notes on HID device implementation](./firmware/HID_notes.md)
 - [Change log](./changelog.md)
