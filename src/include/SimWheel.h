@@ -20,6 +20,26 @@
 #include <string>
 
 /**
+ * @brief Device capabilities
+ * 
+ */
+namespace capabilities
+{
+    // For read only
+    extern volatile uint32_t flags;
+
+    /**
+     * @brief Set a device capability. Should be called before `hidImplementation::begin()`.
+     *        All capabilities are static and should not change once set.
+     * 
+     * @param newFlag A device capability.
+     * @param setOrClear When true, the flag is set. Otherwise, the flag is cleared. 
+     *                   Should not be called more than once for each flag.
+     */
+    void setFlag(deviceCapability_t newFlag, bool setOrClear=true);
+}
+
+/**
  * @brief Language for the user interface
  *
  */

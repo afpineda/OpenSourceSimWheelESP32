@@ -53,6 +53,11 @@ void batteryCalibration::begin()
 {
 }
 
+void capabilities::setFlag(deviceCapability_t a, bool b)
+{
+    
+}
+
 //-------------------------------------------------------
 // Auxiliary
 //-------------------------------------------------------

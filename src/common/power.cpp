@@ -336,6 +336,8 @@ void configureBatteryMonitor(
   // Store parameters
   batteryENPin = enableBatteryReadPin;
   batteryREADPin = batteryLevelPin;
+
+  capabilities::setFlag(deviceCapability_t::CAP_BATTERY);
 }
 
 void power::startBatteryMonitor(

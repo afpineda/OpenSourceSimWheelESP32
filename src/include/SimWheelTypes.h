@@ -29,7 +29,7 @@ typedef uint64_t inputBitmap_t;
 typedef uint8_t inputNumber_t;
 
 #define UNSPECIFIED_INPUT_NUMBER 0xFF /// Input number is not required or is implicit or is unknown
-#define MAX_INPUT_NUMBER 63 /// Maximun allowed input number, including itself
+#define MAX_INPUT_NUMBER 63           /// Maximun allowed input number, including itself
 
 // Well-known input numbers for PC game controllers
 #define JOY_A 0
@@ -45,7 +45,6 @@ typedef uint8_t inputNumber_t;
 #define JOY_LTHUMBSTICK_CLICK 8
 #define JOY_RTHUMBSTICK_CLICK 9
 
-
 /**
  * @brief The value of a joystick's axis
  *
@@ -56,7 +55,7 @@ typedef int8_t clutchValue_t;
 #define CLUTCH_FULL_VALUE 127
 #define CLUTCH_DEFAULT_VALUE 0
 
-//#define clutchValuePercent(value) ((uint8_t)(value))/255
+// #define clutchValuePercent(value) ((uint8_t)(value))/255
 
 /**
  * @brief Value read from an ADC pin
@@ -86,7 +85,7 @@ typedef uint16_t analogReading_t;
  *
  */
 #define NBITMASK(count, first) (((1ULL << static_cast<inputBitmap_t>(count)) - 1ULL) << static_cast<inputBitmap_t>(first))
-//#define NBITMASK(count, first) (((1 << count) - 1) << first)
+// #define NBITMASK(count, first) (((1 << count) - 1) << first)
 
 /**
  * @brief Debounce time for buttons, in system ticks
@@ -95,7 +94,7 @@ typedef uint16_t analogReading_t;
 #define DEBOUNCE_TICKS 30 / portTICK_RATE_MS
 
 /**
- * @brief Priority of background tasks 
+ * @brief Priority of background tasks
  *
  */
 #define INPUT_TASK_PRIORITY (tskIDLE_PRIORITY + 2)
@@ -116,17 +115,18 @@ typedef enum
 
 /**
  * @brief Default delay (in microseconds) before clearing the OLED display after a screen shows up
- * 
+ *
  */
-#define DEFAULT_UI_TIME_us 4*1000*1000
+#define DEFAULT_UI_TIME_us 4 * 1000 * 1000
 
 /**
  * @brief Default autosave delay (in microseconds)
- * 
+ *
  */
-#define DEFAULT_AUTOSAVE_us 20*1000*1000
+#define DEFAULT_AUTOSAVE_us 20 * 1000 * 1000
 
-typedef enum {
+typedef enum
+{
     SCR_INFO_PRIORITY = 0, /// highest priority
     SCR_MENU_PRIORITY = 1,
     SCR_COMM_PRIORITY = 2,
@@ -138,14 +138,15 @@ typedef enum {
  * @brief Display types supported by the ss_oled library
  *        Must match `iType` parameter for the `oledInit` function.
  */
-typedef enum {
-  SSOLED_128x128 = 1,
-  SSOLED_128x32,
-  SSOLED_128x64,
-  SSOLED_132x64,
-  SSOLED_64x32,
-  SSOLED_96x16,
-  SSOLED_72x40
+typedef enum
+{
+    SSOLED_128x128 = 1,
+    SSOLED_128x32,
+    SSOLED_128x64,
+    SSOLED_132x64,
+    SSOLED_64x32,
+    SSOLED_96x16,
+    SSOLED_72x40
 } displayType_t;
 
 // OLED SETUP
@@ -155,30 +156,44 @@ typedef enum {
 
 /**
  * @brief Supported UI languages
- * 
+ *
  */
-typedef enum {
+typedef enum
+{
     LANG_EN = 0, /// English
-    LANG_ES /// Spanish
+    LANG_ES      /// Spanish
 } language_t;
 
 // Time to wait for connection before power off (in seconds)
-#define AUTO_POWER_OFF_DELAY_SECS 60 
+#define AUTO_POWER_OFF_DELAY_SECS 60
 
 /**
  * @brief Supported power latch modes
- * 
+ *
  */
-typedef enum {
+typedef enum
+{
     POWER_OPEN_DRAIN, /// Power on when open drain, power off when low voltage
-    POWER_OFF_HIGH, /// Power on when low voltage, power off when high voltage
-    POWER_OFF_LOW, /// Power on when high voltage, power off when low voltage 
+    POWER_OFF_HIGH,   /// Power on when low voltage, power off when high voltage
+    POWER_OFF_LOW,    /// Power on when high voltage, power off when low voltage
 } powerLatchMode_t;
 
 /**
  * @brief Battery level to report when unknown (percentage)
- * 
+ *
  */
 #define UNKNOWN_BATTERY_LEVEL 66
+
+/**
+ * @brief Enumeration of device capabilities
+ *
+ */
+typedef enum
+{
+    CAP_CLUTCH = 0, /// has clutch paddles
+    CAP_ALT = 1,    /// has "ALT" buttons
+    CAP_DPAD = 2,   /// has a directional pad
+    CAP_BATTERY = 8 /// battery-operated
+} deviceCapability_t;
 
 #endif

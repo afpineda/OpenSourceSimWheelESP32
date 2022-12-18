@@ -4,6 +4,7 @@
 
 The _system_ have been broken into several _modules_ that have been implemented as C++ namespaces. All of them are defined at _SimWheel.h_:
 
+- **capabilities**: Everything realated to the capabilities of the hardware and firmware.
 - **language**: Everything related to the language of the user interface.
 - **inputs**: Everything related to hardware inputs and their events.
 - **inputHub**: Everything related to the combined state of all inputs and their treatment. Translates input events into HID messages. Implements the behavior of clutch paddles, bite point calibration and "ALT" buttons.
@@ -26,10 +27,10 @@ All modules can be found at the `/common` folder.
 
 Some namespaces are implemented with auxiliary modules which are not exposed at _SimWheel.h_, one _cpp_ file for each:
 
-- *RotaryEncoderInput.cpp*: Everything related to rotary encoders
-- *ButtonMatrixInput.cpp*: Everything related to button/switch matrices
-- *debugUtils.cpp*: Minor utilities for debugging and testing
-- *PolledInput*: Everything related to inputs that must be read in a polling (or sampling) loop, except for button matrices.
+- _RotaryEncoderInput.cpp_: Everything related to rotary encoders
+- _ButtonMatrixInput.cpp_: Everything related to button/switch matrices
+- _debugUtils.cpp_: Minor utilities for debugging and testing
+- _PolledInput_: Related to inputs that must be read in a polling (or sampling) loop.
 
 ### Module dependencies
 
@@ -127,11 +128,16 @@ This is the place where inputs are set up and a number assigned to them. Use the
 
 All the logic behind the behavior of the sim wheel is implemented at this module. Wheel's functions are mapped to input numbers here, using the `set*()` methods.
 
+### Capabilities
+
+This module holds static data about device capabilities. For example, it tells if the device has clutch paddles or not.
+Such data is set from other modules at startup. This module is trivial, so it is not shown in the previous diagram. It may be called from any other module.
+
 ### BatteryCalibration
 
 #### Accurate algorithm
 
-Battery calibration is required for accurate battery levels. Calibration goes from full charge to battery depletion, taking a sample of battery voltage every minute. All possible voltages are divided into 32 evenly distributed ranges, called _quantums_. Calibration data is just a set of counters of voltage samples for each quantum. The sum of all counters is equivalent to 100% battery charge. Calibration data is stored in flash memory. 
+Battery calibration is required for accurate battery levels. Calibration goes from full charge to battery depletion, taking a sample of battery voltage every minute. All possible voltages are divided into 32 evenly distributed ranges, called _quantums_. Calibration data is just a set of counters of voltage samples for each quantum. The sum of all counters is equivalent to 100% battery charge. Calibration data is stored in flash memory.
 
 Let's be $V_{min}(i)$ the minimum voltage that falls into quantum $i$ (a natural number), $a < b \iff V_{min}(a)<V_{min}(b)$. Let's be $QSIZE = V_{min}(i+1)-V_{min}(i)+1$ (the same for all quantums). Let's be $S(i)$ the count of samples for quantum number $i$. Let's say we have a battery voltage $V_n$ that falls into the quantum number $n$ (0-index).
 
@@ -154,7 +160,7 @@ An input can also be identified by a bitmap. For example, the button number 3 ca
 
 ### Input masks
 
-A mask is a 64-bits word where each bit represent a button number (the same as input bitmaps), but a bit set to 1 means that an input is not set and *must be ignored* in the corresponding bitmap. Input masks are used in combination with bitmaps to build a combined state. For example:
+A mask is a 64-bits word where each bit represent a button number (the same as input bitmaps), but a bit set to 1 means that an input is not set and _must be ignored_ in the corresponding bitmap. Input masks are used in combination with bitmaps to build a combined state. For example:
 
 | State              | Bitmap   | Bitmask  |
 | ------------------ | -------- | -------- |

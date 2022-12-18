@@ -38,6 +38,14 @@
 // Hardware revision
 #define PRODUCT_REVISION 0x01
 
+// Data specification version
+#define DATA_MAJOR_VERSION 1
+#define DATA_MINOR_VERSION 0
+
+// Magic number, do not change
+#define MAGIC_NUMBER_LOW 0x51
+#define MAGIC_NUMBER_HIGH 0xBF
+
 // HID report descriptor
 static const uint8_t hid_descriptor[] = {
     0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
@@ -89,8 +97,8 @@ static const uint8_t hid_descriptor[] = {
     // __ Feature: Wheel capabilities (read only) __ (4 byte)
     0x09, 0x00,                           // USAGE (undefined)
     0x85, RID_FEATURE_CAPABILITIES, // REPORT ID
-    0x75, 0x20,                           // Report Size (32)
-    0x95, 0x01,                           // Report count (1)
+    0x75, 0x08,                           // Report Size (8)
+    0x95, 0x08,                           // Report count (8)
     0xb1, 0x23,                           // FEATURE (Cnst,var,abs,Nprf)
 
     0xc0 // END_COLLECTION (Application)

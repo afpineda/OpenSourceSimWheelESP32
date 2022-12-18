@@ -122,7 +122,7 @@ class ConfigFRCallbacks : public NimBLECharacteristicCallbacks
             // clutch function
             inputHub::setClutchFunction((clutchFunction_t)data[0],true);
         }
-        if ((size>1) && (data[1]!=0x80)  {
+        if ((size>1) && (data[1]!=0x80))  {
             // ALT Buttons mode
             inputHub::setALTFunction((bool)data[1],true);
         }
@@ -130,7 +130,7 @@ class ConfigFRCallbacks : public NimBLECharacteristicCallbacks
             // Bite point
             inputHub::setClutchBitePoint((clutchValue_t)data[2],true);
         }
-    };
+    }
 
     // SEND REQUESTED DATA
     void onRead(NimBLECharacteristic *pCharacteristic)
@@ -141,28 +141,22 @@ class ConfigFRCallbacks : public NimBLECharacteristicCallbacks
         data[2] = (uint8_t)inputHub::getClutchBitePoint();
         pCharacteristic->setValue(data, sizeof(data));
     }
+
 } configFRCallbacks;
 
 class CapabilitiesFRCallbacks : public NimBLECharacteristicCallbacks
 {
-    // RECEIVE DATA
-    void onWrite(NimBLECharacteristic *pCharacteristic)
-    {
-        // IGNORED: Data is read-only
-    };
+    // RECEIVED DATA is ignored (read-only)
 
     // SEND REQUESTED DATA
     void onRead(NimBLECharacteristic *pCharacteristic)
     {
-        uint8_t data[4];
-        data[0] = 0;
-        data[1] = 0;
-        data[2] = 0;
-        data[3] = 0;
-        if (inputHub::hasClutchPaddles())
-            data[0] = data[0] | 0x01;
-        if (inputHub::hasALTButtons())
-            data[0] = data[0] | 0x02;
+        uint8_t data[8];
+        data[0] = MAGIC_NUMBER_LOW;
+        data[1] = MAGIC_NUMBER_HIGH;
+        *(uint16_t *)(data+2) = DATA_MAJOR_VERSION;
+        *(uint16_t *)(data+4) = DATA_MINOR_VERSION;
+        *(uint16_t *)(data+6) = capabilities::flags;
         pCharacteristic->setValue(data, sizeof(data));
     }
 } capabilitiesFRCallbacks;

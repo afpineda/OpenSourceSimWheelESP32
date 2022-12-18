@@ -23,6 +23,8 @@ bool powerSim = true;
 // mocks
 //------------------------------------------------------------------
 
+volatile uint32_t capabilities::flags = 0x07;
+
 void ui::showConnectedNotice()
 {
     Serial.println("*** CONNECTED ***");

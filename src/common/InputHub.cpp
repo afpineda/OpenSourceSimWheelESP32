@@ -238,11 +238,13 @@ void inputHub::setClutchPaddles(
     {
         leftClutchBitmap = BITMAP(leftClutchNumber);
         rightClutchBitmap = BITMAP(rightClutchNumber);
+        capabilities::setFlag(deviceCapability_t::CAP_CLUTCH);
     }
     else
     {
         leftClutchBitmap = 0;
         rightClutchBitmap = 0;
+        capabilities::setFlag(deviceCapability_t::CAP_CLUTCH,false);
     }
 }
 
@@ -277,6 +279,7 @@ void inputHub::setMenuBitmap(const inputBitmap_t menuButtonsBitmap)
 void inputHub::setALTBitmap(const inputBitmap_t altBmp)
 {
     altBitmap = altBmp;
+    capabilities::setFlag(deviceCapability_t::CAP_ALT,(altBitmap!=0);
 }
 
 void inputHub::setALTButton(const inputNumber_t altNumber)
@@ -285,6 +288,7 @@ void inputHub::setALTButton(const inputNumber_t altNumber)
         altBitmap = 0;
     else
         altBitmap = BITMAP(altNumber);
+    capabilities::setFlag(deviceCapability_t::CAP_ALT,(altBitmap!=0);
 }
 
 void inputHub::setDPADControls(
@@ -343,6 +347,7 @@ void inputHub::setDPADControls(
         dpadNegMask |= dpadBitmap[n];
     }
     dpadMask = ~dpadNegMask;
+    capabilities::setFlag(deviceCapability_t::CAP_DPAD,(dpadNegMask!=0);
 }
 
 // ----------------------------------------------------------------------------
