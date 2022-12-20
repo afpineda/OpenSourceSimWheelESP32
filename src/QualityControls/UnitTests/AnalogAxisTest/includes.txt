@@ -2,9 +2,7 @@ SimWheelTypes.h
 SimWheel.h
 debugUtils.h
 PolledInput.h
-ButtonMatrixInput.h
 adctools.h
 PolledInput.cpp
 adcTools.cpp
-ButtonMatrixInput.cpp
 debugUtils.cpp

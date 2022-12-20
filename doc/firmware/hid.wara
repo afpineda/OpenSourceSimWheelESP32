@@ -1,0 +1,39 @@
+# https://github.com/microsoft/hidtools/releases
+
+[[applicationCollection]]
+usage = ['Generic Desktop', 'Gamepad']
+
+    [[applicationCollection.inputReport]]
+	id = 1
+
+        # 128 buttons
+        [[applicationCollection.inputReport.variableItem]]
+        usageRange = ['Button', 'Button 1', 'Button 128']
+        logicalValueRange = [0, 1]
+		
+		# syncronized clutch axis
+		[[applicationCollection.inputReport.variableItem]]
+		usage = ['Generic Desktop', 'Rz']
+		logicalValueRange = [-127, 127]
+
+		# left clutch axis
+		[[applicationCollection.inputReport.variableItem]]
+		usage = ['Generic Desktop', 'Rx']
+		logicalValueRange = [-127, 127]
+		
+		# right clutch axis
+		[[applicationCollection.inputReport.variableItem]]
+		usage = ['Generic Desktop', 'Ry']
+		logicalValueRange = [-127, 127]
+		
+		# POV 
+		[[applicationCollection.inputReport.variableItem]]
+        usage = ['Generic Desktop', 'Hat Switch']
+		logicalValueRange = [0,8]
+        physicalValueRange = [0, 315]
+        unit = 'degrees'
+		
+		# Feature notification
+		[[applicationCollection.inputReport.variableItem]]
+		usage = ['Generic Desktop', 'Feature notification']
+		logicalValueRange = [0,8]

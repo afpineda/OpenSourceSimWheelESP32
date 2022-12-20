@@ -7,9 +7,11 @@
  *
  */
 
-#include <Arduino.h>
 #include "PolledInput.h"
-//#include <FreeRTOS.h>
+#include "adcTools.h"
+#include <climits>
+//#include <limits.h>
+
 
 // ============================================================================
 // Implementation of class: PolledInput
@@ -22,9 +24,7 @@
 PolledInput::PolledInput(
     PolledInput *nextInChain)
 {
-    // Initialization
     this->nextInChain = nextInChain;
-    this->mask = ~(0ULL);
 }
 
 // ----------------------------------------------------------------------------
@@ -37,10 +37,41 @@ PolledInput *PolledInput::getNextInChain()
 }
 
 // ----------------------------------------------------------------------------
+// Class methods
+// ----------------------------------------------------------------------------
+
+bool PolledInput::contains(
+    PolledInput *instance,
+    PolledInput *firstInChain)
+{
+    bool found = false;
+    while (!found && (firstInChain != nullptr))
+    {
+        found = (firstInChain == instance);
+        firstInChain = firstInChain->nextInChain;
+    }
+    return found;
+}
+
+// ============================================================================
+// Implementation of class: DigitalPolledInput
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Constructor
+// ----------------------------------------------------------------------------
+
+DigitalPolledInput::DigitalPolledInput(
+    DigitalPolledInput *nextInChain): PolledInput(nextInChain)
+{
+    this->mask = ~(0ULL);
+}
+
+// ----------------------------------------------------------------------------
 // Setters
 // ----------------------------------------------------------------------------
 
-void PolledInput::updateMask(uint8_t inputsCount, inputNumber_t firstInputNumber)
+void DigitalPolledInput::updateMask(uint8_t inputsCount, inputNumber_t firstInputNumber)
 {
     if (inputsCount > (64 - firstInputNumber))
     {
@@ -50,7 +81,7 @@ void PolledInput::updateMask(uint8_t inputsCount, inputNumber_t firstInputNumber
     mask = BITMASK(inputsCount, firstInputNumber);
 }
 
-void PolledInput::updateMask(inputNumber_t *inputNumbersArray, uint8_t inputsCount)
+void DigitalPolledInput::updateMask(inputNumber_t *inputNumbersArray, uint8_t inputsCount)
 {
     if (inputNumbersArray == nullptr)
     {
@@ -76,40 +107,27 @@ void PolledInput::updateMask(inputNumber_t *inputNumbersArray, uint8_t inputsCou
 // Class methods
 // ----------------------------------------------------------------------------
 
-bool PolledInput::contains(
-    PolledInput *instance,
-    PolledInput *firstInChain)
-{
-    bool found = false;
-    while (!found && (firstInChain != nullptr))
-    {
-        found = (firstInChain == instance);
-        firstInChain = firstInChain->nextInChain;
-    }
-    return found;
-}
-
-inputBitmap_t PolledInput::readInChain(
+inputBitmap_t DigitalPolledInput::readInChain(
     inputBitmap_t lastState,
-    PolledInput *firstInChain)
+    DigitalPolledInput *firstInChain)
 {
     inputBitmap_t newState = 0ULL;
     while (firstInChain != nullptr)
     {
         inputBitmap_t itemState = firstInChain->read(lastState);
         newState = (newState & firstInChain->mask) | itemState;
-        firstInChain = firstInChain->nextInChain;
+        firstInChain = (DigitalPolledInput *)(firstInChain->nextInChain);
     }
     return newState;
 }
 
-inputBitmap_t PolledInput::getChainMask(PolledInput *firstInChain)
+inputBitmap_t DigitalPolledInput::getChainMask(DigitalPolledInput *firstInChain)
 {
     inputBitmap_t mask = ~(0ULL);
     while (firstInChain != nullptr)
     {
-        mask &= firstInChain->mask;
-        firstInChain = firstInChain->nextInChain;
+        mask &= ((DigitalPolledInput *)firstInChain)->mask;
+        firstInChain = (DigitalPolledInput *)(firstInChain->nextInChain);
     }
     return mask;
 }
@@ -127,10 +145,10 @@ DigitalButton::DigitalButton(
     inputNumber_t buttonNumber,
     bool pullupOrPulldown,
     bool enableInternalPull,
-    PolledInput *nextInChain) : PolledInput(nextInChain)
+    DigitalPolledInput *nextInChain) : DigitalPolledInput(nextInChain)
 {
     // initalize
-    updateMask(1,buttonNumber);
+    updateMask(1, buttonNumber);
     this->pinNumber = pinNumber;
     this->pullupOrPulldown = pullupOrPulldown;
     bitmap = BITMAP(buttonNumber);
@@ -178,60 +196,53 @@ inputBitmap_t DigitalButton::read(inputBitmap_t lastState)
 }
 
 // ============================================================================
-// Implementation of class: AnalogInput
+// Implementation of class: AnalogAxisInput
 // ============================================================================
 
 // ----------------------------------------------------------------------------
 // Constructor
 // ----------------------------------------------------------------------------
 
-AnalogInput::AnalogInput(
-    gpio_num_t pinNumber,
-    inputNumber_t firstInputNumber,
-    analogReading_t *minReading,
-    analogReading_t *maxReading,
-    uint8_t arrayLength,
-    PolledInput *nextInChain) : PolledInput(nextInChain)
+AnalogAxisInput::AnalogAxisInput(
+        gpio_num_t pinNumber,
+        uint8_t axisIndex,
+        AnalogAxisInput *nextInChain): PolledInput(nextInChain)
 {
-    // Pin setup
-    ESP_ERROR_CHECK(gpio_set_direction(pinNumber, GPIO_MODE_INPUT));
-    ESP_ERROR_CHECK(gpio_set_pull_mode(pinNumber, GPIO_FLOATING));
-
-    // Initialization
-    this->firstInputNumber = firstInputNumber;
+    if (!GPIO_IS_VALID_GPIO(pinNumber) ||
+        (digitalPinToAnalogChannel(pinNumber) < 0))
+    {
+        log_e("AnalogAxisInput::AnalogAxisInput: given pins are not usable");
+        abort();
+    }
     this->pinNumber = pinNumber;
-    this->arrayLength = arrayLength;
-    this->minReading = minReading;
-    this->maxReading = maxReading;
+    this->axisIndex = axisIndex;
+    minADCReading = INT_MAX;
+    maxADCReading = INT_MIN;
+    lastADCReading = 0;
 }
 
 // ----------------------------------------------------------------------------
-// Read
+// virtual methods
 // ----------------------------------------------------------------------------
 
-int AnalogInput::filteredAnalogRead()
+void AnalogAxisInput::read(uint8_t *axisIndex, clutchValue_t *value)
 {
-    analogRead(pinNumber); // discard first reading
-    int filterOutput = 0;
-    for (int i = 0; i < 4; i++)
+    *axisIndex = this->axisIndex;
+    // read ADC and remove 4 bits of noise
+    int currentReading = getADCreading(pinNumber,ADC_ATTEN_DB_11) << 4;
+    // filter
+    currentReading = (currentReading + lastADCReading) << 2;
+
+    // Autocalibrate
+    if (currentReading < minADCReading)
     {
-        int reading = analogRead(pinNumber);
-        // filterOutput = ((reading - filterOutput) / 4) + filterOutput;
-        filterOutput = ((reading - filterOutput) >> 2) + filterOutput;
+        minADCReading = currentReading;
     }
-    return filterOutput;
-}
-
-int AnalogInput::getReadingIndex()
-{
-    analogReading_t reading = filteredAnalogRead();
-
-    for (inputNumber_t i = 0; i < arrayLength; i++)
+    if (currentReading > maxADCReading)
     {
-        if ((minReading[i] <= reading) && (reading <= maxReading[i]))
-            return i;
+        maxADCReading = currentReading;
     }
 
-    // unknown
-    return -1;
+    // map ADC reading to axis value
+    *value = map(currentReading, minADCReading, maxADCReading, CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
 }

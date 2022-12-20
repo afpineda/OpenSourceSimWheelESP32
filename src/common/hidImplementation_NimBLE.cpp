@@ -201,7 +201,7 @@ void hidImplementation::begin(
         // HID initialization
         hid = new NimBLEHIDDevice(pServer);
         hid->manufacturer()->setValue(deviceManufacturer);
-        hid->pnp(0x00, OPEN_SOURCE_VENDOR_ID, PROJECT_PRODUCT_ID, PRODUCT_REVISION);
+        hid->pnp(BLE_VENDOR_SOURCE, BLE_VENDOR_ID, BLE_PRODUCT_ID, PRODUCT_REVISION);
         hid->hidInfo(0x00, 0x01);
         NimBLESecurity *pSecurity = new NimBLESecurity();
         pSecurity->setAuthenticationMode(ESP_LE_AUTH_BOND);
@@ -271,6 +271,8 @@ void hidImplementation::reset()
         report[15] = 0;
         report[16] = CLUTCH_NONE_VALUE;
         report[17] = 0;
+        report[18] = 0;
+        report[19] = 0;
         inputGamepad->setValue((const uint8_t *)report, GAMEPAD_REPORT_SIZE);
         inputGamepad->notify();
     }
@@ -324,7 +326,9 @@ void hidImplementation::reportInput(
             report[15] = 0;
         }
         report[16] = (uint8_t)clutchValue;
-        report[17] = POVstate;
+        report[17] = CLUTCH_NONE_VALUE;
+        report[18] = CLUTCH_NONE_VALUE;
+        report[19] = POVstate;
         inputGamepad->setValue((const uint8_t *)report, GAMEPAD_REPORT_SIZE);
         inputGamepad->notify();
     }

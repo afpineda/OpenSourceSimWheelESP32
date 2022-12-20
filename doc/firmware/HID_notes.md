@@ -37,35 +37,31 @@ This project make use of a number of HID reports:
 | Report ID |  Type   | Purpose                           |
 | :-------: | :-----: | --------------------------------- |
 |     1     |  Input  | Buttons, clutch, POV and the like |
-|     2     | Feature | Wheel configuration               |
-|     3     | Feature | Wheel capabilities                |
+|     2     | Feature | Wheel capabilities                |
+|     3     | Feature | Wheel configuration               |
 
 Note that feature reports are both read and write.
 
 ## Data format of report ID 1
 
-- Button states: bytes indexed from 0 to 15. One bit per button (1=pressed, 0=non-pressed). The least significant bit is the first button.
-- Clutch: byte indexed 16. This is a signed byte in the range -127 to 127.
-- POV (D-PAD): byte indexed 17. Valid values are in the range 0-8.
+| Field                | Bits size | Byte index |
+| -------------------- | :-------: | :--------: |
+| Buttons state        |    128    |     0      |
+| Z axis               |     8     |     16     |
+| Y axis               |     8     |     17     |
+| X axis               |     8     |     18     |
+| POV (D-PAD)          |     4     |     19     |
+| Feature notification |     4     |     19     |
+
+- Buttons state: one bit per button (1=pressed, 0=non-pressed). The least significant bit is the first button.
+- Axes: a signed byte in the range -127 to 127.
+  - Z: F1-Style clutch (combined imput from left and right clutch paddles)
+  - Y: Left clutch paddle
+  - X: Right clutch paddle
+- POV (D-PAD): 4 least significant bits of byte index 19. Range: 0 to 8.
+- Feature notification: 4 most significant bits of byte index 19. Valid values: 0 (nothing to notify) or 2 (wheel configuration has changed).
 
 ## Data format of report ID 2
-
-While writing, any value outside of the valid range will be ignored, so they me be used to mask which fields to modify or not.
-
-| Byte index | Valid values | Purpose (field)            | Note                                                  |
-| :--------: | :----------: | -------------------------- | ----------------------------------------------------- |
-|     0      |  see below   | Function of clutch paddles |                                                       |
-|     1      |     any      | "ALT" buttons state        | non-zero means enabled, except for HEX 80 (see below) |
-|     2      | -127 to 127  | Current bite point         | signed byte                                           |
-
-_Other notes_:
-
-- Valid values for byte index 0 are enumerated in `clutchFunction_t` at file [SimWheelTypes.h](../../src/include/SimWheelTypes.h)
-- Any valid value written will be saved to flash memory after a 15 seconds delay.
-- When byte index 1 is set to 80 (hexadecimal) in a write operation, the field will be ignored.
-- The same goes for byte index 2, since 80 (hexadecimal) is -128 (signed decimal), outside of the valid range.
-
-## Data format of report ID 3
 
 Write attempts will be ignored, so this report is read only.
 
@@ -76,7 +72,7 @@ Write attempts will be ignored, so this report is read only.
 |     4      |      2       | Minor Version   | Version of this specification     |
 |     6      |      2       | Flags           | Device capabilities               |
 
-Report ID 1 is not affected by versioning.
+Report ID 1 (input) is not affected by versioning.
 
 ### Magic number
 
@@ -97,3 +93,20 @@ Host-side software should check for version compatibility. Some examples:
 ### Flags
 
 The "flags" field is a set of 1-bit flags. Flags are indexed starting from the least significant bit. Non indexed bits are reserved for future use. Current flags are enumerated in `deviceCapability_t` at file [SimWheelTypes.h](../../src/include/SimWheelTypes.h)
+
+## Data format of report ID 3
+
+While writing, any value outside of the valid range will be ignored, so they me be used to mask which fields to modify or not.
+
+| Byte index | Valid values | Purpose (field)            | Note                                                  |
+| :--------: | :----------: | -------------------------- | ----------------------------------------------------- |
+|     0      |  see below   | Function of clutch paddles |                                                       |
+|     1      |     any      | "ALT" buttons state        | non-zero means enabled, except for HEX 80 (see below) |
+|     2      | -127 to 127  | Current bite point         | signed byte                                           |
+
+_Other notes_:
+
+- Valid values for byte index 0 are enumerated in `clutchFunction_t` at file [SimWheelTypes.h](../../src/include/SimWheelTypes.h)
+- Any valid value written will be saved to flash memory after a 15 seconds delay.
+- When byte index 1 is set to 80 (hexadecimal) in a write operation, the field will be ignored.
+- The same goes for byte index 2, since 80 (hexadecimal) is -128 (signed decimal), outside of the valid range.

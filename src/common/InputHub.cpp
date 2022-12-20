@@ -8,7 +8,7 @@
  */
 
 #include "SimWheel.h"
-//#include <FreeRTOS.h>
+// #include <FreeRTOS.h>
 #include <Preferences.h>
 
 // ----------------------------------------------------------------------------
@@ -28,11 +28,13 @@ static inputBitmap_t rightClutchBitmap = 0;
 static inputBitmap_t calibrateUpBitmap = 0;
 static inputBitmap_t calibrateDownBitmap = 0;
 static clutchValue_t clutchBitePoint = CLUTCH_DEFAULT_VALUE;
+volatile clutchValue_t leftClutchValue = CLUTCH_NONE_VALUE;
+volatile clutchValue_t rightClutchValue = CLUTCH_NONE_VALUE;
 #define CALIBRATION_INCREMENT 3
 
 // Related to the menu button
 #define MENUBTN_PUSH_TICKS 2000 / portTICK_RATE_MS // Two seconds
-static inputBitmap_t menuBtnBitmap = 0;
+    static inputBitmap_t menuBtnBitmap = 0;
 static TickType_t menuBtnPushTick = 0;
 static bool menuRequestInProgress = false;
 static bool inConfigMenu = false;
@@ -123,7 +125,8 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
             hidImplementation::reset();
             inConfigMenu = configMenu::toggle();
             return;
-        } else if (globalState == 0)
+        }
+        else if (globalState == 0)
             menuRequestInProgress = false;
     }
     else
@@ -244,7 +247,7 @@ void inputHub::setClutchPaddles(
     {
         leftClutchBitmap = 0;
         rightClutchBitmap = 0;
-        capabilities::setFlag(deviceCapability_t::CAP_CLUTCH,false);
+        capabilities::setFlag(deviceCapability_t::CAP_CLUTCH, false);
     }
 }
 

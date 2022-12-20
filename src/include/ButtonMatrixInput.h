@@ -30,7 +30,7 @@
  * @brief Setup and read the state of a button matrix
  *
  */
-class ButtonMatrixInput : public PolledInput
+class ButtonMatrixInput : public DigitalPolledInput
 {
 private:
     uint8_t selectorPinCount, inputPinCount;
@@ -68,7 +68,7 @@ public:
         const uint8_t inputPinCount,
         inputNumber_t *buttonNumbersArray = nullptr,
         inputNumber_t alternateFirstInputNumber = UNSPECIFIED_INPUT_NUMBER,
-        PolledInput *nextInChain = nullptr);
+        DigitalPolledInput *nextInChain = nullptr);
 
     /**
      * @brief Read the current state of the matrix

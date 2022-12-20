@@ -190,10 +190,13 @@ typedef enum
  */
 typedef enum
 {
-    CAP_CLUTCH = 0, /// has clutch paddles
-    CAP_ALT = 1,    /// has "ALT" buttons
-    CAP_DPAD = 2,   /// has a directional pad
-    CAP_BATTERY = 8 /// battery-operated
+    CAP_CLUTCH_BUTTON = 0, /// has digital clutch paddles (switches)
+    CAP_CLUTCH_ANALOG, /// has analog clutch paddles (potentiometers)
+    CAP_ALT,    /// has "ALT" buttons
+    CAP_DPAD,   /// has a directional pad
+    CAP_BATTERY = 8, /// battery-operated
+    CAP_HAS_OLED = 12, /// has an OLED
+    CAP_HAS_REV_LIGHTS, /// has rev lights
 } deviceCapability_t;
 
 #endif

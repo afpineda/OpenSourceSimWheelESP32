@@ -401,7 +401,7 @@ namespace inputHub
     void begin();
 
     /**
-     * @brief Handle a change in the state of any input. The states of all inputs
+     * @brief Handle a change in the state of any switch input. The states of all inputs
      *        are combined into a single global state.
      *        Will be called from a single separate background thread.
      *
@@ -507,36 +507,6 @@ namespace inputHub
     void setClutchPaddles(
         const inputNumber_t leftClutchNumber,
         const inputNumber_t rightClutchNumber);
-
-    /**
-     * @brief Set a button number to invoke the configuration menu.
-     *        May be used instead of `setMenuBitmap()`.
-     *
-     * @note This button must be pressed for two seconds or more, and then released, for the menu to show up
-     *       No other button must be pressed at the same time.
-     *       If no long press is detected, it will be reported as a regular button.
-     *
-     * @param menuButtonNumber Button number assigned to the menu function
-     */
-    void setMenuButton(const inputNumber_t menuButtonNumber);
-
-    /**
-     * @brief Set a bitmap to invoke the configuration menu. All buttons
-     *        in the bitmap must be pressed at the same time, and no other button.
-     *        May be used instead of `setMenuButton()`.
-     *
-     * @note These buttons must be pressed for two seconds or more, and then released, for the menu to show up.
-     *       If no long press is detected, they will be reported as regular buttons.
-     *
-     * @param menuButtonsBitmap Bitmap of buttons assigned to the menu function
-     */
-    void setMenuBitmap(const inputBitmap_t menuButtonsBitmap);
-
-    /**
-     * @brief Called from `configMenu` to notify that the menu is not shown anymore
-     *
-     */
-    void notifyMenuExit();
 
     /**
      * @brief Configure directional pad buttons
@@ -795,6 +765,10 @@ namespace configMenu
  */
 namespace hidImplementation
 {
+    // axis position of each analog clutch paddle. Ignored when using digital clutch paddles
+    extern volatile clutchValue_t leftClutchValue;
+    extern volatile clutchValue_t rightClutchValue;
+
     /**
      * @brief Initialize bluetooth device
      *
