@@ -11,6 +11,8 @@
 #ifndef __HID_DEFINITIONS_H__
 #define __HID_DEFINITIONS_H__
 
+#include "SimWheelTypes.h"
+
 // Report ID's
 #define RID_INPUT_GAMEPAD 0x01
 #define RID_FEATURE_CAPABILITIES 0x02
@@ -18,8 +20,8 @@
 
 // Report sizes (bytes)
 #define GAMEPAD_REPORT_SIZE 20
-#define FEATURES_REPORT_SIZE 8
-#define CONFIG_REPORT_SIZE 2
+#define CAPABILITIES_REPORT_SIZE 8
+#define CONFIG_REPORT_SIZE 3
 
 // GAME CONTROLLER APPEARANCES
 #define CONTROLLER_TYPE_GAMEPAD 0x05
@@ -132,11 +134,12 @@ static const uint8_t hid_descriptor[] = {
     //     axis (1 byte)
     0x05, 0x01, //     UsagePage(Generic Desktop[1])
     0x09, 0x35, //     UsageId(Rz[53])
-    0x15, 0x81, //     LogicalMinimum(-127)
-    0x25, 0x7F, //     LogicalMaximum(127)
-    0x95, 0x01, //     ReportCount(1)
-    0x75, 0x08, //     ReportSize(8)
-    0x81, 0x02, //     Input(Data, Variable, Absolute, NoWrap, Linear, PreferredState, NoNullPosition, BitField)
+    // 0x15, 0x00, //     LogicalMinimum
+    // 0x25, CLUTCH_FULL_VALUE, //     LogicalMaximum
+    0x26, 0xFE, 0x00, //     LogicalMaximum(254)
+    0x95, 0x01,       //     ReportCount(1)
+    0x75, 0x08,       //     ReportSize(8)
+    0x81, 0x02,       //     Input(Data, Variable, Absolute, NoWrap, Linear, PreferredState, NoNullPosition, BitField)
 
     //     axis (1 byte)
     0x09, 0x34, //     UsageId(Ry[52])
@@ -147,13 +150,13 @@ static const uint8_t hid_descriptor[] = {
     0x81, 0x02, //     Input(Data, Variable, Absolute, NoWrap, Linear, PreferredState, NoNullPosition, BitField)
 
     //     D-PAD (hat switch), (4 bits)
-    0x09, 0x39,          //     UsageId(Hat Switch[57])
-    0x46, 0x40, 0x01,    //     PhysicalMaximum(320)
-    0x65, 0x14,          //     Unit('degrees', EnglishRotation, Degrees:1)
-    0x15, 0x01,          //     LogicalMinimum(1)
-    0x25, 0x08,          //     LogicalMaximum(8)
-    0x75, 0x04,          //     ReportSize(4)
-    0x81, 0x02,          //     Input(Data, Variable, Absolute, NoWrap, Linear, PreferredState, NoNullPosition, BitField)
+    0x09, 0x39,       //     UsageId(Hat Switch[57])
+    0x46, 0x40, 0x01, //     PhysicalMaximum(320)
+    0x65, 0x14,       //     Unit('degrees', EnglishRotation, Degrees:1)
+    0x15, 0x01,       //     LogicalMinimum(1)
+    0x25, 0x08,       //     LogicalMaximum(8)
+    0x75, 0x04,       //     ReportSize(4)
+    0x81, 0x02,       //     Input(Data, Variable, Absolute, NoWrap, Linear, PreferredState, NoNullPosition, BitField)
 
     //     Feature notification (4 bits)
     0x09, 0x47, //     UsageId(Feature Notification[71])
@@ -167,14 +170,14 @@ static const uint8_t hid_descriptor[] = {
     0x25, 0xff,                     // LogicalMaximum(256)
     0x85, RID_FEATURE_CAPABILITIES, // REPORT ID
     0x75, 0x08,                     // Report Size (8)
-    0x95, FEATURES_REPORT_SIZE,     // Report count (8)
+    0x95, CAPABILITIES_REPORT_SIZE,     // Report count
     0xb1, 0x23,                     // FEATURE (Cnst,var,abs,Nprf)
 
     // ___ CONFIG (FEATURE) REPORT ___
     0x09, 0x00,               // USAGE (undefined)
     0x85, RID_FEATURE_CONFIG, // REPORT ID
     0x75, 0x08,               // Report Size (8)
-    0x95, CONFIG_REPORT_SIZE, // Report count (3)
+    0x95, CONFIG_REPORT_SIZE, // Report count
     0xb1, 0xa2,               // FEATURE (Data,var,abs,Nprf,Vol)
 
     // END APPLICATION

@@ -27,3 +27,8 @@ void capabilities::setFlag(deviceCapability_t newFlag, bool setOrClear)
     else
         capabilities::flags &= ~(1 << newFlag);
 }
+
+bool inline capabilities::hasFlag(deviceCapability_t flag)
+{
+    return capabilities::flags & (1 << flag);
+}

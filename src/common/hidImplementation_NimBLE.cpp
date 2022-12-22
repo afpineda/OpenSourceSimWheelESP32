@@ -35,20 +35,13 @@
 // Related to auto power off
 static esp_timer_handle_t autoPowerOffTimer = nullptr;
 
-// Related to Nordic UART Service (NuS)
-//
-#define UART_SERVICE_UUID "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
-#define CHARACTERISTIC_UUID_RX "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
-#define CHARACTERISTIC_UUID_TX "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
-NimBLEService *uartService = nullptr;
-NimBLECharacteristic *uartTXCharacteristic = nullptr;
-
 // Related to HID device
 static NimBLEHIDDevice *hid = nullptr;
 static NimBLECharacteristic *inputGamepad = nullptr;
 static NimBLECharacteristic *configReport = nullptr;
 static NimBLECharacteristic *capabilitiesReport = nullptr;
 static NimBLEServer *pServer = nullptr;
+static bool notifyConfigChanges = false;
 
 // ----------------------------------------------------------------------------
 // BLE Server callbacks and advertising
@@ -91,23 +84,6 @@ public:
 } connectionStatus;
 
 // ----------------------------------------------------------------------------
-// UART Callbacks
-// ----------------------------------------------------------------------------
-
-class UARTCallbacks : public NimBLECharacteristicCallbacks
-{
-    // RECEIVE DATA
-    void onWrite(NimBLECharacteristic *pCharacteristic)
-    {
-        uartServer::onReceive((char *)pCharacteristic->getValue().c_str());
-        // Serial.print(pCharacteristic->getUUID().toString().c_str());
-        // Serial.print(": onWrite(), value: ");
-        // Serial.println(pCharacteristic->getValue().c_str());
-    };
-
-} uartHandler;
-
-// ----------------------------------------------------------------------------
 // HID FEATURE REQUEST callbacks
 // ----------------------------------------------------------------------------
 
@@ -120,29 +96,31 @@ class ConfigFRCallbacks : public NimBLECharacteristicCallbacks
         const uint8_t *data = pCharacteristic->getValue().data();
         if ((size>0) && (data[0]>=CF_CLUTCH) && (data[0]<=CF_BUTTON)) { 
             // clutch function
-            inputHub::setClutchFunction((clutchFunction_t)data[0],true);
+            clutchState::setFunction((clutchFunction_t)data[0]);
         }
-        if ((size>1) && (data[1]!=0x80))  {
+        if ((size>1) && (data[1]!=0xff))  {
             // ALT Buttons mode
-            inputHub::setALTFunction((bool)data[1],true);
+            clutchState::setALTModeForButtons((bool)data[1]);
         }
         if ((size>2) && ((clutchValue_t)data[2]>=CLUTCH_NONE_VALUE) && ((clutchValue_t)data[2]<=CLUTCH_FULL_VALUE)) {
             // Bite point
-            inputHub::setClutchBitePoint((clutchValue_t)data[2],true);
+            clutchState::setBitePoint((clutchValue_t)data[2]);
         }
     }
 
     // SEND REQUESTED DATA
     void onRead(NimBLECharacteristic *pCharacteristic)
     {
-        uint8_t data[3];
-        data[0] = (uint8_t)inputHub::getClutchFunction();
-        data[1] = (uint8_t)inputHub::getALTFunction();
-        data[2] = (uint8_t)inputHub::getClutchBitePoint();
+        uint8_t data[CONFIG_REPORT_SIZE];
+        data[0] = (uint8_t)clutchState::currentFunction;
+        data[1] = (uint8_t)clutchState::altModeForAltButtons;
+        data[2] = (uint8_t)clutchState::bitePoint;
         pCharacteristic->setValue(data, sizeof(data));
     }
 
 } configFRCallbacks;
+
+// ----------------------------------------------------------------------------
 
 class CapabilitiesFRCallbacks : public NimBLECharacteristicCallbacks
 {
@@ -151,7 +129,7 @@ class CapabilitiesFRCallbacks : public NimBLECharacteristicCallbacks
     // SEND REQUESTED DATA
     void onRead(NimBLECharacteristic *pCharacteristic)
     {
-        uint8_t data[8];
+        uint8_t data[CAPABILITIES_REPORT_SIZE];
         data[0] = MAGIC_NUMBER_LOW;
         data[1] = MAGIC_NUMBER_HIGH;
         *(uint16_t *)(data+2) = DATA_MAJOR_VERSION;
@@ -177,8 +155,7 @@ void autoPowerOffCallback(void *unused)
 void hidImplementation::begin(
     std::string deviceName,
     std::string deviceManufacturer,
-    bool enableAutoPowerOff,
-    bool enableUART)
+    bool enableAutoPowerOff)
 {
     if (hid == nullptr)
     {
@@ -218,28 +195,8 @@ void hidImplementation::begin(
         configReport->setCallbacks(&configFRCallbacks);
         capabilitiesReport->setCallbacks(&capabilitiesFRCallbacks);
 
-        if (enableUART)
-        {
-            // UART Service initialization
-            uartService = pServer->createService(UART_SERVICE_UUID);
-            if (uartService)
-            {
-                uartTXCharacteristic = uartService->createCharacteristic(
-                    CHARACTERISTIC_UUID_TX,
-                    NIMBLE_PROPERTY::NOTIFY);
-                NimBLECharacteristic *rx = uartService->createCharacteristic(
-                    CHARACTERISTIC_UUID_RX,
-                    NIMBLE_PROPERTY::WRITE);
-                rx->setCallbacks(&uartHandler);
-            } else {
-                log_e("Error while creating UART service");
-            }
-        }
-
         // Start services
         hid->startServices();
-        if (uartService)
-            uartService->start();
         connectionStatus.onDisconnect(pServer);
     }
 }
@@ -270,8 +227,8 @@ void hidImplementation::reset()
         report[14] = 0;
         report[15] = 0;
         report[16] = CLUTCH_NONE_VALUE;
-        report[17] = 0;
-        report[18] = 0;
+        report[17] = CLUTCH_NONE_VALUE;
+        report[18] = CLUTCH_NONE_VALUE;
         report[19] = 0;
         inputGamepad->setValue((const uint8_t *)report, GAMEPAD_REPORT_SIZE);
         inputGamepad->notify();
@@ -279,10 +236,9 @@ void hidImplementation::reset()
 }
 
 void hidImplementation::reportInput(
-    inputBitmap_t globalState,
-    bool altEnabled,
-    clutchValue_t clutchValue,
-    uint8_t POVstate)
+        inputBitmap_t globalState,
+        bool altEnabled,
+        uint8_t POVstate = 0)
 {
     if (connectionStatus.connected)
     {
@@ -325,10 +281,14 @@ void hidImplementation::reportInput(
             report[14] = 0;
             report[15] = 0;
         }
-        report[16] = (uint8_t)clutchValue;
-        report[17] = CLUTCH_NONE_VALUE;
-        report[18] = CLUTCH_NONE_VALUE;
+        report[16] = (uint8_t)clutchState::combinedAxis;
+        report[17] = (uint8_t)clutchState::leftAxis;
+        report[18] = (uint8_t)clutchState::rightAxis;
         report[19] = POVstate;
+        if (notifyConfigChanges) {
+            report[19] |= (RID_FEATURE_CONFIG << 4);
+            notifyConfigChanges = false;
+        }
         inputGamepad->setValue((const uint8_t *)report, GAMEPAD_REPORT_SIZE);
         inputGamepad->notify();
     }
@@ -341,8 +301,13 @@ void hidImplementation::reportBatteryLevel(int level)
     else if (level < 0)
         level = 0;
 
-    if ((hid != nullptr) && (connectionStatus.connected))
+    if (connectionStatus.connected)
         hid->setBatteryLevel(level);
+}
+
+void hidImplementation::reportChangeInConfig()
+{
+    notifyConfigChanges = true; // Will be report in next input report
 }
 
 // ----------------------------------------------------------------------------
@@ -352,19 +317,4 @@ void hidImplementation::reportBatteryLevel(int level)
 bool hidImplementation::isConnected()
 {
     return connectionStatus.connected;
-}
-
-// ----------------------------------------------------------------------------
-// UART
-// ----------------------------------------------------------------------------
-
-bool hidImplementation::uartSendText(char *text)
-{
-    if (uartTXCharacteristic != nullptr)
-    {
-        uartTXCharacteristic->setValue((uint8_t *)text, strlen(text));
-        uartTXCharacteristic->notify();
-        return true;
-    }
-    return false;
 }

@@ -21,7 +21,7 @@
 
 /**
  * @brief Device capabilities
- * 
+ *
  */
 namespace capabilities
 {
@@ -31,12 +31,21 @@ namespace capabilities
     /**
      * @brief Set a device capability. Should be called before `hidImplementation::begin()`.
      *        All capabilities are static and should not change once set.
-     * 
+     *
      * @param newFlag A device capability.
-     * @param setOrClear When true, the flag is set. Otherwise, the flag is cleared. 
+     * @param setOrClear When true, the flag is set. Otherwise, the flag is cleared.
      *                   Should not be called more than once for each flag.
      */
-    void setFlag(deviceCapability_t newFlag, bool setOrClear=true);
+    void setFlag(deviceCapability_t newFlag, bool setOrClear = true);
+
+    /**
+     * @brief Ask for a device capability
+     *
+     * @param flag Requested capability
+     * @return true The device has the given capability
+     * @return false The device does not have the given capability
+     */
+    bool inline hasFlag(deviceCapability_t flag);
 }
 
 /**
@@ -65,6 +74,84 @@ namespace language
      * @return language_t Current language for the UI
      */
     language_t getLanguage();
+}
+
+/**
+ * @brief Current state of the clutch paddles (if any) and,
+ *        for convenience, mode of "ALT" buttons
+ *
+ */
+namespace clutchState
+{
+    // For read only. do not touch
+    extern volatile clutchValue_t leftAxis;
+    extern volatile clutchValue_t rightAxis;
+    extern volatile clutchValue_t combinedAxis;
+    extern volatile clutchValue_t bitePoint;
+    extern volatile clutchFunction_t currentFunction;
+    extern volatile bool altModeForAltButtons;
+
+    /**
+     * @brief Must be called before anything else in this namespace. Will
+     *        load user settings from flash memory.
+     *
+     * @note Do not call while testing. This way, autosaving will get disabled.
+     **/
+    void begin();
+
+    /**
+     * @brief Set operation mode for "ALT" buttons (not clutch related)
+     *
+     * @param newMode When True, alt buttons should activate "ALT" function.
+     *                Otherwise, they behave as regular buttons.
+     */
+    void setALTModeForButtons(bool newMode);
+
+    /**
+     * @brief Assign a function to the clutch paddles
+     *
+     * @param newFunction Function of the clutch paddles
+     */
+    void setFunction(clutchFunction_t newFunction);
+
+    /**
+     * @brief Set the current bite point
+     *
+     * @param newBitePoint
+     */
+    void setBitePoint(clutchValue_t newBitePoint);
+
+    /**
+     * @brief Set the position of the left padlle axis
+     *
+     * @param newValue Axis position
+     */
+    void setLeftAxis(clutchValue_t newValue);
+
+    /**
+     * @brief Set the position of the right paddle axis
+     *
+     * @param newValue Axis position
+     */
+    void setRightAxis(clutchValue_t newValue);
+
+    /**
+     * @brief Check if any clutch paddle is pressed while
+     *        "ALT" function is selected
+     *
+     * @return true if ALT mode is requested
+     * @return false otherwise
+     */
+    bool isALTRequested();
+
+    /**
+     * @brief Check if bite point calibration is requested by the user
+     *
+     * @return true if bite point can be manually calibrated
+     * @return false otherwise
+     */
+    bool isCalibrationInProgress();
+
 }
 
 /**
@@ -386,6 +473,37 @@ namespace inputs
         const gpio_num_t inputPins[],
         const uint8_t inputPinCount,
         inputNumber_t *buttonNumbersArray);
+
+    /**
+     * @brief Add two potentiometers attached to clutch paddles. Each one
+     *        will work as an analog axis. Must be called before `start()`.
+     *
+     * @param leftClutchPin ADC pin for the left clutch paddle
+     * @param rightClutchPin ADC pin for the right clutch paddle.
+     *        Must differ from `leftClutchPin`.
+     * @param leftClutchInputNumber Input number for the left paddle
+     *        (to be reported in button mode)
+     * @param rightClutchInputNumber Input number for the right paddle
+     *        (to be reported in button mode)
+     *
+     * @note Only one `set*ClutchPaddles` method can be called and only once.
+     *       Otherwise an error is raised.
+     */
+    void setAnalogClutchPaddles(
+        const gpio_num_t leftClutchPin,
+        const gpio_num_t rightClutchPin,
+        const inputNumber_t leftClutchInputNumber,
+        const inputNumber_t rightClutchInputNumber);
+
+    void setDigitalClutchPaddles(
+        const inputNumber_t leftClutchInputNumber,
+        const inputNumber_t rightClutchInputNumber);
+
+    /**
+     * @brief Force autocalibration of all axes (analog clutch paddles)
+     *
+     */
+    void recalibrateAxes();
 }
 
 /**
@@ -400,6 +518,10 @@ namespace inputHub
      */
     void begin();
 
+    void onInputEvent(inputBitmap_t buttonState, inputBitmap_t buttonMask);
+
+    void onInputEvent(clutchValue_t axisValue, bool leftOrRightClutchPaddle, inputBitmap_t inputBitmap, inputBitmap_t inputMask);
+
     /**
      * @brief Handle a change in the state of any switch input. The states of all inputs
      *        are combined into a single global state.
@@ -412,26 +534,12 @@ namespace inputHub
     void onStateChanged(inputBitmap_t globalState, inputBitmap_t changes);
 
     /**
-     * @brief Get current clutch bite point
-     *
-     * @return calibrated clutch value
-     */
-    clutchValue_t getClutchBitePoint();
-
-    /**
      * @brief Get current function of ALT buttons
      *
      * @return TRUE if ALT buttons trigger alternate mode. FALSE if ALT buttons are reported
      *         as regular buttons.
      */
     bool getALTFunction();
-
-    /**
-     * @brief Get current function of clutch paddles
-     *
-     * @return Clutch paddles function
-     */
-    clutchFunction_t getClutchFunction();
 
     /**
      * @brief Check if clutch paddles have been set up
@@ -765,19 +873,17 @@ namespace configMenu
  */
 namespace hidImplementation
 {
-    // axis position of each analog clutch paddle. Ignored when using digital clutch paddles
-    extern volatile clutchValue_t leftClutchValue;
-    extern volatile clutchValue_t rightClutchValue;
-
     /**
      * @brief Initialize bluetooth device
      *
      * @param deviceName Name of this device shown to the host computer
      * @param deviceManufacturer Name of the manufacturer of this device
      * @param enableAutoPowerOff True to power off when not connected within a certain time lapse. Set to FALSE for testing.
-     * @param enableUART True to enable the NuS protocol. False to disable.
      */
-    void begin(std::string deviceName, std::string deviceManufacturer, bool enableAutoPowerOff = true, bool enableUART = true);
+    void begin(
+        std::string deviceName, 
+        std::string deviceManufacturer, 
+        bool enableAutoPowerOff = true);
 
     /**
      * @brief Tell if there is a Bluetooth connection
@@ -786,6 +892,12 @@ namespace hidImplementation
      * @return false when not connected
      */
     bool isConnected();
+
+    /**
+     * @brief Report a change in user settings (clutch function, etc.)
+     * 
+     */
+    void reportChangeInConfig();
 
     /**
      * @brief Report current battery level to the host computer
@@ -799,30 +911,21 @@ namespace hidImplementation
      *
      * @param globalState input bitmap
      * @param altEnabled TRUE if ALT is enabled
-     * @param clutchValue Current value of the clutch axis
      * @param POVtate State of the hat switch (POV or DPAD), this is, a button number
      *                in the range 0 (no input) to 8 (up-left)
+     * 
+     * @note Axis values are taken from `clutchState`.
      */
     void reportInput(
         inputBitmap_t globalState,
         bool altEnabled,
-        clutchValue_t clutchValue,
-        uint8_t POVstate = 0);
+        uint8_t POVstate);
 
     /**
      * @brief Report all inputs as not active
      *
      */
     void reset();
-
-    /**
-     * @brief Send text through the UaS protocol
-     *
-     * @param text text to be sent
-     * @return true if sucessfull
-     * @return false on error
-     */
-    bool uartSendText(char *text);
 }
 
 /**

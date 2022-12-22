@@ -16,7 +16,7 @@ As a result, you are not allowed to use this project outside of your personal sp
 
 Derivative works should obtain a different VID.
 
-The VID is defined at constant `OPEN_SOURCE_VENDOR_ID`.
+**This project does not feature an USB implementation right now**. However, it is prepared for that.
 
 ### Bluetooth
 
@@ -30,7 +30,7 @@ When using the Bluetooth stack, HID devices may use VIDs from different "sources
 
 I don't know what is the legal situation when a reserved VID source is used. At least, there is a way to avoid the USB-IF's licenses.
 
-## HID descriptor
+## HID reports
 
 This project make use of a number of HID reports:
 
@@ -59,7 +59,7 @@ Note that feature reports are both read and write.
   - Y: Left clutch paddle
   - X: Right clutch paddle
 - POV (D-PAD): 4 least significant bits of byte index 19. Range: 0 to 8.
-- Feature notification: 4 most significant bits of byte index 19. Valid values: 0 (nothing to notify) or 2 (wheel configuration has changed).
+- Feature notification: 4 most significant bits of byte index 19. Valid values: 0 (nothing to notify) or 3 (wheel configuration has changed).
 
 ## Data format of report ID 2
 
@@ -102,11 +102,11 @@ While writing, any value outside of the valid range will be ignored, so they me 
 | :--------: | :----------: | -------------------------- | ----------------------------------------------------- |
 |     0      |  see below   | Function of clutch paddles |                                                       |
 |     1      |     any      | "ALT" buttons state        | non-zero means enabled, except for HEX 80 (see below) |
-|     2      | -127 to 127  | Current bite point         | signed byte                                           |
+|     2      |   0 to 254   | Current bite point         | signed byte                                           |
 
 _Other notes_:
 
 - Valid values for byte index 0 are enumerated in `clutchFunction_t` at file [SimWheelTypes.h](../../src/include/SimWheelTypes.h)
 - Any valid value written will be saved to flash memory after a 15 seconds delay.
-- When byte index 1 is set to 80 (hexadecimal) in a write operation, the field will be ignored.
-- The same goes for byte index 2, since 80 (hexadecimal) is -128 (signed decimal), outside of the valid range.
+- When byte index 1 is set to FF (hexadecimal) in a write operation, the field will be ignored.
+- The same goes for byte index 2, since FF (hexadecimal) is 255 (decimal), outside of the valid range.

@@ -71,7 +71,7 @@ If the device is paired because of a previous test, unpair it first (delete from
    *** CONNECTED ***
    ```
 
-6. Throttle bar should increase each second. At max value, should return to zero.
+6. Rx, Ry and Rz axes should increase each second. At almost max value, should return to zero.
 
 ### Part 3: buttons
 
@@ -164,7 +164,7 @@ If the device is paired because of a previous test, unpair it first (delete from
     COMMAND: testing
     ```
 
-### Part 6: HID report ID 2
+### Part 6: device configuration HID report
 
 1. Reset.
 2. Output must match:
@@ -184,17 +184,17 @@ If the device is paired because of a previous test, unpair it first (delete from
 
 5. Open "SimpleHidWriter.exe". Locate `Device VID=501D` in the top area, and click on it.
 6. You should see continuous report lines starting with `RD 01`. Ignore them. Click on `Clear` from time to time.
-7. Enter `02` at field `ReportID`.
-8. Enter `FF FF 01 FF` at fields below `ReportID`.
+7. Enter `03` at field `ReportID`.
+8. Enter `FF FF FF` at fields below `ReportID`.
 9. Click on `Set Feature` , then on `Get Feature`.
-10. Must show the following line: `RD 02  00 01 01 00`.
-11. Enter `01 00 80 FF` at fields below `ReportID`.
+10. Must show a line starting with: `RD 03  00 01 FE`.
+11. Enter `01 00 80` at fields below `ReportID`.
 12. Click on `Set Feature` , then on `Get Feature`.
-13. Must show the following line: `RD 02  01 00 01 00`.
+13. Must show a line starting with: `RD 03  01 00 80`.
 
-### Part 7: HID report ID 3
+### Part 7: capabilities HID report
 
-32. Enter `03` at field `ReportID`.
-29. Enter `00 00 00 00 00 00 00 00` at fields below `ReportID`.
-33. Click on `Set Feature` , then on `Get Feature`.
-34. Must show the following line: `RD 03 51 BF xx xx xx xx 07 00`. Ignore `xx`.
+1. Enter `02` at field `ReportID`.
+2. Enter `00 00 00 00 00 00 00 00` at fields below `ReportID`.
+3. Click on `Set Feature` , then on `Get Feature`.
+4. Must show the following line: `RD 02 51 BF xx xx xx xx 07 00`. Ignore `xx`.

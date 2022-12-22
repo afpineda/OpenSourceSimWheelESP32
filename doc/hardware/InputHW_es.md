@@ -51,7 +51,10 @@ Tienen una forma similar a los codificadores rotatorios y los interruptores rota
 - La corriente se drena en todo momento, lo que es malo para las baterías.
 - Propenso a fallar después de 10.000 ciclos de uso más o menos.
 
-Como resultado, **se desaconsejan los potenciómetros**. Sin embargo, algunas carcasas están equipadas con potenciómetros en las paletas del embrague, por lo que tenemos que vivir con ello. Por ejemplo, el [kit de volante GT2 de 3DRap](https://www.3drap.it/product/gt2-steering-wheel-kit-by-3drap-thrustmaster-logitech-and-osw-adapters/). Los potenciómetros (en sustitución de los interruptores momentáneos) son compatibles con este proyecto.
+Como resultado, **se desaconsejan los potenciómetros**. Sin embargo, algunas carcasas están equipadas con potenciómetros en las paletas del embrague, por lo que tenemos que vivir con ello. Por ejemplo, el [kit de volante GT2 de 3DRap](https://www.3drap.it/product/gt2-steering-wheel-kit-by-3drap-thrustmaster-logitech-and-osw-adapters/). Los potenciómetros son compatibles con este proyecto de dos formas:
+
+- Como ejes analógicos, conectados a un pin ADC.
+- Como reemplazo de un interruptor, en caso de que ande corto de pines ADC.
 
 ## Pads direccionales (DPAD) y joysticks de 4 direcciones
 
@@ -72,7 +75,7 @@ Cuando se usa un pin GPIO como entrada digital, solo se puede acomodar un interr
 - **Multiplexores**. Son circuitos digitales, por lo que no son propensos a errores. La cantidad de interruptores que puede contener este circuito depende de qué [multiplexor](https://es.wikipedia.org/wiki/Multiplexor) se elija y cómo se combinen. Por ejemplo, cuatro multiplexores, tres selectores cada uno, pueden contener $4*2^{3}=32$ botones con $4+3=7$ pines. Este proyecto no admite multiplexores en este momento.
 
 - **Registros de desplazamiento PISO**. _"PISO"_ significa _"parallel input - serial output"_. Son circuitos digitales, por lo que no son propensos a errores. Casi *no hay límite* en el número de interruptores que puede albergar y sólo necesita 3 pines. Este proyecto no admite registros de desplazamiento en este momento.
- 
+
 ## Circuitos analógicos
 
 En términos globales, los circuitos analógicos pueden parecer una buena idea, pero **pueden fallar** al identificar las entradas correctas debido a:
@@ -167,7 +170,6 @@ Debería poder extrapolar dicho circuito a cualquier otro tamaño. Este es un [m
 
 Casi cualquier tipo de diodo es adecuado para este circuito, pero los [diodos Schottky](https://es.wikipedia.org/wiki/Diodo_Schottky) de conmutación rápida con bajo voltaje directo son perfectos. Por ejemplo: 1N4148.
 
-
 ## Multiplexores
 
 Este circuito es bastante similar a una matriz de botones, pero requiere varios multiplexores, un coste adicional que también ocupa espacio en la PCB. Se requieren dos grupos de pines:
@@ -191,7 +193,6 @@ Que puede albergar hasta 24 pulsadores. [Prueba de este circuito en Falstad.com]
 
 La cantidad de pines requeridos podría reducirse aún más, en algunos casos, colocando otro multiplexor para los pines de entrada.
 
-
 ## Registros de desplazamiento
 
 La idea tras los registros de desplazamiento es capturar el estado de cada botón en paralelo y enviarlo a través de un único pin, en secuencia. Se puede hacer gracias a que los registros de desplazamiento tienen memoria. Solamente hay tres pines involucrados:
@@ -206,8 +207,6 @@ Habitualmente los registros de desplazamiento almacenan 8 bits, pero se pueden e
 Observe que son necesarias resistencias de pulldown para cada botón, lo que no es práctico. Además, necesitará espacio extra en la placa perforada.
 
 [Pruebe este circuito en Falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKDD0JG207Ty8L8+IPGGIAWEJOzRsUNhxFVhzFCGGiJUrrPkB3LpEkpxVbr3zyATuHGTx-QpLAp+VMPBYBnW-f5i1Bmw1dxAAMwBDABsvOhYDMDspfySwDE5IePB07M40zgdrXOSQYjzXKGQ4b2LClBMQIJDKyJi4m2E6vH8K908DTqFLfKKTKkLg916qzJ9B9QROJsqqVtiasZLXfmXQtbiE4kDg9QbdrPrJZZRFxpPMgdvr7ruQrIDX0qX7lgBzECc4AqgLAhCo4JYACUvp9CrtKqYdHJwVBoAgWABZChg9SIsFCRHKNHvCz8PDKSwPJS49ycSb6Lg8GnqDBqelU0FcNAstnczIAGR5XLMTPZLWisSRDPJQs52AQbwM5iFmDZCoZcvVqq46oFQvlbNFuvA4QldClmQAHgD2CzHBgIK4IMZJABJAB2AAcAK4AFxY1rBdMg5BIZg82gaAFF3b6rBEACYRANcDBmBqUaSYSOSfkAe0TAB0vAxiwBjCJWX7J608fjy-gIbD1wjO3EgABydEtvuLpa8AGUAJa-b1DuixuL-TkqXiE+T-MpA-hL0EozL-bbL9QvNcrP7C7f0vcQgaIuqIkZU8RLwo3vI5DcUHIuRsvnEQ-4IVIVb-OD8LjqaivkB4AAdecInFu5wGAgLifH+nzXjKyxwccipSJBagOFQ5w+PeJSIfCED7DU4iAoUaFIeKbQsDYBGUS+0weNUBjkX4Uggo+dGcRxiEgX01T4Scd4ofcNHrPRIn1uqAkzFk4gnCMinYW4ClwCUpjuNx+EaXeWGVCRZo8VpJTHsxnhAA)
-
-
 
 ## Resumen del hardware de entrada
 

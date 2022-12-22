@@ -10,8 +10,7 @@
 #include "PolledInput.h"
 #include "adcTools.h"
 #include <climits>
-//#include <limits.h>
-
+// #include <limits.h>
 
 // ============================================================================
 // Implementation of class: PolledInput
@@ -62,7 +61,7 @@ bool PolledInput::contains(
 // ----------------------------------------------------------------------------
 
 DigitalPolledInput::DigitalPolledInput(
-    DigitalPolledInput *nextInChain): PolledInput(nextInChain)
+    DigitalPolledInput *nextInChain) : PolledInput(nextInChain)
 {
     this->mask = ~(0ULL);
 }
@@ -204,45 +203,76 @@ inputBitmap_t DigitalButton::read(inputBitmap_t lastState)
 // ----------------------------------------------------------------------------
 
 AnalogAxisInput::AnalogAxisInput(
-        gpio_num_t pinNumber,
-        uint8_t axisIndex,
-        AnalogAxisInput *nextInChain): PolledInput(nextInChain)
+    gpio_num_t pinNumber,
+    inputNumber_t inputNumber)
 {
+    // Check parameters
     if (!GPIO_IS_VALID_GPIO(pinNumber) ||
         (digitalPinToAnalogChannel(pinNumber) < 0))
     {
         log_e("AnalogAxisInput::AnalogAxisInput: given pins are not usable");
         abort();
     }
+
+    // Initialize
     this->pinNumber = pinNumber;
-    this->axisIndex = axisIndex;
-    minADCReading = INT_MAX;
-    maxADCReading = INT_MIN;
+    this->bitmap = BITMAP(inputNumber);
+    this->mask = BITMASK(1, inputNumber);
     lastADCReading = 0;
+    lastValue = -128;
+
+    // Note: we assume the potentiometer works on the full range of voltage.
+    // If that is not the case, the user should ask for recalibration.
+    // Storage of calibration data is handled at `Inputs.cpp`
+    minADCReading = 0;
+    maxADCReading = 254;
 }
 
 // ----------------------------------------------------------------------------
-// virtual methods
+// Methods
 // ----------------------------------------------------------------------------
 
-void AnalogAxisInput::read(uint8_t *axisIndex, clutchValue_t *value)
+void AnalogAxisInput::read(clutchValue_t *value, bool *changed, bool *autocalibrated)
 {
-    *axisIndex = this->axisIndex;
     // read ADC and remove 4 bits of noise
-    int currentReading = getADCreading(pinNumber,ADC_ATTEN_DB_11) << 4;
+    int currentReading = getADCreading(pinNumber, ADC_ATTEN_DB_11) >> 4;
     // filter
-    currentReading = (currentReading + lastADCReading) << 2;
+    currentReading = (currentReading + lastADCReading) >> 1; // average
 
     // Autocalibrate
+    *autocalibrated = false;
     if (currentReading < minADCReading)
     {
         minADCReading = currentReading;
+        *autocalibrated = true;
     }
     if (currentReading > maxADCReading)
     {
         maxADCReading = currentReading;
+        *autocalibrated = true;
     }
 
     // map ADC reading to axis value
     *value = map(currentReading, minADCReading, maxADCReading, CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
+    *changed = ((*value) != lastValue);
+    lastADCReading = currentReading;
+    lastValue = *value;
+}
+
+void AnalogAxisInput::getCalibrationData(int *minReading, int *maxReading)
+{
+    *minReading = this->minADCReading;
+    *maxReading = this->maxADCReading;
+}
+
+void AnalogAxisInput::resetCalibrationData()
+{
+    minADCReading = INT_MAX;
+    maxADCReading = INT_MIN;
+}
+
+void AnalogAxisInput::setCalibrationData(int minReading, int maxReading)
+{
+    minADCReading = minReading;
+    maxADCReading = maxReading;
 }

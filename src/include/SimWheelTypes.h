@@ -49,11 +49,19 @@ typedef uint8_t inputNumber_t;
  * @brief The value of a joystick's axis
  *
  */
-typedef int8_t clutchValue_t;
+//typedef int8_t clutchValue_t;
+//#define CLUTCH_NONE_VALUE -127
+//#define CLUTCH_FULL_VALUE 127
+//#define CLUTCH_DEFAULT_VALUE 0
 
-#define CLUTCH_NONE_VALUE -127
-#define CLUTCH_FULL_VALUE 127
-#define CLUTCH_DEFAULT_VALUE 0
+// DO NOT CHANGE. hidImplementation and clutchState depends on it.
+typedef uint8_t clutchValue_t;
+#define CLUTCH_NONE_VALUE 0
+#define CLUTCH_FULL_VALUE 254
+#define CLUTCH_DEFAULT_VALUE 127
+#define CLUTCH_1_4_VALUE 64
+#define CLUTCH_3_4_VALUE 192
+#define CLUTCH_INVALID_VALUE 255
 
 // #define clutchValuePercent(value) ((uint8_t)(value))/255
 
@@ -71,7 +79,7 @@ typedef uint16_t analogReading_t;
 #define BITMAP(n) (1ULL << static_cast<inputBitmap_t>(n))
 
 /**
- * @brief Return a mask for a number of buttons (`count`) starting from `first`.
+ * @brief Return a mask for a number of consecutive buttons (`count`) starting from `first`.
  *        A mask is a bit array where each bit determines if a button is to be used or not.
  *        1 means **not** used. 0 means in use.
  *        Masks are required to combine the state from multiple input bitmaps.
@@ -91,7 +99,8 @@ typedef uint16_t analogReading_t;
  * @brief Debounce time for buttons, in system ticks
  *
  */
-#define DEBOUNCE_TICKS 30 / portTICK_RATE_MS
+// #define DEBOUNCE_TICKS 30 / portTICK_RATE_MS
+#define DEBOUNCE_TICKS pdMS_TO_TICKS(30)
 
 /**
  * @brief Priority of background tasks
@@ -108,9 +117,10 @@ typedef uint16_t analogReading_t;
  */
 typedef enum
 {
-    CF_CLUTCH = 0,
-    CF_ALT,
-    CF_BUTTON
+    CF_CLUTCH = 0, /// F1-Style clutch
+    CF_AXIS,       /// Indepent axes
+    CF_ALT,        /// "ALT" mode
+    CF_BUTTON      /// Regular buttons
 } clutchFunction_t;
 
 /**
@@ -191,12 +201,12 @@ typedef enum
 typedef enum
 {
     CAP_CLUTCH_BUTTON = 0, /// has digital clutch paddles (switches)
-    CAP_CLUTCH_ANALOG, /// has analog clutch paddles (potentiometers)
-    CAP_ALT,    /// has "ALT" buttons
-    CAP_DPAD,   /// has a directional pad
-    CAP_BATTERY = 8, /// battery-operated
-    CAP_HAS_OLED = 12, /// has an OLED
-    CAP_HAS_REV_LIGHTS, /// has rev lights
+    CAP_CLUTCH_ANALOG,     /// has analog clutch paddles (potentiometers)
+    CAP_ALT,               /// has "ALT" buttons
+    CAP_DPAD,              /// has a directional pad
+    CAP_BATTERY = 8,       /// battery-operated
+    CAP_HAS_OLED = 12,     /// has an OLED
+    CAP_HAS_REV_LIGHTS,    /// has rev lights
 } deviceCapability_t;
 
 #endif

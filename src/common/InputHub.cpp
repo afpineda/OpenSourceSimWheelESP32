@@ -230,6 +230,13 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
 }
 
 // ----------------------------------------------------------------------------
+
+void inputHub::onStateChanged(clutchValue_t value, bool leftOrRight, inputNumber_t inputNumber)
+{
+
+}
+
+// ----------------------------------------------------------------------------
 // Setup
 // ----------------------------------------------------------------------------
 

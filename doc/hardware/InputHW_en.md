@@ -51,7 +51,10 @@ They are similar in shape to rotary encoders and absolute rotary switches, but t
 - Current is drained at all times, which is bad for batteries.
 - Prone to failure after 10.000 usage cycles or so.
 
-As a result, **rotary potentiometers are discouraged**. However, some wheel cases are equipped with potentiometers at the clutch paddles, so we have to live with it. For example, the [GT2 steering wheel kit from 3DRap](https://www.3drap.it/product/gt2-steering-wheel-kit-by-3drap-thrustmaster-logitech-and-osw-adapters/). Potentiometers (in replacement of momentary switches) are supported in this project.
+As a result, **rotary potentiometers are discouraged**. However, some wheel cases are equipped with potentiometers at the clutch paddles, so we have to live with it. For example, the [GT2 steering wheel kit from 3DRap](https://www.3drap.it/product/gt2-steering-wheel-kit-by-3drap-thrustmaster-logitech-and-osw-adapters/). Potentiometers are supported in this project in two ways:
+
+- As an analog axis, attached to an ADC pin.
+- As a replacemente for switch buttons, in case you are short of ADC pins.
 
 ## Directional pads (DPADs) and 4-way joysticks
 

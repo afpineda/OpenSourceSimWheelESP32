@@ -36,8 +36,8 @@ static const gpio_num_t mtxInputs[] = {TEST_BTNMTX_COL1,TEST_BTNMTX_COL2};
 // Other pins for testing
 #define TEST_DIGITAL_PIN GPIO_NUM_35
 #define TEST_POWER_PIN GPIO_NUM_0
-#define TEST_ANALOG_PIN1 GPIO_NUM_25 
-#define TEST_ANALOG_PIN2 GPIO_NUM_4 
+#define TEST_ANALOG_PIN1 GPIO_NUM_25
+#define TEST_ANALOG_PIN2 GPIO_NUM_4
 
 // Battery monitor pins for testing
 #define TEST_BATTERY_READ_ENABLE GPIO_NUM_12

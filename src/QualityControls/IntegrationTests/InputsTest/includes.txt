@@ -5,8 +5,11 @@ Inputs.cpp
 ButtonMatrixInput.h
 RotaryEncoderInput.h
 PolledInput.h
+adcTools.h
 debugUtils.cpp
 PolledInput.cpp
 RotaryEncoderInput.cpp
 ButtonMatrixInput.cpp
 power_mock.cpp
+adcTools.cpp
+clutchState.cpp

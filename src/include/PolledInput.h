@@ -158,35 +158,66 @@ public:
  * @brief Class for all polled analog inputs (axis)
  *
  */
-class AnalogAxisInput : public PolledInput
+class AnalogAxisInput
 {
 protected:
     gpio_num_t pinNumber;
-    uint8_t axisIndex;
     int minADCReading;
     int maxADCReading;
     int lastADCReading;
+    clutchValue_t lastValue;
+
+public:
+    // for read-only
+    inputBitmap_t bitmap;
+    inputBitmap_t mask;
 
 public:
     /**
      * @brief Construct a new Analog Axis Input object
      *
      * @param pinNumber ADC-capable pin number
-     * @param axisIndex Arbitray index of this input
-     * @param[in] nextInChain Another instance to build a chain, or nullptr
-      */
+     * @param inputNumber An alternate input number for on/off operation (if supported)
+     */
     AnalogAxisInput(
         gpio_num_t pinNumber,
-        uint8_t axisIndex,
-        AnalogAxisInput *nextInChain);
+        inputNumber_t inputNumber);
 
     /**
-     * @brief Read current axis position
+     * @brief Get autocalibration data. Used for persistent storage.
      *
-     * @param axisIndex Index of this input
-     * @param value Axis position
+     * @param[out] minReading Minimun adc reading
+     * @param[out] maxReading Maximun adc reading
      */
-    virtual void read(uint8_t *axisIndex, clutchValue_t *value);
+    void getCalibrationData(int *minReading, int *maxReading);
+
+    /**
+     * @brief Read current axis position. The axis must go from one
+     *        end to the other for autocalibration.
+     *
+     * @param[out] value Current axis position.
+     * @param[out] changed True if axis position has changed since last call.
+     * @param[out] autocalibrated True if this axis has been autocalibrated.
+     */
+    void read(
+        clutchValue_t *value,
+        bool *changed,
+        bool *autocalibrated);
+
+    /**
+     * @brief Force autocalibration.
+     *
+     */
+    void resetCalibrationData();
+
+    /**
+     * @brief Set autocalibration data (loaded from persistent storage).
+     *
+     * @param[out] axisIndex Index of this input
+     * @param[out] minReading Minimun adc reading
+     * @param[out] maxReading Maximun adc reading
+     */
+    void setCalibrationData(int minReading, int maxReading);
 };
 
 #endif

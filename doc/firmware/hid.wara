@@ -11,26 +11,26 @@ usage = ['Generic Desktop', 'Gamepad']
         usageRange = ['Button', 'Button 1', 'Button 128']
         logicalValueRange = [0, 1]
 		
-		# syncronized clutch axis
+		# Z (sync clutch axis)
 		[[applicationCollection.inputReport.variableItem]]
 		usage = ['Generic Desktop', 'Rz']
-		logicalValueRange = [-127, 127]
+		logicalValueRange = [0, 254]
 
-		# left clutch axis
-		[[applicationCollection.inputReport.variableItem]]
-		usage = ['Generic Desktop', 'Rx']
-		logicalValueRange = [-127, 127]
-		
-		# right clutch axis
+		# X (left clutch axis)
 		[[applicationCollection.inputReport.variableItem]]
 		usage = ['Generic Desktop', 'Ry']
-		logicalValueRange = [-127, 127]
+		logicalValueRange = [0, 254]
+		
+		# Y (right clutch axis)
+		[[applicationCollection.inputReport.variableItem]]
+		usage = ['Generic Desktop', 'Rx']
+		logicalValueRange = [0, 254]
 		
 		# POV 
 		[[applicationCollection.inputReport.variableItem]]
         usage = ['Generic Desktop', 'Hat Switch']
-		logicalValueRange = [0,8]
-        physicalValueRange = [0, 315]
+		logicalValueRange = [1,8]
+        physicalValueRange = [0, 320]
         unit = 'degrees'
 		
 		# Feature notification
