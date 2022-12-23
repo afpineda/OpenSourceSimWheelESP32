@@ -22,6 +22,15 @@ static inputBitmap_t altBitmap = 0;
 static inputBitmap_t calibrateUpBitmap = 0;
 static inputBitmap_t calibrateDownBitmap = 0;
 
+// Related to wheel functions
+static inputBitmap_t cycleALTFunctionBitmap = 0;
+static inputBitmap_t cycleClutchFunctionBitmap = 0;
+static inputBitmap_t setClutchFunctionBitmapForCP = 0;
+static inputBitmap_t setAxisFunctionBitmapForCP = 0;
+static inputBitmap_t setAltFunctionBitmapForCP = 0;
+static inputBitmap_t setButtonFunctionBitmapForCP = 0;
+
+
 // Related to POV buttons
 // #define DPAD_CENTERED 0
 #define DPAD_UP 1
@@ -42,6 +51,43 @@ static inputBitmap_t dpadMask = ~0ULL;
 
 void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
 {
+    // Check for input events rquesting a change in simwheel functions
+    // These input events never translate into a HID report
+    if ((changes & cycleALTFunctionBitmap) && (globalState == cycleALTFunctionBitmap))
+    {
+        clutchState::setALTModeForALTButtons(!clutchState::altModeForAltButtons);
+        return;
+    }
+    if ((changes & cycleClutchFunctionBitmap) && (globalState == cycleClutchFunctionBitmap))
+    {
+        int f = clutchState::currentFunction + 1;
+        if (f > CF_BUTTON)
+            f = CF_CLUTCH;
+        clutchState::setFunction((clutchFunction_t)f);
+        return;
+    }
+    if ((changes & setClutchFunctionBitmapForCP) && (globalState == setClutchFunctionBitmapForCP))
+    {
+        clutchState::setFunction(CF_CLUTCH);
+        return;
+    }
+    if ((changes & setAxisFunctionBitmapForCP) && (globalState == setAxisFunctionBitmapForCP))
+    {
+        clutchState::setFunction(CF_AXIS);
+        return;
+    }
+    if ((changes & setAltFunctionBitmapForCP) && (globalState == setAltFunctionBitmapForCP))
+    {
+        clutchState::setFunction(CF_ALT);
+        return;
+    }
+    if ((changes & setButtonFunctionBitmapForCP) && (globalState == setButtonFunctionBitmapForCP))
+    {
+        clutchState::setFunction(CF_BUTTON);
+        return;
+    }
+
+    // Check alt mode
     inputBitmap_t filteredInputs;
     bool altEnabled = clutchState::isALTRequested();
     if (clutchState::altModeForAltButtons)
@@ -54,26 +100,27 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
         filteredInputs = 0;
     }
 
-    bool calInProgress = clutchState::isCalibrationInProgress();
-    if (calInProgress)
+    // bite point calibration
+    if (clutchState::isCalibrationInProgress())
     {
         // One and only one clutch paddle is pressed
-        // Check for fine-grain calibration
+        // Check for bite point calibration events
         if ((calibrateUpBitmap & changes) &&
             (calibrateUpBitmap & globalState) &&
-            (clutchBitePoint < CLUTCH_FULL_VALUE))
+            (clutchState::bitePoint < CLUTCH_FULL_VALUE))
         {
             clutchState::setBitePoint(clutchState::bitePoint + CALIBRATION_INCREMENT);
         }
         else if ((calibrateDownBitmap & changes) &&
                  (calibrateDownBitmap & globalState) &&
-                 (clutchBitePoint > CLUTCH_NONE_VALUE))
+                 (clutchState::bitePoint > CLUTCH_NONE_VALUE))
         {
             clutchState::setBitePoint(clutchState::bitePoint - CALIBRATION_INCREMENT);
         }
         filteredInputs |= (calibrateDownBitmap | calibrateUpBitmap);
-        //        ui::showBitePoint();
     }
+
+    // Report
 
     globalState = globalState & (~filteredInputs);
 
@@ -120,7 +167,7 @@ void inputHub::setClutchCalibrationButtons(
 void inputHub::setALTBitmap(const inputBitmap_t altBmp)
 {
     altBitmap = altBmp;
-    capabilities::setFlag(deviceCapability_t::CAP_ALT,(altBitmap!=0));
+    capabilities::setFlag(deviceCapability_t::CAP_ALT, (altBitmap != 0));
 }
 
 void inputHub::setALTButton(const inputNumber_t altNumber)
@@ -129,7 +176,7 @@ void inputHub::setALTButton(const inputNumber_t altNumber)
         altBitmap = 0;
     else
         altBitmap = BITMAP(altNumber);
-    capabilities::setFlag(deviceCapability_t::CAP_ALT,(altBitmap!=0));
+    capabilities::setFlag(deviceCapability_t::CAP_ALT, (altBitmap != 0));
 }
 
 void inputHub::setDPADControls(
@@ -188,5 +235,27 @@ void inputHub::setDPADControls(
         dpadNegMask |= dpadBitmap[n];
     }
     dpadMask = ~dpadNegMask;
-    capabilities::setFlag(deviceCapability_t::CAP_DPAD,(dpadNegMask!=0);
+    capabilities::setFlag(deviceCapability_t::CAP_DPAD, (dpadNegMask != 0));
+}
+
+void inputHub::setCycleALTFunctionbitmap(const inputBitmap_t bitmap)
+{
+    cycleALTFunctionBitmap = bitmap;
+}
+
+void inputHub::setCycleClutchFunctionbitmap(const inputBitmap_t bitmap)
+{
+    cycleClutchFunctionBitmap = bitmap;
+}
+
+void inputHub::setSelectClutchFunctionBitmaps(
+        const inputBitmap_t clutchModeBitmap,
+        const inputBitmap_t axisModeBitmap,
+        const inputBitmap_t altModeBitmap,
+        const inputBitmap_t buttonModeBitmap)
+{
+    setClutchFunctionBitmapForCP = clutchModeBitmap;
+    setAxisFunctionBitmapForCP = axisModeBitmap;
+    setAltFunctionBitmapForCP = altModeBitmap;
+    setButtonFunctionBitmapForCP = buttonModeBitmap;
 }

@@ -141,7 +141,7 @@ void clutchState::begin()
 // setters
 // ----------------------------------------------------------------------------
 
-void clutchState::setALTModeForButtons(bool newMode)
+void clutchState::setALTModeForALTButtons(bool newMode)
 {
     if (clutchState::altModeForAltButtons != newMode)
     {
@@ -153,7 +153,8 @@ void clutchState::setALTModeForButtons(bool newMode)
 
 void clutchState::setFunction(clutchFunction_t newFunction)
 {
-    if (newFunction != clutchState::currentFunction)
+    if ((newFunction != clutchState::currentFunction) &&
+        (newFunction>=CF_CLUTCH) && (newFunction<=CF_BUTTON))
     {
         clutchState::currentFunction = newFunction;
         update();
@@ -166,23 +167,33 @@ void clutchState::setBitePoint(clutchValue_t newBitePoint)
 {
     if (newBitePoint != clutchState::bitePoint)
     {
-        clutchState::bitePoint = newBitePoint;
-        update();
-        requestSave();
-        hidImplementation::reportChangeInConfig();
+        if ((newBitePoint != CLUTCH_INVALID_VALUE))
+        {
+            clutchState::bitePoint = newBitePoint;
+            update();
+            requestSave();
+            hidImplementation::reportChangeInConfig();
+            // TO-DO: ui report 
+        }
     }
 }
 
 void clutchState::setLeftAxis(clutchValue_t newValue)
 {
-    auxLeftAxis = newValue;
-    update();
+    if (newValue != CLUTCH_INVALID_VALUE)
+    {
+        auxLeftAxis = newValue;
+        update();
+    }
 }
 
 void clutchState::setRightAxis(clutchValue_t newValue)
 {
-    auxRightAxis = newValue;
-    update();
+    if (newValue != CLUTCH_INVALID_VALUE)
+    {
+        auxRightAxis = newValue;
+        update();
+    }
 }
 
 // ----------------------------------------------------------------------------

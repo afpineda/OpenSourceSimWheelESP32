@@ -32,6 +32,8 @@ void serialPrintf(const char *fmt, ...);
 #define TEST_BTNMTX_COL2 GPIO_NUM_27
 static const gpio_num_t mtxSelectors[] = {TEST_BTNMTX_ROW1,TEST_BTNMTX_ROW2,TEST_BTNMTX_ROW3};
 static const gpio_num_t mtxInputs[] = {TEST_BTNMTX_COL1,TEST_BTNMTX_COL2};
+static inputNumber_t mtxNumbers[] = {0,1,2,3,4,5};
+
 
 // Other pins for testing
 #define TEST_DIGITAL_PIN GPIO_NUM_35

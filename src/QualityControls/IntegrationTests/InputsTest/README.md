@@ -38,9 +38,6 @@ For later reference:
    
    ```
    -- READY --
-   0
-   6
-   7
    -- GO --
    ```
 3. Press and hold D1, then press and hold L1, then release D1, then release L1. Output must match the following:

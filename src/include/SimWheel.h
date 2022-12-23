@@ -31,10 +31,10 @@ namespace capabilities
     /**
      * @brief Set a device capability. Should be called before `hidImplementation::begin()`.
      *        All capabilities are static and should not change once set.
+     *        Will be called from other namespaces. No need for manual set up.
      *
      * @param newFlag A device capability.
      * @param setOrClear When true, the flag is set. Otherwise, the flag is cleared.
-     *                   Should not be called more than once for each flag.
      */
     void setFlag(deviceCapability_t newFlag, bool setOrClear = true);
 
@@ -102,10 +102,10 @@ namespace clutchState
     /**
      * @brief Set operation mode for "ALT" buttons (not clutch related)
      *
-     * @param newMode When True, alt buttons should activate "ALT" function.
+     * @param newMode When True, "ALT" buttons should activate "ALT" mode.
      *                Otherwise, they behave as regular buttons.
      */
-    void setALTModeForButtons(bool newMode);
+    void setALTModeForALTButtons(bool newMode);
 
     /**
      * @brief Assign a function to the clutch paddles
@@ -151,7 +151,6 @@ namespace clutchState
      * @return false otherwise
      */
     bool isCalibrationInProgress();
-
 }
 
 /**
@@ -450,11 +449,11 @@ namespace inputs
 
     /**
      * @brief Set two inputs to digital clutch paddles. Must be called before `start()`.
-     * 
+     *
      * @param leftClutchInputNumber Input number for the left clutch
      * @param rightClutchInputNumber Input number for the right clutch.
      *        Must differ from `leftClutchInputNumber`.
-     * 
+     *
      * @note Only one `set*ClutchPaddles` method can be called and only once.
      *       Otherwise an error is raised.
      */
@@ -470,12 +469,12 @@ namespace inputs
 
     /**
      * @brief Exposed for testing. Do not call.
-     * 
+     *
      */
     void notifyInputEventForTesting(
-        uint8_t id, 
-        inputBitmap_t bitmap, 
-        inputBitmap_t mask, 
+        uint8_t id,
+        inputBitmap_t bitmap,
+        inputBitmap_t mask,
         clutchValue_t value);
 }
 
@@ -485,12 +484,6 @@ namespace inputs
  */
 namespace inputHub
 {
-    // /**
-    //  * @brief Must be called before anything else in this namespace
-    //  *
-    //  */
-    // void begin();
-
     /**
      * @brief Handle a change in the state of any input. The states of all digital inputs
      *        are combined into a single global state.
@@ -499,8 +492,8 @@ namespace inputHub
      * @param globalState Current state of all inputs
      * @param changes A bit array assembling which inputs have changed since last report.
      *                1 means changed, 0 means not changed.
-     * 
-     * @note May be called even if `changes==0`, due to changes in the state of 
+     *
+     * @note May be called even if `changes==0`, due to changes in the state of
      *       an analog axis or a digital clutch.
      */
     void onStateChanged(inputBitmap_t globalState, inputBitmap_t changes);
@@ -556,6 +549,45 @@ namespace inputHub
         inputNumber_t padUpRightNumber = UNSPECIFIED_INPUT_NUMBER,
         inputNumber_t padDownLeftNumber = UNSPECIFIED_INPUT_NUMBER,
         inputNumber_t padDownRightNumber = UNSPECIFIED_INPUT_NUMBER);
+
+    /**
+     * @brief Set up a bitmap of buttons to cycle the function of "ALT" buttons (if any).
+     *        All buttons in the bitmap must be pressed at the same time and none of the others.
+     *
+     * @param bitmap A bitmap of button numbers, for example `BITMAP(JOY_BACK) | BITMAP(JOY_A)`.
+     *
+     * @note Make sure all buttons in the bitmap are able to be pressed at the same time.
+     */
+    void setCycleALTFunctionbitmap(const inputBitmap_t bitmap);
+
+    /**
+     * @brief Set up a bitmap of buttons to cycle the function of clutch paddles (if any).
+     *        All buttons in the bitmap must be pressed at the same time and none of the others.
+     *
+     * @param bitmap A bitmap of button numbers, for example `BITMAP(JOY_BACK) | BITMAP(JOY_B)`.
+     *
+     * @note Make sure all buttons in the bitmap are able to be pressed at the same time.
+     */
+    void setCycleClutchFunctionbitmap(const inputBitmap_t bitmap);
+
+    /**
+     * @brief Set up a bitmap of buttons to enable each specific clutch function for clutch paddles.
+     *        All buttons in the bitmap must be pressed at the same time and none of the others.
+     *        This is compatible with `setCycleClutchFunctionbitmap`.
+     *
+     * @param clutchModeBitmap A bitmap of button numbers to enable the F1-style clutch function
+     * @param axisModeBitmap A bitmap of button numbers to enable the analog axes function
+     * @param altModeBitmap A bitmap of button numbers to enable the "ALT" function
+     * @param buttonModeBitmap A bitmap of button numbers to enable the "regular buttons" function
+     * 
+     * @note Set the bitmap to `0` if a particular function must not be mapped to any input.
+     *       Make sure all buttons in a bitmap are able to be pressed at the same time.
+     */
+    void setSelectClutchFunctionBitmaps(
+        const inputBitmap_t clutchModeBitmap,
+        const inputBitmap_t axisModeBitmap,
+        const inputBitmap_t altModeBitmap,
+        const inputBitmap_t buttonModeBitmap);
 }
 
 /**

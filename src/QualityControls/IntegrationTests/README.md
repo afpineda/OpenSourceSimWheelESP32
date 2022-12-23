@@ -6,6 +6,8 @@ Ensure that all unit test have failed before proceeding to integration testing (
 
 **Note 2**: This is an incremental, bottom-up strategy.
 
+**Note 3**: The `capabilities` module is allways integrated but not explicitly shown below.
+
 ## Step
 
 > _Test name_: [InputsTest](./InputsTest/README.md)
@@ -16,7 +18,6 @@ graph TD
     inputs --> rotaryEnconderInput
     inputs --> polledInput
 ```
-
 ## Step
 
 > _Test name_: [InputHubTest](./InputHubTest/README.md)
@@ -27,6 +28,7 @@ graph TD
     inputs --> rotaryEnconderInput
     inputs --> polledInput
     inputHub --> inputs
+    inputHub ---> clutchState
 ```
 
 ## Step

@@ -12,6 +12,11 @@
 #include "SimWheel.h"
 
 //------------------------------------------------------------------
+// Globals
+//------------------------------------------------------------------
+
+
+//------------------------------------------------------------------
 // Mocks
 //------------------------------------------------------------------
 
@@ -31,24 +36,14 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
 
 void setup()
 {
-    inputNumber_t n;
-    
     Serial.begin(115200);
     while (!Serial)
         ;
     Serial.println("-- READY --");
     inputs::begin();
-
-    n = inputs::setButtonMatrix(mtxSelectors,3,mtxInputs,2);
-    // n = 0
-    Serial.println(n);
-    n = inputs::addDigital(TEST_ROTARY_SW,true,false);
-    // n = 6
-    Serial.println(n);
-    n = inputs::addRotaryEncoder(TEST_ROTARY_CLK,TEST_ROTARY_DT);
-    //n = inputs::addRotaryEncoder(TEST_ROTARY_ALT_A,TEST_ROTARY_ALT_B,true);
-    // n = 7
-    Serial.println(n);
+    inputs::addButtonMatrix(mtxSelectors,3,mtxInputs,2,mtxNumbers);
+    inputs::addDigital(TEST_ROTARY_SW,true,true,6);
+    inputs::addRotaryEncoder(TEST_ROTARY_CLK,TEST_ROTARY_DT,7,8);
 
     Serial.println("-- GO --");
     inputs::start();
