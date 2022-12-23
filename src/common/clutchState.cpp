@@ -24,8 +24,8 @@ volatile clutchFunction_t clutchState::currentFunction = clutchFunction_t::CF_CL
 volatile bool clutchState::altModeForAltButtons = false;
 
 // Internal clutch state (non exported)
-clutchValue_t auxLeftAxis = CLUTCH_NONE_VALUE;
-clutchValue_t auxRightAxis = CLUTCH_NONE_VALUE;
+static clutchValue_t auxLeftAxis = CLUTCH_NONE_VALUE;
+static clutchValue_t auxRightAxis = CLUTCH_NONE_VALUE;
 
 // Related to the autosave feature and user preferences
 static esp_timer_handle_t autoSaveTimer = nullptr;

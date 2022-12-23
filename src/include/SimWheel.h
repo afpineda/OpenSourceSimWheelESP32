@@ -372,21 +372,6 @@ namespace inputs
     void notifyInputEvent(inputBitmap_t mask, inputBitmap_t state);
 
     /**
-     * @brief Add a digital button. Must be called before `start()`
-     *
-     * @param[in] pinNumber Pin where the digital button is attached to
-     * @param[in] pullupOrPulldown TRUE if a pullup resistor is used (LOW signal when pressed).
-     *                             FALSE if a pulldown resistor is used (HIGH signal when pressed)
-     * @param[in] enableInternalPull TRUE if the internal pullup or pulldown resistor must be enabled.
-     *                               Ignored if the GPIO pin does not provide a pull resistor.
-     * @return inputNumber_t Number assigned to the button.
-     */
-    inputNumber_t addDigital(
-        gpio_num_t pinNumber,
-        bool pullupOrPulldown = true,
-        bool enableInternalPull = true);
-
-    /**
      * @brief Add a digital button bound to a specific input number. Must be called before `start()`
      *
      * @param[in] pinNumber Pin where the digital button is attached to
@@ -396,28 +381,11 @@ namespace inputs
      *                               Ignored if the GPIO pin does not provide a pull resistor.
      * @param[in] inputNumber Requested input number for this button
      */
-    void addDigitalExt(
+    void addDigital(
         gpio_num_t pinNumber,
         inputNumber_t inputNumber,
         bool pullupOrPulldown = true,
         bool enableInternalPull = true);
-
-    /**
-     * @brief Add incremental rotary encoder inputs. Must be called before `start()`
-     *
-     * @param clkPin pin number attached to CLK or A
-     * @param dtPin pin number attached to DT or B
-     * @param[in] useAlternateEncoding Set to true in order to use the signal encoding of
-     *                                 ALPS RKJX series of rotary encoders, and the alike.
-     * @return inputNumber_t Number assigned to the clockwise rotation. `Number+1` is the
-     *         assigned number to the counter-clockwise rotation.
-     * @note Only rotation events are considered for input. Rotary's push button must be added
-     *       with `addDigital()`
-     */
-    inputNumber_t addRotaryEncoder(
-        gpio_num_t clkPin,
-        gpio_num_t dtPin,
-        bool useAlternateEncoding = true);
 
     /**
      * @brief Add incremental rotary encoder inputs bound to specific input numbers.
@@ -433,27 +401,12 @@ namespace inputs
      * @note Only rotation events are considered for input. Rotary's push button must be added
      *       with `addDigital()`
      */
-    void addRotaryEncoderExt(
+    void addRotaryEncoder(
         gpio_num_t clkPin,
         gpio_num_t dtPin,
         inputNumber_t cwInputNumber,
         inputNumber_t ccwInputNumber,
         bool useAlternateEncoding = true);
-
-    /**
-     * @brief Setup a single button matrix. Must be called before `start()`
-     *
-     * @param selectorPins Array of pin numbers used as selector pins
-     * @param selectorPinCount Length of the `selectorPins` array
-     * @param inputPins Array of pin numbers used as input pins
-     * @param inputPinCount Length of the `inputPins` array
-     * @return inputNumber_t Number assigned to the first button.
-     */
-    inputNumber_t setButtonMatrix(
-        const gpio_num_t selectorPins[],
-        const uint8_t selectorPinCount,
-        const gpio_num_t inputPins[],
-        const uint8_t inputPinCount);
 
     /**
      * @brief Add a button matrix bound to specific button numbers.
@@ -467,7 +420,7 @@ namespace inputs
      *                           The length of this array is expected to match the
      *                           product of `selectorPinCount` and `inputPinCount`.
      */
-    void addButtonMatrixExt(
+    void addButtonMatrix(
         const gpio_num_t selectorPins[],
         const uint8_t selectorPinCount,
         const gpio_num_t inputPins[],
@@ -475,7 +428,7 @@ namespace inputs
         inputNumber_t *buttonNumbersArray);
 
     /**
-     * @brief Add two potentiometers attached to clutch paddles. Each one
+     * @brief Set two potentiometers attached to clutch paddles. Each one
      *        will work as an analog axis. Must be called before `start()`.
      *
      * @param leftClutchPin ADC pin for the left clutch paddle
@@ -495,6 +448,16 @@ namespace inputs
         const inputNumber_t leftClutchInputNumber,
         const inputNumber_t rightClutchInputNumber);
 
+    /**
+     * @brief Set two inputs to digital clutch paddles. Must be called before `start()`.
+     * 
+     * @param leftClutchInputNumber Input number for the left clutch
+     * @param rightClutchInputNumber Input number for the right clutch.
+     *        Must differ from `leftClutchInputNumber`.
+     * 
+     * @note Only one `set*ClutchPaddles` method can be called and only once.
+     *       Otherwise an error is raised.
+     */
     void setDigitalClutchPaddles(
         const inputNumber_t leftClutchInputNumber,
         const inputNumber_t rightClutchInputNumber);
@@ -504,6 +467,16 @@ namespace inputs
      *
      */
     void recalibrateAxes();
+
+    /**
+     * @brief Exposed for testing. Do not call.
+     * 
+     */
+    void notifyInputEventForTesting(
+        uint8_t id, 
+        inputBitmap_t bitmap, 
+        inputBitmap_t mask, 
+        clutchValue_t value);
 }
 
 /**
@@ -512,48 +485,25 @@ namespace inputs
  */
 namespace inputHub
 {
-    /**
-     * @brief Must be called before anything else in this namespace
-     *
-     */
-    void begin();
-
-    void onInputEvent(inputBitmap_t buttonState, inputBitmap_t buttonMask);
-
-    void onInputEvent(clutchValue_t axisValue, bool leftOrRightClutchPaddle, inputBitmap_t inputBitmap, inputBitmap_t inputMask);
+    // /**
+    //  * @brief Must be called before anything else in this namespace
+    //  *
+    //  */
+    // void begin();
 
     /**
-     * @brief Handle a change in the state of any switch input. The states of all inputs
+     * @brief Handle a change in the state of any input. The states of all digital inputs
      *        are combined into a single global state.
      *        Will be called from a single separate background thread.
      *
      * @param globalState Current state of all inputs
      * @param changes A bit array assembling which inputs have changed since last report.
      *                1 means changed, 0 means not changed.
+     * 
+     * @note May be called even if `changes==0`, due to changes in the state of 
+     *       an analog axis or a digital clutch.
      */
     void onStateChanged(inputBitmap_t globalState, inputBitmap_t changes);
-
-    /**
-     * @brief Get current function of ALT buttons
-     *
-     * @return TRUE if ALT buttons trigger alternate mode. FALSE if ALT buttons are reported
-     *         as regular buttons.
-     */
-    bool getALTFunction();
-
-    /**
-     * @brief Check if clutch paddles have been set up
-     *
-     * @return FALSE if there are no clutch paddles
-     */
-    bool hasClutchPaddles();
-
-    /**
-     * @brief Check if ALT buttons have been set up
-     *
-     * @return FALSE if there are no ALT buttons
-     */
-    bool hasALTButtons();
 
     /**
      * @brief Set the bitmap for all ALT buttons. For example:
@@ -572,14 +522,6 @@ namespace inputHub
     void setALTButton(const inputNumber_t altNumber);
 
     /**
-     * @brief Set the calibrated bite point for the clutch
-     *
-     * @param calibrationValue calibrated value of the clutch
-     * @param save Request autosave
-     */
-    void setClutchBitePoint(clutchValue_t calibrationValue, bool save = false);
-
-    /**
      * @brief Set up buttons for clutch calibration while one and only one clutch paddle is pressed
      *
      * @param upButtonNumber Button number to increase bite point
@@ -588,33 +530,6 @@ namespace inputHub
     void setClutchCalibrationButtons(
         const inputNumber_t upButtonNumber,
         const inputNumber_t downButtonNumber);
-
-    /**
-     * @brief Set a function for the ALT buttons
-     *
-     * @param altFunction TRUE if ALT buttons must enable alternate mode. FALSE if
-     *        ALT button inputs are to be reported as regular inputs. Default is TRUE.
-     * @param save Request autosave
-     */
-    void setALTFunction(bool altFunction, bool save = false);
-
-    /**
-     * @brief Set a function for the clutch paddles
-     *
-     * @param newFunction Requested function for the clutch paddles
-     * @param save Request autosave
-     */
-    void setClutchFunction(clutchFunction_t newFunction, bool save = false);
-
-    /**
-     * @brief Set up buttons for clutch operation
-     *
-     * @param leftClutchNumber Button number for the left clutch paddle
-     * @param rightClutchNumber Button number for the right clutch paddle
-     */
-    void setClutchPaddles(
-        const inputNumber_t leftClutchNumber,
-        const inputNumber_t rightClutchNumber);
 
     /**
      * @brief Configure directional pad buttons
@@ -881,8 +796,8 @@ namespace hidImplementation
      * @param enableAutoPowerOff True to power off when not connected within a certain time lapse. Set to FALSE for testing.
      */
     void begin(
-        std::string deviceName, 
-        std::string deviceManufacturer, 
+        std::string deviceName,
+        std::string deviceManufacturer,
         bool enableAutoPowerOff = true);
 
     /**
@@ -895,7 +810,7 @@ namespace hidImplementation
 
     /**
      * @brief Report a change in user settings (clutch function, etc.)
-     * 
+     *
      */
     void reportChangeInConfig();
 
@@ -913,7 +828,7 @@ namespace hidImplementation
      * @param altEnabled TRUE if ALT is enabled
      * @param POVtate State of the hat switch (POV or DPAD), this is, a button number
      *                in the range 0 (no input) to 8 (up-left)
-     * 
+     *
      * @note Axis values are taken from `clutchState`.
      */
     void reportInput(

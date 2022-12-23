@@ -58,7 +58,6 @@ void hidImplementation::reset()
 void hidImplementation::reportInput(
     inputBitmap_t globalState,
     bool altEnabled,
-    clutchValue_t clutchValue,
     uint8_t POVstate)
 {
     Serial.print("INPUT: ");

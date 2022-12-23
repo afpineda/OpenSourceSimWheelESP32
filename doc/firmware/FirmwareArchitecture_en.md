@@ -5,16 +5,17 @@
 The _system_ have been broken into several _modules_ that have been implemented as C++ namespaces. All of them are defined at _SimWheel.h_:
 
 - **capabilities**: Everything realated to the capabilities of the hardware and firmware.
+- **clutchState**: Implements the behavior of clutch paddles, holds their state and their configuration.
 - **language**: Everything related to the language of the user interface.
 - **inputs**: Everything related to hardware inputs and their events.
-- **inputHub**: Everything related to the combined state of all inputs and their treatment. Translates input events into HID messages. Implements the behavior of clutch paddles, bite point calibration and "ALT" buttons.
+- **inputHub**: Everything related to the combined state of all inputs and their treatment. Translates input events into a HID report.
 - **uiManager**: Everything related to the coordinated use of the UI display from multiple modules.
 - **ui**: Everything related to the user interface.
 - **configMenu**: Everything related to the integrated menu used to set user preferences.
-- **hidImplementation**: Everything related to the HID and NuS protocols.
+- **hidImplementation**: Everything related to the HID and protocol.
 - **power**: Everything related to power management.
 - **uartServer**: Everything related to AT command processing and data capture for display.
-- **batteryCalibration**: Everything related to estimation of battery charge.
+- **batteryCalibration**: Everything related to the estimation of battery charge.
 
 Each namespace is implemented in a single _cpp_ file with its name, however, some of them have alternate implementations in order to enable unit and integration testing. Those files are named following this pattern: `<namespace><underscore><implementation>.cpp`. Some implementations are:
 

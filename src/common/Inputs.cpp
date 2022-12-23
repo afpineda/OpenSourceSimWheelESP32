@@ -18,7 +18,6 @@
 // Globals
 // ----------------------------------------------------------------------------
 
-static inputNumber_t globalButtonCount = 0;
 static TaskHandle_t pollingTask = nullptr;
 static DigitalPolledInput *digitalInputChain = nullptr;
 static AnalogAxisInput *leftClutchAxis = nullptr;
@@ -26,7 +25,6 @@ static AnalogAxisInput *rightClutchAxis = nullptr;
 static inputBitmap_t leftClutchButtonBitmap = 0ULL;
 static inputBitmap_t rightClutchButtonBitmap = 0ULL;
 static inputBitmap_t clutchButtonsMask = ~0ULL;
-static bool buttonMatrixAlreadySet = false;
 
 // Related to the polling task and event queue
 #define SAMPLING_RATE_TICKS DEBOUNCE_TICKS * 2
@@ -117,8 +115,11 @@ void requestSaveAxisCalibration()
 
 void inputs::recalibrateAxes()
 {
-  leftClutchAxis->resetCalibrationData();
-  rightClutchAxis->resetCalibrationData();
+  if (leftClutchAxis)
+  {
+    leftClutchAxis->resetCalibrationData();
+    rightClutchAxis->resetCalibrationData();
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -185,61 +186,45 @@ void inputPollingLoop(void *param)
 // Configure inputs
 // ----------------------------------------------------------------------------
 
-inputNumber_t abortAtAdd()
+void abortDueToCallBeforeBegin()
 {
   log_e("inputs::add*() or inputs::set*() called before inputs::begin()");
   abort();
-  return UNSPECIFIED_INPUT_NUMBER;
+}
+
+void abortDueToInvalidInputNumber()
+{
+  log_e("invalid input or pin numbers at inputs::add*() or inputs::set*()");
+  abort();
 }
 
 // ----------------------------------------------------------------------------
 
-inputNumber_t inputs::addDigital(
-    gpio_num_t pinNumber,
-    bool pullupOrPulldown,
-    bool enableInternalPull)
-{
-  if ((pollingTask == nullptr))
-  {
-    int buttonNumber = globalButtonCount++;
-    digitalInputChain = new DigitalButton(pinNumber, buttonNumber, pullupOrPulldown, enableInternalPull, digitalInputChain);
-    return buttonNumber;
-  }
-  else
-    return abortAtAdd();
-}
-
-void inputs::addDigitalExt(
+void inputs::addDigital(
     gpio_num_t pinNumber,
     inputNumber_t inputNumber,
     bool pullupOrPulldown,
     bool enableInternalPull)
 {
   if ((pollingTask == nullptr))
-    digitalInputChain = new DigitalButton(pinNumber, inputNumber, pullupOrPulldown, enableInternalPull, digitalInputChain);
+  {
+    if (inputNumber <= MAX_INPUT_NUMBER)
+      digitalInputChain = new DigitalButton(
+          pinNumber,
+          inputNumber,
+          pullupOrPulldown,
+          enableInternalPull,
+          digitalInputChain);
+    else
+      abortDueToInvalidInputNumber();
+  }
   else
-    abortAtAdd();
+    abortDueToCallBeforeBegin();
 }
 
 // ----------------------------------------------------------------------------
 
-inputNumber_t inputs::addRotaryEncoder(
-    gpio_num_t clkPin,
-    gpio_num_t dtPin,
-    bool useAlternateEncoding)
-{
-  if (pollingTask == nullptr)
-  {
-    int buttonNumber = globalButtonCount;
-    new RotaryEncoderInput(clkPin, dtPin, buttonNumber, UNSPECIFIED_INPUT_NUMBER, useAlternateEncoding);
-    globalButtonCount += 2;
-    return buttonNumber;
-  }
-  else
-    return abortAtAdd();
-}
-
-void inputs::addRotaryEncoderExt(
+void inputs::addRotaryEncoder(
     gpio_num_t clkPin,
     gpio_num_t dtPin,
     inputNumber_t cwInputNumber,
@@ -248,48 +233,21 @@ void inputs::addRotaryEncoderExt(
 {
   if (pollingTask == nullptr)
   {
-    new RotaryEncoderInput(clkPin, dtPin, cwInputNumber, ccwInputNumber, useAlternateEncoding);
+    if ((cwInputNumber <= MAX_INPUT_NUMBER) &&
+        (ccwInputNumber <= MAX_INPUT_NUMBER) &&
+        (cwInputNumber != ccwInputNumber))
+      new RotaryEncoderInput(
+          clkPin, dtPin, cwInputNumber, ccwInputNumber, useAlternateEncoding);
+    else
+      abortDueToInvalidInputNumber();
   }
   else
-    abortAtAdd();
+    abortDueToCallBeforeBegin();
 }
 
 // ----------------------------------------------------------------------------
 
-inputNumber_t inputs::setButtonMatrix(
-    const gpio_num_t selectorPins[],
-    const uint8_t selectorPinCount,
-    const gpio_num_t inputPins[],
-    const uint8_t inputPinCount)
-{
-  if (pollingTask == nullptr)
-  {
-    if (buttonMatrixAlreadySet)
-    {
-      log_e("inputs::setButtonMatrix() called twice");
-      abort();
-      return UNSPECIFIED_INPUT_NUMBER;
-    }
-    else
-    {
-      int firstButtonNumber = globalButtonCount;
-      digitalInputChain = new ButtonMatrixInput(
-          selectorPins,
-          selectorPinCount,
-          inputPins,
-          inputPinCount,
-          nullptr,
-          firstButtonNumber);
-      globalButtonCount += (inputPinCount * selectorPinCount);
-      buttonMatrixAlreadySet = true;
-      return firstButtonNumber;
-    }
-  }
-  else
-    return abortAtAdd();
-}
-
-void inputs::addButtonMatrixExt(
+void inputs::addButtonMatrix(
     const gpio_num_t selectorPins[],
     const uint8_t selectorPinCount,
     const gpio_num_t inputPins[],
@@ -308,7 +266,7 @@ void inputs::addButtonMatrixExt(
         digitalInputChain);
   }
   else
-    abortAtAdd();
+    abortDueToCallBeforeBegin();
 }
 
 void inputs::setAnalogClutchPaddles(
@@ -322,20 +280,22 @@ void inputs::setAnalogClutchPaddles(
     log_e("inputs::set*ClutchPaddles() called twice");
     abort();
   }
-  else
+  else if (pollingTask == nullptr)
   {
-    if (leftClutchPin != rightClutchPin)
+    if ((leftClutchPin != rightClutchPin) &&
+        (leftClutchInputNumber <= MAX_INPUT_NUMBER) &&
+        (rightClutchInputNumber <= MAX_INPUT_NUMBER) &&
+        (rightClutchInputNumber != leftClutchInputNumber))
     {
       rightClutchAxis = new AnalogAxisInput(rightClutchPin, rightClutchInputNumber);
       leftClutchAxis = new AnalogAxisInput(leftClutchPin, leftClutchInputNumber);
       capabilities::setFlag(CAP_CLUTCH_ANALOG);
     }
     else
-    {
-      log_e("inputs::setAnalogClutchPaddles() called with the same left and right gpio pins");
-      abort();
-    }
+      abortDueToInvalidInputNumber();
   }
+  else
+    abortDueToCallBeforeBegin();
 }
 
 void inputs::setDigitalClutchPaddles(
@@ -347,22 +307,25 @@ void inputs::setDigitalClutchPaddles(
     log_e("inputs::set*ClutchPaddles() called twice");
     abort();
   }
-  else if (leftClutchInputNumber == rightClutchInputNumber)
+  else if ((leftClutchInputNumber == rightClutchInputNumber) ||
+           (leftClutchInputNumber > MAX_INPUT_NUMBER) ||
+           (rightClutchInputNumber > MAX_INPUT_NUMBER))
   {
-    log_e("inputs::setDigitalClutchPaddles() called with the same left and right input numbers");
-    abort();
+    abortDueToInvalidInputNumber();
   }
-  else
+  else if (pollingTask == nullptr)
   {
     leftClutchButtonBitmap = BITMAP(leftClutchInputNumber);
     rightClutchButtonBitmap = BITMAP(rightClutchInputNumber);
     clutchButtonsMask = ~(leftClutchButtonBitmap | rightClutchButtonBitmap);
     capabilities::setFlag(CAP_CLUTCH_BUTTON);
   }
+  else
+    abortDueToCallBeforeBegin();
 }
 
 // ----------------------------------------------------------------------------
-// Input hub
+// Macros to send events
 // ----------------------------------------------------------------------------
 
 void inputs::notifyInputEvent(inputBitmap_t mask, inputBitmap_t state)
@@ -374,10 +337,25 @@ void inputs::notifyInputEvent(inputBitmap_t mask, inputBitmap_t state)
   xQueueSend(eventQueue, &event, SAMPLING_RATE_TICKS); // portMAX_DELAY);
 }
 
+void inputs::notifyInputEventForTesting(uint8_t id, inputBitmap_t bitmap, inputBitmap_t mask, clutchValue_t value)
+{
+  axisEvent_t event;
+  event.eventType = EVENT_TYPE_AXIS;
+  event.inputBitmap = bitmap;
+  event.inputMask = mask;
+  event.value = value;
+  event.id = id;
+  xQueueSend(eventQueue, &event, SAMPLING_RATE_TICKS); // portMAX_DELAY);
+}
+
+// ----------------------------------------------------------------------------
+// Input hub
+// ----------------------------------------------------------------------------
+
 void hubLoop(void *unused)
 {
   inputBitmap_t globalState = 0;
-  inputBitmap_t newState, changes;
+  inputBitmap_t newState, changes, inputFilter;
 
   uint8_t buffer[EVENT_SIZE];
   inputEvent_t *switchEvent = (inputEvent_t *)buffer;
@@ -392,31 +370,45 @@ void hubLoop(void *unused)
         newState = (globalState & switchEvent->mask) | switchEvent->state;
         if (clutchState::currentFunction != CF_BUTTON)
         {
+          // Translate digital clutch inputs into analog axis values
           changes = globalState ^ newState;
           if (changes & leftClutchButtonBitmap)
             clutchState::setLeftAxis((newState & leftClutchButtonBitmap) ? CLUTCH_FULL_VALUE : CLUTCH_NONE_VALUE);
           if (changes & rightClutchButtonBitmap)
             clutchState::setRightAxis((newState & rightClutchButtonBitmap) ? CLUTCH_FULL_VALUE : CLUTCH_NONE_VALUE);
-          newState &= clutchButtonsMask;
+          inputFilter = clutchButtonsMask;
         }
+        else
+          inputFilter = ~0ULL;
         changes = globalState ^ newState;
         globalState = newState;
+        inputHub::onStateChanged(globalState & inputFilter, changes & inputFilter);
       }
       else
       {
-        // EVENT_TYPE_AXIS
-        if (axisEvent->id)
+        // buffer[0] == EVENT_TYPE_AXIS
+        if (clutchState::currentFunction == CF_BUTTON)
         {
-          clutchState::setLeftAxis(axisEvent->value);
+          // Translate analog axis values into digital input
+          if ((axisEvent->value) >= CLUTCH_3_4_VALUE)
+            inputHub::onStateChanged(
+                (globalState & axisEvent->inputMask) | axisEvent->inputBitmap,
+                axisEvent->inputBitmap);
+          else if ((axisEvent->value) <= CLUTCH_1_4_VALUE)
+            inputHub::onStateChanged(globalState, axisEvent->inputBitmap);
         }
         else
         {
-          clutchState::setRightAxis(axisEvent->value);
+          if (axisEvent->id)
+            clutchState::setRightAxis(axisEvent->value);
+          else
+            clutchState::setLeftAxis(axisEvent->value);
+          inputHub::onStateChanged(globalState, 0);
         }
       }
-      inputHub::onStateChanged(globalState, changes);
+
     } // end if
-  }
+  }   // end while
 }
 
 // ----------------------------------------------------------------------------

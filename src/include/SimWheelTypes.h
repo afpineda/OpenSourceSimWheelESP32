@@ -48,22 +48,16 @@ typedef uint8_t inputNumber_t;
 /**
  * @brief The value of a joystick's axis
  *
+ * @note DO NOT CHANGE. hidImplementation and clutchState depends on it.
  */
-//typedef int8_t clutchValue_t;
-//#define CLUTCH_NONE_VALUE -127
-//#define CLUTCH_FULL_VALUE 127
-//#define CLUTCH_DEFAULT_VALUE 0
-
-// DO NOT CHANGE. hidImplementation and clutchState depends on it.
 typedef uint8_t clutchValue_t;
+
 #define CLUTCH_NONE_VALUE 0
 #define CLUTCH_FULL_VALUE 254
 #define CLUTCH_DEFAULT_VALUE 127
 #define CLUTCH_1_4_VALUE 64
 #define CLUTCH_3_4_VALUE 192
 #define CLUTCH_INVALID_VALUE 255
-
-// #define clutchValuePercent(value) ((uint8_t)(value))/255
 
 /**
  * @brief Value read from an ADC pin
