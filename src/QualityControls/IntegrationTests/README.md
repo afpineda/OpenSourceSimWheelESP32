@@ -18,6 +18,7 @@ graph TD
     inputs --> rotaryEnconderInput
     inputs --> polledInput
 ```
+
 ## Step
 
 > _Test name_: [InputHubTest](./InputHubTest/README.md)

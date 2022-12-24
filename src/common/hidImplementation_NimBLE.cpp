@@ -54,8 +54,6 @@ void bleAdvertise()
         NimBLEAdvertising *pAdvertising = pServer->getAdvertising();
         pAdvertising->setAppearance(HID_GAMEPAD);
         pAdvertising->addServiceUUID(hid->hidService()->getUUID());
-        if (uartService)
-            pAdvertising->addServiceUUID(UART_SERVICE_UUID);
         pAdvertising->start();
     }
 }
@@ -70,17 +68,19 @@ public:
         if (autoPowerOffTimer != nullptr)
             esp_timer_stop(autoPowerOffTimer);
         connected = true;
-        ui::showConnectedNotice();
+        notify::connected();
         hidImplementation::reset();
     };
+
     void onDisconnect(NimBLEServer *pServer)
     {
         connected = false;
         bleAdvertise();
         if (autoPowerOffTimer != nullptr)
             esp_timer_start_once(autoPowerOffTimer, AUTO_POWER_OFF_DELAY_SECS * 1000000);
-        ui::showBLEDiscoveringNotice();
+        notify::BLEdiscovering();
     };
+
 } connectionStatus;
 
 // ----------------------------------------------------------------------------
@@ -100,11 +100,19 @@ class ConfigFRCallbacks : public NimBLECharacteristicCallbacks
         }
         if ((size>1) && (data[1]!=0xff))  {
             // ALT Buttons mode
-            clutchState::setALTModeForButtons((bool)data[1]);
+            clutchState::setALTModeForALTButtons((bool)data[1]);
         }
         if ((size>2) && ((clutchValue_t)data[2]>=CLUTCH_NONE_VALUE) && ((clutchValue_t)data[2]<=CLUTCH_FULL_VALUE)) {
             // Bite point
             clutchState::setBitePoint((clutchValue_t)data[2]);
+        }
+        if ((size>3) && (data[3]==(uint8_t)simpleCommands_t::CMD_AXIS_RECALIBRATE)) {
+            // Force analog axis recalibration
+            inputs::recalibrateAxes();
+        }
+        if ((size>3) && (data[3]==(uint8_t)simpleCommands_t::CMD_BATT_RECALIBRATE)) {
+            // Restart auto calibration algoritm
+            batteryCalibration::restartAutoCalibration();
         }
     }
 
@@ -115,6 +123,7 @@ class ConfigFRCallbacks : public NimBLECharacteristicCallbacks
         data[0] = (uint8_t)clutchState::currentFunction;
         data[1] = (uint8_t)clutchState::altModeForAltButtons;
         data[2] = (uint8_t)clutchState::bitePoint;
+        data[3] = 0xff;
         pCharacteristic->setValue(data, sizeof(data));
     }
 
@@ -177,13 +186,18 @@ void hidImplementation::begin(
 
         // HID initialization
         hid = new NimBLEHIDDevice(pServer);
+        if (!hid) {
+            log_e("Unable to create HID device");
+            abort();
+        }
         hid->manufacturer()->setValue(deviceManufacturer);
         hid->pnp(BLE_VENDOR_SOURCE, BLE_VENDOR_ID, BLE_PRODUCT_ID, PRODUCT_REVISION);
         hid->hidInfo(0x00, 0x01);
         NimBLESecurity *pSecurity = new NimBLESecurity();
         pSecurity->setAuthenticationMode(ESP_LE_AUTH_BOND);
         hid->reportMap((uint8_t *)hid_descriptor, sizeof(hid_descriptor));
-        hid->setBatteryLevel(100);
+        hid->setBatteryLevel(UNKNOWN_BATTERY_LEVEL);
+        hid->manufacturer()->notify();
 
         inputGamepad = hid->inputReport(RID_INPUT_GAMEPAD);
         configReport = hid->featureReport(RID_FEATURE_CONFIG);
@@ -301,13 +315,13 @@ void hidImplementation::reportBatteryLevel(int level)
     else if (level < 0)
         level = 0;
 
-    if (connectionStatus.connected)
-        hid->setBatteryLevel(level);
+    hid->setBatteryLevel(level);
+    hid->batteryLevel()->notify();
 }
 
 void hidImplementation::reportChangeInConfig()
 {
-    notifyConfigChanges = true; // Will be report in next input report
+    notifyConfigChanges = true; // Will be reported in next input report
 }
 
 // ----------------------------------------------------------------------------

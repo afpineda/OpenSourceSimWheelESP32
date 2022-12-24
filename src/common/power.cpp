@@ -9,13 +9,14 @@
 
 #include <Arduino.h>
 #include "SimWheel.h"
+#include "adcTools.h"
 #include <esp_sleep.h>
 #include "esp_pm.h"
 #include "esp_bt.h"
 #include "esp_bt_main.h"
 #include "esp32-hal-gpio.h"
-#include "esp32-hal-adc.h"
-#include "driver/adc.h"
+// #include "esp32-hal-adc.h"
+// #include "driver/adc.h"
 #include "driver/rtc_io.h"
 
 // ----------------------------------------------------------------------------
@@ -40,7 +41,7 @@ static TaskHandle_t batteryMonitorDaemon = nullptr;
 static bool testInProgress = false;
 int lastBatteryLevel = 100;
 
-//#define BATTMON_STACK_SIZE 1536
+// #define BATTMON_STACK_SIZE 1536
 #define BATTMON_STACK_SIZE 2048
 #define BATTMON_SAMPLE_COUNT 50
 #define BATTMON_SAMPLING_RATE_TICKS ((2 * 60 * 1000) / portTICK_RATE_MS) // 2 minutes
@@ -199,10 +200,9 @@ void latchPowerOff()
   }
 }
 
-void power::powerOff(bool forced)
+void power::powerOff()
 {
-  // Turn display off
-  ui::turnOff();
+  notify::powerOff();
   // try external latch circuit
   latchPowerOff();
   // if still up and running, enter deep sleep
@@ -213,35 +213,12 @@ void power::powerOff(bool forced)
 // Battery monitor daemon
 // ----------------------------------------------------------------------------
 
-int getADCreading(int pin, adc_atten_t attenuation)
-{
-  int8_t channel = digitalPinToAnalogChannel(pin);
-  if (channel < 0)
-  {
-    log_e("power::getBatteryReadingForTesting(): GPIO %u is not ADC", pin);
-    abort();
-  }
-  else if (channel > 9)
-  {
-    channel -= 10;
-    int value = 0;
-    ESP_ERROR_CHECK(adc2_config_channel_atten((adc2_channel_t)channel, attenuation));
-    ESP_ERROR_CHECK(adc2_get_raw((adc2_channel_t)channel, ADC_WIDTH_BIT_12, &value));
-    return value;
-  }
-  else
-  {
-    ESP_ERROR_CHECK(adc1_config_channel_atten((adc1_channel_t)channel, attenuation));
-    ESP_ERROR_CHECK(adc1_config_width(ADC_WIDTH_BIT_12));
-    return adc1_get_raw((adc1_channel_t)channel);
-  }
-}
-
 int power::getBatteryReadingForTesting(gpio_num_t battENPin, gpio_num_t battREADPin)
 {
-  if (gpio_set_level(battENPin, 1) == ESP_OK)
+
+  if ((battENPin < 0) || (gpio_set_level(battENPin, 1) == ESP_OK))
   {
-    adc_power_acquire();
+//    adc_power_acquire();
     vTaskDelay(200);
     uint64_t sum = 0;
     for (int i = 0; i < BATTMON_SAMPLE_COUNT; i++)
@@ -250,8 +227,9 @@ int power::getBatteryReadingForTesting(gpio_num_t battENPin, gpio_num_t battREAD
       sum += getADCreading(battREADPin, ADC_ATTEN_DB_11);
       // vTaskDelay(10);
     }
-    gpio_set_level(battENPin, 0);
-    adc_power_release();
+    if (battENPin >= 0)
+      gpio_set_level(battENPin, 0);
+//    adc_power_release();
     return (sum / BATTMON_SAMPLE_COUNT);
   }
   return 0;
@@ -290,7 +268,7 @@ void batteryDaemonLoop(void *unused)
       power::powerOff();
     }
     else if (lastBatteryLevel <= LOW_BATTERY_LEVEL)
-      ui::showLowBatteryNotice();
+      notify::lowBattery();
 
     // Delay to next sample
     if (testInProgress)
@@ -309,24 +287,28 @@ void configureBatteryMonitor(
     gpio_num_t batteryLevelPin)
 {
   if (!GPIO_IS_VALID_GPIO(batteryLevelPin) ||
-      !GPIO_IS_VALID_OUTPUT_GPIO(enableBatteryReadPin) ||
+      ((enableBatteryReadPin >= 0) && !GPIO_IS_VALID_OUTPUT_GPIO(enableBatteryReadPin)) ||
       (digitalPinToAnalogChannel(batteryLevelPin) < 0))
   {
     log_e("power::startBatteryMonitor(): given pins are not usable");
     abort();
   }
 
-  // configure _battEN_ pin
   gpio_config_t io_conf = {};
-  io_conf.intr_type = GPIO_INTR_DISABLE;
-  io_conf.mode = GPIO_MODE_OUTPUT;
-  io_conf.pin_bit_mask = (1ULL << enableBatteryReadPin);
-  io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
-  io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
-  ESP_ERROR_CHECK(gpio_config(&io_conf));
-  ESP_ERROR_CHECK(gpio_set_level(enableBatteryReadPin, 0));
+  if (enableBatteryReadPin >= 0)
+  {
+    // configure _battEN_ pin
+    io_conf.intr_type = GPIO_INTR_DISABLE;
+    io_conf.mode = GPIO_MODE_OUTPUT;
+    io_conf.pin_bit_mask = (1ULL << enableBatteryReadPin);
+    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
+    io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
+    ESP_ERROR_CHECK(gpio_config(&io_conf));
+    ESP_ERROR_CHECK(gpio_set_level(enableBatteryReadPin, 0));
+  }
 
   // configure _battRead_ pin
+  io_conf.intr_type = GPIO_INTR_DISABLE;
   io_conf.mode = GPIO_MODE_INPUT;
   io_conf.pin_bit_mask = (1ULL << batteryLevelPin);
   io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
@@ -355,6 +337,7 @@ void power::startBatteryMonitor(
       log_e("power::startBatteryMonitor(): unable to start daemon");
       abort();
     }
+    capabilities::setFlag(deviceCapability_t::CAP_BATTERY);
   }
 }
 
@@ -365,9 +348,4 @@ void power::startBatteryMonitor(
 int power::getLastBatteryLevel()
 {
   return lastBatteryLevel;
-}
-
-bool power::hasBatteryMonitor()
-{
-  return (batteryMonitorDaemon != nullptr);
 }

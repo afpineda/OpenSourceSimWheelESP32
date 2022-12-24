@@ -101,7 +101,7 @@ typedef uint16_t analogReading_t;
  *
  */
 #define INPUT_TASK_PRIORITY (tskIDLE_PRIORITY + 2)
-#define UART_TASK_PRIORITY (tskIDLE_PRIORITY + 1)
+#define UI_TASK_PRIORITY (tskIDLE_PRIORITY + 1)
 
 /**
  * @brief User-selected function of the clutch paddles
@@ -202,5 +202,25 @@ typedef enum
     CAP_HAS_OLED = 12,     /// has an OLED
     CAP_HAS_REV_LIGHTS,    /// has rev lights
 } deviceCapability_t;
+
+/**
+ * @brief Simple commands accepted from a feature HID report
+ * 
+ */
+typedef enum{
+    CMD_RESERVED = 0, /// Not a command, reserved to avoid mistakes
+    CMD_AXIS_RECALIBRATE=1, /// Recalibrate analog axes (if any)
+    CMD_BATT_RECALIBRATE=2 /// Restart battery auto-calibration
+} simpleCommands_t;
+
+
+class AbstractNotificationInterface {
+    virtual void bitePoint(clutchValue_t bitePoint) = 0;
+    virtual void connected() = 0;
+    virtual void BLEdiscovering() = 0;
+    virtual void powerOn() = 0;
+    virtual void powerOff() = 0;
+    virtual void lowBattery() = 0;
+};
 
 #endif

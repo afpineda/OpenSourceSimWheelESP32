@@ -23,6 +23,10 @@
 #define STR_BITEP "bite point"
 #define STR_ALT "ALT request"
 
+//------------------------------------------------------------------
+// Auxiliary
+//------------------------------------------------------------------
+
 template <typename T>
 void assertEquals(const char *text, T expected, T found)
 {
@@ -50,7 +54,6 @@ void assertAlmostEquals(const char *text, clutchValue_t expected, clutchValue_t 
     }
 }
 
-
 //------------------------------------------------------------------
 // Mocks
 //------------------------------------------------------------------
@@ -59,6 +62,12 @@ void hidImplementation::reportChangeInConfig()
 {
 
 }
+
+void notify::bitePoint(clutchValue_t n)
+{
+
+}
+
 
 //------------------------------------------------------------------
 // Arduino entry point

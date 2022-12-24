@@ -49,34 +49,6 @@ namespace capabilities
 }
 
 /**
- * @brief Language for the user interface
- *
- */
-namespace language
-{
-    /**
-     * @brief Must be called before anything else in this namespace. Will
-     *        load the configured UI language from flash memory.
-     *
-     **/
-    void begin();
-
-    /**
-     * @brief Set the current language for the UI. Will be stored in flash memory.
-     *
-     * @param lang Language
-     */
-    void setLanguage(language_t lang);
-
-    /**
-     * @brief Retrieve the current language for the UI
-     *
-     * @return language_t Current language for the UI
-     */
-    language_t getLanguage();
-}
-
-/**
  * @brief Current state of the clutch paddles (if any) and,
  *        for convenience, mode of "ALT" buttons
  *
@@ -299,7 +271,9 @@ namespace power
     /**
      * @brief Enable monitorization of battery charge. Do not call if there is no battery.
      *
-     * @param battENPin Output pin to enable/disable the battery monitor circuit
+     * @param battENPin Output pin to enable/disable the battery monitor circuit.
+     *                  Set to `GPIO_NUM_NC` (-1) if `battREADPin` is attached to
+     *                  a simple voltage divider. This is the case for most battery-enabled devkits.
      * @param battREADPin ADC pin used to read battery voltage
      * @param testing Set to TRUE for unit testing. Will get a battery sample every 5 seconds.
      */
@@ -321,25 +295,15 @@ namespace power
     /**
      * @brief Get last known battery level
      *
-     * @return int Percentage of battery charge
+     * @return int Percentage of battery charge (0% to 100%)
      */
     int getLastBatteryLevel();
 
     /**
-     * @brief Check if the battery monitor is running
-     *
-     * @return true If the battery monitor is running
-     * @return false Otherwise
-     */
-    bool hasBatteryMonitor();
-
-    /**
      * @brief If an external power latch circuit is in place, the system will be powered off.
      *        Otherwise, deep sleep mode will be enabled.
-     *
-     * @param forced Set to TRUE when requested by the user, FALSE otherwise.
      */
-    void powerOff(bool forced = false);
+    void powerOff();
 }
 
 /**
@@ -558,7 +522,7 @@ namespace inputHub
      *
      * @note Make sure all buttons in the bitmap are able to be pressed at the same time.
      */
-    void setCycleALTFunctionbitmap(const inputBitmap_t bitmap);
+    void setCycleALTFunctionBitmap(const inputBitmap_t bitmap);
 
     /**
      * @brief Set up a bitmap of buttons to cycle the function of clutch paddles (if any).
@@ -568,7 +532,7 @@ namespace inputHub
      *
      * @note Make sure all buttons in the bitmap are able to be pressed at the same time.
      */
-    void setCycleClutchFunctionbitmap(const inputBitmap_t bitmap);
+    void setCycleClutchFunctionBitmap(const inputBitmap_t bitmap);
 
     /**
      * @brief Set up a bitmap of buttons to enable each specific clutch function for clutch paddles.
@@ -579,7 +543,7 @@ namespace inputHub
      * @param axisModeBitmap A bitmap of button numbers to enable the analog axes function
      * @param altModeBitmap A bitmap of button numbers to enable the "ALT" function
      * @param buttonModeBitmap A bitmap of button numbers to enable the "regular buttons" function
-     * 
+     *
      * @note Set the bitmap to `0` if a particular function must not be mapped to any input.
      *       Make sure all buttons in a bitmap are able to be pressed at the same time.
      */
@@ -591,228 +555,239 @@ namespace inputHub
 }
 
 /**
- * @brief Coordinate the use of the OLED display from multiple threads
+ * @brief Show notifications to the user if a user interface (UI) is available.
+ *        Different user interfaces may be implemented in the future.
  *
  */
-namespace uiManager
+namespace notify
 {
     /**
-     * @brief Must be called before anything else in this namespace
+     * @brief Set up an UI-dependant implementation for user notifications.
+     *        Do not call if there is no user interface.
      *
+     * @param implementation An object that actually implements user notifications.
+     *                       Must remain valid forever (do not destroy).
      */
-    void begin();
+
+    void begin(AbstractNotificationInterface *implementation);
 
     /**
-     * @brief Acquire exclusive access to the display buffer assigned to a certain screen priority
+     * @brief Notify current clutch's bite point
      *
-     * @param priority Screen priority
-     * @return uint8_t* buffer used to draw the screen
-     *
-     * @note Every call to `enterDisplay` must be followed by a call to `exitDisplay`.
-     *       Two calls in a row will cause a deadlock.
+     * @param aBitePoint Current bite point
      */
-    uint8_t *enterDisplay(screenPriority_t priority);
+    void bitePoint(clutchValue_t aBitePoint);
 
     /**
-     * @brief Release exclusive access to a buffer and display it.
-     *
-     * @param priority Screen priority
-     * @param autoHide If TRUE, this screen will be cleared after a few seconds.
-     *
-     * @note Every call to `exitDisplay` must be preceded by a single call to `enterDisplay`.
+     * @brief Notify the device is connected to a host computer
      *
      */
-    void exitDisplay(screenPriority_t priority, bool autoHide);
+    void connected();
+
+    void BLEdiscovering();
+    /**
+     * @brief Notify the device is ready for use
+     *
+     */
+    void powerOn();
 
     /**
-     * @brief Acquire a buffer for the frame server daemon.
-     *        Must be called from a single thread. Reserved for use by a frame server.
+     * @brief Notify the device is going to power off or deep sleep
      *
-     * @return uint8_t* buffer used to draw the screen. Must not be shared betweeen threads.
      */
-    uint8_t *getFrameServerBuffer();
+    void powerOff();
 
     /**
-     * @brief Display the buffer assigned to the frame server.
-     *        Must be called from a single thread. Reserved for use by a frame server.
+     * @brief Notify a very low battery level
      *
      */
-    void unsafeDisplayFrameServerBuffer();
-
-    /**
-     * @brief Clear screen
-     *
-     * @param priority Screen priority
-     *
-     * @note Must not be called between `enterDisplay` and `exitDisplay`, otherwise a deadlock
-     *       will occur.
-     */
-    void hide(screenPriority_t priority);
+    void lowBattery();
 }
 
-/**
- * @brief Implementation of a user interface
- *
- */
-namespace ui
-{
-    /**
-     * @brief Initialize display
-     *
-     * @param pixels_width Resolution width in pixels
-     * @param pixels_height Resolution height in pixels
-     * @param displayType Type of display controller
-     * @param flipUpsideDown Set to true if the display is mounted upside down
-     * @return true OLED is available
-     * @return false OLED is not available
-     */
-    bool begin(
-        int pixels_width = 128,
-        int pixels_height = 64,
-        displayType_t displayType = SSOLED_132x64,
-        bool flipUpsideDown = false);
+// /**
+//  * @brief Coordinate the use of the OLED display from multiple threads
+//  *
+//  */
+// namespace uiManager
+// {
+//     /**
+//      * @brief Must be called before anything else in this namespace
+//      *
+//      */
+//     void begin();
 
-    /**
-     * @brief Clear the screen. Called exclusively from `uiManager`. Must not call `uiManager`.
-     */
-    void clear();
+//     /**
+//      * @brief Acquire exclusive access to the display buffer assigned to a certain screen priority
+//      *
+//      * @param priority Screen priority
+//      * @return uint8_t* buffer used to draw the screen
+//      *
+//      * @note Every call to `enterDisplay` must be followed by a call to `exitDisplay`.
+//      *       Two calls in a row will cause a deadlock.
+//      */
+//     uint8_t *enterDisplay(screenPriority_t priority);
 
-    /**
-     * @brief Display the given buffer. Called exclusively from `uiManager`. Must not call `uiManager`.
-     *
-     * @param buffer data to display
-     */
-    void display(uint8_t *buffer);
+//     /**
+//      * @brief Release exclusive access to a buffer and display it.
+//      *
+//      * @param priority Screen priority
+//      * @param autoHide If TRUE, this screen will be cleared after a few seconds.
+//      *
+//      * @note Every call to `exitDisplay` must be preceded by a single call to `enterDisplay`.
+//      *
+//      */
+//     void exitDisplay(screenPriority_t priority, bool autoHide);
 
-    /**
-     * @brief Display current clutch's bite point
-     *
-     * @param value Bite point
-     * @return Screen ID
-     */
-    void showBitePoint(clutchValue_t value);
+//     /**
+//      * @brief Acquire a buffer for the frame server daemon.
+//      *        Must be called from a single thread. Reserved for use by a frame server.
+//      *
+//      * @return uint8_t* buffer used to draw the screen. Must not be shared betweeen threads.
+//      */
+//     uint8_t *getFrameServerBuffer();
 
-    /**
-     * @brief Show a menu screen
-     *
-     * @param title Menu title
-     * @param selection Currently selected option or submenu
-     */
-    void showMenu(const char *title, const char *selection);
+//     /**
+//      * @brief Display the buffer assigned to the frame server.
+//      *        Must be called from a single thread. Reserved for use by a frame server.
+//      *
+//      */
+//     void unsafeDisplayFrameServerBuffer();
 
-    /**
-     * @brief Show message
-     *
-     * @param title Title. Optional: Can be null
-     * @param info Message to display
-     * @param priority Screen priority
-     *
-     * @note Will auto-hide after a few seconds
-     */
-    void showInfo(const char *title, const char *info, screenPriority_t priority = SCR_INFO_PRIORITY);
+//     /**
+//      * @brief Clear screen
+//      *
+//      * @param priority Screen priority
+//      *
+//      * @note Must not be called between `enterDisplay` and `exitDisplay`, otherwise a deadlock
+//      *       will occur.
+//      */
+//     void hide(screenPriority_t priority);
+// }
 
-    /**
-     * @brief Show message and wait for it to disapear.
-     *
-     * @param title Title. Optional: Can be null
-     * @param info Message to display
-     * @param priority Screen priority
-     *
-     * @note Will not return inmediately, but after a few seconds. Use wisely.
-     */
-    void showModal(const char *title, const char *info, screenPriority_t priority = SCR_INFO_PRIORITY);
+// /**
+//  * @brief Implementation of a user interface
+//  *
+//  */
+// namespace ui
+// {
+//     /**
+//      * @brief Initialize display
+//      *
+//      * @param pixels_width Resolution width in pixels
+//      * @param pixels_height Resolution height in pixels
+//      * @param displayType Type of display controller
+//      * @param flipUpsideDown Set to true if the display is mounted upside down
+//      * @return true OLED is available
+//      * @return false OLED is not available
+//      */
+//     bool begin(
+//         int pixels_width = 128,
+//         int pixels_height = 64,
+//         displayType_t displayType = SSOLED_132x64,
+//         bool flipUpsideDown = false);
 
-    /**
-     * @brief Macro to hide SCR_MENU_PRIORITY screen
-     *
-     */
-    void hideMenu();
+//     /**
+//      * @brief Clear the screen. Called exclusively from `uiManager`. Must not call `uiManager`.
+//      */
+//     void clear();
 
-    /**
-     * @brief Macro to show a data save notice
-     *
-     */
-    void showSaveNote();
+//     /**
+//      * @brief Display the given buffer. Called exclusively from `uiManager`. Must not call `uiManager`.
+//      *
+//      * @param buffer data to display
+//      */
+//     void display(uint8_t *buffer);
 
-    /**
-     * @brief Macro to show a Bluetooth connection notice
-     *
-     */
-    void showConnectedNotice();
+//     /**
+//      * @brief Display current clutch's bite point
+//      *
+//      * @param value Bite point
+//      * @return Screen ID
+//      */
+//     void showBitePoint(clutchValue_t value);
 
-    /**
-     * @brief Macro to tell the user that Bluetooth discovery is active
-     *
-     */
-    void showBLEDiscoveringNotice();
+//     /**
+//      * @brief Show a menu screen
+//      *
+//      * @param title Menu title
+//      * @param selection Currently selected option or submenu
+//      */
+//     void showMenu(const char *title, const char *selection);
 
-    /**
-     * @brief Macro to warn the user that the battery charge is about to deplete
-     *
-     */
-    void showLowBatteryNotice();
+//     /**
+//      * @brief Show message
+//      *
+//      * @param title Title. Optional: Can be null
+//      * @param info Message to display
+//      * @param priority Screen priority
+//      *
+//      * @note Will auto-hide after a few seconds
+//      */
+//     void showInfo(const char *title, const char *info, screenPriority_t priority = SCR_INFO_PRIORITY);
 
-    /**
-     * @brief Cut power to the display in order to preserve battery.
-     *        Will be called before system shutdown.
-     */
-    void turnOff();
+//     /**
+//      * @brief Show message and wait for it to disapear.
+//      *
+//      * @param title Title. Optional: Can be null
+//      * @param info Message to display
+//      * @param priority Screen priority
+//      *
+//      * @note Will not return inmediately, but after a few seconds. Use wisely.
+//      */
+//     void showModal(const char *title, const char *info, screenPriority_t priority = SCR_INFO_PRIORITY);
 
-    /**
-     * @brief Activate or deactivate the frame server in order to
-     *        display simulation data (low priority)
-     *
-     * @param state TRUE to enable, FALSE to disable
-     */
-    void frameServerSetEnabled(bool state);
+//     /**
+//      * @brief Macro to hide SCR_MENU_PRIORITY screen
+//      *
+//      */
+//     void hideMenu();
 
-    /**
-     * @brief  Check if the OLED is available
-     *
-     * @return true Available
-     * @return false Not available
-     */
-    bool isAvailable();
-}
+//     /**
+//      * @brief Macro to show a data save notice
+//      *
+//      */
+//     void showSaveNote();
 
-/**
- * @brief Operarion of the user config menu
- *
- */
-namespace configMenu
-{
-    /**
-     * @brief Show configuration menu if not shown and vice-versa
-     *
-     * @return true Menu is shown
-     * @return false Menu is not shown or there is no user interface available
-     */
-    bool toggle();
+//     /**
+//      * @brief Macro to show a Bluetooth connection notice
+//      *
+//      */
+//     void showConnectedNotice();
 
-    /**
-     * @brief Route input events to the configuration menu, when shown
-     *
-     * @param globalState input bitmap
-     * @param changes bitmap of inputs that have changed since last report
-     *
-     * @note Called exclusivelly from `inputHub`
-     */
-    void onInput(inputBitmap_t globalState, inputBitmap_t changes);
+//     /**
+//      * @brief Macro to tell the user that Bluetooth discovery is active
+//      *
+//      */
+//     void showBLEDiscoveringNotice();
 
-    /**
-     * @brief Configured buttons used to navigate through menu options
-     *
-     * @param prevButtonNumber button number for previous option or submenu
-     * @param nextButtonNumber button number for next option or submenu
-     * @param selectButtonNumber button number to select current option or enter submenu
-     * @param cancelButtonNumber button number to go back to previous menu
-     */
-    void setNavButtons(
-        inputNumber_t prevButtonNumber,
-        inputNumber_t nextButtonNumber,
-        inputNumber_t selectButtonNumber,
-        inputNumber_t cancelButtonNumber);
-}
+//     /**
+//      * @brief Macro to warn the user that the battery charge is about to deplete
+//      *
+//      */
+//     void showLowBatteryNotice();
+
+//     /**
+//      * @brief Cut power to the display in order to preserve battery.
+//      *        Will be called before system shutdown.
+//      */
+//     void turnOff();
+
+//     /**
+//      * @brief Activate or deactivate the frame server in order to
+//      *        display simulation data (low priority)
+//      *
+//      * @param state TRUE to enable, FALSE to disable
+//      */
+//     void frameServerSetEnabled(bool state);
+
+//     /**
+//      * @brief  Check if the OLED is available
+//      *
+//      * @return true Available
+//      * @return false Not available
+//      */
+//     bool isAvailable();
+// }
 
 /**
  * @brief Implementation of the "Human Interface Device" protocol and UART service
@@ -875,22 +850,22 @@ namespace hidImplementation
     void reset();
 }
 
-/**
- * @brief Receive and process commands through the UART service at `hidImplementation`
- *
- */
-namespace uartServer
-{
-    void onReceive(char *text);
+// /**
+//  * @brief Receive and process commands through the UART service at `hidImplementation`
+//  *
+//  */
+// namespace uartServer
+// {
+//     void onReceive(char *text);
 
-    // For read only
-    extern volatile char gear;
-    extern volatile uint8_t rpmPercent;
-    extern volatile uint16_t speed;
-    extern volatile uint8_t engineMap;
-    extern volatile uint8_t absLevel;
-    extern volatile uint8_t tcLevel;
-    extern volatile uint64_t frameCount;
-}
+//     // For read only
+//     extern volatile char gear;
+//     extern volatile uint8_t rpmPercent;
+//     extern volatile uint16_t speed;
+//     extern volatile uint8_t engineMap;
+//     extern volatile uint8_t absLevel;
+//     extern volatile uint8_t tcLevel;
+//     extern volatile uint64_t frameCount;
+// }
 
 #endif

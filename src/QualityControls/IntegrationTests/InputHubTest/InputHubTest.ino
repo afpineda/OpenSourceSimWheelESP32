@@ -21,9 +21,9 @@ static bool inMenu = false;
 #define RIGHT_CLUTCH_IN 1
 #define CW_IN 7
 #define CCW_IN 8
-#define COMMAND_IN 3
-#define CYCLE_CLUTCH_BMP BITMAP()
-#define CYCLE_ALT_BMP 6
+#define COMMAND_IN 2
+#define CYCLE_ALT_IN 3
+#define CYCLE_CLUTCH_IN 4
 
 clutchFunction_t oldCP;
 bool oldAltF;
@@ -69,6 +69,8 @@ void setup()
 
     inputs::setDigitalClutchPaddles(LEFT_CLUTCH_IN, RIGHT_CLUTCH_IN);
     inputHub::setALTButton(ALT_IN);
+    inputHub::setCycleALTFunctionBitmap(BITMAP(COMMAND_IN)|BITMAP(CYCLE_ALT_IN));
+    inputHub::setCycleClutchFunctionBitmap(BITMAP(COMMAND_IN)|BITMAP(CYCLE_CLUTCH_IN));
 
     inputHub::setClutchCalibrationButtons(CW_IN, CCW_IN);
 

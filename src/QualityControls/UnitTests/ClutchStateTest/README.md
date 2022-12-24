@@ -2,7 +2,7 @@
 
 ## Purpouse and summary
 
-To test correct logic behaviour of clutch paddles depending on each available function.
+To test correct behaviour of clutch paddles depending on each available function.
 
 ## Harware setup
 

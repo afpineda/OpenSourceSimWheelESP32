@@ -4,10 +4,10 @@
 
 To test that:
 
-- Menu, clutch and ALT button numbers are properly mapped to inputs
-- Clutch value is properly set depending on which paddles are pressed or not
-- Bite point is properly set when requested when configured buttons are operated
-- ALT function is enabled when configured buttons is pressed.
+- Button numbers are properly mapped to wheel functions.
+- Clutch value is properly set depending on which paddles are pressed or not.
+- Bite point is properly set when requested.
+- ALT mode is enabled when configured button is pressed.
 
 ## Hardware setup
 
@@ -31,7 +31,6 @@ For later reference:
 ## Procedure and expected output
 
 1. Reset. Ignore output from the operating system itself.
-
 2. Output must match:
 
    ```text
@@ -59,7 +58,7 @@ For later reference:
 
 6. Press and hold "CLUTCH2", then press and hold "CLUTCH1", then release "CLUTCH2", then release "CLUTCH1". Output must match the previous four lines.
 
-
+**UNFINISHED**
 
 7. Press and hold "MENU1" and "MENU2" for three seconds or more, then release both. The **last two lines** of output must match:
    

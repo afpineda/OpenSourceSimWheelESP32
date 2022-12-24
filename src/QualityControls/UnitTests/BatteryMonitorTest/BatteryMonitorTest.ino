@@ -36,27 +36,23 @@ int batteryCalibration::getBatteryLevelAutoCalibrated(int reading)
     return 66;
 }
 
+void batteryCalibration::begin()
+{
+}
+
 void hidImplementation::reportBatteryLevel(int level)
 {
 
 }
 
-void ui::showLowBatteryNotice()
+void notify::lowBattery()
 {
 }
 
-void ui::turnOff()
+void notify::powerOff()
 {
 }
 
-void batteryCalibration::begin()
-{
-}
-
-void capabilities::setFlag(deviceCapability_t a, bool b)
-{
-    
-}
 
 //-------------------------------------------------------
 // Auxiliary

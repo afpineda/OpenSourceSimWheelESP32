@@ -30,7 +30,6 @@ static inputBitmap_t setAxisFunctionBitmapForCP = 0;
 static inputBitmap_t setAltFunctionBitmapForCP = 0;
 static inputBitmap_t setButtonFunctionBitmapForCP = 0;
 
-
 // Related to POV buttons
 // #define DPAD_CENTERED 0
 #define DPAD_UP 1
@@ -81,6 +80,7 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
         clutchState::setFunction(CF_ALT);
         return;
     }
+
     if ((changes & setButtonFunctionBitmapForCP) && (globalState == setButtonFunctionBitmapForCP))
     {
         clutchState::setFunction(CF_BUTTON);
@@ -99,7 +99,7 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
     {
         filteredInputs = 0;
     }
-
+    
     // bite point calibration
     if (clutchState::isCalibrationInProgress())
     {
@@ -121,7 +121,6 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
     }
 
     // Report
-
     globalState = globalState & (~filteredInputs);
 
     uint8_t povInput = 0;
@@ -129,6 +128,7 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
     {
         // Map directional pad buttons to POV input as needed
         inputBitmap_t povState = globalState & dpadNegMask;
+
         if (povState)
         {
             uint8_t n = 1;
@@ -141,7 +141,6 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
         }
         globalState = globalState & (dpadMask);
     }
-
     hidImplementation::reportInput(globalState, altEnabled, povInput);
 }
 
@@ -238,21 +237,21 @@ void inputHub::setDPADControls(
     capabilities::setFlag(deviceCapability_t::CAP_DPAD, (dpadNegMask != 0));
 }
 
-void inputHub::setCycleALTFunctionbitmap(const inputBitmap_t bitmap)
+void inputHub::setCycleALTFunctionBitmap(const inputBitmap_t bitmap)
 {
     cycleALTFunctionBitmap = bitmap;
 }
 
-void inputHub::setCycleClutchFunctionbitmap(const inputBitmap_t bitmap)
+void inputHub::setCycleClutchFunctionBitmap(const inputBitmap_t bitmap)
 {
     cycleClutchFunctionBitmap = bitmap;
 }
 
 void inputHub::setSelectClutchFunctionBitmaps(
-        const inputBitmap_t clutchModeBitmap,
-        const inputBitmap_t axisModeBitmap,
-        const inputBitmap_t altModeBitmap,
-        const inputBitmap_t buttonModeBitmap)
+    const inputBitmap_t clutchModeBitmap,
+    const inputBitmap_t axisModeBitmap,
+    const inputBitmap_t altModeBitmap,
+    const inputBitmap_t buttonModeBitmap)
 {
     setClutchFunctionBitmapForCP = clutchModeBitmap;
     setAxisFunctionBitmapForCP = axisModeBitmap;

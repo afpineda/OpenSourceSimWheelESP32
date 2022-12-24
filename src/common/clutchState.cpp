@@ -90,7 +90,6 @@ void autoSaveCallback(void *param)
         prefs.putUChar(KEY_CLUTCH_FUNCTION, (uint8_t)clutchState::currentFunction);
         prefs.putUChar(KEY_CLUTCH_CALIBRATION, (uint8_t)clutchState::bitePoint);
         prefs.end();
-        // ui::showSaveNote();
     }
 }
 
@@ -173,7 +172,7 @@ void clutchState::setBitePoint(clutchValue_t newBitePoint)
             update();
             requestSave();
             hidImplementation::reportChangeInConfig();
-            // TO-DO: ui report 
+            notify::bitePoint(newBitePoint);
         }
     }
 }

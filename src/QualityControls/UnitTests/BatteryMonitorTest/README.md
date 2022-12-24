@@ -23,15 +23,17 @@ Output through USB serial port at 115200 bauds.
 
 1. Reset. Ignore output from the operating system itself.
 2. Output must match:
-   
-   ```
+
+   ```text
    --GO--
    ```
+
 3. A message must appear every 5 seconds. For example (not to be taken literally):
-   
-   ```
+
+   ```text
    Reading: 1695
    ```
+
 4. Ignore repeated messages from now on.
 5. Wire `battery(+)` to `GND`.
 6. **No output** should appear.
