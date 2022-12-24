@@ -47,14 +47,14 @@ Note that feature reports are both read and write.
 | Field                | Bits size | Byte index |
 | -------------------- | :-------: | :--------: |
 | Buttons state        |    128    |     0      |
-| Z axis               |     8     |     16     |
-| Y axis               |     8     |     17     |
-| X axis               |     8     |     18     |
+| Rz axis              |     8     |     16     |
+| Rx axis              |     8     |     17     |
+| Ry axis              |     8     |     18     |
 | POV (D-PAD)          |     4     |     19     |
 | Feature notification |     4     |     19     |
 
 - Buttons state: one bit per button (1=pressed, 0=non-pressed). The least significant bit is the first button.
-- Axes: a signed byte in the range -127 to 127.
+- Axes: a signed byte in the range 0 to 254.
   - Z: F1-Style clutch (combined imput from left and right clutch paddles)
   - Y: Left clutch paddle
   - X: Right clutch paddle
@@ -103,6 +103,7 @@ While writing, any value outside of the valid range will be ignored, so they me 
 |     0      |  see below   | Function of clutch paddles |                                                       |
 |     1      |     any      | "ALT" buttons state        | non-zero means enabled, except for HEX 80 (see below) |
 |     2      |   0 to 254   | Current bite point         | signed byte                                           |
+|     3      |    1 to 2    | Simple command             | Write-only. Read is allways HEX FF                    |
 
 _Other notes_:
 
@@ -110,3 +111,4 @@ _Other notes_:
 - Any valid value written will be saved to flash memory after a 15 seconds delay.
 - When byte index 1 is set to FF (hexadecimal) in a write operation, the field will be ignored.
 - The same goes for byte index 2, since FF (hexadecimal) is 255 (decimal), outside of the valid range.
+- Valid values for byte index 3 are enumerated in `simpleCommands_t` at file [SimWheelTypes.h](../../src/include/SimWheelTypes.h)

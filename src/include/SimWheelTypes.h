@@ -205,21 +205,64 @@ typedef enum
 
 /**
  * @brief Simple commands accepted from a feature HID report
- * 
+ *
  */
-typedef enum{
-    CMD_RESERVED = 0, /// Not a command, reserved to avoid mistakes
-    CMD_AXIS_RECALIBRATE=1, /// Recalibrate analog axes (if any)
-    CMD_BATT_RECALIBRATE=2 /// Restart battery auto-calibration
+typedef enum
+{
+    CMD_RESERVED = 0,         /// Not a command, reserved to avoid mistakes
+    CMD_AXIS_RECALIBRATE = 1, /// Recalibrate analog axes (if any)
+    CMD_BATT_RECALIBRATE = 2  /// Restart battery auto-calibration
 } simpleCommands_t;
 
+/**
+ * @brief Abstract implementation of notifications
+ *
+ */
+class AbstractNotificationInterface
+{
+public:
+    /**
+     * @brief Called once at initialization. Called from the main thread
+     *
+     */
+    virtual void begin() = 0;
 
-class AbstractNotificationInterface {
+    /**
+     * @brief Notify a change in current bite point. Called from a separate thread.
+     *
+     * @param bitePoint A bite point value
+     */
     virtual void bitePoint(clutchValue_t bitePoint) = 0;
+
+    /**
+     * @brief Notify device is connected. Called from a separate thread.
+     *
+     */
     virtual void connected() = 0;
+
+    /**
+     * @brief Notify device is in discovery mode. Called from a separate thread.
+     *
+     */
     virtual void BLEdiscovering() = 0;
+
+    /**
+     * @brief Notify device is ready. Called from a separate thread.
+     *
+     */
     virtual void powerOn() = 0;
+
+    /**
+     * @brief Notify device is about to power off/deep sleep.
+     *        Called from a separate thread.
+     *
+     */
     virtual void powerOff() = 0;
+
+    /**
+     * @brief Notify low battery. Called from a separate thread.
+     *
+     */
     virtual void lowBattery() = 0;
 };
 

@@ -1,0 +1,55 @@
+/**
+ * @author Ángel Fernández Pineda. Madrid. Spain.
+ * @date 2022-02-27
+ * @brief Unit Test. See [README](./README.md)
+ *
+ * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ *
+ */
+
+#include <Arduino.h>
+#include "SimWheel.h"
+#include "SimWheelTypes.h"
+#include "SerialNotification.h"
+// #include "debugUtils.h"
+
+//------------------------------------------------------------------
+// Globals
+//------------------------------------------------------------------
+
+//------------------------------------------------------------------
+// Mocks
+//------------------------------------------------------------------
+
+//------------------------------------------------------------------
+// Arduino entry point
+//------------------------------------------------------------------
+
+void setup()
+{
+    Serial.begin(115200);
+    while (!Serial)
+        ;
+    Serial.println("-- READY --");
+
+    notify::begin(new SerialNotificationImpl());
+
+    Serial.println("-- GO --");
+
+    notify::powerOn();
+    notify::BLEdiscovering();
+    notify::connected();
+    notify::lowBattery();
+    notify::powerOff();
+
+    for (clutchValue_t i=CLUTCH_NONE_VALUE; i<CLUTCH_FULL_VALUE; i++)
+        notify::bitePoint(i);
+
+    delay(8000);
+    Serial.println("-- END --");
+}
+
+void loop()
+{
+    delay(2000);
+}

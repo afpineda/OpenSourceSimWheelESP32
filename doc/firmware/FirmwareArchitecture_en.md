@@ -4,18 +4,14 @@
 
 The _system_ have been broken into several _modules_ that have been implemented as C++ namespaces. All of them are defined at _SimWheel.h_:
 
+- **batteryCalibration**: Everything related to the estimation of battery charge.
 - **capabilities**: Everything realated to the capabilities of the hardware and firmware.
 - **clutchState**: Implements the behavior of clutch paddles, holds their state and their configuration.
-- **language**: Everything related to the language of the user interface.
+- **hidImplementation**: Everything related to the HID protocol.
 - **inputs**: Everything related to hardware inputs and their events.
 - **inputHub**: Everything related to the combined state of all inputs and their treatment. Translates input events into a HID report.
-- **uiManager**: Everything related to the coordinated use of the UI display from multiple modules.
-- **ui**: Everything related to the user interface.
-- **configMenu**: Everything related to the integrated menu used to set user preferences.
-- **hidImplementation**: Everything related to the HID and protocol.
+- **notify**: Everything related to the notification of some events to the user if an user interface is available.
 - **power**: Everything related to power management.
-- **uartServer**: Everything related to AT command processing and data capture for display.
-- **batteryCalibration**: Everything related to the estimation of battery charge.
 
 Each namespace is implemented in a single _cpp_ file with its name, however, some of them have alternate implementations in order to enable unit and integration testing. Those files are named following this pattern: `<namespace><underscore><implementation>.cpp`. Some implementations are:
 
@@ -26,21 +22,22 @@ All modules can be found at the `/common` folder.
 
 ### Auxiliary modules
 
-Some namespaces are implemented with auxiliary modules which are not exposed at _SimWheel.h_, one _cpp_ file for each:
+Some namespaces are implemented with the help of auxiliary modules which are not exposed at _SimWheel.h_, one _cpp_ file for each:
 
-- _RotaryEncoderInput.cpp_: Everything related to rotary encoders
-- _ButtonMatrixInput.cpp_: Everything related to button/switch matrices
-- _debugUtils.cpp_: Minor utilities for debugging and testing
-- _PolledInput_: Related to inputs that must be read in a polling (or sampling) loop.
+- *adcTools*: Reading of ADC pins.
+- *ButtonMatrixInput.cpp*: Everything related to button/switch matrices.
+- *debugUtils.cpp*: Minor utilities for debugging and testing.
+- *PolledInput*: Related to inputs that must be read in a polling (or sampling) loop.
+- *RotaryEncoderInput.cpp*: Everything related to rotary encoders.
+- *SerialNotification*: For the testing of user notifications through the USB serial interface.
 
 ### Module dependencies
 
-Only most relevant methods are shown:
+Only most relevant information is shown below:
 
 ```mermaid
 classDiagram
     class RotaryEncoderInput 
-    class PolledInput
     class inputs { 
       +notifyInputEvent()
       +start()
@@ -48,24 +45,15 @@ classDiagram
     class inputHub {
       +onStateChanged()
     }
-    class language
-    class ui {
-      +clear()
-      +display()
-    }
-    class uiManager {
-      +enterDisplay()
-      +exitDisplay()
+    class clutchState {
+      +isCalibrationInProgress()
+      +setBitePoint()
+      +isALTRequested()
+      +altModeForAltButtons
+      +currentFunction
     }
     class hidImplementation {
       +reportInput()
-    }
-    class configMenu {
-      +onInput()
-      +toggle()
-    }
-    class uartServer {
-      +onReceive()
     }
     class power {
       +powerOff()
@@ -74,27 +62,22 @@ classDiagram
       +getBatteryLevel()
       +getBatteryLevelAutoCalibrated()
     }
-    inputHub <-- inputs: events
-    inputs <--> RotaryEncoderInput: events
-    inputs <--> PolledInput: events
-    inputs <--> ButtonMatrixInput: events
-    inputHub --> ui: show bite point or save notifications
-    inputHub --> configMenu: re-routed events
-    inputHub <-- configMenu: user preferences
+    inputHub <-- inputs: state changes
+    inputs <-- RotaryEncoderInput: events
+    inputs <-- DigitalPolledInput: events
+    inputs <-- AnalogPolledInput: events
+    inputs --> clutchState: state changes
+    inputs <-- clutchState: configuration
+    inputHub <-- clutchState: state
+    inputHub <--> clutchState: configuration
     inputHub --> hidImplementation: processed events
-    ui --> uiManager
-    configMenu --> language: set UI language
-    configMenu --> ui: menu options
-    hidImplementation --> ui: notify connection status 
+    hidImplementation <--> clutchState: configuration
     hidImplementation --> power: auto power-off 
     hidImplementation <-- power: current battery level
-    hidImplementation <--> uartServer: NuS protocol
-    uartServer --> inputHub: execute AT commands
-    power --> ui: turn display off
-    power --> batteryCalibration
+    power <-- batteryCalibration: computed battery level
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9VcGO2jAQ_RUrp1ZdfiCqVtpdkIpU2mppb1yMMwmWHE9kj1kQ4t87DgnrkACneOa9sef5jTllCgvI8kwZ6f1cy8rJemMF_9qIeEeS7riwEeaWtgkk0vQfNAaKNp6GdQx4ceqwQnyzSLo8tsDFHix9-XpNed7huj6PyvwIW3G6gtGuSRK87aStoJhkGU4FWUEaCzqpoQxIlxyg0L4x8jhZLOiVtFzMJXw-Prj5kBTDB03zB6V2uljWjYGa-ZI02qSkgwYdtfJMchXaUlcrsGGgxYDAEcKqMjDdCIu8BrcfdIL2HRTo_TSlwY8Bul3_LstJ8FYSq3J8k0Zv3W17FdDrJf8T9mCSE99kXgJhX2J0vVc7fJ_NOovlAqKbfALwMf08Ydz72MTF90GvgQjtSpLTh3vQeLiIDToXfocfYqsJWEdtSaATXu5BtJOgVSvRFPfzqnPhYOYwsBLTW0UdUnjwfF-NgxIcWAVT1UcmzJmAjPU3m_DEXDrp_N_d9acPY7YfNe4WSPxb3s7eEB1VqeMCm6T58Vj02MubEatYUG2GnwoKXjwitibNhWQjXb5nWJZ3GVHBjqGCY9WoN7Iw0Y8PeM_JSOXiV1hHIQkVdqRk4CK4vwV2zQEU36l4-cut1bW0RafEZd767ik4K7qnSXAPt5jxwEVE9pTV4GqpC37U2wHcZLTjk2-ynD8LKGUwtMk29szQ0BQ8Z4tCE7osJxfgKYvKrY9WZXkpjYce1P03dNHzf-lRDuA)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNlN1u4yAQhV8FcbXV1i9gVZXSNlUjddWo3UvfEBg7SBi8MLSKorz7Ana8ZLHa-spmvvk5zJGPlBsBtKZcMeceJOss6xtNwpNOyKtBZg9rHTG70YNHkodlPHHkOB0S8lMblO0hket30Pjjag65UGr-PhVlnvyOHGfY6DdkCPd7pjsQi1lceeT7hGWJ0t0zJXeWoTR6o7fWdBacy-cAvJMIWyMvxpNu9fz7Ff54cPivYwgwhb-C_EdjVwrvPKLRbg5yb22Q-eg1jw0XxtxLsekHBX3A0lDZsBYGYzHd1qLEwXyAzfj0_dK2i_COIYI9ZPKzzC6IHuPP8A4qk_dfZOXRnEsUFz8v6qaqpuXXxKUN8LQpl3EuUaWDagLRGSX6IDuJTG2NUiA-R1eaKdN9RVbVbe6Sr0a9QLnRrez8eJEL6su6JXT7_ZIRLpxSk8EaHtwL4kJeaalvNSvTYlbyVE1Y2Pv4Xpm2JZ80OmdM1j_7jqhonzFv9G1kS1PG0fqgOmgqMuk17cH2TIrwT0rmbSjuQ_uG1uFVQMu8woY2-hRQP4ggdS0kGktrtB6uaZTxdtCc1i1TDs7Q9GubTk9_AWA1rEk)
 
 Many modules have a `begin()` method that must be called at system startup (`main()`or `setup()`). The calling order is defined by the previous diagram, where bottom modules must be called first.
 
@@ -105,7 +88,6 @@ Most relevant are:
 
 - **SimWheel.h**: definition of all modules (namespaces).
 - **SimWheelTypes.h**: common constants and types for all modules.
-- **strings.h**: all message strings, already translated as requested by the user.
 - **debugUtils.h**: constants and utilities for unit testing.
 
 ## Brief description of most relevant modules
@@ -114,25 +96,56 @@ For detailed description, see the doxigen's documentation at _SimWheel.h_.
 
 ### RotaryEncoderInput
 
-Each detent of a rotary encoder generates two input events in quick succession: a button press and then, release. This requires a dedicated thread for every rotary encoder, but they are dormant most of the time.
-Decoding is implemented by hardware interrupts.
+Each detent of a rotary encoder generates two input events in quick succession: a button press and then, release. This requires a dedicated thread for every rotary encoder, but they are dormant most of the time. Decoding is implemented by hardware interrupts.
 
-### PolledInput and ButtonMatrixInput
+### DigitalPolledInput and descendant classes
 
-There is a dedicated daemon that read the state of those inputs in a loop, every few milliseconds. Since many inputs are read at the same time, the combined state of all of them is reported to `inputHub`. Nothing is reported if there are no input event, this is, a state change since the previous iteration.
+There is a dedicated daemon that read the state of those inputs in a loop, every few milliseconds. Since many inputs are read at the same time, the combined state of all of them is reported to `inputHub` or `clutchSate` (for digital clutch paddles when not configured to work as regular buttons). Nothing is reported if there are no input events, this is, a state change since the previous iteration.
+
+### AnalogPolledInput
+
+It works in a similar way to `DigitalPolledInput`, but for analog inputs, which are limited to two clutch paddles with potentiometers. Changes are notified to `clutchSate`.
 
 ### Inputs
 
-This is the place where inputs are set up and a number assigned to them. Use the `add*()` methods to tell the system input pins and kind of inputs (digital buttons, button matrices and rotary encoders). Input numbers are assigned by the system in calling order (ascending).
+This is the place where inputs are set up and a number assigned to them. The assigned input number will be reported to the hosting computer when needed.
+Use the `add*()` methods to set up any kind of inputs (button matrices, rotary encoders, etc) and their pins.
+Analog or digital clutch paddles are set here, too.
 
-### InputHub
+### InputHub and clutchState
 
-All the logic behind the behavior of the sim wheel is implemented at this module. Wheel's functions are mapped to input numbers here, using the `set*()` methods.
+Almost all the logic behind the behavior of the sim wheel is implemented at these modules.
+Wheel's functions are mapped to input numbers at `InputHub`, using the `set*()` methods.
 
 ### Capabilities
 
 This module holds static data about device capabilities. For example, it tells if the device has clutch paddles or not.
 Such data is set from other modules at startup. This module is trivial, so it is not shown in the previous diagram. It may be called from any other module.
+
+### Notifications
+
+This module provides a generic way to notify events to the user, if a user interface is available. It does not depend on a particular hardware, so, anything could be implemented in the future: a single LED, sounds, an OLED, etc. By default, it does nothing. To provide a particular user-interface implementation, derive a new class from `AbstractNotificationInterface` and provide an instance to `notify::begin()`.
+
+```mermaid
+classDiagram
+    class notification {
+       + begin(AbstractNotificationInterface *implementation)
+    }
+    class AbstractNotificationInterface {
+        + begin()
+        + lowBattery()
+        + connected()
+        + bitePoint()
+        + powerOn()
+        + powerOff()
+        + BLEDiscovering()
+    }
+
+    notification ..> AbstractNotificationInterface
+```
+
+All notifications are queued, serialized and executed in a separate thread. The calling thread does not wait for them. 
+For this reason, some notifications may be missed if the queue is full.
 
 ### BatteryCalibration
 
@@ -150,7 +163,7 @@ If calibration data is not available, a rough estimation is provided based on Li
 
 (See [LiPoBatteryCharacterization.ods](./LiPoBatteryCharacterization.ods))
 
-## About inputs and input events
+## About digital inputs and input events
 
 Every input is assigned a single number starting from 0 and up to 63.
 
@@ -194,32 +207,6 @@ flowchart LR
 [Render this graph at mermaid.live](https://mermaid.live/view#pako:eNptj8sOgkAMRX-l6QoS-QEWriSRxIXg0nFRmSokzAxOOhpi_Hd5yELjrj333DR9YuU0Y4qX1j2qmrzArlQWoMyiqHRCvge2o-NBExtn43iM830U5bYLAp1r25-wODZTxHe2ArfAgU9TabuU6nD-apQZJMnHT5I1FPONP7D4ZvkWV2jYG2r08MVzVBRKzYYVpsOo-UKhFYXKvgY1dJqEM92I85iKD7xCCuIOva2WfXY2DV09mRm-3lPKX_4)
 
 Event capture is detached from event processing at the **input hub daemon**, which runs most of the code. Note that such a daemon is implemented inside `inputs.cpp`, not `inputHub.cpp`.
-
-## About OLED
-
-The system is a multi-threaded one, so access to OLED hardware must be synchronized in some way. This is the main purpose of `uiManager`, but there is more. Some messages are more relevant than others, so they are assigned a priority. Lower priority messages never get on top of higher priority messages. If a message is hidden, the next one with lower priority is displayed again.
-
-```mermaid
-sequenceDiagram
-    ui->>uiManager: enterDisplay(priority)
-    uiManager-->>ui: buffer
-    ui->>ui: build screen into `buffer`
-    ui->>uiManager: exitDisplay(priority)
-    alt current screen has higher priority
-        uiManager->>uiManager: mark given priority as visible
-    else current screen has lower priority
-        uiManager->>uiManager: display an update current priority
-    end
-    ui->>uiManager: hide(priority)
-    alt matches current priority
-        uiManager->>uiManager: clear display
-        uiManager->>uiManager: find next visible priority, if any, and display. 
-    else otherwise
-        uiManager->>uiManager: mark given priority as non-visible
-    end
-```
-
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqdkz1uwzAMha9CaGqApAfwkCkdO3X1EMaibaIylVJSfhDk7lWquK2BpEXrxTbx8T3q0T6ZxlsylQn0lkgaWjF2ikMtkK_Ei-Uy8TMKdqQVkETSFYetw-PDVtkrx-NsZK_Y4qOngk1qW9KJ0KXIzkJolEiAJXpYF259x_HA8Y4hughNUs1DjYI9Bui560lhhAs7HXDiMKC-Qse73D72QJbZceCNo9JOLtAtL-f3f7Gy5SCAAmlrMX5pTiVI7O00erZ0K4YBY9NTuCP3w0SNI9Rxrl_plsWC0CGO6XwazYHbfKx8x4xc9R7hW3o-5q3sOdB_FyJeFtOliDVzM5AOyDZ_wadLuTbZZ6DaVPnRUovJxdrUcs5oyfzJcvRqqqiJ5gZT9C9Hacb3wlx_glI8vwMYlxTu)
 
 ## About auto power off
 
