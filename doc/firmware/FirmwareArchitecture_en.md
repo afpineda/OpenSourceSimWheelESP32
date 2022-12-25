@@ -27,7 +27,7 @@ Some namespaces are implemented with the help of auxiliary modules which are not
 - *adcTools*: Reading of ADC pins.
 - *ButtonMatrixInput.cpp*: Everything related to button/switch matrices.
 - *debugUtils.cpp*: Minor utilities for debugging and testing.
-- *PolledInput*: Related to inputs that must be read in a polling (or sampling) loop.
+- *PolledInput*: Related to inputs that must be read in a polling (or sampling) loop. Defines two main c++ classes: `AnalogPolledInput` and `DigitalPolledInput`
 - *RotaryEncoderInput.cpp*: Everything related to rotary encoders.
 - *SerialNotification*: For the testing of user notifications through the USB serial interface.
 
@@ -74,10 +74,24 @@ classDiagram
     hidImplementation <--> clutchState: configuration
     hidImplementation --> power: auto power-off 
     hidImplementation <-- power: current battery level
+    power --> batteryCalibration: battery voltage
     power <-- batteryCalibration: computed battery level
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNlN1u4yAQhV8FcbXV1i9gVZXSNlUjddWo3UvfEBg7SBi8MLSKorz7Ana8ZLHa-spmvvk5zJGPlBsBtKZcMeceJOss6xtNwpNOyKtBZg9rHTG70YNHkodlPHHkOB0S8lMblO0hket30Pjjag65UGr-PhVlnvyOHGfY6DdkCPd7pjsQi1lceeT7hGWJ0t0zJXeWoTR6o7fWdBacy-cAvJMIWyMvxpNu9fz7Ff54cPivYwgwhb-C_EdjVwrvPKLRbg5yb22Q-eg1jw0XxtxLsekHBX3A0lDZsBYGYzHd1qLEwXyAzfj0_dK2i_COIYI9ZPKzzC6IHuPP8A4qk_dfZOXRnEsUFz8v6qaqpuXXxKUN8LQpl3EuUaWDagLRGSX6IDuJTG2NUiA-R1eaKdN9RVbVbe6Sr0a9QLnRrez8eJEL6su6JXT7_ZIRLpxSk8EaHtwL4kJeaalvNSvTYlbyVE1Y2Pv4Xpm2JZ80OmdM1j_7jqhonzFv9G1kS1PG0fqgOmgqMuk17cH2TIrwT0rmbSjuQ_uG1uFVQMu8woY2-hRQP4ggdS0kGktrtB6uaZTxdtCc1i1TDs7Q9GubTk9_AWA1rEk)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNVMFu2zAM_RVBpw2rf8AYCqRtigZosaDd0RdFph0BsuhKVIYgyL9Pkh1PmY22PsnieyQf-aATl1gDL7nUwrkHJVorusqw8KUb9ook7HFtIsxuTO-J5WEVbxw7jZeM_TBIqjkm5PoAhr59n0IupJr-z7M0T37HThMYzRsJgvu9MC3UiyypPcl9gmVE5e6FVjsrSKHZmK3F1oJzeR9Ad4pgi-qqPeVWz79f4d2Do38VQ0BoegnyH9GuNN15IjRuCkpvbZD56I2MBRfa3Kt60_UaugBLTWXNWujRUprWosQe_4DN8On_V9MsgneCCOwxk58x2yB6iD_DAXQm77_IyhNeUswGPy3qZ1GMyy-ZSxuQaVMuw7mEmjuoZBCdMYc-qFaR0FvUGuqPoSsjNLafIYviNnfJZ61eQSWaRrV-GOSC-nneOej26ykjeOaUkvUWZXAv1Ffy5pb6UrE5LbKSp0omwt6Hc4FNwz4odGGM1r_4julon4E3-DZmn5uynAgH1CRayCkx_RJFYhcGFcZwVYzf8A5sJ1QdnrDk9YrTPnRb8TIca2iE11TxypwD1Pd1mMy6VoSWl2Q93PCo-u1oJC8boR1cQONLON6e_wLZdr1Y)
+
+```mermaid
+classDiagram
+    hidImplementation <--> clutchState: configuration
+    hidImplementation --> inputs: command to calibrate analog axes
+    hidImplementation --> power: command to recalibrate battery
+    hidImplementation --> notify: connected, discovering
+    power --> notify: powerOff, low battery
+    clutchState --> notify: bite point
+
+```
+
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9kbFuxCAMhl8FMedeIKo6tUOnDreyOGASS2BHxPQane7dS3Kt2gw9Jvj9f78tc7VeAtre-gTL8kIwFsiOTTsThbc8J8zICkrC5ul0ejY-VfXTuUnYGy8caaxlr_-HbRTxXHXZgJyBg1ExHhINjUQDDElGA5-4PMqY5YLlEFHwN2QAVSzrowAWpbjuUzN6xdCZQIuXDyzE453cmxzcu_IeY2eSXI5t_uzigAzUhFmI1bHtbMaSgULb8nXjnNWpTeZs364BI9Skzjq-NWudQwt7DaRSbK-lYmehqpxX9j_vu-f7r2wfIS14-wLihqBZ)
 
 Many modules have a `begin()` method that must be called at system startup (`main()`or `setup()`). The calling order is defined by the previous diagram, where bottom modules must be called first.
 
@@ -124,28 +138,60 @@ Such data is set from other modules at startup. This module is trivial, so it is
 
 ### Notifications
 
-This module provides a generic way to notify events to the user, if a user interface is available. It does not depend on a particular hardware, so, anything could be implemented in the future: a single LED, sounds, an OLED, etc. By default, it does nothing. To provide a particular user-interface implementation, derive a new class from `AbstractNotificationInterface` and provide an instance to `notify::begin()`.
+This module provides a generic way to notify events to the user, if a user interface is available. It does not depend on a particular hardware, so, anything could be implemented in the future: a single LED, sounds, an OLED, etc. By default, it does nothing. To provide a particular user-interface implementation, derive a new class from `AbstractNotificationInterface` or `AbastractFrameServerInterface` and, then, provide an instance to `notify::begin()`.
 
-```mermaid
-classDiagram
-    class notification {
-       + begin(AbstractNotificationInterface *implementation)
-    }
-    class AbstractNotificationInterface {
-        + begin()
-        + lowBattery()
-        + connected()
-        + bitePoint()
-        + powerOn()
-        + powerOff()
-        + BLEDiscovering()
-    }
+All notifications are queued, serialized and executed in a very low priority separate thread. The calling thread does not wait for them. For those reasons, some notifications may be missed.
 
-    notification ..> AbstractNotificationInterface
+#### AbstractNotificationInterface
+
+For user interfaces not needing a perpetual loop. For example:
+
+```c
+   void MyImpl::turnOn() {
+      turnLedOn();
+   }
+
+   void MyImpl::connected() {
+      // blink 2 times
+      delay(250);
+      turnLedOff();
+      delay(250);
+      turnLedOn();
+      delay(250);
+      turnLedOff();
+      delay(250);
+      turnLedOn();
+   }
 ```
 
-All notifications are queued, serialized and executed in a separate thread. The calling thread does not wait for them. 
-For this reason, some notifications may be missed if the queue is full.
+#### AbastractFrameServerInterface
+
+For user interfaces in need of a perpetual loop. If there are no pending notifications, `AbastractFrameServerInterface::serveSingleFrame()` will be called at timed intervals. For example:
+
+```c
+   void MyImpl::begin() {
+     batteryIsLow = false;
+   }
+
+   uint8_t getTargetFPS() {
+     return 1;
+   }
+
+   void MyImpl::turnOn() {
+      turnLedOn();
+   }
+
+   void MyImpl::lowBattery() {
+      batteryIsLow = true;
+   }
+
+   void MyImpl::serveSingleFrame() {
+    // Called one time per second
+    if (batteryIsLow) 
+      switchLed();
+   }
+
+```
 
 ### BatteryCalibration
 
