@@ -1,6 +1,6 @@
-## Firmware (software) architecture
+# Firmware (software) architecture
 
-### Modules
+## Modules
 
 The _system_ have been broken into several _modules_ that have been implemented as C++ namespaces. All of them are defined at _SimWheel.h_:
 
@@ -162,6 +162,15 @@ $BatteryLevel = \frac{ (\sum_{i=0}^{n-1}S(i)) + \frac{S(n)*(V_n-V_{min}(n))}{QSI
 If calibration data is not available, a rough estimation is provided based on LiPo batteries characterization data taken from here: [https://blog.ampow.com/lipo-voltage-chart/](https://blog.ampow.com/lipo-voltage-chart/). However, actual battery voltages may not match the characterization data due to 1) inaccurate ADC readings and 2) voltage drop due to the involved transistors. For this reason, the highest voltage ever read is taken as an auto-calibration parameter. The expected voltage reading is mapped linearly to the absolute maximum voltage ever read. The battery needs a full charge before this algorithm provides any meaningful result.
 
 (See [LiPoBatteryCharacterization.ods](./LiPoBatteryCharacterization.ods))
+
+### HidImplementation
+
+All data interchange between the device and the host computer is conducted through the HID protocol. This involves:
+- State of buttons, axes and the alike.
+- Device capabilities.
+- Configuration: clutch paddles, "ALT" buttons, battery calibration, etc.
+
+See [HID notes](./HID_notes.md) for more details.
 
 ## About digital inputs and input events
 

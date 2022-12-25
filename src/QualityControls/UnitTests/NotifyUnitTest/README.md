@@ -6,7 +6,7 @@ To test that notifications are sent, received and executed.
 
 ## Harware setup
 
-Nothing required. This is an automated test.
+Nothing required.
 Output through USB serial port at 115200 bauds. Connect before reset.
 
 ## Procedure and expected output
@@ -281,3 +281,5 @@ Output through USB serial port at 115200 bauds. Connect before reset.
    ```
 
 3. Some "(BITE POINT: xxx)" messages may be missed but this is a **correct and expected behaviour**.
+
+**NOTE:** Last line will take 10 seconds (more or less) to show up. Be patient.

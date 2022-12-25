@@ -1,6 +1,0 @@
-SimWheel.h
-SimWheelTypes.h
-debugUtils.h
-uartServer.cpp
-inputHub_mock.cpp
-debugUtils.cpp

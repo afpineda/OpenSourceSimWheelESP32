@@ -215,10 +215,12 @@ typedef enum
 } simpleCommands_t;
 
 /**
- * @brief Abstract implementation of notifications
+ * @brief Abstract interface for notifications.
+ *        To provide an implementation, use one of the other
+ *        descendant abstract classes
  *
  */
-class AbstractNotificationInterface
+class BaseAbstractNotification
 {
 public:
     /**
@@ -265,5 +267,53 @@ public:
      */
     virtual void lowBattery() = 0;
 };
+
+/**
+ * @brief Interface for notifications with hardware which does not
+ *        need a perpetual background task. For example, LEDS.
+ * 
+ */
+class AbstractNotificationInterface: public BaseAbstractNotification
+{
+    public:
+        /**
+         * @brief Used to chain two or more implementations with
+         *        different hardware.
+         * 
+         */
+        AbstractNotificationInterface *nextInChain=nullptr;
+};
+
+/**
+ * @brief Interface for notifications with hardware that
+ *        requires a frame server. For example, OLED.
+ * 
+ */
+class AbstractFrameServerInterface: public BaseAbstractNotification
+{
+    public:
+        /**
+         * @brief Used to chain two or more implementations with
+         *        different hardware.
+         * 
+         */
+        AbstractFrameServerInterface *nextInChain=nullptr;
+
+    /**
+     * @brief Draw a single frame. 
+     *        Called in a loop when no notifications are pending.
+     *        Must not enter a loop itself.
+     * 
+     */
+    virtual void serveSingleFrame() = 0;
+
+    /**
+     * @brief Specify a target FPS. Not guaranteed.
+     * 
+     * @return uint8_t frames per second
+     */
+    virtual uint8_t getTargetFPS() = 0;
+};
+
 
 #endif

@@ -15,32 +15,49 @@
 // Globals
 //------------------------------------------------------------------
 
-#define OLED_BUFFER_SIZE (128 * 128) / 8 // Maximun buffer size: 128x128 pixels
+class TestImpl: public AbstractFrameServerInterface
+{
+public:
+    virtual void begin() {
+        Serial.println("begin");
+    };
 
-uint8_t buffer[OLED_BUFFER_SIZE];
+    virtual void bitePoint(clutchValue_t bitePoint) {
+        Serial.println("bite point");
+    };
+
+    virtual void connected() {
+        Serial.println("connected");
+    };
+
+    virtual void BLEdiscovering() {
+        Serial.println("BLE discovering");
+    };
+
+    virtual void powerOn() {
+        Serial.println("powerOn");
+    };
+
+    virtual void powerOff() {
+        Serial.println("powerOff");
+    }
+
+    virtual void lowBattery() {
+        Serial.println("Low battery");
+    }
+
+    virtual void serveSingleFrame() {
+        Serial.println("(FRAME)");
+    };
+
+    virtual uint8_t getTargetFPS() {
+        return 3;
+    }
+};
 
 //------------------------------------------------------------------
 // Mocks
 //------------------------------------------------------------------
-
-uint8_t *uiManager::getFrameServerBuffer()
-{
-    return buffer;
-}
-
-void uiManager::unsafeDisplayFrameServerBuffer()
-{
-    ui::display(buffer);
-}
-
-void uiManager::hide(screenPriority_t priority)
-{
-    ui::clear();
-}
-
-void idle(void *unused)
-{
-}
 
 //------------------------------------------------------------------
 // Arduino entry point
@@ -49,54 +66,19 @@ void idle(void *unused)
 void setup()
 {
     Serial.begin(115200);
-    // while (!Serial)
-    //     ;
+    while (!Serial)
+        ;
     Serial.println("-- READY --");
-    esp_task_wdt_init(30, false);
-    ui::begin();
-    ui::frameServerSetEnabled(true);
+
+    notify::begin(new TestImpl());
+
     Serial.println("-- GO --");
 }
 
-// Simulate received data
 void loop()
 {
-    Serial.println("frame server enabled");
-    ui::frameServerSetEnabled(true);
-    uartServer::gear = 'N';
-    uartServer::rpmPercent = 0;
-    uartServer::speed = 0;
-    uartServer::absLevel = 0;
-    uartServer::engineMap = 0;
-    uartServer::tcLevel = 0;
+    delay(1000);
+    notify::powerOn();
     delay(2000);
-    for (int i = 0; i < 500; i++)
-    {
-        if (i < 100)
-            uartServer::gear = '1';
-        else if (i < 200)
-            uartServer::gear = '2';
-        else if (i < 300)
-            uartServer::gear = '3';
-        else if (i < 400)
-            uartServer::gear = '4';
-        else
-            uartServer::gear = '5';
-
-        if ((i % 100)>74)
-            uartServer::rpmPercent = 100;
-        else 
-            uartServer::rpmPercent = 0;
-        uartServer::speed = i;
-        uartServer::absLevel = i % 100;
-        uartServer::engineMap = i % 10;
-        uartServer::tcLevel = i % 20;
-        delay(100);
-    }
-    uartServer::gear = ' ';
-    delay(3000);
-    Serial.println("frame server disabled");
-    ui::frameServerSetEnabled(false);
-    uartServer::gear = 'E';
-    delay(2000);
+    notify::powerOff();
 }

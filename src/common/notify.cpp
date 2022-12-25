@@ -33,78 +33,164 @@ typedef struct
 #define ID_LOWBATTERY 6
 
 #define MAX_WAIT_TICKS DEBOUNCE_TICKS * 2
+#define FRAMESERVER_PERIOD_TICKS pdMS_TO_TICKS(20) // 50FPS
 
 // ----------------------------------------------------------------------------
-// Loop
+// Loops
 // ----------------------------------------------------------------------------
 
 void notificationLoop(void *param)
 {
     AbstractNotificationInterface *impl = (AbstractNotificationInterface *)param;
+    AbstractNotificationInterface *chain;
     notifyEvent_t event;
+
     while (true)
     {
         if (xQueueReceive(queue, &event, portMAX_DELAY))
         {
-            switch (event.id)
+            chain = impl;
+            while (chain)
             {
-            case ID_BITEPOINT:
-                impl->bitePoint((clutchValue_t)event.data[0]);
-                break;
 
-            case ID_CONNECTED:
-                impl->connected();
-                break;
+                switch (event.id)
+                {
+                case ID_BITEPOINT:
+                    chain->bitePoint((clutchValue_t)event.data[0]);
+                    break;
 
-            case ID_BLEDISCOVERING:
-                impl->BLEdiscovering();
-                break;
+                case ID_CONNECTED:
+                    chain->connected();
+                    break;
 
-            case ID_POWERON:
-                impl->powerOn();
-                break;
+                case ID_BLEDISCOVERING:
+                    chain->BLEdiscovering();
+                    break;
 
-            case ID_POWEROFF:
-                impl->powerOff();
-                break;
+                case ID_POWERON:
+                    chain->powerOn();
+                    break;
 
-            case ID_LOWBATTERY:
-                impl->lowBattery();
-                break;
+                case ID_POWEROFF:
+                    chain->powerOff();
+                    break;
 
-            default:
-                break;
-            } // end switch
+                case ID_LOWBATTERY:
+                    chain->lowBattery();
+                    break;
+
+                default:
+                    break;
+                } // end switch
+                chain = chain->nextInChain;
+            } // end while(chain)
         }     // end if
-    }         // end while
+    }         // end while(true)
+}
+
+void frameServerLoop(void *param)
+{
+    AbstractFrameServerInterface *impl = (AbstractFrameServerInterface *)param;
+    AbstractFrameServerInterface *chain;
+    notifyEvent_t event;
+
+    TickType_t period = pdMS_TO_TICKS (1000 / impl->getTargetFPS());
+    if (period<FRAMESERVER_PERIOD_TICKS)
+        period = FRAMESERVER_PERIOD_TICKS;
+    auto xLastWakeTime = xTaskGetTickCount();
+
+    while (true)
+    {
+        chain = impl;
+        if ((uxQueueMessagesWaiting(queue) > 0) && xQueueReceive(queue, &event, portMAX_DELAY))
+        {
+            while (chain)
+            {
+
+                switch (event.id)
+                {
+                case ID_BITEPOINT:
+                    chain->bitePoint((clutchValue_t)event.data[0]);
+                    break;
+
+                case ID_CONNECTED:
+                    chain->connected();
+                    break;
+
+                case ID_BLEDISCOVERING:
+                    chain->BLEdiscovering();
+                    break;
+
+                case ID_POWERON:
+                    chain->powerOn();
+                    break;
+
+                case ID_POWEROFF:
+                    chain->powerOff();
+                    break;
+
+                case ID_LOWBATTERY:
+                    chain->lowBattery();
+                    break;
+
+                default:
+                    break;
+                } // end switch
+                chain = chain->nextInChain;
+            } // end while(chain)
+        }
+        else
+        {
+            while (chain)
+            {
+                chain->serveSingleFrame();
+                chain = chain->nextInChain;
+            }
+            vTaskDelayUntil(&xLastWakeTime, period);
+        } // end if-then-else
+    }     // end while(true)
 }
 
 // ----------------------------------------------------------------------------
 // Initialization
 // ----------------------------------------------------------------------------
 
+void notify_init(TaskFunction_t loop, void *param)
+{
+    queue = xQueueCreate(64, sizeof(notifyEvent_t));
+    if (queue == nullptr)
+    {
+        log_e("Unable to create notifications queue");
+        abort();
+    }
+    xTaskCreate(
+        loop,
+        "notify",
+        NOTIFICATION_TASK_STACK_SIZE,
+        param,
+        tskIDLE_PRIORITY,
+        &notificationTask);
+    if (notificationTask == nullptr)
+    {
+        log_e("Unable to create notifications task");
+        abort();
+    }
+}
+
 void notify::begin(AbstractNotificationInterface *implementation)
 {
     if (implementation && (notificationTask == nullptr) && (queue == nullptr))
     {
-        queue = xQueueCreate(64, sizeof(notifyEvent_t));
-        if (queue == nullptr)
-        {
-            log_e("Unable to create notifications queue");
-            abort();
-        }
-        xTaskCreate(
-            notificationLoop,
-            "notify",
-            NOTIFICATION_TASK_STACK_SIZE,
-            (void *)implementation,
-            UI_TASK_PRIORITY,
-            &notificationTask);
-        if (notificationTask == nullptr)
-        {
-            log_e("Unable to create notifications task");
-            abort();
-        }
+        notify_init(notificationLoop, (void *)implementation);
+        implementation->begin();
+    }
+}
+
+void notify::begin(AbstractFrameServerInterface *implementation)
+{
+    if (implementation && (notificationTask == nullptr) && (queue == nullptr))
+    {
+        notify_init(frameServerLoop, (void *)implementation);
         implementation->begin();
     }
 }

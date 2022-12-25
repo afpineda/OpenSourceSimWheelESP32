@@ -1,6 +1,3 @@
 SimWheelTypes.h
 SimWheel.h
-strings.h
-ui_ssoled.cpp
-uartServer_mock.cpp
-language.cpp
+notify.cpp
