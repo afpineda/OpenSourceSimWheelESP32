@@ -15,7 +15,8 @@
 // This implementation is based on:
 // https://www.best-microcontroller-projects.com/rotary-encoder.html
 
-#define RT_STACK_SIZE 1024
+#define RT_STACK_SIZE 1264
+//#define RT_STACK_SIZE 2048
 
 #define OUTPUT_NONE 0
 #define OUTPUT_CW 1

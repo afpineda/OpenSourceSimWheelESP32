@@ -55,9 +55,9 @@ Note that feature reports are both read and write.
 
 - Buttons state: one bit per button (1=pressed, 0=non-pressed). The least significant bit is the first button.
 - Axes: a signed byte in the range 0 to 254.
-  - Z: F1-Style clutch (combined imput from left and right clutch paddles)
-  - Y: Left clutch paddle
-  - X: Right clutch paddle
+  - Rz: F1-Style clutch (combined imput from left and right clutch paddles)
+  - Ry: Left clutch paddle
+  - Rx: Right clutch paddle
 - POV (D-PAD): 4 least significant bits of byte index 19. Range: 0 to 8.
 - Feature notification: 4 most significant bits of byte index 19. Valid values: 0 (nothing to notify) or 3 (wheel configuration has changed).
 
@@ -101,7 +101,7 @@ While writing, any value outside of the valid range will be ignored, so they me 
 | Byte index | Valid values | Purpose (field)            | Note                                                  |
 | :--------: | :----------: | -------------------------- | ----------------------------------------------------- |
 |     0      |  see below   | Function of clutch paddles |                                                       |
-|     1      |     any      | "ALT" buttons state        | non-zero means enabled, except for HEX 80 (see below) |
+|     1      |     any      | "ALT" buttons state        | non-zero means enabled, except for HEX FF (see below) |
 |     2      |   0 to 254   | Current bite point         | signed byte                                           |
 |     3      |    1 to 2    | Simple command             | Write-only. Read is allways HEX FF                    |
 

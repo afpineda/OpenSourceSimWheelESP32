@@ -12,7 +12,7 @@
 #include "ButtonMatrixInput.h"
 #include <Preferences.h>
 
-// #include <FreeRTOS.h>
+//#include "debugUtils.h"
 
 // ----------------------------------------------------------------------------
 // Globals
@@ -188,7 +188,7 @@ void inputPollingLoop(void *param)
 
 void abortDueToCallBeforeBegin()
 {
-  log_e("inputs::add*() or inputs::set*() called before inputs::begin()");
+  log_e("inputs::add*() or inputs::set*() called before inputs::begin() or after inputs::start()");
   abort();
 }
 
@@ -206,7 +206,7 @@ void inputs::addDigital(
     bool pullupOrPulldown,
     bool enableInternalPull)
 {
-  if ((pollingTask == nullptr))
+  if ((!pollingTask) && (hubTask))
   {
     if (inputNumber <= MAX_INPUT_NUMBER)
       digitalInputChain = new DigitalButton(
@@ -231,7 +231,7 @@ void inputs::addRotaryEncoder(
     inputNumber_t ccwInputNumber,
     bool useAlternateEncoding)
 {
-  if (pollingTask == nullptr)
+  if ((!pollingTask) && (hubTask))
   {
     if ((cwInputNumber <= MAX_INPUT_NUMBER) &&
         (ccwInputNumber <= MAX_INPUT_NUMBER) &&
@@ -254,7 +254,7 @@ void inputs::addButtonMatrix(
     const uint8_t inputPinCount,
     inputNumber_t *buttonNumbersArray)
 {
-  if (pollingTask != nullptr)
+  if ((!pollingTask) && (hubTask))
   {
     digitalInputChain = new ButtonMatrixInput(
         selectorPins,
@@ -280,7 +280,7 @@ void inputs::setAnalogClutchPaddles(
     log_e("inputs::set*ClutchPaddles() called twice");
     abort();
   }
-  else if (pollingTask == nullptr)
+  else if ((!pollingTask) && (hubTask))
   {
     if ((leftClutchPin != rightClutchPin) &&
         (leftClutchInputNumber <= MAX_INPUT_NUMBER) &&
@@ -313,7 +313,7 @@ void inputs::setDigitalClutchPaddles(
   {
     abortDueToInvalidInputNumber();
   }
-  else if (pollingTask == nullptr)
+  else if ((!pollingTask) && (hubTask))
   {
     leftClutchButtonBitmap = BITMAP(leftClutchInputNumber);
     rightClutchButtonBitmap = BITMAP(rightClutchInputNumber);

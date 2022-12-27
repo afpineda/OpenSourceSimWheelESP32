@@ -74,7 +74,7 @@ void DigitalPolledInput::updateMask(uint8_t inputsCount, inputNumber_t firstInpu
 {
     if (inputsCount > (64 - firstInputNumber))
     {
-        log_e("Last button number is too high at PolledInput instance");
+        log_e("Last button number is too high at DigitalPolledInput instance");
         abort();
     }
     mask = BITMASK(inputsCount, firstInputNumber);
@@ -93,7 +93,7 @@ void DigitalPolledInput::updateMask(inputNumber_t *inputNumbersArray, uint8_t in
     {
         if (inputNumbersArray[i] > MAX_INPUT_NUMBER)
         {
-            log_e("Invalid input number at PolledInput::updateMask()");
+            log_e("Invalid input number at DigitalPolledInput::updateMask()");
             abort();
         }
         inputBitmap_t currentBitmap = BITMAP(inputNumbersArray[i]);
@@ -125,7 +125,7 @@ inputBitmap_t DigitalPolledInput::getChainMask(DigitalPolledInput *firstInChain)
     inputBitmap_t mask = ~(0ULL);
     while (firstInChain != nullptr)
     {
-        mask &= ((DigitalPolledInput *)firstInChain)->mask;
+        mask &= (firstInChain->mask);
         firstInChain = (DigitalPolledInput *)(firstInChain->nextInChain);
     }
     return mask;
@@ -150,7 +150,7 @@ DigitalButton::DigitalButton(
     updateMask(1, buttonNumber);
     this->pinNumber = pinNumber;
     this->pullupOrPulldown = pullupOrPulldown;
-    bitmap = BITMAP(buttonNumber);
+    this->bitmap = BITMAP(buttonNumber);
     debouncing = false;
 
     // Pin setup

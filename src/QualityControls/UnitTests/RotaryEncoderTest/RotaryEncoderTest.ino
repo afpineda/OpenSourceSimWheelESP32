@@ -43,6 +43,7 @@ void inputs::notifyInputEvent(inputBitmap_t mask, inputBitmap_t state)
 
 void setup()
 {
+    esp_log_level_set("*", ESP_LOG_ERROR);
     ESP_ERROR_CHECK(gpio_install_isr_service(0));
     Serial.begin(115200);
     while (!Serial) ;

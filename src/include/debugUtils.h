@@ -33,7 +33,6 @@ void serialPrintf(const char *fmt, ...);
 
 static const gpio_num_t mtxSelectors[] = {TEST_BTNMTX_ROW1,TEST_BTNMTX_ROW2};
 static const gpio_num_t mtxInputs[] = {TEST_BTNMTX_COL1,TEST_BTNMTX_COL2,TEST_BTNMTX_COL3};
-//static inputNumber_t mtxNumbers[] = {2,3,4,5,6,7};
 static inputNumber_t mtxNumbers[] = {6,7,5,4,2,3};
 
 // Other pins for testing

@@ -27,10 +27,10 @@ Ensure that all unit test have failed before proceeding to integration testing (
 
 - RotaryEncoderInput
 - DigitalPolledInput
-- AnalogPolledInput
 - inputs
-- clutchState
-- inputHub
+- **AnalogPolledInput**
+- **clutchState**
+- **inputHub**
 
 ## Step
 

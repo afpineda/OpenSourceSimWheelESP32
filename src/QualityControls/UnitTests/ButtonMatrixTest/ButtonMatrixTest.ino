@@ -31,6 +31,7 @@ inputNumber_t btnNumbers[] = {3, 4, 5, 6, 7, 8, 9};
 
 void setup()
 {
+    esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
     while (!Serial)
         ;

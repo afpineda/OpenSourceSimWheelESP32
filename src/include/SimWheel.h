@@ -369,7 +369,7 @@ namespace inputs
         gpio_num_t dtPin,
         inputNumber_t cwInputNumber,
         inputNumber_t ccwInputNumber,
-        bool useAlternateEncoding = true);
+        bool useAlternateEncoding = false);
 
     /**
      * @brief Add a button matrix bound to specific button numbers.

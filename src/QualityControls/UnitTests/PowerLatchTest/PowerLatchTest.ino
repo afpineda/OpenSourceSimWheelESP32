@@ -17,7 +17,6 @@
 
 void notify::powerOff()
 {
-
 }
 
 //-------------------------------------------------------
@@ -26,9 +25,11 @@ void notify::powerOff()
 
 void setup()
 {
-   Serial.begin(115200);
-  //  while (!Serial) ;
-  delay(5000);
+  esp_log_level_set("*", ESP_LOG_ERROR);
+  Serial.begin(115200);
+  while (!Serial)
+    ;
+  // delay(5000);
   Serial.println("--READY--");
   power::setPowerLatch(TEST_LATCH_PIN, TEST_LATCH_MODE, TEST_LATCH_DELAY);
   Serial.println("Going to power off in 20 seconds");
