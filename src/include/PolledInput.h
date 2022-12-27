@@ -166,6 +166,7 @@ protected:
     int maxADCReading;
     int lastADCReading;
     clutchValue_t lastValue;
+    bool reversed;
 
 public:
     // for read-only
@@ -178,10 +179,12 @@ public:
      *
      * @param pinNumber ADC-capable pin number
      * @param inputNumber An alternate input number for on/off operation (if supported)
+     * @param reversed True if the highest voltage is for the idle position. False, otherwise.
      */
     AnalogAxisInput(
         gpio_num_t pinNumber,
-        inputNumber_t inputNumber);
+        inputNumber_t inputNumber,
+        bool reversed = true);
 
     /**
      * @brief Get autocalibration data. Used for persistent storage.

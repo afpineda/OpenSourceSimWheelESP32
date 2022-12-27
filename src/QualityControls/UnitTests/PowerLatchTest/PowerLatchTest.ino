@@ -12,11 +12,12 @@
 #include "debugUtils.h"
 
 //-------------------------------------------------------
-// Globals
+// Mocks
 //-------------------------------------------------------
 
-void ui::turnOff()
+void notify::powerOff()
 {
+
 }
 
 //-------------------------------------------------------
@@ -29,7 +30,6 @@ void setup()
   //  while (!Serial) ;
   delay(5000);
   Serial.println("--READY--");
-  power::setPowerLatch(TEST_LATCH_PIN, POWER_OFF_LOW, TEST_LATCH_DELAY);
   power::setPowerLatch(TEST_LATCH_PIN, TEST_LATCH_MODE, TEST_LATCH_DELAY);
   Serial.println("Going to power off in 20 seconds");
   for (int i = 20; i >= 0; i--)

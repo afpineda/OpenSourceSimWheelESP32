@@ -14,7 +14,7 @@ To test that input events are properly reported under these circumstances:
 
 ## Harware setup
 
-Nothing required. This is a fully automated test.
+Nothing required. This is an automated test.
 Output through USB serial port at 115200 bauds.
 
 ## Procedure and expected output

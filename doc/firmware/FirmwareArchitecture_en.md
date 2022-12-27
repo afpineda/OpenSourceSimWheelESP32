@@ -144,7 +144,7 @@ All notifications are queued, serialized and executed in a very low priority sep
 
 #### AbstractNotificationInterface
 
-For user interfaces not needing a perpetual loop. For example:
+For user interfaces not needing a perpetual loop or for one-time notifications. For example:
 
 ```c
    void MyImpl::turnOn() {
@@ -166,7 +166,7 @@ For user interfaces not needing a perpetual loop. For example:
 
 #### AbastractFrameServerInterface
 
-For user interfaces in need of a perpetual loop. If there are no pending notifications, `AbastractFrameServerInterface::serveSingleFrame()` will be called at timed intervals. For example:
+For user interfaces in need of a perpetual loop or for persistent notifications. If there are no pending notifications, `AbastractFrameServerInterface::serveSingleFrame()` will be called at timed intervals. For example:
 
 ```c
    void MyImpl::begin() {

@@ -22,6 +22,10 @@ inputBitmap_t state = 0;
 inputNumber_t btnNumbers[] = {3, 4, 5, 6, 7, 8, 9};
 
 //------------------------------------------------------------------
+// Mocks
+//------------------------------------------------------------------
+
+//------------------------------------------------------------------
 // Arduino entry point
 //------------------------------------------------------------------
 
@@ -32,20 +36,12 @@ void setup()
         ;
     Serial.println("-- READY --");
 
-    // btns = new ButtonMatrixInput(
-    //     mtxSelectors,
-    //     sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
-    //     mtxInputs,
-    //     sizeof(mtxInputs) / sizeof(mtxInputs[0]),
-    //     nullptr,
-    //     3);
-
     btns = new ButtonMatrixInput(
         mtxSelectors,
         sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
         mtxInputs,
         sizeof(mtxInputs) / sizeof(mtxInputs[0]),
-        btnNumbers);
+        mtxNumbers);
 
     Serial.println("MASK:");
     debugPrintBool(btns->mask);

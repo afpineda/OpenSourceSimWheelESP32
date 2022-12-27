@@ -48,15 +48,8 @@ void setup()
     while (!Serial) ;
     Serial.println("-- READY --");
     
-    // Uncomment the following line when testing alterante enconding
-    // and vice-versa
-
-    new RotaryEncoderInput(TEST_ROTARY_ALT_A,TEST_ROTARY_ALT_B,5,6,true);
-    
-    // Comment out the following line when not testing alternate encoding
-    // and vice-versa
-
-    new RotaryEncoderInput(TEST_ROTARY_CLK,TEST_ROTARY_DT,5);
+    new RotaryEncoderInput(TEST_ROTARY_ALPS_A,TEST_ROTARY_ALPS_B,5,6,true);
+    new RotaryEncoderInput(TEST_ROTARY_CLK,TEST_ROTARY_DT,5,6,false);
 
     Serial.println("-- GO --");
 }

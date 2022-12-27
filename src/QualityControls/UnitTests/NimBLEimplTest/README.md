@@ -2,7 +2,10 @@
 
 ## Purpose and summary
 
-To test if the device works properly as a wireless gamepad in a computer.
+To test that:
+
+- the device works properly as a wireless gamepad in a computer.
+- the device can send and receive data by the means of HID feature reports.
 
 ## Hardware setup
 

@@ -133,14 +133,9 @@ void enterDeepSleep()
   // disable radios
   esp_bluedroid_disable();
   esp_bt_controller_disable();
-  // esp_wifi_stop();
 
-  // for (int p = 0; p < GPIO_NUM_MAX; p++)
-  //   if (GPIO_IS_VALID_GPIO((gpio_num_t)p))
-  //     gpio_reset_pin((gpio_num_t)p);
-
-  // disable pins to avoid current drainage through pull resistors
-  // enable proper pull resistors
+  // Disable pins to avoid current drainage through pull resistors
+  // Enable proper pull resistors for wake up (if available)
   for (int p = 0; p < GPIO_NUM_MAX; p++)
     if (GPIO_IS_VALID_GPIO((gpio_num_t)p) && !((p >= 6) && (p <= 11))) // Exclude flash memory pins
     {

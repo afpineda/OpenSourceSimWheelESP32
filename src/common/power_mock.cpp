@@ -26,7 +26,7 @@ void power::setPowerLatch(gpio_num_t latchPin, powerLatchMode_t mode, uint32_t w
 
 }
 
-void power::powerOff(bool forced) {
+void power::powerOff() {
     for(;;);
 }
 
@@ -46,9 +46,4 @@ void power::startBatteryMonitor(
 int power::getLastBatteryLevel()
 {
   return 66;
-}
-
-bool power::hasBatteryMonitor()
-{
-    return true;
 }

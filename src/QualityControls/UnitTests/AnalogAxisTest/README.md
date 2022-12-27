@@ -6,12 +6,12 @@ To test correct reading of analog axis through a potentiometer. This test involv
 
 ## Harware setup
 
-Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h) as `TEST_ANALOG_PIN1` and `TEST_ANALOG_PIN2`.
-A potentiometer is required. Wiring:
+Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
+Use this [test circuit](../../Protoboards/ESP32-WROOM-DevKitC-1.diy):
 
-- `Pot(+)` to `3V3`.
-- `Pot(-)` to `GND`.
-- `Pot output` to `TEST_ANALOG_PIN1` and `TEST_ANALOG_PIN2` (both).
+![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.png)
+
+We are using "Clutch1" potentiometer only, wired to `TEST_ANALOG_PIN1`.
 
 ## Procedure and expected output
 
@@ -27,5 +27,5 @@ A potentiometer is required. Wiring:
 4. Wait for 30 seconds or so. There must be no further output.
 5. Move the potentiometer all the way to `pot(-)`. The last output line must show "(autocalibrated)".
 6. Move the potentiometer all the way to `pot(+)`. The last output line must show "(autocalibrated)".
-7. Move the potentiometer slowly towards `pot(-)`. The value `xxx` shown at `Axis: xxx` should get lower and lower (down to -127). The word "autocalibrated" must not show up.
-8. Move the potentiometer slowly towards `pot(+)`. The value `xxx` shown at `Axis: xxx` should get higher and higher (up to 127). The word "autocalibrated" must not show up.
+7. Move the potentiometer slowly towards `pot(-)`. The value `xxx` shown at `Axis: xxx` should get higher and higher (up to 127). The word "autocalibrated" must not show up.
+8. Move the potentiometer slowly towards `pot(+)`. The value `xxx` shown at `Axis: xxx` should get lower and lower (down to -127). The word "autocalibrated" must not show up.

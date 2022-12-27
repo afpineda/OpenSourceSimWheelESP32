@@ -204,7 +204,8 @@ inputBitmap_t DigitalButton::read(inputBitmap_t lastState)
 
 AnalogAxisInput::AnalogAxisInput(
     gpio_num_t pinNumber,
-    inputNumber_t inputNumber)
+    inputNumber_t inputNumber,
+    bool reversed)
 {
     // Check parameters
     if (!GPIO_IS_VALID_GPIO(pinNumber) ||
@@ -218,6 +219,7 @@ AnalogAxisInput::AnalogAxisInput(
     this->pinNumber = pinNumber;
     this->bitmap = BITMAP(inputNumber);
     this->mask = BITMASK(1, inputNumber);
+    this->reversed = reversed;
     lastADCReading = 0;
     lastValue = -128;
 
@@ -253,7 +255,10 @@ void AnalogAxisInput::read(clutchValue_t *value, bool *changed, bool *autocalibr
     }
 
     // map ADC reading to axis value
-    *value = map(currentReading, minADCReading, maxADCReading, CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
+    if (reversed)
+        *value = map(currentReading, minADCReading, maxADCReading, CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
+    else
+        *value = map(currentReading, minADCReading, maxADCReading, CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
     *changed = ((*value) != lastValue);
     lastADCReading = currentReading;
     lastValue = *value;
