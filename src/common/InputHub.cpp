@@ -19,6 +19,8 @@ static inputBitmap_t altBitmap = 0;
 
 // Related to clutch calibration
 #define CALIBRATION_INCREMENT 3
+#define MAX_BITEPOINT CLUTCH_FULL_VALUE-CALIBRATION_INCREMENT
+#define MIN_BITEPOINT CLUTCH_NONE_VALUE+CALIBRATION_INCREMENT
 static inputBitmap_t calibrateUpBitmap = 0;
 static inputBitmap_t calibrateDownBitmap = 0;
 
@@ -107,13 +109,13 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
         // Check for bite point calibration events
         if ((calibrateUpBitmap & changes) &&
             (calibrateUpBitmap & globalState) &&
-            (clutchState::bitePoint < CLUTCH_FULL_VALUE))
+            (clutchState::bitePoint <= MAX_BITEPOINT))
         {
             clutchState::setBitePoint(clutchState::bitePoint + CALIBRATION_INCREMENT);
         }
         else if ((calibrateDownBitmap & changes) &&
                  (calibrateDownBitmap & globalState) &&
-                 (clutchState::bitePoint > CLUTCH_NONE_VALUE))
+                 (clutchState::bitePoint >= MIN_BITEPOINT))
         {
             clutchState::setBitePoint(clutchState::bitePoint - CALIBRATION_INCREMENT);
         }

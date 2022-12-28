@@ -37,7 +37,7 @@ static inputNumber_t mtxNumbers[] = {6,7,5,4,2,3};
 
 // Other pins for testing
 #define TEST_ANALOG_PIN1 GPIO_NUM_12
-#define TEST_ANALOG_PIN2 GPIO_NUM13
+#define TEST_ANALOG_PIN2 GPIO_NUM_13
 
 // Battery monitor pins for testing
 #define TEST_BATTERY_READ_ENABLE GPIO_NUM_12

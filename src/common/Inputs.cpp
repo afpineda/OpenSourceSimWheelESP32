@@ -12,7 +12,7 @@
 #include "ButtonMatrixInput.h"
 #include <Preferences.h>
 
-//#include "debugUtils.h"
+// #include "debugUtils.h"
 
 // ----------------------------------------------------------------------------
 // Globals
@@ -391,19 +391,34 @@ void hubLoop(void *unused)
         {
           // Translate analog axis values into digital input
           if ((axisEvent->value) >= CLUTCH_3_4_VALUE)
-            inputHub::onStateChanged(
-                (globalState & axisEvent->inputMask) | axisEvent->inputBitmap,
-                axisEvent->inputBitmap);
+            newState = (globalState & axisEvent->inputMask) | axisEvent->inputBitmap;
           else if ((axisEvent->value) <= CLUTCH_1_4_VALUE)
-            inputHub::onStateChanged(globalState, axisEvent->inputBitmap);
+            newState = (globalState & axisEvent->inputMask); 
+          else
+            newState = globalState;
+          changes = globalState ^ newState;
+          if (changes) {
+            globalState = newState;
+            inputHub::onStateChanged(globalState,changes);
+          }
         }
         else
         {
+          bool oldAltEnabled = clutchState::isALTRequested();
+          clutchValue_t oldClutchValue = clutchState::combinedAxis;
+
           if (axisEvent->id)
             clutchState::setRightAxis(axisEvent->value);
           else
             clutchState::setLeftAxis(axisEvent->value);
-          inputHub::onStateChanged(globalState, 0);
+
+          if (
+              (clutchState::currentFunction == CF_AXIS) ||
+              ((clutchState::currentFunction == CF_ALT) &&
+               (oldAltEnabled != clutchState::isALTRequested())) ||
+              ((clutchState::currentFunction == CF_CLUTCH) &&
+               (oldClutchValue != clutchState::combinedAxis)))
+            inputHub::onStateChanged(globalState, 0);
         }
       }
 

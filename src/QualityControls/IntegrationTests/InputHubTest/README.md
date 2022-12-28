@@ -4,29 +4,48 @@
 
 To test that:
 
-- Button numbers are properly mapped to wheel functions.
-- Clutch value is properly set depending on which paddles are pressed or not.
-- Bite point is properly set when requested.
-- ALT mode is enabled when configured button is pressed.
+- In button mode, clutch paddles are mapped to button numbers when pushed.
+- In "ALT" mode, clutch paddles activate the "ALT" function when pushed.
+- In axis mode, clutch paddles are mapped to independent analog axes.
+- In clutch mode, clutch paddles are combinend into a single axis.
+- In clutch mode, bite point calibration works properly.
+- Configured button combinations works properly when selecting wheel functions.
+- In "ALT" mode, "ALT" buttons activate the "ALT" function when pushed.
+- In button" mode, "ALT" buttons are mapped to their button numbers when pushed.
 
 ## Hardware setup
 
-See [debugUtils.h](debugUtils.h) for particular GPIO pin numbers.
-Use the same hardware setup as [InputsTest](../InputsTest/README.md).
-Output through USB serial port at 115200 bauds.
+Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
+Use this [test circuit](../../Protoboards/ESP32-WROOM-DevKitC-1.diy):
+
+![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.png)
+
+We are using the KY-040 rotary encoder, both clutch potentiometers and the button matrix.
 
 For later reference:
 
-- "ALT" is the built-in push button into the rotary encoder.
-- "CLUTCH1" is the button numbered 1 in the button matrix
-- "CLUTCH2" is the button numbered 2 in the button matrix
-- "COMMAND" is the button numbered 3 in the button matrix
-- "CYCLE_ALT" is the button numbered 4 in the button matrix
-- "CYCLE_PADDLES" is the button numbered 5 in the button matrix
-- "RCW" means rotary's clockwise rotation
-- "RCCW" means rotary's counter-clockwise rotation
+- "ALT" is the built-in push button into the rotary encoder, button number 10.
+- "CLUTCH1" and "CLUTCH2" are the analog potentiometers (numbered 0 and 1).
+- "COMMAND" is the button number 2 in the button matrix.
+- "CYCLE_ALT" is the button number 3 in the button matrix.
+- "CYCLE_PADDLES" is the button number 4 in the button matrix.
+- "RCW" means rotary's clockwise rotation (number 12).
+- "RCCW" means rotary's counter-clockwise rotation (number 13).
+- Output has this format:
 
-**Note:** Before proceeding, identify buttons numbers (1 to 6) at the button matrix. Do not assume they are numbered in any order because they are not, and there is nothing wrong with it.
+  ```text
+  <64 binary digits> | <C> | <L> | <R> || <BP>
+  ```
+
+  Where:
+
+  - `<C>` is the combined axis value from both potentiometers.
+  - `<L>` is the axis value from the left potentiometer.
+  - `<R>` is the axis value from the right potentiometer.
+  - `<BP>` is the current bite point.
+
+Note that `<L>` and `<R>` are interchangeable.
+Output through USB serial port at 115200 bauds.
 
 ## Procedure and expected output
 
@@ -38,103 +57,62 @@ For later reference:
    -- GO --
    ```
 
-3. Press and release "ALT". Output must match:
+3. Move both potentiometers from one end to the other (calibration). Ignore output.
+4. Move "CLUTCH1" to full extent, then "CLUTCH2" to full extent, then "CLUTCH1" to idle, then "CLUTCH2" to idle.
+5. Not to be taken literally, output must show the following lines in any order:
 
    ```text
-   HID: 0000000000000000000000000000000000000000000000000000000000000000 | 0 (ALT)
-   HID: 0000000000000000000000000000000000000000000000000000000000000000 | 0
+   0000000000000000000000000000000000000000000000000000000000000010 | 0 | 0 | 0 || 127
+   0000000000000000000000000000000000000000000000000000000000000011 | 0 | 0 | 0 || 127
+   0000000000000000000000000000000000000000000000000000000000000001 | 0 | 0 | 0 || 127
+   0000000000000000000000000000000000000000000000000000000000000000 | 0 | 0 | 0 || 127
    ```
 
-4. Press and hold "CLUTCH1", then press and hold "CLUTCH2", then release "CLUTCH1", then release "CLUTCH2". Output must match:
+6. Push and release "ALT". Output must show:
 
    ```text
-   HID: 0000000000000000000000000000000000000000000000000000000000000000 | 127
-   HID: 0000000000000000000000000000000000000000000000000000000000000000 | 255
-   HID: 0000000000000000000000000000000000000000000000000000000000000000 | 127
-   HID: 0000000000000000000000000000000000000000000000000000000000000000 | 0
+   0000000000000000000000000000000000000000000000000000000000000000 | 0 | 0 | 0 || 127 (ALT)
+   0000000000000000000000000000000000000000000000000000000000000000 | 0 | 0 | 0 || 127
    ```
 
-5. Press and hold "CLUTCH1", then press and hold "CLUTCH2", then release "CLUTCH2", then release "CLUTCH1". Output must match the previous four lines.
+7. Push and hold "COMMAND", then "RCW", then release "COMMAND". Output must show:
 
-6. Press and hold "CLUTCH2", then press and hold "CLUTCH1", then release "CLUTCH2", then release "CLUTCH1". Output must match the previous four lines.
-
-**UNFINISHED**
-
-7. Press and hold "MENU1" and "MENU2" for three seconds or more, then release both. The **last two lines** of output must match:
-   
-   ```
-   HID RESET
-   MENU TOGGLE: 1
+   ```text
+   0000000000000000000000000000000000000000000000000000000000000100 | 0 | 0 | 0 || 127
+   0000000000000000000000000000000000000000000000000001000000000100 | 0 | 0 | 0 || 127
+   0000000000000000000000000000000000000000000000000000000000000100 | 0 | 0 | 0 || 127
+   0000000000000000000000000000000000000000000000000000000000000000 | 0 | 0 | 0 || 127
    ```
 
-8. Press and release each button in the following order: "ALT", "CLUTCH1, "CLUTCH2", "MENU1" and "MENU2". New output must follow this pattern:
-   
-   1. Ten lines of text
-   
-   2. Each line starting width `MENU:`
-   
-   3. Five of those lines shows a single "1"
-   
-   4. A line width a single "1" is always followed by this line:
-      
-      ```
-      MENU: 0000000000000000000000000000000000000000000000000000000000000000
-      ```
-   
-   5. Every "1" character takes a different position than the "1" character at other lines
+8. Push "COMMAND" and "CYCLE_ALT" at the same time, then release. Output must show `ALT mode: 0`.
+9. Push and release "ALT". Output must show:
 
-9. Press and hold "MENU1" and "MENU2" for three seconds or more, then release both. The last two lines of output must match:
-   
-   ```
-   HID RESET
-   MENU TOGGLE: 0
+   ```text
+   0000000000000000000000000000000000000000000000000000010000000000 | 0 | 0 | 0 || 127
+   0000000000000000000000000000000000000000000000000000000000000000 | 0 | 0 | 0 || 127
    ```
 
-10. Press and hold "CLUTCH1", then rotate RCW two detents, then release "CLUTCH1". Output must match:
-    
-    ```
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | 0
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | 3
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | 3
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | 6
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | 6
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | -127
+10. Push "COMMAND" and "CYCLE_ALT" at the same time, then release. Output must show `ALT mode: 1`.
+11. Push "COMMAND" and "CYCLE_PADDLES" at the same time, then release. Output must show `Clutch mode: 0`.
+12. Ensure both potentiometers are idle.
+13. Move "CLUTCH1" slowly to full extent. Output must show an increasing number at `<C>` up to 127. `<L>` and `<R>` must remain in zero.
+14. Move "CLUTCH2" slowly to full extent. Output must show an increasing number at `<C>`, greater than 127, and up to 254.
+15. Move "CLUTCH1" slowly to idle. Output must show a decreasing number at `<C>` down to 127.
+16. Keep "CLUTCH2" at full extent.
+17. Rotate "RCCW" many times. Output must show a decreasing number at `<BP>` down to 1. All binary digits must remain in 0.
+18. Rotate "CCW" many times. Output must show an increasing number at `<BP>` up to 253. All binary digits must remain in 0.
+19. Move "CLUTCH2" to idle.
+20. Push "COMMAND" and "CYCLE_PADDLES" at the same time, then release. Output must show `Clutch mode: 1`.
+21. Output must show `<C>` set to 0.
+22. Move "CLUTCH1" at random. Output must show a changing value at `<L>` and `<C>` set to 0.
+23. Move "CLUTCH2" at random. Output must show a changing value at `<R>` and `<C>` set to 0.
+24. Move both "CLUTCH1" and "CLUTCH2" to idle.
+25. Push "COMMAND" and "CYCLE_PADDLES" at the same time, then release. Output must show `Clutch mode: 2`.
+26. Move "CLUTCH1" to full extent, then back to iddle. Output must show:
+
+    ```text
+    0000000000000000000000000000000000000000000000000000000000000000 | 0 | 0 | 0 || 253 (ALT)
+    0000000000000000000000000000000000000000000000000000000000000000 | 0 | 0 | 0 || 253
     ```
 
-11. Press and hold "CLUTCH2", then rotate RCCW three detents, then release "CLUTCH2". Output must match:
-    
-    ```
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | 6
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | 3
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | 3
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | 0
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | 0
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | -3
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | -3
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | -127
-    ```
-
-12. Press and hold "ALT", then press and release "CLUTCH1", then release "ALT". Output must match:
-    
-    ```
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | -127 (ALT)
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | -3 (ALT)
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | -127 (ALT)
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | -127
-    ```
-
-13. Press and hold "MENU1" for three seconds, then release. Output must match:
-    
-    ```
-    HID: 0000000000000000000000000000000000000000000000000000000000000100 | -127
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | -127
-    ```
-
-14. Press and hold "MENU2" for three seconds, then release. Output must match:
-    
-    ```
-    HID: 0000000000000000000000000000000000000000000000000000000000001000 | -127
-    HID: 0000000000000000000000000000000000000000000000000000000000000000 | -127
-    ```
-
-15. Press and hold "MENU1" and "MENU2" for **less than two seconds**, then release both. Any number of lines may output, but all of them must start with `HID:`.
+27. Push "COMMAND" and "CYCLE_PADDLES" at the same time, then release. Output must show `Clutch mode: 3`.

@@ -12,6 +12,5 @@ RotaryEncoderInput.cpp
 ButtonMatrixInput.cpp
 debugUtils.cpp
 InputHub.cpp
-ui_mock.cpp
 clutchState.cpp
 capabilities.cpp
