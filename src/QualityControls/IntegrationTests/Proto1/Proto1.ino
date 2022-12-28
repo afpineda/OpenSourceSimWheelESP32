@@ -10,6 +10,24 @@
 #include <Arduino.h>
 #include "debugUtils.h"
 #include "SimWheel.h"
+#include "SerialNotification.h"
+
+//------------------------------------------------------------------
+// Globals
+//------------------------------------------------------------------
+
+#define LEFT_CLUTCH_IN 0
+#define RIGHT_CLUTCH_IN 1
+#define ALT_IN 10
+#define CW_IN 12
+#define CCW_IN 13
+#define COMMAND_IN 2
+#define CYCLE_ALT_IN 3
+#define CYCLE_CLUTCH_IN 4
+#define UP 3
+#define DOWN 4
+#define LEFT 5
+#define RIGHT 6
 
 //------------------------------------------------------------------
 // Mocks
@@ -26,38 +44,37 @@ void batteryCalibration::restartAutoCalibration()
 
 void setup()
 {
-    inputNumber_t cl1Num, cl2Num, altNum, menuNum, calUpNum, calDownNum;
+    esp_log_level_set("*", ESP_LOG_ERROR);
+    Serial.begin(115200);
+    while (!Serial)
+        ;
 
-    language::begin();
-    language::setLanguage(LANG_EN);
-    uiManager::begin();
-    ui::begin();
-    hidImplementation::begin("Proto1", "Mamandurrio", false);
+    Serial.println("-- READY --");
+    clutchState::begin();
     inputs::begin();
-    inputHub::begin();
+    notify::begin(new SerialNotificationImpl());
 
-    cl1Num = inputs::setButtonMatrix(mtxSelectors, 3, mtxInputs, 2);
-    cl2Num = cl1Num + 1;
-    menuNum = cl2Num + 1;
-    altNum = inputs::addDigital(TEST_ROTARY_SW, true, false);
-    calUpNum = inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT);
-    calDownNum = calUpNum + 1;
+    inputs::addButtonMatrix(
+        mtxSelectors,
+        sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
+        mtxInputs,
+        sizeof(mtxInputs) / sizeof(mtxInputs[0]),
+        mtxNumbers);
+    inputs::addDigital(TEST_ROTARY_SW, ALT_IN, true, true );
+    inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, CW_IN, CCW_IN,false);
+    inputs::setAnalogClutchPaddles(TEST_ANALOG_PIN1,TEST_ANALOG_PIN2,LEFT_CLUTCH_IN,RIGHT_CLUTCH_IN);
 
-    inputHub::setClutchPaddles(cl1Num, cl2Num);
-    inputHub::setALTButton(altNum);
-    inputHub::setClutchCalibrationButtons(calUpNum, calDownNum);
-    inputHub::setMenuButton(menuNum);
+    inputHub::setCycleALTFunctionBitmap(BITMAP(COMMAND_IN)|BITMAP(CYCLE_ALT_IN));
+    inputHub::setCycleClutchFunctionBitmap(BITMAP(COMMAND_IN)|BITMAP(CYCLE_CLUTCH_IN));
+    inputHub::setClutchCalibrationButtons(CW_IN, CCW_IN);
+    inputHub::setDPADControls(UP,DOWN,LEFT,RIGHT);
 
-    inputHub::setClutchFunction(CF_CLUTCH);
-    inputHub::setALTFunction(true);
-    inputHub::setClutchBitePoint(0);
-
-    configMenu::setNavButtons(calDownNum, calUpNum, altNum, menuNum);
-
+    hidImplementation::begin("Proto1","Mamandurrio",false);
+    Serial.println("-- GO --");
     inputs::start();
 }
 
 void loop()
 {
-    delay(5000);
+    vTaskDelay(portMAX_DELAY);
 }

@@ -16,13 +16,6 @@ Ensure that all unit test have failed before proceeding to integration testing (
 
 ## Step
 
-> *Test name*: [pending]()
-
-- AnalogPolledInput
-- inputs
-
-## Step
-
 > *Test name*: [InputHubTest](./InputHubTest/README.md)
 
 - RotaryEncoderInput
@@ -42,7 +35,8 @@ Ensure that all unit test have failed before proceeding to integration testing (
 - inputs
 - clutchState
 - inputHub
-- hidImplementation
+- **hidImplementation**
+- **notify**
 
 *Note*: This is a working prototype
 

@@ -66,6 +66,7 @@ void notify::bitePoint(inputNumber_t b)
 
 void setup()
 {
+    esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
     while (!Serial)
         ;
@@ -81,7 +82,6 @@ void setup()
     inputs::addDigital(TEST_ROTARY_SW, ALT_IN, true, true );
     inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, CW_IN, CCW_IN,false);
     inputs::setAnalogClutchPaddles(TEST_ANALOG_PIN1,TEST_ANALOG_PIN2,LEFT_CLUTCH_IN,RIGHT_CLUTCH_IN);
-//    inputs::setDigitalClutchPaddles(LEFT_CLUTCH_IN, RIGHT_CLUTCH_IN);
 
     inputHub::setALTButton(ALT_IN);
     inputHub::setCycleALTFunctionBitmap(BITMAP(COMMAND_IN)|BITMAP(CYCLE_ALT_IN));
