@@ -19,10 +19,10 @@ Recommended:
 
 - [DIY layout creator](https://bancika.github.io/diy-layout-creator/). [Alternate link](https://github.com/bancika/diy-layout-creator/releases).
 - [Planet pointy's joystick test application](http://www.planetpointy.co.uk/joystick-test-application/) (for Windows).
-- "nRF Connect" from [Nordic semiconductors](https://www.nordicsemi.com/). Available for multiple platforms.
 - [Visual Studio Code](https://code.visualstudio.com/), as an alternative to Arduino IDE. Requires other tools:
   - [Arduino CLI](https://blog.arduino.cc/2020/03/13/arduino-cli-an-introduction/)
   - [Arduino extension for VSCode](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.vscode-arduino). Installable from VSCode itself.
+- SimpleHIDWrite.exe: available at [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm). There is a modern clone at [https://github.com/Robmaister/SimplerHidWrite](https://github.com/Robmaister/SimplerHidWrite).
 
 ## Hardware tools
 

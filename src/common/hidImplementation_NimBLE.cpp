@@ -123,7 +123,7 @@ class ConfigFRCallbacks : public NimBLECharacteristicCallbacks
         data[0] = (uint8_t)clutchState::currentFunction;
         data[1] = (uint8_t)clutchState::altModeForAltButtons;
         data[2] = (uint8_t)clutchState::bitePoint;
-        data[3] = 0xff;
+        data[3] = (uint8_t)power::getLastBatteryLevel();
         pCharacteristic->setValue(data, sizeof(data));
     }
 

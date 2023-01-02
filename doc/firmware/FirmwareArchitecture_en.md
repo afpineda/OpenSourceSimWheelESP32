@@ -114,7 +114,7 @@ Each detent of a rotary encoder generates two input events in quick succession: 
 
 ### DigitalPolledInput and descendant classes
 
-There is a dedicated daemon that read the state of those inputs in a loop, every few milliseconds. Since many inputs are read at the same time, the combined state of all of them is reported to `inputHub` or `clutchSate` (for digital clutch paddles when not configured to work as regular buttons). Nothing is reported if there are no input events, this is, a state change since the previous iteration.
+There is a dedicated daemon that read the state of those inputs in a loop, every few milliseconds. Since many inputs are read at the same time, the combined state of all of them is reported to `inputHub` or `clutchSate`. Nothing is reported if there are no input events, this is, a state change since the previous iteration.
 
 ### AnalogPolledInput
 

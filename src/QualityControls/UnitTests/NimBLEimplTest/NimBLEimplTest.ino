@@ -35,6 +35,11 @@ void notify::BLEdiscovering()
     Serial.println("*** DISCOVERING ***");
 }
 
+void notify::bitePoint(clutchValue_t a)
+{
+
+}
+
 void inputs::recalibrateAxes()
 {
     Serial.println("CMD: recalibrate axes");
@@ -49,6 +54,11 @@ void power::powerOff()
 {
     Serial.println("*** POWER OFF ***");
     powerSim = false;
+}
+
+int power::getLastBatteryLevel()
+{
+    return UNKNOWN_BATTERY_LEVEL;
 }
 
 //------------------------------------------------------------------

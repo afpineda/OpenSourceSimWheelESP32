@@ -48,8 +48,8 @@ Note that feature reports are both read and write.
 | -------------------- | :-------: | :--------: |
 | Buttons state        |    128    |     0      |
 | Rz axis              |     8     |     16     |
-| Rx axis              |     8     |     17     |
-| Ry axis              |     8     |     18     |
+| Ry axis              |     8     |     17     |
+| Rx axis              |     8     |     18     |
 | POV (D-PAD)          |     4     |     19     |
 | Feature notification |     4     |     19     |
 
@@ -92,23 +92,45 @@ Host-side software should check for version compatibility. Some examples:
 
 ### Flags
 
-The "flags" field is a set of 1-bit flags. Flags are indexed starting from the least significant bit. Non indexed bits are reserved for future use. Current flags are enumerated in `deviceCapability_t` at file [SimWheelTypes.h](../../src/include/SimWheelTypes.h)
+The "flags" field is a set of 1-bit flags. Flags are indexed starting from the least significant bit. Non indexed bits are reserved for future use. Current flags are enumerated in `deviceCapability_t` at file [SimWheelTypes.h][def]
 
 ## Data format of report ID 3
 
 While writing, any value outside of the valid range will be ignored, so they me be used to mask which fields to modify or not.
 
-| Byte index | Valid values | Purpose (field)            | Note                                                  |
-| :--------: | :----------: | -------------------------- | ----------------------------------------------------- |
-|     0      |  see below   | Function of clutch paddles |                                                       |
-|     1      |     any      | "ALT" buttons state        | non-zero means enabled, except for HEX FF (see below) |
-|     2      |   0 to 254   | Current bite point         | signed byte                                           |
-|     3      |    1 to 2    | Simple command             | Write-only. Read is allways HEX FF                    |
+| Byte index | Size (bytes) | Purpose (field)                        |
+| :--------: | :----------: | -------------------------------------- |
+|     0      |      1       | Function of clutch paddles             |
+|     1      |      1       | "ALT" buttons state                    |
+|     2      |      1       | Current bite point                     |
+|     3      |      1       | Simple command / Current battery level |
 
-_Other notes_:
+### Function of clutch paddles
 
-- Valid values for byte index 0 are enumerated in `clutchFunction_t` at file [SimWheelTypes.h](../../src/include/SimWheelTypes.h)
-- Any valid value written will be saved to flash memory after a 15 seconds delay.
-- When byte index 1 is set to FF (hexadecimal) in a write operation, the field will be ignored.
-- The same goes for byte index 2, since FF (hexadecimal) is 255 (decimal), outside of the valid range.
-- Valid values for byte index 3 are enumerated in `simpleCommands_t` at file [SimWheelTypes.h](../../src/include/SimWheelTypes.h)
+Read/write.
+Valid values are enumerated in `clutchFunction_t` at file [SimWheelTypes.h][def].
+Write FF (hexadecimal) to ignore this field.
+
+### "ALT" buttons state
+
+Read/write.
+Non zero means enabled.
+Write FF (hexadecimal) to ignore this field.
+
+### Current bite point
+
+Read/write.
+Write FF (hexadecimal) to ignore this field.
+
+### Simple command / Current battery level
+
+At read:
+
+- Retrieve current battery level. Non meaningful if there is no battery. Check capabilities.
+
+At write:
+
+- Send a simple command. Valid commands are enumerated in `simpleCommands_t` at file [SimWheelTypes.h][def].
+- Write FF (hexadecimal) to ignore this field.
+
+[def]: ../../src/include/SimWheelTypes.h

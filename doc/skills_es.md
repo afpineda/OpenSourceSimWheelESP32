@@ -13,16 +13,16 @@ Indispensable:
 
 Puede ser necesario:
 
-- [Controladores de ESP32](http://esp32.net/usb-uart/) para Windows. Tutorial (en inglés): [Installing drivers for the ESP32](https://www.bromleysat.com/installing-drivers-for-the-esp32/). 
+- [Controladores de ESP32](http://esp32.net/usb-uart/) para Windows. Tutorial (en inglés): [Installing drivers for the ESP32](https://www.bromleysat.com/installing-drivers-for-the-esp32/).
 
 Recomendado:
 
 - [DIY layout creator](https://bancika.github.io/diy-layout-creator/). [Enlace alternativo](https://github.com/bancika/diy-layout-creator/releases).
 - [Aplicación de prueba de joysticks de Planet Pointy](http://www.planetpointy.co.uk/joystick-test-application/) (para Windows)
-- "nRF Connect" de [Nordic semiconductors](https://www.nordicsemi.com/). Disponible para múltiples plataformas.
 - [Visual Studio Code](https://code.visualstudio.com/), como alternativa al IDE de Arduino. Requiere otras herramientas:
   - [Arduino CLI](https://blog.arduino.cc/2020/03/13/arduino-cli-an-introduction/)
   - [Extensión Arduino para VSCode](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.vscode-arduino). Se puede instalar desde el propio VSCode.
+- SimpleHIDWrite.exe: disponible en [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm). Hay un clon moderno en [https://github.com/Robmaister/SimplerHidWrite](https://github.com/Robmaister/SimplerHidWrite).
 
 ## Herramientas de ferretería
 

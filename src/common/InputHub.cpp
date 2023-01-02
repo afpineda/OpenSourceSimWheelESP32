@@ -19,8 +19,8 @@ static inputBitmap_t altBitmap = 0;
 
 // Related to clutch calibration
 #define CALIBRATION_INCREMENT 3
-#define MAX_BITEPOINT CLUTCH_FULL_VALUE-CALIBRATION_INCREMENT
-#define MIN_BITEPOINT CLUTCH_NONE_VALUE+CALIBRATION_INCREMENT
+// #define MAX_BITEPOINT CLUTCH_FULL_VALUE-CALIBRATION_INCREMENT
+// #define MIN_BITEPOINT CLUTCH_NONE_VALUE+CALIBRATION_INCREMENT
 static inputBitmap_t calibrateUpBitmap = 0;
 static inputBitmap_t calibrateDownBitmap = 0;
 
@@ -33,7 +33,7 @@ static inputBitmap_t setAltFunctionBitmapForCP = 0;
 static inputBitmap_t setButtonFunctionBitmapForCP = 0;
 
 // Related to POV buttons
-// #define DPAD_CENTERED 0
+#define DPAD_CENTERED 0
 #define DPAD_UP 1
 #define DPAD_UP_RIGHT 2
 #define DPAD_RIGHT 3
@@ -52,7 +52,7 @@ static inputBitmap_t dpadMask = ~0ULL;
 
 void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
 {
-    // Check for input events rquesting a change in simwheel functions
+    // Look for input events requesting a change in simwheel functions
     // These input events never translate into a HID report
     if ((changes & cycleALTFunctionBitmap) && (globalState == cycleALTFunctionBitmap))
     {
@@ -82,7 +82,6 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
         clutchState::setFunction(CF_ALT);
         return;
     }
-
     if ((changes & setButtonFunctionBitmapForCP) && (globalState == setButtonFunctionBitmapForCP))
     {
         clutchState::setFunction(CF_BUTTON);
@@ -107,17 +106,24 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
     {
         // One and only one clutch paddle is pressed
         // Check for bite point calibration events
+        int aux;
         if ((calibrateUpBitmap & changes) &&
             (calibrateUpBitmap & globalState) &&
-            (clutchState::bitePoint <= MAX_BITEPOINT))
+            (clutchState::bitePoint < CLUTCH_FULL_VALUE))
         {
-            clutchState::setBitePoint(clutchState::bitePoint + CALIBRATION_INCREMENT);
+            aux = clutchState::bitePoint + CALIBRATION_INCREMENT;
+            if (aux>CLUTCH_FULL_VALUE)
+                aux = CLUTCH_FULL_VALUE;
+            clutchState::setBitePoint((clutchValue_t)aux);
         }
         else if ((calibrateDownBitmap & changes) &&
                  (calibrateDownBitmap & globalState) &&
-                 (clutchState::bitePoint >= MIN_BITEPOINT))
+                 (clutchState::bitePoint > CLUTCH_NONE_VALUE))
         {
-            clutchState::setBitePoint(clutchState::bitePoint - CALIBRATION_INCREMENT);
+            aux = clutchState::bitePoint - CALIBRATION_INCREMENT;
+            if (aux<CLUTCH_NONE_VALUE)
+                aux = CLUTCH_NONE_VALUE;
+            clutchState::setBitePoint((clutchValue_t)aux);
         }
         filteredInputs |= (calibrateDownBitmap | calibrateUpBitmap);
     }
@@ -125,7 +131,7 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
     // Report
     globalState = globalState & (~filteredInputs);
 
-    uint8_t povInput = 0;
+    uint8_t povInput = DPAD_CENTERED;
     if (!altEnabled)
     {
         // Map directional pad buttons to POV input as needed

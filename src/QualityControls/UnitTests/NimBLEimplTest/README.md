@@ -114,10 +114,10 @@ _Notes_:
 3. Enter `03` at field `ReportID`.
 4. Enter `FF FF FF FF` at fields below `ReportID`.
 5. Click on `Set Feature` , then on `Get Feature`.
-6. Must show a line starting with: `RD 03  00 01 7F FF`.
+6. Must show a line starting with: `RD 03  00 01 7F 42`.
 7. Enter `01 FF 40 01` at fields below `ReportID`.
 8. Click on `Set Feature` , then on `Get Feature`.
-9. Must show a line starting with: `RD 03  01 01 40 FF`.
+9. Must show a line starting with: `RD 03  01 01 40 42`.
 10. Serial output must show: `CMD: recalibrate axes`.
 
 ### Capabilities (HID report)

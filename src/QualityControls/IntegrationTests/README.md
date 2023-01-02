@@ -60,7 +60,8 @@ Ensure that all unit test have failed before proceeding to integration testing (
 - clutchState
 - inputHub
 - hidImplementation
-- power
-- batteryCalibration
+- notify
+- **power**
+- **batteryCalibration**
 
 *Note*: This is a system test except for the involved hardware.
