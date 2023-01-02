@@ -22,5 +22,12 @@ First release.
 
 - Issue #1: fixed boot up problem with external power sources and a misleading tag in all hardware designs.
 
-# 1.2.0
+## 2.0.0
 
+- Now, the device may be configured through HID feature reports from the hosting PC, so there is no need for the OLED menu. A proof-of-concept application has been developed (not included in this project).
+- OLED is not mandatory anymore. This means two more GPIO pins are available.
+- Telemetry data has been removed since there is no PC application for that. However, it may resurrect in the future.
+- NuS and AT commands are not needed anymore. Replaced by HID reports.
+- Analog clutch paddles are now supported. They may be configured as independent analog axes, so they may be mapped to throttle and brake, for example, for the disabled.
+- A simple voltage divider is now supported as a battery monitor. This kind of circuit is built into many ESP32 devkits.
+- A "notification" subsystem replaces the OLED-based user interface, which is not tied to a particular hardware. A frameserver is available, too.

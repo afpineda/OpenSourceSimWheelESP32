@@ -1,6 +1,6 @@
 > English
 
-# Open source wireless steering wheel/Button box for ESP32 boards
+# Open source wireless steering wheel/button box for ESP32 boards
 
 This project provides open hardware and software for a sim-racing wheel or button box, featuring:
 
@@ -15,10 +15,6 @@ This project provides open hardware and software for a sim-racing wheel or butto
 - **ALT buttons** that can be mapped to one of two functions through user preferences
   - Alternate mode
   - Regular button
-- **Preferences menu** through OLED (optional), in English and Spanish
-- 40 **save slots** to remember your preferences, including clutch's bite point and button mappings 
-- Preferences may also be set through **[AT commands](https://www.twilio.com/docs/iot/supersim/introduction-at-commands)** using generic apps for PC or mobile phone (a specific PC app has to be developed yet).
-- **Display basic simulator data** like gear and speed through OLED (a specific [SimHub](https://www.simhubdash.com/) plugin has to be developed yet).
 - **Automatic power-off** when not in use
 - **Quality controls** (you don't want your wheel to fail in the middle of a race)
 - **Extensive documentation**
@@ -43,10 +39,6 @@ Este proyecto proporciona hardware y software abierto para un volante de simulac
 - **Botones "ALT"** que pueden ser configurados en una de dos funciones:
   - Modo alternativo
   - Botón normal y corriente
-- **Menú de preferencias** mediante OLED (opcional), en inglés y español
-- 40 **ranuras de salvado** para recordar sus preferencias, incluyendo el punto de mordida del embrague y las funciones seleccionadas
-- Las preferencias de usuario también se pueden introducir mediante **[comandos AT](http://www.zonabot.com/index.php/en/11-categoria-es-es/electronica/11-comandos-at)** usando aplicaciones genéricas para PC o teléfono móvil (pendiente de desarrollo una aplicación específica para PC).
-- **Visualización de datos básicos del simulador** como la marcha y la velocidad a través de la pantalla OLED (pendiente de desarrollo de un _plugin_ para [SimHub](https://www.simhubdash.com/))
 - **Apagado automático** cuando no se usa
 - **Controles de calidad** (no queremos que el volante falle en medio de una carrera)
 - **Documentación extensa**
