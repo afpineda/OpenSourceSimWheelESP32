@@ -14,10 +14,11 @@ The purpose of this subsystem is:
   - To **prevent your batteries from catching fire or blowing up**.
   - To maximize battery life.
 
-There are **two alternate choices** for this subsystem and **restrictions** to them:
+There are **some alternate choices** for this subsystem and **restrictions** to them:
 
 - Use the internal voltage regulator at the DevKit board, so power is taken from an external source.
 - Use a _powerboost module/shield_ (also known as _power bank_). This is **mandatory** for a battery-operated system.
+- Some ESP32 boards already feature built-in battery support, which is a good alternative.
 
 **Warning:** Do not place two or more power sources at the same time. The DevKit board will get damaged.
 
@@ -57,8 +58,9 @@ This is [an example](https://www.wareorigin.com/products/8650-v8-lithium-battery
 And this is the powerboost module used for testing in this project (note there is a latch circuit):
 ![module used for testing](./BatteryShieldSpecs.png)
 
-## Circuit design
+### Circuit design
 
+If your ESP32 board has built-in battery support, nothing else is required.
 There is no circuit involved, however, some wires have to be soldered. If possible, use pin headers instead, for flexibility. These labels will be used from now on along this project:
 
 - **POWERBOOST_3V3**: named as `3V3` or `3V` at the powerboost module.

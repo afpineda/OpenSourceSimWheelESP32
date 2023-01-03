@@ -14,12 +14,14 @@ El propósito de este subsistema es:
   - **Evitar que las baterías se incendien o exploten**.
   - Maximizar la duración de la batería.
 
-Hay **dos opciones alternativas** para este subsistema y **restricciones** para ellas:
+Hay **varias opciones alternativas** para este subsistema y **restricciones** para ellas:
 
 - Usar el regulador de voltaje interno en la placa DevKit, de modo que la energía se tome de una fuente externa.
 - Usar un _módulo/escudo powerboost_ (también conocido como _power bank_). Esto es **obligatorio** para un sistema que funciona con batería.
+- Algunas placas ESP32 ya integran soporte para batería, lo que resulta en una buena alternativa.
 
 **Advertencia:** No coloque dos o más fuentes de alimentación al mismo tiempo. La placa DevKit se dañará.
+
 
 ## Energía de una fuente externa
 
@@ -31,7 +33,6 @@ Una fuente de alimentación externa debe estar disponible a través de un conect
   - `Vcc` conectado al pin `5V0` en la placa DevKit y `GND` como de costumbre. Tenga en cuenta que, a pesar de la etiqueta "5V0", este pin puede soportar hasta 12V. Sin embargo, cuanto mayor sea el voltaje, mayor será el desperdicio de energía y mayor será el calor disipado. Se recomienda no más de 7V.
 
 Si su fuente de alimentación externa no cumple con uno de estos requisitos, opte por un módulo powerboost incluso sin baterías, o busque un regulador de voltaje externo adecuado.
-
 
 ## Energía a través de un módulo powerboost
 
@@ -60,6 +61,7 @@ Y este es el módulo powerboost utilizado para probar en este proyecto (observe 
 
 ## Diseño del circuito
 
+Si su placa ESP32 ya integra soporte para batería, no se necesita nada más.
 No hay circuito involucrado, sin embargo, algunos cables deben soldarse. Si es posible, use cabezales de pines para mayor flexibilidad. Estas etiquetas se utilizarán de ahora en adelante a lo largo de este proyecto:
 
 - **POWERBOOST_3V3**: denominado `3V3` o `3V` en el módulo powerboost.

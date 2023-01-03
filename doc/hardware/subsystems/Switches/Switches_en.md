@@ -9,7 +9,7 @@ To provide a number of **normally-open momentary switches** to the system, inclu
 - Built in push buttons of rotary encoders (both KY-040 and bare bone).
 - Directional pads, directional joysticks and funky switches (except for rotation, which behaves like any other [rotary encoder](../RelativeRotaryEncoder/RelativeRotaryEncoder_en.md)).
 
-And also **potentiometers** for some kinds of clutch paddles.
+And also **potentiometers** as digital clutch paddles, in case you are short of GPIO pins. If not, potentiometers as [analog clutch paddles](../AnalogClutchPaddles/AnalogClutchPaddles_en.md) are a better option.
 
 This subsystem is based on a _button matrix_. Take a look at the article on [input hardware](../../InputHW_en.md) for an explanation. It is highly customizable and dependent on the availability of enough GPIO pins at the DevKit board.
 
@@ -124,7 +124,7 @@ Input pins must be wired to valid input-capable GPIO pins with internal pull-dow
 1. Open file **"CustomSetup.ino"** in editor, and edit the body of `simWheelSetup()`
 2. Create a constant static array for all the selector's GPIO numbers, lets say `mtxSelectors`.
 3. Create another constant static array for all the input's GPIO numbers, lets say `mtxInputs`.
-4. Call `inputs::setButtonMatrix()`. 
+4. Call `inputs::addButtonMatrix()`. 
    - First parameter is `mtxSelectors`.
    - Second parameter is the count of GPIOs in `mtxSelectors`.
    - Third parameter is `mtxInputs`.
@@ -138,7 +138,12 @@ void simWheelSetup()
     static const gpio_num_t mtxSelectors[] = {GPIO_NUM_24,GPIO_NUM_33,GPIO_NUM_32,GPIO_NUM_26, GPIO_NUM_27};
     static const gpio_num_t mtxInputs[] = {GPIO_NUM_15, GPIO_NUM_2, GPIO_NUM_19, GPIO_NUM_3, GPIO_NUM_23};
     ...
-    int btnMtxFirstButtonNumber = inputs::setButtonMatrix(mtxSelectors,5,mtxInputs,5);
+    int btnMtxFirstButtonNumber = inputs::addButtonMatrix(
+      mtxSelectors,
+      sizeof(mtxSelectors)/sizeof(mtxSelectors[0]),
+      mtxInputs,
+      sizeof(mtxInputs)/sizeof(mtxInputs[0])
+      );
     ...
 }
 ```

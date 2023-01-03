@@ -9,7 +9,7 @@ Proporcionar una cantidad de **interruptores momentáneos normalmente abiertos**
 - Botones integrados de codificadores rotatorios (tanto KY-040 como desnudos).
 - Pads direccionales, joysticks direccionales e interruptores funky (excepto la rotación, que se comporta como cualquier otro [codificador rotatorio](../RelativeRotaryEncoder/RelativeRotaryEncoder_es.md)).
 
-Y también **potenciómetros** para algunos tipos de levas de embrague.
+Y también **potenciómetros** para levas digitales de embrague, en caso de que ande corto de pines GPIO. Si no es el caso, las [levas analógicas de embrague](../AnalogClutchPaddles/AnalogClutchPaddles_es.md) son una mejor opción.
 
 Este subsistema se basa en una _matriz de botones_. Eche un vistazo al artículo sobre [hardware de entrada](../../InputHW_es.md) para obtener una explicación. Es altamente personalizable y depende de la disponibilidad de suficientes pines GPIO en la placa DevKit.
 
@@ -70,7 +70,7 @@ El propósito de este circuito es transformar un potenciómetro analógico en un
 3. Mueva lentamente el tornillo del trimmer hacia el otro extremo hasta que se produzca el cambio, pero no más. Si el cambio no sucede, intercambie los terminales izquierdo y derecho del potenciómetro del embrague y luego comience de nuevo.
 4. Olvídese. No se requiere ningún ajuste adicional.
 
-Est ees el [circuito eléctrico en falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWEBmAHAJmgdgGzoRmACzICcpkORICkNNdCApgLRhgBQYW1x1y6cKUHsR4eHRipc6CXLgQAwgBsArgBcAxgAsOAd3BFq6LCKMpIvDgHND-S3ZTIcUKPpD4XqOs9QhvHhwAsig4fgEkggF0mEQcAB4ewiCkLkSQyCmkILx0ACoA9gA6AM4ARhrqBQB2pQC2AIbqAE4AlvGlrdUADhql3V0JHjh0YJDZRiJggrkgAILK-V2lACZMpUzVLQ0rDavrJcp7JY0trQBe+6VlBVXVTCVDLAgiCNnS4Hg54iB5bdbWJjNUrqbTNB7aArKFb9W6bdStAp1JjqIFPKjgHgpLCYnGzAAKcOqmlaAGfkS1iiU1qVVHUys0GotqQcVq0St0Gs0Ck8yOI6KlxJleEhIKUCto6iVSixSmNSgBpFgSqUcMogNiQJDEbWoTLoDGQJ6oPzodB+FgfdDICCzIpGxKW03IXgujzIPE-PLaA7aVrWH3Akqgg6tOrdJi7YlMAA0IJ9pWUBT0QPjB1B4JKkOhTyISHQRBc7H1RAmPzm9QaAE8CkGwxGoySGnGTpta7T6YzlGqNWMkHywHrDIIHRqiH4EBAMDRqLMVBodP0ditlAdukSEUj4WjHTgIDhtXAQGFvmMQITUcSyRTuVdDkwAG7HGklJidhrWVRMLhYviYovJAWoz8vAUDYKQOLepm2YrO4f7TKaBbgOabgGGavAoehHiQH4RpoUhsh+GAgE4ahjgCI4YAuHhjhAbRphuI6hbYdQWCmpAnrTAwYolCq0olLKJRjJASp8RwAAylEuIKVGuBAABmTKvig0CZKORCCGwvA4C4bC2j8ADKTCrpoVRBgMtQlE01yVDUlZnPEQwmL24CoPmp50PiywlK+JlmXeRz2W0lwstctw1A8HBuvJegrNy3RFAAjjARbgNgxDIC8qDEeawmQOgrA4qM0DjhQ4wHsQlhGAgangBwKxCFEMQIF4MQgDFcUFAlyXQDgHBAA) para una sola leva de embrague. Está diseñado para potenciómetros lineales de 10K-ohms, pero funcionará con cualquier cosa hasta 50K-ohms.
+Este es el [circuito eléctrico en falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWEBmAHAJmgdgGzoRmACzICcpkORICkNNdCApgLRhgBQYW1x1y6cKUHsR4eHRipc6CXLgQAwgBsArgBcAxgAsOAd3BFq6LCKMpIvDgHND-S3ZTIcUKPpD4XqOs9QhvHhwAsig4fgEkggF0mEQcAB4ewiCkLkSQyCmkILx0ACoA9gA6AM4ARhrqBQB2pQC2AIbqAE4AlvGlrdUADhql3V0JHjh0YJDZRiJggrkgAILK-V2lACZMpUzVLQ0rDavrJcp7JY0trQBe+6VlBVXVTCVDLAgiCNnS4Hg54iB5bdbWJjNUrqbTNB7aArKFb9W6bdStAp1JjqIFPKjgHgpLCYnGzAAKcOqmlaAGfkS1iiU1qVVHUys0GotqQcVq0St0Gs0Ck8yOI6KlxJleEhIKUCto6iVSixSmNSgBpFgSqUcMogNiQJDEbWoTLoDGQJ6oPzodB+FgfdDICCzIpGxKW03IXgujzIPE-PLaA7aVrWH3Akqgg6tOrdJi7YlMAA0IJ9pWUBT0QPjB1B4JKkOhTyISHQRBc7H1RAmPzm9QaAE8CkGwxGoySGnGTpta7T6YzlGqNWMkHywHrDIIHRqiH4EBAMDRqLMVBodP0ditlAdukSEUj4WjHTgIDhtXAQGFvmMQITUcSyRTuVdDkwAG7HGklJidhrWVRMLhYviYovJAWoz8vAUDYKQOLepm2YrO4f7TKaBbgOabgGGavAoehHiQH4RpoUhsh+GAgE4ahjgCI4YAuHhjhAbRphuI6hbYdQWCmpAnrTAwYolCq0olLKJRjJASp8RwAAylEuIKVGuBAABmTKvig0CZKORCCGwvA4C4bC2j8ADKTCrpoVRBgMtQlE01yVDUlZnPEQwmL24CoPmp50PiywlK+JlmXeRz2W0lwstctw1A8HBuvJegrNy3RFAAjjARbgNgxDIC8qDEeawmQOgrA4qM0DjhQ4wHsQlhGAgangBwKxCFEMQIF4MQgDFcUFAlyXQDgHBAA) para una sola leva de embrague. Está diseñado para potenciómetros lineales de 10K-ohms, pero funcionará con cualquier cosa hasta 50K-ohms.
 
 ![Circuito satélite para potenciómetros](./PotentiometerAsSwitch_falstad.png)
 
@@ -125,7 +125,7 @@ Los pines de entrada deben conectarse a pines GPIO con capacidad de entrada vál
 1. Abra el archivo **"CustomSetup.ino"** en el editor y edite el cuerpo de `simWheelSetup()`
 2. Cree una matriz estática constante para todos los números GPIO del selector, digamos `mtxSelectors`.
 3. Cree otra matriz estática constante para todos los números GPIO de entrada, digamos `mtxInputs`.
-4. Llame  a `inputs::setButtonMatrix()`.
+4. Llame  a `inputs::addButtonMatrix()`.
    - El primer parámetro es `mtxSelectors`.
    - El segundo parámetro es el recuento de GPIO en `mtxSelectors`.
    - El tercer parámetro es `mtxInputs`.
@@ -139,7 +139,12 @@ void simWheelSetup()
     static const gpio_num_t mtxSelectors[] = {GPIO_NUM_24,GPIO_NUM_33,GPIO_NUM_32,GPIO_NUM_26, GPIO_NUM_27};
     static const gpio_num_t mtxInputs[] = {GPIO_NUM_15, GPIO_NUM_2, GPIO_NUM_19, GPIO_NUM_3, GPIO_NUM_23};
     ...
-    int btnMtxFirstButtonNumber = inputs::setButtonMatrix(mtxSelectors,5,mtxInputs,5);
+    int btnMtxFirstButtonNumber = inputs::addButtonMatrix(
+      mtxSelectors,
+      sizeof(mtxSelectors)/sizeof(mtxSelectors[0]),
+      mtxInputs,
+      sizeof(mtxInputs)/sizeof(mtxInputs[0])
+      );
     ...
 }
 ```

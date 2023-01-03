@@ -18,7 +18,7 @@ Follow the links to get a detailed description of each subsystem:
 - [Battery monitor subsystem](./BatteryMonitor/BatteryMonitor_en.md): provides an estimation of battery charge.
 - [Relative rotary encoder subsystem](./RelativeRotaryEncoder/RelativeRotaryEncoder_en.md): provides input from rotation of rotary encoders.
 - [Switches subsystem](./Switches/Switches_en.md): provides input from NO momentary switches (push buttons, paddles, etc.) and potentiometers (some kinds of clutch paddles).
-- [Display subsystem](./Display/Display_en.md): provides a user interface.
+- [Analog clutch subsystem](./AnalogClutchPaddles/AnalogClutchPaddles_en.md): provides input from two potentiometers attached to clutch paddles as analog axes. Digital clutches are supported in the switches subsystem.
 
 ## Design your custom hardware
 
@@ -35,7 +35,7 @@ Arduino's sketch named [**CustomSetup**](../../../src/Firmware/CustomSetup/Custo
 1. Configure each subsystem as described in their documentation.
 
 2. Configure inputs:
-   
+
    As shown for each subsystem, a call to a function in the `inputs` namespace will enable them. Those functions will return the assigned number for the first input, but you can figure out in advance. The assigned number to certain inputs must be known for the next step. Each input number also maps to a certain position in a pin header at your hardware design.
 
 3. Map certain input numbers to specific functions, as explained below. Edit the body of `simWheelSetup()` and place the required calls at the end of it. All of those mappings are optional, but take care not to build a dis functional firmware. Do not assign two functions to the same input number (except for menu navigation).
