@@ -101,7 +101,7 @@ typedef uint16_t analogReading_t;
  *
  */
 #define INPUT_TASK_PRIORITY (tskIDLE_PRIORITY + 2)
-#define UI_TASK_PRIORITY (tskIDLE_PRIORITY + 1)
+//#define UI_TASK_PRIORITY (tskIDLE_PRIORITY + 1)
 
 /**
  * @brief User-selected function of the clutch paddles
@@ -118,55 +118,30 @@ typedef enum
 } clutchFunction_t;
 
 /**
- * @brief Default delay (in microseconds) before clearing the OLED display after a screen shows up
- *
- */
-#define DEFAULT_UI_TIME_us 4 * 1000 * 1000
-
-/**
  * @brief Default autosave delay (in microseconds)
  *
  */
 #define DEFAULT_AUTOSAVE_us 20 * 1000 * 1000
 
-typedef enum
-{
-    SCR_INFO_PRIORITY = 0, /// highest priority
-    SCR_MENU_PRIORITY = 1,
-    SCR_COMM_PRIORITY = 2,
-    SCR_FRAMESERVER_PRIORITY = 3
-} screenPriority_t;
-#define SCR_PRIORITY_COUNT 4
+// /**
+//  * @brief Display types supported by the ss_oled library
+//  *        Must match `iType` parameter for the `oledInit` function.
+//  */
+// typedef enum
+// {
+//     SSOLED_128x128 = 1,
+//     SSOLED_128x32,
+//     SSOLED_128x64,
+//     SSOLED_132x64,
+//     SSOLED_64x32,
+//     SSOLED_96x16,
+//     SSOLED_72x40
+// } displayType_t;
 
-/**
- * @brief Display types supported by the ss_oled library
- *        Must match `iType` parameter for the `oledInit` function.
- */
-typedef enum
-{
-    SSOLED_128x128 = 1,
-    SSOLED_128x32,
-    SSOLED_128x64,
-    SSOLED_132x64,
-    SSOLED_64x32,
-    SSOLED_96x16,
-    SSOLED_72x40
-} displayType_t;
-
-// OLED SETUP
-#define SCREEN_RESET_PIN -1
-#define SCREEN_SDA_PIN 21
-#define SCREEN_SCL_PIN 22
-
-/**
- * @brief Supported UI languages
- *
- */
-typedef enum
-{
-    LANG_EN = 0, /// English
-    LANG_ES      /// Spanish
-} language_t;
+// // OLED SETUP
+// #define SCREEN_RESET_PIN -1
+// #define SCREEN_SDA_PIN 21
+// #define SCREEN_SCL_PIN 22
 
 // Time to wait for connection before power off (in seconds)
 #define AUTO_POWER_OFF_DELAY_SECS 60
@@ -216,18 +191,41 @@ typedef enum
 
 /**
  * @brief Abstract interface for notifications.
- *        To provide an implementation, use one of the other
- *        descendant abstract classes
  *
  */
-class BaseAbstractNotification
+class AbstractNotificationInterface
 {
 public:
     /**
-     * @brief Called once at initialization. Called from the main thread
+     * @brief Used to chain two or more implementations with
+     *        different hardware.
+     *
+     */
+    AbstractNotificationInterface *nextInChain = nullptr;
+
+public:
+    /**
+     * @brief Called once at initialization, from the main thread.
      *
      */
     virtual void begin() = 0;
+
+    /**
+     * @brief Specify a target FPS. Not guaranteed. If there are chained
+     *        instances, the first one will fix the target.
+     *
+     * @return uint8_t frames per second. If zero,
+     *         `serverSingleFrame()` will never be called.
+     */
+    virtual uint8_t getTargetFPS(){return 0;};
+
+    /**
+     * @brief Draw a single frame.
+     *        Called in a loop when no notifications are pending.
+     *        Not called at all if `getTargetFPS()==0`.
+     *        Must not enter a loop itself.
+     */
+    virtual void serveSingleFrame(){};
 
     /**
      * @brief Notify a change in current bite point. Called from a separate thread.
@@ -267,53 +265,5 @@ public:
      */
     virtual void lowBattery() = 0;
 };
-
-/**
- * @brief Interface for notifications with hardware which does not
- *        need a perpetual background task. For example, LEDS.
- * 
- */
-class AbstractNotificationInterface: public BaseAbstractNotification
-{
-    public:
-        /**
-         * @brief Used to chain two or more implementations with
-         *        different hardware.
-         * 
-         */
-        AbstractNotificationInterface *nextInChain=nullptr;
-};
-
-/**
- * @brief Interface for notifications with hardware that
- *        requires a frame server. For example, OLED.
- * 
- */
-class AbstractFrameServerInterface: public BaseAbstractNotification
-{
-    public:
-        /**
-         * @brief Used to chain two or more implementations with
-         *        different hardware.
-         * 
-         */
-        AbstractFrameServerInterface *nextInChain=nullptr;
-
-    /**
-     * @brief Draw a single frame. 
-     *        Called in a loop when no notifications are pending.
-     *        Must not enter a loop itself.
-     * 
-     */
-    virtual void serveSingleFrame() = 0;
-
-    /**
-     * @brief Specify a target FPS. Not guaranteed.
-     * 
-     * @return uint8_t frames per second
-     */
-    virtual uint8_t getTargetFPS() = 0;
-};
-
 
 #endif

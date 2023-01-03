@@ -568,23 +568,9 @@ namespace notify
      * @param implementation An object that actually implements user notifications.
      *                       Must remain valid forever (do not destroy).
      *
-     * @note Use this signature when the underlying hardware does not need
-     *       a perpetual background task.
      */
 
     void begin(AbstractNotificationInterface *implementation);
-
-    /**
-     * @brief Set up an UI-dependant implementation for user notifications.
-     *        Do not call if there is no user interface.
-     *
-     * @param implementation An object that actually implements user notifications.
-     *                       Must remain valid forever (do not destroy).
-     *
-     * @note Use this signature when the underlying hardware requires
-     *       a perpetual background task.
-     */
-    void begin(AbstractFrameServerInterface *implementation);
 
     /**
      * @brief Notify current clutch's bite point

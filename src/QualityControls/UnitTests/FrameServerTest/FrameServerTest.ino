@@ -15,7 +15,7 @@
 // Globals
 //------------------------------------------------------------------
 
-class TestImpl: public AbstractFrameServerInterface
+class TestImpl: public AbstractNotificationInterface
 {
 public:
     virtual void begin() {

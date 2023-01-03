@@ -90,10 +90,14 @@ void notificationLoop(void *param)
 
 void frameServerLoop(void *param)
 {
-    AbstractFrameServerInterface *impl = (AbstractFrameServerInterface *)param;
-    AbstractFrameServerInterface *chain;
+    AbstractNotificationInterface *impl = (AbstractNotificationInterface *)param;
+    AbstractNotificationInterface *chain;
     notifyEvent_t event;
 
+    if (impl->getTargetFPS()==0) {
+        log_e("getTargetFPS() is zero at frameServerLoop()");
+        abort();
+    }
     TickType_t period = pdMS_TO_TICKS (1000 / impl->getTargetFPS());
     if (period<FRAMESERVER_PERIOD_TICKS)
         period = FRAMESERVER_PERIOD_TICKS;
@@ -181,16 +185,10 @@ void notify::begin(AbstractNotificationInterface *implementation)
 {
     if (implementation && (notificationTask == nullptr) && (queue == nullptr))
     {
-        notify_init(notificationLoop, (void *)implementation);
-        implementation->begin();
-    }
-}
-
-void notify::begin(AbstractFrameServerInterface *implementation)
-{
-    if (implementation && (notificationTask == nullptr) && (queue == nullptr))
-    {
-        notify_init(frameServerLoop, (void *)implementation);
+        if (implementation->getTargetFPS()==0)
+            notify_init(notificationLoop, (void *)implementation);
+        else
+            notify_init(frameServerLoop, (void *)implementation);
         implementation->begin();
     }
 }

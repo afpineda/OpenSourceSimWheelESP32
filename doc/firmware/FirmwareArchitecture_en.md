@@ -138,13 +138,18 @@ Such data is set from other modules at startup. This module is trivial, so it is
 
 ### Notifications
 
-This module provides a generic way to notify events to the user, if a user interface is available. It does not depend on a particular hardware, so, anything could be implemented in the future: a single LED, sounds, an OLED, etc. By default, it does nothing. To provide a particular user-interface implementation, derive a new class from `AbstractNotificationInterface` or `AbastractFrameServerInterface` and, then, provide an instance to `notify::begin()`.
+This module provides a generic way to notify events to the user, if a user interface is available. It does not depend on a particular hardware, so, anything could be implemented in the future: a single LED, sounds, an OLED, etc. By default, it does nothing. To provide a particular user-interface implementation, derive a new class from `AbstractNotificationInterface` then, provide an instance to `notify::begin()`.
 
 All notifications are queued, serialized and executed in a very low priority separate thread. The calling thread does not wait for them. For those reasons, some notifications may be missed.
 
-#### AbstractNotificationInterface
+If there were two or more user interfaces (for example, display and sounds), they may be chained together not to mix their code. See `AbstractNotificationInterface::nextInChain`.
 
-For user interfaces not needing a perpetual loop or for one-time notifications. For example:
+`AbstractNotificationInterface` may work in two, non-exclusive, modes:
+
+#### As a simple message queue
+
+For user interfaces not needing a perpetual loop or for one-time notifications. This is the default behavior.
+For example:
 
 ```c
    void MyImpl::turnOn() {
@@ -164,9 +169,9 @@ For user interfaces not needing a perpetual loop or for one-time notifications. 
    }
 ```
 
-#### AbastractFrameServerInterface
+#### As a frame server
 
-For user interfaces in need of a perpetual loop or for persistent notifications. If there are no pending notifications, `AbastractFrameServerInterface::serveSingleFrame()` will be called at timed intervals. For example:
+For user interfaces in need of a perpetual loop or for persistent notifications. If there are no pending notifications, `AbstractFrameServerInterface::serveSingleFrame()` will be called at timed intervals. Override `AbstractFrameServerInterface::getTargetFPS()` to return a non-zero value. For example:
 
 ```c
    void MyImpl::begin() {
