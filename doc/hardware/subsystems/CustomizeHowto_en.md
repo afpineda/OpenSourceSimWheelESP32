@@ -6,7 +6,7 @@ In order to build your own setup, follow a few simple steps:
 1. Choose what is required from each subsystem
 2. Design your custom hardware
 3. Configure your custom firmware
-4. _Optional but recommended_: build the resulting circuit in a protoboard, upload your custom firmware and test it.
+4. *Optional but recommended*: build the resulting circuit in a protoboard, upload your custom firmware and test it.
 5. Build your design into a [perfboard](https://en.wikipedia.org/wiki/Perfboard).
 
 ## Choose what is required from each subsystem
@@ -36,52 +36,50 @@ Arduino's sketch named [**CustomSetup**](../../../src/Firmware/CustomSetup/Custo
 
 2. Configure inputs:
 
-   As shown for each subsystem, a call to a function in the `inputs` namespace will enable them. Those functions will return the assigned number for the first input, but you can figure out in advance. The assigned number to certain inputs must be known for the next step. Each input number also maps to a certain position in a pin header at your hardware design.
+   As shown for each subsystem, a call to a function in the `inputs` namespace will enable them. You must also assign an "input number" to each input, in the range from 0 to 63. Each input number maps to a certain position in a pin header at your hardware design. Some input numbers have a concrete meaning in the hosting PC.
 
-3. Map certain input numbers to specific functions, as explained below. Edit the body of `simWheelSetup()` and place the required calls at the end of it. All of those mappings are optional, but take care not to build a dis functional firmware. Do not assign two functions to the same input number (except for menu navigation).
+3. Map certain input numbers to specific functions, as explained below. Edit the body of `simWheelSetup()` and place the required calls at the end of it. All of those mappings are optional, but take care not to build a dis functional firmware. Do not assign two functions to the same input numbers. Where available, do not use a combination of input numbers which can not be activated at the same time. Do not map a specific function to non-existent input numbers.
 
 *Note:* "..." means other code not explicitly shown.
 
 ### DPAD
 
-Despite this function is designed for funky switches and directional pads, it may be assigned to _any_ input, including rotary encoders and push buttons. Place a call to `inputHub::setDPADControls()`:
+A DPAD is optional. Despite this function is designed for funky switches and directional pads, it may be assigned to _any_ input, including rotary encoders and push buttons. Place a call to `inputHub::setDPADControls()`:
 
 - 1st parameter is the input number for the "up" button
 - 2nd parameter is the input number for the "down" button
 - 3rd parameter is the input number for the "left" button
 - 4th parameter is the input number for the "right" button
 
-For example, let's say this function is mapped to certain inputs at the button matrix:
+For example, let's say the button matrix contains input numbers 20, 22, 25 and 28:
 
 ```c
 void simWheelSetup()
 {
    ...
-   inputNumber_t mtxFirstBtn = inputs::setButtonMatrix(...);
+   inputs::addButtonMatrix(...);
    ...
-   inputHub::setDPADControls(
-      mtxFirstBtn+10,
-      mtxFirstBtn+12,
-      mtxFirstBtn+16,
-      mtxFirstBtn+18);
+   inputHub::setDPADControls(20, 22, 25, 28);
    ...
 }
 ```
 
 ### Clutch paddless
 
-Place a call to `inputHub::setClutchPaddles()`. Each parameter (there are two) is the input number assigned to a clutch paddle.
-For example, let's say this function is mapped to certain inputs at the button matrix:
+Clutch paddles are optional. You can have *analog* or *digital* clutch paddles, but not both. They work just the same.
+Analog clutch paddles are configured in the `inputs` namespace as stated in the [corresponding subsystem](./AnalogClutchPaddles/AnalogClutchPaddles_en.md) (nothing else is required).
+
+Digital clutch paddles requires just two existing input numbers. Place a call to `inputs::setDigitalClutchPaddles()`. Each parameter (there are two) is the input number assigned to a clutch paddle.
+For example, let's say the button matrix contains input numbers 45 and 46:
 
 ```c
 void simWheelSetup()
 {
+   inputNumber_t btnMatrixNumbers = [ ..., 45, 46, ...];
    ...
-   inputNumber_t mtxFirstBtn = inputs::setButtonMatrix(...);
+   inputs::addButtonMatrix(... , btnMatrixNumbers);
    ...
-   inputHub::setClutchPaddles(
-      mtxFirstBtn+14,
-      mtxFirstBtn+15);
+   inputs::setDigitalClutchPaddles(45, 46);
    ...
 }
 ```
@@ -93,20 +91,20 @@ Place a call to `inputHub::setClutchCalibrationButtons()`:
 - 1st parameter is an input number to increase the bite point.
 - 2nd parameter is an input number to decrease the bite point.
 
-For example, let's say this function is mapped to a rotary encoder:
+For example, let's say this function is mapped to a rotary encoder (input numbers 34 and 35):
 
 ```c
 void simWheelSetup()
 {
    ...
-   inputNumber_t rotary1Clockwise = inputs::addRotaryEncoder(...);
+   inputs::addRotaryEncoder(..., 34, 35, false);
    ...
-   inputHub::setClutchCalibrationButtons(
-      rotary1Clockwise,
-      rotary1Clockwise+1);
+   inputHub::setClutchCalibrationButtons(34, 35);
    ...
 }
 ```
+
+There is no point on this if there are no clutch paddles.
 
 ### ALT buttons
 
@@ -118,72 +116,73 @@ For example, let's say this function is mapped to two certain inputs at the butt
 ```c
 void simWheelSetup()
 {
+   inputNumber_t btnMatrixNumbers = [ ..., 45, 46, ...];
    ...
-   inputNumber_t mtxFirstBtn = inputs::setButtonMatrix(...);
+   inputs::addButtonMatrix(..., btnMatrixNumbers);
    ...
    inputHub::setALTBitmap(
-      BITMAP(mtxFirstBtn) | BITMAP(mtxFirstBtn+1)
+      BITMAP(45) | BITMAP(46)
    );
    ...
 }
 ```
 
-### Enter/exit menu
+Any of the given input numbers will enter the "ALT" mode when activated, except if they are set to work as "regular buttons" by the user.
 
-This function is useless if there is no OLED subsystem. You may assign this function to any number of push buttons (rotation of a rotary encoder will not work). All of those buttons, and none of the others, have to be pressed at the same time, hold for two seconds, then released, to enter/exit the configuration menu. If those buttons are pressed in any other way, **they will be reported to the hosting PC** as any other input. To avoid accidental activation, assign two button numbers.
+### Cycle working mode for clutch paddles
 
-Place a call to `inputHub::setMenuBitmap()`. There is one parameter: a sequence of calls to `BITMAP(<input number>)` separated by `|`. For example, let's say this function is mapped to two certain buttons at the button matrix:
+Each time this function is activated, the working mode of the clutch paddles will move to the next one : F1-style clutch, autonomous axes, "ALT" mode, regular buttons and back to the first mode. There is no point on this if there are no clutch paddles.
+
+Assign a combination of input numbers to activate this function by placing a call to
+`inputHub::setCycleClutchFunctionBitmap()`. There is one parameter: a sequence of calls to `BITMAP(<input number>)` separated by `|`. All the inputs have to be active at the same time, and none of the others.
+For example:
 
 ```c
 void simWheelSetup()
 {
+   inputNumber_t btnMatrixNumbers = [ ..., 60, 61, ...];
    ...
-   inputNumber_t mtxFirstBtn = inputs::setButtonMatrix(...);
+   inputs::addButtonMatrix(... , btnMatrixNumbers);
    ...
-   inputHub::setMenuBitmap(
-      BITMAP(mtxFirstBtn+20) | BITMAP(mtxFirstBtn+22)
-   );
+   inputHub::setCycleClutchFunctionBitmap(BITMAP(60)|BITMAP(61));
    ...
 }
 ```
 
-### Menu navigation
+#### Select a specific working mode for clutch paddles
 
-This function is useless if there is no OLED subsystem. 
+As an alternative, you may assign specific button combinations to specific working modes. Place a call to `inputHub::setSelectClutchFunctionBitmaps()`. There are four parameters. Each one should contain a sequence of calls to `BITMAP(<input number>)` as seen in the previous calls:
 
-In this case, assigned input numbers can be shared with other functions. Place a call to `configMenu::setNavButtons()`:
+- First parameter: button combination to select F1-Style clutch mode.
+- Second parameter: button combination to select autonomous axes mode.
+- Third parameter: button combination to select "ALT" mode.
+- Fourth parameter: button combination to select "regular buttons" mode.
 
-- 1st parameter is the input number assigned to navigate to the previous option.
-- 2nd parameter is the input number assigned to navigate to the next option.
-- 3rd parameter is the input number assigned to select a menu option.
-- 4th parameter is the input number assigned to cancel.
-
-For example, let's say navigation is mapped to a rotary encoder (the same as a previous example), "select" is mapped to its built in push button and "cancel" is mapped to a clutch paddle (the same as a previous example):
+For example:
 
 ```c
 void simWheelSetup()
 {
+   inputNumber_t btnMatrixNumbers = [ ..., 59, 60, 61, 62, 63];
    ...
-   inputNumber_t mtxFirstBtn = inputs::setButtonMatrix(...);
-   inputNumber_t rotary1Clockwise = inputs::addRotaryEncoder(...);
-   inputNumber_t rotary1Button = inputs::addDigital(...);
+   inputs::addButtonMatrix(... , btnMatrixNumbers);
    ...
-   inputHub::setClutchPaddles(
-      mtxFirstBtn+14,
-      mtxFirstBtn+15);
-   inputHub::setClutchCalibrationButtons(
-      rotary1Clockwise,
-      rotary1Clockwise+1);
-   ...
-   configMenu::setNavButtons(
-      rotary1Clockwise,
-      rotary1Clockwise+1,
-      rotary1Button,
-      mtxFirstBtn+14
-   );
+   inputHub::setSelectClutchFunctionBitmaps(
+      BITMAP(59)|BITMAP(60),
+      BITMAP(59)|BITMAP(61),
+      BITMAP(59)|BITMAP(62),
+      BITMAP(59)|BITMAP(63) );
    ...
 }
 ```
+
+### Cycle working mode of "ALT" buttons
+
+Each time this function is activated, the working mode of the "ALT" buttons will move to the next one : "ALT" mode, regular buttons and back to the first mode. There is no point on this if there are no "ALT" buttons.
+
+Assign a combination of input numbers to activate this function by placing a call to
+`inputHub::setCycleALTFunctionBitmap()`. There is one parameter: a sequence of calls to `BITMAP(<input number>)` separated by
+`|`. All the inputs have to be active at the same time, and none of the others.
 
 ### Other game pad controls
 

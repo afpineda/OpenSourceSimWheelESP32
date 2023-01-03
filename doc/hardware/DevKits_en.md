@@ -15,9 +15,9 @@ This is not the only annoyance:
 
 As a result, some devices can not be connected to any arbitrary pin, so a **pinout plan** is needed. To develop such a plan, you need to know which constraints apply to your DevKit board. Look for a data sheet.
 
-## ESP-WROOM-32 chip
+## ESP-WROOM-32 devkit
 
-The following article explains which pins can be used and how: 
+The following article explains which pins can be used and how:
 [https://randomnerdtutorials.com/esp32-pinout-reference-gpios/](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/). However, we can get more specific:
 
 - **GPIO #36, #39, #34 and #35**:

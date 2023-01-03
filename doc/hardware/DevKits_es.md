@@ -15,7 +15,7 @@ Esta no es la única molestia:
 
 Como resultado, algunos dispositivos no se pueden conectar a cualquier pin arbitrario, por lo que se necesita un **plan de asignación de pines**. Para desarrollar un plan de este tipo, necesita saber qué restricciones se aplican a su placa DevKit. Busque una hoja de datos.
 
-## Chip ESP-WROOM-32
+## Devkit ESP-WROOM-32
 
 El siguiente artículo explica qué pines se pueden usar y cómo:
 [https://randomnerdtutorials.com/esp32-pinout-reference-gpios/](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/). Sin embargo, podemos ser más específicos:

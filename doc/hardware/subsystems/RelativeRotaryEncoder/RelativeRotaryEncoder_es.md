@@ -26,13 +26,11 @@ Cada codificador rotatorio requiere dos pines dedicados en la placa DevKit, sin 
 
 ![Resistencias pullup externas](./ExternalPullupEncoder.png)
 
-
 ## Codificación de la señal
 
 Algunos codificadores usan ["incremental Encoder Quadrature Output Waveform"](https://www.allaboutcircuits.com/projects/how-to-use-a-rotary-encoder-in-a-mcu-based-project/). Este es el caso de los KY-040. 
 Otros parecen usar una codificación de señal distinta. **Este es el caso de la serie [ALPS RKJX](https://docs.rs-online.com/5b4c/0900766b8152c2e9.pdf) de funky switches**. Dicha codificación se denomina "codificación alternativa" en este proyecto.
 El firmware está listo para usar ambas.
-
 
 ## Personalización del firmware
 
@@ -41,28 +39,28 @@ Edite el cuerpo de `simWheelSetup()` y realice una llamada a `inputs::addRotaryE
 
 - El primer parámetro es el GPIO asignado a `CLK` o `A`.
 - El segundo parámetro es el GPIO asignado a `DT` o `B`.
-- El tercer parámetro debe ajsutarse a  `true` si hay "codificación alternativa" (parámetro opcional, por defecto es `false`). Déle una oportunidad a este parámetro si su codificador relativo no funciona apropiadamente.
+- El tercer parámetro es el número de entrada asignado a la rotacion en el sentido de las agujas del reloj.
+- El cuarto parámetro es el número de entrada asignado a la rotacion en el sentido contrario a las agujas del reloj.
+- El quinto parámetro debe ajustarse a `true` si hay "codificación alternativa" (parámetro opcional, por defecto es `false`). Déle una oportunidad a este parámetro si su codificador rotatorio no funciona apropiadamente.
 
 Por ejemplo, supongamos que un codificador rotatorio desnudo tiene `A` conectado a GPIO 33 y `B` conectado a GPIO 25:
-
-```c
-anular simWheelSetup()
-{
-   ...
-   entradas::addRotaryEncoder(GPIO_NUM_33,GPIO_NUM_25);
-   ...
-}
-```
-
-Por ejemplo, supongames que un codificador funky ALPS tiene `A` conectado a GPIO 33 y `B` conectado a GPIO 25:
 
 ```c
 void simWheelSetup()
 {
    ...
-   inputs::addRotaryEncoder(GPIO_NUM_33,GPIO_NUM_25,true);
+   inputs::addRotaryEncoder(GPIO_NUM_33, GPIO_NUM_25, 30, 31);
    ...
 }
 ```
 
-`inputs::addRotaryEncoder()` devuelve el número de entrada para la rotación en el sentido de las agujas del reloj, siendo el siguiente el número de entrada para la rotación en el sentido contrario a las agujas del reloj.
+Por ejemplo, supongamos que un codificador funky ALPS tiene `A` conectado a GPIO 33 y `B` conectado a GPIO 25:
+
+```c
+void simWheelSetup()
+{
+   ...
+   inputs::addRotaryEncoder(GPIO_NUM_33, GPIO_NUM_25, 30, 31, true);
+   ...
+}
+```

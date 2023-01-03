@@ -122,27 +122,31 @@ Customization takes place at file [CustomSetup.ino](../../../../src/Firmware/Cus
 Input pins must be wired to valid input-capable GPIO pins with internal pull-down resistors.  Otherwise, external pull-down resistors must be added to the circuit design. Selector pins must be wired to valid output-capable GPIO pins.
 
 1. Open file **"CustomSetup.ino"** in editor, and edit the body of `simWheelSetup()`
-2. Create a constant static array for all the selector's GPIO numbers, lets say `mtxSelectors`.
-3. Create another constant static array for all the input's GPIO numbers, lets say `mtxInputs`.
-4. Call `inputs::addButtonMatrix()`. 
+2. Create a constant static array for all the selector's GPIO numbers, let's say `mtxSelectors`.
+3. Create another constant static array for all the input's GPIO numbers, let's say `mtxInputs`.
+4. Create another constant static array for the assigned input numbers, let's say `mtxNumbers`. All of them in the range from 0 to 63.
+5. Call `inputs::addButtonMatrix()`. 
    - First parameter is `mtxSelectors`.
    - Second parameter is the count of GPIOs in `mtxSelectors`.
    - Third parameter is `mtxInputs`.
    - Fourth parameter is the count of GPIOs in `mtxInputs`.
+   - Fifth parameter is `mtxNumbers`. The count of items in this array must match the product of the second and fourth parameters.
 
 For example:
 
 ```c
 void simWheelSetup()
 {
-    static const gpio_num_t mtxSelectors[] = {GPIO_NUM_24,GPIO_NUM_33,GPIO_NUM_32,GPIO_NUM_26, GPIO_NUM_27};
-    static const gpio_num_t mtxInputs[] = {GPIO_NUM_15, GPIO_NUM_2, GPIO_NUM_19, GPIO_NUM_3, GPIO_NUM_23};
+    static const gpio_num_t mtxSelectors[] = {GPIO_NUM_24,GPIO_NUM_33,GPIO_NUM_32};
+    static const gpio_num_t mtxInputs[] = {GPIO_NUM_15, GPIO_NUM_2, GPIO_NUM_19};
+    static const inputNumber_t mtxNumbers[] = {0,1,2,3,4,5,6,20,21};
     ...
-    int btnMtxFirstButtonNumber = inputs::addButtonMatrix(
+    inputs::addButtonMatrix(
       mtxSelectors,
       sizeof(mtxSelectors)/sizeof(mtxSelectors[0]),
       mtxInputs,
-      sizeof(mtxInputs)/sizeof(mtxInputs[0])
+      sizeof(mtxInputs)/sizeof(mtxInputs[0]),
+      mtxNumbers
       );
     ...
 }
