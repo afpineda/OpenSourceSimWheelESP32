@@ -101,7 +101,7 @@ typedef uint16_t analogReading_t;
  *
  */
 #define INPUT_TASK_PRIORITY (tskIDLE_PRIORITY + 2)
-//#define UI_TASK_PRIORITY (tskIDLE_PRIORITY + 1)
+// #define UI_TASK_PRIORITY (tskIDLE_PRIORITY + 1)
 
 /**
  * @brief User-selected function of the clutch paddles
@@ -169,13 +169,13 @@ typedef enum
  */
 typedef enum
 {
-    CAP_CLUTCH_BUTTON = 0, /// has digital clutch paddles (switches)
-    CAP_CLUTCH_ANALOG,     /// has analog clutch paddles (potentiometers)
-    CAP_ALT,               /// has "ALT" buttons
-    CAP_DPAD,              /// has a directional pad
-    CAP_BATTERY = 8,       /// battery-operated
-    CAP_HAS_OLED = 12,     /// has an OLED
-    CAP_HAS_REV_LIGHTS,    /// has rev lights
+    CAP_CLUTCH_BUTTON = 0,  /// has digital clutch paddles (switches)
+    CAP_CLUTCH_ANALOG = 1,  /// has analog clutch paddles (potentiometers)
+    CAP_ALT = 2,            /// has "ALT" buttons
+    CAP_DPAD = 3,           /// has a directional pad
+    CAP_BATTERY = 4,        /// battery-operated
+    CAP_HAS_OLED = 5,       /// has an OLED
+    CAP_HAS_REV_LIGHTS = 6, /// has rev lights
 } deviceCapability_t;
 
 /**
@@ -217,7 +217,7 @@ public:
      * @return uint8_t frames per second. If zero,
      *         `serverSingleFrame()` will never be called.
      */
-    virtual uint8_t getTargetFPS(){return 0;};
+    virtual uint8_t getTargetFPS() { return 0; };
 
     /**
      * @brief Draw a single frame.

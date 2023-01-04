@@ -50,7 +50,7 @@ void setup()
         ;
 
     Serial.println("-- READY --");
-    clutchState::begin();
+    //clutchState::begin();
     inputs::begin();
     notify::begin(new SerialNotificationImpl());
 
@@ -64,12 +64,15 @@ void setup()
     inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, CW_IN, CCW_IN,false);
     inputs::setAnalogClutchPaddles(TEST_ANALOG_PIN1,TEST_ANALOG_PIN2,LEFT_CLUTCH_IN,RIGHT_CLUTCH_IN);
 
+    inputHub::setALTButton(ALT_IN);
     inputHub::setCycleALTFunctionBitmap(BITMAP(COMMAND_IN)|BITMAP(CYCLE_ALT_IN));
     inputHub::setCycleClutchFunctionBitmap(BITMAP(COMMAND_IN)|BITMAP(CYCLE_CLUTCH_IN));
     inputHub::setClutchCalibrationButtons(CW_IN, CCW_IN);
     inputHub::setDPADControls(UP,DOWN,LEFT,RIGHT);
 
     hidImplementation::begin("Proto1","Mamandurrio",false);
+    clutchState::setFunction(CF_CLUTCH);
+    clutchState::setALTModeForALTButtons(true);
     Serial.println("-- GO --");
     inputs::start();
 }
