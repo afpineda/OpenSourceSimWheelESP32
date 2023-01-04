@@ -54,8 +54,8 @@ void setup()
     inputs::addDigital(TEST_ROTARY_SW, ROTARY_PUSH_BN, true, true);
     inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, ROTARY_CW_BN, ROTARY_CCW_BN,false);
 
-    Serial.println("-- GO --");
     inputs::start();
+    Serial.println("-- GO --");
 }
 
 void loop()

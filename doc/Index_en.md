@@ -22,10 +22,6 @@
 
 - [How to customize in order to build your own hardware and firmware setup](./hardware/subsystems/CustomizeHowto_en.md).
 
-## Other
-
-- [UART protocol](./firmware/UARTProtocol_en.md)
-
 ## Contributing
 
 - Ways to contribute:

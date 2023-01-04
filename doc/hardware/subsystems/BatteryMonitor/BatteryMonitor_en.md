@@ -4,7 +4,7 @@ This subsystem is for a **battery-operated** setup. Does not make sense if an ex
 
 ## Purpose
 
-The purpose of this subsystem is to provide an estimation of how much battery charge is left, so the user knows when to plug the charging cable in. The battery level is a percentage of charge left in the range 0% to 100%. 
+The purpose of this subsystem is to provide an estimation of how much battery charge is left, so the user knows when to plug the charging cable in. The battery level is a percentage of charge left in the range 0% to 100%.
 Battery level is known to the hosting PC through Bluetooth Low Energy.
 
 There are two alternative implementations to choose from:
@@ -23,7 +23,7 @@ A battery monitor needs to read the output voltage of the battery (*not* the pow
 In some way, this output voltage should be read through an ADC pin, however, there are two restrictions:
 
 - The output voltage of the battery exceeds 3.3V and would damage the DevKit board, so that voltage has to drop down to a suitable range.
-- Reading the output voltage could discharge the battery itself, so the battery monitor should not draw any relevant current. 
+- Reading the output voltage could discharge the battery itself, so the battery monitor should not draw any relevant current.
 
 The firmware will read the battery level every few minutes and it takes only a few milliseconds long.
 
@@ -53,7 +53,7 @@ Needed parts:
 - 100K-ohms resistor (x2)
 - 4.7K-ohms resistors (x2) **1% tolerance**. Any impedance in the range 1K-100K ohms will work, as long as both are identical.
 - A bipolar junction transistor (x1), NPN type: any kind should work (for example: [BC637](https://www.onsemi.com/pdf/datasheet/bc637-d.pdf)).
-- A bipolar junction transistor (x1), PNP type: any kind should work (for example: [BC640](https://www.onsemi.com/pdf/datasheet/bc640-d.pdf)). 
+- A bipolar junction transistor (x1), PNP type: any kind should work (for example: [BC640](https://www.onsemi.com/pdf/datasheet/bc640-d.pdf)).
 
 Pay attention to the pinout of your transistors. It *may not match* the one shown here.
 

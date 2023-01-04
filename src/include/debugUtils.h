@@ -40,13 +40,11 @@ static inputNumber_t mtxNumbers[] = {6,7,5,4,2,3};
 #define TEST_ANALOG_PIN2 GPIO_NUM_13
 
 // Battery monitor pins for testing
-#define TEST_BATTERY_READ_ENABLE GPIO_NUM_12
-#define TEST_BATTERY_READ GPIO_NUM_13
-// #define TEST_BATTERY_READ_ENABLE GPIO_NUM_12
-// #define TEST_BATTERY_READ GPIO_NUM_2
+#define TEST_BATTERY_READ_ENABLE GPIO_NUM_17
+#define TEST_BATTERY_READ GPIO_NUM_15
 
 // Latch circuit pins for testing
-#define TEST_LATCH_PIN GPIO_NUM_12
+#define TEST_LATCH_PIN GPIO_NUM_23
 #define TEST_LATCH_MODE POWER_OPEN_DRAIN
 #define TEST_LATCH_DELAY pdMS_TO_TICKS(5000)
 

@@ -12,7 +12,7 @@
 #include "ButtonMatrixInput.h"
 #include <Preferences.h>
 
-// #include "debugUtils.h"
+#include "debugUtils.h"
 
 // ----------------------------------------------------------------------------
 // Globals
@@ -25,6 +25,7 @@ static AnalogAxisInput *rightClutchAxis = nullptr;
 static inputBitmap_t leftClutchButtonBitmap = 0ULL;
 static inputBitmap_t rightClutchButtonBitmap = 0ULL;
 static inputBitmap_t clutchButtonsMask = ~0ULL;
+static bool forceUpdate = false;
 
 // Related to the polling task and event queue
 #define SAMPLING_RATE_TICKS DEBOUNCE_TICKS * 2
@@ -126,6 +127,11 @@ void inputs::recalibrateAxes()
 // Input polling
 // ----------------------------------------------------------------------------
 
+void inputs::update()
+{
+  forceUpdate = true;
+}
+
 void inputPollingLoop(void *param)
 {
   inputBitmap_t newState;
@@ -140,7 +146,7 @@ void inputPollingLoop(void *param)
   {
     // Digital inputs
     newState = DigitalPolledInput::readInChain(oldState, digitalInputChain);
-    if (newState != oldState)
+    if ((newState != oldState) || forceUpdate)
       inputs::notifyInputEvent(combinedMask, newState);
     oldState = newState;
 
@@ -152,7 +158,7 @@ void inputPollingLoop(void *param)
           &(axisEvent.value),
           &axisChanged,
           &leftAxisAutocalibrated);
-      if (axisChanged)
+      if (axisChanged || forceUpdate)
       {
         axisEvent.id = LEFT_CLUTCH_INDEX;
         axisEvent.inputBitmap = leftClutchAxis->bitmap;
@@ -165,7 +171,7 @@ void inputPollingLoop(void *param)
           &(axisEvent.value),
           &axisChanged,
           &rightAxisAutocalibrated);
-      if (axisChanged)
+      if (axisChanged || forceUpdate)
       {
         axisEvent.id = RIGHT_CLUTCH_INDEX;
         axisEvent.inputBitmap = rightClutchAxis->bitmap;
@@ -176,7 +182,7 @@ void inputPollingLoop(void *param)
       if (leftAxisAutocalibrated || rightAxisAutocalibrated)
         requestSaveAxisCalibration();
     }
-
+    forceUpdate = false;
     // wait for next sampling interval
     vTaskDelay(SAMPLING_RATE_TICKS);
   }
@@ -412,6 +418,7 @@ void hubLoop(void *unused)
           else
             clutchState::setLeftAxis(axisEvent->value);
 
+          globalState = globalState & (axisEvent->inputMask);
           if (
               (clutchState::currentFunction == CF_AXIS) ||
               ((clutchState::currentFunction == CF_ALT) &&
@@ -442,7 +449,7 @@ void inputs::start()
   {
     // Load axis callibration data, if any
     Preferences prefs;
-    if (prefs.begin(AXIS_NAMESPACE, true))
+    if ((leftClutchAxis) && (rightClutchAxis) && prefs.begin(AXIS_NAMESPACE, true))
     {
       int min, max;
       if (loadAxisCalibration(&prefs, LEFT_CLUTCH_INDEX, &min, &max))

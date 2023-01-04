@@ -5,6 +5,7 @@ PolledInput.h
 RotaryEncoderInput.h
 strings.h
 adcTools.h
+HID_definitions.h
 adcTools.cpp
 BatteryCalibration.cpp
 ButtonMatrixInput.cpp
@@ -15,3 +16,5 @@ PolledInput.cpp
 power.cpp
 RotaryEncoderInput.cpp
 notify.cpp
+clutchState.cpp
+capabilities.cpp

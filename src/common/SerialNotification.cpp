@@ -31,11 +31,6 @@ void SerialNotificationImpl::BLEdiscovering()
     Serial.println("(BLE DISCOVERING)");
 }
 
-void SerialNotificationImpl::powerOn()
-{
-    Serial.println("(Welcome)");
-}
-
 void SerialNotificationImpl::powerOff()
 {
     Serial.println("(POWER OFF)");

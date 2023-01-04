@@ -45,6 +45,11 @@ void inputs::recalibrateAxes()
     Serial.println("CMD: recalibrate axes");
 }
 
+void inputs::update()
+{
+
+}
+
 void batteryCalibration::restartAutoCalibration()
 {
     Serial.println("CMD: recalibrate battery");

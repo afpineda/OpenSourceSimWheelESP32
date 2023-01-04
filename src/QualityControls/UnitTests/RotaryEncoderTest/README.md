@@ -12,8 +12,9 @@ Use this [test circuit](../../Protoboards/ESP32-WROOM-DevKitC-1.diy):
 ![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.png)
 
 Two rotary encoderes are tested:
+
 - KY-040 type (with external pull up resistors). `CLK` pin attached to `TEST_ROTARY_CLK`. `DT` pin attached to `TEST_ROTARY_DT`. `V+` and `GND` pins as usual.
-- ALPS RKJX series (no external pull up resistors). `Encoder A` pin attached to `TEST_ROTARY_ALPS_A`, `Encoder B` pin attached to `TEST_ROTARY_ALPS_B`. `Encoder COM` pin attached to `GND`.
+- ALPS RKJX series. `Encoder A` pin attached to `TEST_ROTARY_ALPS_A`, `Encoder B` pin attached to `TEST_ROTARY_ALPS_B`. `Encoder COM` pin attached to `GND`.
 
 If you are not using both rotary encoders, ensure the missing pins are attached to `3V3`. Otherwise, ghost inputs will apppear.
 

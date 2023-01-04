@@ -247,12 +247,6 @@ public:
     virtual void BLEdiscovering() = 0;
 
     /**
-     * @brief Notify device is ready. Called from a separate thread.
-     *
-     */
-    virtual void powerOn() = 0;
-
-    /**
      * @brief Notify device is about to power off/deep sleep.
      *        Called from a separate thread.
      *

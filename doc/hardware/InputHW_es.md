@@ -16,9 +16,9 @@ Dependiendo de cómo se activen, se pueden clasificar en:
 
 Dependiendo de cómo se cierre el circuito, los interruptores momentáneos se pueden clasificar en:
 
-- __Normalmente cerrado__ (NC): el interruptor se cierra si no se presiona, dejando pasar la corriente. Esto no se recomienda para evitar que se agote la batería.
-- __Normalmente abierto__ (NO): el interruptor está abierto si no está presionado.
-- __NO-NC__ (ambos): tienen 3 o 4 terminales y se pueden utilizar tanto como NO como NC a la vez. Tenga en cuenta que los terminales NC están cerrados mientras que los terminales NO están abiertos y viceversa. Esto tiene una aplicación interesante con divisores de voltaje (ver más abajo).
+- **Normalmente cerrado** (NC): el interruptor se cierra si no se presiona, dejando pasar la corriente. Esto no se recomienda para evitar que se agote la batería.
+- **Normalmente abierto** (NO): el interruptor está abierto si no está presionado.
+- **NO-NC** (ambos): tienen 3 o 4 terminales y se pueden utilizar tanto como NO como NC a la vez. Tenga en cuenta que los terminales NC están cerrados mientras que los terminales NO están abiertos y viceversa. Esto tiene una aplicación interesante con divisores de voltaje (ver más abajo).
 
 Los interruptores son propensos a [rebotar](https://circuitdigest.com/electronic-circuits/what-is-switch-bouncing-and-how-to-prevent-it-using-debounce-circuit) debido a su naturaleza mecánica.
 Este proyecto proporciona amortiguación por medio de software.
@@ -68,13 +68,13 @@ Un interruptor funky es solo la combinación física de un codificador rotatorio
 
 Cuando se usa un pin GPIO como entrada digital, solo se puede acomodar un interruptor en él. No hay suficientes pines para acomodar todas las entradas requeridas de esta manera, por lo que debe implementarse otra técnica. Hay varias opciones:
 
-- **Circuitos analógicos**. Algunos pines GPIO están equipados con convertidores de analógico a digital (ADC), por lo que pueden usarse como entradas analógicas. La idea es compartir un solo pin con varias entradas configurando diferentes voltajes. Sin embargo, los ADC no son perfectos. Existe una _limitación_ severa en el número de entradas que el software puede detectar _sin error_. Cada circuito analógico debe estar "calibrado" en el software. El procedimiento de calibración determinará un rango de voltajes donde se detecta cada entrada individual. Incluso si dos circuitos parecen idénticos, pueden establecer diferentes voltajes para las mismas entradas. Esto se debe a que las resistencias no son perfectas. Sin embargo, puede llegar a una calibración que se adapte a todos los circuitos idénticos.
+- **Circuitos analógicos**. Algunos pines GPIO están equipados con convertidores de analógico a digital (ADC), por lo que pueden usarse como entradas analógicas. La idea es compartir un solo pin con varias entradas configurando diferentes voltajes. Sin embargo, los ADC no son perfectos. Existe una *limitación* severa en el número de entradas que el software puede detectar *sin error*. Cada circuito analógico debe estar "calibrado" en el software. El procedimiento de calibración determinará un rango de voltajes donde se detecta cada entrada individual. Incluso si dos circuitos parecen idénticos, pueden establecer diferentes voltajes para las mismas entradas. Esto se debe a que las resistencias no son perfectas. Sin embargo, puede llegar a una calibración que se adapte a todos los circuitos idénticos.
 
 - **Matrices de botón (o interruptor)**. Son circuitos digitales, por lo que no son propensos a errores. Con $N$ pines adecuados, una matriz de botones puede contener hasta $(N/2)^2$ botones.
 
 - **Multiplexores**. Son circuitos digitales, por lo que no son propensos a errores. La cantidad de interruptores que puede contener este circuito depende de qué [multiplexor](https://es.wikipedia.org/wiki/Multiplexor) se elija y cómo se combinen. Por ejemplo, cuatro multiplexores, tres selectores cada uno, pueden contener $4*2^{3}=32$ botones con $4+3=7$ pines. Este proyecto no admite multiplexores en este momento.
 
-- **Registros de desplazamiento PISO**. _"PISO"_ significa _"parallel input - serial output"_. Son circuitos digitales, por lo que no son propensos a errores. Casi *no hay límite* en el número de interruptores que puede albergar y sólo necesita 3 pines. Este proyecto no admite registros de desplazamiento en este momento.
+- **Registros de desplazamiento PISO**. *"PISO"* significa *"parallel input - serial output"*. Son circuitos digitales, por lo que no son propensos a errores. Casi *no hay límite* en el número de interruptores que puede albergar y sólo necesita 3 pines. Este proyecto no admite registros de desplazamiento en este momento.
 
 ## Circuitos analógicos
 
@@ -143,10 +143,10 @@ No se presiona ningún botón físico en la imagen anterior. Tenga en cuenta que
 
 Una matriz de botones está compuesta por dos grupos de pines:
 
-- Pines selectores (también llamados pines de _salida_ o de _columna_): activan una sola parte del circuito.
-- Pines de entrada (también llamados pines de _fila_): proporcionan el estado de esa parte del circuito.
+- Pines selectores (también llamados pines de *salida* o de *columna*): activan una sola parte del circuito.
+- Pines de entrada (también llamados pines de *fila*): proporcionan el estado de esa parte del circuito.
 
-La idea es escanear cada parte del circuito habilitando uno y solo uno de los pines selectores, y luego pasar al siguiente. Después de algunas rondas, se ha recopilado el estado de cada botón. Por tanto, sí, una matriz de botones puede detectar la entrada de varios botones presionados al mismo tiempo, sin errores. El número máximo de botones que puede contener una matriz es igual al número de pines de _fila_ multiplicado por el número de pines de _columna_. Si hay $N$ pines disponibles, el número máximo de botones se obtiene a través de $N/2$ pines selectores.
+La idea es escanear cada parte del circuito habilitando uno y solo uno de los pines selectores, y luego pasar al siguiente. Después de algunas rondas, se ha recopilado el estado de cada botón. Por tanto, sí, una matriz de botones puede detectar la entrada de varios botones presionados al mismo tiempo, sin errores. El número máximo de botones que puede contener una matriz es igual al número de pines de *fila* multiplicado por el número de pines de *columna*. Si hay $N$ pines disponibles, el número máximo de botones se obtiene a través de $N/2$ pines selectores.
 
 La principal desventaja de las matrices de botones es el cableado: se requiere mucho cableado, lo que es propenso a errores humanos. La orientación correcta de los diodos también es fundamental. Tenga en cuenta que los diodos son una parte crítica del circuito y no se pueden suprimir.
 
@@ -196,6 +196,7 @@ La cantidad de pines requeridos podría reducirse aún más, en algunos casos, c
 ## Registros de desplazamiento
 
 La idea tras los registros de desplazamiento es capturar el estado de cada botón en paralelo y enviarlo a través de un único pin, en secuencia. Se puede hacer gracias a que los registros de desplazamiento tienen memoria. Solamente hay tres pines involucrados:
+
 - Load (LD): un pulso en este pin capturará el estado de todos los botones al mismo tiempo y lo almacenará en memoria como bits individuales.
 - Input: lee el valor de un único bit (es decir, el estado de un único botón).
 - Clock (CLK): un pulso en este pin transitará al siguiente bit, es decir, al estado del siguiente botón.

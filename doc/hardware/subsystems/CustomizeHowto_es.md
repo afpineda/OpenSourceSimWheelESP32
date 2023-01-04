@@ -18,7 +18,7 @@ Siga los enlaces para obtener una descripción detallada de cada subsistema:
 - [Subsistema monitor de batería](./BatteryMonitor/BatteryMonitor_es.md): proporciona una estimación de la carga de la batería.
 - [Subsistema de codificador rotatorio relativo](./RelativeRotaryEncoder/RelativeRotaryEncoder_es.md): proporciona información de la rotación de los codificadores rotatorios.
 - [Subsistema de interruptores](./Switches/Switches_es.md): proporciona entrada desde interruptores NO momentáneos (pulsadores, levas, etc.) y potenciómetros (algunos tipos de levas de embrague).
-- [Subsistema de pantalla](./Display/Display_es.md): proporciona una interfaz de usuario.
+- [Subsistema de embrague analógico](./AnalogClutchPaddles/AnalogClutchPaddles_es.md): proporciona entrada desde dos potenciometros anclados a las levas de embrague. Los embragues digitales están soportados mediante el subsistema de interruptores.
 
 ## Diseñe su hardware personalizado
 
@@ -35,10 +35,10 @@ El boceto de Arduino llamado [**CustomSetup**](../../../src/Firmware/CustomSetup
 1. Configure cada subsistema como se describe en su documentación.
 
 2. Configurar entradas:
-   
-   Como se muestra para cada subsistema, una llamada a una función en el espacio de nombres `inputs` las habilitará. Esas funciones devolverán el número asignado para la primera entrada, pero puede imaginárselo de antemano. El número asignado a ciertas entradas debe conocerse para el siguiente paso. Cada número de entrada también se asocia a una determinada posición en un cabezal de pines en su diseño hardware.
 
-3. Asigne ciertos números de entrada a funciones específicas, como se explica a continuación. Edite el cuerpo de `simWheelSetup()` y coloque las llamadas necesarias al final. Todas esas asignaciones son opcionales, pero tenga cuidado de no crear un firmware disfuncional. No asigne dos funciones al mismo número de entrada (excepto para la navegación del menú).
+   Como se muestra para cada subsistema, una llamada a una función en el espacio de nombres `inputs` las habilitará. Debe asignar un "número de entrada" a cada una de ellas, en el rango desde 0 a 63. Cada número de entrada también está asociada a una posición concreta en el cabezal de pines del circuito. Algunos números de entrada tienen un significado concreto en el PC.
+
+3. Asigne ciertos números de entrada a funciones específicas, como se explica a continuación. Edite el cuerpo de `simWheelSetup()` y coloque las llamadas necesarias al final. Todas esas asignaciones son opcionales, pero tenga cuidado de no crear un firmware disfuncional. No asigne dos funciones al mismo número de entrada. Donde esté disponible, no use una combinación de números de entrada que no puedan ser activados al mismo tiempo. No asigne una función específica a números de entrada que no existen.
 
 *Nota:* "..." significa código que no se muestra explícitamente.
 
@@ -51,37 +51,33 @@ A pesar de que esta función está diseñada para interruptores funky y pads dir
 - El tercer parámetro es el número de entrada para el botón "izquierdo"
 - El cuarto parámetro es el número de entrada para el botón "derecho"
 
-Por ejemplo, supongamos que esta función está asignada a ciertas entradas en la matriz de botones:
+Por ejemplo, supongamos que la matriz de botones contiene los números de entrada 20, 22, 25 y 28:
 
 ```c
 void simWheelSetup()
 {
    ...
-   inputNumber_t mtxFirstBtn = inputs::setButtonMatrix(...);
+   inputs::addButtonMatrix(...);
    ...
-   inputHub::setDPADControls(
-      mtxFirstBtn+10,
-      mtxFirstBtn+12,
-      mtxFirstBtn+16,
-      mtxFirstBtn+18);
+   inputHub::setDPADControls(20, 22, 25, 28);
    ...
 }
 ```
 
 ### Levas de embrague
 
-Haga una llamada a `inputHub::setClutchPaddles()`. Cada parámetro (hay dos) es el número de entrada asignado a una leva de embrague.
-Por ejemplo, supongamos que esta función está asignada a ciertas entradas en la matriz de botones:
+Las levas de embrague son opcionales. Puede tener levas *analógicas* o *digitales*, pero no ambas. Funcionan igual indistintamente. Las levas analógicas se configuran en el espacio de nombres `inputs` como se relata en el [subsistema correspondiente](./AnalogClutchPaddles/AnalogClutchPaddles_es.md) (no se necesita nada más).
+
+Las levas digitales necesitan exactamente dos números de entrada. Ponga una llamada a `inputs::setDigitalClutchPaddles()`. Cada parámetro (hay dos) es el número de entrada asignado a una leva. Por ejemplo, supongamos que la matriz de botones contiene los números de entrada 45 and 46:
 
 ```c
 void simWheelSetup()
 {
+   inputNumber_t btnMatrixNumbers = [ ..., 45, 46, ...];
    ...
-   inputNumber_t mtxFirstBtn = inputs::setButtonMatrix(...);
+   inputs::addButtonMatrix(... , btnMatrixNumbers);
    ...
-   inputHub::setClutchPaddles(
-      mtxFirstBtn+14,
-      mtxFirstBtn+15);
+   inputs::setDigitalClutchPaddles(45, 46);
    ...
 }
 ```
@@ -93,17 +89,15 @@ Haga una llamada a `inputHub::setClutchCalibrationButtons()`:
 - El primer parámetro es un número de entrada para aumentar el punto de mordida.
 - El segundo parámetro es un número de entrada para disminuir el punto de mordida.
 
-Por ejemplo, supongamos que esta función está asignada a un codificador rotatorio:
+Por ejemplo, supongamos que esta función está asignada a un codificador rotatorio (números de entrada 34 y 35):
 
 ```c
 void simWheelSetup()
 {
    ...
-   inputNumber_t rotary1Clockwise = inputs::addRotaryEncoder(...);
+   inputs::addRotaryEncoder(..., 34, 35, false);
    ...
-   inputHub::setClutchCalibrationButtons(
-      rotary1Clockwise,
-      rotary1Clockwise+1);
+   inputHub::setClutchCalibrationButtons(34, 35);
    ...
 }
 ```
@@ -118,72 +112,68 @@ Por ejemplo, supongamos que esta función está asignada a dos entradas determin
 ```c
 void simWheelSetup()
 {
+   inputNumber_t btnMatrixNumbers = [ ..., 45, 46, ...];
    ...
-   inputNumber_t mtxFirstBtn = inputs::setButtonMatrix(...);
+   inputs::addButtonMatrix(..., btnMatrixNumbers);
    ...
    inputHub::setALTBitmap(
-      BITMAP(mtxFirstBtn) | BITMAP(mtxFirstBtn+1)
+      BITMAP(45) | BITMAP(46)
    );
    ...
 }
 ```
 
-### Entrar/salir del menú
+### Rotar el modo de funcionamiento de las levas de embrague
 
-Esta función es inútil si no hay un subsistema OLED. Puede asignar esta función a cualquier número de botones pulsadores (la rotación de un codificador giratorio no funcionará). Todos esos botones, y ninguno de los otros, deben presionarse al mismo tiempo, mantenerse presionados durante dos segundos y luego soltarse para entrar/salir del menú de configuración. Si esos botones se presionan de otra manera, **se informarán al PC anfitrión** como cualquier otra entrada. Para evitar la activación accidental, asigne dos números de botón.
+Cada vez que eta función es activada, el modo de funcionamiento de las levas de embrague pasa al siguiente disponible: embrague tipo F1, ejes independientes, modo alternativo, botones normales y vuelta al principio. Esto no tiene sentido si no hay levas de embrague.
 
-Realice una llamada a `inputHub::setMenuBitmap()`. Hay un parámetro: una secuencia de llamadas a `BITMAP(<número de entrada>)` separadas por `|`. Por ejemplo, supongamos que esta función está asignada a dos botones determinados en la matriz de botones:
+Asigne una combinación de números de entrada para activar esta función mediante una llamada a `inputHub::setCycleClutchFunctionBitmap()`. Tiene un parámetro: una secuencia de llamadas a `BITMAP(<número de entrada>)` separadas por `|`. Todas las entradas deben estar activas al mismo tiempo y ninguna de las otras.
+Por ejemplo:
 
 ```c
 void simWheelSetup()
 {
+   inputNumber_t btnMatrixNumbers = [ ..., 60, 61, ...];
    ...
-   inputNumber_t mtxFirstBtn = inputs::setButtonMatrix(...);
+   inputs::addButtonMatrix(... , btnMatrixNumbers);
    ...
-   inputHub::setMenuBitmap(
-      BITMAP(mtxFirstBtn+20) | BITMAP(mtxFirstBtn+22)
-   );
+   inputHub::setCycleClutchFunctionBitmap(BITMAP(60)|BITMAP(61));
    ...
 }
 ```
 
-### Menú de navegación
+#### Seleccionar un modo de funcionamiento específico para las levas de embrague
 
-Esta función es inútil si no hay un subsistema OLED.
+Como alternativa, puede asignar una combinación de botones a modos de funcionamiento específicos. Situe una llamada a `inputHub::setSelectClutchFunctionBitmaps()`. Hay cuatro parámetros. Cada uno debería contener una secuencia de llamadas a  `BITMAP(<número de entrada>)` como se vio en las llamadas anteriores:
 
-En este caso, los números de entrada asignados se pueden compartir con otras funciones. Haga una llamada a `configMenu::setNavButtons()`:
+- Primer parámetro: combinación de botones para seleccionar el embrague tipo F1.
+- Segundo parámetro: combinación de botones para seleccionar ejes independientes.
+- Tercer parámetro: combinación de botones para seleccionar el modo alternativo.
+- Cuarto parámetro: combinación de botones para seleccionar el modo de "botones normales".
 
-- El 1er parámetro es el número de entrada asignado para navegar a la opción anterior.
-- El segundo parámetro es el número de entrada asignado para navegar a la siguiente opción.
-- El tercer parámetro es el número de entrada asignado para seleccionar una opción del menú.
-- El cuarto parámetro es el número de entrada asignado para cancelar.
-
-Por ejemplo, digamos que la navegación está asignada a un codificador rotatorio (igual que en el ejemplo anterior), "seleccionar" está asignada a su botón integrado y "cancelar" está asignada a una leva de embrague (igual que en el ejemplo anterior) :
+Por ejemplo:
 
 ```c
 void simWheelSetup()
 {
+   inputNumber_t btnMatrixNumbers = [ ..., 59, 60, 61, 62, 63];
    ...
-   inputNumber_t mtxFirstBtn = inputs::setButtonMatrix(...);
-   inputNumber_t rotary1Clockwise = inputs::addRotaryEncoder(...);
-   inputNumber_t rotary1Button = inputs::addDigital(...);
+   inputs::addButtonMatrix(... , btnMatrixNumbers);
    ...
-   inputHub::setClutchPaddles(
-      mtxFirstBtn+14,
-      mtxFirstBtn+15);
-   inputHub::setClutchCalibrationButtons(
-      rotary1Clockwise,
-      rotary1Clockwise+1);
-   ...
-   configMenu::setNavButtons(
-      rotary1Clockwise,
-      rotary1Clockwise+1,
-      rotary1Button,
-      mtxFirstBtn+14
-   );
+   inputHub::setSelectClutchFunctionBitmaps(
+      BITMAP(59)|BITMAP(60),
+      BITMAP(59)|BITMAP(61),
+      BITMAP(59)|BITMAP(62),
+      BITMAP(59)|BITMAP(63) );
    ...
 }
 ```
+
+### Rotar el modo de funcionamiento de los botones "ALT"
+
+Cada vez que se active esta función, el modo de funcionamiento de los botones "ALT pasará al siguiente: modo alternativo, botones normales y vuelta al principio. Eso no tiene sentido si no hay botones "ALT".
+
+Asigne una combinación de números de entrada para activar esta función mediante una llamada a  `inputHub::setCycleALTFunctionBitmap()`. Tiene un parámetro: una secuencia de llamadas a `BITMAP(<número de entrada>)` separadas por `|`. Todas las entradas deben estar activas al mismo tiempo y ninguna de las otras.
 
 ### Otros controles de gamepad
 

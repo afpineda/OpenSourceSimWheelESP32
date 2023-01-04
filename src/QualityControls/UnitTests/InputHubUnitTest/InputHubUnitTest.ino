@@ -80,6 +80,16 @@ void capabilities::setFlag(deviceCapability_t a, bool b)
 {
 }
 
+void inputs::recalibrateAxes()
+{
+
+}
+
+void batteryCalibration::restartAutoCalibration()
+{
+
+}
+
 //------------------------------------------------------------------
 // Auxiliary
 //------------------------------------------------------------------
@@ -109,6 +119,11 @@ void pushAssertEqualsRelease(inputBitmap_t bmp, const char *text, T expected, T 
     inputHub::onStateChanged(bmp, bmp);
     assertEquals<T>(text, expected, *found);
     inputHub::onStateChanged(0, bmp);
+}
+
+void inputs::update()
+{
+
 }
 
 //------------------------------------------------------------------

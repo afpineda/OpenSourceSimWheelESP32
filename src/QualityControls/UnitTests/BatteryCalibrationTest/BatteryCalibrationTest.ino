@@ -198,7 +198,7 @@ void setup()
     checkCalibrationDataIsClear();
     if (batteryCalibration::calibrationInProgress)
     {
-        Serial.println("ERROR: unexpected state");
+        Serial.println("ERROR: unexpected state 1");
     }
 
     // Feed test data
@@ -210,7 +210,7 @@ void setup()
             batteryCalibration::addSample(testReadings[i]);
             if (!batteryCalibration::calibrationInProgress)
             {
-                Serial.println("ERROR: unexpected state");
+                Serial.println("ERROR: unexpected state 2");
             }
         }
     }
@@ -260,7 +260,7 @@ void setup()
     batteryCalibration::restartAutoCalibration();
     if (batteryCalibration::maxBatteryReadingEver >= 0)
     {
-        Serial.println("ERROR: unexpected state");
+        Serial.println("ERROR: unexpected state 3");
     }
     // Out of range readings
     batteryCalibrationAssertEquals(0, batteryCalibration::getBatteryLevelAutoCalibrated(-100));

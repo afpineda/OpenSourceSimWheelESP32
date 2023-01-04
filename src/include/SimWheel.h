@@ -326,6 +326,13 @@ namespace inputs
     void start();
 
     /**
+     * @brief Force an update in inputs' current state. Called from other namespaces after a 
+     *        change in configuration.
+     * 
+     */
+    void update();
+
+    /**
      * @brief Used from input classes to report a new event.
      *        Should not be called if there is no change since the last report (of the same input).
      *
@@ -552,6 +559,19 @@ namespace inputHub
         const inputBitmap_t axisModeBitmap,
         const inputBitmap_t altModeBitmap,
         const inputBitmap_t buttonModeBitmap);
+
+    /**
+     * @brief Set up a bitmap of buttons for two recalibration commands.
+     *        All buttons in the bitmap must be pressed at the same time and none of the others.
+     * 
+     * @param recalibrateAxisBitmap A bitmap of button numbers to ask for autocalibration of analog axes.
+     * @param recalibrateBatteryBitmap A bitmap of button numbers to ask for recalibration of battery levels.
+     * 
+     * @note Set to zero if a command is not required (e.g. there is no battery)
+     */
+    void setCalibrationCommandBitmaps(
+        const inputBitmap_t recalibrateAxisBitmap,
+        const inputBitmap_t recalibrateBatteryBitmap = 0);
 }
 
 /**
@@ -585,12 +605,11 @@ namespace notify
      */
     void connected();
 
-    void BLEdiscovering();
     /**
-     * @brief Notify the device is ready for use
-     *
+     * @brief Notify bluetooth radio in discovery mode
+     * 
      */
-    void powerOn();
+    void BLEdiscovering();
 
     /**
      * @brief Notify the device is going to power off or deep sleep

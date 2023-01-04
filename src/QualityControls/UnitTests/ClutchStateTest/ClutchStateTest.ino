@@ -68,6 +68,10 @@ void notify::bitePoint(clutchValue_t n)
 
 }
 
+void inputs::update()
+{
+
+}
 
 //------------------------------------------------------------------
 // Arduino entry point

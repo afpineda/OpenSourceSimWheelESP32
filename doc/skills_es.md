@@ -8,12 +8,12 @@ Indispensable:
 - [Paquete de soporte oficial para Arduino-ESP32](https://docs.espressif.com/projects/arduino-esp32/en/latest/getting_started.html). Siga [este enlace](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html) para instrucciones de instalación (en inglés).
 - [Bibliotecas Arduino](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries) indispensables para este proyecto. Instale sus dependencias también.
   - [NimBLE-Arduino](https://www.arduino.cc/reference/en/libraries/nimble-arduino/)
-  - [ss_oled](https://www.arduino.cc/reference/en/libraries/ss_oled/)
 - [Powershell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.2). Ya instalado en Windows.
 
 Puede ser necesario:
 
 - [Controladores de ESP32](http://esp32.net/usb-uart/) para Windows. Tutorial (en inglés): [Installing drivers for the ESP32](https://www.bromleysat.com/installing-drivers-for-the-esp32/).
+- [ss_oled](https://www.arduino.cc/reference/en/libraries/ss_oled/)
 
 Recomendado:
 

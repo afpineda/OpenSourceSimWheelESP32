@@ -22,6 +22,21 @@ void hidImplementation::reportBatteryLevel(int l)
     Serial.println("");
 }
 
+void notify::lowBattery()
+{
+
+}
+
+void notify::powerOff()
+{
+
+}
+
+void capabilities::setFlag(deviceCapability_t a, bool b)
+{
+
+}
+
 //------------------------------------------------------------------
 // Arduino entry point
 //------------------------------------------------------------------

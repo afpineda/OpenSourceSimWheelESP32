@@ -16,9 +16,9 @@ Depending on how they are activated, may be classified as:
 
 Depending on how the circuit is closed, momentary switches may be classified as:
 
-- __Normally closed__ (NC): the switch is closed if not pressed, letting current flow. This is not recommended to prevent battery drain.
-- __Normally open__ (NO): the switch is open if not pressed.
-- __NO-NC__ (both): they have 3 or 4 terminals and may be used both as NO and NC at the same time. Note that NC terminals are closed while NO terminals are open, and vice versa. This has an interesting application with voltage dividers (see below).
+- **Normally closed** (NC): the switch is closed if not pressed, letting current flow. This is not recommended to prevent battery drain.
+- **Normally open** (NO): the switch is open if not pressed.
+- **NO-NC** (both): they have 3 or 4 terminals and may be used both as NO and NC at the same time. Note that NC terminals are closed while NO terminals are open, and vice versa. This has an interesting application with voltage dividers (see below).
 
 Switches are prone to [bouncing](https://circuitdigest.com/electronic-circuits/what-is-switch-bouncing-and-how-to-prevent-it-using-debounce-circuit) due to its mechanical nature.
 This project provides debouncing by software means.
@@ -68,13 +68,13 @@ A funky switch is just the physical combination of a rotary encoder, a 4-way joy
 
 When using a GPIO as a digital input, just one switch can be accommodated in it. There are not enough input pins to accommodate all the required inputs in this way, so another technique must come into place. There are several choices:
 
-- **Analog circuits**. Some GPIO pins are equipped with analog-to-digital converters (ADC), so they may be used as analog inputs. The idea is to share a single pin with a number of inputs by setting different voltages. However, ADCs are not perfect. There is a severe _limitation_ on the number of inputs that can be detected by the software _without error_. Every single analog circuit should be "calibrated" in software. The calibration procedure will determine a range of voltages where every single input is detected. Even if two circuits seem identical, they may set different voltages for the same inputs. This is due to resistors not being perfect. However, you may come into a calibration that suits all identical circuits.
+- **Analog circuits**. Some GPIO pins are equipped with analog-to-digital converters (ADC), so they may be used as analog inputs. The idea is to share a single pin with a number of inputs by setting different voltages. However, ADCs are not perfect. There is a severe *limitation* on the number of inputs that can be detected by the software *without error*. Every single analog circuit should be "calibrated" in software. The calibration procedure will determine a range of voltages where every single input is detected. Even if two circuits seem identical, they may set different voltages for the same inputs. This is due to resistors not being perfect. However, you may come into a calibration that suits all identical circuits.
 
 - **Button (or switch) matrices**. Those are digital circuits, so they are not prone to error. Given $N$ suitable pins, a button matrix can hold up to $(N/2)^2$ buttons.
 
 - **Multiplexed switches**. Those are digital circuits, so they are not prone to error. The number of switches this circuit can hold depends on which [multiplexer](https://en.wikipedia.org/wiki/Multiplexer) is chosen and how they are combined. For example, four multiplexers, three selectors each, can hold $4*2^{3}=32$ buttons with $4+3=7$ pins. This project does not support multiplexed switches right now.
 
-- **PISO shift registers**. _"PISO"_ means _"parallel input - serial output"_. Those are digital circuits, so they are not prone to error. There is almost *no limit* to the number of switches this circuit can hold and it takes just 3 pins. This project does not support shift registers right now. 
+- **PISO shift registers**. *"PISO"* means *"parallel input - serial output"*. Those are digital circuits, so they are not prone to error. There is almost *no limit* to the number of switches this circuit can hold and it takes just 3 pins. This project does not support shift registers right now. 
 
 ## Analog circuits
 
@@ -143,16 +143,16 @@ No physical button is pressed in the previous image. Note that both switches in 
 
 A button matrix is composed by two groups of pins:
 
-- Selector pins (also named _output_ or _column_ pins): they activate a single part of the circuit.
-- Input pins (also named _row_ pins): they provide the state of that part of the circuit.
+- Selector pins (also named *output* or *column* pins): they activate a single part of the circuit.
+- Input pins (also named *row* pins): they provide the state of that part of the circuit.
 
-The idea is to scan each part of the circuit by enabling one and only one of the selector pins, and then moving to the next one. After a few rounds, the state of every button is collected. So, yes, a button matrix is able to detect input from multiple buttons pushed at the same time, without error. The maximum number of buttons that a matrix can hold equals to the number of _row_ pins multiplied by the number of _column_ pins. If $N$ pins are available, the maximun number of buttons is obtained through $N/2$ selector pins.
+The idea is to scan each part of the circuit by enabling one and only one of the selector pins, and then moving to the next one. After a few rounds, the state of every button is collected. So, yes, a button matrix is able to detect input from multiple buttons pushed at the same time, without error. The maximum number of buttons that a matrix can hold equals to the number of *row* pins multiplied by the number of *column* pins. If $N$ pins are available, the maximun number of buttons is obtained through $N/2$ selector pins.
 
 The main disadvantage of button matrices is wiring: a lot of wiring is required which is prone to human error. Correct orientation of diodes is also critical. Note that diodes are a critical part of the circuit and can not be suppressed.
 
 There are multiple correct variations of button matrices. The one proposed here is this:
 
-- Input pins are pulled down (internally). As a result, pins GPIO36, GPIO39, GPIO34 and GPIO35 can not be used unless an external pull-down resistor is provided. 
+- Input pins are pulled down (internally). As a result, pins GPIO36, GPIO39, GPIO34 and GPIO35 can not be used unless an external pull-down resistor is provided.
 - Selector pins are set to HIGH for reading, and LOW otherwise. Note that certain pins are not suitable for output.
 - Diodes are faced toward the input pins.
 
@@ -209,7 +209,6 @@ Note that pulldown resistors are needed for each button, which is unpractical. I
 
 [Test this circuit at Falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKDD0JG207Ty8L8+IPGGIAWEJOzRsUNhxFVhzFCGGiJUrrPkB3LpEkpxVbr3zyATuHGTx-QpLAp+VMPBYBnW-f5i1Bmw1dxAAMwBDABsvOhYDMDspfySwDE5IePB07M40zgdrXOSQYjzXKGQ4b2LClBMQIJDKyJi4m2E6vH8K908DTqFLfKKTKkLg916qzJ9B9QROJsqqVtiasZLXfmXQtbiE4kDg9QbdrPrJZZRFxpPMgdvr7ruQrIDX0qX7lgBzECc4AqgLAhCo4JYACUvp9CrtKqYdHJwVBoAgWABZChg9SIsFCRHKNHvCz8PDKSwPJS49ycSb6Lg8GnqDBqelU0FcNAstnczIAGR5XLMTPZLWisSRDPJQs52AQbwM5iFmDZCoZcvVqq46oFQvlbNFuvA4QldClmQAHgD2CzHBgIK4IMZJABJAB2AAcAK4AFxY1rBdMg5BIZg82gaAFF3b6rBEACYRANcDBmBqUaSYSOSfkAe0TAB0vAxiwBjCJWX7J608fjy-gIbD1wjO3EgABydEtvuLpa8AGUAJa-b1DuixuL-TkqXiE+T-MpA-hL0EozL-bbL9QvNcrP7C7f0vcQgaIuqIkZU8RLwo3vI5DcUHIuRsvnEQ-4IVIVb-OD8LjqaivkB4AAdecInFu5wGAgLifH+nzXjKyxwccipSJBagOFQ5w+PeJSIfCED7DU4iAoUaFIeKbQsDYBGUS+0weNUBjkX4Uggo+dGcRxiEgX01T4Scd4ofcNHrPRIn1uqAkzFk4gnCMinYW4ClwCUpjuNx+EaXeWGVCRZo8VpJTHsxnhAA)
 
-
 ## Summary of input hardware
 
 |      Circuitry       |        Required pins         | Number of switches |              Best suited for              |         Advantages          | Disadvantages                    |
@@ -221,4 +220,4 @@ Note that pulldown resistors are needed for each button, which is unpractical. I
 |   Voltage divider    |              1               |         2          |               Push buttons                |            None             | Prone to error                   |
 | PISO shift registers |              3               |     unlimited      |          Push buttons and DPADS           | Many buttons and error-free | Extra cost and space at the PCB  |
 
-Input circuitry takes some space inside the housing. Their physical layout must be carefully designed to fit into the steering wheel (or button box). 
+Input circuitry takes some space inside the housing. Their physical layout must be carefully designed to fit into the steering wheel (or button box).

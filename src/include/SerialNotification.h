@@ -42,12 +42,6 @@ public:
     virtual void BLEdiscovering() override;
 
     /**
-     * @brief Notify device is ready. Called in a separate thread.
-     *
-     */
-    virtual void powerOn() override;
-
-    /**
      * @brief Notify device is about to power off/deep sleep.
      *        Called in a separate thread.
      *

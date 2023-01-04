@@ -31,6 +31,8 @@ static inputBitmap_t setClutchFunctionBitmapForCP = 0;
 static inputBitmap_t setAxisFunctionBitmapForCP = 0;
 static inputBitmap_t setAltFunctionBitmapForCP = 0;
 static inputBitmap_t setButtonFunctionBitmapForCP = 0;
+static inputBitmap_t cmdAxisAutocalibrationBitmap = 0;
+static inputBitmap_t cmdBatteryRecalibrationBitmap = 0;
 
 // Related to POV buttons
 #define DPAD_CENTERED 0
@@ -87,6 +89,16 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
         clutchState::setFunction(CF_BUTTON);
         return;
     }
+    if ((changes & cmdAxisAutocalibrationBitmap) && (globalState == cmdAxisAutocalibrationBitmap))
+    {
+        inputs::recalibrateAxes();
+        return;
+    }
+    if ((changes & cmdBatteryRecalibrationBitmap) && (globalState == cmdBatteryRecalibrationBitmap))
+    {
+        batteryCalibration::restartAutoCalibration();
+        return;
+    }
 
     // Check alt mode
     inputBitmap_t filteredInputs;
@@ -100,7 +112,7 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
     {
         filteredInputs = 0;
     }
-    
+
     // bite point calibration
     if (clutchState::isCalibrationInProgress())
     {
@@ -112,7 +124,7 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
             (clutchState::bitePoint < CLUTCH_FULL_VALUE))
         {
             aux = clutchState::bitePoint + CALIBRATION_INCREMENT;
-            if (aux>CLUTCH_FULL_VALUE)
+            if (aux > CLUTCH_FULL_VALUE)
                 aux = CLUTCH_FULL_VALUE;
             clutchState::setBitePoint((clutchValue_t)aux);
         }
@@ -121,7 +133,7 @@ void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
                  (clutchState::bitePoint > CLUTCH_NONE_VALUE))
         {
             aux = clutchState::bitePoint - CALIBRATION_INCREMENT;
-            if (aux<CLUTCH_NONE_VALUE)
+            if (aux < CLUTCH_NONE_VALUE)
                 aux = CLUTCH_NONE_VALUE;
             clutchState::setBitePoint((clutchValue_t)aux);
         }
@@ -265,4 +277,12 @@ void inputHub::setSelectClutchFunctionBitmaps(
     setAxisFunctionBitmapForCP = axisModeBitmap;
     setAltFunctionBitmapForCP = altModeBitmap;
     setButtonFunctionBitmapForCP = buttonModeBitmap;
+}
+
+void inputHub::setCalibrationCommandBitmaps(
+    const inputBitmap_t recalibrateAxisBitmap,
+    const inputBitmap_t recalibrateBatteryBitmap)
+{
+    cmdAxisAutocalibrationBitmap = recalibrateAxisBitmap;
+    cmdBatteryRecalibrationBitmap = recalibrateBatteryBitmap;
 }

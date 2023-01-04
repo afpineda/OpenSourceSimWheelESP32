@@ -60,6 +60,11 @@ void notify::bitePoint(inputNumber_t b)
 
 }
 
+void batteryCalibration::restartAutoCalibration()
+{
+
+}
+
 //------------------------------------------------------------------
 // Arduino entry point
 //------------------------------------------------------------------

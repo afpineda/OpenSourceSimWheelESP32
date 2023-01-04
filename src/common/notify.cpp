@@ -28,7 +28,7 @@ typedef struct
 #define ID_BITEPOINT 1
 #define ID_CONNECTED 2
 #define ID_BLEDISCOVERING 3
-#define ID_POWERON 4
+//#define ID_POWERON 4
 #define ID_POWEROFF 5
 #define ID_LOWBATTERY 6
 
@@ -65,10 +65,6 @@ void notificationLoop(void *param)
 
                 case ID_BLEDISCOVERING:
                     chain->BLEdiscovering();
-                    break;
-
-                case ID_POWERON:
-                    chain->powerOn();
                     break;
 
                 case ID_POWEROFF:
@@ -123,10 +119,6 @@ void frameServerLoop(void *param)
 
                 case ID_BLEDISCOVERING:
                     chain->BLEdiscovering();
-                    break;
-
-                case ID_POWERON:
-                    chain->powerOn();
                     break;
 
                 case ID_POWEROFF:
@@ -224,16 +216,6 @@ void notify::BLEdiscovering()
     {
         notifyEvent_t event;
         event.id = ID_BLEDISCOVERING;
-        xQueueSend(queue, &event, MAX_WAIT_TICKS);
-    }
-}
-
-void notify::powerOn()
-{
-    if (queue)
-    {
-        notifyEvent_t event;
-        event.id = ID_POWERON;
         xQueueSend(queue, &event, MAX_WAIT_TICKS);
     }
 }

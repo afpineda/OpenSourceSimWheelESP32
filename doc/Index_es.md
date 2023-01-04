@@ -22,10 +22,6 @@
 
 - [Cómo personalizar el firmware para crear su propia configuración de hardware y firmware](./hardware/subsystems/CustomizeHowto_es.md).
 
-## Otros
-
-- [Protocolo UART](./firmware/UARTProtocol_es.md) 
-
 ## Contribuyendo
 
 - Formas de contribuir:

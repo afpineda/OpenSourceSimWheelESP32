@@ -147,6 +147,7 @@ void clutchState::setALTModeForALTButtons(bool newMode)
         clutchState::altModeForAltButtons = newMode;
         requestSave();
         hidImplementation::reportChangeInConfig();
+        inputs::update();
     }
 }
 
@@ -159,6 +160,7 @@ void clutchState::setFunction(clutchFunction_t newFunction)
         update();
         requestSave();
         hidImplementation::reportChangeInConfig();
+        inputs::update();
     }
 }
 
@@ -173,6 +175,7 @@ void clutchState::setBitePoint(clutchValue_t newBitePoint)
             requestSave();
             hidImplementation::reportChangeInConfig();
             notify::bitePoint(newBitePoint);
+            inputs::update();
         }
     }
 }

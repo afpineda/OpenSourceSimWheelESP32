@@ -87,42 +87,6 @@ const powerLatchMode_t LATCH_MODE = POWER_OPEN_DRAIN;
 #endif // POWER_LATCH
 
 /* -----------------------------------------------------------------
- >>>> OLED
------------------------------------------------------------------- */
-
-// [EN] Set the display type to one of these.
-//      Comment out if there is no OLED
-// [ES] Indique el controlador de pantalla entre uno de estos
-//      Comente la línea si no hay OLED
-//   SSOLED_128x128
-//   SSOLED_128x32,
-//   SSOLED_128x64,
-//   SSOLED_132x64,
-//   SSOLED_64x32,
-//   SSOLED_96x16,
-//   SSOLED_72x40
-
-#define OLED_TYPE SSOLED_132x64
-
-#ifdef OLED_TYPE
-// [EN] Set the screen with in pixels
-// [ES] Indique el ancho de la pantalla en pixels
-
-#define OLED_SCREEN_WIDTH 128
-
-// [EN] Set the screen height in pixels
-// [ES] Indique el alto de la pantalla en pixels
-
-#define OLED_SCREEN_HEIGHT 64
-
-// [EN] Set to true if the display is mounted upside down, false otherwise
-// [ES] Indique true si la pantalla está montada del revés, false en otro caso
-
-#define OLED_FLIP false
-
-#endif // OLED_TYPE
-
-/* -----------------------------------------------------------------
  >>>> [EN] BATTERY MONITOR SUBSYSTEM
  >>>> [ES] SUBSISTEMA DE MONITORIZACIÓN DE BATERÍA
 ------------------------------------------------------------------ */
@@ -157,6 +121,10 @@ static const gpio_num_t mtxSelectors[] = {GPIO_NUM_4, GPIO_NUM_16, GPIO_NUM_17, 
 // [ES] Indique los números de GPIO de todos los pines de entrada entre las llaves
 static const gpio_num_t mtxInputs[] = {GPIO_NUM_15, GPIO_NUM_19, GPIO_NUM_3, GPIO_NUM_23};
 
+// [EN] Set all input numbers. The order of those numbers depends on the wiring
+// [ES] Indique los números de entrada. Su orden depende del cableado.
+static inputNumber_t mtxNumbers[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+
 //------------------------------------------------------------------
 // Globals
 //------------------------------------------------------------------
@@ -167,25 +135,27 @@ static const gpio_num_t mtxInputs[] = {GPIO_NUM_15, GPIO_NUM_19, GPIO_NUM_3, GPI
 
 void simWheelSetup()
 {
-    inputs::setButtonMatrix(
+    // [EN] Example code. Fill with your own code.
+    // [ES] Código de ejemplo. Ponga el suyo.
+
+    inputs::addButtonMatrix(
         mtxSelectors,
         sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
         mtxInputs,
-        sizeof(mtxInputs) / sizeof(mtxInputs[0]));      // fistButtonNumber=0
-    inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_39); // fistButtonNumber=20
-    inputs::addRotaryEncoder(GPIO_NUM_35, GPIO_NUM_32); // fistButtonNumber=22
-    inputs::addRotaryEncoder(GPIO_NUM_25, GPIO_NUM_26); // fistButtonNumber=24
-    inputs::addRotaryEncoder(GPIO_NUM_14, GPIO_NUM_18); // fistButtonNumber=26
-    inputs::addDigital(GPIO_NUM_34, true, false);       // fistButtonNumber=27 (Rotary 1)
-    inputs::addDigital(GPIO_NUM_33, true, false);       // fistButtonNumber=28 (Rotary 2)
-    inputs::addDigital(GPIO_NUM_27, true, false);       // fistButtonNumber=29 (Rotary 3)
+        sizeof(mtxInputs) / sizeof(mtxInputs[0]),
+        mtxNumbers);
+    inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_39,25,26);
+    inputs::addRotaryEncoder(GPIO_NUM_35, GPIO_NUM_32,27,28);
+    inputs::addRotaryEncoder(GPIO_NUM_25, GPIO_NUM_26,29,30);
+    inputs::addRotaryEncoder(GPIO_NUM_14, GPIO_NUM_18,31,32); 
+    inputs::addDigital(GPIO_NUM_34, true, false,33);
+    inputs::addDigital(GPIO_NUM_33, true, false,34);       
+    inputs::addDigital(GPIO_NUM_27, true, false,35);       
 
+    inputs::setDigitalClutchPaddles(4, 12);
     inputHub::setDPADControls(19, 15, 11, 7);
     inputHub::setALTBitmap(BITMAP(0) | BITMAP(8));
-    inputHub::setClutchPaddles(4, 12);
-    inputHub::setClutchCalibrationButtons(21, 20); // Rotary 1
-    inputHub::setMenuBitmap(BITMAP(27) | BITMAP(28));
-    configMenu::setNavButtons(21, 20, 27, 28);
+    inputHub::setClutchCalibrationButtons(25, 26); // Rotary 1
 }
 
 //------------------------------------------------------------------
@@ -207,14 +177,7 @@ void setup()
         LATCH_POWEROFF_DELAY);
 #endif
 
-#ifdef OLED_TYPE
-    language::begin();
-    uiManager::begin();
-    ui::begin(OLED_SCREEN_WIDTH, OLED_SCREEN_HEIGHT, OLED_TYPE, OLED_FLIP);
-#endif
-
     inputs::begin();
-    inputHub::begin();
     simWheelSetup();
     hidImplementation::begin(
         DEVICE_NAME,
