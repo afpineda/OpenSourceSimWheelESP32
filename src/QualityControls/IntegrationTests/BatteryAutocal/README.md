@@ -60,7 +60,7 @@ Output through USB serial port at 115200 bauds.
    Last Battery level: 100
    ```
 
-9. Wire `battery(+)`  to "3V3. Next output must be 6 or lesser. For example (not to be taken literally):
+9. Wire `battery(+)`  to "3V3". Next output must be 66 or lesser. For example (not to be taken literally):
 
    ```text
    Last Battery level: 0
