@@ -275,7 +275,8 @@ namespace power
      *                  Set to `GPIO_NUM_NC` (-1) if `battREADPin` is attached to
      *                  a simple voltage divider. This is the case for most battery-enabled devkits.
      * @param battREADPin ADC pin used to read battery voltage
-     * @param testing Set to TRUE for unit testing. Will get a battery sample every 5 seconds.
+     * @param testing Set to TRUE for unit testing: will get a battery sample every 5 seconds,
+     *                will not power off the device.
      */
     void startBatteryMonitor(
         gpio_num_t battENPin,

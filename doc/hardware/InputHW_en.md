@@ -193,10 +193,10 @@ Which can hold up to 24 push buttons. [Test this circuit at Falstad.com](https:/
 
 The number of required pins could be further reduced, in some cases, by placing another multiplexer for the input pins. 
 
-
 ## Shift registers
 
 The idea behind shift registers is to capture the state of every button in parallel and send it through a single input pin, in sequence. This can be done because shift registers have memory. There are just 3 pins involved:
+
 - Load (LD): a pulse at this pin will capture the state of all buttons at the same time and store it into memory as individual bits.
 - Input: read the value of a single bit (this is, the state of a single button)
 - Clock (CLK): a pulse at this pin will move to the next bit, this is, the state of the next button.
@@ -211,13 +211,13 @@ Note that pulldown resistors are needed for each button, which is unpractical. I
 
 ## Summary of input hardware
 
-|      Circuitry       |        Required pins         | Number of switches |              Best suited for              |         Advantages          | Disadvantages                    |
-| :------------------: | :--------------------------: | :----------------: | :---------------------------------------: | :-------------------------: | :------------------------------- |
-|         None         |              1               |         1          |              Rotary encoders              |     Easy and error-free     | Not enough pins for many buttons |
-|    Button Matrix     |             $N$              |    $(N/2)^{2}$     |          Push buttons and DPADS           | Many buttons and error-free | Complex wiring                   |
-|     Multiplexers     | $S$ selectors and $I$ inputs |     $2^{S}*I$      |          Push buttons and DPADS           | Many buttons and error-free | Extra cost and space at the PCB  |
-|    Voltage ladder    |              1               |       enough       | DPADS, rotary switches and funky switches | Single pin for many inputs  | Requires calibration             |
-|   Voltage divider    |              1               |         2          |               Push buttons                |            None             | Prone to error                   |
-| PISO shift registers |              3               |     unlimited      |          Push buttons and DPADS           | Many buttons and error-free | Extra cost and space at the PCB  |
+| Circuitry            | Required pins                | Number of switches | Best suited for                           | Advantages                  | Disadvantages                    |
+|:--------------------:|:----------------------------:|:------------------:|:-----------------------------------------:|:---------------------------:|:-------------------------------- |
+| None                 | 1                            | 1                  | Rotary encoders                           | Easy and error-free         | Not enough pins for many buttons |
+| Button Matrix        | $N$                          | $(N/2)^{2}$        | Push buttons and DPADS                    | Many buttons and error-free | Complex wiring                   |
+| Multiplexers         | $S$ selectors and $I$ inputs | $2^{S}*I$          | Push buttons and DPADS                    | Many buttons and error-free | Extra cost and space at the PCB  |
+| Voltage ladder       | 1                            | enough             | DPADS, rotary switches and funky switches | Single pin for many inputs  | Requires calibration             |
+| Voltage divider      | 1                            | 2                  | Push buttons                              | None                        | Prone to error                   |
+| PISO shift registers | 3                            | unlimited          | Push buttons and DPADS                    | Many buttons and error-free | Extra cost and space at the PCB  |
 
 Input circuitry takes some space inside the housing. Their physical layout must be carefully designed to fit into the steering wheel (or button box).

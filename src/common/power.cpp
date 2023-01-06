@@ -213,7 +213,7 @@ int power::getBatteryReadingForTesting(gpio_num_t battENPin, gpio_num_t battREAD
 
   if ((battENPin < 0) || (gpio_set_level(battENPin, 1) == ESP_OK))
   {
-//    adc_power_acquire();
+    //    adc_power_acquire();
     vTaskDelay(200);
     uint64_t sum = 0;
     for (int i = 0; i < BATTMON_SAMPLE_COUNT; i++)
@@ -224,7 +224,7 @@ int power::getBatteryReadingForTesting(gpio_num_t battENPin, gpio_num_t battREAD
     }
     if (battENPin >= 0)
       gpio_set_level(battENPin, 0);
-//    adc_power_release();
+    //    adc_power_release();
     return (sum / BATTMON_SAMPLE_COUNT);
   }
   return 0;
@@ -232,8 +232,9 @@ int power::getBatteryReadingForTesting(gpio_num_t battENPin, gpio_num_t battREAD
 
 // ----------------------------------------------------------------------------
 
-void batteryDaemonLoop(void *unused)
+void batteryDaemonLoop(void *arg)
 {
+  bool notTesting = !((bool)arg);
   while (true)
   {
     // Determine battery level
@@ -256,7 +257,7 @@ void batteryDaemonLoop(void *unused)
 
     // Report battery level
     hidImplementation::reportBatteryLevel(lastBatteryLevel);
-    if (lastBatteryLevel <= SAFETY_BATTERY_LEVEL)
+    if ((lastBatteryLevel <= SAFETY_BATTERY_LEVEL) && notTesting)
     {
       // The DevKit must go to deep sleep before battery depletes, otherwise, it keeps
       // draining current even if there is not enought voltage to turn it on.
@@ -326,7 +327,12 @@ void power::startBatteryMonitor(
   {
     testInProgress = testing;
     configureBatteryMonitor(battENPin, battREADPin);
-    xTaskCreate(batteryDaemonLoop, "BattMon", BATTMON_STACK_SIZE, nullptr, tskIDLE_PRIORITY + 1, &batteryMonitorDaemon);
+    xTaskCreate(
+        batteryDaemonLoop,
+        "BattMon",
+        BATTMON_STACK_SIZE,
+        (void *)testing,
+        tskIDLE_PRIORITY + 1, &batteryMonitorDaemon);
     if (batteryMonitorDaemon == nullptr)
     {
       log_e("power::startBatteryMonitor(): unable to start daemon");
