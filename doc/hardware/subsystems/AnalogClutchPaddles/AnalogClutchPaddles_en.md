@@ -22,7 +22,7 @@ There is no circuit involved, just wiring:
 Notes:
 
 - An ADC-capable pin is required for each clutch paddle.
-- `3V3` and `GND` are interchangeable.
+- `3V3` and `GND` are interchangeable. If the clutch (or axis) goes to 100% when idle, swap those terminals.
 - An high impedance potentiometer is advisable (10 K-ohms or more). Potentiometers will drain current at all times, which is bad for batteries.
 
 ## Firmware customization

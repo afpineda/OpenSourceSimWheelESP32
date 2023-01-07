@@ -2,8 +2,6 @@
 
 - **Alternate mode** (or "ALT mode"): a function for certain buttons. When enabled, other input numbers will be reported as `input number + 64`. This duplicates the number of reported inputs in the _HID_ protocol.
 
-- **AT commands**: a text-based protocol developed by _Hayes_. See [An Introduction to AT Commands](https://www.twilio.com/docs/iot/supersim/introduction-at-commands) for further reference.
-
 - **Bite point**: a certain value of the _clutch_ where the simulated car begins to transfer torque from the engine to the wheels.
 
 - **BLE**: Bluetooth Low Energy.
@@ -48,8 +46,8 @@
 
 - **Quantum**: talking about battery charge, a counter of voltage samples that falls into a certain range.
 
-- **System**: the combination of hardware and software subject of this project
+- **System**: the combination of hardware and software subject of this project.
 
-- **UART**: Universal Asynchronous Receiver / Transmitter
+- **State of charge (SOC)**: an estimation of available battery charge in the range 0% to 100%.
 
-- **UI**: User interface
+- **UI**: User interface.

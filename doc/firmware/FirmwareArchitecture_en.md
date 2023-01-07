@@ -152,7 +152,7 @@ For user interfaces not needing a perpetual loop or for one-time notifications. 
 For example:
 
 ```c
-   void MyImpl::turnOn() {
+   void MyImpl::begin() {
       turnLedOn();
    }
 
@@ -176,14 +176,11 @@ For user interfaces in need of a perpetual loop or for persistent notifications.
 ```c
    void MyImpl::begin() {
      batteryIsLow = false;
+     turnLedOn();
    }
 
    uint8_t getTargetFPS() {
      return 1;
-   }
-
-   void MyImpl::turnOn() {
-      turnLedOn();
    }
 
    void MyImpl::lowBattery() {
@@ -200,13 +197,17 @@ For user interfaces in need of a perpetual loop or for persistent notifications.
 
 ### BatteryCalibration
 
-#### Accurate algorithm
+Provides an estimation of the "State of Charge" (SOC).
+
+#### Most accurate algorithm
 
 Battery calibration is required for accurate battery levels. Calibration goes from full charge to battery depletion, taking a sample of battery voltage every minute. All possible voltages are divided into 32 evenly distributed ranges, called _quantums_. Calibration data is just a set of counters of voltage samples for each quantum. The sum of all counters is equivalent to 100% battery charge. Calibration data is stored in flash memory.
 
 Let's be $V_{min}(i)$ the minimum voltage that falls into quantum $i$ (a natural number), $a < b \iff V_{min}(a)<V_{min}(b)$. Let's be $QSIZE = V_{min}(i+1)-V_{min}(i)+1$ (the same for all quantums). Let's be $S(i)$ the count of samples for quantum number $i$. Let's say we have a battery voltage $V_n$ that falls into the quantum number $n$ (0-index).
 
 $BatteryLevel = \frac{ (\sum_{i=0}^{n-1}S(i)) + \frac{S(n)*(V_n-V_{min}(n))}{QSIZE} }{ \sum_{j=0}^{31}S(j) } * 100$
+
+Note that "most accurate" does not mean "accurate". Battery voltage is not enough for accurate SOC.
 
 #### Auto-calibrated algorithm
 

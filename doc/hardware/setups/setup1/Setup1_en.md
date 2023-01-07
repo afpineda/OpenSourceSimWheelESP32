@@ -9,13 +9,16 @@ Read this document from start to end before building anything. Ensure you unders
 - Analog clutch paddles (potentiometers).
 - Shift paddles (x2)
 - Optional: "ALT" buttons (x2)
-- Optional: DPAD or 4 push buttons arranged in a cross
+- Optional: DPAD, funky switch or 4 push buttons arranged in a cross
+- Relative rotary encoders (with push button): x4 + optional funky switch
 - Up to 12 push buttons
-- Relative rotary encoders (with push button): x4
 
 ## Button mapping
 
 - *Bite point calibration*: rotary #1 clockwise and counter-clockwise (while holding one and only one clutch paddle).
+- *Next clutch function*: `START` and `Left shift paddle`.
+- *ALT buttons mode*: `START` and `Right shift paddle`.
+- *Recalibrate clutch paddles*: `START`, `Left shift paddle` and `Right shift paddle`.
 
 ## Needed parts
 
@@ -23,17 +26,18 @@ Read this document from start to end before building anything. Ensure you unders
 | :------------------------------------------------: | :-----------------------------------------: | --------------------------------------------------------------------- |
 |              Barebone Rotary encoder               |                      4                      |                                                                       |
 |        Standard perfboard sized 24x18 holes        |                      1                      |                                                                       |
-|                    Roller lever                    |                      2                      | For shift paddles (maybe they are included with your wheel's case)    |
+|                Roller lever switch                 |                      2                      | For shift paddles (maybe they are included with your wheel's case)    |
 |    Linear potentiometer (10K-ohms to 100K-ohms)    |                      2                      | For clutch paddles (maybe they are included with your wheel's case)   |
 |        D-Pad, funky switch or push buttons         | 1 D-pad or 1 funky switch or 4 push buttons | For directional input (optional). See notes below for a funky switch. |
-|                    Push buttons                    |                  up to 14                   | General purpose inputs (up to you)                                    |
+|                    Push buttons                    |                  up to 12                   | General purpose inputs (up to you)                                    |
 |                Pin header (female)                 |                     35                      | For a DevKit board with male pins already soldered                    |
 |       Pin header (male or female up to you)        |                     63                      | For external wiring                                                   |
 |                  Schottky diodes                   |                     24                      | 1N4148 recommended                                                    |
 |                 10k-ohms resistor                  |                      2                      |                                                                       |
 |           ESP32-WROOM-32UE/E (DevKit-C)            |                      1                      | Male pins already soldered. Choose built-in/external antenna.         |
 | External Antenna with U.FL, MHF I or AMC connector |                      1                      | Only required if ESP32-WROOM-32UE is chosen                           |
-| External connector depending on your quick release |                      1                      | See below                                                             |
+|  Power connector depending on your quick release   |                      1                      | See below                                                             |
+|                    Funky switch                    |                      1                      | ALPS RKJ series                                                       |
 
 Other parts (quantity unknown):
 
@@ -41,14 +45,16 @@ Other parts (quantity unknown):
 - Cable with Dupond terminals (for external wiring). A cable kit for protoboards will do the job. ¿Male or female? the opposite to pin headers.
 - Welding tin.
 
-Notes:
+Additional notes:
+
+- Chose an appropiate male/female power connector depending on your wheel base. Make sure to identify the positive and negative terminals correctly. If you have a *Simagic QR*, negative is the yellow wire and positive is the green one.
 
 ## Pinout plan for the ESP32-DevKit-C board
 
 | **GPIO** | **Input**  | **Output** |     **Usage**     | **Notes**                              |
 | -------- | ---------- | ---------- | :---------------: | -------------------------------------- |
-| **36**   | OK         |            |       L_POT       | input only (no internal pull resistor) |
-| **39**   | OK         |            |       R_POT       | input only (no internal pull resistor) |
+| **36**   | OK         |            |     Left pot      | input only (no internal pull resistor) |
+| **39**   | OK         |            |     Right pot     | input only (no internal pull resistor) |
 | **34**   | OK         |            |      ROT1_A       | input only (no internal pull resistor) |
 | **35**   | OK         |            |      ROT1_B       | input only (no internal pull resistor) |
 | **32**   | OK         | OK         |      ROT2_A       |                                        |
@@ -72,8 +78,8 @@ Notes:
 | **16**   | OK         | OK         | Matrix selector 2 |                                        |
 | **17**   | OK         | OK         | Matrix selector 3 |                                        |
 | **5**    | OK         | OK         |                   | outputs PWM signal at boot             |
-| **18**   | OK         | OK         |                   |                                        |
-| **19**   | OK         | OK         |                   |                                        |
+| **18**   | OK         | OK         |    F_ENCODER_A    |                                        |
+| **19**   | OK         | OK         |    F_ENCODER_B    |                                        |
 | **21**   | OK         | OK         |  Matrix input 3   |                                        |
 | **3**    | pulled up  | RX pin     |                   | HIGH at boot                           |
 | **1**    | TX pin     | OK         | Matrix selector 4 | debug output at boot                   |
@@ -91,16 +97,18 @@ This layout includes the following subsystems (read for an in-depth explanation)
 - [Analog clutch paddles](../../subsystems/AnalogClutchPaddles/AnalogClutchPaddles_en.md).
 - [Power](../../subsystems/Power/Power_en.md) through an external power source.
 - [Switches](../../subsystems/Switches/Switches_en.md).
-- [Relative rotary encoder](../../subsystems/RelativeRotaryEncoder/RelativeRotaryEncoder_en.md) KY-040 type.
+- [Relative rotary encoder](../../subsystems/RelativeRotaryEncoder/RelativeRotaryEncoder_en.md).
 
 Notes and build tips:
 
 - Some components may look very small, not matching their actual size. This is not a mistake. They must be placed in vertical position, so they lie in a minimal surface of the perfboard. All resistors and diodes should fit in 1x4 holes when they lay in horizontal position.
-- There is a lot of wiring, which is prone to human error. Check wiring and traces twice before soldering. Note that switch #17 is attached to a single wire unlike the others (this is not a mistake).
+- There is a lot of wiring, which is prone to human error. Check wiring and traces twice before soldering.
 
 ### External wiring
 
-Each input has an assigned number in the circuit layout. Certain inputs have a particular function, so attach them properly.
+- Each input has an assigned number in the circuit layout. Certain inputs have a particular function, so attach them properly.
+- The built-in push button of each rotary encoder must be wired to the button matrix just like any other push button, being `SW` and `SW GND` the involved terminals.
+- The `POTn_GND` and `POTn_VCC` terminals of each potentiometer are interchangeable. If the clutch (or axis) goes to 100% when idle, swap those terminals.
 
 **Under no circumstances should you plug an USB cable and an external power source at the same time**. You could damage the DevKit board.
 
