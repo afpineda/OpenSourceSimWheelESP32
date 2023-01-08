@@ -23,10 +23,10 @@ Derivative works should obtain a different VID.
 When using the Bluetooth stack, HID devices may use VIDs from different "sources". As seen at the [Device Information Service Specification](https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=244369):
 
 | Vendor ID source | Description                                                                         |
-| :--------------: | ----------------------------------------------------------------------------------- |
-|       0x01       | Bluetooth SIG-assigned Device ID Vendor ID value from the Assigned Numbers document |
-|       0x02       | USB Implementer’s Forum assigned Vendor ID value                                    |
-|      other       | Reserved for future use                                                             |
+|:----------------:| ----------------------------------------------------------------------------------- |
+| 0x01             | Bluetooth SIG-assigned Device ID Vendor ID value from the Assigned Numbers document |
+| 0x02             | USB Implementer’s Forum assigned Vendor ID value                                    |
+| other            | Reserved for future use                                                             |
 
 I don't know what is the legal situation when a reserved VID source is used. At least, there is a way to avoid the USB-IF's licenses.
 
@@ -34,24 +34,24 @@ I don't know what is the legal situation when a reserved VID source is used. At 
 
 This project make use of a number of HID reports:
 
-| Report ID |  Type   | Purpose                           |
-| :-------: | :-----: | --------------------------------- |
-|     1     |  Input  | Buttons, clutch, POV and the like |
-|     2     | Feature | Wheel capabilities                |
-|     3     | Feature | Wheel configuration               |
+| Report ID | Type    | Purpose                           |
+|:---------:|:-------:| --------------------------------- |
+| 1         | Input   | Buttons, clutch, POV and the like |
+| 2         | Feature | Wheel capabilities                |
+| 3         | Feature | Wheel configuration               |
 
 Note that feature reports are both read and write.
 
 ## Data format of report ID 1
 
 | Field                | Bits size | Byte index |
-| -------------------- | :-------: | :--------: |
-| Buttons state        |    128    |     0      |
-| Rz axis              |     8     |     16     |
-| Ry axis              |     8     |     17     |
-| Rx axis              |     8     |     18     |
-| POV (D-PAD)          |     4     |     19     |
-| Feature notification |     4     |     19     |
+| -------------------- |:---------:|:----------:|
+| Buttons state        | 128       | 0          |
+| Rz axis              | 8         | 16         |
+| Ry axis              | 8         | 17         |
+| Rx axis              | 8         | 18         |
+| POV (D-PAD)          | 4         | 19         |
+| Feature notification | 4         | 19         |
 
 - Buttons state: one bit per button (1=pressed, 0=non-pressed). The least significant bit is the first button.
 - Axes: a signed byte in the range 0 to 254.
@@ -65,12 +65,12 @@ Note that feature reports are both read and write.
 
 Write attempts will be ignored, so this report is read only.
 
-| Byte index | Size (Bytes) | Purpose (field) | Note                              |
-| :--------: | :----------: | --------------- | --------------------------------- |
-|     0      |      2       | Magic number    | Allways set to BF51 (hexadecimal) |
-|     2      |      2       | Major Version   | Version of this specification     |
-|     4      |      2       | Minor Version   | Version of this specification     |
-|     6      |      2       | Flags           | Device capabilities               |
+| Byte index | Size (Bytes) | Purpose (field) | Note                             |
+|:----------:|:------------:| --------------- | -------------------------------- |
+| 0          | 2            | Magic number    | Always set to BF51 (hexadecimal) |
+| 2          | 2            | Major Version   | Version of this specification    |
+| 4          | 2            | Minor Version   | Version of this specification    |
+| 6          | 2            | Flags           | Device capabilities              |
 
 Report ID 1 (input) is not affected by versioning.
 
@@ -83,12 +83,12 @@ The purpose of such a field is to enable device detection and recognition, witho
 Two different major versions means incompatible data formats. A greater minor version means a backwards-compatible data format.
 Host-side software should check for version compatibility. Some examples:
 
-| Data version | Supported version at host |    Result    |
-| :----------: | :-----------------------: | :----------: |
-|     1.5      |            2.0            | Incompatible |
-|     2.0      |            1.1            | Incompatible |
-|     1.1      |            1.6            | Incompatible |
-|     2.7      |            2.3            |  Compatible  |
+| Data version | Supported version at host | Result       |
+|:------------:|:-------------------------:|:------------:|
+| 1.5          | 2.0                       | Incompatible |
+| 2.0          | 1.1                       | Incompatible |
+| 1.1          | 1.6                       | Incompatible |
+| 2.7          | 2.3                       | Compatible   |
 
 ### Flags
 
@@ -99,11 +99,11 @@ The "flags" field is a set of 1-bit flags. Flags are indexed starting from the l
 While writing, any value outside of the valid range will be ignored, so they me be used to mask which fields to modify or not.
 
 | Byte index | Size (bytes) | Purpose (field)                        |
-| :--------: | :----------: | -------------------------------------- |
-|     0      |      1       | Function of clutch paddles             |
-|     1      |      1       | "ALT" buttons state                    |
-|     2      |      1       | Current bite point                     |
-|     3      |      1       | Simple command / Current battery level |
+|:----------:|:------------:| -------------------------------------- |
+| 0          | 1            | Function of clutch paddles             |
+| 1          | 1            | "ALT" buttons state                    |
+| 2          | 1            | Current bite point                     |
+| 3          | 1            | Simple command / Current battery level |
 
 ### Function of clutch paddles
 
@@ -134,3 +134,5 @@ At write:
 - Write FF (hexadecimal) to ignore this field.
 
 [def]: ../../src/include/SimWheelTypes.h
+
+

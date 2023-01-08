@@ -30,4 +30,5 @@ First release.
 - NuS and AT commands are not needed anymore. Replaced by HID reports.
 - Analog clutch paddles are now supported. They may be configured as independent analog axes, so they may be mapped to throttle and brake, for example, for the disabled.
 - A simple voltage divider is now supported as a battery monitor. This kind of circuit is built into many ESP32 devkits.
-- A "notification" subsystem replaces the OLED-based user interface, which is not tied to a particular hardware. A frameserver is available, too.
+- A "notification" subsystem replaces the OLED-based user interface, which is not tied to a particular hardware. A frame server is available, too.
+- Removed documentation in spanish. A nightmare to maintain.

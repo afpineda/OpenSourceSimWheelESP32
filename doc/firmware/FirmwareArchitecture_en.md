@@ -88,7 +88,6 @@ classDiagram
     hidImplementation --> notify: connected, discovering
     power --> notify: powerOff, low battery
     clutchState --> notify: bite point
-
 ```
 
 [Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9kbFuxCAMhl8FMedeIKo6tUOnDreyOGASS2BHxPQane7dS3Kt2gw9Jvj9f78tc7VeAtre-gTL8kIwFsiOTTsThbc8J8zICkrC5ul0ejY-VfXTuUnYGy8caaxlr_-HbRTxXHXZgJyBg1ExHhINjUQDDElGA5-4PMqY5YLlEFHwN2QAVSzrowAWpbjuUzN6xdCZQIuXDyzE453cmxzcu_IeY2eSXI5t_uzigAzUhFmI1bHtbMaSgULb8nXjnNWpTeZs364BI9Skzjq-NWudQwt7DaRSbK-lYmehqpxX9j_vu-f7r2wfIS14-wLihqBZ)
@@ -192,7 +191,6 @@ For user interfaces in need of a perpetual loop or for persistent notifications.
     if (batteryIsLow) 
       switchLed();
    }
-
 ```
 
 ### BatteryCalibration
@@ -218,6 +216,7 @@ If calibration data is not available, a rough estimation is provided based on Li
 ### HidImplementation
 
 All data interchange between the device and the host computer is conducted through the HID protocol. This involves:
+
 - State of buttons, axes and the alike.
 - Device capabilities.
 - Configuration: clutch paddles, "ALT" buttons, battery calibration, etc.
@@ -272,3 +271,5 @@ Event capture is detached from event processing at the **input hub daemon**, whi
 ## About auto power off
 
 When there is no bluetooth connection, the systems goes to advertising. If no connection is made in a certain time lapse, the system goes to deep sleep or power off.
+
+

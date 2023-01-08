@@ -48,33 +48,33 @@ k. __You__ means the individual or entity exercising the Licensed Rights under t
 
 a. ___License grant.___
 
- 1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+   
+   A. reproduce and Share the Licensed Material, in whole or in part; and
+   
+   B. produce, reproduce, and Share Adapted Material.
 
-  A. reproduce and Share the Licensed Material, in whole or in part; and
+2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
 
-  B. produce, reproduce, and Share Adapted Material.
+3. __Term.__ The term of this Public License is specified in Section 6(a).
 
- 2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
 
- 3. __Term.__ The term of this Public License is specified in Section 6(a).
+5. __Downstream recipients.__
+   
+   A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+   
+   B. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
 
- 4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
-
- 5. __Downstream recipients.__
-
-  A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
-
-  B. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
-
- 6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
 
 b. ___Other rights.___
 
- 1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
 
- 2. Patent and trademark rights are not licensed under this Public License.
+2. Patent and trademark rights are not licensed under this Public License.
 
- 3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties.
+3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties.
 
 ### Section 3 – License Conditions.
 
@@ -82,29 +82,29 @@ Your exercise of the Licensed Rights is expressly made subject to the following 
 
 a. ___Attribution.___
 
- 1. If You Share the Licensed Material (including in modified form), You must:
-
-  A. retain the following if it is supplied by the Licensor with the Licensed Material:
-
+1. If You Share the Licensed Material (including in modified form), You must:
+   
+   A. retain the following if it is supplied by the Licensor with the Licensed Material:
+   
    i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
-
+   
    ii. a copyright notice;
-
+   
    iii. a notice that refers to this Public License;
-
+   
    iv. a notice that refers to the disclaimer of warranties;
-
+   
    v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+   
+   B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+   
+   C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
 
-  B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
 
-  C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
 
- 2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
-
- 3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
-
- 4. If You Share Adapted Material You produce, the Adapter's License You apply must not prevent recipients of the Adapted Material from complying with this Public License.
+4. If You Share Adapted Material You produce, the Adapter's License You apply must not prevent recipients of the Adapted Material from complying with this Public License.
 
 ### Section 4 – Sui Generis Database Rights.
 
@@ -132,11 +132,11 @@ a. This Public License applies for the term of the Copyright and Similar Rights 
 
 b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
 
- 1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
 
- 2. upon express reinstatement by the Licensor.
-
- For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+2. upon express reinstatement by the Licensor.
+   
+   For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
 
 c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
 
@@ -164,7 +164,6 @@ Creative Commons is not a party to its public licenses. Notwithstanding, Creativ
 Creative Commons may be contacted at [creativecommons.org](http://creativecommons.org/).
 ```
 
-
 > Español
 
 # Creative Commons
@@ -179,9 +178,7 @@ Las licencias públicas de Creative Commons proporcionan un conjunto estándar d
 
 * __Consideraciones para licenciantes:__ Nuestras licencias públicas están destinadas a ser utilizadas por aquellos autorizados a dar permiso al público para utilizar material en formas que de otra manera estarían restringidas por los derechos de autor y por otros derechos. Nuestras licencias son irrevocables. Los licenciantes deben leer y entender los términos y las condiciones de la licencia que elijan antes de aplicarla. Los licenciantes deben también contar con todos los derechos necesarios antes de aplicar nuestras licencias, de modo que el público pueda reutilizar el material según lo esperado. Los licenciantes deben identificar con claridad cualquier material que no esté sujeto a la licencia. Esto incluye materiales que se encuentren distribuidos con otra licencia de CC o materiales utilizados en virtud de alguna excepción o limitación al derecho de autor. [Más consideraciones para Licenciantes](https://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
 
-
 * __Consideraciones para el público:__ Mediante el uso de una de nuestras licencias públicas, el licenciante concede el permiso para utilizar el Material Licenciado bajo los términos y las condiciones que se especifican. Si producto de la aplicación de una excepción o limitación al derecho de autor u otra razón, no es necesario aplicar la licencia para el uso requerido, se entenderá que dicho uso no se encuentra regulado por la licencia. Nuestras licencias solamente otorgan los permisos que por derecho de autor y derechos conexos el licenciante tiene potestad legal de otorgar. El uso del Material Licenciado podría estar restringido por razones distintas de la licencia, incluyendo el ejercicio de otros derechos de autor u otros derechos sobre el material. El licenciante puede solicitar peticiones especiales, como pedir que los cambios estén marcados o descritos. Aunque nuestras licencias no lo requieren, se lo alienta a respetar esas solicitudes dentro de lo razonable. [Más consideraciones para licenciatarios](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
-
 
 ## Creative Commons Atribución/Reconocimiento 4.0 Licencia Pública Internacional — CC BY 4.0
 
@@ -207,7 +204,6 @@ h. __Licenciante__ es el individuo(s) o la entidad(es) que concede derechos bajo
 
 i. __Compartir__ significa proporcionar material al público por cualquier medio o procedimiento que requiera permiso conforme a los Derechos Licenciados, tales como la reproducción, exhibición pública, presentación pública, distribución, difusión, comunicación o importación, así como también su puesta a disposición, incluyendo formas en que el público pueda acceder al material desde un lugar y momento elegido individualmente por ellos.
 
-
 j. __Derechos "Sui Generis" sobre Bases de Datos__ son aquellos derechos diferentes a los derechos de autor, resultantes de la Directiva 96/9/EC del Parlamento Europeo y del Consejo, de 11 de marzo de 1996 sobre la protección jurídica de las bases de datos, en sus versiones modificadas y/o posteriores, así como otros derechos esencialmente equivalentes en cualquier otra parte del mundo.
 
 k. __Usted__ es el individuo o la entidad que ejerce los Derechos Licenciados en esta Licencia Pública. La palabra Su tiene un significado equivalente.
@@ -216,36 +212,33 @@ k. __Usted__ es el individuo o la entidad que ejerce los Derechos Licenciados en
 
 a. ___Otorgamiento de la licencia.___
 
- 1. Sujeto a los términos y condiciones de esta Licencia Pública, el Licenciante le otorga a Usted una licencia de carácter global, gratuita, no transferible a terceros, no exclusiva e irrevocable para ejercer los Derechos Licenciados sobre el Material Licenciado para:
+1. Sujeto a los términos y condiciones de esta Licencia Pública, el Licenciante le otorga a Usted una licencia de carácter global, gratuita, no transferible a terceros, no exclusiva e irrevocable para ejercer los Derechos Licenciados sobre el Material Licenciado para:
+   
+   A. reproducir y Compartir el Material Licenciado, en su totalidad o en parte; y 
+   
+   B. producir, reproducir y Compartir Material Adaptado.
 
-  A. reproducir y Compartir el Material Licenciado, en su totalidad o en parte; y 
+2. __Excepciones y Limitaciones.__ Para evitar cualquier duda, donde se apliquen Excepciones y Limitaciones al uso del Material Licenciado, esta Licencia Pública no será aplicable, y Usted no tendrá necesidad de cumplir con sus términos y condiciones.
 
-  B. producir, reproducir y Compartir Material Adaptado.
+3. __Vigencia.__ La vigencia de esta Licencia Pública está especificada en la sección 6(a).
 
+4. __Medios y formatos; modificaciones técnicas permitidas.__ El Licenciante le autoriza a Usted a ejercer los Derechos Licenciados en todos los medios y formatos, actualmente conocidos o por crearse en el futuro, y a realizar las modificaciones técnicas necesarias para ello. El Licenciante renuncia y/o se compromete a no hacer valer cualquier derecho o potestad para prohibirle a Usted realizar las modificaciones técnicas necesarias para ejercer los Derechos Licenciados, incluyendo las modificaciones técnicas necesarias para eludir las Medidas Tecnológicas Efectivas. A los efectos de esta Licencia Pública, la mera realización de modificaciones autorizadas por esta sección 2(a)(4) nunca produce Material Adaptado.
 
- 2. __Excepciones y Limitaciones.__ Para evitar cualquier duda, donde se apliquen Excepciones y Limitaciones al uso del Material Licenciado, esta Licencia Pública no será aplicable, y Usted no tendrá necesidad de cumplir con sus términos y condiciones.
-
-
- 3. __Vigencia.__ La vigencia de esta Licencia Pública está especificada en la sección 6(a).
-
- 4. __Medios y formatos; modificaciones técnicas permitidas.__ El Licenciante le autoriza a Usted a ejercer los Derechos Licenciados en todos los medios y formatos, actualmente conocidos o por crearse en el futuro, y a realizar las modificaciones técnicas necesarias para ello. El Licenciante renuncia y/o se compromete a no hacer valer cualquier derecho o potestad para prohibirle a Usted realizar las modificaciones técnicas necesarias para ejercer los Derechos Licenciados, incluyendo las modificaciones técnicas necesarias para eludir las Medidas Tecnológicas Efectivas. A los efectos de esta Licencia Pública, la mera realización de modificaciones autorizadas por esta sección 2(a)(4) nunca produce Material Adaptado.
-
-
- 5. __Receptores posteriores.__
-
-  A. __Oferta del Licenciante – Material Licenciado.__ Cada receptor de Material Licenciado recibe automáticamente una oferta del Licenciante para ejercer los Derechos Licenciados bajo los términos y condiciones de esta Licencia Pública.
-
-  B. __Sin restricciones a receptores posteriores.__ Usted no puede ofrecer o imponer ningún término ni condición diferente o adicional, ni puede aplicar ninguna Medida Tecnológica Efectiva al Material Licenciado si haciéndolo restringe el ejercicio de los Derechos Licenciados a cualquier receptor del Material Licenciado.
-
-  C. __Sin endoso.__ Nada de lo contenido en esta Licencia Pública constituye o puede interpretarse como un permiso para afirmar o implicar que Usted, o que Su uso del Material Licenciado, está conectado, patrocinado, respaldado o reconocido con estatus oficial por el Licenciante u otros designados para recibir la Atribución/Reconocimiento según lo dispuesto en la sección 3(a)(1)(A)(i).
+5. __Receptores posteriores.__
+   
+   A. __Oferta del Licenciante – Material Licenciado.__ Cada receptor de Material Licenciado recibe automáticamente una oferta del Licenciante para ejercer los Derechos Licenciados bajo los términos y condiciones de esta Licencia Pública.
+   
+   B. __Sin restricciones a receptores posteriores.__ Usted no puede ofrecer o imponer ningún término ni condición diferente o adicional, ni puede aplicar ninguna Medida Tecnológica Efectiva al Material Licenciado si haciéndolo restringe el ejercicio de los Derechos Licenciados a cualquier receptor del Material Licenciado.
+   
+   C. __Sin endoso.__ Nada de lo contenido en esta Licencia Pública constituye o puede interpretarse como un permiso para afirmar o implicar que Usted, o que Su uso del Material Licenciado, está conectado, patrocinado, respaldado o reconocido con estatus oficial por el Licenciante u otros designados para recibir la Atribución/Reconocimiento según lo dispuesto en la sección 3(a)(1)(A)(i).
 
 b. ___Otros derechos.___
 
- 1. Los derechos morales, tales como el derecho a la integridad, no están comprendidos bajo esta Licencia Pública ni tampoco los derechos de publicidad y privacidad ni otros derechos personales similares. Sin embargo, en la medida de lo posible, el Licenciante renuncia y/o se compromete a no hacer valer ninguno de estos derechos que ostenta como Licenciante, limitándose a lo necesario para que Usted pueda ejercer los Derechos Licenciados, pero no de otra manera.
+1. Los derechos morales, tales como el derecho a la integridad, no están comprendidos bajo esta Licencia Pública ni tampoco los derechos de publicidad y privacidad ni otros derechos personales similares. Sin embargo, en la medida de lo posible, el Licenciante renuncia y/o se compromete a no hacer valer ninguno de estos derechos que ostenta como Licenciante, limitándose a lo necesario para que Usted pueda ejercer los Derechos Licenciados, pero no de otra manera.
 
- 2. Los derechos de patentes y marcas no son objeto de esta Licencia Pública.
+2. Los derechos de patentes y marcas no son objeto de esta Licencia Pública.
 
- 3. En la medida de lo posible, el Licenciante renuncia al derecho de cobrarle regalías a Usted por el ejercicio de los Derechos Licenciados, ya sea directamente o a través de una entidad de gestión colectiva bajo cualquier esquema de licenciamiento voluntario, renunciable o no renunciable. En todos los demás casos, el Licenciante se reserva expresamente cualquier derecho de cobrar esas regalías.
+3. En la medida de lo posible, el Licenciante renuncia al derecho de cobrarle regalías a Usted por el ejercicio de los Derechos Licenciados, ya sea directamente o a través de una entidad de gestión colectiva bajo cualquier esquema de licenciamiento voluntario, renunciable o no renunciable. En todos los demás casos, el Licenciante se reserva expresamente cualquier derecho de cobrar esas regalías.
 
 ### Sección 3 – Condiciones de la Licencia.
 
@@ -253,10 +246,10 @@ Su ejercicio de los Derechos Licenciados está expresamente sujeto a las condici
 
 a. ___Atribución/Reconocimiento.___
 
- 1. Si Usted comparte el Material Licenciado (incluyendo en forma modificada), Usted debe:
-
-  A. Conservar lo siguiente si es facilitado por el Licenciante con el Material Licenciado:
-
+1. Si Usted comparte el Material Licenciado (incluyendo en forma modificada), Usted debe:
+   
+   A. Conservar lo siguiente si es facilitado por el Licenciante con el Material Licenciado:
+   
    i. identificación del creador o los creadores del Material Licenciado y de cualquier otra persona designada para recibir Atribución/Reconocimiento, de cualquier manera razonable solicitada por el Licenciante (incluyendo por seudónimo si este ha sido designado);
    
    ii. un aviso sobre derecho de autor;
@@ -266,17 +259,16 @@ a. ___Atribución/Reconocimiento.___
    iv. un aviso que se refiera a la limitación de garantías;
    
    v. un URI o un hipervínculo al Material Licenciado en la medida razonablemente posible;
+   
+   B. Indicar si Usted modificó el Material Licenciado y conservar una indicación de las modificaciones anteriores; e
+   
+   C. Indicar que el Material Licenciado está bajo esta Licencia Pública, e incluir el texto, el URI o el hipervínculo a esta Licencia Pública.
 
-  B. Indicar si Usted modificó el Material Licenciado y conservar una indicación de las modificaciones anteriores; e
+2. Usted puede satisfacer las condiciones de la sección 3(a)(1) de cualquier forma razonable según el medio, las maneras y el contexto en los cuales Usted Comparta el Material Licenciado. Por ejemplo, puede ser razonable satisfacer las condiciones facilitando un URI o un hipervínculo a un recurso que incluya la información requerida.
 
-  C. Indicar que el Material Licenciado está bajo esta Licencia Pública, e incluir el texto, el URI o el hipervínculo a esta Licencia Pública.
+3. Bajo requerimiento del Licenciante, Usted debe eliminar cualquier información requerida por la sección 3(a)(1)(A) en la medida razonablemente posible.
 
- 2. Usted puede satisfacer las condiciones de la sección 3(a)(1) de cualquier forma razonable según el medio, las maneras y el contexto en los cuales Usted Comparta el Material Licenciado. Por ejemplo, puede ser razonable satisfacer las condiciones facilitando un URI o un hipervínculo a un recurso que incluya la información requerida.
-
- 3. Bajo requerimiento del Licenciante, Usted debe eliminar cualquier información requerida por la sección 3(a)(1)(A) en la medida razonablemente posible.
-
- 4. Si Usted Comparte Material Adaptado producido por Usted, la Licencia del Adaptador que Usted aplique no debe evitar que los destinatarios del material adaptado cumplan con esta Licencia Pública.
-
+4. Si Usted Comparte Material Adaptado producido por Usted, la Licencia del Adaptador que Usted aplique no debe evitar que los destinatarios del material adaptado cumplan con esta Licencia Pública.
 
 ### Sección 4 – Derechos "Sui Generis" sobre Bases de Datos.
 
@@ -304,11 +296,11 @@ a. Esta Licencia Pública tiene una vigencia de aplicación igual al plazo de pr
 
 b. En aquellos casos en que Su derecho a utilizar el Material Licenciado se haya terminado conforme a la sección 6(a), éste será restablecido:
 
- 1. automáticamente a partir de la fecha en que la violación sea subsanada, siempre y cuando esta se subsane dentro de los 30 días siguientes a partir de Su descubrimiento de la violación; o
+1. automáticamente a partir de la fecha en que la violación sea subsanada, siempre y cuando esta se subsane dentro de los 30 días siguientes a partir de Su descubrimiento de la violación; o
 
- 2. tras el restablecimiento expreso por parte del Licenciante.
-
- Para evitar dudas, esta sección 6(b) no afecta ningún derecho que pueda tener el Licenciante a buscar resarcimiento por Sus violaciones de esta Licencia Pública.
+2. tras el restablecimiento expreso por parte del Licenciante.
+   
+   Para evitar dudas, esta sección 6(b) no afecta ningún derecho que pueda tener el Licenciante a buscar resarcimiento por Sus violaciones de esta Licencia Pública.
 
 c. Para evitar dudas, el Licenciante también puede ofrecer el Material Licenciado bajo términos o condiciones diferentes, o dejar de distribuir el Material Licenciado en cualquier momento; sin embargo, hacer esto no pondrá fin a esta Licencia Pública.
 

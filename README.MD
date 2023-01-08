@@ -20,7 +20,7 @@ This project provides open hardware and software for a sim-racing wheel or butto
 - **Extensive documentation**
 - **Budget friendly**
 
-Please, start at the [documentation index (English)](./doc/Index_en.md).
+Please, start at the [documentation index](./doc/Index_en.md).
 
 > Español
 
@@ -44,8 +44,6 @@ Este proyecto proporciona hardware y software abierto para un volante de simulac
 - **Documentación extensa**
 - **Costes contenidos**
 
-Por favor, comience por el [índice de documentación (español)](./doc/Index_es.md).
-
-**Nota**: la documentación específica de diseño e implementación del software se encuentra únicamente en inglés.
+Por favor, comience por el [índice de documentación (inglés)](./doc/Index_en.md).
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)

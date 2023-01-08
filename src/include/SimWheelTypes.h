@@ -221,7 +221,8 @@ public:
 
     /**
      * @brief Draw a single frame.
-     *        Called in a loop when no notifications are pending.
+     *        Called in a loop when no notifications are pending
+	 *        (from a separate thread).
      *        Not called at all if `getTargetFPS()==0`.
      *        Must not enter a loop itself.
      */
