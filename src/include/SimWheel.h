@@ -157,11 +157,12 @@ namespace batteryCalibration
     /**
      * @brief Add an ADC reading to calibration data. The battery should get fully charged
      *        before first call. Will clear previous data at first call.
-     *        Calibration data will **not** be available until `save()` is called.
+     *        Calibration data will **not** be available until `calibrationInProgress` is set to false.
      *
      * @param reading An ADC reading of current battery(+) voltage.
+     * @param save When true, the given sample will be saved to flash memory.
      */
-    void addSample(int reading);
+    void addSample(int reading, bool save = false);
 
     /**
      * @brief Get calibration data. For internal use.
@@ -200,18 +201,7 @@ namespace batteryCalibration
      *
      */
     extern volatile int maxBatteryReadingEver;
-
-    /**
-     * @brief Get a rough estimation of the battery charge based on
-     *        LiPo battery characterization data. Not accurate, but allways available.
-     *
-     * @param reading An ADC reading of current battery(+) voltage.
-     * @return int A percentage in the range 0%-100%
-     *
-     * @note Based on https://blog.ampow.com/lipo-voltage-chart/
-     */
-    int getGenericLiPoBatteryLevel(int reading);
-
+    
     /**
      * @brief Restart autocalibration algorithm.
      *
@@ -220,14 +210,16 @@ namespace batteryCalibration
 
     /**
      * @brief Get a percentage of battery charge using auto-calibration.
-     *        Based on `getGenericLiPoBatteryLevel()`. Will provide incorrect
-     *        battery levels (higher) until the battery is fully charged.
+     *        Will provide incorrect battery levels (higher) until 
+     *        the battery is fully charged. 
      *        Anyway, this algorithm is not accurate.
      *
      * @param reading An ADC reading of current battery(+) voltage
      *
      * @return If auto-calibration is available, a percentage in the range 0%-100%.
      *         Otherwise, the constant `UNKNOWN_BATTERY_LEVEL`.
+     * 
+     * @note Based on https://blog.ampow.com/lipo-voltage-chart/
      */
     int getBatteryLevelAutoCalibrated(int reading);
 

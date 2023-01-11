@@ -177,6 +177,7 @@ void setup()
         LATCH_POWEROFF_DELAY);
 #endif
 
+    clutchState::begin();
     inputs::begin();
     simWheelSetup();
     hidImplementation::begin(

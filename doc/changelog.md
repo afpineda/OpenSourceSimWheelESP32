@@ -32,3 +32,4 @@ First release.
 - A simple voltage divider is now supported as a battery monitor. This kind of circuit is built into many ESP32 devkits.
 - A "notification" subsystem replaces the OLED-based user interface, which is not tied to a particular hardware. A frame server is available, too.
 - Removed documentation in spanish. A nightmare to maintain.
+- The battery calibration/backup procedures have been simplified. Now, no particular circuit is required.

@@ -247,13 +247,15 @@ void setup()
 
     // Test LiPo characterization data
     printTestHeader(testnumber++); // #7
-    batteryCalibrationAssertEquals(0, batteryCalibration::getGenericLiPoBatteryLevel(1000));
-    batteryCalibrationAssertEquals(8, batteryCalibration::getGenericLiPoBatteryLevel(2240));
-    batteryCalibrationAssertEquals(27, batteryCalibration::getGenericLiPoBatteryLevel(2327));
-    batteryCalibrationAssertEquals(46, batteryCalibration::getGenericLiPoBatteryLevel(2371));
-    batteryCalibrationAssertEquals(85, batteryCalibration::getGenericLiPoBatteryLevel(2532));
-    batteryCalibrationAssertEquals(89, batteryCalibration::getGenericLiPoBatteryLevel(2551));
-    batteryCalibrationAssertEquals(100, batteryCalibration::getGenericLiPoBatteryLevel(3000));
+    // removed since getGenericLiPoBatteryLevel is not exposed anymore
+    
+    // batteryCalibrationAssertEquals(0, batteryCalibration::getGenericLiPoBatteryLevel(1000));
+    // batteryCalibrationAssertEquals(8, batteryCalibration::getGenericLiPoBatteryLevel(2240));
+    // batteryCalibrationAssertEquals(27, batteryCalibration::getGenericLiPoBatteryLevel(2327));
+    // batteryCalibrationAssertEquals(46, batteryCalibration::getGenericLiPoBatteryLevel(2371));
+    // batteryCalibrationAssertEquals(85, batteryCalibration::getGenericLiPoBatteryLevel(2532));
+    // batteryCalibrationAssertEquals(89, batteryCalibration::getGenericLiPoBatteryLevel(2551));
+    // batteryCalibrationAssertEquals(100, batteryCalibration::getGenericLiPoBatteryLevel(3000));
 
     // Test autocalibration
     printTestHeader(testnumber++); // #8

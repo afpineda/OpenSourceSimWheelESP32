@@ -4,6 +4,8 @@ ButtonMatrixInput.h
 RotaryEncoderInput.h
 PolledInput.h
 HID_definitions.h
+adcTools.h
+adcTools.cpp
 ButtonMatrixInput.cpp
 RotaryEncoderInput.cpp
 PolledInput.cpp
@@ -11,4 +13,6 @@ Inputs.cpp
 InputHub.cpp
 hidImplementation_NimBLE.cpp
 power_mock.cpp
-ui_mock.cpp
+clutchState.cpp
+notify.cpp
+capabilities.cpp

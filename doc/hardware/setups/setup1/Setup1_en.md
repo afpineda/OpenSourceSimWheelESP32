@@ -24,20 +24,19 @@ Read this document from start to end before building anything. Ensure you unders
 
 |                      **Item**                      |                **Quantity**                 | Notes                                                                 |
 | :------------------------------------------------: | :-----------------------------------------: | --------------------------------------------------------------------- |
-|              Barebone Rotary encoder               |                      4                      |                                                                       |
+|              Bare bone Rotary encoder              |                      4                      |                                                                       |
 |        Standard perfboard sized 24x18 holes        |                      1                      |                                                                       |
 |                Roller lever switch                 |                      2                      | For shift paddles (maybe they are included with your wheel's case)    |
 |    Linear potentiometer (10K-ohms to 100K-ohms)    |                      2                      | For clutch paddles (maybe they are included with your wheel's case)   |
 |        D-Pad, funky switch or push buttons         | 1 D-pad or 1 funky switch or 4 push buttons | For directional input (optional). See notes below for a funky switch. |
 |                    Push buttons                    |                  up to 12                   | General purpose inputs (up to you)                                    |
 |                Pin header (female)                 |                     35                      | For a DevKit board with male pins already soldered                    |
-|       Pin header (male or female up to you)        |                     63                      | For external wiring                                                   |
-|                  Schottky diodes                   |                     24                      | 1N4148 recommended                                                    |
+|       Pin header (male or female up to you)        |                     72                      | For external wiring                                                   |
+|                  Schottky diodes                   |                     25                      | 1N4148 recommended                                                    |
 |                 10k-ohms resistor                  |                      2                      |                                                                       |
 |           ESP32-WROOM-32UE/E (DevKit-C)            |                      1                      | Male pins already soldered. Choose built-in/external antenna.         |
 | External Antenna with U.FL, MHF I or AMC connector |                      1                      | Only required if ESP32-WROOM-32UE is chosen                           |
 |  Power connector depending on your quick release   |                      1                      | See below                                                             |
-|                    Funky switch                    |                      1                      | ALPS RKJ series                                                       |
 
 Other parts (quantity unknown):
 
@@ -48,6 +47,7 @@ Other parts (quantity unknown):
 Additional notes:
 
 - Chose an appropiate male/female power connector depending on your wheel base. Make sure to identify the positive and negative terminals correctly. If you have a *Simagic QR*, negative is the yellow wire and positive is the green one.
+- Optional funky switch: ALPS RKJ series, 7-way.
 
 ## Pinout plan for the ESP32-DevKit-C board
 
@@ -78,8 +78,8 @@ Additional notes:
 | **16**   | OK         | OK         | Matrix selector 2 |                                        |
 | **17**   | OK         | OK         | Matrix selector 3 |                                        |
 | **5**    | OK         | OK         |                   | outputs PWM signal at boot             |
-| **18**   | OK         | OK         |    F_ENCODER_A    |                                        |
-| **19**   | OK         | OK         |    F_ENCODER_B    |                                        |
+| **18**   | OK         | OK         |     ENCODER_A     |                                        |
+| **19**   | OK         | OK         |     ENCODER_B     |                                        |
 | **21**   | OK         | OK         |  Matrix input 3   |                                        |
 | **3**    | pulled up  | RX pin     |                   | HIGH at boot                           |
 | **1**    | TX pin     | OK         | Matrix selector 4 | debug output at boot                   |
@@ -107,8 +107,18 @@ Notes and build tips:
 ### External wiring
 
 - Each input has an assigned number in the circuit layout. Certain inputs have a particular function, so attach them properly.
-- The built-in push button of each rotary encoder must be wired to the button matrix just like any other push button, being `SW` and `SW GND` the involved terminals.
 - The `POTn_GND` and `POTn_VCC` terminals of each potentiometer are interchangeable. If the clutch (or axis) goes to 100% when idle, swap those terminals.
+- Optional funky switch:
+  - The involved terminals are:
+    - For rotation: `ENCODER_A`, `ENCODER_B` and `ENCODER_COM`.
+    - For push buttons: `A`, `B`, `C`, `D`, `PUSH` and `COM`.
+  - Do not confuse `COM` and `ENCODER_COM`.
+- Bare bone rotary encoders:
+  - The involved terminals are:
+    - For rotation: `A` or `CLK` attached to `ROTn_A`, `B` or `DT` attached to `ROTn_B`, `COM` attached to `ROTn_COM`.
+    - The built-in push button must be wired to the button matrix just like any other push button, being `SW` and `SW GND` the involved terminals. `SW` attached to the upper row of pin headers, `SW COM` attached to the lower row of pin headers.
+  - Do not confuse `COM` and `SW COM`.
+  - `ROT1` is mandatory. The others are optional.
 
 **Under no circumstances should you plug an USB cable and an external power source at the same time**. You could damage the DevKit board.
 

@@ -11,22 +11,23 @@ Read this document from start to end before building anything. Ensure you unders
 - Powered through USB (or, optionally, external power source)
 
 - Button box (64 inputs):
-  - Up to 52 general porpouse push buttons
-  - Up to 4 relative rotary encoders (with push button) 
+  
+  - Up to 52 general porpouse push buttons.
+  - Up to 4 relative rotary encoders (with push button).
 
 ## Needed parts
 
-|                      **Item**                      | **Quantity** | Notes                                                         |
-| :------------------------------------------------: | :----------: | ------------------------------------------------------------- |
-|              Barebone Rotary encoder               |   up to 4    |                                                               |
-|        Standard perfboard sized 24x18 holes        |      1       |                                                               |
-|                    Push buttons                    |   up to 52   | General porpouse (up to you)                                  |
-|       Pin header (male or female up to you)        |     136      | For external wiring                                           |
-|                  Schottky diodes                   |      56      | 1N4148 recommended                                            |
-|      Resistor (any impedance 4K to 100K-ohms)      |      4       |                                                               |
-|           ESP32-WROOM-32UE/E (DevKit-C)            |      1       | Male pins already soldered. Choose built-in/external antenna. |
-| External Antenna with U.FL, MHF I or AMC connector |      1       | Only required if ESP32-WROOM-32UE is choosen                  |
-|            Micro-USB cable long enough             |      1       | For power                                                     |
+| **Item**                                           | **Quantity** | Notes                                                         |
+|:--------------------------------------------------:|:------------:| ------------------------------------------------------------- |
+| Barebone Rotary encoder                            | up to 4      |                                                               |
+| Standard perfboard sized 24x18 holes               | 1            |                                                               |
+| Push buttons                                       | up to 52     | General porpouse (up to you)                                  |
+| Pin header (male or female up to you)              | 136          | For external wiring                                           |
+| Schottky diodes                                    | 56           | 1N4148 recommended                                            |
+| Resistor (any impedance 4K to 100K-ohms)           | 4            |                                                               |
+| ESP32-WROOM-32UE/E (DevKit-C)                      | 1            | Male pins already soldered. Choose built-in/external antenna. |
+| External Antenna with U.FL, MHF I or AMC connector | 1            | Only required if ESP32-WROOM-32UE is choosen                  |
+| Micro-USB cable long enough                        | 1            | For power                                                     |
 
 Other parts (quantity unknown):
 
@@ -36,26 +37,26 @@ Other parts (quantity unknown):
 
 ## Pinout plan for the ESP32-DevKit-C board
 
-| **GPIO** | **Input**  | **Output** |     **Usage**     | **Notes**                               |
-| -------- | ---------- | ---------- | :---------------: | --------------------------------------- |
+| **GPIO** | **Input**  | **Output** | **Usage**         | **Notes**                               |
+| -------- | ---------- | ---------- |:-----------------:| --------------------------------------- |
 | **36**   | OK         |            | _Matrix input_ 1  | input only (no internal pull restistor) |
 | **39**   | OK         |            | _Matrix input_ 2  | input only (no internal pull restistor) |
 | **34**   | OK         |            | _Matrix input_ 3  | input only (no internal pull restistor) |
 | **35**   | OK         |            | _Matrix input_ 4  | input only (no internal pull restistor) |
-| **32**   | OK         | OK         |  Matrix input 5   |                                         |
-| **33**   | OK         | OK         |  Matrix input 6   |                                         |
-| **25**   | OK         | OK         |  Matrix input 7   |                                         |
-| **26**   | OK         | OK         |  Matrix input 8   |                                         |
-| **27**   | OK         | OK         |     ROTARY1_A     |                                         |
-| **14**   | OK         | OK         |     ROTARY1_B     | outputs PWM signal at boot              |
-| **12**   | OK         | OK         |     ROTARY2_A     | boot fail if pulled high                |
-| **13**   | OK         | OK         |     ROTARY2_B     |                                         |
-| **9**    | x          | x          |   **UNUSABLE**    | connected to the integrated SPI flash   |
-| **10**   | x          | x          |   **UNUSABLE**    | connected to the integrated SPI flash   |
-| **11**   | x          | x          |   **UNUSABLE**    | connected to the integrated SPI flash   |
-| **6**    | x          | x          |   **UNUSABLE**    | connected to the integrated SPI flash   |
-| **7**    | x          | x          |   **UNUSABLE**    | connected to the integrated SPI flash   |
-| **8**    | x          | x          |   **UNUSABLE**    | connected to the integrated SPI flash   |
+| **32**   | OK         | OK         | Matrix input 5    |                                         |
+| **33**   | OK         | OK         | Matrix input 6    |                                         |
+| **25**   | OK         | OK         | Matrix input 7    |                                         |
+| **26**   | OK         | OK         | Matrix input 8    |                                         |
+| **27**   | OK         | OK         | ROTARY1_A         |                                         |
+| **14**   | OK         | OK         | ROTARY1_B         | outputs PWM signal at boot              |
+| **12**   | OK         | OK         | ROTARY2_A         | boot fail if pulled high                |
+| **13**   | OK         | OK         | ROTARY2_B         |                                         |
+| **9**    | x          | x          | **UNUSABLE**      | connected to the integrated SPI flash   |
+| **10**   | x          | x          | **UNUSABLE**      | connected to the integrated SPI flash   |
+| **11**   | x          | x          | **UNUSABLE**      | connected to the integrated SPI flash   |
+| **6**    | x          | x          | **UNUSABLE**      | connected to the integrated SPI flash   |
+| **7**    | x          | x          | **UNUSABLE**      | connected to the integrated SPI flash   |
+| **8**    | x          | x          | **UNUSABLE**      | connected to the integrated SPI flash   |
 | **15**   | OK         | OK         | Matrix selector 1 | outputs PWM signal at boot              |
 | **2**    | OK         | OK         | Matrix selector 2 | connected to on-board LED               |
 | **0**    | pulled up? | OK         | Matrix selector 3 | outputs PWM signal at boot              |
@@ -63,13 +64,13 @@ Other parts (quantity unknown):
 | **16**   | OK         | OK         | Matrix selector 5 |                                         |
 | **17**   | OK         | OK         | Matrix selector 6 |                                         |
 | **5**    | OK         | OK         | Matrix selector 7 | outputs PWM signal at boot              |
-| **18**   | OK         | OK         |     ROTARY3_A     |                                         |
-| **19**   | OK         | OK         |     ROTARY3_B     |                                         |
-| **21**   | OK         | OK         |     _UNUSED_      |                                         |
-| **3**    | pulled up  | RX pin     |     _UNUSED_      | HIGH at boot                            |
-| **1**    | TX pin     | OK         |     _UNUSED_      | debug output at boot                    |
-| **22**   | OK         | OK         |     ROTARY4_A     |                                         |
-| **23**   | OK         | OK         |     ROTARY4_B     |                                         |
+| **18**   | OK         | OK         | ROTARY3_A         |                                         |
+| **19**   | OK         | OK         | ROTARY3_B         |                                         |
+| **21**   | OK         | OK         | _UNUSED_          |                                         |
+| **3**    | pulled up  | RX pin     | _UNUSED_          | HIGH at boot                            |
+| **1**    | TX pin     | OK         | _UNUSED_          | debug output at boot                    |
+| **22**   | OK         | OK         | ROTARY4_A         |                                         |
+| **23**   | OK         | OK         | ROTARY4_B         |                                         |
 
 ## Circuit layout
 
@@ -102,4 +103,3 @@ Notes and build tips:
 4. Open the serial monitor (Arduino IDE).
 5. Reset.
 6. Check there are no error messages.
-

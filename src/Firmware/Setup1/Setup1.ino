@@ -18,6 +18,8 @@
 #define IN_DOWN 31
 #define IN_LEFT 32
 #define IN_RIGHT 33
+#define IN_ALT1 20
+#define IN_ALT2 21
 
 /* -----------------------------------------------------------------
  >>>> [EN] DEVICE IDENTIFICATION
@@ -47,11 +49,11 @@ static const gpio_num_t mtxInputs[] = {
     GPIO_NUM_13};
 
 static inputNumber_t mtxNumbers[] = {
-    JOY_LB, JOY_RB, 20, 21, JOY_START,
     JOY_A, JOY_B, JOY_X, JOY_Y, JOY_BACK,
-    JOY_LTHUMBSTICK_CLICK, JOY_RTHUMBSTICK_CLICK, 10, 11, 12,
-    13, 14, 15, 16, 17,
-    IN_UP, IN_DOWN, IN_LEFT, IN_RIGHT};
+    JOY_START, 8, 9, 10, 11,
+    12, 13, 14, 15, 16,
+    17, IN_UP, IN_DOWN, IN_LEFT, IN_RIGHT,
+    IN_ALT2, IN_ALT1, JOY_RTHUMBSTICK_CLICK, JOY_LTHUMBSTICK_CLICK};
 
 //------------------------------------------------------------------
 // Setup
@@ -73,11 +75,11 @@ void simWheelSetup()
     inputs::addRotaryEncoder(GPIO_NUM_19, GPIO_NUM_18, 48, 49, true); // ALPS
 
     inputHub::setDPADControls(IN_UP, IN_DOWN, IN_LEFT, IN_RIGHT);
-    inputHub::setALTBitmap(BITMAP(20) | BITMAP(21));
+    inputHub::setALTBitmap(BITMAP(IN_ALT1) | BITMAP(IN_ALT2));
     inputHub::setClutchCalibrationButtons(40, 41); // Rotary 1
     inputHub::setCycleClutchFunctionBitmap(BITMAP(JOY_START) | BITMAP(JOY_LB));
     inputHub::setCycleALTFunctionBitmap(BITMAP(JOY_START) | BITMAP(JOY_RB));
-    inputHub::setCalibrationCommandBitmaps(BITMAP(JOY_START) | BITMAP(JOY_LB) | BITMAP(JOY_RB),0);
+    inputHub::setCalibrationCommandBitmaps(BITMAP(JOY_START) | BITMAP(JOY_LB) | BITMAP(JOY_RB), 0);
 }
 
 //------------------------------------------------------------------
