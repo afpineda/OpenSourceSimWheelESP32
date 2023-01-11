@@ -9,7 +9,6 @@
 
 #include <Arduino.h>
 #include "SimWheel.h"
-// #include "debugUtils.h"
 
 // ----------------------------------------------------------------------------
 // GPIO
@@ -25,8 +24,6 @@
 // ----------------------------------------------------------------------------
 
 #define SAMPLING_MILLIS (60 * 1000) // 1 minute
-
-uint64_t loopCount = 0;
 
 // ----------------------------------------------------------------------------
 // Auxiliary
@@ -52,20 +49,6 @@ void dumpCalibrationData()
     Serial.println(" };");
 }
 
-bool serialBlocked = true;
-
-void testUSB(void *unused)
-{
-    Serial.begin(115200); // will block if USB not connected
-    while (!Serial)
-        delay(250);
-    Serial.println("--START--");
-    Serial.flush();
-    serialBlocked = false;
-    for (;;)
-        delay(1000);
-}
-
 // ----------------------------------------------------------------------------
 // Mocks
 // ----------------------------------------------------------------------------
@@ -86,31 +69,21 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
 
-    // int countdown = 60;
+    // int countdown = 3*60;
     int countdown = 10;
-    TaskHandle_t testUSBtask = nullptr;
-    if ((xTaskCreate(testUSB, "usbTest", 2048, nullptr, tskIDLE_PRIORITY + 1, &testUSBtask) != pdPASS) || (!testUSBtask))
-    {
-        log_e("Unable to create testUSB task");
-        abort();
-    };
-    delay(500);
-    while ((serialBlocked) && (countdown > 0))
+    Serial.begin(115200);
+    Serial.println("Waiting...");
+    while ((!Serial.available()) && (countdown > 0))
     {
         countdown--;
         delay(1000);
     }
-    vTaskDelete(testUSBtask);
-    
-    // Serial.begin(115200);
-    // while ((!Serial) && (countdown>0)) {
-    //     countdown--;
-    //     delay(1000);
-    // }
 
-    if (serialBlocked)
-//    if (!Serial)
+    if (countdown<=0)
     {
+        Serial.println("Running...");
+        Serial.println("If you can see this message, unplug the USB cable,");
+        Serial.println("plug a fully charged battery and reset.");
         batteryCalibration::clear();
         // batteryCalibration::save();
         hidImplementation::begin("Battery calibration", "Mamandurrio", false);

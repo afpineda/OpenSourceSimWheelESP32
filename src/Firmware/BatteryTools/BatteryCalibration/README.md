@@ -22,8 +22,6 @@ If a simple voltage divider is used as a battery monitor, the first "define" mus
 **Note**: completing this procedure may take hours or days, however, no human supervision is required. This procedure is **optional**, but highly recommended.
 Please, read from start to end before proceeding.
 
-### Purpose
-
 Due to non-linearity of battery charge versus battery voltage, only a rough and imprecise estimation can be achieved. This procedure collects calibration data in order to provide a better estimation of battery charge for your particular battery. Data is saved to flash memory, so it can be reused later at any other sketch. This procedure will go through a complete discharge cycle.
 
 Use [Online calculator: Battery discharge time depending upon load](https://planetcalc.com/2283/) to estimate how long will it take to deplete the battery.
@@ -32,47 +30,66 @@ Use [Online calculator: Battery discharge time depending upon load](https://plan
 
 ### Calibration procedure
 
-1. **Ensure the battery is fully charged before continuing**.
-2. Plug the USB cable.
-3. Upload the sketch ([BatteryCalibration.ino](./BatteryCalibration.ino)) to the DevKit board.
-4. Unplug the USB cable.
-5. If your board has built-in battery support, push the reset button. If not, the board has no power, so attach the *powerboost* module properly.
-6. Make sure the on-board LED is on, so the DevKit board has power.
-7. *Note:* the sketch will wait for 1 minute before continuing, to avoid accidental overwrite of calibration data.
-8. Wait for the battery to deplete. The on-board LED will go off.
+- If your DevKit **does NOT feature a built-in powerboost module**, so you are using an external one:
+
+   1. **Ensure the battery is fully charged before continuing**.
+   2. Unplug the battery (or the external powerboost module).
+   3. Plug the USB cable.
+   4. Upload the sketch ([BatteryCalibration.ino](./BatteryCalibration.ino)) to the DevKit board (if not done yet).
+   5. Unplug the USB cable (the DevKit has no power right now).
+   6. **Plug the battery** or the external powerboost module. Ensure `BATT_READ_PIN` is properly attached, too.
+   7. Make sure the on-board LED is on, so the DevKit board has power.
+   8. Wait for the battery to deplete. The on-board LED will go off.
+
+- If your DevKit **has built-in battery support** with a built-in powerboost module:
+
+   1. **Ensure the battery is fully charged before continuing**.
+   2. Plug the USB cable and the battery.
+   3. Upload the sketch ([BatteryCalibration.ino](./BatteryCalibration.ino)) to the DevKit board (if not done yet).
+   4. **Unplug the USB cable** (the DevKit is powered through the battery right now).
+   5. **Reset**.
+   6. Make sure the on-board LED is on, so the DevKit board has power.
+   7. Wait for the battery to deplete. The on-board LED will go off.
 
 The calibration data is now saved to flash memory and ready to use. However, you should follow the *Backup procedure* below.
 
-If the calibration procedure is interrupted, you should start again, otherwise wrong battery levels will be reported.
+If the calibration procedure is interrupted, you should start again with a fully charged battery, otherwise wrong battery levels will be reported.
 
 Since there is no serial connection, in order to check if the sketch is running properly:
 
-- Wait for one minutes after power on.
+- Wait for three minutes after power on.
 - Open the bluetooth control panel at the host PC.
 - Ensure the device is **not** paired due to a previous sketch.
 - Click on "Add device".
-- The board should get listed as "Battery calibration".
+- The device should get listed as "Battery calibration". Do not pair.
 
 ### Further action
 
 You **should not run the sketch again**, otherwise the acquired data will get cleared.
-You have **one minute to cut power** before this happens.
-Take this into account if you plug another charged battery. However, there is no risk if you plug the USB cable.
-Upload another sketch as soon as possible.
+You have **three minutes to cut power** before this happens.
+Take this into account if you plug another charged battery or the USB cable.
+Upload another sketch as soon as possible. Follow the backup procedure below to avoid any risk before uploading.
 
 ## Backup of calibration data
 
-### Purpose
-
 As a backup measure, calibration data is dumped to the serial port, so you can copy-paste it into the [restoration sketch](../../BatteryTools/RestoreBatteryCalibration/README.md) in case of need. This way, the calibration procedure does not need to be run more than once. You may also contribute this data to the community, but take into account that it will not work with a different battery monitor circuit or another battery model.
+
+You should also follow this procedure to avoid accidental overwrite of calibration data while the sketch is still in flash memory.
 
 ### Backup procedure
 
-1. **Plug the USB cable**.
-2. If not done yet, upload the sketch ([BatteryCalibration.ino](./BatteryCalibration.ino)) to the DevKit board.
-3. Open the serial monitor (115200 bauds).
-4. Reset.
-5. Output will show:
+1. If your DevKit does not feature a built-in powerboost module, unplug the battery.
+2. **Plug the USB cable**.
+3. If not done yet, upload the sketch ([BatteryCalibration.ino](./BatteryCalibration.ino)) to the DevKit board.
+4. Open the serial monitor (115200 bauds).
+5. Reset. Output will show:
+
+   ```text
+   Waiting...
+   ```
+
+6. At the serial monitor, **press ENTER** (or send any other character) before 3 minutes elapses.
+7. Output will show:
 
     ```text
     [EN] Current battery calibration data:
@@ -80,13 +97,13 @@ As a backup measure, calibration data is dumped to the serial port, so you can c
     ----------------------------------------------
     ```
 
-6. The next line is the calibration data. Copy-paste to a text file and save it. For example:
+8. The next line is the calibration data. Copy-paste to a text file and save it. For example:
 
    ```text
-   { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 11, 64, 132, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 11, 64, 132, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
    ```
 
-7. Ignore further output.
+9. Ignore further output.
 
 ### Extra ball
 

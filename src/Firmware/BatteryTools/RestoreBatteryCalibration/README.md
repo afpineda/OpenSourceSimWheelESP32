@@ -4,7 +4,7 @@ A copy of the calibration data is needed. Calibration data is a set of 32 number
 For example:
 
 ```text
-{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 11, 64, 132, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
+{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 11, 64, 132, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 ```
 
 ## Purpose
