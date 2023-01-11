@@ -38,7 +38,6 @@ static TickType_t latchDelay = 0;
 static gpio_num_t batteryENPin = (gpio_num_t)-1;
 static gpio_num_t batteryREADPin = (gpio_num_t)-1;
 static TaskHandle_t batteryMonitorDaemon = nullptr;
-static bool testInProgress = false;
 int lastBatteryLevel = 100;
 
 // #define BATTMON_STACK_SIZE 1536
@@ -267,10 +266,10 @@ void batteryDaemonLoop(void *arg)
       notify::lowBattery();
 
     // Delay to next sample
-    if (testInProgress)
-      vTaskDelay(BATTMON_TESTING_RATE_TICKS);
-    else
+    if (notTesting)
       vTaskDelay(BATTMON_SAMPLING_RATE_TICKS);
+    else
+      vTaskDelay(BATTMON_TESTING_RATE_TICKS);
   } // end while
 }
 
@@ -325,7 +324,6 @@ void power::startBatteryMonitor(
 {
   if (batteryMonitorDaemon == nullptr)
   {
-    testInProgress = testing;
     configureBatteryMonitor(battENPin, battREADPin);
     xTaskCreate(
         batteryDaemonLoop,
