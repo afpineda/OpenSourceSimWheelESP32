@@ -4,7 +4,7 @@ A copy of the calibration data is needed. Calibration data is a set of 32 number
 For example:
 
 ```text
-{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 11, 64, 132, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 35, 122, 103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 ```
 
 ## Purpose
@@ -35,7 +35,7 @@ To restore battery calibration data in a variety of circumstances:
 3. And write the calibration data, bracket to bracket, after `=`. End with `;`. For example:
 
    ```c
-   const uint16_t customCalibrationData[] = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 11, 64, 132, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 }; 
+   const uint16_t customCalibrationData[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 35, 122, 103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
    ```
 
 4. Save the file, compile and upload the sketch to the DevKit board.

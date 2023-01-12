@@ -26,30 +26,30 @@ Due to non-linearity of battery charge versus battery voltage, only a rough and 
 
 Use [Online calculator: Battery discharge time depending upon load](https://planetcalc.com/2283/) to estimate how long will it take to deplete the battery.
 
-*Warning:* if `BATT_READ_PIN` is not properly attached to the positive pole of the battery, no data will be collected, thus this procedure will be useless.
+*Warning:* if `BATT_READ_PIN` is not properly attached to the positive pole of the battery, calibration data will be cleared but not collected, thus this procedure will be useless.
 
 ### Calibration procedure
 
 - If your DevKit **does NOT feature a built-in powerboost module**, so you are using an external one:
 
-   1. **Ensure the battery is fully charged before continuing**.
-   2. Unplug the battery (or the external powerboost module).
-   3. Plug the USB cable.
-   4. Upload the sketch ([BatteryCalibration.ino](./BatteryCalibration.ino)) to the DevKit board (if not done yet).
-   5. Unplug the USB cable (the DevKit has no power right now).
-   6. **Plug the battery** or the external powerboost module. Ensure `BATT_READ_PIN` is properly attached, too.
-   7. Make sure the on-board LED is on, so the DevKit board has power.
-   8. Wait for the battery to deplete. The on-board LED will go off.
+  1. **Ensure the battery is fully charged before continuing**.
+  2. Unplug the battery (or the external powerboost module).
+  3. Plug the USB cable.
+  4. Upload the sketch ([BatteryCalibration.ino](./BatteryCalibration.ino)) to the DevKit board (if not done yet).
+  5. Unplug the USB cable (the DevKit has no power right now).
+  6. **Plug the battery** or the external powerboost module. Ensure `BATT_READ_PIN` is properly attached, too.
+  7. Make sure the on-board LED is on, so the DevKit board has power.
+  8. Wait for the battery to deplete. The on-board LED will go off.
 
 - If your DevKit **has built-in battery support** with a built-in powerboost module:
 
-   1. **Ensure the battery is fully charged before continuing**.
-   2. Plug the USB cable and the battery.
-   3. Upload the sketch ([BatteryCalibration.ino](./BatteryCalibration.ino)) to the DevKit board (if not done yet).
-   4. **Unplug the USB cable** (the DevKit is powered through the battery right now).
-   5. **Reset**.
-   6. Make sure the on-board LED is on, so the DevKit board has power.
-   7. Wait for the battery to deplete. The on-board LED will go off.
+  1. **Ensure the battery is fully charged before continuing**.
+  2. Plug the USB cable and the battery.
+  3. Upload the sketch ([BatteryCalibration.ino](./BatteryCalibration.ino)) to the DevKit board (if not done yet).
+  4. **Unplug the USB cable** (the DevKit is powered through the battery right now).
+  5. **Reset**.
+  6. Make sure the on-board LED is on, so the DevKit board has power.
+  7. Wait for the battery to deplete. The on-board LED will go off.
 
 The calibration data is now saved to flash memory and ready to use. However, you should follow the *Backup procedure* below.
 
@@ -57,7 +57,7 @@ If the calibration procedure is interrupted, you should start again with a fully
 
 Since there is no serial connection, in order to check if the sketch is running properly:
 
-- Wait for three minutes after power on.
+- Wait for three minutes after power on (or reset).
 - Open the bluetooth control panel at the host PC.
 - Ensure the device is **not** paired due to a previous sketch.
 - Click on "Add device".
@@ -65,7 +65,7 @@ Since there is no serial connection, in order to check if the sketch is running 
 
 ### Further action
 
-You **should not run the sketch again**, otherwise the acquired data will get cleared.
+You **should not run the sketch again**, otherwise the acquired data will be cleared.
 You have **three minutes to cut power** before this happens.
 Take this into account if you plug another charged battery or the USB cable.
 Upload another sketch as soon as possible. Follow the backup procedure below to avoid any risk before uploading.
@@ -81,29 +81,37 @@ You should also follow this procedure to avoid accidental overwrite of calibrati
 1. If your DevKit does not feature a built-in powerboost module, unplug the battery.
 2. **Plug the USB cable**.
 3. If not done yet, upload the sketch ([BatteryCalibration.ino](./BatteryCalibration.ino)) to the DevKit board.
-4. Open the serial monitor (115200 bauds).
+4. Open the serial monitor (115200 bauds):
+
+   - If you are using *Arduino IDE*, press "CTRL+SHIFT+M".
+   - If you are using *Visual Studio Code*, click on the small plug-shaped icon near the lower-right corner of the window.
+
 5. Reset. Output will show:
 
    ```text
    Waiting...
    ```
 
-6. At the serial monitor, **press ENTER** (or send any other character) before 3 minutes elapses.
+6. At the serial monitor, send any character before 3 minutes elapses:
+
+   - If you are using *Arduino IDE*, press the "SEND" button.
+   - If you are using *Visual Studio Code*, press "F1" and type "Arduino: send text to serial port". Select that command. Type any character, then press "ENTER".
+
 7. Output will show:
 
-    ```text
-    [EN] Current battery calibration data:
-    [ES] Datos actuales de calibracion de bateria:
-    ----------------------------------------------
-    ```
+   ```text
+   [EN] Current battery calibration data:
+   [ES] Datos actuales de calibracion de bateria:
+   ----------------------------------------------
+   ```
 
 8. The next line is the calibration data. Copy-paste to a text file and save it. For example:
 
    ```text
-   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 11, 64, 132, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 35, 122, 103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
    ```
 
-9. Ignore further output.
+9. Ignore further output. At this point, the sketch will not collect new calibration data.
 
 ### Extra ball
 

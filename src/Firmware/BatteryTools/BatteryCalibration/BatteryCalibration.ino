@@ -69,8 +69,11 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
 
-    // int countdown = 3*60;
-    int countdown = 10;
+    int countdown = 3*60;
+    //int countdown = 10;
+
+    configureBatteryMonitor(BATT_EN_PIN, BATT_READ_PIN);
+
     Serial.begin(115200);
     Serial.println("Waiting...");
     while ((!Serial.available()) && (countdown > 0))
@@ -85,7 +88,8 @@ void setup()
         Serial.println("If you can see this message, unplug the USB cable,");
         Serial.println("plug a fully charged battery and reset.");
         batteryCalibration::clear();
-        // batteryCalibration::save();
+        batteryCalibration::save();
+        Serial.println("Calibration data has been cleared.");
         hidImplementation::begin("Battery calibration", "Mamandurrio", false);
     }
     else
@@ -105,9 +109,9 @@ void setup()
 
 void loop()
 {
-    delay(SAMPLING_MILLIS);
     int reading = power::getBatteryReadingForTesting(BATT_EN_PIN, BATT_READ_PIN);
-    // if (reading >= 150)
-    //     batteryCalibration::addSample(reading, true);
-    // // else BATT_READ_PIN is not connected
+    if (reading >= 150)
+        batteryCalibration::addSample(reading, true);
+    // else BATT_READ_PIN is not connected
+    delay(SAMPLING_MILLIS);
 }
