@@ -2,8 +2,8 @@
 <project>
   <fileVersion>
     <major>4</major>
-    <minor>30</minor>
-    <build>1</build>
+    <minor>35</minor>
+    <build>0</build>
   </fileVersion>
   <title>Standard size perfboards</title>
   <author>Ángel Fernández Pineda.Madrid.Spain.2022</author>
@@ -87,11 +87,11 @@
       <alpha>102</alpha>
       <value></value>
       <controlPoints>
-        <point x="4.3" y="4.6"/>
-        <point x="6.7" y="3.5"/>
+        <point x="4.0" y="4.6"/>
+        <point x="6.5" y="3.5"/>
       </controlPoints>
-      <firstPoint x="4.3" y="3.5"/>
-      <secondPoint x="6.7" y="4.6"/>
+      <firstPoint x="4.0" y="3.5"/>
+      <secondPoint x="6.5" y="4.6"/>
       <boardColor hex="f8ebb3"/>
       <borderColor hex="ada47d"/>
       <coordinateColor hex="b6b6b6"/>
@@ -110,11 +110,6 @@
     <set>
       <null/>
     </set>
-    <set/>
-    <set/>
-    <set/>
-    <set/>
-    <set/>
     <set/>
   </groups>
   <lockedLayers/>

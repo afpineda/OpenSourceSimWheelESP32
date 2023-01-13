@@ -17,10 +17,11 @@
 #define ROT1_CW 40
 #define ROT1_CCW 41
 #define ROT2_CW 42
-#define ROT3_CCW 43
+#define ROT2_CCW 43
 #define ALT1 20
 #define ALT2 21
-
+#define LCLUTCH 30
+#define RCLUTCH 31
 
 /* -----------------------------------------------------------------
  >>>> [EN] DEVICE IDENTIFICATION
@@ -87,15 +88,19 @@ const gpio_num_t WAKEUP_PINS[] = {GPIO_NUM_27};
 
 // [EN] Set all GPIO numbers for selector pins between curly brackets
 // [ES] Indique los números de GPIO de todos los pines selectores entre las llaves
-static const gpio_num_t mtxSelectors[] = {};
+static const gpio_num_t mtxSelectors[] = {GPIO_NUM_22, GPIO_NUM_21, GPIO_NUM_32, GPIO_NUM_33};
 
 // [EN] Set all GPIO numbers for input pins between curly brackets
 // [ES] Indique los números de GPIO de todos los pines de entrada entre las llaves
-static const gpio_num_t mtxInputs[] = {};
+static const gpio_num_t mtxInputs[] = {GPIO_NUM_23, GPIO_NUM_19, GPIO_NUM_18, GPIO_NUM_5};
 
 // [EN] Set all input numbers. The order of those numbers depends on the wiring
 // [ES] Indique los números de entrada. Su orden depende del cableado.
-static inputNumber_t mtxNumbers[] = {};
+static inputNumber_t mtxNumbers[] = {
+    JOY_RB, ALT2, JOY_B, JOY_Y,
+    JOY_LB, ALT1, JOY_A, JOY_X,
+    13, 11, 9, JOY_START,
+    12, 10, 8, JOY_BACK};
 
 //------------------------------------------------------------------
 // Globals
@@ -107,27 +112,20 @@ static inputNumber_t mtxNumbers[] = {};
 
 void simWheelSetup()
 {
-    // [EN] Example code. Fill with your own code.
-    // [ES] Código de ejemplo. Ponga el suyo.
-
     inputs::addButtonMatrix(
         mtxSelectors,
         sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
         mtxInputs,
         sizeof(mtxInputs) / sizeof(mtxInputs[0]),
         mtxNumbers);
-    inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_39,25,26);
-    inputs::addRotaryEncoder(GPIO_NUM_35, GPIO_NUM_32,27,28);
-    inputs::addRotaryEncoder(GPIO_NUM_25, GPIO_NUM_26,29,30);
-    inputs::addRotaryEncoder(GPIO_NUM_14, GPIO_NUM_18,31,32); 
-    inputs::addDigital(GPIO_NUM_34, true, false,33);
-    inputs::addDigital(GPIO_NUM_33, true, false,34);       
-    inputs::addDigital(GPIO_NUM_27, true, false,35);       
-
-    inputs::setDigitalClutchPaddles(4, 12);
-    inputHub::setDPADControls(19, 15, 11, 7);
-    inputHub::setALTBitmap(BITMAP(0) | BITMAP(8));
-    inputHub::setClutchCalibrationButtons(25, 26); // Rotary 1
+    inputs::addRotaryEncoder(GPIO_NUM_26, GPIO_NUM_27, ROT1_CW, ROT1_CCW);
+    inputs::addRotaryEncoder(GPIO_NUM_14, GPIO_NUM_4, ROT2_CW, ROT2_CCW);
+    inputs::setAnalogClutchPaddles(GPIO_NUM_25, GPIO_NUM_26, LCLUTCH, RCLUTCH);
+    inputHub::setALTBitmap(BITMAP(ALT1) | BITMAP(ALT2));
+    inputHub::setClutchCalibrationButtons(ROT1_CW, ROT1_CCW);
+    inputHub::setCycleClutchFunctionBitmap(BITMAP(JOY_START) | BITMAP(JOY_LB));
+    inputHub::setCycleALTFunctionBitmap(BITMAP(JOY_START) | BITMAP(JOY_RB));
+    inputHub::setCalibrationCommandBitmaps(BITMAP(JOY_RB) | BITMAP(JOY_LB) | BITMAP(JOY_START));
 }
 
 //------------------------------------------------------------------
@@ -141,13 +139,6 @@ void setup()
         WAKEUP_PINS,
         sizeof(WAKEUP_PINS) / sizeof(gpio_num_t),
         WAKEUP_ANYorALL);
-
-#ifdef POWER_LATCH
-    power::setPowerLatch(
-        (gpio_num_t)POWER_LATCH,
-        LATCH_MODE,
-        LATCH_POWEROFF_DELAY);
-#endif
 
     clutchState::begin();
     inputs::begin();

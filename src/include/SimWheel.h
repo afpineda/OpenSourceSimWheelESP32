@@ -599,13 +599,13 @@ namespace notify
     void connected();
 
     /**
-     * @brief Notify bluetooth radio in discovery mode
+     * @brief Notify bluetooth radio is in discovery mode
      * 
      */
     void BLEdiscovering();
 
     /**
-     * @brief Notify the device is going to power off or deep sleep
+     * @brief Notify the device is about to power off or deep sleep
      *
      */
     void powerOff();
