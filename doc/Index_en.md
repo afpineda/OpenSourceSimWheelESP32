@@ -18,7 +18,7 @@
 |:-----------------------------------------------:|:--------------:|:------------------:|:-------------------------------------------------------------------------------------------:|:-------------------:|
 | [Setup1](./hardware/setups/setup1/Setup1_en.md) | Steering wheel | ESP32-WROOM-32E/UE | Rotary encoders x4, DPAD or funky switch (optional), analog clutch paddles                  | External            |
 | [Setup2](./hardware/setups/setup2/Setup2_en.md) | Button box     | ESP32-WROOM-32E/UE | Rotary encoders x4, up to 52 inputs                                                         | External            |
-| [Setup3](./hardware/setups/setup3/Setup3_en.md) | Steering wheel | ESP32-WROOM-32E/UE | Rotary encoders x4, DPAD or funky switch (optional), potentiometer support, up to 24 inputs | Battery or external |
+| [Setup3](./hardware/setups/setup3/Setup3_en.md) | Steering wheel | TinyPico | Rotary encoders x2, DPAD (optional), analog clutch paddles | Battery |
 
 - [How to customize in order to build your own hardware and firmware setup](./hardware/subsystems/CustomizeHowto_en.md).
 

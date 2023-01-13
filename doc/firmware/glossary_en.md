@@ -48,6 +48,6 @@
 
 - **System**: the combination of hardware and software subject of this project.
 
-- **State of charge (SOC)**: an estimation of available battery charge in the range 0% to 100%.
+- **State of charge (SOC)**: an estimation of available battery charge in the range from 0% to 100%.
 
 - **UI**: User interface.
