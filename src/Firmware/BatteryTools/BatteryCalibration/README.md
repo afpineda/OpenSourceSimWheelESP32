@@ -31,7 +31,7 @@ Use [Online calculator: Battery discharge time depending upon load](https://plan
 ### Calibration procedure
 
 - If your DevKit **does NOT feature a built-in powerboost module**, so you are using an external one:
-
+  
   1. **Ensure the battery is fully charged before continuing**.
   2. Unplug the battery (or the external powerboost module).
   3. Plug the USB cable.
@@ -42,7 +42,7 @@ Use [Online calculator: Battery discharge time depending upon load](https://plan
   8. Wait for the battery to deplete. The on-board LED will go off.
 
 - If your DevKit **has built-in battery support** with a built-in powerboost module:
-
+  
   1. **Ensure the battery is fully charged before continuing**.
   2. Plug the USB cable and the battery.
   3. Upload the sketch ([BatteryCalibration.ino](./BatteryCalibration.ino)) to the DevKit board (if not done yet).
@@ -79,26 +79,29 @@ You should also follow this procedure to avoid accidental overwrite of calibrati
 ### Backup procedure
 
 1. If your DevKit does not feature a built-in powerboost module, unplug the battery.
-2. **Plug the USB cable**.
-3. If not done yet, upload the sketch ([BatteryCalibration.ino](./BatteryCalibration.ino)) to the DevKit board.
-4. Open the serial monitor (115200 bauds):
 
+2. **Plug the USB cable**.
+
+3. If not done yet, upload the sketch ([BatteryCalibration.ino](./BatteryCalibration.ino)) to the DevKit board.
+
+4. Open the serial monitor (115200 bauds):
+   
    - If you are using *Arduino IDE*, press "CTRL+SHIFT+M".
    - If you are using *Visual Studio Code*, click on the small plug-shaped icon near the lower-right corner of the window.
 
 5. Reset. Output will show:
-
+   
    ```text
    Waiting...
    ```
 
 6. At the serial monitor, send any character before 3 minutes elapses:
-
+   
    - If you are using *Arduino IDE*, press the "SEND" button.
    - If you are using *Visual Studio Code*, press "F1" and type "Arduino: send text to serial port". Select that command. Type any character, then press "ENTER".
 
 7. Output will show:
-
+   
    ```text
    [EN] Current battery calibration data:
    [ES] Datos actuales de calibracion de bateria:
@@ -106,7 +109,7 @@ You should also follow this procedure to avoid accidental overwrite of calibrati
    ```
 
 8. The next line is the calibration data. Copy-paste to a text file and save it. For example:
-
+   
    ```text
    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 35, 122, 103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
    ```

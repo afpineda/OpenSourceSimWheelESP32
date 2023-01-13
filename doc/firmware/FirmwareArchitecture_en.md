@@ -271,5 +271,3 @@ Event capture is detached from event processing at the **input hub daemon**, whi
 ## About auto power off
 
 When there is no bluetooth connection, the systems goes to advertising. If no connection is made in a certain time lapse, the system goes to deep sleep or power off.
-
-

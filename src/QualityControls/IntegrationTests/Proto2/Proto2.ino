@@ -50,7 +50,7 @@ void setup()
     
     hidImplementation::begin("Proto2", "Mamandurrio", true);
     inputs::start();
-    power::startBatteryMonitor(TEST_BATTERY_READ_ENABLE,TEST_BATTERY_READ,true);
+    power::startBatteryMonitor(TEST_BATTERY_READ_ENABLE,TEST_BATTERY_READ,false);
 }
 
 void loop()

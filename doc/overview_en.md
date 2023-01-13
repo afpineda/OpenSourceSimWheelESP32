@@ -5,7 +5,7 @@ There are few basic steps in building a DIY steering wheel or button box:
 1. Build or purchase a steering wheel housing (or button box).
 2. Build the electronics.
 3. Put everything together.
-4. Build a battery charging port.
+4. Build a battery charging port (if required).
 
 However, those are *not* independent steps. Enough space is required inside the housing to fit the circuits, buttons, batteries and cables. Chosen components may have an effect on housing design and vice versa.
 
@@ -75,6 +75,6 @@ The charging port is made of a USB cable and [GX16](https://duckduckgo.com/?q=GX
 1. Insert the GX16 cover into the USB cable.
 2. Make a knot on the cut end.
 
-![Charging cable female end](./hardware/pictures/ChargingCableFemale.jpg)
+   ![Charging cable female end](./hardware/pictures/ChargingCableFemale.jpg)
 
 3. Solder the red and black wires to any two pins, matching the male plug.

@@ -28,8 +28,9 @@ First release.
 - OLED is not mandatory anymore. This means two more GPIO pins are available.
 - Telemetry data has been removed since there is no PC application for that. However, it may resurrect in the future.
 - NuS and AT commands are not needed anymore. Replaced by HID reports.
-- Analog clutch paddles are now supported. They may be configured as independent analog axes, so they may be mapped to throttle and brake, for example, for the disabled.
-- A simple voltage divider is now supported as a battery monitor. This kind of circuit is built into many ESP32 devkits.
+- Analog clutch paddles are now fully supported. They may be configured as independent analog axes, so they may be mapped to throttle and brake, for example, for the disabled.
+- A simple voltage divider is now supported as a battery monitor. This kind of circuit is built into many ESP32 DevKits.
 - A "notification" subsystem replaces the OLED-based user interface, which is not tied to a particular hardware. A frame server is available, too.
 - Removed documentation in spanish. A nightmare to maintain.
 - The battery calibration/backup procedures have been simplified. Now, no particular circuit is required.
+

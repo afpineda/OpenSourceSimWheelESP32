@@ -13,9 +13,9 @@ This is not the only annoyance:
 - Not all pins can wake up the system from deep sleep.
 - Not all pins can be used for analog input.
 
-As a result, some devices can not be connected to any arbitrary pin, so a **pinout plan** is needed. To develop such a plan, you need to know which constraints apply to your DevKit board. Look for a data sheet.
+As a result, some devices can not be connected to any arbitrary pin, so a **pin-out plan** is needed. To develop such a plan, you need to know which constraints apply to your DevKit board. Look for a data sheet.
 
-## ESP-WROOM-32 devkit
+## ESP-WROOM-32 DevKit
 
 The following article explains which pins can be used and how:
 [https://randomnerdtutorials.com/esp32-pinout-reference-gpios/](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/). However, we can get more specific:
@@ -52,3 +52,5 @@ The following article explains which pins can be used and how:
 ## The problem with boot strapping
 
 In order to upload a firmware to a DevKit board, certain pins, called "bootstrap" pins are used. If some device is attached to those pins, it may get in the way. You should detach the board from the circuit before uploading.
+
+

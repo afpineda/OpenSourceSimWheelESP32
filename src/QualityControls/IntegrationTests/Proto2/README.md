@@ -2,7 +2,7 @@
 
 ## Purpose and summary
 
-To test battery level and power off from the config menu.
+To test battery level (calibrated) and power off from the config menu.
 
 ## Hardware setup
 
@@ -20,6 +20,9 @@ We are not using the potentiometers. For later reference (this differs from prev
 - "RCW" means rotary's clockwise rotation.
 - "RCCW" means rotary's counter-clockwise rotation.
 
+A powerboost module and a battery is needed. However, the test circuit does not require power from the battery (that is up to you).
+Wire `battery(+)` and `POWERBOOST_GND`, at least.
+
 ## Software setup (computer)
 
 - Windows 10 or later
@@ -28,7 +31,7 @@ We are not using the potentiometers. For later reference (this differs from prev
 
 ## Before start
 
-- Leave `battery(+)` unwired.
+- Follow the [battery calibration procedure](../../../Firmware/BatteryTools/BatteryCalibration/README.md).
 - Make sure the device is not paired to the hosting PC. This includes previous tests.
 
 ## Procedure and expected output
@@ -45,14 +48,6 @@ We are not using the potentiometers. For later reference (this differs from prev
 8. "Proto 2" must appear again.
 9. Select and connect to "Proto 2" .
 
-### Battery level
-
-1. In the control panel, battery level must show "66%" for "Proto 2".
-2. Wire `Battery(+)` to `5V0` (bottom-right pin of the DevKit) in the protoboard.
-3. Wait for 5 seconds. Battery level must show "100%".
-4. Wire `Battery(+)` to `3V3` in the protoboard.
-5. Wait for 5 seconds. Battery level must show anything below 100%, but not 66%.
-
 ### Digital clutch paddle
 
 1. Open the joystick test app.
@@ -60,9 +55,20 @@ We are not using the potentiometers. For later reference (this differs from prev
 3. Hit "Cycle CF" 4 times and test "CLUTCH1" and "CLUTCH" each time, in no particular order. In clutch mode, test "RCW" and "RCCW" for bite point calibration.
 4. Hit "Cycle CF" until analog axis mode is selected (check using "CLUTCH1").
 5. Wait for 30 seconds or so.
-6. Reset. Open the joystick test app again.
-7. "CLUTCH1" must be configured in axis mode. Check.
-8. Hit "Cycle CF" until "regular buttons" mode is selected (check using "CLUTCH1").
-9. Wait for 30 seconds or so.
-10. Reset. Open the joystick test app again.
-11. "CLUTCH1" must be configured in "regular buttons" mode. Check.
+6. Reset. Close the joystick test app. Wait for the device to connect again.
+7. Open the joystick test app again.
+8. "CLUTCH1" must be configured in axis mode. Check.
+9. Hit "Cycle CF" until "regular buttons" mode is selected (check using "CLUTCH1").
+10. Wait for 30 seconds or so.
+11. Reset. Close the joystick test app. Wait for the device to connect again.
+12. "CLUTCH1" must be configured in "regular buttons" mode. Check.
+
+### Battery level
+
+1. Leave `battery(+)` unwired. Wait for 1 minute.
+2. In the control panel, battery level must show "66%" for "Proto 2".
+3. Wire `Battery(+)` to the battery positive pole.
+4. Wait for 1 minute. Battery level must show anything byt "66%", depending on your battery charge.
+5. Wait for 5 to 30 minutes (depending on battery capacity). Whatever the battery level was, it must decrease at least 1%.
+6. Wire `Battery(+)` to `3V3` in the protoboard.
+7. The device may go to deep sleep. Check if the device is disconnected at the control panel. However, if this does not happen, the battery level must show a very low percentage after a minute or so.

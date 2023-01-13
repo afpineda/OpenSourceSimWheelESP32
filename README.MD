@@ -8,10 +8,11 @@ This project provides open hardware and software for a sim-racing wheel or butto
 - **Several hardware setups** to choose from and detailed instructions about how to **customize** them with **minimum effort**
 - Power through rechargeable **batteries** or through the wheel base
 - **Alternate mode**. While activated, any input is reported as an alternate one, thus, duplicating the number of effective inputs. Much like the SHIFT key in your keyboard.
-- **Clutch paddles** that can be mapped to one of three functions through user preferences:
+- **Clutch paddles** that can be mapped to one of four functions through user preferences:
   - **F1-style clutch** with bite point calibration
   - Alternate mode
   - Regular button
+  - Individual analog axes
 - **ALT buttons** that can be mapped to one of two functions through user preferences
   - Alternate mode
   - Regular button
@@ -29,13 +30,14 @@ Please, start at the [documentation index](./doc/Index_en.md).
 Este proyecto proporciona hardware y software abierto para un volante de simulación o una caja de botones con las siguientes características:
 
 - **Conexión inalámbrica** a través de Bluetooth de baja energía y sin esfuerzo de configuración
-- **Varias configuraciones hardware** para elegir e instrucciones detalladas para **personalizarlas** con el **mínimo esfuerzo** 
+- **Varias configuraciones hardware** para elegir e instrucciones detalladas para **personalizarlas** con el **mínimo esfuerzo**
 - Alimentación mediante **baterías** recargables, o bien, mediante la base del volante
 - **Modo alternativo**. Mientras está activado, cualquier entrada se reporta como una entrada alternativa, duplicando su número en consecuencia. Similar a la tecla SHIFT de un teclado.
 - **Levas de embrague** que pueden ser configuradas en una de tres funciones:
   - **Embrague tipo F1** con calibración del punto de mordida
   - Modo alternativo
   - Botón normal y corriente
+  - Ejes analógicos independientes
 - **Botones "ALT"** que pueden ser configurados en una de dos funciones:
   - Modo alternativo
   - Botón normal y corriente
