@@ -11,7 +11,7 @@ Read this document from start to end before building anything. Ensure you unders
 - Optional: "ALT" buttons (x2)
 - Optional: DPAD, funky switch or 4 push buttons arranged in a cross
 - Relative rotary encoders (with push button): x4 + optional funky switch
-- Up to 12 push buttons
+- Up to additional 12 push buttons
 
 ## Button mapping
 
@@ -40,8 +40,8 @@ Read this document from start to end before building anything. Ensure you unders
 
 Other parts (quantity unknown):
 
-- Thin cable.
-- Cable with Dupond terminals (for external wiring). A cable kit for protoboards will do the job. ¿Male or female? the opposite to pin headers.
+- Thin wire.
+- Wire with Dupond terminals (for external wiring). A kit for protoboards will do the job. ¿Male or female? the opposite to pin headers.
 - Welding tin.
 
 Additional notes:
