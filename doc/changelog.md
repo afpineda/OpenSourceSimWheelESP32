@@ -7,12 +7,12 @@ First release.
 ## 1.1.0
 
 - API changes in order to get more control over assigned input numbers, other than sequential numbering. See documentation for the `inputs` namespace, methods with suffix "Ext". More than one button matrix is allowed this way.
-- Fixed wrong behaviour of ALPS RKJX series of rotary encoders (and potentially others).
+- Fixed wrong behavior of ALPS RKJX series of rotary encoders (and potentially others).
 - Minor documentation improvements and fixes.
 
 ## 1.1.1
 
-- Fixed bug in `inputs::start()` that was casuing a wrong call to `abort()` in some circumstances.
+- Fixed bug in `inputs::start()` that was causing a wrong call to `abort()` in some circumstances.
 
 ## 1.1.2
 
@@ -31,6 +31,5 @@ First release.
 - Analog clutch paddles are now fully supported. They may be configured as independent analog axes, so they may be mapped to throttle and brake, for example, for the disabled.
 - A simple voltage divider is now supported as a battery monitor. This kind of circuit is built into many ESP32 DevKits.
 - A "notification" subsystem replaces the OLED-based user interface, which is not tied to a particular hardware. A frame server is available, too.
-- Removed documentation in spanish. A nightmare to maintain.
+- Removed documentation in Spanish. A nightmare to maintain.
 - The battery calibration/backup procedures have been simplified. Now, no particular circuit is required.
-

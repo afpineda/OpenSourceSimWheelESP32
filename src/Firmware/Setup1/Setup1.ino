@@ -1,6 +1,6 @@
 /**
  * @author Ángel Fernández Pineda. Madrid. Spain.
- * @date 2022-03-01
+ * @date 2023-01-13
  * @brief Sim wheel setup #1
  *
  * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
@@ -53,7 +53,7 @@ static inputNumber_t mtxNumbers[] = {
     JOY_START, 8, 9, 10, 11,
     12, 13, 14, 15, 16,
     17, IN_UP, IN_DOWN, IN_LEFT, IN_RIGHT,
-    IN_ALT2, IN_ALT1, JOY_RTHUMBSTICK_CLICK, JOY_LTHUMBSTICK_CLICK};
+    IN_ALT2, IN_ALT1, JOY_RTHUMBSTICK_CLICK, JOY_LTHUMBSTICK_CLICK, 63};
 
 //------------------------------------------------------------------
 // Setup

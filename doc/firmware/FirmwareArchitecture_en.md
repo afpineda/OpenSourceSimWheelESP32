@@ -5,7 +5,7 @@
 The _system_ have been broken into several _modules_ that have been implemented as C++ namespaces. All of them are defined at _SimWheel.h_:
 
 - **batteryCalibration**: Everything related to the estimation of battery charge.
-- **capabilities**: Everything realated to the capabilities of the hardware and firmware.
+- **capabilities**: Everything related to the capabilities of the hardware and firmware.
 - **clutchState**: Implements the behavior of clutch paddles, holds their state and their configuration.
 - **hidImplementation**: Everything related to the HID protocol.
 - **inputs**: Everything related to hardware inputs and their events.
@@ -16,7 +16,7 @@ The _system_ have been broken into several _modules_ that have been implemented 
 Each namespace is implemented in a single _cpp_ file with its name, however, some of them have alternate implementations in order to enable unit and integration testing. Those files are named following this pattern: `<namespace><underscore><implementation>.cpp`. Some implementations are:
 
 - _mock_: dummy implementation with no actual behavior.
-- _serial_: implementation providing output to the serial port instead of the OLED.
+- _serial_: implementation providing output to the serial port.
 
 All modules can be found at the `/common` folder.
 
@@ -199,9 +199,9 @@ Provides an estimation of the "State of Charge" (SOC).
 
 #### Most accurate algorithm
 
-Battery calibration is required for accurate battery levels. Calibration goes from full charge to battery depletion, taking a sample of battery voltage every minute. All possible voltages are divided into 32 evenly distributed ranges, called _quantums_. Calibration data is just a set of counters of voltage samples for each quantum. The sum of all counters is equivalent to 100% battery charge. Calibration data is stored in flash memory.
+Battery calibration is required for accurate battery levels. Calibration goes from full charge to battery depletion, taking a sample of battery voltage every minute. All possible voltages are divided into 32 evenly distributed ranges, called _quantum_. Calibration data is just a set of counters of voltage samples for each quantum. The sum of all counters is equivalent to 100% battery charge. Calibration data is stored in flash memory.
 
-Let's be $V_{min}(i)$ the minimum voltage that falls into quantum $i$ (a natural number), $a < b \iff V_{min}(a)<V_{min}(b)$. Let's be $QSIZE = V_{min}(i+1)-V_{min}(i)+1$ (the same for all quantums). Let's be $S(i)$ the count of samples for quantum number $i$. Let's say we have a battery voltage $V_n$ that falls into the quantum number $n$ (0-index).
+Let's be $V_{min}(i)$ the minimum voltage that falls into quantum $i$ (a natural number), $a < b \iff V_{min}(a)<V_{min}(b)$. Let's be $QSIZE = V_{min}(i+1)-V_{min}(i)+1$ (the same for every quantum). Let's be $S(i)$ the count of samples for quantum number $i$. Let's say we have a battery voltage $V_n$ that falls into the quantum number $n$ (0-index).
 
 $BatteryLevel = \frac{ (\sum_{i=0}^{n-1}S(i)) + \frac{S(n)*(V_n-V_{min}(n))}{QSIZE} }{ \sum_{j=0}^{31}S(j) } * 100$
 
@@ -249,14 +249,14 @@ where `bitmap(C) = bitmap(B) OR (bitmask(B) AND bitmap(A))` being AND/OR bitwise
 Input events are captured from hardware interrupts or daemons. Most relevant are:
 
 - **Rotary encoder daemons**: simulates a button press on each "detent". These daemons are dormant most time. They react to hardware interrupts.
-- **Input poller daemon**: it checks the state of polled inputs every 50 ms. This period is short enough not to miss any event, but long enough to prevent other threads from starvation.
+- **Input poll daemon**: it checks the state of polled inputs every 50 ms. This period is short enough not to miss any event, but long enough to prevent other threads from starvation.
 
 Event processing takes long, so later input events would be missed while processing sooner ones. To prevent this, input events are posted into a queue.
 
 ```mermaid
 flowchart LR
   RE((Rotary encoder daemon))
-  IP((Input poller daemon))
+  IP((Input poll daemon))
   Q[input event queue]
   IH((Input hub daemon))
   RE -- event --> Q

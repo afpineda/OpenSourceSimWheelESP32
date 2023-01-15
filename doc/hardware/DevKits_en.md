@@ -53,4 +53,9 @@ The following article explains which pins can be used and how:
 
 In order to upload a firmware to a DevKit board, certain pins, called "bootstrap" pins are used. If some device is attached to those pins, it may get in the way. You should detach the board from the circuit before uploading.
 
+## Some interesting ESP32 boards for this project
 
+- [Tinypico](https://www.tinypico.com/) and [related](https://unexpectedmaker.com/shop?category=Development+Boards)
+- [Adafruit Feather 32u4 Bluefruit LE](https://www.adafruit.com/product/2829)
+- [Wemos D32 boards](https://www.wemos.cc/en/latest/d32/d32.html)
+- [Sparkfun Thing Plus](https://www.sparkfun.com/products/17381)

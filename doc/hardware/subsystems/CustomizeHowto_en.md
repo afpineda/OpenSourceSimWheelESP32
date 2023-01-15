@@ -188,14 +188,14 @@ Assign a combination of input numbers to activate this function by placing a cal
 
 Note that the following input numbers have a special meaning in Windows:
 
-- _00_: "A"
-- _01_: "B"
-- _02_: "X"
-- _03_: "Y"
-- _04_: "LB" (should be reserved for the left shift paddle)
-- _05_: "RB" (should be reserved for the right shift paddle)
-- _06_: "Back"
-- _07_: "Start"
+- *00*: "A" button
+- *01*: "B" button
+- *02*: "X" button
+- *03*: "Y" button
+- *04*: "LB" button (should be reserved for the left shift paddle)
+- *05*: "RB" button (should be reserved for the right shift paddle)
+- *06*: "Back" button
+- *07*: "Start" button
 
 ## Build your design into a perfboard
 

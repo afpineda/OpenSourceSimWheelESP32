@@ -30,7 +30,7 @@ They come in two flavors:
 - **Bare bone**: just a mechanical device with no pull resistors. They have 5 terminals: `common GND`, `A` and `B` (related to rotation) plus `SW GND` and `SW` (related to the built in push button). Those terminals are floating when idle. In this case, the label `GND` means nothing: it is just one of the two terminals of a switch.
 - **KY-040**: a bare bone rotary encoder with pull-up resistors. They have 5 terminals: `Vcc` and `Gnd`, related to the power source, `CLK` (or `A`) and `DT` (or `B`), related to rotation, and `SW`, related to the integrated push button. `CLK`, `DT` and `SW` terminals are set to high voltage when idle.
 
-[See pinout at pinterest.com (thanks to Abhishek Ghosh)](https://in.pinterest.com/pin/436145545160682538/)
+[See pin-out at pinterest.com (thanks to Abhishek Ghosh)](https://in.pinterest.com/pin/436145545160682538/)
 
 Both encoders are supported in this project, as long as the proper input pins are used.
 
@@ -54,7 +54,7 @@ They are similar in shape to rotary encoders and absolute rotary switches, but t
 As a result, **rotary potentiometers are discouraged**. However, some wheel cases are equipped with potentiometers at the clutch paddles, so we have to live with it. For example, the [GT2 steering wheel kit from 3DRap](https://www.3drap.it/product/gt2-steering-wheel-kit-by-3drap-thrustmaster-logitech-and-osw-adapters/). Potentiometers are supported in this project in two ways:
 
 - As an analog axis, attached to an ADC pin.
-- As a replacemente for switch buttons, in case you are short of ADC pins.
+- As a replacement for switch buttons, in case you are short of ADC pins.
 
 ## Directional pads (DPADs) and 4-way joysticks
 
@@ -146,7 +146,7 @@ A button matrix is composed by two groups of pins:
 - Selector pins (also named *output* or *column* pins): they activate a single part of the circuit.
 - Input pins (also named *row* pins): they provide the state of that part of the circuit.
 
-The idea is to scan each part of the circuit by enabling one and only one of the selector pins, and then moving to the next one. After a few rounds, the state of every button is collected. So, yes, a button matrix is able to detect input from multiple buttons pushed at the same time, without error. The maximum number of buttons that a matrix can hold equals to the number of *row* pins multiplied by the number of *column* pins. If $N$ pins are available, the maximun number of buttons is obtained through $N/2$ selector pins.
+The idea is to scan each part of the circuit by enabling one and only one of the selector pins, and then moving to the next one. After a few rounds, the state of every button is collected. So, yes, a button matrix is able to detect input from multiple buttons pushed at the same time, without error. The maximum number of buttons that a matrix can hold equals to the number of *row* pins multiplied by the number of *column* pins. If $N$ pins are available, the maximum number of buttons is obtained through $N/2$ selector pins.
 
 The main disadvantage of button matrices is wiring: a lot of wiring is required which is prone to human error. Correct orientation of diodes is also critical. Note that diodes are a critical part of the circuit and can not be suppressed.
 
@@ -201,11 +201,11 @@ The idea behind shift registers is to capture the state of every button in paral
 - Input: read the value of a single bit (this is, the state of a single button)
 - Clock (CLK): a pulse at this pin will move to the next bit, this is, the state of the next button.
 
-Tipicall shift registers stores 8 bits, but they may be chained together to achieve any number of bits. This is an electrical circuit for two shift registers, 4 bits each one:
+Typical shift registers stores 8 bits, but they may be chained together to achieve any number of bits. This is an electrical circuit for two shift registers, 4 bits each one:
 
 ![PISO shift registers](./pictures/PISO.png)
 
-Note that pulldown resistors are needed for each button, which is unpractical. It will require extra space at the PCB, too.
+Note that pull-down resistors are needed for each button, which is unpractical. It will require extra space at the PCB, too.
 
 [Test this circuit at Falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKDD0JG207Ty8L8+IPGGIAWEJOzRsUNhxFVhzFCGGiJUrrPkB3LpEkpxVbr3zyATuHGTx-QpLAp+VMPBYBnW-f5i1Bmw1dxAAMwBDABsvOhYDMDspfySwDE5IePB07M40zgdrXOSQYjzXKGQ4b2LClBMQIJDKyJi4m2E6vH8K908DTqFLfKKTKkLg916qzJ9B9QROJsqqVtiasZLXfmXQtbiE4kDg9QbdrPrJZZRFxpPMgdvr7ruQrIDX0qX7lgBzECc4AqgLAhCo4JYACUvp9CrtKqYdHJwVBoAgWABZChg9SIsFCRHKNHvCz8PDKSwPJS49ycSb6Lg8GnqDBqelU0FcNAstnczIAGR5XLMTPZLWisSRDPJQs52AQbwM5iFmDZCoZcvVqq46oFQvlbNFuvA4QldClmQAHgD2CzHBgIK4IMZJABJAB2AAcAK4AFxY1rBdMg5BIZg82gaAFF3b6rBEACYRANcDBmBqUaSYSOSfkAe0TAB0vAxiwBjCJWX7J608fjy-gIbD1wjO3EgABydEtvuLpa8AGUAJa-b1DuixuL-TkqXiE+T-MpA-hL0EozL-bbL9QvNcrP7C7f0vcQgaIuqIkZU8RLwo3vI5DcUHIuRsvnEQ-4IVIVb-OD8LjqaivkB4AAdecInFu5wGAgLifH+nzXjKyxwccipSJBagOFQ5w+PeJSIfCED7DU4iAoUaFIeKbQsDYBGUS+0weNUBjkX4Uggo+dGcRxiEgX01T4Scd4ofcNHrPRIn1uqAkzFk4gnCMinYW4ClwCUpjuNx+EaXeWGVCRZo8VpJTHsxnhAA)
 

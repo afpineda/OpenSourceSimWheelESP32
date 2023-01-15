@@ -1,6 +1,6 @@
 /**
  * @author Ángel Fernández Pineda. Madrid. Spain.
- * @date 2023-01-131
+ * @date 2023-01-13
  * @brief Sim wheel setup #3
  *
  * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
@@ -64,11 +64,6 @@ const gpio_num_t WAKEUP_PINS[] = {GPIO_NUM_27};
  >>>> [ES] SUBSISTEMA DE MONITORIZACIÓN DE BATERÍA
 ------------------------------------------------------------------ */
 
-// [EN] Comment out the following line if the battery monitor subsystem is NOT in place
-// [ES] Comentar la siguiente linea si NO hay subsistema de monitorización de batería
-#define ENABLE_BATTERY_MONITOR
-
-#ifdef ENABLE_BATTERY_MONITOR
 // [EN] Set an output-capable GPIO number for the "battEN" pin.
 // [ES] Indique el número de GPIO para el pin "battEN".
 
@@ -78,8 +73,6 @@ const gpio_num_t WAKEUP_PINS[] = {GPIO_NUM_27};
 // [ES] Indique el número de GPIO para el pin ADC de "battREAD".
 
 #define BATTERY_READ_GPIO -1
-
-#endif // ENABLE_BATTERY_MONITOR
 
 /* -----------------------------------------------------------------
  >>>> [EN] BUTTON MATRIX
@@ -147,12 +140,10 @@ void setup()
         DEVICE_NAME,
         DEVICE_MANUFACTURER);
 
-#ifdef ENABLE_BATTERY_MONITOR
     batteryCalibration::begin();
     power::startBatteryMonitor(
         (gpio_num_t)BATTERY_ENABLE_READ_GPIO,
         (gpio_num_t)BATTERY_READ_GPIO);
-#endif
 
     inputs::start();
 }

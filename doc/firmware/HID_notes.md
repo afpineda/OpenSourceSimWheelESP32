@@ -55,7 +55,7 @@ Note that feature reports are both read and write.
 
 - Buttons state: one bit per button (1=pressed, 0=non-pressed). The least significant bit is the first button.
 - Axes: a signed byte in the range 0 to 254.
-  - Rz: F1-Style clutch (combined imput from left and right clutch paddles)
+  - Rz: F1-Style clutch (combined input from left and right clutch paddles)
   - Ry: Left clutch paddle
   - Rx: Right clutch paddle
 - POV (D-PAD): 4 least significant bits of byte index 19. Range: 0 to 8.
@@ -134,5 +134,3 @@ At write:
 - Write FF (hexadecimal) to ignore this field.
 
 [def]: ../../src/include/SimWheelTypes.h
-
-

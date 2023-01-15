@@ -25,7 +25,7 @@ Read this document from start to end before building anything. Ensure you unders
 | **Item**                                           | **Quantity**                                | Notes                                                                 |
 |:--------------------------------------------------:|:-------------------------------------------:| --------------------------------------------------------------------- |
 | Bare bone Rotary encoder                           | 4                                           |                                                                       |
-| Standard perfboard sized 24x18 holes               | 1                                           |                                                                       |
+| Standard perfboard sized 24x18 holes               | 1                                           | Double side required                                                  |
 | Roller lever switch                                | 2                                           | For shift paddles (maybe they are included with your wheel's case)    |
 | Linear potentiometer (10K-ohms to 100K-ohms)       | 2                                           | For clutch paddles (maybe they are included with your wheel's case)   |
 | D-Pad, funky switch or push buttons                | 1 D-pad or 1 funky switch or 4 push buttons | For directional input (optional). See notes below for a funky switch. |
@@ -46,10 +46,10 @@ Other parts (quantity unknown):
 
 Additional notes:
 
-- Chose an appropiate male/female power connector depending on your wheel base. Make sure to identify the positive and negative terminals correctly. If you have a *Simagic QR*, negative is the yellow wire and positive is the green one.
+- Chose an appropriate male/female power connector depending on your wheel base. Make sure to identify the positive and negative terminals correctly. If you have a *Simagic QR*, negative is the yellow wire and positive is the green one.
 - Optional funky switch: ALPS RKJ series, 7-way.
 
-## Pinout plan for the ESP32-DevKit-C board
+## Pin-out plan for the ESP32-DevKit-C board
 
 | **GPIO** | **Input**  | **Output** | **Usage**         | **Notes**                              |
 | -------- | ---------- | ---------- |:-----------------:| -------------------------------------- |
@@ -108,11 +108,12 @@ Notes and build tips:
 
 - Each input has an assigned number in the circuit layout. Certain inputs have a particular function, so attach them properly.
 - The `POTn_GND` and `POTn_VCC` terminals of each potentiometer are interchangeable. If the clutch (or axis) goes to 100% when idle, swap those terminals.
+- Note that the pin headers on the left and right clutch paddles are symmetrical, not identical.
 - Optional funky switch:
   - The involved terminals are:
     - For rotation: `ENCODER_A`, `ENCODER_B` and `ENCODER_COM`.
     - For push buttons: `A`, `B`, `C`, `D`, `PUSH` and `COM`.
-  - Do not confuse `COM` and `ENCODER_COM`.
+  - Do not confuse `COM` with `ENCODER_COM` since `COM` is physically closer to `ENCODER_A/B` than `ENCODER_COM`.
 - Bare bone rotary encoders:
   - The involved terminals are:
     - For rotation: `A` or `CLK` attached to `ROTn_A`, `B` or `DT` attached to `ROTn_B`, `COM` attached to `ROTn_COM`.

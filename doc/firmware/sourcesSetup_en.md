@@ -9,17 +9,17 @@ This procedure relays on a **poweshell script**, named [**MakeSymLinks.ps1**](..
 1. Run `powershell.exe`
 
 2. type and run:
-   
+
    ```powershell
    Set-ExecutionPolicy unrestricted
    ```
 
 3. Now, the script may be run, by typing:
-   
+
    ```powershell
    <<path_to_project_folder>>/src/MakeSymLinks.ps1
    ```
-   
+
    Another way is to open *MakeSymLinks.ps1* with "Powershell ISE" and click on the "play" icon (or press F5).
 
 Anyway, there are two choices:
