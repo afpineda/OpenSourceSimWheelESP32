@@ -174,8 +174,7 @@ typedef enum
     CAP_ALT = 2,            /// has "ALT" buttons
     CAP_DPAD = 3,           /// has a directional pad
     CAP_BATTERY = 4,        /// battery-operated
-    CAP_HAS_OLED = 5,       /// has an OLED
-    CAP_HAS_REV_LIGHTS = 6, /// has rev lights
+    CAP_BATTERY_CALIBRATION_AVAILABLE = 5 // has battery calibration data
 } deviceCapability_t;
 
 /**

@@ -37,7 +37,6 @@ void setup()
 
     Serial.println("-- GO --");
 
-    notify::powerOn();
     notify::BLEdiscovering();
     notify::connected();
     notify::lowBattery();

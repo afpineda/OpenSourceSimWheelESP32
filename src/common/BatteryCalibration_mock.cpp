@@ -29,7 +29,7 @@ void batteryCalibration::save()
 
 }
 
-void batteryCalibration::addSample(int reading)
+void addSample(int reading, bool save)
 {
 
 }
@@ -47,11 +47,6 @@ void batteryCalibration::restoreCalibrationData(const uint16_t data[])
 int batteryCalibration::getBatteryLevel(int reading)
 {
     return -1;
-}
-
-int batteryCalibration::getGenericLiPoBatteryLevel(int reading)
-{
-    return 66;
 }
 
 int batteryCalibration::getBatteryLevelAutoCalibrated(int reading)

@@ -34,10 +34,6 @@ public:
         Serial.println("BLE discovering");
     };
 
-    virtual void powerOn() {
-        Serial.println("powerOn");
-    };
-
     virtual void powerOff() {
         Serial.println("powerOff");
     }
@@ -79,7 +75,7 @@ void setup()
 void loop()
 {
     delay(1000);
-    notify::powerOn();
+    notify::connected();
     delay(2000);
     notify::powerOff();
 }

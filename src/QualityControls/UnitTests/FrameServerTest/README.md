@@ -22,6 +22,6 @@ This test runs in a never-ending loop.
    ```
 
 3. The text line `(FRAME)` must appear at almost timed intervals.
-4. Between those lines, the text line `PowerOn` must appear.
+4. Between those lines, the text line `connected` must appear.
 5. A few lines after that, the text line `PowerOff` must appear.
 6. Back to 3.

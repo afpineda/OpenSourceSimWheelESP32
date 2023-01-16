@@ -84,6 +84,8 @@ void batteryCalibration::begin()
     }
     else
         clear();
+    if (totalBatterySamplesCount>0)
+        capabilities::setFlag(CAP_BATTERY_CALIBRATION_AVAILABLE);
 }
 
 // ----------------------------------------------------------------------------
