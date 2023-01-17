@@ -28,7 +28,7 @@ Each rotary encoder requires two dedicated pins at the DevKit board, no matter i
 
 ## Signal encoding
 
-Some encoders use ["incremental Encoder Quadrature Output Waveform"](https://www.allaboutcircuits.com/projects/how-to-use-a-rotary-encoder-in-a-mcu-based-project/). This is the case of KY-040. 
+Some encoders use ["incremental Encoder Quadrature Output Waveform"](https://www.allaboutcircuits.com/projects/how-to-use-a-rotary-encoder-in-a-mcu-based-project/). This is the case of KY-040 and bare bone rotary encoders.
 Others seems to use a different signal encoding. **This is the case of [ALPS RKJX](https://docs.rs-online.com/5b4c/0900766b8152c2e9.pdf) series of funky switches**. Such encoding is called "alterante encoding" in this project.
 The firmware is ready to use both.
 
@@ -39,7 +39,9 @@ Edit the body of `simWheelSetup()` and place a call to `inputs::addRotaryEncoder
 
 - First parameter is the GPIO assigned to `CLK` or `A`.
 - Second parameter is the GPIO assigned to `DT` or `B`.
-- Third paramater must be set to `true` when "alternate encoding" is in place (optional parameter, defaults to `false`). Give a try to this parameter if your encoder does not work properly.
+- Third parameter is the assigned input number for clockwise rotation.
+- Fourth parameter is the assigned input number for counter-clockwise rotation.
+- Fifth paramater must be set to `true` when "alternate encoding" is in place (optional parameter, defaults to `false`). Give a try to this parameter if your encoder does not work properly.
 
 For example, let's say that a bare bone rotary encoder has `A` attached to GPIO 33 and `B` attached to GPIO 25:
 
@@ -47,7 +49,7 @@ For example, let's say that a bare bone rotary encoder has `A` attached to GPIO 
 void simWheelSetup()
 {
    ...
-   inputs::addRotaryEncoder(GPIO_NUM_33,GPIO_NUM_25);
+   inputs::addRotaryEncoder(GPIO_NUM_33, GPIO_NUM_25, 30, 31);
    ...
 }
 ```
@@ -58,9 +60,7 @@ For example, let's say that an ALPS funky switch encoder has `A` attached to GPI
 void simWheelSetup()
 {
    ...
-   inputs::addRotaryEncoder(GPIO_NUM_33,GPIO_NUM_25,true);
+   inputs::addRotaryEncoder(GPIO_NUM_33, GPIO_NUM_25, 30, 31, true);
    ...
 }
 ```
-
-`inputs::addRotaryEncoder()` returns the input number for clockwise rotation, being the next one the input number number for counter-clockwise rotation.

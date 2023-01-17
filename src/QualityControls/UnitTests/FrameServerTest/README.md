@@ -2,24 +2,26 @@
 
 ## Purpose and summary
 
-To test that:
-
-- the frame server is properly enabled and disabled
-- when enabled, the frame server is able to display simulation data properly
+To test that the notification interface is able to serialize notifications while running a generic frameserver in a loop.
 
 ## Hardware setup
 
-OLED attached to `SCL` and `SDA` as usual.
+Nothing required. Output through USB serial port at 115200 bauds. Connect before reset.
 
 ## Procedure and expected output
 
-1. Reset. Wait for the "Welcome" screen to disappear.
-2. The following sequence must be displayed in a loop:
-   1. Gear "N". Shown for 2 seconds.
-   2. Speed going up from 0 to 500, gear "1":
-      1. Gear going up every 100.
-      2. Gear showing braces "[]" near each multiple of 100.
-      3. ABS going up from 0 to 90 and back to 0 in a loop.
-      4. TC going up from 0 to 20 and back to 0 in a loop.
-      5. MAP going up from 0 to 10 and back to 0 in a loop.
-   3. Screen cleared for 5 seconds.
+This test runs in a never-ending loop.
+
+1. Reset. Ignore output from the operating system itself.
+2. The following text must appear:
+
+   ```text
+   -- READY --
+   begin
+   -- GO --
+   ```
+
+3. The text line `(FRAME)` must appear at almost timed intervals.
+4. Between those lines, the text line `connected` must appear.
+5. A few lines after that, the text line `PowerOff` must appear.
+6. Back to 3.

@@ -1,117 +1,36 @@
 # Unit test: Input hub
 
+**NOTE**:: This is also an integration test for modules `inputHub` and `clutchState`.
+
 ## Purpose and summary
 
 To test that:
 
-- Clutch bite point is properly stored, then retrieved.
-- Button-to-function map is properly stored, then retrieved.
-- Clutch works as expected
-- ALT function works as expected
-- Can enter and exit config menu.
-- When menu is enabled, inputs are routed to module "configMenu".
+- Function modes are selected in response to the proper input events.
+- ALT buttons work as expected.
+- Bite point calibration works as expected.
+- D-PAD input is properly reported.
 
 ## Harware setup
 
-Nothing required.
+Nothing required. This is an automated test.
 Output through USB serial port at 115200 bauds. Connect before reset.
 
 ## Procedure and expected output
 
-1. Reset. 
+1. Reset. Ignore output from the operating system itself.
+2. Output must match:
 
-2. Wait (over 30 seconds) for the following line to appear:
-   
-   ```
+   ```text
+   -- READY --
+   -- GO --
+   - simulate POV operation (valid input) -
+   - simulate POV operation (invalid input) -
+   - simulate POV operation while ALT pushed -
+   - simulate cycle ALT function -
+   - simulate cycle clutch function -
+   - simulate explicit selection of clutch function -
+   - simulate non-mapped button combinations -
+   - simulate bite point calibration -
    -- END --
    ```
-
-3. Reset again. Ignore output from the operating system itself.
-
-4. Output must match the following:
-   
-```
--- READY --
--- GO --
-- stored preferences -
-bite point OK
-clutch function OK
-ALT function OK
-
-- simulate POV operation (valid input) -
-INPUT: 0 Clutch: -127 POV 1
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 5
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 7
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 3
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 8
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 6
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 2
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 4
-INPUT: 0 Clutch: -127 POV 0
-
-- simulate POV operation (invalid input) -
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-
-- simulate POV operation while ALT pressed -
-INPUT: 64 ALT Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 128 ALT Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 256 ALT Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 512 ALT Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-
-- simulate ALT operation -
-INPUT: 0 ALT Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 8 Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 32 ALT Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-
-- simulate clutch operation (clutch function) -
-Bite point: -3
-INPUT: 0 Clutch: -3 POV 0
-INPUT: 0 Clutch: -127 POV 0
-Bite point: -3
-INPUT: 0 Clutch: -3 POV 0
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 0 Clutch: 127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-
-- simulate clutch operation (ALT function) -
-INPUT: 0 ALT Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 0 ALT Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 0 ALT Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-
-- simulate clutch operation (BUTTON function) -
-INPUT: 2 Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-INPUT: 4 Clutch: -127 POV 0
-INPUT: 0 Clutch: -127 POV 0
-
-- simulate config menu -
-INPUT: 16 Clutch: -127 POV 0
-**menu button**
-MENU: 8;8
-MENU: 0;8
-MENU: 16;16
-**menu button**
-
-- save preferences -
--- END --
-```

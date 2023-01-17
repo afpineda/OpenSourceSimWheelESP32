@@ -2,121 +2,66 @@
 
 Ensure that all unit test have failed before proceeding to integration testing (*YES, they have to fail, since their purpose is to reveal bugs, but they don't*).
 
-**Note 1**: Just the modules being integrated are shown. _Mock_ modules are not shown.
-
-**Note 2**: This is an incremental, bottom-up strategy.
-
-## Step
-
-> _Test name_: [InputsTest](./InputsTest/README.md)
-
-```mermaid
-graph TD
-    inputs --> ButtonMatrixInput
-    inputs --> rotaryEnconderInput
-    inputs --> polledInput
-```
+- This is an incremental, bottom-up strategy.
+- The `capabilities` module is always integrated but not explicitly shown below.
+- Just the modules being integrated are shown.
 
 ## Step
 
-> _Test name_: [InputHubTest](./InputHubTest/README.md)
+> *Test name*: [DigitalInputsTest](./DigitalInputsTest/README.md)
 
-```mermaid
-graph TD
-    inputs --> ButtonMatrixInput
-    inputs --> rotaryEnconderInput
-    inputs --> polledInput
-    inputHub --> inputs
-```
+- RotaryEncoderInput
+- DigitalPolledInput
+- inputs
 
 ## Step
 
-> _Test name_: [uiTest](./uiTest/README.md)
+> *Test name*: [InputHubTest](./InputHubTest/README.md)
 
-```mermaid
-graph TD
-    ui_ssoled --> uiManager
-```
-
-_Note_: this is a unit test for `ui_ssoled`, too. 
-
-## Step
-
-> _Test name_: [InputHubOledTest](./InputHubOledTest/README.md)
-
-```mermaid
-graph TD
-    inputs --> ButtonMatrixInput
-    inputs --> rotaryEnconderInput
-    inputs --> polledInput
-    inputHub --> inputs
-    inputHub --> ui_ssoled
-    ui_ssoled --> uiManager
-    ui_ssoled --> language
-    inputHub --> configMenu
-    configMenu --> language
-```
+- RotaryEncoderInput
+- DigitalPolledInput
+- inputs
+- **AnalogPolledInput**
+- **clutchState**
+- **inputHub**
 
 ## Step
 
-> _Test name_: [NimBLEuartServerTest](./NimBLEuartServerTest/README.md)
+> *Test name*: [Proto1](./Proto1/README.md)
 
-```mermaid
-graph TD
-    hidImplementation --> uartServer
-```
+- RotaryEncoderInput
+- DigitalPolledInput
+- AnalogPolledInput
+- inputs
+- clutchState
+- inputHub
+- **hidImplementation**
+- **notify**
 
-## Step
-
-> _Test name_: [Proto1](./Proto1/README.md)
-
-```mermaid
-graph TD
-    inputs --> ButtonMatrixInput
-    inputs --> rotaryEnconderInput
-    inputs --> polledInput
-    inputHub --> inputs
-    inputHub --> ui_ssoled
-    ui_ssoled --> uiManager
-    ui_ssoled --> language
-    inputHub --> configMenu
-    configMenu --> language
-    inputHub --> hidImplementation
-    hidImplementation --> uartServer
-```
-
-_Note_: This is a working prototype
+*Note*: This is a working prototype
 
 ## Step
 
-> _Test name_: [BatteryAutocal](./BatteryAutocal/README.md)
+> *Test name*: [BatteryAutocal](./BatteryAutocal/README.md)
 
-```mermaid
-graph TD
-    power --> batteryCalibration
-```
+- power
+- batteryCalibration
 
-_Note_: Only autocalibrated algorithm is tested.
+*Note*: Only autocalibrated algorithm is tested.
 
-## Planned
+## Step
 
-> _Test name_: [Proto2](./Proto2/README.md)
+> *Test name*: [Proto2](./Proto2/README.md)
 
-```mermaid
-graph TD
-    inputs --> ButtonMatrixInput
-    inputs --> rotaryEnconderInput
-    inputs --> polledInput
-    inputHub --> inputs
-    inputHub --> ui_ssoled
-    ui_ssoled --> uiManager
-    ui_ssoled --> language
-    inputHub --> configMenu
-    configMenu --> language
-    inputHub --> hidImplementation
-    hidImplementation --> uartServer
-    hidImplementation --> power
-    power --> batteryCalibration
-```
+- RotaryEncoderInput
+- DigitalPolledInput
+- AnalogPolledInput
+- inputs
+- clutchState
+- inputHub
+- hidImplementation
+- notify
+- **power**
+- **batteryCalibration**
 
-_Note_: This is a system test except for the involved hardware.
+*Note*: This is a system test except for the involved hardware.

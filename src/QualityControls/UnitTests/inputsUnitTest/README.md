@@ -1,0 +1,67 @@
+# Unit test: input event report
+
+## Purpouse and summary
+
+To test that input events are properly reported under these circumstances:
+
+- When clutch function is set to "buttons mode":
+  - Analog clutch position is properly translated into a button state.
+  - Digital clutch state is properly reported as a button state.
+
+- When clutch function is **not** set to "buttons mode":
+  - Digital clutch state is properly translated into an axis position.
+  - Analog clutch position is properly reported as an axis position.
+
+## Harware setup
+
+Nothing required. This is an automated test.
+Output through USB serial port at 115200 bauds.
+
+## Procedure and expected output
+
+1. Reset. Ignore output from the operating system itself.
+2. Output must match:
+
+   ```text
+   -- READY --
+   -- GO --
+   ---- AXIS function ---
+   -- Analog CP
+   0000000000000000000000000000000000000000000000000000000000000000
+      L: 64 R: 0 C: 0
+   0000000000000000000000000000000000000000000000000000000000000000
+      L: 64 R: 192 C: 0
+   0000000000000000000000000000000000000000000000000000000000000000
+      L: 0 R: 192 C: 0
+   0000000000000000000000000000000000000000000000000000000000000000
+      L: 0 R: 0 C: 0
+   -- Digital CP
+   0000000000000000000000000000000000000000000000000000000000010000
+      L: 254 R: 0 C: 0
+   0000000000000000000000000000000000000000000000000000000000010000
+      L: 254 R: 254 C: 0
+   0000000000000000000000000000000000000000000000000000000000000000
+      L: 0 R: 254 C: 0
+   0000000000000000000000000000000000000000000000000000000000000000
+      L: 0 R: 0 C: 0
+   ---- BUTTON function ---
+   -- Analog CP
+   0000000000000000000000000000000000000000000000000000000000000000
+      L: 0 R: 0 C: 0
+   0000000000000000000000000000000000000000000000000000000000001000
+      L: 0 R: 0 C: 0
+   0000000000000000000000000000000000000000000000000000000000000000
+      L: 0 R: 0 C: 0
+   0000000000000000000000000000000000000000000000000000000000000000
+      L: 0 R: 0 C: 0
+   -- Digital CP
+   0000000000000000000000000000000000000000000000000000000000010001
+      L: 0 R: 0 C: 0
+   0000000000000000000000000000000000000000000000000000000000010011
+      L: 0 R: 0 C: 0
+   0000000000000000000000000000000000000000000000000000000000000010
+      L: 0 R: 0 C: 0
+   0000000000000000000000000000000000000000000000000000000000000000
+      L: 0 R: 0 C: 0
+   -- END --  
+   ```

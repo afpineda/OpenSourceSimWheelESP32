@@ -1,3 +1,6 @@
 SimWheelTypes.h
 SimWheel.h
+debugUtils.h
 inputHub.cpp
+clutchState.cpp
+debugUtils.cpp

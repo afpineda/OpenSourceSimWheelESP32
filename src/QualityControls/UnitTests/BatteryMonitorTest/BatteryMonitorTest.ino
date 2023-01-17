@@ -36,22 +36,23 @@ int batteryCalibration::getBatteryLevelAutoCalibrated(int reading)
     return 66;
 }
 
+void batteryCalibration::begin()
+{
+}
+
 void hidImplementation::reportBatteryLevel(int level)
 {
 
 }
 
-void ui::showLowBatteryNotice()
+void notify::lowBattery()
 {
 }
 
-void ui::turnOff()
+void notify::powerOff()
 {
 }
 
-void batteryCalibration::begin()
-{
-}
 
 //-------------------------------------------------------
 // Auxiliary
@@ -65,6 +66,7 @@ void setup()
 {
     int testnumber = 1;
 
+    esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
     while (!Serial)
         ;

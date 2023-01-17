@@ -1,58 +1,74 @@
-# Integration test: power and battery
+# Integration test: power, battery and digital clutch paddles
 
 ## Purpose and summary
 
-To test battery level and power off from the config menu.
+To test battery level (calibrated) and power off from the config menu.
 
 ## Hardware setup
 
 Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
+Use this [test circuit](../../Protoboards/ESP32-WROOM-DevKitC-1.diy):
 
-The [battery monitor circuit](../../../../doc/hardware/subsystems/BatteryMonitor/BatteryMonitor_en.md) must be in place. 
+![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.png)
 
-- Wire `battEN` to GPIO `TEST_BATTERY_READ_ENABLE`
-- Wire `battREAD` to GPIO `TEST_BATTERY_READ`
-- `Battery(+)` wired to the positive terminal of a fully charged battery (3.7V or more). 
-- Wire `3V3` and `GND` as usual.
-- Wire the negative terminal of the battery to GND.
+We are not using the potentiometers. For later reference (this differs from previous tests):
 
-Rotary encoder:
+- "CLUTCH1" is the button mumbered #2 in the protoboard.
+- "CLUTCH2" is the button mumbered #3 in the protoboard.
+- "Cycle CF" is the combination of buttons #7 and #6 in the protoboard.
+- "RSW" is the built-in push button of the rotary encoder.
+- "RCW" means rotary's clockwise rotation.
+- "RCCW" means rotary's counter-clockwise rotation.
 
-- KY-040 type (with external pull-up resistors)
-- `CLK` pin attached to `TEST_ROTARY_CLK`
-- `DT` pin attached to `TEST_ROTARY_DT`
-- `SW` pin attached to `TEST_ROTARY_SW`
-
-Button Matrix (6 buttons): same setup as the [Button Matrix unit test](../../UnitTests/ButtonMatrixTest/README.md).
-An external antenna may be required at some devices.
-
-This test is designed for 128x64 pixels with a 132x64 display controller. When using another setup, the sketch must be tweaked.  OLED must be powered and wired to the corresponding `SCL` and `SCA` pins in the DevKit board.
-
-For later reference:
-
-- "ALT" is the built-in push button into the rotary encoder.
-- "MENU" is the button numbered 3 in the button matrix
-- "RCW" means rotary's clockwise rotation
-- "RCCW" means rotary's counter-clockwise rotation
+A powerboost module and a battery is needed. However, the test circuit does not require power from the battery (that is up to you).
+Wire `battery(+)` and `POWERBOOST_GND`, at least.
 
 ## Software setup (computer)
 
 - Windows 10 or later
-- Bluetooth 4.0 or later
+- Bluetooth 4.2 or later
+- Joystick testing software from Planet's Pointy ( [http://www.planetpointy.co.uk/joystick-test-application/](http://www.planetpointy.co.uk/joystick-test-application/) ) or any other able to display 128 buttons. Note that Window's device property page is not suitable for this.
+
+## Before start
+
+- Follow the [battery calibration procedure](../../../Firmware/BatteryTools/BatteryCalibration/README.md).
+- Make sure the device is not paired to the hosting PC. This includes previous tests.
 
 ## Procedure and expected output
 
-1. Reset. Wait for the "welcome" screen to disappear.
-2. Pair and connect.
-3. Press and hold "MENU" for 3 seconds, then release.
-4. Go to "Battery" menu. 
-5. Go to "Recalibrate" and click "ALT". 
-6. Wait for 3 minutes.
-7. Go to "Battery" menu again. Show battery level.
-8. Battery level must be 100%.
-9. Go to "Power off" menu and click "ALT".
-10. The system should enter deep sleep.
-11. Unwire `Battery(+)`.
-12. Click "ALT". The "welcome" screen must show up.
-13. Go to "Battery" menu again. Show battery level.
-14. Battery level must be 66%.
+### Power off/on
+
+1. Keep the bluetooth control panel visible.
+2. Reset.
+3. Go to "Add devices" for device discovery.
+4. Make sure "Proto 2" shows up, but **do not connect**.
+5. Wait for a minute or so.
+6. "Proto 2" must disappear (the device is in deep sleep).
+7. Push and release "RSW" (for wake up).
+8. "Proto 2" must appear again.
+9. Select and connect to "Proto 2" .
+
+### Digital clutch paddle
+
+1. Open the joystick test app.
+2. At this point, the working mode of clutch paddles could be set to anything due to previous test. This is ok.
+3. Hit "Cycle CF" 4 times and test "CLUTCH1" and "CLUTCH" each time, in no particular order. In clutch mode, test "RCW" and "RCCW" for bite point calibration.
+4. Hit "Cycle CF" until analog axis mode is selected (check using "CLUTCH1").
+5. Wait for 30 seconds or so.
+6. Reset. Close the joystick test app. Wait for the device to connect again.
+7. Open the joystick test app again.
+8. "CLUTCH1" must be configured in axis mode. Check.
+9. Hit "Cycle CF" until "regular buttons" mode is selected (check using "CLUTCH1").
+10. Wait for 30 seconds or so.
+11. Reset. Close the joystick test app. Wait for the device to connect again.
+12. "CLUTCH1" must be configured in "regular buttons" mode. Check.
+
+### Battery level
+
+1. Leave `battery(+)` unwired. Wait for 1 minute.
+2. In the control panel, battery level must show "66%" for "Proto 2".
+3. Wire `Battery(+)` to the battery positive pole.
+4. Wait for 1 minute. Battery level must show anything byt "66%", depending on your battery charge.
+5. Wait for 5 to 30 minutes (depending on battery capacity). Whatever the battery level was, it must decrease at least 1%.
+6. Wire `Battery(+)` to `3V3` in the protoboard.
+7. The device may go to deep sleep. Check if the device is disconnected at the control panel. However, if this does not happen, the battery level must show a very low percentage after a minute or so.

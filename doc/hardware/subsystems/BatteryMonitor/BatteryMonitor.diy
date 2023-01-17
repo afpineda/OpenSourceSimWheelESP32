@@ -2,8 +2,8 @@
 <project>
   <fileVersion>
     <major>4</major>
-    <minor>22</minor>
-    <build>1</build>
+    <minor>35</minor>
+    <build>0</build>
   </fileVersion>
   <title>Battery monitor</title>
   <author>Ángel Fernández Pineda. Madrid. Spain. 2022.</author>
@@ -213,7 +213,7 @@
       <labelOriantation>Directional</labelOriantation>
       <moveLabel>false</moveLabel>
       <hideShortLeads>false</hideShortLeads>
-      <value value="10.0" unit="K"/>
+      <value value="100.0" unit="K"/>
       <power>HALF</power>
       <colorCode>NONE</colorCode>
       <shape>Standard</shape>
@@ -238,7 +238,7 @@
       <labelOriantation>Directional</labelOriantation>
       <moveLabel>false</moveLabel>
       <hideShortLeads>false</hideShortLeads>
-      <value value="4.7" unit="K"/>
+      <value value="200.0" unit="K"/>
       <power>HALF</power>
       <colorCode>NONE</colorCode>
       <shape>Standard</shape>
@@ -327,7 +327,7 @@
       <labelOriantation>Directional</labelOriantation>
       <moveLabel>false</moveLabel>
       <hideShortLeads>false</hideShortLeads>
-      <value value="10.0" unit="K"/>
+      <value value="100.0" unit="K"/>
       <power>HALF</power>
       <colorCode>NONE</colorCode>
       <shape>Standard</shape>
@@ -352,7 +352,7 @@
       <labelOriantation>Directional</labelOriantation>
       <moveLabel>false</moveLabel>
       <hideShortLeads>false</hideShortLeads>
-      <value value="4.7" unit="K"/>
+      <value value="110.0" unit="K"/>
       <power>HALF</power>
       <colorCode>NONE</colorCode>
       <shape>Standard</shape>
@@ -427,7 +427,6 @@
       <text>E  </text>
       <font name="Calibri Bold" size="8" style="1"/>
       <color hex="0000cc"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -438,7 +437,6 @@
       <text>C  </text>
       <font name="Calibri Bold" size="8" style="1"/>
       <color hex="0000cc"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -449,7 +447,6 @@
       <text>B  </text>
       <font name="Calibri Bold Italic" size="8" style="3"/>
       <color hex="0000cc"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -460,7 +457,6 @@
       <text>E  </text>
       <font name="Calibri Bold" size="8" style="1"/>
       <color hex="0000cc"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -471,7 +467,6 @@
       <text>C  </text>
       <font name="Calibri Bold" size="8" style="1"/>
       <color hex="0000cc"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -482,7 +477,6 @@
       <text>B  </text>
       <font name="Calibri Bold Italic" size="8" style="3"/>
       <color hex="0000cc"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -493,7 +487,6 @@
       <text>NPN</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="ffff00"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>BOTTOM</verticalAlignment>
       <orientation>_270</orientation>
@@ -504,7 +497,6 @@
       <text>PNP</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="ffff00"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>TOP</verticalAlignment>
       <orientation>_90</orientation>
@@ -515,7 +507,6 @@
       <text>battEN</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -526,7 +517,6 @@
       <text>battery(+)</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -537,7 +527,6 @@
       <text>battREAD</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -548,29 +537,27 @@
       <text>GND</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
     </diylc.misc.Label>
   </components>
   <groups>
-    <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[7]"/>
-      <diylc.semiconductors.TransistorTO92 reference="../../../components/diylc.semiconductors.TransistorTO92"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[3]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[2]"/>
-    </set>
     <set/>
     <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[8]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[4]"/>
       <diylc.semiconductors.TransistorTO92 reference="../../../components/diylc.semiconductors.TransistorTO92[2]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[5]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[8]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[6]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[4]"/>
     </set>
-    <set/>
+    <set>
+      <diylc.semiconductors.TransistorTO92 reference="../../../components/diylc.semiconductors.TransistorTO92"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[3]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[7]"/>
+    </set>
   </groups>
   <lockedLayers/>
   <lockedComponents/>

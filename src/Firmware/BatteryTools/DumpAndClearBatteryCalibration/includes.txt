@@ -1,3 +1,0 @@
-SimWheelTypes.h
-SimWheel.h
-BatteryCalibration.cpp

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project>
+  <fileVersion>
+    <major>4</major>
+    <minor>35</minor>
+    <build>0</build>
+  </fileVersion>
+  <title>Standard size perfboards</title>
+  <author>Ángel Fernández Pineda.Madrid.Spain.2022</author>
+  <description></description>
+  <width value="20.0" unit="cm"/>
+  <height value="15.0" unit="cm"/>
+  <gridSpacing value="0.1" unit="in"/>
+  <dotSpacing>1</dotSpacing>
+  <components>
+    <diylc.boards.PerfBoard>
+      <name>Perfboard</name>
+      <alpha>102</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="0.9" y="2.8"/>
+        <point x="3.4" y="0.9"/>
+      </controlPoints>
+      <firstPoint x="0.9" y="0.9"/>
+      <secondPoint x="3.4" y="2.8"/>
+      <boardColor hex="f8ebb3"/>
+      <borderColor hex="ada47d"/>
+      <coordinateColor hex="b6b6b6"/>
+      <xType>Letters</xType>
+      <coordinateOrigin>Bottom_Left</coordinateOrigin>
+      <coordinateDisplay>Both_Sides</coordinateDisplay>
+      <yType>Numbers</yType>
+      <length value="63.5" unit="mm"/>
+      <width value="48.26" unit="mm"/>
+      <mode>TwoPoints</mode>
+      <spacing value="0.1" unit="in"/>
+      <padColor hex="da8a67"/>
+    </diylc.boards.PerfBoard>
+    <diylc.boards.PerfBoard>
+      <name>Board1</name>
+      <alpha>102</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="1.1" y="4.8"/>
+        <point x="3.2" y="3.3"/>
+      </controlPoints>
+      <firstPoint x="1.1" y="3.3"/>
+      <secondPoint x="3.2" y="4.8"/>
+      <boardColor hex="f8ebb3"/>
+      <borderColor hex="ada47d"/>
+      <coordinateColor hex="b6b6b6"/>
+      <xType>Letters</xType>
+      <coordinateOrigin>Bottom_Left</coordinateOrigin>
+      <coordinateDisplay>Both_Sides</coordinateDisplay>
+      <yType>Numbers</yType>
+      <length value="53.34" unit="mm"/>
+      <width value="38.1" unit="mm"/>
+      <mode>TwoPoints</mode>
+      <spacing value="0.1" unit="in"/>
+      <padColor hex="da8a67"/>
+    </diylc.boards.PerfBoard>
+    <diylc.boards.PerfBoard>
+      <name>Board2</name>
+      <alpha>102</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="3.9" y="2.2"/>
+        <point x="6.8" y="1.5"/>
+      </controlPoints>
+      <firstPoint x="3.9" y="1.5"/>
+      <secondPoint x="6.8" y="2.2"/>
+      <boardColor hex="f8ebb3"/>
+      <borderColor hex="ada47d"/>
+      <coordinateColor hex="b6b6b6"/>
+      <xType>Letters</xType>
+      <coordinateOrigin>Bottom_Left</coordinateOrigin>
+      <coordinateDisplay>Both_Sides</coordinateDisplay>
+      <yType>Numbers</yType>
+      <length value="53.34" unit="mm"/>
+      <width value="38.1" unit="mm"/>
+      <mode>TwoPoints</mode>
+      <spacing value="0.1" unit="in"/>
+      <padColor hex="da8a67"/>
+    </diylc.boards.PerfBoard>
+    <diylc.boards.PerfBoard>
+      <name>Board3</name>
+      <alpha>102</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="4.0" y="4.6"/>
+        <point x="6.5" y="3.5"/>
+      </controlPoints>
+      <firstPoint x="4.0" y="3.5"/>
+      <secondPoint x="6.5" y="4.6"/>
+      <boardColor hex="f8ebb3"/>
+      <borderColor hex="ada47d"/>
+      <coordinateColor hex="b6b6b6"/>
+      <xType>Letters</xType>
+      <coordinateOrigin>Bottom_Left</coordinateOrigin>
+      <coordinateDisplay>Both_Sides</coordinateDisplay>
+      <yType>Numbers</yType>
+      <length value="53.34" unit="mm"/>
+      <width value="38.1" unit="mm"/>
+      <mode>TwoPoints</mode>
+      <spacing value="0.1" unit="in"/>
+      <padColor hex="da8a67"/>
+    </diylc.boards.PerfBoard>
+  </components>
+  <groups>
+    <set>
+      <null/>
+    </set>
+    <set/>
+  </groups>
+  <lockedLayers/>
+  <lockedComponents/>
+  <hiddenLayers/>
+  <font name="Dialog.plain" size="14" style="0"/>
+</project>

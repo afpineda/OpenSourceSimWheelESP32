@@ -1,4 +1,0 @@
-SimWheel.h
-SimWheelTypes.h
-Strings.h
-language.cpp

@@ -8,21 +8,21 @@ Indispensable:
 - Official [Arduino-ESP32 support package](https://docs.espressif.com/projects/arduino-esp32/en/latest/getting_started.html). Follow [this link](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html) for installation instructions.
 - Indispensable [Arduino libraries](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries) for this project. Install their dependencies as well.
   - [NimBLE-Arduino](https://www.arduino.cc/reference/en/libraries/nimble-arduino/)
-  - [ss_oled](https://www.arduino.cc/reference/en/libraries/ss_oled/)
 - [Powershell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.2). Already installed in Windows.
 
 May be needed:
 
 - [ESP32 drivers](http://esp32.net/usb-uart/) on Windows. A tutorial: [Installing drivers for the ESP32](https://www.bromleysat.com/installing-drivers-for-the-esp32/).
+- [ss_oled](https://www.arduino.cc/reference/en/libraries/ss_oled/)
 
 Recommended:
 
 - [DIY layout creator](https://bancika.github.io/diy-layout-creator/). [Alternate link](https://github.com/bancika/diy-layout-creator/releases).
 - [Planet pointy's joystick test application](http://www.planetpointy.co.uk/joystick-test-application/) (for Windows).
-- "nRF Connect" from [Nordic semiconductors](https://www.nordicsemi.com/). Available for multiple platforms.
 - [Visual Studio Code](https://code.visualstudio.com/), as an alternative to Arduino IDE. Requires other tools:
   - [Arduino CLI](https://blog.arduino.cc/2020/03/13/arduino-cli-an-introduction/)
   - [Arduino extension for VSCode](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.vscode-arduino). Installable from VSCode itself.
+- SimpleHIDWrite.exe: available at [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm). There is a modern clone at [https://github.com/Robmaister/SimplerHidWrite](https://github.com/Robmaister/SimplerHidWrite).
 
 ## Hardware tools
 

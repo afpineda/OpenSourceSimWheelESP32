@@ -4,10 +4,13 @@ PolledInput.h
 RotaryEncoderInput.h
 ButtonMatrixInput.h
 debugUtils.h
+adcTools.h
+adcTools.cpp
 Inputs.cpp
 PolledInput.cpp
 RotaryEncoderInput.cpp
 ButtonMatrixInput.cpp
 debugUtils.cpp
 InputHub.cpp
-ui_mock.cpp
+clutchState.cpp
+capabilities.cpp

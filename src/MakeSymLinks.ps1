@@ -100,6 +100,8 @@ foreach ($folder in $sketchFolders) {
         } catch [UnauthorizedAccessException] {
             # No admin privileges, copy files instead
             Copy-Item $linkSpec.source -Destination $target -Force 
+        } catch [System.Management.Automation.ItemNotFoundException] {
+           Write-Warning "$($linkSpec.source) not found" 
         }
     }
 }

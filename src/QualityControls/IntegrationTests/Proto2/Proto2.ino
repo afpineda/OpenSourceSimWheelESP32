@@ -7,13 +7,21 @@
  *
  */
 
-#include <Arduino.h>
 #include "debugUtils.h"
 #include "SimWheel.h"
 
 //------------------------------------------------------------------
-// Mocks
+// Globals
 //------------------------------------------------------------------
+
+#define LEFT_CLUTCH_IN 3
+#define RIGHT_CLUTCH_IN 2
+#define ALT_IN 10
+#define CW_IN 12
+#define CCW_IN 13
+#define COMMAND_IN 7
+//#define CYCLE_ALT_IN 5
+#define CYCLE_CLUTCH_IN 6
 
 //------------------------------------------------------------------
 // Arduino entry point
@@ -21,33 +29,28 @@
 
 void setup()
 {
-    inputNumber_t cl1Num, cl2Num, altNum, menuNum, calUpNum, calDownNum;
+    esp_log_level_set("*", ESP_LOG_ERROR);
 
-    power::begin(TEST_ROTARY_SW,false);
-    language::begin();
-    uiManager::begin();
-    ui::begin();
-    batteryCalibration::begin();
-    power::startBatteryMonitor(TEST_BATTERY_READ_ENABLE,TEST_BATTERY_READ);
+    clutchState::begin();
     inputs::begin();
-    inputHub::begin();
+    power::begin(TEST_ROTARY_SW,false);
 
-    cl1Num = inputs::setButtonMatrix(mtxSelectors, 3, mtxInputs, 2);
-    cl2Num = cl1Num + 1;
-    menuNum = cl2Num + 1;
-    altNum = inputs::addDigital(TEST_ROTARY_SW, true, false);
-    calUpNum = inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT);
-    calDownNum = calUpNum + 1;
+    inputs::addButtonMatrix(
+        mtxSelectors,
+        sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
+        mtxInputs,
+        sizeof(mtxInputs) / sizeof(mtxInputs[0]),
+        mtxNumbers);
+    inputs::addDigital(TEST_ROTARY_SW, ALT_IN, true, true );
+    inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, CW_IN, CCW_IN,false);
+    inputs::setDigitalClutchPaddles(LEFT_CLUTCH_IN,RIGHT_CLUTCH_IN);
 
-    inputHub::setClutchPaddles(cl1Num, cl2Num);
-    inputHub::setALTButton(altNum);
-    inputHub::setClutchCalibrationButtons(calUpNum, calDownNum);
-    inputHub::setMenuButton(menuNum);
-
-    configMenu::setNavButtons(calDownNum, calUpNum, altNum, menuNum);
-
-    hidImplementation::begin("Proto2", "Mamandurrio", true, true);
+    inputHub::setCycleClutchFunctionBitmap(BITMAP(COMMAND_IN)|BITMAP(CYCLE_CLUTCH_IN));
+    inputHub::setClutchCalibrationButtons(CW_IN, CCW_IN);
+    
+    hidImplementation::begin("Proto2", "Mamandurrio", true);
     inputs::start();
+    power::startBatteryMonitor(TEST_BATTERY_READ_ENABLE,TEST_BATTERY_READ,false);
 }
 
 void loop()

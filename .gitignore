@@ -46,6 +46,12 @@
 # Built Visual Studio Code Extensions
 *.vsix
 
+# Debug files
+*.svd
+debug_custom.json
+debug.cfg
+
+# other
 src/UnitTests/InputHubTest/debugUtils.cpp
 src/UnitTests/InputHubTest/debugUtils.h
 src/UnitTests/InputHubTest/InputHub.cpp

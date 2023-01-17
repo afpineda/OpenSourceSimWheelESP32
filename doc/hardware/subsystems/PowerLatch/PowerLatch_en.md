@@ -7,7 +7,7 @@
 The purpose of this subsystem is to completely **cut power off** to the system when required, thus saving battery charge. This subsystem is **optional**. When not in place, the system will enter [**deep sleep**](https://randomnerdtutorials.com/esp32-deep-sleep-arduino-ide-wake-up-sources/) mode instead, which drains current, but at a lower rate.
 
 - There is no need for a power latch circuit if the system is powered through the wheel's base or any other external power source not based on batteries.
-- This subsystem requires a single dedicated output pin (GPIO) at the DevKit board, named `POWER_LATCH`. This pin does not require to be attached to anything, so it can be reserved for future use. 
+- This subsystem requires a single dedicated output pin (GPIO) at the DevKit board, named `POWER_LATCH`. This pin does not require to be attached to anything, so it can be reserved for future use.
 
 ## External power latch circuit
 

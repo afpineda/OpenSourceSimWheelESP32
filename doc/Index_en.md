@@ -12,19 +12,15 @@
 
 - [Overview of input hardware suitable (or not) for a sim wheel/button box](./hardware/InputHW_en.md)
 
-- Ready to deploy designs:
-
-| Name                                            | Usage          | DevKit             | Inputs summary                                                                              | Power source        | OLED | Other |
-|:-----------------------------------------------:|:--------------:|:------------------:|:-------------------------------------------------------------------------------------------:|:-------------------:| ---- | ----- |
-| [Setup1](./hardware/setups/setup1/Setup1_en.md) | Steering wheel | ESP32-WROOM-32E/UE | Rotary encoders x4, DPAD or funky switch (optional), potentiometer support, up to 24 inputs | Battery or external | yes  | BLE   |
-| [Setup2](./hardware/setups/setup2/Setup2_en.md) | Button box     | ESP32-WROOM-32E/UE | Rotary encoders x4, up to 52 inputs                                                         | external            | no   | BLE   |
-| [Setup3](./hardware/setups/setup3/Setup3_en.md) | Steering wheel | ESP32-WROOM-32E/UE | Rotary encoders x4, DPAD or funky switch (optional), potentiometer support, up to 24 inputs | Battery or external | yes  | BLE   |
-
 - [How to customize in order to build your own hardware and firmware setup](./hardware/subsystems/CustomizeHowto_en.md).
 
-## Other
+- Ready to deploy designs:
 
-- [UART protocol](./firmware/UARTProtocol_en.md)
+| Name                                            | Usage          | DevKit             | Inputs summary                                                             | Power source |
+|:-----------------------------------------------:|:--------------:|:------------------:|:--------------------------------------------------------------------------:|:------------:|
+| [Setup1](./hardware/setups/setup1/Setup1_en.md) | Steering wheel | ESP32-WROOM-32E/UE | Rotary encoders x4, DPAD or funky switch (optional), analog clutch paddles | External     |
+| [Setup2](./hardware/setups/setup2/Setup2_en.md) | Button box     | ESP32-WROOM-32E/UE | Rotary encoders x4, up to 52 inputs                                        | External     |
+| [Setup3](./hardware/setups/setup3/Setup3_en.md) | Steering wheel | TinyPico           | Rotary encoders x2, DPAD (optional), analog clutch paddles                 | Battery      |
 
 ## Contributing
 
@@ -48,4 +44,9 @@
 - [Glossary of terms and definitions](./firmware/glossary_en.md)
 - [Firmware architecture](./firmware/FirmwareArchitecture_en.md)
 - [Overview of Quality Controls](./firmware/FirmwareTesting_en.md)
+- [Notes on HID device implementation](./firmware/HID_notes.md)
 - [Change log](./changelog.md)
+
+## Other
+
+- [Companion app](https://github.com/afpineda/SimWheelESP32Config)

@@ -1,6 +1,11 @@
 SimWheelTypes.h
 SimWheel.h
-debugUtils.h
-debugUtils.cpp
+HID_definitions.h
+adcTools.h
+adcTools.cpp
 BatteryCalibration.cpp
 power.cpp
+hidImplementation_NimBLE.cpp
+capabilities.cpp
+clutchState.cpp
+notify.cpp
