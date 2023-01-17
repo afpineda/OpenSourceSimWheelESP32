@@ -2,6 +2,8 @@
 
 Read this document from start to end before building anything. Ensure you understand everything.
 
+**This setup has not been tested at the system level**. If you try, please, let me know.
+
 ## Hardware features
 
 - Bluetooth Low Energy

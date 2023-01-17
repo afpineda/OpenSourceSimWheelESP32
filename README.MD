@@ -23,9 +23,11 @@ This project provides open hardware and software for a sim-racing wheel or butto
 
 Please, start at the [documentation index](./doc/Index_en.md).
 
+There is a [companion app](https://github.com/afpineda/SimWheelESP32Config) for user preferences (not mandatory).
+
 > Español
 
-# Volante inalámbrico de simulador/caja de botones para placas ESP32 de fuentes abiertas
+# Volante inalámbrico de simulador/caja de botones de fuentes abiertas para placas ESP32
 
 Este proyecto proporciona hardware y software abierto para un volante de simulación o una caja de botones con las siguientes características:
 
@@ -33,7 +35,7 @@ Este proyecto proporciona hardware y software abierto para un volante de simulac
 - **Varias configuraciones hardware** para elegir e instrucciones detalladas para **personalizarlas** con el **mínimo esfuerzo**
 - Alimentación mediante **baterías** recargables, o bien, mediante la base del volante
 - **Modo alternativo**. Mientras está activado, cualquier entrada se reporta como una entrada alternativa, duplicando su número en consecuencia. Similar a la tecla SHIFT de un teclado.
-- **Levas de embrague** que pueden ser configuradas en una de tres funciones:
+- **Levas de embrague** que pueden ser configuradas en una de cuatro funciones:
   - **Embrague tipo F1** con calibración del punto de mordida
   - Modo alternativo
   - Botón normal y corriente
@@ -47,5 +49,7 @@ Este proyecto proporciona hardware y software abierto para un volante de simulac
 - **Costes contenidos**
 
 Por favor, comience por el [índice de documentación (inglés)](./doc/Index_en.md).
+
+Existe una [aplicación auxiliar](https://github.com/afpineda/SimWheelESP32Config) para las preferencias de usuario (no obligatoria).
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)

@@ -46,3 +46,7 @@
 - [Overview of Quality Controls](./firmware/FirmwareTesting_en.md)
 - [Notes on HID device implementation](./firmware/HID_notes.md)
 - [Change log](./changelog.md)
+
+## Other
+
+- [Companion app](https://github.com/afpineda/SimWheelESP32Config)

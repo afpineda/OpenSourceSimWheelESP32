@@ -24,7 +24,7 @@ First release.
 
 ## 2.0.0
 
-- Now, the device may be configured through HID feature reports from the hosting PC, so there is no need for the OLED menu. A proof-of-concept application has been developed (not included in this project).
+- Now, the device may be configured through HID feature reports from the hosting PC, so there is no need for the OLED menu. A companion application has been developed (source code not included in this project).
 - OLED is not mandatory anymore. This means two more GPIO pins are available.
 - Telemetry data has been removed since there is no PC application for that. However, it may resurrect in the future.
 - NuS and AT commands are not needed anymore. Replaced by HID reports.

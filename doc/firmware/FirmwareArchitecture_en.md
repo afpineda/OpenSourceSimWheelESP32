@@ -178,7 +178,7 @@ For user interfaces in need of a perpetual loop or for persistent notifications.
      turnLedOn();
    }
 
-   uint8_t getTargetFPS() {
+   uint8_t MyImpl::getTargetFPS() {
      return 1;
    }
 
@@ -209,7 +209,7 @@ Note that "most accurate" does not mean "accurate". Battery voltage is not enoug
 
 #### Auto-calibrated algorithm
 
-If calibration data is not available, a rough estimation is provided based on LiPo batteries characterization data taken from here: [https://blog.ampow.com/lipo-voltage-chart/](https://blog.ampow.com/lipo-voltage-chart/). However, actual battery voltages may not match the characterization data due to 1) inaccurate ADC readings and 2) voltage drop due to the involved transistors. For this reason, the highest voltage ever read is taken as an auto-calibration parameter. The expected voltage reading is mapped linearly to the absolute maximum voltage ever read. The battery needs a full charge before this algorithm provides any meaningful result.
+If calibration data is not available, a rough estimation is provided based on LiPo batteries characterization data taken from here: [https://blog.ampow.com/lipo-voltage-chart/](https://blog.ampow.com/lipo-voltage-chart/). However, actual battery voltages may not match the characterization data due to 1) inaccurate ADC readings, 2) voltage drop due to the involved transistors (if any) and 3) Unexpected impedances at the voltage divider. For this reason, the highest voltage ever read is taken as an auto-calibration parameter. The expected voltage reading is mapped linearly to the absolute maximum voltage ever read. The battery needs a full charge before this algorithm provides any meaningful result.
 
 (See [LiPoBatteryCharacterization.ods](./LiPoBatteryCharacterization.ods))
 
@@ -270,4 +270,4 @@ Event capture is detached from event processing at the **input hub daemon**, whi
 
 ## About auto power off
 
-When there is no bluetooth connection, the systems goes to advertising. If no connection is made in a certain time lapse, the system goes to deep sleep or power off.
+In a battery-operated system, when there is no bluetooth connection, the systems goes to advertising. If no connection is made in a certain time lapse, the system goes to deep sleep or power off.
