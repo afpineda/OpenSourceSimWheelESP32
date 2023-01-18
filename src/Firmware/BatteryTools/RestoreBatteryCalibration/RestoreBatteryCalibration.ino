@@ -17,7 +17,7 @@
 // [EN] Uncomment and paste your backup data after "="
 // [ES] Descomente y pegue sus datos de respaldo despues de "="
 
-//const uint16_t customCalibrationData[] = 
+// const uint16_t customCalibrationData[] = ;
 
 // ----------------------------------------------------------------------------
 // Auxiliary

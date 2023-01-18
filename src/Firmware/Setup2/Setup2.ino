@@ -35,6 +35,7 @@ static const gpio_num_t mtxSelectors[] = {
     GPIO_NUM_16,
     GPIO_NUM_17,
     GPIO_NUM_5};
+
 static const gpio_num_t mtxInputs[] = {
     GPIO_NUM_36,
     GPIO_NUM_39,
@@ -45,21 +46,23 @@ static const gpio_num_t mtxInputs[] = {
     GPIO_NUM_25,
     GPIO_NUM_26};
 
+static inputNumber_t mtxNumbers[] = {
+    0, 1, 2, 3, 4, 5, 6,
+    7, 8, 9, 10, 11, 12, 13,
+    14, 15, 16, 17, 18, 19, 20,
+    21, 22, 23, 24, 25, 26, 27,
+    28, 29, 30, 31, 32, 33, 34,
+    35, 36, 37, 38, 39, 40, 41,
+    42, 43, 44, 45, 46, 47, 48,
+    49, 50, 51, 52, 53, 54, 55};
+
 //------------------------------------------------------------------
 // Mocks
 //------------------------------------------------------------------
 
-bool configMenu::toggle()
+void batteryCalibration::restartAutoCalibration()
 {
-    return false;
-}
-
-void configMenu::onInput(inputBitmap_t globalState, inputBitmap_t changes)
-{
-}
-
-void uartServer::onReceive(char *text)
-{
+    
 }
 
 //------------------------------------------------------------------
@@ -68,15 +71,16 @@ void uartServer::onReceive(char *text)
 
 void simWheelSetup()
 {
-    inputs::setButtonMatrix(
+    inputs::addButtonMatrix(
         mtxSelectors,
         sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
         mtxInputs,
-        sizeof(mtxInputs) / sizeof(mtxInputs[0]));      // fistButtonNumber=0
-    inputs::addRotaryEncoder(GPIO_NUM_26, GPIO_NUM_27); // fistButtonNumber=56
-    inputs::addRotaryEncoder(GPIO_NUM_12, GPIO_NUM_13); // fistButtonNumber=58
-    inputs::addRotaryEncoder(GPIO_NUM_18, GPIO_NUM_19); // fistButtonNumber=60
-    inputs::addRotaryEncoder(GPIO_NUM_22, GPIO_NUM_23); // fistButtonNumber=62
+        sizeof(mtxInputs) / sizeof(mtxInputs[0]),
+        mtxNumbers);
+    inputs::addRotaryEncoder(GPIO_NUM_26, GPIO_NUM_27, 56, 57);
+    inputs::addRotaryEncoder(GPIO_NUM_12, GPIO_NUM_13, 58, 59);
+    inputs::addRotaryEncoder(GPIO_NUM_18, GPIO_NUM_19, 60, 61);
+    inputs::addRotaryEncoder(GPIO_NUM_22, GPIO_NUM_23, 62, 63);
 }
 
 //------------------------------------------------------------------
@@ -86,12 +90,10 @@ void simWheelSetup()
 void setup()
 {
     inputs::begin();
-    inputHub::begin();
     simWheelSetup();
     hidImplementation::begin(
         DEVICE_NAME,
         DEVICE_MANUFACTURER,
-        false,
         false);
 
     inputs::start();

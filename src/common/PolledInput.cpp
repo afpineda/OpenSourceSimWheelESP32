@@ -7,9 +7,10 @@
  *
  */
 
-#include <Arduino.h>
 #include "PolledInput.h"
-//#include <FreeRTOS.h>
+#include "adcTools.h"
+#include <climits>
+// #include <limits.h>
 
 // ============================================================================
 // Implementation of class: PolledInput
@@ -22,9 +23,7 @@
 PolledInput::PolledInput(
     PolledInput *nextInChain)
 {
-    // Initialization
     this->nextInChain = nextInChain;
-    this->mask = ~(0ULL);
 }
 
 // ----------------------------------------------------------------------------
@@ -34,42 +33,6 @@ PolledInput::PolledInput(
 PolledInput *PolledInput::getNextInChain()
 {
     return nextInChain;
-}
-
-// ----------------------------------------------------------------------------
-// Setters
-// ----------------------------------------------------------------------------
-
-void PolledInput::updateMask(uint8_t inputsCount, inputNumber_t firstInputNumber)
-{
-    if (inputsCount > (64 - firstInputNumber))
-    {
-        log_e("Last button number is too high at PolledInput instance");
-        abort();
-    }
-    mask = BITMASK(inputsCount, firstInputNumber);
-}
-
-void PolledInput::updateMask(inputNumber_t *inputNumbersArray, uint8_t inputsCount)
-{
-    if (inputNumbersArray == nullptr)
-    {
-        mask = ~0ULL;
-        return;
-    }
-
-    mask = 0ULL;
-    for (uint8_t i = 0; i < inputsCount; i++)
-    {
-        if (inputNumbersArray[i] > MAX_INPUT_NUMBER)
-        {
-            log_e("Invalid input number at PolledInput::updateMask()");
-            abort();
-        }
-        inputBitmap_t currentBitmap = BITMAP(inputNumbersArray[i]);
-        mask = mask | currentBitmap;
-    }
-    mask = ~mask;
 }
 
 // ----------------------------------------------------------------------------
@@ -89,27 +52,81 @@ bool PolledInput::contains(
     return found;
 }
 
-inputBitmap_t PolledInput::readInChain(
+// ============================================================================
+// Implementation of class: DigitalPolledInput
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Constructor
+// ----------------------------------------------------------------------------
+
+DigitalPolledInput::DigitalPolledInput(
+    DigitalPolledInput *nextInChain) : PolledInput(nextInChain)
+{
+    this->mask = ~(0ULL);
+}
+
+// ----------------------------------------------------------------------------
+// Setters
+// ----------------------------------------------------------------------------
+
+void DigitalPolledInput::updateMask(uint8_t inputsCount, inputNumber_t firstInputNumber)
+{
+    if (inputsCount > (64 - firstInputNumber))
+    {
+        log_e("Last button number is too high at DigitalPolledInput instance");
+        abort();
+    }
+    mask = BITMASK(inputsCount, firstInputNumber);
+}
+
+void DigitalPolledInput::updateMask(inputNumber_t *inputNumbersArray, uint8_t inputsCount)
+{
+    if (inputNumbersArray == nullptr)
+    {
+        mask = ~0ULL;
+        return;
+    }
+
+    mask = 0ULL;
+    for (uint8_t i = 0; i < inputsCount; i++)
+    {
+        if (inputNumbersArray[i] > MAX_INPUT_NUMBER)
+        {
+            log_e("Invalid input number at DigitalPolledInput::updateMask()");
+            abort();
+        }
+        inputBitmap_t currentBitmap = BITMAP(inputNumbersArray[i]);
+        mask = mask | currentBitmap;
+    }
+    mask = ~mask;
+}
+
+// ----------------------------------------------------------------------------
+// Class methods
+// ----------------------------------------------------------------------------
+
+inputBitmap_t DigitalPolledInput::readInChain(
     inputBitmap_t lastState,
-    PolledInput *firstInChain)
+    DigitalPolledInput *firstInChain)
 {
     inputBitmap_t newState = 0ULL;
     while (firstInChain != nullptr)
     {
         inputBitmap_t itemState = firstInChain->read(lastState);
         newState = (newState & firstInChain->mask) | itemState;
-        firstInChain = firstInChain->nextInChain;
+        firstInChain = (DigitalPolledInput *)(firstInChain->nextInChain);
     }
     return newState;
 }
 
-inputBitmap_t PolledInput::getChainMask(PolledInput *firstInChain)
+inputBitmap_t DigitalPolledInput::getChainMask(DigitalPolledInput *firstInChain)
 {
     inputBitmap_t mask = ~(0ULL);
     while (firstInChain != nullptr)
     {
-        mask &= firstInChain->mask;
-        firstInChain = firstInChain->nextInChain;
+        mask &= (firstInChain->mask);
+        firstInChain = (DigitalPolledInput *)(firstInChain->nextInChain);
     }
     return mask;
 }
@@ -127,13 +144,13 @@ DigitalButton::DigitalButton(
     inputNumber_t buttonNumber,
     bool pullupOrPulldown,
     bool enableInternalPull,
-    PolledInput *nextInChain) : PolledInput(nextInChain)
+    DigitalPolledInput *nextInChain) : DigitalPolledInput(nextInChain)
 {
     // initalize
-    updateMask(1,buttonNumber);
+    updateMask(1, buttonNumber);
     this->pinNumber = pinNumber;
     this->pullupOrPulldown = pullupOrPulldown;
-    bitmap = BITMAP(buttonNumber);
+    this->bitmap = BITMAP(buttonNumber);
     debouncing = false;
 
     // Pin setup
@@ -178,60 +195,89 @@ inputBitmap_t DigitalButton::read(inputBitmap_t lastState)
 }
 
 // ============================================================================
-// Implementation of class: AnalogInput
+// Implementation of class: AnalogAxisInput
 // ============================================================================
 
 // ----------------------------------------------------------------------------
 // Constructor
 // ----------------------------------------------------------------------------
 
-AnalogInput::AnalogInput(
+AnalogAxisInput::AnalogAxisInput(
     gpio_num_t pinNumber,
-    inputNumber_t firstInputNumber,
-    analogReading_t *minReading,
-    analogReading_t *maxReading,
-    uint8_t arrayLength,
-    PolledInput *nextInChain) : PolledInput(nextInChain)
+    inputNumber_t inputNumber,
+    bool reversed)
 {
-    // Pin setup
-    ESP_ERROR_CHECK(gpio_set_direction(pinNumber, GPIO_MODE_INPUT));
-    ESP_ERROR_CHECK(gpio_set_pull_mode(pinNumber, GPIO_FLOATING));
+    // Check parameters
+    if (!GPIO_IS_VALID_GPIO(pinNumber) ||
+        (digitalPinToAnalogChannel(pinNumber) < 0))
+    {
+        log_e("AnalogAxisInput::AnalogAxisInput: given pins are not usable");
+        abort();
+    }
 
-    // Initialization
-    this->firstInputNumber = firstInputNumber;
+    // Initialize
     this->pinNumber = pinNumber;
-    this->arrayLength = arrayLength;
-    this->minReading = minReading;
-    this->maxReading = maxReading;
+    this->bitmap = BITMAP(inputNumber);
+    this->mask = BITMASK(1, inputNumber);
+    this->reversed = reversed;
+    lastADCReading = 0;
+    lastValue = -128;
+
+    // Note: we assume the potentiometer works on the full range of voltage.
+    // If that is not the case, the user should ask for recalibration.
+    // Storage of calibration data is handled at `Inputs.cpp`
+    minADCReading = 0;
+    maxADCReading = 254;
 }
 
 // ----------------------------------------------------------------------------
-// Read
+// Methods
 // ----------------------------------------------------------------------------
 
-int AnalogInput::filteredAnalogRead()
+void AnalogAxisInput::read(clutchValue_t *value, bool *changed, bool *autocalibrated)
 {
-    analogRead(pinNumber); // discard first reading
-    int filterOutput = 0;
-    for (int i = 0; i < 4; i++)
+    // read ADC and remove 4 bits of noise
+    int currentReading = getADCreading(pinNumber, ADC_ATTEN_DB_11) >> 4;
+    // filter
+    currentReading = (currentReading + lastADCReading) >> 1; // average
+
+    // Autocalibrate
+    *autocalibrated = false;
+    if (currentReading < minADCReading)
     {
-        int reading = analogRead(pinNumber);
-        // filterOutput = ((reading - filterOutput) / 4) + filterOutput;
-        filterOutput = ((reading - filterOutput) >> 2) + filterOutput;
+        minADCReading = currentReading;
+        *autocalibrated = true;
     }
-    return filterOutput;
+    if (currentReading > maxADCReading)
+    {
+        maxADCReading = currentReading;
+        *autocalibrated = true;
+    }
+
+    // map ADC reading to axis value
+    if (reversed)
+        *value = map(currentReading, minADCReading, maxADCReading, CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
+    else
+        *value = map(currentReading, minADCReading, maxADCReading, CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
+    *changed = ((*value) != lastValue);
+    lastADCReading = currentReading;
+    lastValue = *value;
 }
 
-int AnalogInput::getReadingIndex()
+void AnalogAxisInput::getCalibrationData(int *minReading, int *maxReading)
 {
-    analogReading_t reading = filteredAnalogRead();
+    *minReading = this->minADCReading;
+    *maxReading = this->maxADCReading;
+}
 
-    for (inputNumber_t i = 0; i < arrayLength; i++)
-    {
-        if ((minReading[i] <= reading) && (reading <= maxReading[i]))
-            return i;
-    }
+void AnalogAxisInput::resetCalibrationData()
+{
+    minADCReading = INT_MAX;
+    maxADCReading = INT_MIN;
+}
 
-    // unknown
-    return -1;
+void AnalogAxisInput::setCalibrationData(int minReading, int maxReading)
+{
+    minADCReading = minReading;
+    maxADCReading = maxReading;
 }

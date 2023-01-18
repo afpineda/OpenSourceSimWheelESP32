@@ -1,6 +1,0 @@
-SimWheelTypes.h
-SimWheel.h
-strings.h
-uiManager.cpp
-ui_ssoled.cpp
-language.cpp

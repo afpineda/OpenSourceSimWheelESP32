@@ -10,7 +10,7 @@
 #include <Arduino.h>
 #include "Preferences.h"
 #include "SimWheel.h"
-//#include "debugUtils.h"
+// #include "debugUtils.h"
 
 // ----------------------------------------------------------------------------
 // Globals
@@ -25,13 +25,30 @@ static uint32_t totalBatterySamplesCount = 0;
 volatile int batteryCalibration::maxBatteryReadingEver = -1; // unknown
 volatile bool batteryCalibration::calibrationInProgress = false;
 
-//#define MIN_AUTOCALIBRATION_READING 2400
 #define PREFS_NAMESPACE "bcal"
 #define KEY_SAMPLE_COUNT "q%02.2d"
 #define KEY_MAX_READING "m"
 
-using namespace batteryCalibration;
 
+// ----------------------------------------------------------------------------
+// Save to flash memory
+// ----------------------------------------------------------------------------
+
+void batteryCalibration::save()
+{
+    Preferences prefs;
+    if (prefs.begin(PREFS_NAMESPACE, false))
+    {
+        char key[5];
+        for (int q = 0; q < QUANTUM_COUNT; q++)
+        {
+            snprintf(key, 5, KEY_SAMPLE_COUNT, q);
+            prefs.putUShort(key, batteryCalibrationQuantum[q]);
+        }
+        prefs.end();
+    }
+    calibrationInProgress = false;
+}
 // ----------------------------------------------------------------------------
 // Initialization
 // ----------------------------------------------------------------------------
@@ -67,33 +84,15 @@ void batteryCalibration::begin()
     }
     else
         clear();
-}
-
-// ----------------------------------------------------------------------------
-// Save to flash memory
-// ----------------------------------------------------------------------------
-
-void batteryCalibration::save()
-{
-    Preferences prefs;
-    if (prefs.begin(PREFS_NAMESPACE, false))
-    {
-        char key[5];
-        for (int q = 0; q < QUANTUM_COUNT; q++)
-        {
-            snprintf(key, 5, KEY_SAMPLE_COUNT, q);
-            prefs.putUShort(key, batteryCalibrationQuantum[q]);
-        }
-        prefs.end();
-    }
-    calibrationInProgress = false;
+    if (totalBatterySamplesCount>0)
+        capabilities::setFlag(CAP_BATTERY_CALIBRATION_AVAILABLE);
 }
 
 // ----------------------------------------------------------------------------
 // Sampling
 // ----------------------------------------------------------------------------
 
-void batteryCalibration::addSample(int reading)
+void batteryCalibration::addSample(int reading, bool save)
 {
     if ((reading < 0) || (reading > 4095))
     {
@@ -112,6 +111,17 @@ void batteryCalibration::addSample(int reading)
     {
         batteryCalibrationQuantum[quantumIndex] += 1;
         totalBatterySamplesCount++;
+        if (save)
+        {
+            Preferences prefs;
+            if (prefs.begin(PREFS_NAMESPACE, false))
+            {
+                char key[5];
+                snprintf(key, 5, KEY_SAMPLE_COUNT, quantumIndex);
+                prefs.putUShort(key, batteryCalibrationQuantum[quantumIndex]);
+                prefs.end();
+            }
+        }
     }
     else
     {
@@ -192,24 +202,24 @@ int batteryCalibration::getBatteryLevel(int reading)
 // Auto-calibrated algorithm
 // ----------------------------------------------------------------------------
 
-int batteryCalibration::getGenericLiPoBatteryLevel(int reading)
+int getGenericLiPoBatteryLevel(int reading)
 {
     int result;
-    if (reading <= 2029)
+    if (reading < 4059)
     {
         result = 0;
     }
-    else if (reading <= 2290)
+    else if (reading < 4580)
     {
-        result = ((10 * (reading - 2029)) / 261);
+        result = ((10 * (reading - 4059)) / 521);
     }
-    else if (reading <= 2402)
+    else if (reading < 4803)
     {
-        result = ((50 * (reading - 2290)) / 112) + 10;
+        result = ((50 * (reading - 4580)) / 223) + 10;
     }
-    else if (reading <= 2607)
+    else if (reading < 5213)
     {
-        result = ((40 * (reading - 2402)) / 205) + 60;
+        result = ((40 * (reading - 4803)) / 410) + 60;
     }
     else
         result = 100;
@@ -218,7 +228,7 @@ int batteryCalibration::getGenericLiPoBatteryLevel(int reading)
 
 int batteryCalibration::getBatteryLevelAutoCalibrated(int reading)
 {
-    if (reading >= 4096)
+    if (reading >= 4095)
     {
         return 100;
     }
@@ -226,8 +236,7 @@ int batteryCalibration::getBatteryLevelAutoCalibrated(int reading)
     {
         return 0;
     }
-
-    if (reading > maxBatteryReadingEver)
+    else if (reading > maxBatteryReadingEver)
     {
         maxBatteryReadingEver = reading;
         Preferences prefs;
@@ -240,8 +249,9 @@ int batteryCalibration::getBatteryLevelAutoCalibrated(int reading)
 
     if (maxBatteryReadingEver >= 0)
     {
-        reading = map(reading, 0, maxBatteryReadingEver, 0, 2608);
-        return batteryCalibration::getGenericLiPoBatteryLevel(reading);
+        int minBatteryReading = 4059 * maxBatteryReadingEver / 5213;
+        reading = map(reading, minBatteryReading, maxBatteryReadingEver, 4059, 5213);
+        return getGenericLiPoBatteryLevel(reading);
     }
     else
         return UNKNOWN_BATTERY_LEVEL;
@@ -250,7 +260,7 @@ int batteryCalibration::getBatteryLevelAutoCalibrated(int reading)
 void batteryCalibration::restartAutoCalibration()
 {
     maxBatteryReadingEver = -1;
-    
+
     Preferences prefs;
     if (prefs.begin(PREFS_NAMESPACE, false))
     {

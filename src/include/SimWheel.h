@@ -20,31 +20,109 @@
 #include <string>
 
 /**
- * @brief Language for the user interface
+ * @brief Device capabilities
  *
  */
-namespace language
+namespace capabilities
 {
+    // For read only
+    extern volatile uint32_t flags;
+
+    /**
+     * @brief Set a device capability. Should be called before `hidImplementation::begin()`.
+     *        All capabilities are static and should not change once set.
+     *        Will be called from other namespaces. No need for manual set up.
+     *
+     * @param newFlag A device capability.
+     * @param setOrClear When true, the flag is set. Otherwise, the flag is cleared.
+     */
+    void setFlag(deviceCapability_t newFlag, bool setOrClear = true);
+
+    /**
+     * @brief Ask for a device capability
+     *
+     * @param flag Requested capability
+     * @return true The device has the given capability
+     * @return false The device does not have the given capability
+     */
+    bool inline hasFlag(deviceCapability_t flag);
+}
+
+/**
+ * @brief Current state of the clutch paddles (if any) and,
+ *        for convenience, mode of "ALT" buttons
+ *
+ */
+namespace clutchState
+{
+    // For read only. do not touch
+    extern volatile clutchValue_t leftAxis;
+    extern volatile clutchValue_t rightAxis;
+    extern volatile clutchValue_t combinedAxis;
+    extern volatile clutchValue_t bitePoint;
+    extern volatile clutchFunction_t currentFunction;
+    extern volatile bool altModeForAltButtons;
+
     /**
      * @brief Must be called before anything else in this namespace. Will
-     *        load the configured UI language from flash memory.
+     *        load user settings from flash memory.
      *
+     * @note Do not call while testing. This way, autosaving will get disabled.
      **/
     void begin();
 
     /**
-     * @brief Set the current language for the UI. Will be stored in flash memory.
+     * @brief Set operation mode for "ALT" buttons (not clutch related)
      *
-     * @param lang Language
+     * @param newMode When True, "ALT" buttons should activate "ALT" mode.
+     *                Otherwise, they behave as regular buttons.
      */
-    void setLanguage(language_t lang);
+    void setALTModeForALTButtons(bool newMode);
 
     /**
-     * @brief Retrieve the current language for the UI
+     * @brief Assign a function to the clutch paddles
      *
-     * @return language_t Current language for the UI
+     * @param newFunction Function of the clutch paddles
      */
-    language_t getLanguage();
+    void setFunction(clutchFunction_t newFunction);
+
+    /**
+     * @brief Set the current bite point
+     *
+     * @param newBitePoint
+     */
+    void setBitePoint(clutchValue_t newBitePoint);
+
+    /**
+     * @brief Set the position of the left padlle axis
+     *
+     * @param newValue Axis position
+     */
+    void setLeftAxis(clutchValue_t newValue);
+
+    /**
+     * @brief Set the position of the right paddle axis
+     *
+     * @param newValue Axis position
+     */
+    void setRightAxis(clutchValue_t newValue);
+
+    /**
+     * @brief Check if any clutch paddle is pressed while
+     *        "ALT" function is selected
+     *
+     * @return true if ALT mode is requested
+     * @return false otherwise
+     */
+    bool isALTRequested();
+
+    /**
+     * @brief Check if bite point calibration is requested by the user
+     *
+     * @return true if bite point can be manually calibrated
+     * @return false otherwise
+     */
+    bool isCalibrationInProgress();
 }
 
 /**
@@ -79,11 +157,12 @@ namespace batteryCalibration
     /**
      * @brief Add an ADC reading to calibration data. The battery should get fully charged
      *        before first call. Will clear previous data at first call.
-     *        Calibration data will **not** be available until `save()` is called.
+     *        Calibration data will **not** be available until `calibrationInProgress` is set to false.
      *
      * @param reading An ADC reading of current battery(+) voltage.
+     * @param save When true, the given sample will be saved to flash memory.
      */
-    void addSample(int reading);
+    void addSample(int reading, bool save = false);
 
     /**
      * @brief Get calibration data. For internal use.
@@ -122,18 +201,7 @@ namespace batteryCalibration
      *
      */
     extern volatile int maxBatteryReadingEver;
-
-    /**
-     * @brief Get a rough estimation of the battery charge based on
-     *        LiPo battery characterization data. Not accurate, but allways available.
-     *
-     * @param reading An ADC reading of current battery(+) voltage.
-     * @return int A percentage in the range 0%-100%
-     *
-     * @note Based on https://blog.ampow.com/lipo-voltage-chart/
-     */
-    int getGenericLiPoBatteryLevel(int reading);
-
+    
     /**
      * @brief Restart autocalibration algorithm.
      *
@@ -142,14 +210,16 @@ namespace batteryCalibration
 
     /**
      * @brief Get a percentage of battery charge using auto-calibration.
-     *        Based on `getGenericLiPoBatteryLevel()`. Will provide incorrect
-     *        battery levels (higher) until the battery is fully charged.
+     *        Will provide incorrect battery levels (higher) until 
+     *        the battery is fully charged. 
      *        Anyway, this algorithm is not accurate.
      *
      * @param reading An ADC reading of current battery(+) voltage
      *
      * @return If auto-calibration is available, a percentage in the range 0%-100%.
      *         Otherwise, the constant `UNKNOWN_BATTERY_LEVEL`.
+     * 
+     * @note Based on https://blog.ampow.com/lipo-voltage-chart/
      */
     int getBatteryLevelAutoCalibrated(int reading);
 
@@ -193,9 +263,12 @@ namespace power
     /**
      * @brief Enable monitorization of battery charge. Do not call if there is no battery.
      *
-     * @param battENPin Output pin to enable/disable the battery monitor circuit
+     * @param battENPin Output pin to enable/disable the battery monitor circuit.
+     *                  Set to `GPIO_NUM_NC` (-1) if `battREADPin` is attached to
+     *                  a simple voltage divider. This is the case for most battery-enabled devkits.
      * @param battREADPin ADC pin used to read battery voltage
-     * @param testing Set to TRUE for unit testing. Will get a battery sample every 5 seconds.
+     * @param testing Set to TRUE for unit testing: will get a battery sample every 5 seconds,
+     *                will not power off the device.
      */
     void startBatteryMonitor(
         gpio_num_t battENPin,
@@ -215,25 +288,15 @@ namespace power
     /**
      * @brief Get last known battery level
      *
-     * @return int Percentage of battery charge
+     * @return int Percentage of battery charge (0% to 100%)
      */
     int getLastBatteryLevel();
 
     /**
-     * @brief Check if the battery monitor is running
-     *
-     * @return true If the battery monitor is running
-     * @return false Otherwise
-     */
-    bool hasBatteryMonitor();
-
-    /**
      * @brief If an external power latch circuit is in place, the system will be powered off.
      *        Otherwise, deep sleep mode will be enabled.
-     *
-     * @param forced Set to TRUE when requested by the user, FALSE otherwise.
      */
-    void powerOff(bool forced = false);
+    void powerOff();
 }
 
 /**
@@ -256,6 +319,13 @@ namespace inputs
     void start();
 
     /**
+     * @brief Force an update in inputs' current state. Called from other namespaces after a 
+     *        change in configuration.
+     * 
+     */
+    void update();
+
+    /**
      * @brief Used from input classes to report a new event.
      *        Should not be called if there is no change since the last report (of the same input).
      *
@@ -263,21 +333,6 @@ namespace inputs
      * @param state Current state of such an input. Should not set any bit outside of its mask.
      */
     void notifyInputEvent(inputBitmap_t mask, inputBitmap_t state);
-
-    /**
-     * @brief Add a digital button. Must be called before `start()`
-     *
-     * @param[in] pinNumber Pin where the digital button is attached to
-     * @param[in] pullupOrPulldown TRUE if a pullup resistor is used (LOW signal when pressed).
-     *                             FALSE if a pulldown resistor is used (HIGH signal when pressed)
-     * @param[in] enableInternalPull TRUE if the internal pullup or pulldown resistor must be enabled.
-     *                               Ignored if the GPIO pin does not provide a pull resistor.
-     * @return inputNumber_t Number assigned to the button.
-     */
-    inputNumber_t addDigital(
-        gpio_num_t pinNumber,
-        bool pullupOrPulldown = true,
-        bool enableInternalPull = true);
 
     /**
      * @brief Add a digital button bound to a specific input number. Must be called before `start()`
@@ -289,28 +344,11 @@ namespace inputs
      *                               Ignored if the GPIO pin does not provide a pull resistor.
      * @param[in] inputNumber Requested input number for this button
      */
-    void addDigitalExt(
+    void addDigital(
         gpio_num_t pinNumber,
         inputNumber_t inputNumber,
         bool pullupOrPulldown = true,
         bool enableInternalPull = true);
-
-    /**
-     * @brief Add incremental rotary encoder inputs. Must be called before `start()`
-     *
-     * @param clkPin pin number attached to CLK or A
-     * @param dtPin pin number attached to DT or B
-     * @param[in] useAlternateEncoding Set to true in order to use the signal encoding of
-     *                                 ALPS RKJX series of rotary encoders, and the alike.
-     * @return inputNumber_t Number assigned to the clockwise rotation. `Number+1` is the
-     *         assigned number to the counter-clockwise rotation.
-     * @note Only rotation events are considered for input. Rotary's push button must be added
-     *       with `addDigital()`
-     */
-    inputNumber_t addRotaryEncoder(
-        gpio_num_t clkPin,
-        gpio_num_t dtPin,
-        bool useAlternateEncoding = true);
 
     /**
      * @brief Add incremental rotary encoder inputs bound to specific input numbers.
@@ -326,27 +364,12 @@ namespace inputs
      * @note Only rotation events are considered for input. Rotary's push button must be added
      *       with `addDigital()`
      */
-    void addRotaryEncoderExt(
+    void addRotaryEncoder(
         gpio_num_t clkPin,
         gpio_num_t dtPin,
         inputNumber_t cwInputNumber,
         inputNumber_t ccwInputNumber,
-        bool useAlternateEncoding = true);
-
-    /**
-     * @brief Setup a single button matrix. Must be called before `start()`
-     *
-     * @param selectorPins Array of pin numbers used as selector pins
-     * @param selectorPinCount Length of the `selectorPins` array
-     * @param inputPins Array of pin numbers used as input pins
-     * @param inputPinCount Length of the `inputPins` array
-     * @return inputNumber_t Number assigned to the first button.
-     */
-    inputNumber_t setButtonMatrix(
-        const gpio_num_t selectorPins[],
-        const uint8_t selectorPinCount,
-        const gpio_num_t inputPins[],
-        const uint8_t inputPinCount);
+        bool useAlternateEncoding = false);
 
     /**
      * @brief Add a button matrix bound to specific button numbers.
@@ -360,12 +383,63 @@ namespace inputs
      *                           The length of this array is expected to match the
      *                           product of `selectorPinCount` and `inputPinCount`.
      */
-    void addButtonMatrixExt(
+    void addButtonMatrix(
         const gpio_num_t selectorPins[],
         const uint8_t selectorPinCount,
         const gpio_num_t inputPins[],
         const uint8_t inputPinCount,
         inputNumber_t *buttonNumbersArray);
+
+    /**
+     * @brief Set two potentiometers attached to clutch paddles. Each one
+     *        will work as an analog axis. Must be called before `start()`.
+     *
+     * @param leftClutchPin ADC pin for the left clutch paddle
+     * @param rightClutchPin ADC pin for the right clutch paddle.
+     *        Must differ from `leftClutchPin`.
+     * @param leftClutchInputNumber Input number for the left paddle
+     *        (to be reported in button mode)
+     * @param rightClutchInputNumber Input number for the right paddle
+     *        (to be reported in button mode)
+     *
+     * @note Only one `set*ClutchPaddles` method can be called and only once.
+     *       Otherwise an error is raised.
+     */
+    void setAnalogClutchPaddles(
+        const gpio_num_t leftClutchPin,
+        const gpio_num_t rightClutchPin,
+        const inputNumber_t leftClutchInputNumber,
+        const inputNumber_t rightClutchInputNumber);
+
+    /**
+     * @brief Set two inputs to digital clutch paddles. Must be called before `start()`.
+     *
+     * @param leftClutchInputNumber Input number for the left clutch
+     * @param rightClutchInputNumber Input number for the right clutch.
+     *        Must differ from `leftClutchInputNumber`.
+     *
+     * @note Only one `set*ClutchPaddles` method can be called and only once.
+     *       Otherwise an error is raised.
+     */
+    void setDigitalClutchPaddles(
+        const inputNumber_t leftClutchInputNumber,
+        const inputNumber_t rightClutchInputNumber);
+
+    /**
+     * @brief Force autocalibration of all axes (analog clutch paddles)
+     *
+     */
+    void recalibrateAxes();
+
+    /**
+     * @brief Exposed for testing. Do not call.
+     *
+     */
+    void notifyInputEventForTesting(
+        uint8_t id,
+        inputBitmap_t bitmap,
+        inputBitmap_t mask,
+        clutchValue_t value);
 }
 
 /**
@@ -375,57 +449,18 @@ namespace inputs
 namespace inputHub
 {
     /**
-     * @brief Must be called before anything else in this namespace
-     *
-     */
-    void begin();
-
-    /**
-     * @brief Handle a change in the state of any input. The states of all inputs
+     * @brief Handle a change in the state of any input. The states of all digital inputs
      *        are combined into a single global state.
      *        Will be called from a single separate background thread.
      *
      * @param globalState Current state of all inputs
      * @param changes A bit array assembling which inputs have changed since last report.
      *                1 means changed, 0 means not changed.
+     *
+     * @note May be called even if `changes==0`, due to changes in the state of
+     *       an analog axis or a digital clutch.
      */
     void onStateChanged(inputBitmap_t globalState, inputBitmap_t changes);
-
-    /**
-     * @brief Get current clutch bite point
-     *
-     * @return calibrated clutch value
-     */
-    clutchValue_t getClutchBitePoint();
-
-    /**
-     * @brief Get current function of ALT buttons
-     *
-     * @return TRUE if ALT buttons trigger alternate mode. FALSE if ALT buttons are reported
-     *         as regular buttons.
-     */
-    bool getALTFunction();
-
-    /**
-     * @brief Get current function of clutch paddles
-     *
-     * @return Clutch paddles function
-     */
-    clutchFunction_t getClutchFunction();
-
-    /**
-     * @brief Check if clutch paddles have been set up
-     *
-     * @return FALSE if there are no clutch paddles
-     */
-    bool hasClutchPaddles();
-
-    /**
-     * @brief Check if ALT buttons have been set up
-     *
-     * @return FALSE if there are no ALT buttons
-     */
-    bool hasALTButtons();
 
     /**
      * @brief Set the bitmap for all ALT buttons. For example:
@@ -444,14 +479,6 @@ namespace inputHub
     void setALTButton(const inputNumber_t altNumber);
 
     /**
-     * @brief Set the calibrated bite point for the clutch
-     *
-     * @param calibrationValue calibrated value of the clutch
-     * @param save Request autosave
-     */
-    void setClutchBitePoint(clutchValue_t calibrationValue, bool save = false);
-
-    /**
      * @brief Set up buttons for clutch calibration while one and only one clutch paddle is pressed
      *
      * @param upButtonNumber Button number to increase bite point
@@ -460,63 +487,6 @@ namespace inputHub
     void setClutchCalibrationButtons(
         const inputNumber_t upButtonNumber,
         const inputNumber_t downButtonNumber);
-
-    /**
-     * @brief Set a function for the ALT buttons
-     *
-     * @param altFunction TRUE if ALT buttons must enable alternate mode. FALSE if
-     *        ALT button inputs are to be reported as regular inputs. Default is TRUE.
-     * @param save Request autosave
-     */
-    void setALTFunction(bool altFunction, bool save = false);
-
-    /**
-     * @brief Set a function for the clutch paddles
-     *
-     * @param newFunction Requested function for the clutch paddles
-     * @param save Request autosave
-     */
-    void setClutchFunction(clutchFunction_t newFunction, bool save = false);
-
-    /**
-     * @brief Set up buttons for clutch operation
-     *
-     * @param leftClutchNumber Button number for the left clutch paddle
-     * @param rightClutchNumber Button number for the right clutch paddle
-     */
-    void setClutchPaddles(
-        const inputNumber_t leftClutchNumber,
-        const inputNumber_t rightClutchNumber);
-
-    /**
-     * @brief Set a button number to invoke the configuration menu.
-     *        May be used instead of `setMenuBitmap()`.
-     *
-     * @note This button must be pressed for two seconds or more, and then released, for the menu to show up
-     *       No other button must be pressed at the same time.
-     *       If no long press is detected, it will be reported as a regular button.
-     *
-     * @param menuButtonNumber Button number assigned to the menu function
-     */
-    void setMenuButton(const inputNumber_t menuButtonNumber);
-
-    /**
-     * @brief Set a bitmap to invoke the configuration menu. All buttons
-     *        in the bitmap must be pressed at the same time, and no other button.
-     *        May be used instead of `setMenuButton()`.
-     *
-     * @note These buttons must be pressed for two seconds or more, and then released, for the menu to show up.
-     *       If no long press is detected, they will be reported as regular buttons.
-     *
-     * @param menuButtonsBitmap Bitmap of buttons assigned to the menu function
-     */
-    void setMenuBitmap(const inputBitmap_t menuButtonsBitmap);
-
-    /**
-     * @brief Called from `configMenu` to notify that the menu is not shown anymore
-     *
-     */
-    void notifyMenuExit();
 
     /**
      * @brief Configure directional pad buttons
@@ -543,247 +513,128 @@ namespace inputHub
         inputNumber_t padUpRightNumber = UNSPECIFIED_INPUT_NUMBER,
         inputNumber_t padDownLeftNumber = UNSPECIFIED_INPUT_NUMBER,
         inputNumber_t padDownRightNumber = UNSPECIFIED_INPUT_NUMBER);
+
+    /**
+     * @brief Set up a bitmap of buttons to cycle the function of "ALT" buttons (if any).
+     *        All buttons in the bitmap must be pressed at the same time and none of the others.
+     *
+     * @param bitmap A bitmap of button numbers, for example `BITMAP(JOY_BACK) | BITMAP(JOY_A)`.
+     *
+     * @note Make sure all buttons in the bitmap are able to be pressed at the same time.
+     */
+    void setCycleALTFunctionBitmap(const inputBitmap_t bitmap);
+
+    /**
+     * @brief Set up a bitmap of buttons to cycle the function of clutch paddles (if any).
+     *        All buttons in the bitmap must be pressed at the same time and none of the others.
+     *
+     * @param bitmap A bitmap of button numbers, for example `BITMAP(JOY_BACK) | BITMAP(JOY_B)`.
+     *
+     * @note Make sure all buttons in the bitmap are able to be pressed at the same time.
+     */
+    void setCycleClutchFunctionBitmap(const inputBitmap_t bitmap);
+
+    /**
+     * @brief Set up a bitmap of buttons to enable each specific clutch function for clutch paddles.
+     *        All buttons in the bitmap must be pressed at the same time and none of the others.
+     *        This is compatible with `setCycleClutchFunctionbitmap`.
+     *
+     * @param clutchModeBitmap A bitmap of button numbers to enable the F1-style clutch function
+     * @param axisModeBitmap A bitmap of button numbers to enable the analog axes function
+     * @param altModeBitmap A bitmap of button numbers to enable the "ALT" function
+     * @param buttonModeBitmap A bitmap of button numbers to enable the "regular buttons" function
+     *
+     * @note Set the bitmap to `0` if a particular function must not be mapped to any input.
+     *       Make sure all buttons in a bitmap are able to be pressed at the same time.
+     */
+    void setSelectClutchFunctionBitmaps(
+        const inputBitmap_t clutchModeBitmap,
+        const inputBitmap_t axisModeBitmap,
+        const inputBitmap_t altModeBitmap,
+        const inputBitmap_t buttonModeBitmap);
+
+    /**
+     * @brief Set up a bitmap of buttons for two recalibration commands.
+     *        All buttons in the bitmap must be pressed at the same time and none of the others.
+     * 
+     * @param recalibrateAxisBitmap A bitmap of button numbers to ask for autocalibration of analog axes.
+     * @param recalibrateBatteryBitmap A bitmap of button numbers to ask for recalibration of battery levels.
+     * 
+     * @note Set to zero if a command is not required (e.g. there is no battery)
+     */
+    void setCalibrationCommandBitmaps(
+        const inputBitmap_t recalibrateAxisBitmap,
+        const inputBitmap_t recalibrateBatteryBitmap = 0);
 }
 
 /**
- * @brief Coordinate the use of the OLED display from multiple threads
+ * @brief Show notifications to the user if a user interface (UI) is available.
+ *        Different user interfaces may be implemented in the future.
  *
  */
-namespace uiManager
+namespace notify
 {
     /**
-     * @brief Must be called before anything else in this namespace
+     * @brief Set up an UI-dependant implementation for user notifications.
+     *        Do not call if there is no user interface.
+     *
+     * @param implementation An object that actually implements user notifications.
+     *                       Must remain valid forever (do not destroy).
      *
      */
-    void begin();
+
+    void begin(AbstractNotificationInterface *implementation);
 
     /**
-     * @brief Acquire exclusive access to the display buffer assigned to a certain screen priority
+     * @brief Notify current clutch's bite point
      *
-     * @param priority Screen priority
-     * @return uint8_t* buffer used to draw the screen
-     *
-     * @note Every call to `enterDisplay` must be followed by a call to `exitDisplay`.
-     *       Two calls in a row will cause a deadlock.
+     * @param aBitePoint Current bite point
      */
-    uint8_t *enterDisplay(screenPriority_t priority);
+    void bitePoint(clutchValue_t aBitePoint);
 
     /**
-     * @brief Release exclusive access to a buffer and display it.
-     *
-     * @param priority Screen priority
-     * @param autoHide If TRUE, this screen will be cleared after a few seconds.
-     *
-     * @note Every call to `exitDisplay` must be preceded by a single call to `enterDisplay`.
+     * @brief Notify the device is connected to a host computer
      *
      */
-    void exitDisplay(screenPriority_t priority, bool autoHide);
+    void connected();
 
     /**
-     * @brief Acquire a buffer for the frame server daemon.
-     *        Must be called from a single thread. Reserved for use by a frame server.
-     *
-     * @return uint8_t* buffer used to draw the screen. Must not be shared betweeen threads.
+     * @brief Notify bluetooth radio is in discovery mode
+     * 
      */
-    uint8_t *getFrameServerBuffer();
+    void BLEdiscovering();
 
     /**
-     * @brief Display the buffer assigned to the frame server.
-     *        Must be called from a single thread. Reserved for use by a frame server.
+     * @brief Notify the device is about to power off or deep sleep
      *
      */
-    void unsafeDisplayFrameServerBuffer();
+    void powerOff();
 
     /**
-     * @brief Clear screen
+     * @brief Notify a very low battery level
      *
-     * @param priority Screen priority
-     *
-     * @note Must not be called between `enterDisplay` and `exitDisplay`, otherwise a deadlock
-     *       will occur.
      */
-    void hide(screenPriority_t priority);
+    void lowBattery();
 }
 
 /**
- * @brief Implementation of a user interface
- *
- */
-namespace ui
-{
-    /**
-     * @brief Initialize display
-     *
-     * @param pixels_width Resolution width in pixels
-     * @param pixels_height Resolution height in pixels
-     * @param displayType Type of display controller
-     * @param flipUpsideDown Set to true if the display is mounted upside down
-     * @return true OLED is available
-     * @return false OLED is not available
-     */
-    bool begin(
-        int pixels_width = 128,
-        int pixels_height = 64,
-        displayType_t displayType = SSOLED_132x64,
-        bool flipUpsideDown = false);
-
-    /**
-     * @brief Clear the screen. Called exclusively from `uiManager`. Must not call `uiManager`.
-     */
-    void clear();
-
-    /**
-     * @brief Display the given buffer. Called exclusively from `uiManager`. Must not call `uiManager`.
-     *
-     * @param buffer data to display
-     */
-    void display(uint8_t *buffer);
-
-    /**
-     * @brief Display current clutch's bite point
-     *
-     * @param value Bite point
-     * @return Screen ID
-     */
-    void showBitePoint(clutchValue_t value);
-
-    /**
-     * @brief Show a menu screen
-     *
-     * @param title Menu title
-     * @param selection Currently selected option or submenu
-     */
-    void showMenu(const char *title, const char *selection);
-
-    /**
-     * @brief Show message
-     *
-     * @param title Title. Optional: Can be null
-     * @param info Message to display
-     * @param priority Screen priority
-     *
-     * @note Will auto-hide after a few seconds
-     */
-    void showInfo(const char *title, const char *info, screenPriority_t priority = SCR_INFO_PRIORITY);
-
-    /**
-     * @brief Show message and wait for it to disapear.
-     *
-     * @param title Title. Optional: Can be null
-     * @param info Message to display
-     * @param priority Screen priority
-     *
-     * @note Will not return inmediately, but after a few seconds. Use wisely.
-     */
-    void showModal(const char *title, const char *info, screenPriority_t priority = SCR_INFO_PRIORITY);
-
-    /**
-     * @brief Macro to hide SCR_MENU_PRIORITY screen
-     *
-     */
-    void hideMenu();
-
-    /**
-     * @brief Macro to show a data save notice
-     *
-     */
-    void showSaveNote();
-
-    /**
-     * @brief Macro to show a Bluetooth connection notice
-     *
-     */
-    void showConnectedNotice();
-
-    /**
-     * @brief Macro to tell the user that Bluetooth discovery is active
-     *
-     */
-    void showBLEDiscoveringNotice();
-
-    /**
-     * @brief Macro to warn the user that the battery charge is about to deplete
-     *
-     */
-    void showLowBatteryNotice();
-
-    /**
-     * @brief Cut power to the display in order to preserve battery.
-     *        Will be called before system shutdown.
-     */
-    void turnOff();
-
-    /**
-     * @brief Activate or deactivate the frame server in order to
-     *        display simulation data (low priority)
-     *
-     * @param state TRUE to enable, FALSE to disable
-     */
-    void frameServerSetEnabled(bool state);
-
-    /**
-     * @brief  Check if the OLED is available
-     *
-     * @return true Available
-     * @return false Not available
-     */
-    bool isAvailable();
-}
-
-/**
- * @brief Operarion of the user config menu
- *
- */
-namespace configMenu
-{
-    /**
-     * @brief Show configuration menu if not shown and vice-versa
-     *
-     * @return true Menu is shown
-     * @return false Menu is not shown or there is no user interface available
-     */
-    bool toggle();
-
-    /**
-     * @brief Route input events to the configuration menu, when shown
-     *
-     * @param globalState input bitmap
-     * @param changes bitmap of inputs that have changed since last report
-     *
-     * @note Called exclusivelly from `inputHub`
-     */
-    void onInput(inputBitmap_t globalState, inputBitmap_t changes);
-
-    /**
-     * @brief Configured buttons used to navigate through menu options
-     *
-     * @param prevButtonNumber button number for previous option or submenu
-     * @param nextButtonNumber button number for next option or submenu
-     * @param selectButtonNumber button number to select current option or enter submenu
-     * @param cancelButtonNumber button number to go back to previous menu
-     */
-    void setNavButtons(
-        inputNumber_t prevButtonNumber,
-        inputNumber_t nextButtonNumber,
-        inputNumber_t selectButtonNumber,
-        inputNumber_t cancelButtonNumber);
-}
-
-/**
- * @brief Implementation of the "Human Interface Device" protocol and UART service
+ * @brief Implementation of the "Human Interface Device"
  *
  */
 namespace hidImplementation
 {
     /**
-     * @brief Initialize bluetooth device
+     * @brief Initialize bluetooth/USB device
      *
      * @param deviceName Name of this device shown to the host computer
      * @param deviceManufacturer Name of the manufacturer of this device
-     * @param enableAutoPowerOff True to power off when not connected within a certain time lapse. Set to FALSE for testing.
-     * @param enableUART True to enable the NuS protocol. False to disable.
+     * @param enableAutoPowerOff True to power off when not connected within a certain time lapse.
+     *        Set to FALSE if there is no battery or for testing.
      */
-    void begin(std::string deviceName, std::string deviceManufacturer, bool enableAutoPowerOff = true, bool enableUART = true);
+    void begin(
+        std::string deviceName,
+        std::string deviceManufacturer,
+        bool enableAutoPowerOff = true);
 
     /**
      * @brief Tell if there is a Bluetooth connection
@@ -792,6 +643,12 @@ namespace hidImplementation
      * @return false when not connected
      */
     bool isConnected();
+
+    /**
+     * @brief Report a change in user settings (clutch function, etc.)
+     *
+     */
+    void reportChangeInConfig();
 
     /**
      * @brief Report current battery level to the host computer
@@ -805,48 +662,21 @@ namespace hidImplementation
      *
      * @param globalState input bitmap
      * @param altEnabled TRUE if ALT is enabled
-     * @param clutchValue Current value of the clutch axis
      * @param POVtate State of the hat switch (POV or DPAD), this is, a button number
      *                in the range 0 (no input) to 8 (up-left)
+     *
+     * @note Axis values are taken from `clutchState`.
      */
     void reportInput(
         inputBitmap_t globalState,
         bool altEnabled,
-        clutchValue_t clutchValue,
-        uint8_t POVstate = 0);
+        uint8_t POVstate);
 
     /**
      * @brief Report all inputs as not active
      *
      */
     void reset();
-
-    /**
-     * @brief Send text through the UaS protocol
-     *
-     * @param text text to be sent
-     * @return true if sucessfull
-     * @return false on error
-     */
-    bool uartSendText(char *text);
-}
-
-/**
- * @brief Receive and process commands through the UART service at `hidImplementation`
- *
- */
-namespace uartServer
-{
-    void onReceive(char *text);
-
-    // For read only
-    extern volatile char gear;
-    extern volatile uint8_t rpmPercent;
-    extern volatile uint16_t speed;
-    extern volatile uint8_t engineMap;
-    extern volatile uint8_t absLevel;
-    extern volatile uint8_t tcLevel;
-    extern volatile uint64_t frameCount;
 }
 
 #endif

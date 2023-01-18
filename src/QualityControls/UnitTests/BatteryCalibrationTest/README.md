@@ -17,8 +17,8 @@ Output through USB serial port at 115200 bauds.
 
 1. Reset. Ignore output from the operating system itself.
 2. Output must match:
-   
-   ```
+
+   ```text
    **TEST #1
    **TEST #2
    **TEST #3
@@ -34,6 +34,6 @@ Output through USB serial port at 115200 bauds.
    --END--
    ```
 
-**NOTES**
+Notes:
 
 - Prior calibration data, if any, will be erased from flash memory.

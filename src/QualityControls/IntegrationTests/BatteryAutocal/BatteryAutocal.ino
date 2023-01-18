@@ -22,12 +22,28 @@ void hidImplementation::reportBatteryLevel(int l)
     Serial.println("");
 }
 
+void notify::lowBattery()
+{
+
+}
+
+void notify::powerOff()
+{
+
+}
+
+void capabilities::setFlag(deviceCapability_t a, bool b)
+{
+
+}
+
 //------------------------------------------------------------------
 // Arduino entry point
 //------------------------------------------------------------------
 
 void setup()
 {
+    esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
     while (!Serial)
         ;

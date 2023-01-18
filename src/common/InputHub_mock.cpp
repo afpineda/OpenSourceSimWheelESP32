@@ -16,6 +16,8 @@
 clutchValue_t mockBitePoint = CLUTCH_DEFAULT_VALUE;
 clutchFunction_t mockClutchFuncion = CF_CLUTCH;
 bool mockAltFunction = true;
+volatile clutchValue_t leftClutchValue;
+volatile clutchValue_t rightClutchValue;
 
 // ----------------------------------------------------------------------------
 // Input Handler

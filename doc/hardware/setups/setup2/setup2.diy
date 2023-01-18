@@ -2,12 +2,12 @@
 <project>
   <fileVersion>
     <major>4</major>
-    <minor>30</minor>
-    <build>1</build>
+    <minor>35</minor>
+    <build>0</build>
   </fileVersion>
-  <title>Setup #1</title>
+  <title>Setup #2</title>
   <author>Ángel Fernández Pineda.Madrid.Spain.2022</author>
-  <description>2x Potentiometers, 4x KY-040, x22 push buttons</description>
+  <description>Button box</description>
   <width value="20.0" unit="cm"/>
   <height value="25.0" unit="cm"/>
   <gridSpacing value="0.1" unit="in"/>
@@ -9846,10 +9846,9 @@
     <diylc.misc.Label>
       <name>L3</name>
       <point x="1.8" y="0.4"/>
-      <text>Obverse - Amberso</text>
+      <text>Front side - components</text>
       <font name="Dialog.bold" size="24" style="1"/>
       <color hex="000099"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -9857,10 +9856,9 @@
     <diylc.misc.Label>
       <name>L26</name>
       <point x="5.7" y="0.4"/>
-      <text>Reverse - Reverso</text>
+      <text>Back side - traces</text>
       <font name="Dialog.bold" size="24" style="1"/>
       <color hex="000099"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -9868,10 +9866,9 @@
     <diylc.misc.Label>
       <name>L27</name>
       <point x="3.6" y="3.2"/>
-      <text>External wiring&lt;br&gt;Cableado externo</text>
+      <text>External wiring</text>
       <font name="Dialog.bold" size="24" style="1"/>
       <color hex="000099"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -9882,7 +9879,6 @@
       <text>MTX_SEL_1</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -9893,7 +9889,6 @@
       <text>MTX_SEL_2</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -9904,7 +9899,6 @@
       <text>MTX_SEL_3</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -9915,7 +9909,6 @@
       <text>MTX_SEL_4</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -9926,7 +9919,6 @@
       <text>MTX_SEL_5</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -9937,7 +9929,6 @@
       <text>MTX_SEL_6</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -9948,7 +9939,6 @@
       <text>MTX_SEL_7</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -9959,7 +9949,6 @@
       <text>MTX_IN_1</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -9970,7 +9959,6 @@
       <text>MTX_IN_2</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -9981,7 +9969,6 @@
       <text>MTX_IN_3</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -9992,7 +9979,6 @@
       <text>MTX_IN_4</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10003,7 +9989,6 @@
       <text>MTX_IN_5</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10014,7 +9999,6 @@
       <text>MTX_IN_6</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10025,7 +10009,6 @@
       <text>MTX_IN_7</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10036,7 +10019,6 @@
       <text>MTX_IN_8</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10047,7 +10029,6 @@
       <text>00 (A)</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -10058,7 +10039,6 @@
       <text>01 (B)</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -10069,7 +10049,6 @@
       <text>02 (X)</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -10080,7 +10059,6 @@
       <text>03 (Y)</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -10091,7 +10069,6 @@
       <text>04 (LB)</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -10102,7 +10079,6 @@
       <text>05 (RB)</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -10113,7 +10089,6 @@
       <text>06 (Back - Atrás)</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -10124,7 +10099,6 @@
       <text>07 (Start - Inicio)</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -10135,7 +10109,6 @@
       <text>GND1</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10146,7 +10119,6 @@
       <text>Rotary #1 GND</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10157,7 +10129,6 @@
       <text>Rotary #2 GND</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10168,7 +10139,6 @@
       <text>Rotary #3 GND</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10179,7 +10149,6 @@
       <text>Rotary #4 GND</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10190,7 +10159,6 @@
       <text>Antenna</text>
       <font name="Dialog.plain" size="20" style="0"/>
       <color hex="ffffff"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10201,7 +10169,6 @@
       <text>USB</text>
       <font name="Dialog.plain" size="20" style="0"/>
       <color hex="ffffff"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10212,7 +10179,6 @@
       <text>3V3</text>
       <font name="Dialog.bold" size="10" style="1"/>
       <color hex="ff0000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10223,7 +10189,6 @@
       <text>EN</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10234,7 +10199,6 @@
       <text>IN/ADC/RTC/#36</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_180</orientation>
@@ -10245,7 +10209,6 @@
       <text>IN/ADC/RTC/#39</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_180</orientation>
@@ -10256,7 +10219,6 @@
       <text>IN/ADC/RTC/#34</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_180</orientation>
@@ -10267,7 +10229,6 @@
       <text>IN/ADC/RTC/#35</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_180</orientation>
@@ -10278,7 +10239,6 @@
       <text>IO/ADC/RTC/#32</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_180</orientation>
@@ -10289,7 +10249,6 @@
       <text>IO/ADC/RTC/#33</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_180</orientation>
@@ -10300,7 +10259,6 @@
       <text>IO/ADC/RTC/#25</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_180</orientation>
@@ -10311,7 +10269,6 @@
       <text>IO/ADC/RTC/#26</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_180</orientation>
@@ -10322,7 +10279,6 @@
       <text>IO/ADC/RTC/#27</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_180</orientation>
@@ -10333,7 +10289,6 @@
       <text>IO/ADC/RTC/#14</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_180</orientation>
@@ -10344,7 +10299,6 @@
       <text>IO/ADC/RTC/#12</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_180</orientation>
@@ -10355,7 +10309,6 @@
       <text>GND</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10366,7 +10319,6 @@
       <text>IO/ADC/RTC/#13</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_180</orientation>
@@ -10377,7 +10329,6 @@
       <text>5V0</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000099"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10388,7 +10339,6 @@
       <text>IO/ADC/RTC/#15</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10399,7 +10349,6 @@
       <text>IO/ADC/RTC/#2</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10410,7 +10359,6 @@
       <text>IO/ADC/RTC/#0/Pullup</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10421,7 +10369,6 @@
       <text>IO/ADC/RTC/#4</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10432,7 +10379,6 @@
       <text>IO/#16</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10443,7 +10389,6 @@
       <text>IO/#17</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10454,7 +10399,6 @@
       <text>IO/#5</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10465,7 +10409,6 @@
       <text>IO/#18</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10476,7 +10419,6 @@
       <text>IO/#19</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10487,7 +10429,6 @@
       <text>GND</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_180</orientation>
@@ -10498,7 +10439,6 @@
       <text>IO/SDA/#21</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10509,7 +10449,6 @@
       <text>IN/#3</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10520,7 +10459,6 @@
       <text>OUT/#1</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10531,7 +10469,6 @@
       <text>IO/SCL/#22</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10542,7 +10479,6 @@
       <text>IO/#23</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff00ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10553,7 +10489,6 @@
       <text>GND</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_180</orientation>
@@ -10561,10 +10496,9 @@
     <diylc.misc.Label>
       <name>L130</name>
       <point x="4.5" y="7.2"/>
-      <text>EXTERNAL_5V0 (optional - opcional)</text>
+      <text>EXTERNAL_5V0 (optional)</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10575,7 +10509,6 @@
       <text>Rotary #3 A/CLK</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10586,7 +10519,6 @@
       <text>Rotary #3 B/DT</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10597,7 +10529,6 @@
       <text>Rotary #4 A/CLK</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10608,7 +10539,6 @@
       <text>Rotary #4 B/DT</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10619,7 +10549,6 @@
       <text>MTX_SEL_4</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10630,7 +10559,6 @@
       <text>MTX_SEL_5</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10641,7 +10569,6 @@
       <text>MTX_SEL_6</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10652,7 +10579,6 @@
       <text>MTX_SEL_7</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10663,7 +10589,6 @@
       <text>MTX_SEL_3</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10674,7 +10599,6 @@
       <text>MTX_SEL_1</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10685,7 +10609,6 @@
       <text>MTX_SEL_2</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10696,7 +10619,6 @@
       <text>MTX_SEL_3</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10707,7 +10629,6 @@
       <text>MTX_IN_1</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10718,7 +10639,6 @@
       <text>MTX_IN_2</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10729,7 +10649,6 @@
       <text>MTX_IN_3</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10740,7 +10659,6 @@
       <text>MTX_IN_4</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10751,7 +10669,6 @@
       <text>MTX_IN_5</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10762,7 +10679,6 @@
       <text>MTX_IN_6</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10773,7 +10689,6 @@
       <text>MTX_IN_7</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10784,7 +10699,6 @@
       <text>MTX_IN_8</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10795,7 +10709,6 @@
       <text>Rotary #1 A/CLK</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10806,7 +10719,6 @@
       <text>Rotary #1 B/DT</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10817,7 +10729,6 @@
       <text>Rotary #2 A/CLK</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10828,7 +10739,6 @@
       <text>Rotary #2 B/DT</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10839,7 +10749,6 @@
       <text>Rotary #N - SW</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10850,7 +10759,6 @@
       <text>Rotary #N - SW GND</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10858,10 +10766,9 @@
     <diylc.misc.Label>
       <name>L91</name>
       <point x="2.6" y="4.1"/>
-      <text>NO momentary switches in columns&lt;br&gt;Interruptores momentáneos normalmente abiertos en columnas</text>
+      <text>NO momentary switches in columns</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10872,7 +10779,6 @@
       <text>GND2</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10883,7 +10789,6 @@
       <text>GND3</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10891,10 +10796,9 @@
     <diylc.misc.Label>
       <name>L129</name>
       <point x="5.2" y="4.9"/>
-      <text>EXTERNAL_GND (optional - opcional)</text>
+      <text>EXTERNAL_GND (optional)</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10905,7 +10809,6 @@
       <text>GND1</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10916,7 +10819,6 @@
       <text>GND2</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10927,7 +10829,6 @@
       <text>GND3</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10935,10 +10836,9 @@
     <diylc.misc.Label>
       <name>L22</name>
       <point x="4.5" y="9.0"/>
-      <text>EXTERNAL_3V3 (optional - opcional)</text>
+      <text>EXTERNAL_3V3 (optional)</text>
       <font name="Dialog.plain" size="12" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -10950,165 +10850,165 @@
     </set>
     <set/>
     <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[7]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[7]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[55]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[19]"/>
-    </set>
-    <set>
       <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[25]"/>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[77]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[57]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[21]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[30]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[14]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[25]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[9]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[29]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[13]"/>
-    </set>
-    <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[2]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[2]"/>
-    </set>
-    <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[6]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[6]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[4]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[4]"/>
     </set>
     <set>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[80]"/>
       <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[28]"/>
     </set>
     <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[59]"/>
       <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[23]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[59]"/>
     </set>
     <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[24]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[76]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[4]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[4]"/>
     </set>
     <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[12]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[14]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[30]"/>
+    </set>
+    <set>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[28]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[12]"/>
     </set>
     <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[29]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[81]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[58]"/>
       <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[22]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[58]"/>
     </set>
     <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[18]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[54]"/>
-    </set>
-    <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[17]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[53]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[56]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[20]"/>
-    </set>
-    <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[26]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[78]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[5]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[5]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[3]"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[3]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[26]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[10]"/>
     </set>
     <set>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[48]"/>
       <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[15]"/>
     </set>
     <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[10]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[26]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[24]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[8]"/>
     </set>
     <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[8]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[24]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[5]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[5]"/>
+    </set>
+    <set>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[53]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[17]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[26]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[78]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace"/>
+    </set>
+    <set>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[81]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[29]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[21]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[57]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[2]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[2]"/>
+    </set>
+    <set>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[6]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[6]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[3]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[3]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[19]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[55]"/>
+    </set>
+    <set>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[54]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[18]"/>
     </set>
     <set>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[27]"/>
       <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[11]"/>
     </set>
     <set>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[30]"/>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[82]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[30]"/>
     </set>
     <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[47]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[56]"/>
-      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[2]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[38]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[35]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[60]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[39]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[57]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[41]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[53]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[61]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[59]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[63]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[36]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[65]"/>
-      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[52]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[40]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[50]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[62]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[49]"/>
-      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[33]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[64]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[34]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[48]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[58]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[37]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[46]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[54]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[55]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[51]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[42]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[32]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[45]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[44]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[43]"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace"/>
-      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad"/>
-    </set>
-    <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[79]"/>
       <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[27]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[79]"/>
+    </set>
+    <set>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[29]"/>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[13]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[24]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[76]"/>
+    </set>
+    <set>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[64]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[40]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[58]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[56]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[36]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[37]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[52]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[45]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[38]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[33]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[62]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[53]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[42]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[43]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[39]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[32]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[46]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[65]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[34]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[50]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[35]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[57]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[55]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[59]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[41]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[49]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[47]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[60]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[44]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[61]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[63]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[51]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[48]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[54]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[9]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[25]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[7]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[7]"/>
+    </set>
+    <set>
+      <diylc.connectivity.SolderPad reference="../../../components/diylc.connectivity.SolderPad[20]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[56]"/>
     </set>
   </groups>
   <lockedLayers/>
   <lockedComponents>
-    <diylc.boards.PerfBoard reference="../../components/diylc.boards.PerfBoard[2]"/>
     <diylc.boards.PerfBoard reference="../../components/diylc.boards.PerfBoard"/>
+    <diylc.boards.PerfBoard reference="../../components/diylc.boards.PerfBoard[2]"/>
   </lockedComponents>
   <hiddenLayers/>
   <font name="Dialog.plain" size="14" style="0"/>

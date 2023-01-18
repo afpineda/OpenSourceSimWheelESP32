@@ -123,6 +123,11 @@ int samplesCount[TEST_DATA_COUNT] = {
 // Mocks
 //-------------------------------------------------------
 
+void capabilities::setFlag(deviceCapability_t a, bool b)
+{
+
+}
+
 //-------------------------------------------------------
 // Auxiliary
 //-------------------------------------------------------
@@ -186,6 +191,7 @@ void setup()
 {
     int testnumber = 1;
 
+    esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
     while (!Serial)
         ;
@@ -197,7 +203,7 @@ void setup()
     checkCalibrationDataIsClear();
     if (batteryCalibration::calibrationInProgress)
     {
-        Serial.println("ERROR: unexpected state");
+        Serial.println("ERROR: unexpected state 1");
     }
 
     // Feed test data
@@ -209,7 +215,7 @@ void setup()
             batteryCalibration::addSample(testReadings[i]);
             if (!batteryCalibration::calibrationInProgress)
             {
-                Serial.println("ERROR: unexpected state");
+                Serial.println("ERROR: unexpected state 2");
             }
         }
     }
@@ -246,20 +252,22 @@ void setup()
 
     // Test LiPo characterization data
     printTestHeader(testnumber++); // #7
-    batteryCalibrationAssertEquals(0, batteryCalibration::getGenericLiPoBatteryLevel(1000));
-    batteryCalibrationAssertEquals(8, batteryCalibration::getGenericLiPoBatteryLevel(2240));
-    batteryCalibrationAssertEquals(27, batteryCalibration::getGenericLiPoBatteryLevel(2327));
-    batteryCalibrationAssertEquals(46, batteryCalibration::getGenericLiPoBatteryLevel(2371));
-    batteryCalibrationAssertEquals(85, batteryCalibration::getGenericLiPoBatteryLevel(2532));
-    batteryCalibrationAssertEquals(89, batteryCalibration::getGenericLiPoBatteryLevel(2551));
-    batteryCalibrationAssertEquals(100, batteryCalibration::getGenericLiPoBatteryLevel(3000));
+    // removed since getGenericLiPoBatteryLevel is not exposed anymore
+    
+    // batteryCalibrationAssertEquals(0, batteryCalibration::getGenericLiPoBatteryLevel(1000));
+    // batteryCalibrationAssertEquals(8, batteryCalibration::getGenericLiPoBatteryLevel(2240));
+    // batteryCalibrationAssertEquals(27, batteryCalibration::getGenericLiPoBatteryLevel(2327));
+    // batteryCalibrationAssertEquals(46, batteryCalibration::getGenericLiPoBatteryLevel(2371));
+    // batteryCalibrationAssertEquals(85, batteryCalibration::getGenericLiPoBatteryLevel(2532));
+    // batteryCalibrationAssertEquals(89, batteryCalibration::getGenericLiPoBatteryLevel(2551));
+    // batteryCalibrationAssertEquals(100, batteryCalibration::getGenericLiPoBatteryLevel(3000));
 
     // Test autocalibration
     printTestHeader(testnumber++); // #8
     batteryCalibration::restartAutoCalibration();
     if (batteryCalibration::maxBatteryReadingEver >= 0)
     {
-        Serial.println("ERROR: unexpected state");
+        Serial.println("ERROR: unexpected state 3");
     }
     // Out of range readings
     batteryCalibrationAssertEquals(0, batteryCalibration::getBatteryLevelAutoCalibrated(-100));

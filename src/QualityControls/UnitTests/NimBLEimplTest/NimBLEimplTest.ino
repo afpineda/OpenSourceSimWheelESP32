@@ -2,9 +2,9 @@
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
  * @brief Unit Test. See [README](./README.md)
- * 
+ *
  * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
- * 
+ *
  */
 
 #include <Arduino.h>
@@ -23,26 +23,47 @@ bool powerSim = true;
 // mocks
 //------------------------------------------------------------------
 
-void ui::showConnectedNotice()
+volatile uint32_t capabilities::flags = 0x07;
+
+void notify::connected()
 {
     Serial.println("*** CONNECTED ***");
 }
 
-void ui::showBLEDiscoveringNotice()
+void notify::BLEdiscovering()
 {
     Serial.println("*** DISCOVERING ***");
 }
 
-void power::powerOff(bool forced)
+void notify::bitePoint(clutchValue_t a)
+{
+
+}
+
+void inputs::recalibrateAxes()
+{
+    Serial.println("CMD: recalibrate axes");
+}
+
+void inputs::update()
+{
+
+}
+
+void batteryCalibration::restartAutoCalibration()
+{
+    Serial.println("CMD: recalibrate battery");
+}
+
+void power::powerOff()
 {
     Serial.println("*** POWER OFF ***");
     powerSim = false;
 }
 
-void uartServer::onReceive(char *text)
+int power::getLastBatteryLevel()
 {
-    Serial.print("COMMAND: ");
-    Serial.println(text);
+    return UNKNOWN_BATTERY_LEVEL;
 }
 
 //------------------------------------------------------------------
@@ -51,54 +72,63 @@ void uartServer::onReceive(char *text)
 
 void setup()
 {
+    esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
     while (!Serial)
         ;
     Serial.println("--START--");
-    hidImplementation::begin("SimWheelTest", "Mamandurrio", true);
+    hidImplementation::begin("NimBLEimplTest", "Mamandurrio", true);
+    clutchState::setFunction(CF_CLUTCH);
+    clutchState::setALTModeForALTButtons(true);
+    clutchState::setBitePoint(CLUTCH_DEFAULT_VALUE);
     Serial.println("--GO--");
 }
 
-#define axis1 -127
-#define axis2 127
-
 uint64_t data = 0;
-clutchValue_t axis = axis1;
+clutchValue_t axis = CLUTCH_NONE_VALUE;
 uint8_t battery = 99;
 bool alt = false;
 uint8_t POV = 0;
 
 void loop()
 {
-    if (!powerSim) {
+    if (!powerSim)
+    {
         // Simulate power off
         Serial.println("(Reset required)");
-        for(;;);
+        for (;;)
+            ;
     }
-        
+
     if (!hidImplementation::isConnected())
     {
         Serial.println("(Waiting for connection)");
     }
     else
     {
-        hidImplementation::reportBatteryLevel(battery);
-        hidImplementation::reportInput(data,alt,axis,POV);
+        hidImplementation::reportInput(data, alt, POV);
 
         data = data + 1;
         POV = POV + 1;
-        if (POV>8)
+        if (POV > 8)
+        {
             POV = 0;
+            hidImplementation::reportChangeInConfig();
+        }
 
         alt = !alt;
 
         battery--;
-        if (battery<50)
-            battery=100;
+        if (battery < 50)
+            battery = 100;
+        hidImplementation::reportBatteryLevel(battery);
 
         axis = axis + 5;
-        if (axis>=axis2)
-            axis = axis1; 
+        if (axis >= CLUTCH_FULL_VALUE - 5)
+            axis = CLUTCH_NONE_VALUE;
+        clutchState::leftAxis = axis;
+        clutchState::rightAxis = axis;
+        clutchState::combinedAxis = axis;
     }
     delay(1000);
 }

@@ -9,28 +9,31 @@
 
 #include <Arduino.h>
 #include "SimWheel.h"
+#include "debugUtils.h"
 
 //------------------------------------------------------------------
 // Globals
 //------------------------------------------------------------------
 
-#define CLUTCHV_TO_STORE -3
-#define FUNCTION_TO_STORE CF_ALT
-#define LCLUTCH 1
-#define RCLUTCH 2
+// #define LCLUTCH 1
+// #define RCLUTCH 2
 #define ALT 3
-#define MENU 4
-#define OTHER 5
-#define UP 6
-#define DOWN 7
-#define LEFT 8
-#define RIGHT 9
+#define CMD 4
+#define CYCLE_CLUTCH 5
+#define CYCLE_ALT 6
+#define UP 7
+#define DOWN 8
+#define LEFT 9
+#define RIGHT 10
 
-#define LCLUTCH_B BITMAP(LCLUTCH)
-#define RCLUTCH_B BITMAP(RCLUTCH)
+#define BMP_CYCLE_CLUTCH BITMAP(CMD) | BITMAP(CYCLE_CLUTCH)
+#define BMP_CYCLE_ALT BITMAP(CMD) | BITMAP(CYCLE_ALT)
+#define BMP_SELECT_CLUTCH_F BITMAP(CMD) | BITMAP(UP)
+#define BMP_SELECT_ALT_F BITMAP(CMD) | BITMAP(DOWN)
+#define BMP_SELECT_AXIS_F BITMAP(CMD) | BITMAP(LEFT)
+#define BMP_SELECT_BUTTON_F BITMAP(CMD) | BITMAP(RIGHT)
+
 #define ALT_B BITMAP(ALT)
-#define MENU_B BITMAP(MENU)
-#define OTHER_B BITMAP(OTHER)
 #define UP_B BITMAP(UP)
 #define DOWN_B BITMAP(DOWN)
 #define LEFT_B BITMAP(LEFT)
@@ -40,69 +43,87 @@
 // Mocks
 //------------------------------------------------------------------
 
-void configMenu::onInput(inputBitmap_t globalState, inputBitmap_t changes)
-{
-    if (changes)
-    {
-        Serial.print("MENU: ");
-        Serial.print(globalState);
-        Serial.print(";");
-        Serial.println(changes);
-    }
-}
+uint8_t currentPOV = 0;
+bool currentALTEnabled = false;
+inputBitmap_t currentState = 0;
 
 void hidImplementation::reset()
 {
+    currentPOV = 0;
+    currentALTEnabled = false;
+    currentState = 0;
+    //Serial.println("hidImplementation::reset()");
 }
 
 void hidImplementation::reportInput(
     inputBitmap_t globalState,
     bool altEnabled,
-    clutchValue_t clutchValue,
     uint8_t POVstate)
 {
-    Serial.print("INPUT: ");
-    Serial.print(globalState);
-    if (altEnabled)
-        Serial.print(" ALT");
-    Serial.print(" Clutch: ");
-    Serial.print(clutchValue);
-    Serial.print(" POV ");
-    Serial.print(POVstate);
-    Serial.println("");
+    currentState = globalState;
+    currentPOV = POVstate;
+    currentALTEnabled = altEnabled;
+    // Serial.println(".");
 }
 
-void ui::showBitePoint(clutchValue_t value)
+void notify::bitePoint(clutchValue_t value)
 {
-    Serial.print("Bite point: ");
-    Serial.println(value);
+    // Serial.print("Bite point: ");
+    // Serial.println(value);
 }
 
-void ui::showSaveNote()
+void hidImplementation::reportChangeInConfig()
 {
 }
 
-bool configMenu::toggle()
+void capabilities::setFlag(deviceCapability_t a, bool b)
 {
-    Serial.println("**menu button**");
-    return true;
+}
+
+void inputs::recalibrateAxes()
+{
+
+}
+
+void batteryCalibration::restartAutoCalibration()
+{
+
 }
 
 //------------------------------------------------------------------
 // Auxiliary
 //------------------------------------------------------------------
 
-void pushMenuButton()
-{
-    inputHub::onStateChanged(MENU_B, MENU_B);
-    delay(2200);
-    inputHub::onStateChanged(0, MENU_B);
-}
-
-void pressAndRelease(inputBitmap_t bmp)
+void push(inputBitmap_t bmp)
 {
     inputHub::onStateChanged(bmp, bmp);
+}
+
+void release(inputBitmap_t bmp)
+{
     inputHub::onStateChanged(0, bmp);
+}
+
+template <typename T>
+void assertEquals(const char *text, T expected, T found)
+{
+    if (expected != found)
+    {
+        serialPrintf("[assertEquals] (%s). Expected: %d, found: %d\n", text, expected, found);
+    }
+}
+
+template <typename T>
+void pushAssertEqualsRelease(inputBitmap_t bmp, const char *text, T expected, T *found)
+{
+    inputHub::onStateChanged(bmp, bmp);
+    assertEquals<T>(text, expected, *found);
+    inputHub::onStateChanged(0, bmp);
+}
+
+void inputs::update()
+{
+
 }
 
 //------------------------------------------------------------------
@@ -111,90 +132,112 @@ void pressAndRelease(inputBitmap_t bmp)
 
 void setup()
 {
-    clutchValue_t clutch;
-    clutchFunction_t f;
+    clutchValue_t biteP;
+
+    esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
     while (!Serial)
         ;
     Serial.println("-- READY --");
-    inputHub::begin();
-    inputHub::setClutchPaddles(LCLUTCH, RCLUTCH);
-    inputHub::setALTButton(ALT);
-    inputHub::setMenuButton(MENU);
-    inputHub::setDPADControls(UP, DOWN, LEFT, RIGHT);
-    Serial.println("-- GO --");
 
-    Serial.println("- stored preferences -");
-    clutch = inputHub::getClutchBitePoint();
-    if (clutch != CLUTCHV_TO_STORE)
-        Serial.println("ERROR: bite point not stored");
-    else
-        Serial.println("bite point OK");
-    f = inputHub::getClutchFunction();
-    if (f != FUNCTION_TO_STORE)
-        Serial.println("ERROR: clutch function not stored");
-    else
-        Serial.println("clutch function OK");
-    if (inputHub::getALTFunction())
-        Serial.println("ERROR: ALT function not stored");
-    else
-        Serial.println("ALT function OK");
+    inputHub::setALTButton(ALT);
+    inputHub::setDPADControls(UP, DOWN, LEFT, RIGHT);
+    inputHub::setCycleALTFunctionBitmap(BMP_CYCLE_ALT);
+    inputHub::setCycleClutchFunctionBitmap(BMP_CYCLE_CLUTCH);
+    inputHub::setSelectClutchFunctionBitmaps(
+        BMP_SELECT_CLUTCH_F,
+        BMP_SELECT_AXIS_F,
+        BMP_SELECT_ALT_F,
+        BMP_SELECT_BUTTON_F);
+    inputHub::setClutchCalibrationButtons(UP, DOWN);
+
+    Serial.println("-- GO --");
+    assertEquals<inputBitmap_t>("state at start", 0, currentState);
 
     Serial.println("- simulate POV operation (valid input) -");
-    pressAndRelease(UP_B); // POV = 1
-    pressAndRelease(DOWN_B); // POV = 5
-    pressAndRelease(LEFT_B); // POV = 7
-    pressAndRelease(RIGHT_B); // POV = 3
-    pressAndRelease(UP_B | LEFT_B); // POV = 8
-    pressAndRelease(DOWN_B | LEFT_B); // POV = 6
-    pressAndRelease(UP_B | RIGHT_B); // POV = 2
-    pressAndRelease(DOWN_B | RIGHT_B); // POV = 4
+    pushAssertEqualsRelease<uint8_t>(UP_B, "UP_B", 1, &currentPOV);
+    pushAssertEqualsRelease<uint8_t>(DOWN_B, "DOWN_B", 5, &currentPOV);
+    pushAssertEqualsRelease<uint8_t>(LEFT_B, "LEFT_B", 7, &currentPOV);
+    pushAssertEqualsRelease<uint8_t>(RIGHT_B, "RIGHT_B", 3, &currentPOV);
+    pushAssertEqualsRelease<uint8_t>(UP_B | LEFT_B, "UP_B | LEFT_B", 8, &currentPOV);
+    pushAssertEqualsRelease<uint8_t>(DOWN_B | LEFT_B, "DOWN_B | LEFT_B", 6, &currentPOV);
+    pushAssertEqualsRelease<uint8_t>(UP_B | RIGHT_B, "UP_B | RIGHT_B", 2, &currentPOV);
+    pushAssertEqualsRelease<uint8_t>(DOWN_B | RIGHT_B, "DOWN_B | RIGHT_B", 4, &currentPOV);
+    push(UP_B);
+    assertEquals<inputBitmap_t>("state at push", 0, currentState);
+    release(UP_B);
+    assertEquals<inputBitmap_t>("state at release", 0, currentState);
+
     Serial.println("- simulate POV operation (invalid input) -");
-    pressAndRelease(UP_B | DOWN_B);
-    pressAndRelease(LEFT_B | RIGHT_B);
-    Serial.println("- simulate POV operation while ALT pressed -");
-    inputHub::setALTFunction(true,false);
-    pressAndRelease(UP_B | ALT_B);
-    pressAndRelease(DOWN_B | ALT_B);
-    pressAndRelease(LEFT_B | ALT_B);
-    pressAndRelease(RIGHT_B | ALT_B);
+    pushAssertEqualsRelease<uint8_t>(UP_B | DOWN_B, "UP_B | DOWN_B", 0, &currentPOV);
+    pushAssertEqualsRelease<uint8_t>(LEFT_B | RIGHT_B, "LEFT_B | RIGHT_B", 0, &currentPOV);
+    push(UP_B | DOWN_B);
+    assertEquals<inputBitmap_t>("state at push", 0, currentState);
+    release(UP_B | DOWN_B);
+    assertEquals<inputBitmap_t>("state at release", 0, currentState);
 
-    Serial.println("- simulate ALT operation -");
-    inputHub::setALTFunction(true, false);
-    pressAndRelease(ALT_B);
-    inputHub::setALTFunction(false, false);
-    pressAndRelease(ALT_B);
-    inputHub::setALTFunction(true, false);
-    pressAndRelease(ALT_B | OTHER_B);
+    Serial.println("- simulate POV operation while ALT pushed -");
+    clutchState::setALTModeForALTButtons(true);
+    push(ALT_B);
+    assertEquals<inputBitmap_t>("ALT filtered state", 0, currentState);
+    push(ALT_B | UP_B);
+    assertEquals<uint8_t>("UP_B | ALT_B POV", 0, currentPOV);
+    assertEquals<inputBitmap_t>("UP_B | ALT_B state at push", UP_B, currentState);
+    assertEquals<bool>("UP_B | ALT_B altEnabled", true, currentALTEnabled);
+    release(UP_B);
+    assertEquals<inputBitmap_t>("UP_B | ALT_B state at release", 0, currentState);
+    pushAssertEqualsRelease<uint8_t>(DOWN_B | ALT_B, "DOWN_B | ALT_B", 0, &currentPOV);
+    pushAssertEqualsRelease<uint8_t>(LEFT_B | ALT_B, "LEFT_B | ALT_B", 0, &currentPOV);
+    pushAssertEqualsRelease<uint8_t>(RIGHT_B | ALT_B, "RIGHT_B | ALT_B", 0, &currentPOV);
+    release(ALT_B);
 
-    Serial.println("- simulate clutch operation (clutch function) -");
-    inputHub::setClutchFunction(CF_CLUTCH);
-    pressAndRelease(LCLUTCH_B);
-    pressAndRelease(RCLUTCH_B);
-    pressAndRelease(LCLUTCH_B | RCLUTCH_B);
+    Serial.println("- simulate cycle ALT function -");
+    clutchState::setALTModeForALTButtons(true);
+    pushAssertEqualsRelease<bool>(BMP_CYCLE_ALT, "Cycle alt 1", false, (bool *)&clutchState::altModeForAltButtons);
+    pushAssertEqualsRelease<bool>(BMP_CYCLE_ALT, "Cycle alt 2", true, (bool *)&clutchState::altModeForAltButtons);
 
-    Serial.println("- simulate clutch operation (ALT function) -");
-    inputHub::setClutchFunction(CF_ALT);
-    pressAndRelease(LCLUTCH_B);
-    pressAndRelease(RCLUTCH_B);
-    pressAndRelease(LCLUTCH_B | RCLUTCH_B);
+    Serial.println("- simulate cycle clutch function -");
+    clutchState::setFunction(CF_BUTTON);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 1", CF_CLUTCH, (clutchFunction_t *)&clutchState::currentFunction);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 2", CF_AXIS, (clutchFunction_t *)&clutchState::currentFunction);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 3", CF_ALT, (clutchFunction_t *)&clutchState::currentFunction);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 4", CF_BUTTON, (clutchFunction_t *)&clutchState::currentFunction);
 
-    Serial.println("- simulate clutch operation (BUTTON function) -");
-    inputHub::setClutchFunction(CF_BUTTON);
-    pressAndRelease(LCLUTCH_B);
-    pressAndRelease(RCLUTCH_B);
+    Serial.println("- simulate explicit selection of clutch function -");
+    clutchState::setFunction(CF_BUTTON);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_ALT_F, "CF_ALT", CF_ALT, (clutchFunction_t *)&clutchState::currentFunction);
+    clutchState::setFunction(CF_BUTTON);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_CLUTCH_F, "CF_CLUTCH", CF_CLUTCH, (clutchFunction_t *)&clutchState::currentFunction);
+    clutchState::setFunction(CF_ALT);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_BUTTON_F, "CF_BUTTON", CF_BUTTON, (clutchFunction_t *)&clutchState::currentFunction);
+    clutchState::setFunction(CF_BUTTON);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_AXIS_F, "CF_AXIS", CF_AXIS, (clutchFunction_t *)&clutchState::currentFunction);
 
-    Serial.println("- simulate config menu -");
-    pushMenuButton();
-    pressAndRelease(ALT_B);
-    pushMenuButton();
+    Serial.println("- simulate non-mapped button combinations -");
+    clutchState::setFunction(CF_BUTTON);
+    clutchState::setALTModeForALTButtons(true);
+    push(BMP_CYCLE_ALT | BMP_CYCLE_CLUTCH);
+    assertEquals<clutchFunction_t>("CF_BUTTON", CF_BUTTON, clutchState::currentFunction);
+    assertEquals<bool>("alt mode", true, clutchState::altModeForAltButtons);
+    release(BMP_CYCLE_ALT | BMP_CYCLE_CLUTCH);
 
-    Serial.println("- save preferences -");
-    inputHub::setClutchFunction(FUNCTION_TO_STORE);
-    inputHub::setClutchBitePoint(CLUTCHV_TO_STORE, true);
-    inputHub::setALTFunction(false, true);
-    for (int i = 0; i < 30; i++)
-        delay(1000);
+    Serial.println("- simulate bite point calibration -");
+    clutchState::setFunction(CF_CLUTCH);
+    clutchState::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    clutchState::setLeftAxis(CLUTCH_FULL_VALUE);
+    clutchState::setRightAxis(CLUTCH_NONE_VALUE);
+    biteP = clutchState::bitePoint;
+    push(UP_B);
+    release(UP_B);
+    if (clutchState::bitePoint <= biteP)
+        serialPrintf("Invalid bite point. Expected > %d, Found: %d\n", biteP, clutchState::bitePoint);
+    biteP = clutchState::bitePoint;
+    push(DOWN_B);
+    release(DOWN_B);
+    push(DOWN_B);
+    release(DOWN_B);
+    if (clutchState::bitePoint >= biteP)
+        serialPrintf("Invalid bite point. Expected < %d, Found: %d\n", biteP, clutchState::bitePoint);
 
     Serial.println("-- END --");
     for (;;)

@@ -27,7 +27,7 @@ ButtonMatrixInput::ButtonMatrixInput(
     const uint8_t inputPinCount,
     inputNumber_t *buttonNumbersArray,
     inputNumber_t alternateFirstInputNumber,
-    PolledInput *nextInChain) : PolledInput(nextInChain)
+    DigitalPolledInput *nextInChain) : DigitalPolledInput(nextInChain)
 {
     if ((selectorPinCount > MAX_MATRIX_SELECTOR_COUNT) || (inputPinCount > MAX_MATRIX_INPUT_COUNT))
     {

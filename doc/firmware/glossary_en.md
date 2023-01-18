@@ -1,8 +1,6 @@
-## Glossary of terms and definitions
+# Glossary of terms and definitions
 
 - **Alternate mode** (or "ALT mode"): a function for certain buttons. When enabled, other input numbers will be reported as `input number + 64`. This duplicates the number of reported inputs in the _HID_ protocol.
-
-- **AT commands**: a text-based protocol developed by _Hayes_. See [An Introduction to AT Commands](https://www.twilio.com/docs/iot/supersim/introduction-at-commands) for further reference.
 
 - **Bite point**: a certain value of the _clutch_ where the simulated car begins to transfer torque from the engine to the wheels.
 
@@ -24,7 +22,7 @@
 
 - **HID**: Human Interface Device.
 
-- **HID messages**: data sent to a computer using the standard HID protocol.
+- **HID reports**: data sent to a computer using the standard HID protocol.
 
 - **Input**: Any hardware able to generate _input events_ caused by user interactions. For example: momentary switches and rotary encoders.
 
@@ -40,18 +38,16 @@
 
 - **Module**: a piece of the _system_ that provides a certain behavior by grouping related functions.
 
-- **NuS**: [Nordic UART Service](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.6.1/nrf/include/bluetooth/services/nus.html). An implementation of serial communications through BLE.
-
 - **LiPo** (battery): Lithium-polymer battery.
 
-- **Paddle**: a momentary switch shaped as a lever.
+- **Paddle**: a momentary switch or a potentiometer shaped as a lever.
 
 - **Polling loop**: a perpetual task that reads the state of some inputs and generates input events from state changes.
 
 - **Quantum**: talking about battery charge, a counter of voltage samples that falls into a certain range.
 
-- **System**: the combination of hardware and software subject of this project
+- **System**: the combination of hardware and software subject of this project.
 
-- **UART**: Universal Asynchronous Receiver / Transmitter
+- **State of charge (SOC)**: an estimation of available battery charge in the range from 0% to 100%.
 
-- **UI**: User interface
+- **UI**: User interface.
