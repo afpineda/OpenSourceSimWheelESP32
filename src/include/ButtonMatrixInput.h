@@ -40,9 +40,6 @@ private:
     inputNumber_t *buttonNumbersArray;
     inputNumber_t alternateFirstInputNumber;
 
-    void checkAndInitializeSelectorPin(gpio_num_t aPin);
-    void checkAndInitializeInputPin(gpio_num_t aPin);
-
 public:
 
     /**

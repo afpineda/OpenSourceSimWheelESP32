@@ -35,6 +35,15 @@ static const gpio_num_t mtxSelectors[] = {TEST_BTNMTX_ROW1,TEST_BTNMTX_ROW2};
 static const gpio_num_t mtxInputs[] = {TEST_BTNMTX_COL1,TEST_BTNMTX_COL2,TEST_BTNMTX_COL3};
 static inputNumber_t mtxNumbers[] = {6,7,5,4,2,3};
 
+// Analog multiplexer pins for testing
+#define TEST_AMTXER_SEL1 GPIO_NUM_19
+#define TEST_AMTXER_IN1 GPIO_NUM_18
+#define TEST_AMTXER_IN2 GPIO_NUM_5
+
+static const gpio_num_t amtxerSelectors[] = {TEST_AMTXER_SEL1};
+static const gpio_num_t amtxerInputs[] = {TEST_AMTXER_IN1,TEST_AMTXER_IN2};
+static inputNumber_t amtxerNumbers[] = {20,21,22,23};
+
 // Other pins for testing
 #define TEST_ANALOG_PIN1 GPIO_NUM_12
 #define TEST_ANALOG_PIN2 GPIO_NUM_13
