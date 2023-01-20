@@ -32,7 +32,7 @@ They come in two flavors:
 
 [See pin-out at pinterest.com (thanks to Abhishek Ghosh)](https://in.pinterest.com/pin/436145545160682538/)
 
-Both encoders are supported in this project, as long as the proper input pins are used.
+Both encoders are supported by this project, as long as the proper input pins are used.
 
 Rotary encoders can be very noisy, despite of debouncing techniques, some rotations may be missed. This project has eradicated this problem as far as we know.
 
@@ -51,7 +51,7 @@ They are similar in shape to rotary encoders and absolute rotary switches, but t
 - Current is drained at all times, which is bad for batteries.
 - Prone to failure after 10.000 usage cycles or so.
 
-As a result, **rotary potentiometers are discouraged**. However, some wheel cases are equipped with potentiometers at the clutch paddles, so we have to live with it. For example, the [GT2 steering wheel kit from 3DRap](https://www.3drap.it/product/gt2-steering-wheel-kit-by-3drap-thrustmaster-logitech-and-osw-adapters/). Potentiometers are supported in this project in two ways:
+As a result, **rotary potentiometers are discouraged**. However, some wheel cases are equipped with potentiometers at the clutch paddles, so we have to live with it. For example, the [GT2 steering wheel kit from 3DRap](https://www.3drap.it/product/gt2-steering-wheel-kit-by-3drap-thrustmaster-logitech-and-osw-adapters/). Potentiometers are supported by this project in two ways:
 
 - As an analog axis, attached to an ADC pin.
 - As a replacement for switch buttons, in case you are short of ADC pins.
@@ -72,7 +72,7 @@ When using a GPIO as a digital input, just one switch can be accommodated in it.
 
 - **Button (or switch) matrices**. Those are digital circuits, so they are not prone to error. Given $N$ suitable pins, a button matrix can hold up to $(N/2)^2$ buttons.
 
-- **Multiplexed switches**. Those are digital circuits, so they are not prone to error. The number of switches this circuit can hold depends on which [multiplexer](https://en.wikipedia.org/wiki/Multiplexer) is chosen and how they are combined. For example, four multiplexers, three selectors each, can hold $4*2^{3}=32$ buttons with $4+3=7$ pins. This project does not support multiplexed switches right now.
+- **Multiplexed switches**. Those are digital circuits, so they are not prone to error. The number of switches this circuit can hold depends on which [multiplexer](https://en.wikipedia.org/wiki/Multiplexer) is chosen and how they are combined. For example, four multiplexers, three selectors each, can hold $4*2^{3}=32$ buttons with $4+3=7$ pins.
 
 - **PISO shift registers**. *"PISO"* means *"parallel input - serial output"*. Those are digital circuits, so they are not prone to error. There is almost *no limit* to the number of switches this circuit can hold and it takes just 3 pins. This project does not support shift registers right now. 
 
@@ -183,7 +183,7 @@ There are two kinds of multiplexers:
 
 - **Analog multiplexers**: the selected switch is electrically connected to the input pin, whatever voltage it has. They work straight with switches.
 
-- **Digital multiplexers**: the voltage at the selected switch is copied to the input pin, but they are not "electrically connected". Does not work straight with switches because they have an undetermined voltage when open. In order to work with switches, an external pull resistor is required for each switch, which is unpractical.
+- **Digital multiplexers**: the voltage at the selected switch is copied to the input pin, but they are not "electrically connected". Does not work straight with switches because they have an undetermined voltage when open. In order to work with switches, an external pull resistor is required for each switch, which is unpractical.  Digital multiplexers are not supported by this project.
 
 This is the logical circuit for 3 selector pins and 3 input pins using analog multiplexers:
 
@@ -211,13 +211,13 @@ Note that pull-down resistors are needed for each button, which is unpractical. 
 
 ## Summary of input hardware
 
-| Circuitry            | Required pins                | Number of switches | Best suited for                           | Advantages                  | Disadvantages                    |
-|:--------------------:|:----------------------------:|:------------------:|:-----------------------------------------:|:---------------------------:|:-------------------------------- |
-| None                 | 1                            | 1                  | Rotary encoders                           | Easy and error-free         | Not enough pins for many buttons |
-| Button Matrix        | $N$                          | $(N/2)^{2}$        | Push buttons and DPADS                    | Many buttons and error-free | Complex wiring                   |
-| Multiplexers         | $S$ selectors and $I$ inputs | $2^{S}*I$          | Push buttons and DPADS                    | Many buttons and error-free | Extra cost and space at the PCB  |
-| Voltage ladder       | 1                            | enough             | DPADS, rotary switches and funky switches | Single pin for many inputs  | Requires calibration             |
-| Voltage divider      | 1                            | 2                  | Push buttons                              | None                        | Prone to error                   |
-| PISO shift registers | 3                            | unlimited          | Push buttons and DPADS                    | Many buttons and error-free | Extra cost and space at the PCB  |
+| Circuitry            | Required pins                | Number of switches | Best suited for                           | Advantages                  | Disadvantages                    | Supported by this project |
+|:--------------------:|:----------------------------:|:------------------:|:-----------------------------------------:|:---------------------------:|:-------------------------------- |:-:|
+| None                 | 1                            | 1                  | Rotary encoders                           | Easy and error-free         | Not enough pins for many buttons | yes |
+| Button Matrix        | $N$                          | $(N/2)^{2}$        | Push buttons and DPADS                    | Many buttons and error-free | Complex wiring                   | yes |
+| Multiplexers         | $S$ selectors and $I$ inputs | $2^{S}*I$          | Push buttons and DPADS                    | Many buttons and error-free | Extra cost and space at the PCB  | analog only |
+| Voltage ladder       | 1                            | enough             | DPADS, rotary switches and funky switches | Single pin for many inputs  | Requires calibration             | no |
+| Voltage divider      | 1                            | 2                  | Push buttons                              | None                        | Prone to error                   | no |
+| PISO shift registers | 3                            | unlimited          | Push buttons and DPADS                    | Many buttons and error-free | Extra cost and space at the PCB  | no |
 
 Input circuitry takes some space inside the housing. Their physical layout must be carefully designed to fit into the steering wheel (or button box).

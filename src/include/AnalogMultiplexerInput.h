@@ -32,7 +32,7 @@ private:
 
 public:
     /**
-     * @brief Construct a new Button Matrix Input object
+     * @brief Construct a new Analog Multiplexer Input object
      *
      * @param selectorPins Array of GPIO numbers for selector pins.
      * @param selectorPinCount Length of `selectorPins` array.

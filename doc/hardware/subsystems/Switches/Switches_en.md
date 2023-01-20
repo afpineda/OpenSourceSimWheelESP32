@@ -11,16 +11,23 @@ To provide a number of **normally-open momentary switches** to the system, inclu
 
 And also **potentiometers** as digital clutch paddles, in case you are short of GPIO pins. If not, potentiometers as [analog clutch paddles](../AnalogClutchPaddles/AnalogClutchPaddles_en.md) are a better option.
 
-This subsystem is based on a _button matrix_. Take a look at the article on [input hardware](../../InputHW_en.md) for an explanation. It is highly customizable and dependent on the availability of enough GPIO pins at the DevKit board.
+There are several, non-exclusive, implementation choices:
 
-## External wiring of inputs
+- Button matrix
+- Analog Multiplexers
+
+Take a look at the article on [input hardware](../../InputHW_en.md) for an introduction.
+
+## Button Matrix implementation
+
+### External wiring of inputs
 
 Before going into design details, take note on how to wire (externally) all inputs to this subsystem:
 
 - **Push buttons, push levers or roller levers**. They have two interchangeable terminals. If there are three terminals, choose the two terminals for the NO (normally open) switch.
   
   - One terminal wired to a selector pin header at the button matrix.
-  - Other terminal wired to an input pin header at the button matrix. 
+  - Other terminal wired to an input pin header at the button matrix.
 
 - **Built in push button of rotary encoders**:
   
@@ -36,11 +43,11 @@ Before going into design details, take note on how to wire (externally) all inpu
 
 - **Potentiometers**: a satellite circuit is required (see below) for each potentiometer. Terminals are **not** interchangeable.
 
-## Circuit design
+### Circuit designs for a button matrix
 
 You should be able to extrapolate those designs to your needs.
 
-### Button Matrix (25 inputs)
+#### Button Matrix (25 inputs)
 
 This is a button matrix with 5 selector pins and 5 input pins, giving 25 inputs, enough for most setups:
 
@@ -57,11 +64,11 @@ Needed parts (not counting input hardware like push buttons):
   - 5x1 (=5) for selector pins
 - Thin wire
 
-Open the [circuit design](./BtnMatrix25Inputs.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator). Inputs are externally wired to the light blue pin header in columns.
+Open the [circuit design](./BtnMatrix25Inputs.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator). Inputs are externally wired to the light-blue pin header in columns.
 
 ![Circuit design](./BtnMatrix25Inputs.png)
 
-### Satellite circuit for potentiometers (at clutch paddles)
+#### Satellite circuit for potentiometers (at clutch paddles)
 
 The purpose of this circuit is to transform an analog potentiometer into an "on/off" switch. Another soldered potentiometer (called "trimmer") will calibrate the position where on/off switching happens. Please, **follow this calibration procedure in order to minimize battery drainage**:
 
@@ -97,7 +104,7 @@ Note that, in case of need, a momentary switch can substitute the potentiometer 
 
 This hack is an alternative to this circuit: [https://www.instructables.com/Super-simple-potentiometer-switch-hack/](https://www.instructables.com/Super-simple-potentiometer-switch-hack/)
 
-### Satellite circuit for a KY-040 (rotary encoder) built in push button
+#### Satellite circuit for a KY-040 (rotary encoder) built in push button
 
 The purpose of this circuit is to avoid the expenditure of a single GPIO pin for a single rotary encoder. Such an input is connected to the button matrix instead.
 
@@ -114,18 +121,47 @@ Open this [circuit layout](./LogicInverter.diy) using [DIY Layout Creator](https
 
 ![Logic inverter](./LogicInverter_diy.png)
 
+## Analog multiplexer implementation
+
+The following circuit design provides 24 inputs using 6 pins, which should be enough for most steering wheels. However,this design can be extended easily:
+
+- Add another analog multiplexer.
+- Wire `S0`, `S1` and `S2` (selector pins) to the same pins at another multiplexer.
+- Add a new input pin wired to `(A)`.
+
+![Multiplexed switches design](./MultiplexedSwitchesX24.png)
+
+Open this [circuit layout](./MultiplexedSwitchesX24.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
+
+Needed parts (not counting input hardware like push buttons):
+
+- *74HC4051N analog multiplexer*: x3.
+- *Dupond pin headers* (male or female):
+  - 27 for external inputs
+  - 3 for input pins
+  - 3 for selector pins
+  - 3 for GND and 3V3.
+- Thin wire
+
+### External wiring for the analog multiplexers
+
+- Wire `ALL_SW_COM` to just one terminal of each push button *in a chain*. See above.
+- Wire the other terminal of each push button (or switch) to one of the light-blue pins.
+- Bare bone rotary encoders: their built-in push button must be wired like any other push button, being `SW` and `SW GND` the involved terminals.
+- KY-040 rotary encoders: wire `SW` to any light-blue pin.
+
 ## Firmware customization
+
+Customization takes place at the body of `simWheelSetup()` inside [CustomSetup.ino](../../../../src/Firmware/CustomSetup/CustomSetup.ino).
 
 ### Button matrix
 
-Customization takes place at file [CustomSetup.ino](../../../../src/Firmware/CustomSetup/CustomSetup.ino).
 Input pins must be wired to valid input-capable GPIO pins with internal pull-down resistors.  Otherwise, external pull-down resistors must be added to the circuit design. Selector pins must be wired to valid output-capable GPIO pins.
 
-1. Open file **"CustomSetup.ino"** in editor, and edit the body of `simWheelSetup()`
-2. Create a constant static array for all the selector's GPIO numbers, let's say `mtxSelectors`.
-3. Create another constant static array for all the input's GPIO numbers, let's say `mtxInputs`.
-4. Create another constant static array for the assigned input numbers, let's say `mtxNumbers`. All of them in the range from 0 to 63.
-5. Call `inputs::addButtonMatrix()`. 
+1. Create a constant static array for all the selector's GPIO numbers, let's say `mtxSelectors`.
+2. Create another constant static array for all the input's GPIO numbers, let's say `mtxInputs`.
+3. Create another constant static array for the assigned input numbers, let's say `mtxNumbers`. All of them in the range from 0 to 63.
+4. Call `inputs::addButtonMatrix()`. 
    - First parameter is `mtxSelectors`.
    - Second parameter is the count of GPIOs in `mtxSelectors`.
    - Third parameter is `mtxInputs`.
@@ -152,13 +188,40 @@ void simWheelSetup()
 }
 ```
 
+## Analog multiplexers
+
+Input pins must be wired to valid input-capable GPIO pins with internal pull-up resistors.  Otherwise, external pull-up resistors must be added to the circuit design. Selector pins must be wired to valid output-capable GPIO pins.
+
+Put a call to `inputs::addAnalogMultiplexer()`. Parameters are just the same as shown for `inputs::addButtonMatrix()`. However, the count of items in `mtxNumbers` (fifth parameter) must match $2^{SecondParameter}*{FourthParameter}$.
+
+For example:
+
+```c
+void simWheelSetup()
+{
+    static const gpio_num_t mtxSelectors[] = {GPIO_NUM_24,GPIO_NUM_33};
+    static const gpio_num_t mtxInputs[] = {GPIO_NUM_15, GPIO_NUM_2 };
+    static const inputNumber_t mtxNumbers[] = {0,1,2,3,4,5,6,7};
+    ...
+    inputs::addAnalogMultiplexer(
+      mtxSelectors,
+      sizeof(mtxSelectors)/sizeof(mtxSelectors[0]),
+      mtxInputs,
+      sizeof(mtxInputs)/sizeof(mtxInputs[0]),
+      mtxNumbers
+      );
+    ...
+}
+```
+
 ### Built in push button of a _KY-040_ rotary encoder attached to a single GPIO pin (**only**)
 
-When not attached to the button matrix through the satellite circuit, place a call to `inputs::addDigital()`:
+When not attached to a button matrix nor a multiplexer, place a call to `inputs::addDigital()`:
 
 - First parameter is the GPIO where "SW" is attached to.
-- Second parameter: always set to `true`.
+- Second parameter: assigned input number for this push button.
 - Third parameter: always set to `true`.
+- Fourth parameter: always set to `true`.
 
 For example:
 
@@ -166,7 +229,7 @@ For example:
 void simWheelSetup() 
 {
    ...
-   inputs::addDigital(GPIO_NUM_26,true,true);
+   inputs::addDigital(GPIO_NUM_26, 1, true, true);
    ...
 }
 ```

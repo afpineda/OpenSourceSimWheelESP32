@@ -391,6 +391,25 @@ namespace inputs
         inputNumber_t *buttonNumbersArray);
 
     /**
+     * @brief Add analog multiplexers bound to specific button numbers.
+     *        Must be called before `start()`. You can have more than one.
+     *
+     * @param selectorPins Array of GPIO numbers for selector pins.
+     * @param selectorPinCount Length of `selectorPins` array.
+     * @param inputPins Array of GPIO numbers for input pins
+     * @param inputPinCount Length of `inputPins`array.
+     * @param buttonNumbersArray Array of input numbers to be assigned to every button.
+     *                           The length of this array is expected to match
+     *                           (2^selectorPinCount)*inputPinCount.
+     */
+    void addAnalogMultiplexer(
+        const gpio_num_t selectorPins[],
+        const uint8_t selectorPinCount,
+        const gpio_num_t inputPins[],
+        const uint8_t inputPinCount,
+        inputNumber_t *buttonNumbersArray);
+
+    /**
      * @brief Set two potentiometers attached to clutch paddles. Each one
      *        will work as an analog axis. Must be called before `start()`.
      *
