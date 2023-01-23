@@ -1,4 +1,4 @@
-# Ready to deploy design #34
+# Ready to deploy design #4
 
 Read this document from start to end before building anything. Ensure you understand everything.
 **This setup has not been tested at the system level**. If you try, please, let me know.
@@ -17,9 +17,9 @@ Read this document from start to end before building anything. Ensure you unders
 ## Button mapping
 
 - *Bite point calibration*: rotary #1 clockwise and counter-clockwise (while holding one and only one clutch paddle).
-- *Next clutch function*: `START` and `Left shift paddle`.
-- *ALT buttons mode*: `START` and `Right shift paddle`.
-- *Recalibrate clutch paddles*: `START`, `Left shift paddle` and `Right shift paddle`.
+- *Next clutch function*: `Left shift paddle` and `START`.
+- *ALT buttons mode*: `Right shift paddle` and `START`.
+- *Recalibrate clutch paddles*: `Left shift paddle`, `Right shift paddle` and `START`.
 - *Power on*: rotary #1 clockwise or counter-clockwise.
 
 ## Needed parts

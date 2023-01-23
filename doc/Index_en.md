@@ -16,11 +16,12 @@
 
 - Ready to deploy designs:
 
-| Name                                            | Usage          | DevKit             | Inputs summary                                                             | Power source |
-|:-----------------------------------------------:|:--------------:|:------------------:|:--------------------------------------------------------------------------:|:------------:|
-| [Setup1](./hardware/setups/setup1/Setup1_en.md) | Steering wheel | ESP32-WROOM-32E/UE | Rotary encoders x4, DPAD or funky switch (optional), analog clutch paddles | External     |
-| [Setup2](./hardware/setups/setup2/Setup2_en.md) | Button box     | ESP32-WROOM-32E/UE | Rotary encoders x4, up to 52 inputs                                        | External     |
-| [Setup3](./hardware/setups/setup3/Setup3_en.md) | Steering wheel | TinyPico           | Rotary encoders x2, DPAD (optional), analog clutch paddles                 | Battery      |
+  |                      Name                       |     Usage      |       DevKit       |                               Inputs summary                               |   Main power source     |
+  | :---------------------------------------------: | :------------: | :----------------: | :------------------------------------------------------------------------: | :-----------------: |
+  | [Setup1](./hardware/setups/setup1/Setup1_en.md) | Steering wheel | ESP32-WROOM-32E/UE | Rotary encoders x4, DPAD or funky switch (optional), analog clutch paddles, 12 push buttons |      External       |
+  | [Setup2](./hardware/setups/setup2/Setup2_en.md) |   Button box   | ESP32-WROOM-32E/UE |                    Rotary encoders x4, 52 push buttons                     |      External       |
+  | [Setup3](./hardware/setups/setup3/Setup3_en.md) | Steering wheel |      TinyPico      |         Rotary encoders x2, DPAD (optional), analog clutch paddles, 10 push buttons        |       Battery       |
+  | [Setup4](./hardware/setups/setup4/Setup4_en.md) | Steering wheel |      TinyPico      |                 Rotary encoders x3, analog clutch paddles, 10 push buttons                  | Battery or external |
 
 ## Contributing
 
