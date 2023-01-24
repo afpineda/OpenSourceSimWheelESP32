@@ -25,7 +25,7 @@ private:
     uint8_t selectorPinCount, inputPinCount;
     const gpio_num_t *selectorPins;
     const gpio_num_t *inputPins;
-    BaseType_t debounce;
+    BaseType_t *debounce = nullptr;
     inputNumber_t *buttonNumbersArray;
     bool negativeLogic;
     uint8_t switchCount;
@@ -50,9 +50,16 @@ public:
         const uint8_t selectorPinCount,
         const gpio_num_t inputPins[],
         const uint8_t inputPinCount,
-        inputNumber_t *buttonNumbersArray = nullptr,
+        inputNumber_t *buttonNumbersArray,
         const bool negativeLogic = true,
         DigitalPolledInput *nextInChain = nullptr);
+
+    /**
+     * @brief Destroy the Analog Multiplexer Input object
+     * 
+     * @note Should not be called.
+     */
+    ~AnalogMultiplexerInput();
 
     /**
      * @brief Read the current state of multiplexed switches

@@ -52,13 +52,21 @@ AnalogMultiplexerInput::AnalogMultiplexerInput(
     }
 
     // Initialize debouncing state
-    this->debounce = 0;
+    debounce = (BaseType_t *)malloc(sizeof(BaseType_t) * switchCount);
+    for (int i = 0; i < switchCount; i++)
+        debounce[i] = 0;
 
     // Check and initialize pins
     for (int i = 0; i < selectorPinCount; i++)
         checkAndInitializeSelectorPin(selectorPins[i]);
     for (int i = 0; i < inputPinCount; i++)
         checkAndInitializeInputPin(inputPins[i], !negativeLogic, negativeLogic);
+}
+
+AnalogMultiplexerInput::~AnalogMultiplexerInput()
+{
+    if (debounce)
+        free(debounce);
 }
 
 // ----------------------------------------------------------------------------
@@ -68,28 +76,29 @@ AnalogMultiplexerInput::AnalogMultiplexerInput(
 inputBitmap_t AnalogMultiplexerInput::read(inputBitmap_t lastState)
 {
     inputBitmap_t state = 0;
-    BaseType_t now = xTaskGetTickCount();
-    if (debounce > 0)
-    {
-        if ((now - debounce) >= DEBOUNCE_TICKS)
-            debounce = 0;
-        return lastState & mask;
-    }
 
     for (uint8_t switchIndex = 0; switchIndex < switchCount; switchIndex++)
-    {
-        // Choose selector pins
-        for (uint8_t selPinIndex = 0; selPinIndex < selectorPinCount; selPinIndex++)
-            gpio_set_level(selectorPins[selPinIndex], switchIndex & (1 << selPinIndex));
+        if (debounce[switchIndex])
+        {
+            BaseType_t now = xTaskGetTickCount();
+            if ((now - debounce[switchIndex]) >= DEBOUNCE_TICKS)
+                debounce[switchIndex] = 0;
+            state = state | (lastState & BITMAP(switchIndex));
+        }
+        else
+        {
+            // Choose selector pins
+            for (uint8_t selPinIndex = 0; selPinIndex < selectorPinCount; selPinIndex++)
+                gpio_set_level(selectorPins[selPinIndex], switchIndex & (1 << selPinIndex));
 
-        // Wait for the signal to propagate
-        vTaskDelay(SIGNAL_CHANGE_DELAY_TICKS);
+            // Wait for the signal to propagate
+            vTaskDelay(SIGNAL_CHANGE_DELAY_TICKS);
 
-        uint8_t inputPinIndex = switchIndex >> selectorPinCount;
-        int level = gpio_get_level(inputPins[inputPinIndex]);
-        if (level ^ negativeLogic)
-            state = state | BITMAP(buttonNumbersArray[switchIndex]);
-    }
+            uint8_t inputPinIndex = switchIndex >> selectorPinCount;
+            int level = gpio_get_level(inputPins[inputPinIndex]);
+            if (level ^ negativeLogic)
+                state = state | BITMAP(buttonNumbersArray[switchIndex]);
+        };
 
     return state;
 }
