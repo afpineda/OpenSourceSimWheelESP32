@@ -33,8 +33,8 @@ Before going into design details, take note on how to wire (externally) all inpu
   
   - **Barebone**: They are wired to the button matrix as any other push button, being `SW` and `SW GND` the involved terminals.
   - **KY-040**. There are two options:
-    - _Single pin_: wire `SW` to any input-capable GPIO.
-    - _Wired to the button matrix_, using a satellite circuit (see below). Terminals are **not** interchangeable.
+    - *Single pin*: wire `SW` to any input-capable GPIO.
+    - *Wired to the button matrix*, using a satellite circuit (see below). Terminals are **not** interchangeable.
 
 - **Directional pads (DPADs) and funky switches (except for rotation)**. Terminals are **not** interchangeable:
   
@@ -123,6 +123,8 @@ Open this [circuit layout](./LogicInverter.diy) using [DIY Layout Creator](https
 
 ## Analog multiplexer implementation
 
+This implementation is based on the widely available *74HC4051N* analog multiplexer: an *8 to 1* multiplexer. If you want another kind of analog multiplexer, the firmware will work "as-is", but some changes may be needed in the circuit design. In any case, all switches must work in *negative logic*, so their common pole must be attached to `GND`. See below.
+
 The following circuit design provides 24 inputs using 6 pins, which should be enough for most steering wheels. However,this design can be extended easily:
 
 - Add another analog multiplexer.
@@ -135,13 +137,17 @@ Open this [circuit layout](./MultiplexedSwitchesX24.diy) using [DIY Layout Creat
 
 Needed parts (not counting input hardware like push buttons):
 
+- Standard-sized perfboard 28x6 holes.
 - *74HC4051N analog multiplexer*: x3.
 - *Dupond pin headers* (male or female):
   - 27 for external inputs
   - 3 for input pins
   - 3 for selector pins
-  - 3 for GND and 3V3.
+  - 4 for `GND` and `ALL_SW_COM`.
+  - 1 for `3V3`.
 - Thin wire
+
+There are two `ALL_SW_COM` for flexibility, but they all work the same.
 
 ### External wiring for the analog multiplexers
 
@@ -214,7 +220,7 @@ void simWheelSetup()
 }
 ```
 
-### Built in push button of a _KY-040_ rotary encoder attached to a single GPIO pin (**only**)
+### Built in push button of a *KY-040* rotary encoder attached to a single GPIO pin (**only**)
 
 When not attached to a button matrix nor a multiplexer, place a call to `inputs::addDigital()`:
 
