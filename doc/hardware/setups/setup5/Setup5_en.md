@@ -17,25 +17,22 @@ Read this document from start to end before building anything. Ensure you unders
 
 - *Bite point calibration*: rotary #1 clockwise and counter-clockwise (while holding one and only one clutch paddle).
 - *Next clutch function*: `Left shift paddle` and `START`.
-- *ALT buttons mode*: `Right shift paddle` and `START`.
-- *Recalibrate clutch paddles*: `Left shift paddle`, `Right shift paddle` and `START`.
 - *Power on*: rotary #1 clockwise or counter-clockwise.
 
 ## Needed parts
 
 Common:
 
-| **Item**                                 | **Quantity** | Notes                                                               |
-| ---------------------------------------- | :----------: | ------------------------------------------------------------------- |
-| Bare bone rotary encoder                 |      3       | With built-in push button                                           |
-| Roller lever                             |      2       | For shift paddles (maybe they are included with your wheel's case)  |
-| Linear potentiometer 10 K-ohms or higher |      2       | For clutch paddles (maybe they are included with your wheel's case) |
-| Push buttons                             |   up to 10   | General purpose inputs (up to you)                                  |
-| Analog multiplexer                       |      2       | 74HC4051N (*mandatory*)                                             |
-| Standard perfboard sized 28x6 holes      |      1       |                                                                     |
-| LilyGO T-QT PRO DevKit board             |      1       | With male pins already soldered                                     |
-| Pin header (male or female up to you)    |      32      | For external wiring                                                 |
-| External Antenna with proper connector   |      1       | Optional                                                            |
+| **Item**                                 | **Quantity** | Notes                                                                         |
+| ---------------------------------------- | :----------: | ----------------------------------------------------------------------------- |
+| Bare bone rotary encoder                 |      3       | With built-in push button                                                     |
+| Roller lever                             |      4       | For shift and clutch paddles (maybe they are included with your wheel's case) |
+| Push buttons                             |   up to 9    | General purpose inputs (up to you)                                            |
+| Analog multiplexer                       |      2       | 74HC4051N (*mandatory*)                                                       |
+| Standard perfboard sized 28x6 holes      |      1       |                                                                               |
+| LilyGO T-QT PRO DevKit board             |      1       | With male pins already soldered                                               |
+| Pin header (male or female up to you)    |      29      | For external wiring                                                           |
+| External Antenna with proper connector   |      1       | Optional                                                                      |
 
 Battery-operated:
 
@@ -61,7 +58,10 @@ Other notes:
 
 - The GX16 connector may be replaced by any other kind. The GX16 features a knot that prevents accidental unplug. The 5 pins flavor allows to build a fully capable USB port, not just a charging/power port, if you want.
 - Recommended male 90-degrees bended pin headers.
-- You may choose another perfboard as long as it fits 17x6 holes. A single-sided board is all right.
+- You may choose another perfboard as long as it features 17x6 holes. A single-sided board is all right.
+- There are several flavors of the T-QT DevKit board. Choose the **"PRO"** flavor, since it features a built-in powerboost module, unless you don't need the battery.
+- The T-QT DevKit board is sold with some wires included for the (optional) battery.
+- You may substitute the clutch paddles (and their roller levers) with two push buttons or two lever switches.
 
 ## Pin-out plan for the T-QT DevKit board
 
@@ -109,23 +109,24 @@ Notes and build tips:
   - Solder the battery connector to the small solder pads on the back of the T-QT dekvit board.
   - `Battery(+)` is the positive pole of the battery.
   - `Battery(-)` is the negative pole of the battery.
-  - Attach `Battery(+)` and `Battery(-)` properly. **Take care not to swap those terminals**.
+  - Attach `Battery(+)` and `Battery(-)` properly. **Take care not to swap those terminals**. There are two small solder pads on the back of the T-QT for them.
+  - `EXT_GND` is used as `ALL_SW_COM`.
   - Battery charge port:
-    - Cut the USB cable near the Micro-USB/USB-C end, but leave enough length to reach the GX16 plug.
+    - Cut the USB cable near the USB-C end, but leave enough length to reach the GX16 plug.
     - Make sure matching GX16 pins in both male and female connectors are soldered to the same wire (same color).
     - Red and black wires are mandatory. Others are optional.
 - In an externally powered setup:
-  - Solder the external connector to Dupond wires with a female header in one end.
+  - Solder the external connector to Dupond wires matching the pin header of `EXT_5V` and `EXT_GND`.
   - Leave `Battery(+)` and `Battery(-)` unwired (obviously).
   - `EXT_5V` is the positive terminal of the external power source. Any DC source from +5V to +7V is suitable.
   - `EXT_GND` is the negative (or ground) terminal of the external power source.
-- Rotary encoder #1 is mandatory.
+- Rotary encoder #1 is mandatory as well as the *Start* button.
 
 ## Firmware upload
 
 **You should calibrate your battery first**. See the [Battery calibration procedure](../../../../src/Firmware/BatteryTools/BatteryCalibration/README.md).
 
-1. Plug the USB cable to the Devkit board and upload the [sketch](../../../../src/Firmware/Setup4/Setup4.ino) with Arduino IDE.
+1. Plug the USB cable to the DevKit board and upload the [sketch](../../../../src/Firmware/Setup4/Setup4.ino) with Arduino IDE.
 2. Open the serial monitor (Arduino IDE).
 3. Reset.
 4. Check there are no error messages.
