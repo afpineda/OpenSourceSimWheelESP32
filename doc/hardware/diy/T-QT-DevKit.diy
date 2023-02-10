@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project>
+  <fileVersion>
+    <major>4</major>
+    <minor>35</minor>
+    <build>0</build>
+  </fileVersion>
+  <title>LilyGO T-QT devkit board</title>
+  <author>Ángel Fernández Pineda. Madrid. Spain. 2023</author>
+  <width value="4.0" unit="cm"/>
+  <height value="6.0" unit="cm"/>
+  <gridSpacing value="0.1" unit="in"/>
+  <dotSpacing>1</dotSpacing>
+  <components>
+    <diylc.connectivity.Dot>
+      <name>Dot4</name>
+      <size value="1.1" unit="mm"/>
+      <color hex="ff0000"/>
+      <point x="1.1" y="2.1"/>
+    </diylc.connectivity.Dot>
+    <diylc.connectivity.Dot>
+      <name>Dot3</name>
+      <size value="1.1" unit="mm"/>
+      <color hex="000000"/>
+      <point x="1.1" y="2.0"/>
+    </diylc.connectivity.Dot>
+    <diylc.connectivity.Dot>
+      <name>Dot2</name>
+      <size value="1.1" unit="mm"/>
+      <color hex="ff0000"/>
+      <point x="1.2" y="0.1"/>
+    </diylc.connectivity.Dot>
+    <diylc.connectivity.Dot>
+      <name>Dot1</name>
+      <size value="1.1" unit="mm"/>
+      <color hex="000000"/>
+      <point x="1.1" y="0.1"/>
+    </diylc.connectivity.Dot>
+    <diylc.shapes.Rectangle>
+      <name>RECT1</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="0.1" y="0.1"/>
+        <point x="1.3" y="0.8"/>
+      </controlPoints>
+      <firstPoint x="0.1" y="0.1"/>
+      <secondPoint x="1.3" y="0.8"/>
+      <color hex="cccccc"/>
+      <borderColor hex="000000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="0.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.semiconductors.DIL__IC>
+      <name>IC1</name>
+      <alpha>127</alpha>
+      <value>T-QT</value>
+      <orientation>_90</orientation>
+      <pinCount>_14</pinCount>
+      <pinSpacing value="0.1" unit="in"/>
+      <rowSpacing value="0.7" unit="in"/>
+      <controlPoints>
+        <point x="1.0" y="0.1"/>
+        <point x="0.9" y="0.1"/>
+        <point x="0.8" y="0.1"/>
+        <point x="0.7" y="0.1"/>
+        <point x="0.6" y="0.1"/>
+        <point x="0.5" y="0.1"/>
+        <point x="0.4" y="0.1"/>
+        <point x="1.0" y="0.8"/>
+        <point x="0.9" y="0.8"/>
+        <point x="0.8" y="0.8"/>
+        <point x="0.7" y="0.8"/>
+        <point x="0.6" y="0.8"/>
+        <point x="0.5" y="0.8"/>
+        <point x="0.4" y="0.8"/>
+      </controlPoints>
+      <display>VALUE</display>
+      <bodyColor hex="cccccc"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+      <indentColor hex="595959"/>
+      <displayNumbers>NO</displayNumbers>
+    </diylc.semiconductors.DIL__IC>
+    <diylc.shapes.Rectangle>
+      <name>RECT2</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="1.1" y="0.1"/>
+        <point x="1.3" y="0.3"/>
+      </controlPoints>
+      <firstPoint x="1.1" y="0.1"/>
+      <secondPoint x="1.3" y="0.3"/>
+      <color hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="3.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.shapes.Rectangle>
+      <name>RECT3</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="1.1" y="0.6"/>
+        <point x="1.3" y="0.8"/>
+      </controlPoints>
+      <firstPoint x="1.1" y="0.6"/>
+      <secondPoint x="1.3" y="0.8"/>
+      <color hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="3.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.shapes.Rectangle>
+      <name>RECT4</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="1.1" y="0.3"/>
+        <point x="1.4" y="0.6"/>
+      </controlPoints>
+      <firstPoint x="1.1" y="0.3"/>
+      <secondPoint x="1.4" y="0.6"/>
+      <color hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="2.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.shapes.Rectangle>
+      <name>RECT5</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="1.1" y="1.0"/>
+        <point x="0.4" y="2.2"/>
+      </controlPoints>
+      <firstPoint x="0.4" y="1.0"/>
+      <secondPoint x="1.1" y="2.2"/>
+      <color hex="cccccc"/>
+      <borderColor hex="000000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="0.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.semiconductors.DIL__IC>
+      <name>IC2</name>
+      <alpha>127</alpha>
+      <value>T-QT</value>
+      <orientation>_180</orientation>
+      <pinCount>_14</pinCount>
+      <pinSpacing value="0.1" unit="in"/>
+      <rowSpacing value="0.7" unit="in"/>
+      <controlPoints>
+        <point x="1.1" y="1.9"/>
+        <point x="1.1" y="1.8"/>
+        <point x="1.1" y="1.7"/>
+        <point x="1.1" y="1.6"/>
+        <point x="1.1" y="1.5"/>
+        <point x="1.1" y="1.4"/>
+        <point x="1.1" y="1.3"/>
+        <point x="0.4" y="1.9"/>
+        <point x="0.4" y="1.8"/>
+        <point x="0.4" y="1.7"/>
+        <point x="0.4" y="1.6"/>
+        <point x="0.4" y="1.5"/>
+        <point x="0.4" y="1.4"/>
+        <point x="0.4" y="1.3"/>
+      </controlPoints>
+      <display>VALUE</display>
+      <bodyColor hex="cccccc"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+      <indentColor hex="595959"/>
+      <displayNumbers>NO</displayNumbers>
+    </diylc.semiconductors.DIL__IC>
+    <diylc.shapes.Rectangle>
+      <name>RECT6</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="0.6" y="2.0"/>
+        <point x="0.4" y="2.2"/>
+      </controlPoints>
+      <firstPoint x="0.4" y="2.0"/>
+      <secondPoint x="0.6" y="2.2"/>
+      <color hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="3.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.shapes.Rectangle>
+      <name>RECT7</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="1.1" y="2.0"/>
+        <point x="0.9" y="2.2"/>
+      </controlPoints>
+      <firstPoint x="0.9" y="2.0"/>
+      <secondPoint x="1.1" y="2.2"/>
+      <color hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="3.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.shapes.Rectangle>
+      <name>RECT8</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="0.9" y="2.0"/>
+        <point x="0.6" y="2.3"/>
+      </controlPoints>
+      <firstPoint x="0.6" y="2.0"/>
+      <secondPoint x="0.9" y="2.3"/>
+      <color hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="2.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.shapes.TapeMeasure>
+      <name>TM1</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="1.5" y="1.0"/>
+        <point x="1.5" y="2.3"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowStart>true</arrowStart>
+      <arrowEnd>true</arrowEnd>
+      <unit>mm</unit>
+      <decimals>2</decimals>
+    </diylc.shapes.TapeMeasure>
+    <diylc.shapes.TapeMeasure>
+      <name>TM2</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="0.4" y="0.9"/>
+        <point x="1.1" y="0.9"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowStart>true</arrowStart>
+      <arrowEnd>true</arrowEnd>
+      <unit>mm</unit>
+      <decimals>2</decimals>
+    </diylc.shapes.TapeMeasure>
+  </components>
+  <groups>
+    <set>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[3]"/>
+      <diylc.connectivity.Dot reference="../../../components/diylc.connectivity.Dot[3]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[2]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[4]"/>
+      <diylc.connectivity.Dot reference="../../../components/diylc.connectivity.Dot[4]"/>
+    </set>
+    <set/>
+    <set>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[2]"/>
+      <diylc.connectivity.Dot reference="../../../components/diylc.connectivity.Dot"/>
+      <diylc.connectivity.Dot reference="../../../components/diylc.connectivity.Dot[2]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[7]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[5]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[8]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[6]"/>
+    </set>
+  </groups>
+  <lockedLayers/>
+  <lockedComponents/>
+  <hiddenLayers/>
+  <font name="Dialog.plain" size="14" style="0"/>
+</project>
