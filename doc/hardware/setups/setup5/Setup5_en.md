@@ -23,16 +23,16 @@ Read this document from start to end before building anything. Ensure you unders
 
 Common:
 
-| **Item**                                 | **Quantity** | Notes                                                                         |
-| ---------------------------------------- | :----------: | ----------------------------------------------------------------------------- |
-| Bare bone rotary encoder                 |      3       | With built-in push button                                                     |
-| Roller lever                             |      4       | For shift and clutch paddles (maybe they are included with your wheel's case) |
-| Push buttons                             |   up to 9    | General purpose inputs (up to you)                                            |
-| Analog multiplexer                       |      2       | 74HC4051N (*mandatory*)                                                       |
-| Standard perfboard sized 28x6 holes      |      1       |                                                                               |
-| LilyGO T-QT PRO DevKit board             |      1       | With male pins already soldered                                               |
-| Pin header (male or female up to you)    |      29      | For external wiring                                                           |
-| External Antenna with proper connector   |      1       | Optional                                                                      |
+| **Item**                               | **Quantity** | Notes                                                                         |
+| -------------------------------------- | :----------: | ----------------------------------------------------------------------------- |
+| Bare bone rotary encoder               |      3       | With built-in push button                                                     |
+| Roller lever                           |      4       | For shift and clutch paddles (maybe they are included with your wheel's case) |
+| Push buttons                           |   up to 9    | General purpose inputs (up to you)                                            |
+| Analog multiplexer                     |      2       | 74HC4051N (*mandatory*)                                                       |
+| Standard perfboard sized 28x6 holes    |      1       |                                                                               |
+| LilyGO T-QT PRO DevKit board           |      1       | With male pins already soldered                                               |
+| Pin header (male or female up to you)  |      29      | For external wiring                                                           |
+| External Antenna with proper connector |      1       | Optional                                                                      |
 
 Battery-operated:
 
@@ -57,7 +57,7 @@ Other parts (quantity unknown):
 Other notes:
 
 - The GX16 connector may be replaced by any other kind. The GX16 features a knot that prevents accidental unplug. The 5 pins flavor allows to build a fully capable USB port, not just a charging/power port, if you want.
-- Recommended male 90-degrees bended pin headers.
+- Recommended male 90-degrees [bended pin headers](https://duckduckgo.com/?q=bended+pin+header&iax=images&ia=images).
 - You may choose another perfboard as long as it features 17x6 holes. A single-sided board is all right.
 - There are several flavors of the T-QT DevKit board. Choose the **"PRO"** flavor, since it features a built-in powerboost module, unless you don't need the battery.
 - The T-QT DevKit board is sold with some wires included for the (optional) battery.
@@ -74,10 +74,10 @@ Other notes:
 | **37**   | OK        | OK         |         ROT2_B         | outputs PWM signal at boot |
 | **36**   | OK        | OK         |         ROT3_A         |                            |
 | **35**   | OK        | OK         |         ROT3_B         |                            |
-| **48**   | OK        | OK         |  Multiplexer input 1   |                            |
-| **18**   | OK        | OK         | Multiplexer selector 3 |                            |
-| **17**   | OK        | OK         | Multiplexer selector 2 | outputs PWM signal at boot |
-| **16**   | OK        | OK         | Multiplexer selector 1 |                            |
+| **48**   | OK        | OK         | Multiplexer selector 1 |                            |
+| **18**   | OK        | OK         | Multiplexer selector 2 |                            |
+| **17**   | OK        | OK         | Multiplexer selector 3 | outputs PWM signal at boot |
+| **16**   | OK        | OK         |  Multiplexer input 1   |                            |
 
 ## Circuit layout
 
@@ -124,9 +124,29 @@ Notes and build tips:
 
 ## Firmware upload
 
-**You should calibrate your battery first**. See the [Battery calibration procedure](../../../../src/Firmware/BatteryTools/BatteryCalibration/README.md).
+At Arduino IDE, configure the board manager as this:
 
-1. Plug the USB cable to the DevKit board and upload the [sketch](../../../../src/Firmware/Setup4/Setup4.ino) with Arduino IDE.
+- Board: "ESP32S3Dev"
+- USB CDC on boot: "Enabled".
+
+In a battery-operated setup:
+
+- **You should calibrate your battery first**. See the [Battery calibration procedure](../../../../src/Firmware/BatteryTools/BatteryCalibration/README.md).
+- Locate the `#define BATTERY_ENABLE_READ_GPIO` directive and rewrite, so it looks as follow:
+
+  ```c
+  #define BATTERY_ENABLE_READ_GPIO GPIO_NUM_4
+  ```
+
+When using an external power source:
+
+- Locate the `#define BATTERY_ENABLE_READ_GPIO` directive and rewrite, so it looks as follow:
+
+  ```c
+  // #define BATTERY_ENABLE_READ_GPIO GPIO_NUM_4
+  ```
+
+1. Plug the USB cable to the DevKit board and upload the [sketch](../../../../src/Firmware/Setup4/Setup4.ino) with Arduino IDE. If required, in order to enter "boot mode" click the reset button while holding "IO0".
 2. Open the serial monitor (Arduino IDE).
 3. Reset.
 4. Check there are no error messages.

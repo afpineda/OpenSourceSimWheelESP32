@@ -38,7 +38,7 @@ void setup()
     btns = new AnalogMultiplexerInput(
         amtxerSelectors,
         sizeof(amtxerSelectors) / sizeof(amtxerSelectors[0]),
-        mtxInputs,
+        amtxerInputs,
         sizeof(amtxerInputs) / sizeof(amtxerInputs[0]),
         amtxerNumbers);
 

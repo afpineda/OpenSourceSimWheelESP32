@@ -16,8 +16,8 @@
       <name>W27</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="6.6" y="6.6"/>
-        <point x="6.6" y="7.5"/>
+        <point x="8.5" y="6.6"/>
+        <point x="8.5" y="6.9"/>
       </controlPoints2>
       <color hex="000000"/>
       <pointCount>TWO</pointCount>
@@ -106,128 +106,13 @@
       <striped>false</striped>
       <stripeColor hex="ffff00"/>
     </diylc.connectivity.HookupWire>
-    <diylc.semiconductors.DIL__IC>
-      <name>ESP32-DevKitC-32E</name>
-      <alpha>44</alpha>
-      <value></value>
-      <orientation>_90</orientation>
-      <pinCount>_38</pinCount>
-      <pinSpacing value="0.1" unit="in"/>
-      <rowSpacing value="1.0" unit="in"/>
-      <controlPoints>
-        <point x="8.9" y="4.2"/>
-        <point x="8.8" y="4.2"/>
-        <point x="8.7" y="4.2"/>
-        <point x="8.6" y="4.2"/>
-        <point x="8.5" y="4.2"/>
-        <point x="8.4" y="4.2"/>
-        <point x="8.3" y="4.2"/>
-        <point x="8.2" y="4.2"/>
-        <point x="8.1" y="4.2"/>
-        <point x="8.0" y="4.2"/>
-        <point x="7.9" y="4.2"/>
-        <point x="7.8" y="4.2"/>
-        <point x="7.7" y="4.2"/>
-        <point x="7.6" y="4.2"/>
-        <point x="7.5" y="4.2"/>
-        <point x="7.4" y="4.2"/>
-        <point x="7.3" y="4.2"/>
-        <point x="7.2" y="4.2"/>
-        <point x="7.1" y="4.2"/>
-        <point x="8.9" y="5.2"/>
-        <point x="8.8" y="5.2"/>
-        <point x="8.7" y="5.2"/>
-        <point x="8.6" y="5.2"/>
-        <point x="8.5" y="5.2"/>
-        <point x="8.4" y="5.2"/>
-        <point x="8.3" y="5.2"/>
-        <point x="8.2" y="5.2"/>
-        <point x="8.1" y="5.2"/>
-        <point x="8.0" y="5.2"/>
-        <point x="7.9" y="5.2"/>
-        <point x="7.8" y="5.2"/>
-        <point x="7.7" y="5.2"/>
-        <point x="7.6" y="5.2"/>
-        <point x="7.5" y="5.2"/>
-        <point x="7.4" y="5.2"/>
-        <point x="7.3" y="5.2"/>
-        <point x="7.2" y="5.2"/>
-        <point x="7.1" y="5.2"/>
-      </controlPoints>
-      <display>BOTH</display>
-      <bodyColor hex="808080"/>
-      <borderColor hex="595959"/>
-      <labelColor hex="ffffff"/>
-      <indentColor hex="595959"/>
-      <displayNumbers>CONNECTOR</displayNumbers>
-    </diylc.semiconductors.DIL__IC>
-    <diylc.shapes.Rectangle>
-      <name>RECT1</name>
-      <alpha>44</alpha>
-      <value></value>
-      <controlPoints>
-        <point x="6.85" y="4.305"/>
-        <point x="7.1" y="5.1"/>
-      </controlPoints>
-      <firstPoint x="6.85" y="4.305"/>
-      <secondPoint x="7.1" y="5.1"/>
-      <color hex="999999"/>
-      <borderColor hex="999999"/>
-      <borderThickness value="0.2" unit="mm"/>
-      <edgeRadius value="0.0" unit="mm"/>
-    </diylc.shapes.Rectangle>
-    <diylc.shapes.Rectangle>
-      <name>USB</name>
-      <alpha>65</alpha>
-      <value></value>
-      <controlPoints>
-        <point x="8.7" y="4.5"/>
-        <point x="9.0" y="4.9"/>
-      </controlPoints>
-      <firstPoint x="8.7" y="4.5"/>
-      <secondPoint x="9.0" y="4.9"/>
-      <color hex="cccccc"/>
-      <borderColor hex="ffffff"/>
-      <borderThickness value="0.2" unit="mm"/>
-      <edgeRadius value="5.0" unit="mm"/>
-    </diylc.shapes.Rectangle>
-    <diylc.shapes.Rectangle>
-      <name>RECT6</name>
-      <alpha>127</alpha>
-      <value></value>
-      <controlPoints>
-        <point x="8.6" y="5.1"/>
-        <point x="8.8" y="5.2"/>
-      </controlPoints>
-      <firstPoint x="8.6" y="5.1"/>
-      <secondPoint x="8.8" y="5.2"/>
-      <color hex="ff0033"/>
-      <borderColor hex="ff0000"/>
-      <borderThickness value="0.2" unit="mm"/>
-      <edgeRadius value="0.0" unit="mm"/>
-    </diylc.shapes.Rectangle>
-    <diylc.shapes.Rectangle>
-      <name>RECT7</name>
-      <alpha>127</alpha>
-      <value></value>
-      <controlPoints>
-        <point x="8.7" y="4.2"/>
-        <point x="8.9" y="4.3"/>
-      </controlPoints>
-      <firstPoint x="8.7" y="4.2"/>
-      <secondPoint x="8.9" y="4.3"/>
-      <color hex="ff0033"/>
-      <borderColor hex="ff0000"/>
-      <borderThickness value="0.2" unit="mm"/>
-      <edgeRadius value="0.0" unit="mm"/>
-    </diylc.shapes.Rectangle>
     <diylc.passive.PotentiometerPanel>
       <name>Clutch2</name>
       <alpha>127</alpha>
       <controlPoints>
-        <point x="8.700000000000001" y="7.0"/>
-        <point x="8.400000000000002" y="7.0"/>
-        <point x="8.100000000000001" y="7.0"/>
+        <point x="7.300000000000001" y="7.0"/>
+        <point x="7.000000000000003" y="7.0"/>
+        <point x="6.700000000000001" y="7.0"/>
       </controlPoints>
       <resistance value="10.0" unit="K"/>
       <orientation>_180</orientation>
@@ -247,9 +132,9 @@
       <name>Clutch1</name>
       <alpha>127</alpha>
       <controlPoints>
-        <point x="7.8" y="6.9"/>
-        <point x="7.5" y="6.9"/>
-        <point x="7.2" y="6.9"/>
+        <point x="6.5" y="6.9"/>
+        <point x="6.2" y="6.9"/>
+        <point x="5.9" y="6.9"/>
       </controlPoints>
       <resistance value="10.0" unit="K"/>
       <orientation>_180</orientation>
@@ -577,13 +462,11 @@
       <name>W7</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="8.3" y="5.5"/>
-        <point x="7.4" y="6.2"/>
-        <point x="7.7" y="6.4"/>
-        <point x="7.5" y="6.9"/>
+        <point x="7.3" y="5.5"/>
+        <point x="6.2" y="6.9"/>
       </controlPoints2>
       <color hex="00ff00"/>
-      <pointCount>FOUR</pointCount>
+      <pointCount>TWO</pointCount>
       <style>SOLID</style>
       <smooth>true</smooth>
       <lastUpdatePointIndex>-1</lastUpdatePointIndex>
@@ -595,8 +478,8 @@
       <name>W8</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="7.8" y="6.6"/>
-        <point x="7.8" y="6.9"/>
+        <point x="6.5" y="6.6"/>
+        <point x="6.5" y="6.9"/>
       </controlPoints2>
       <color hex="000000"/>
       <pointCount>TWO</pointCount>
@@ -611,8 +494,8 @@
       <name>W9</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="7.2" y="6.5"/>
-        <point x="7.2" y="6.9"/>
+        <point x="5.9" y="6.5"/>
+        <point x="5.9" y="6.9"/>
       </controlPoints2>
       <color hex="ff0000"/>
       <pointCount>TWO</pointCount>
@@ -627,13 +510,11 @@
       <name>W10</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="7.3" y="5.3"/>
-        <point x="6.9" y="6.1"/>
-        <point x="6.2" y="6.7"/>
-        <point x="5.7" y="7.1"/>
+        <point x="7.5" y="5.5"/>
+        <point x="7.5" y="7.7"/>
       </controlPoints2>
       <color hex="00ff00"/>
-      <pointCount>FOUR</pointCount>
+      <pointCount>TWO</pointCount>
       <style>SOLID</style>
       <smooth>true</smooth>
       <lastUpdatePointIndex>-1</lastUpdatePointIndex>
@@ -645,13 +526,11 @@
       <name>W11</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="7.4" y="5.3"/>
-        <point x="7.0" y="6.1"/>
-        <point x="6.3" y="6.7"/>
-        <point x="5.9" y="7.1"/>
+        <point x="7.6" y="5.5"/>
+        <point x="7.7" y="7.7"/>
       </controlPoints2>
       <color hex="00ff00"/>
-      <pointCount>FOUR</pointCount>
+      <pointCount>TWO</pointCount>
       <style>SOLID</style>
       <smooth>true</smooth>
       <lastUpdatePointIndex>-1</lastUpdatePointIndex>
@@ -663,13 +542,11 @@
       <name>W12</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="7.5" y="5.3"/>
-        <point x="7.1" y="6.1"/>
-        <point x="6.4" y="6.7"/>
-        <point x="6.1" y="7.1"/>
+        <point x="7.7" y="5.5"/>
+        <point x="7.9" y="7.7"/>
       </controlPoints2>
       <color hex="00ff00"/>
-      <pointCount>FOUR</pointCount>
+      <pointCount>TWO</pointCount>
       <style>SOLID</style>
       <smooth>true</smooth>
       <lastUpdatePointIndex>-1</lastUpdatePointIndex>
@@ -747,7 +624,7 @@
       <name>W14</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="8.0" y="5.5"/>
+        <point x="8.3" y="5.3"/>
         <point x="7.0" y="5.7"/>
         <point x="6.6" y="5.9"/>
       </controlPoints2>
@@ -764,7 +641,7 @@
       <name>W15</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="8.1" y="5.5"/>
+        <point x="8.5" y="5.5"/>
         <point x="7.4" y="5.9"/>
         <point x="6.0" y="6.0"/>
       </controlPoints2>
@@ -783,7 +660,7 @@
       <controlPoints2>
         <point x="4.7" y="5.5"/>
         <point x="5.4" y="5.2"/>
-        <point x="7.7" y="5.3"/>
+        <point x="8.0" y="5.3"/>
       </controlPoints2>
       <color hex="cccc00"/>
       <pointCount>THREE</pointCount>
@@ -800,7 +677,7 @@
       <controlPoints2>
         <point x="5.5" y="5.5"/>
         <point x="6.0" y="5.3"/>
-        <point x="7.8" y="5.4"/>
+        <point x="8.1" y="5.4"/>
       </controlPoints2>
       <color hex="cccc00"/>
       <pointCount>THREE</pointCount>
@@ -817,7 +694,7 @@
       <controlPoints2>
         <point x="6.3" y="5.5"/>
         <point x="6.8" y="5.4"/>
-        <point x="7.9" y="5.5"/>
+        <point x="8.2" y="5.5"/>
       </controlPoints2>
       <color hex="cccc00"/>
       <pointCount>THREE</pointCount>
@@ -832,13 +709,11 @@
       <name>W17</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="8.5" y="5.5"/>
-        <point x="8.4" y="6.2"/>
-        <point x="8.7" y="6.4"/>
-        <point x="8.4" y="7.0"/>
+        <point x="7.4" y="5.5"/>
+        <point x="7.0" y="7.0"/>
       </controlPoints2>
       <color hex="00ff00"/>
-      <pointCount>FOUR</pointCount>
+      <pointCount>TWO</pointCount>
       <style>SOLID</style>
       <smooth>true</smooth>
       <lastUpdatePointIndex>-1</lastUpdatePointIndex>
@@ -850,8 +725,8 @@
       <name>W23</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="8.1" y="6.5"/>
-        <point x="8.1" y="7.0"/>
+        <point x="6.7" y="6.5"/>
+        <point x="6.7" y="7.0"/>
       </controlPoints2>
       <color hex="ff0000"/>
       <pointCount>TWO</pointCount>
@@ -866,8 +741,8 @@
       <name>W24</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="8.7" y="6.6"/>
-        <point x="8.7" y="7.0"/>
+        <point x="7.299999999999999" y="6.6"/>
+        <point x="7.299999999999999" y="7.0"/>
       </controlPoints2>
       <color hex="000000"/>
       <pointCount>TWO</pointCount>
@@ -882,13 +757,11 @@
       <name>W25</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="7.6" y="5.4"/>
-        <point x="7.2" y="6.2"/>
-        <point x="6.5" y="6.8"/>
-        <point x="6.4" y="7.6"/>
+        <point x="7.9" y="5.5"/>
+        <point x="8.4" y="6.9"/>
       </controlPoints2>
       <color hex="00ffff"/>
-      <pointCount>FOUR</pointCount>
+      <pointCount>TWO</pointCount>
       <style>SOLID</style>
       <smooth>true</smooth>
       <lastUpdatePointIndex>-1</lastUpdatePointIndex>
@@ -900,13 +773,11 @@
       <name>W26</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="8.2" y="5.5"/>
-        <point x="8.2" y="6.2"/>
-        <point x="6.5" y="6.2"/>
-        <point x="6.5" y="7.6"/>
+        <point x="7.8" y="5.5"/>
+        <point x="8.3" y="6.9"/>
       </controlPoints2>
       <color hex="00ffff"/>
-      <pointCount>FOUR</pointCount>
+      <pointCount>TWO</pointCount>
       <style>SOLID</style>
       <smooth>true</smooth>
       <lastUpdatePointIndex>-1</lastUpdatePointIndex>
@@ -914,6 +785,1235 @@
       <striped>false</striped>
       <stripeColor hex="ffff00"/>
     </diylc.connectivity.HookupWire>
+    <diylc.misc.Label>
+      <name>LAB1</name>
+      <point x="7.7" y="7.8"/>
+      <text>CLK</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB2</name>
+      <point x="7.9" y="7.8"/>
+      <text>DT</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB3</name>
+      <point x="7.5" y="7.8"/>
+      <text>SW</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.WrapLabel>
+      <name>L35</name>
+      <controlPoints>
+        <point x="7.2" y="7.9"/>
+        <point x="8.1" y="8.0"/>
+      </controlPoints>
+      <firstPoint x="7.2" y="7.9"/>
+      <secondPoint x="8.1" y="8.0"/>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="3333ff"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <value>KY-040 rotary encoder</value>
+    </diylc.misc.WrapLabel>
+    <diylc.misc.Label>
+      <name>LAB4</name>
+      <point x="6.6" y="5.8"/>
+      <text>1</text>
+      <font name="Dialog.plain" size="10" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB5</name>
+      <point x="6.0" y="5.8"/>
+      <text>2</text>
+      <font name="Dialog.plain" size="10" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB6</name>
+      <point x="5.2" y="5.8"/>
+      <text>1</text>
+      <font name="Dialog.plain" size="10" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB7</name>
+      <point x="4.4" y="5.8"/>
+      <text>2</text>
+      <font name="Dialog.plain" size="10" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB8</name>
+      <point x="5.8" y="5.8"/>
+      <text>2</text>
+      <font name="Dialog.plain" size="10" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB9</name>
+      <point x="5.0" y="5.8"/>
+      <text>1</text>
+      <font name="Dialog.plain" size="10" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB10</name>
+      <point x="6.5" y="5.9"/>
+      <text>2</text>
+      <font name="Dialog.bold" size="36" style="1"/>
+      <color hex="ff9900"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB11</name>
+      <point x="6.1" y="5.9"/>
+      <text>3</text>
+      <font name="Dialog.bold" size="36" style="1"/>
+      <color hex="ff9900"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB12</name>
+      <point x="5.7" y="5.9"/>
+      <text>4</text>
+      <font name="Dialog.bold" size="36" style="1"/>
+      <color hex="ff9900"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB13</name>
+      <point x="5.3" y="5.9"/>
+      <text>5</text>
+      <font name="Dialog.bold" size="36" style="1"/>
+      <color hex="ff9900"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB14</name>
+      <point x="4.9" y="5.9"/>
+      <text>6</text>
+      <font name="Dialog.bold" size="36" style="1"/>
+      <color hex="ff9900"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB15</name>
+      <point x="4.5" y="5.9"/>
+      <text>7</text>
+      <font name="Dialog.bold" size="36" style="1"/>
+      <color hex="ff9900"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB16</name>
+      <point x="4.6" y="7.0"/>
+      <text>Button numbers</text>
+      <font name="Dialog.bold" size="36" style="1"/>
+      <color hex="ff9900"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB17</name>
+      <point x="8.3" y="7.1"/>
+      <text>ENC A</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB18</name>
+      <point x="8.4" y="7.1"/>
+      <text>ENC B</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.WrapLabel>
+      <name>L36</name>
+      <controlPoints>
+        <point x="7.9" y="7.3"/>
+        <point x="8.8" y="7.4"/>
+      </controlPoints>
+      <firstPoint x="7.9" y="7.3"/>
+      <secondPoint x="8.8" y="7.4"/>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="3333ff"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <value>ALPS funky switch</value>
+    </diylc.misc.WrapLabel>
+    <diylc.semiconductors.TransistorTO92>
+      <name>PNP</name>
+      <alpha>100</alpha>
+      <value></value>
+      <orientation>_90</orientation>
+      <controlPoints>
+        <point x="8.9" y="3.5"/>
+        <point x="8.8" y="3.5"/>
+        <point x="8.7" y="3.5"/>
+      </controlPoints>
+      <bodyColor hex="ff6600"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="000000"/>
+      <display>NAME</display>
+      <folded>true</folded>
+      <pinSpacing value="0.1" unit="in"/>
+    </diylc.semiconductors.TransistorTO92>
+    <diylc.passive.Resistor>
+      <name>R1</name>
+      <alpha>127</alpha>
+      <length value="0.3" unit="in"/>
+      <width value="0.1" unit="in"/>
+      <points>
+        <point x="8.6" y="4.1"/>
+        <point x="8.8" y="3.7"/>
+        <point x="8.7" y="3.9"/>
+      </points>
+      <bodyColor hex="82cffd"/>
+      <borderColor hex="5b90b1"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NONE</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <value value="4.7" unit="K"/>
+      <power>HALF</power>
+      <colorCode>_5_BAND</colorCode>
+      <shape>Standard</shape>
+    </diylc.passive.Resistor>
+    <diylc.passive.Resistor>
+      <name>R2</name>
+      <alpha>127</alpha>
+      <length value="0.3" unit="in"/>
+      <width value="0.1" unit="in"/>
+      <points>
+        <point x="8.6" y="4.1"/>
+        <point x="8.3" y="3.7"/>
+        <point x="8.45" y="3.9"/>
+      </points>
+      <bodyColor hex="82cffd"/>
+      <borderColor hex="5b90b1"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NONE</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <value value="4.7" unit="K"/>
+      <power>HALF</power>
+      <colorCode>_5_BAND</colorCode>
+      <shape>Standard</shape>
+    </diylc.passive.Resistor>
+    <diylc.passive.Resistor>
+      <name>R4</name>
+      <alpha>127</alpha>
+      <length value="0.3" unit="in"/>
+      <width value="0.1" unit="in"/>
+      <points>
+        <point x="8.1" y="4.1"/>
+        <point x="8.1" y="3.7"/>
+        <point x="8.1" y="3.9"/>
+      </points>
+      <bodyColor hex="82cffd"/>
+      <borderColor hex="5b90b1"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NONE</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <value value="100.0" unit="K"/>
+      <power>HALF</power>
+      <colorCode>_5_BAND</colorCode>
+      <shape>Standard</shape>
+    </diylc.passive.Resistor>
+    <diylc.connectivity.HookupWire>
+      <name>W28</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="8.3" y="3.3"/>
+        <point x="7.1" y="3.8"/>
+        <point x="6.7" y="4.8"/>
+      </controlPoints2>
+      <color hex="000000"/>
+      <pointCount>THREE</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.misc.Label>
+      <name>LAB19</name>
+      <point x="8.5" y="7.1"/>
+      <text>ENC COM</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB20</name>
+      <point x="8.7" y="3.3"/>
+      <text>B</text>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="ff0033"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB21</name>
+      <point x="8.8" y="3.3"/>
+      <text>C</text>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="ff0033"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB22</name>
+      <point x="8.9" y="3.3"/>
+      <text>E</text>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="ff0033"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB23</name>
+      <point x="8.1" y="3.3"/>
+      <text>B</text>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="ff0033"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB24</name>
+      <point x="8.2" y="3.3"/>
+      <text>C</text>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="ff0033"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB25</name>
+      <point x="8.3" y="3.3"/>
+      <text>E</text>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="ff0033"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.semiconductors.TransistorTO92>
+      <name>NPN</name>
+      <alpha>100</alpha>
+      <value></value>
+      <orientation>_90</orientation>
+      <controlPoints>
+        <point x="8.3" y="3.5"/>
+        <point x="8.2" y="3.5"/>
+        <point x="8.1" y="3.5"/>
+      </controlPoints>
+      <bodyColor hex="ff9933"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="000000"/>
+      <display>NAME</display>
+      <folded>true</folded>
+      <pinSpacing value="0.1" unit="in"/>
+    </diylc.semiconductors.TransistorTO92>
+    <diylc.passive.Resistor>
+      <name>R3</name>
+      <alpha>126</alpha>
+      <length value="0.3" unit="in"/>
+      <width value="0.1" unit="in"/>
+      <points>
+        <point x="8.2" y="3.4"/>
+        <point x="8.7" y="3.4"/>
+        <point x="8.45" y="3.4"/>
+      </points>
+      <bodyColor hex="82cffd"/>
+      <borderColor hex="5b90b1"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NONE</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <value value="100.0" unit="K"/>
+      <power>HALF</power>
+      <colorCode>_5_BAND</colorCode>
+      <shape>Standard</shape>
+    </diylc.passive.Resistor>
+    <diylc.electromechanical.TactileMicroSwitch>
+      <name>SW7</name>
+      <alpha>127</alpha>
+      <value></value>
+      <orientation>_90</orientation>
+      <controlPoints>
+        <point x="3.8" y="3.7"/>
+        <point x="3.620000000000001" y="3.7"/>
+        <point x="3.8" y="3.955"/>
+        <point x="3.620000000000001" y="3.955"/>
+      </controlPoints>
+      <display>NONE</display>
+      <bodyColor hex="c0c0c0"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+    </diylc.electromechanical.TactileMicroSwitch>
+    <diylc.electromechanical.TactileMicroSwitch>
+      <name>SW8</name>
+      <alpha>127</alpha>
+      <value></value>
+      <orientation>_90</orientation>
+      <controlPoints>
+        <point x="3.5" y="3.7"/>
+        <point x="3.3200000000000007" y="3.7"/>
+        <point x="3.5" y="3.955"/>
+        <point x="3.3200000000000007" y="3.955"/>
+      </controlPoints>
+      <display>NONE</display>
+      <bodyColor hex="c0c0c0"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+    </diylc.electromechanical.TactileMicroSwitch>
+    <diylc.electromechanical.TactileMicroSwitch>
+      <name>SW9</name>
+      <alpha>127</alpha>
+      <value></value>
+      <orientation>_90</orientation>
+      <controlPoints>
+        <point x="3.2" y="3.7"/>
+        <point x="3.02" y="3.7"/>
+        <point x="3.2" y="3.955"/>
+        <point x="3.02" y="3.955"/>
+      </controlPoints>
+      <display>NONE</display>
+      <bodyColor hex="c0c0c0"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+    </diylc.electromechanical.TactileMicroSwitch>
+    <diylc.electromechanical.TactileMicroSwitch>
+      <name>SW10</name>
+      <alpha>127</alpha>
+      <value></value>
+      <orientation>_90</orientation>
+      <controlPoints>
+        <point x="2.9" y="3.7"/>
+        <point x="2.72" y="3.7"/>
+        <point x="2.9" y="3.955"/>
+        <point x="2.72" y="3.955"/>
+      </controlPoints>
+      <display>NONE</display>
+      <bodyColor hex="c0c0c0"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+    </diylc.electromechanical.TactileMicroSwitch>
+    <diylc.semiconductors.DIL__IC>
+      <name>74HC4051N</name>
+      <alpha>107</alpha>
+      <fontSizeOverride>8</fontSizeOverride>
+      <value>74HC4051N</value>
+      <orientation>_90</orientation>
+      <pinCount>_16</pinCount>
+      <pinSpacing value="0.1" unit="in"/>
+      <rowSpacing value="0.3" unit="in"/>
+      <controlPoints>
+        <point x="6.3" y="3.7"/>
+        <point x="6.2" y="3.7"/>
+        <point x="6.1" y="3.7"/>
+        <point x="6.0" y="3.7"/>
+        <point x="5.9" y="3.7"/>
+        <point x="5.8" y="3.7"/>
+        <point x="5.7" y="3.7"/>
+        <point x="5.6" y="3.7"/>
+        <point x="6.3" y="4.0"/>
+        <point x="6.2" y="4.0"/>
+        <point x="6.1" y="4.0"/>
+        <point x="6.0" y="4.0"/>
+        <point x="5.9" y="4.0"/>
+        <point x="5.8" y="4.0"/>
+        <point x="5.7" y="4.0"/>
+        <point x="5.6" y="4.0"/>
+      </controlPoints>
+      <display>VALUE</display>
+      <bodyColor hex="808080"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+      <indentColor hex="595959"/>
+      <displayNumbers>NO</displayNumbers>
+    </diylc.semiconductors.DIL__IC>
+    <diylc.semiconductors.DIL__IC>
+      <name>IC1</name>
+      <alpha>107</alpha>
+      <fontSizeOverride>8</fontSizeOverride>
+      <value>74HC4051N</value>
+      <orientation>_90</orientation>
+      <pinCount>_16</pinCount>
+      <pinSpacing value="0.1" unit="in"/>
+      <rowSpacing value="0.3" unit="in"/>
+      <controlPoints>
+        <point x="5.4" y="3.7"/>
+        <point x="5.3" y="3.7"/>
+        <point x="5.2" y="3.7"/>
+        <point x="5.1" y="3.7"/>
+        <point x="5.0" y="3.7"/>
+        <point x="4.9" y="3.7"/>
+        <point x="4.8" y="3.7"/>
+        <point x="4.7" y="3.7"/>
+        <point x="5.4" y="4.0"/>
+        <point x="5.3" y="4.0"/>
+        <point x="5.2" y="4.0"/>
+        <point x="5.1" y="4.0"/>
+        <point x="5.0" y="4.0"/>
+        <point x="4.9" y="4.0"/>
+        <point x="4.8" y="4.0"/>
+        <point x="4.7" y="4.0"/>
+      </controlPoints>
+      <display>VALUE</display>
+      <bodyColor hex="808080"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+      <indentColor hex="595959"/>
+      <displayNumbers>NO</displayNumbers>
+    </diylc.semiconductors.DIL__IC>
+    <diylc.connectivity.HookupWire>
+      <name>W29</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="9.2" y="3.1"/>
+        <point x="9.2" y="3.4"/>
+        <point x="8.9" y="3.3999999999999995"/>
+      </controlPoints2>
+      <color hex="ff3300"/>
+      <pointCount>THREE</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W30</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="7.2" y="4.1"/>
+        <point x="7.2" y="3.5"/>
+        <point x="7.2" y="2.6"/>
+      </controlPoints2>
+      <color hex="00ff66"/>
+      <pointCount>THREE</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W36</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="5.4" y="4.4"/>
+        <point x="5.4" y="4.7"/>
+      </controlPoints2>
+      <color hex="ff0000"/>
+      <pointCount>TWO</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W37</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="6.3" y="4.4"/>
+        <point x="6.3" y="4.7"/>
+      </controlPoints2>
+      <color hex="ff0000"/>
+      <pointCount>TWO</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W40</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="4.7" y="3.6"/>
+        <point x="4.8" y="3.3"/>
+      </controlPoints2>
+      <color hex="000000"/>
+      <pointCount>TWO</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W35</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="7.8" y="4.1"/>
+        <point x="6.6" y="4.2"/>
+        <point x="5.6" y="4.4"/>
+      </controlPoints2>
+      <color hex="9999ff"/>
+      <pointCount>THREE</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W50</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="5.6" y="4.1"/>
+        <point x="4.7" y="4.1"/>
+      </controlPoints2>
+      <color hex="9999ff"/>
+      <pointCount>TWO</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W34</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="3.0" y="4.8"/>
+        <point x="2.7" y="4.4"/>
+      </controlPoints2>
+      <color hex="000000"/>
+      <pointCount>TWO</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W31</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="3.0" y="4.4"/>
+        <point x="3.1" y="4.8"/>
+      </controlPoints2>
+      <color hex="000000"/>
+      <pointCount>TWO</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W32</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="3.3" y="4.4"/>
+        <point x="3.3" y="4.8"/>
+      </controlPoints2>
+      <color hex="000000"/>
+      <pointCount>TWO</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W33</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="3.5999999999999996" y="4.4"/>
+        <point x="3.5999999999999996" y="4.8"/>
+      </controlPoints2>
+      <color hex="000000"/>
+      <pointCount>TWO</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.misc.Label>
+      <name>LAB26</name>
+      <point x="9.2" y="3.0"/>
+      <text>Battery(+)</text>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="000000"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB27</name>
+      <point x="7.2" y="2.6"/>
+      <text>TEST_LATCH_PIN</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB28</name>
+      <point x="5.8" y="4.0"/>
+      <text>S0   </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB29</name>
+      <point x="5.7" y="4.0"/>
+      <text>S1   </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB30</name>
+      <point x="5.6" y="4.0"/>
+      <text>S2   </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB31</name>
+      <point x="5.9" y="4.0"/>
+      <text>A3   </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB32</name>
+      <point x="6.0" y="4.0"/>
+      <text>A0   </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB33</name>
+      <point x="6.1" y="4.0"/>
+      <text>A1   </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB34</name>
+      <point x="6.2" y="4.0"/>
+      <text>A2   </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB35</name>
+      <point x="6.3" y="4.0"/>
+      <text>Vcc  </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB36</name>
+      <point x="5.6" y="3.7"/>
+      <text>   GND</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB37</name>
+      <point x="5.7" y="3.7"/>
+      <text>   Vee</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB38</name>
+      <point x="5.8" y="3.7"/>
+      <text>   ~E</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB39</name>
+      <point x="5.9" y="3.7"/>
+      <text>   A5</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB40</name>
+      <point x="6.0" y="3.7"/>
+      <text>   A7</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB41</name>
+      <point x="6.1" y="3.7"/>
+      <text>   (A)</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB42</name>
+      <point x="6.2" y="3.7"/>
+      <text>   A6</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB43</name>
+      <point x="6.3" y="3.7"/>
+      <text>   A4</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB44</name>
+      <point x="4.9" y="4.0"/>
+      <text>S0   </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB45</name>
+      <point x="4.8" y="4.0"/>
+      <text>S1   </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB46</name>
+      <point x="4.7" y="4.0"/>
+      <text>S2   </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB47</name>
+      <point x="5.0" y="4.0"/>
+      <text>A3   </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB48</name>
+      <point x="5.1" y="4.0"/>
+      <text>A0   </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB49</name>
+      <point x="5.2" y="4.0"/>
+      <text>A1   </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB50</name>
+      <point x="5.3" y="4.0"/>
+      <text>A2   </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB51</name>
+      <point x="5.4" y="4.0"/>
+      <text>Vcc  </text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB52</name>
+      <point x="4.7" y="3.7"/>
+      <text>   GND</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB53</name>
+      <point x="4.8" y="3.7"/>
+      <text>   Vee</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB54</name>
+      <point x="4.9" y="3.7"/>
+      <text>   ~E</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB55</name>
+      <point x="5.0" y="3.7"/>
+      <text>   A5</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB56</name>
+      <point x="5.1" y="3.7"/>
+      <text>   A7</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB57</name>
+      <point x="5.2" y="3.7"/>
+      <text>   (A)</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB58</name>
+      <point x="5.3" y="3.7"/>
+      <text>   A6</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB59</name>
+      <point x="5.4" y="3.7"/>
+      <text>   A4</text>
+      <font name="Dialog.plain" size="6" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB60</name>
+      <point x="3.7" y="4.1"/>
+      <text>20</text>
+      <font name="Dialog.bold" size="36" style="1"/>
+      <color hex="ff9900"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB61</name>
+      <point x="3.4" y="4.1"/>
+      <text>21</text>
+      <font name="Dialog.bold" size="36" style="1"/>
+      <color hex="ff9900"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB62</name>
+      <point x="3.1" y="4.1"/>
+      <text>22</text>
+      <font name="Dialog.bold" size="36" style="1"/>
+      <color hex="ff9900"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB63</name>
+      <point x="2.8" y="4.1"/>
+      <text>23</text>
+      <font name="Dialog.bold" size="36" style="1"/>
+      <color hex="ff9900"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.semiconductors.DIL__IC>
+      <name>ESP32-DevKitC-32E</name>
+      <alpha>44</alpha>
+      <value></value>
+      <orientation>_90</orientation>
+      <pinCount>_38</pinCount>
+      <pinSpacing value="0.1" unit="in"/>
+      <rowSpacing value="1.0" unit="in"/>
+      <controlPoints>
+        <point x="8.9" y="4.2"/>
+        <point x="8.8" y="4.2"/>
+        <point x="8.7" y="4.2"/>
+        <point x="8.6" y="4.2"/>
+        <point x="8.5" y="4.2"/>
+        <point x="8.4" y="4.2"/>
+        <point x="8.3" y="4.2"/>
+        <point x="8.2" y="4.2"/>
+        <point x="8.1" y="4.2"/>
+        <point x="8.0" y="4.2"/>
+        <point x="7.9" y="4.2"/>
+        <point x="7.8" y="4.2"/>
+        <point x="7.7" y="4.2"/>
+        <point x="7.6" y="4.2"/>
+        <point x="7.5" y="4.2"/>
+        <point x="7.4" y="4.2"/>
+        <point x="7.3" y="4.2"/>
+        <point x="7.2" y="4.2"/>
+        <point x="7.1" y="4.2"/>
+        <point x="8.9" y="5.2"/>
+        <point x="8.8" y="5.2"/>
+        <point x="8.7" y="5.2"/>
+        <point x="8.6" y="5.2"/>
+        <point x="8.5" y="5.2"/>
+        <point x="8.4" y="5.2"/>
+        <point x="8.3" y="5.2"/>
+        <point x="8.2" y="5.2"/>
+        <point x="8.1" y="5.2"/>
+        <point x="8.0" y="5.2"/>
+        <point x="7.9" y="5.2"/>
+        <point x="7.8" y="5.2"/>
+        <point x="7.7" y="5.2"/>
+        <point x="7.6" y="5.2"/>
+        <point x="7.5" y="5.2"/>
+        <point x="7.4" y="5.2"/>
+        <point x="7.3" y="5.2"/>
+        <point x="7.2" y="5.2"/>
+        <point x="7.1" y="5.2"/>
+      </controlPoints>
+      <display>BOTH</display>
+      <bodyColor hex="808080"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+      <indentColor hex="595959"/>
+      <displayNumbers>CONNECTOR</displayNumbers>
+    </diylc.semiconductors.DIL__IC>
+    <diylc.shapes.Rectangle>
+      <name>RECT1</name>
+      <alpha>44</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="6.85" y="4.305"/>
+        <point x="7.1" y="5.1"/>
+      </controlPoints>
+      <firstPoint x="6.85" y="4.305"/>
+      <secondPoint x="7.1" y="5.1"/>
+      <color hex="999999"/>
+      <borderColor hex="999999"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="0.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.shapes.Rectangle>
+      <name>USB</name>
+      <alpha>65</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="8.7" y="4.5"/>
+        <point x="9.0" y="4.9"/>
+      </controlPoints>
+      <firstPoint x="8.7" y="4.5"/>
+      <secondPoint x="9.0" y="4.9"/>
+      <color hex="cccccc"/>
+      <borderColor hex="ffffff"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="5.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.shapes.Rectangle>
+      <name>RECT6</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="8.6" y="5.1"/>
+        <point x="8.8" y="5.2"/>
+      </controlPoints>
+      <firstPoint x="8.6" y="5.1"/>
+      <secondPoint x="8.8" y="5.2"/>
+      <color hex="ff0033"/>
+      <borderColor hex="ff0000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="0.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.shapes.Rectangle>
+      <name>RECT7</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="8.7" y="4.2"/>
+        <point x="8.9" y="4.3"/>
+      </controlPoints>
+      <firstPoint x="8.7" y="4.2"/>
+      <secondPoint x="8.9" y="4.3"/>
+      <color hex="ff0033"/>
+      <borderColor hex="ff0000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="0.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
     <diylc.misc.Label>
       <name>L1</name>
       <point x="7.0" y="4.7"/>
@@ -1254,910 +2354,14 @@
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
     </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB1</name>
-      <point x="5.9" y="7.2"/>
-      <text>CLK</text>
-      <font name="Dialog.plain" size="14" style="0"/>
-      <color hex="000000"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB2</name>
-      <point x="6.1" y="7.2"/>
-      <text>DT</text>
-      <font name="Dialog.plain" size="14" style="0"/>
-      <color hex="000000"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB3</name>
-      <point x="5.7" y="7.2"/>
-      <text>SW</text>
-      <font name="Dialog.plain" size="14" style="0"/>
-      <color hex="000000"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.WrapLabel>
-      <name>L35</name>
-      <controlPoints>
-        <point x="5.4" y="7.3"/>
-        <point x="6.3" y="7.4"/>
-      </controlPoints>
-      <firstPoint x="5.4" y="7.3"/>
-      <secondPoint x="6.3" y="7.4"/>
-      <font name="Dialog.bold" size="14" style="1"/>
-      <color hex="3333ff"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <value>KY-040 rotary encoder</value>
-    </diylc.misc.WrapLabel>
-    <diylc.misc.Label>
-      <name>LAB4</name>
-      <point x="6.6" y="5.8"/>
-      <text>1</text>
-      <font name="Dialog.plain" size="10" style="0"/>
-      <color hex="000000"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB5</name>
-      <point x="6.0" y="5.8"/>
-      <text>2</text>
-      <font name="Dialog.plain" size="10" style="0"/>
-      <color hex="000000"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB6</name>
-      <point x="5.2" y="5.8"/>
-      <text>1</text>
-      <font name="Dialog.plain" size="10" style="0"/>
-      <color hex="000000"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB7</name>
-      <point x="4.4" y="5.8"/>
-      <text>2</text>
-      <font name="Dialog.plain" size="10" style="0"/>
-      <color hex="000000"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB8</name>
-      <point x="5.8" y="5.8"/>
-      <text>2</text>
-      <font name="Dialog.plain" size="10" style="0"/>
-      <color hex="000000"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB9</name>
-      <point x="5.0" y="5.8"/>
-      <text>1</text>
-      <font name="Dialog.plain" size="10" style="0"/>
-      <color hex="000000"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB10</name>
-      <point x="6.5" y="5.9"/>
-      <text>2</text>
-      <font name="Dialog.bold" size="36" style="1"/>
-      <color hex="ff9900"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB11</name>
-      <point x="6.1" y="5.9"/>
-      <text>3</text>
-      <font name="Dialog.bold" size="36" style="1"/>
-      <color hex="ff9900"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB12</name>
-      <point x="5.7" y="5.9"/>
-      <text>4</text>
-      <font name="Dialog.bold" size="36" style="1"/>
-      <color hex="ff9900"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB13</name>
-      <point x="5.3" y="5.9"/>
-      <text>5</text>
-      <font name="Dialog.bold" size="36" style="1"/>
-      <color hex="ff9900"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB14</name>
-      <point x="4.9" y="5.9"/>
-      <text>6</text>
-      <font name="Dialog.bold" size="36" style="1"/>
-      <color hex="ff9900"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB15</name>
-      <point x="4.5" y="5.9"/>
-      <text>7</text>
-      <font name="Dialog.bold" size="36" style="1"/>
-      <color hex="ff9900"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB16</name>
-      <point x="4.6" y="7.0"/>
-      <text>Button numbers</text>
-      <font name="Dialog.bold" size="36" style="1"/>
-      <color hex="ff9900"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB17</name>
-      <point x="6.4" y="7.7"/>
-      <text>ENC A</text>
-      <font name="Dialog.plain" size="14" style="0"/>
-      <color hex="000000"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB18</name>
-      <point x="6.5" y="7.7"/>
-      <text>ENC B</text>
-      <font name="Dialog.plain" size="14" style="0"/>
-      <color hex="000000"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.WrapLabel>
-      <name>L36</name>
-      <controlPoints>
-        <point x="6.0" y="7.9"/>
-        <point x="6.9" y="8.0"/>
-      </controlPoints>
-      <firstPoint x="6.0" y="7.9"/>
-      <secondPoint x="6.9" y="8.0"/>
-      <font name="Dialog.bold" size="14" style="1"/>
-      <color hex="3333ff"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <value>ALPS funky switch</value>
-    </diylc.misc.WrapLabel>
-    <diylc.passive.Resistor>
-      <name></name>
-      <alpha>127</alpha>
-      <length value="0.3" unit="in"/>
-      <width value="0.1" unit="in"/>
-      <points>
-        <point x="7.5" y="6.5"/>
-        <point x="7.6" y="5.5"/>
-        <point x="7.55" y="6.0"/>
-      </points>
-      <bodyColor hex="82cffd"/>
-      <borderColor hex="5b90b1"/>
-      <labelColor hex="000000"/>
-      <leadColor hex="cccccc"/>
-      <display>NONE</display>
-      <flipStanding>false</flipStanding>
-      <labelOriantation>Directional</labelOriantation>
-      <moveLabel>false</moveLabel>
-      <hideShortLeads>false</hideShortLeads>
-      <value value="1.0" unit="K"/>
-      <power>HALF</power>
-      <colorCode>_5_BAND</colorCode>
-      <shape>Standard</shape>
-    </diylc.passive.Resistor>
-    <diylc.semiconductors.TransistorTO92>
-      <name>PNP</name>
-      <alpha>100</alpha>
-      <value></value>
-      <orientation>_90</orientation>
-      <controlPoints>
-        <point x="8.9" y="3.5"/>
-        <point x="8.8" y="3.5"/>
-        <point x="8.7" y="3.5"/>
-      </controlPoints>
-      <bodyColor hex="ff6600"/>
-      <borderColor hex="595959"/>
-      <labelColor hex="000000"/>
-      <display>NAME</display>
-      <folded>true</folded>
-      <pinSpacing value="0.1" unit="in"/>
-    </diylc.semiconductors.TransistorTO92>
-    <diylc.passive.Resistor>
-      <name>R1</name>
-      <alpha>127</alpha>
-      <length value="0.3" unit="in"/>
-      <width value="0.1" unit="in"/>
-      <points>
-        <point x="8.6" y="4.1"/>
-        <point x="8.8" y="3.7"/>
-        <point x="8.7" y="3.9"/>
-      </points>
-      <bodyColor hex="82cffd"/>
-      <borderColor hex="5b90b1"/>
-      <labelColor hex="000000"/>
-      <leadColor hex="cccccc"/>
-      <display>NONE</display>
-      <flipStanding>false</flipStanding>
-      <labelOriantation>Directional</labelOriantation>
-      <moveLabel>false</moveLabel>
-      <hideShortLeads>false</hideShortLeads>
-      <value value="4.7" unit="K"/>
-      <power>HALF</power>
-      <colorCode>_5_BAND</colorCode>
-      <shape>Standard</shape>
-    </diylc.passive.Resistor>
-    <diylc.passive.Resistor>
-      <name>R2</name>
-      <alpha>127</alpha>
-      <length value="0.3" unit="in"/>
-      <width value="0.1" unit="in"/>
-      <points>
-        <point x="8.6" y="4.1"/>
-        <point x="8.3" y="3.7"/>
-        <point x="8.45" y="3.9"/>
-      </points>
-      <bodyColor hex="82cffd"/>
-      <borderColor hex="5b90b1"/>
-      <labelColor hex="000000"/>
-      <leadColor hex="cccccc"/>
-      <display>NONE</display>
-      <flipStanding>false</flipStanding>
-      <labelOriantation>Directional</labelOriantation>
-      <moveLabel>false</moveLabel>
-      <hideShortLeads>false</hideShortLeads>
-      <value value="4.7" unit="K"/>
-      <power>HALF</power>
-      <colorCode>_5_BAND</colorCode>
-      <shape>Standard</shape>
-    </diylc.passive.Resistor>
-    <diylc.passive.Resistor>
-      <name>R4</name>
-      <alpha>127</alpha>
-      <length value="0.3" unit="in"/>
-      <width value="0.1" unit="in"/>
-      <points>
-        <point x="8.1" y="4.1"/>
-        <point x="8.1" y="3.7"/>
-        <point x="8.1" y="3.9"/>
-      </points>
-      <bodyColor hex="82cffd"/>
-      <borderColor hex="5b90b1"/>
-      <labelColor hex="000000"/>
-      <leadColor hex="cccccc"/>
-      <display>NONE</display>
-      <flipStanding>false</flipStanding>
-      <labelOriantation>Directional</labelOriantation>
-      <moveLabel>false</moveLabel>
-      <hideShortLeads>false</hideShortLeads>
-      <value value="100.0" unit="K"/>
-      <power>HALF</power>
-      <colorCode>_5_BAND</colorCode>
-      <shape>Standard</shape>
-    </diylc.passive.Resistor>
-    <diylc.connectivity.HookupWire>
-      <name>W28</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="8.3" y="3.3"/>
-        <point x="7.1" y="3.8"/>
-        <point x="6.7" y="4.8"/>
-      </controlPoints2>
-      <color hex="000000"/>
-      <pointCount>THREE</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.misc.Label>
-      <name>LAB19</name>
-      <point x="6.6" y="7.7"/>
-      <text>ENC COM</text>
-      <font name="Dialog.plain" size="14" style="0"/>
-      <color hex="000000"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB20</name>
-      <point x="8.7" y="3.3"/>
-      <text>B</text>
-      <font name="Dialog.bold" size="14" style="1"/>
-      <color hex="ff0033"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB21</name>
-      <point x="8.8" y="3.3"/>
-      <text>C</text>
-      <font name="Dialog.bold" size="14" style="1"/>
-      <color hex="ff0033"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB22</name>
-      <point x="8.9" y="3.3"/>
-      <text>E</text>
-      <font name="Dialog.bold" size="14" style="1"/>
-      <color hex="ff0033"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB23</name>
-      <point x="8.1" y="3.3"/>
-      <text>B</text>
-      <font name="Dialog.bold" size="14" style="1"/>
-      <color hex="ff0033"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB24</name>
-      <point x="8.2" y="3.3"/>
-      <text>C</text>
-      <font name="Dialog.bold" size="14" style="1"/>
-      <color hex="ff0033"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB25</name>
-      <point x="8.3" y="3.3"/>
-      <text>E</text>
-      <font name="Dialog.bold" size="14" style="1"/>
-      <color hex="ff0033"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.semiconductors.TransistorTO92>
-      <name>NPN</name>
-      <alpha>100</alpha>
-      <value></value>
-      <orientation>_90</orientation>
-      <controlPoints>
-        <point x="8.3" y="3.5"/>
-        <point x="8.2" y="3.5"/>
-        <point x="8.1" y="3.5"/>
-      </controlPoints>
-      <bodyColor hex="ff9933"/>
-      <borderColor hex="595959"/>
-      <labelColor hex="000000"/>
-      <display>NAME</display>
-      <folded>true</folded>
-      <pinSpacing value="0.1" unit="in"/>
-    </diylc.semiconductors.TransistorTO92>
-    <diylc.passive.Resistor>
-      <name>R3</name>
-      <alpha>126</alpha>
-      <length value="0.3" unit="in"/>
-      <width value="0.1" unit="in"/>
-      <points>
-        <point x="8.2" y="3.4"/>
-        <point x="8.7" y="3.4"/>
-        <point x="8.45" y="3.4"/>
-      </points>
-      <bodyColor hex="82cffd"/>
-      <borderColor hex="5b90b1"/>
-      <labelColor hex="000000"/>
-      <leadColor hex="cccccc"/>
-      <display>NONE</display>
-      <flipStanding>false</flipStanding>
-      <labelOriantation>Directional</labelOriantation>
-      <moveLabel>false</moveLabel>
-      <hideShortLeads>false</hideShortLeads>
-      <value value="100.0" unit="K"/>
-      <power>HALF</power>
-      <colorCode>_5_BAND</colorCode>
-      <shape>Standard</shape>
-    </diylc.passive.Resistor>
-    <diylc.electromechanical.TactileMicroSwitch>
-      <name>SW7</name>
-      <alpha>127</alpha>
-      <value></value>
-      <orientation>_90</orientation>
-      <controlPoints>
-        <point x="4.1" y="5.5"/>
-        <point x="3.9200000000000004" y="5.5"/>
-        <point x="4.1" y="5.755"/>
-        <point x="3.9200000000000004" y="5.755"/>
-      </controlPoints>
-      <display>NONE</display>
-      <bodyColor hex="c0c0c0"/>
-      <borderColor hex="595959"/>
-      <labelColor hex="ffffff"/>
-    </diylc.electromechanical.TactileMicroSwitch>
-    <diylc.electromechanical.TactileMicroSwitch>
-      <name>SW8</name>
-      <alpha>127</alpha>
-      <value></value>
-      <orientation>_90</orientation>
-      <controlPoints>
-        <point x="3.7" y="5.5"/>
-        <point x="3.5200000000000005" y="5.5"/>
-        <point x="3.7" y="5.755"/>
-        <point x="3.5200000000000005" y="5.755"/>
-      </controlPoints>
-      <display>NONE</display>
-      <bodyColor hex="c0c0c0"/>
-      <borderColor hex="595959"/>
-      <labelColor hex="ffffff"/>
-    </diylc.electromechanical.TactileMicroSwitch>
-    <diylc.electromechanical.TactileMicroSwitch>
-      <name>SW9</name>
-      <alpha>127</alpha>
-      <value></value>
-      <orientation>_90</orientation>
-      <controlPoints>
-        <point x="3.3" y="5.5"/>
-        <point x="3.12" y="5.5"/>
-        <point x="3.3" y="5.755"/>
-        <point x="3.12" y="5.755"/>
-      </controlPoints>
-      <display>NONE</display>
-      <bodyColor hex="c0c0c0"/>
-      <borderColor hex="595959"/>
-      <labelColor hex="ffffff"/>
-    </diylc.electromechanical.TactileMicroSwitch>
-    <diylc.electromechanical.TactileMicroSwitch>
-      <name>SW10</name>
-      <alpha>127</alpha>
-      <value></value>
-      <orientation>_90</orientation>
-      <controlPoints>
-        <point x="2.9" y="5.5"/>
-        <point x="2.72" y="5.5"/>
-        <point x="2.9" y="5.755"/>
-        <point x="2.72" y="5.755"/>
-      </controlPoints>
-      <display>NONE</display>
-      <bodyColor hex="c0c0c0"/>
-      <borderColor hex="595959"/>
-      <labelColor hex="ffffff"/>
-    </diylc.electromechanical.TactileMicroSwitch>
-    <diylc.semiconductors.DIL__IC>
-      <name>74HC4051N</name>
-      <alpha>107</alpha>
-      <fontSizeOverride>8</fontSizeOverride>
-      <value>74HC4051N</value>
-      <orientation>_90</orientation>
-      <pinCount>_16</pinCount>
-      <pinSpacing value="0.1" unit="in"/>
-      <rowSpacing value="0.3" unit="in"/>
-      <controlPoints>
-        <point x="6.3" y="3.7"/>
-        <point x="6.2" y="3.7"/>
-        <point x="6.1" y="3.7"/>
-        <point x="6.0" y="3.7"/>
-        <point x="5.9" y="3.7"/>
-        <point x="5.8" y="3.7"/>
-        <point x="5.7" y="3.7"/>
-        <point x="5.6" y="3.7"/>
-        <point x="6.3" y="4.0"/>
-        <point x="6.2" y="4.0"/>
-        <point x="6.1" y="4.0"/>
-        <point x="6.0" y="4.0"/>
-        <point x="5.9" y="4.0"/>
-        <point x="5.8" y="4.0"/>
-        <point x="5.7" y="4.0"/>
-        <point x="5.6" y="4.0"/>
-      </controlPoints>
-      <display>VALUE</display>
-      <bodyColor hex="808080"/>
-      <borderColor hex="595959"/>
-      <labelColor hex="ffffff"/>
-      <indentColor hex="595959"/>
-      <displayNumbers>NO</displayNumbers>
-    </diylc.semiconductors.DIL__IC>
-    <diylc.semiconductors.DIL__IC>
-      <name>IC1</name>
-      <alpha>107</alpha>
-      <fontSizeOverride>8</fontSizeOverride>
-      <value>74HC4051N</value>
-      <orientation>_90</orientation>
-      <pinCount>_16</pinCount>
-      <pinSpacing value="0.1" unit="in"/>
-      <rowSpacing value="0.3" unit="in"/>
-      <controlPoints>
-        <point x="5.1" y="3.7"/>
-        <point x="5.0" y="3.7"/>
-        <point x="4.9" y="3.7"/>
-        <point x="4.8" y="3.7"/>
-        <point x="4.7" y="3.7"/>
-        <point x="4.6" y="3.7"/>
-        <point x="4.5" y="3.7"/>
-        <point x="4.4" y="3.7"/>
-        <point x="5.1" y="4.0"/>
-        <point x="5.0" y="4.0"/>
-        <point x="4.9" y="4.0"/>
-        <point x="4.8" y="4.0"/>
-        <point x="4.7" y="4.0"/>
-        <point x="4.6" y="4.0"/>
-        <point x="4.5" y="4.0"/>
-        <point x="4.4" y="4.0"/>
-      </controlPoints>
-      <display>VALUE</display>
-      <bodyColor hex="808080"/>
-      <borderColor hex="595959"/>
-      <labelColor hex="ffffff"/>
-      <indentColor hex="595959"/>
-      <displayNumbers>NO</displayNumbers>
-    </diylc.semiconductors.DIL__IC>
-    <diylc.connectivity.HookupWire>
-      <name>W29</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="9.2" y="3.1"/>
-        <point x="9.2" y="3.4"/>
-        <point x="8.9" y="3.3999999999999995"/>
-      </controlPoints2>
-      <color hex="ff3300"/>
-      <pointCount>THREE</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W30</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="7.2" y="4.1"/>
-        <point x="7.2" y="3.5"/>
-        <point x="7.2" y="2.6"/>
-      </controlPoints2>
-      <color hex="00ff66"/>
-      <pointCount>THREE</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W36</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="5.1" y="4.4"/>
-        <point x="5.1" y="4.7"/>
-      </controlPoints2>
-      <color hex="ff0000"/>
-      <pointCount>TWO</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W37</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="6.3" y="4.4"/>
-        <point x="6.3" y="4.7"/>
-      </controlPoints2>
-      <color hex="ff0000"/>
-      <pointCount>TWO</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W40</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="4.6" y="3.5"/>
-        <point x="5.6" y="3.5"/>
-      </controlPoints2>
-      <color hex="000000"/>
-      <pointCount>TWO</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W41</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="4.4" y="3.4"/>
-        <point x="4.6" y="3.4"/>
-      </controlPoints2>
-      <color hex="000000"/>
-      <pointCount>TWO</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W42</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="4.4" y="3.5"/>
-        <point x="4.2" y="3.8"/>
-        <point x="4.4" y="4.1"/>
-      </controlPoints2>
-      <color hex="000000"/>
-      <pointCount>THREE</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W43</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="5.6" y="3.4"/>
-        <point x="5.8" y="3.4"/>
-      </controlPoints2>
-      <color hex="000000"/>
-      <pointCount>TWO</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W39</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="6.0" y="3.6"/>
-        <point x="7.6" y="3.5"/>
-        <point x="7.9" y="4.1"/>
-      </controlPoints2>
-      <color hex="cccc00"/>
-      <pointCount>THREE</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W45</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="4.9" y="3.6"/>
-        <point x="7.4" y="3.5"/>
-        <point x="8.0" y="4.1"/>
-      </controlPoints2>
-      <color hex="cccc00"/>
-      <pointCount>THREE</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W46</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="5.6" y="4.4"/>
-        <point x="5.6" y="4.8"/>
-      </controlPoints2>
-      <color hex="000000"/>
-      <pointCount>TWO</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W47</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="5.7" y="4.4"/>
-        <point x="5.7" y="4.8"/>
-      </controlPoints2>
-      <color hex="000000"/>
-      <pointCount>TWO</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W48</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="4.4" y="4.4"/>
-        <point x="4.4" y="4.8"/>
-      </controlPoints2>
-      <color hex="000000"/>
-      <pointCount>TWO</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W49</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="4.5" y="4.4"/>
-        <point x="4.5" y="4.8"/>
-      </controlPoints2>
-      <color hex="000000"/>
-      <pointCount>TWO</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W35</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="7.8" y="4.1"/>
-        <point x="7.2" y="3.9"/>
-        <point x="5.8" y="4.4"/>
-      </controlPoints2>
-      <color hex="9999ff"/>
-      <pointCount>THREE</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W50</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="5.8" y="4.3"/>
-        <point x="5.1" y="4.1"/>
-        <point x="4.6" y="4.4"/>
-      </controlPoints2>
-      <color hex="9999ff"/>
-      <pointCount>THREE</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W51</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="6.0" y="4.1"/>
-        <point x="5.1" y="4.4"/>
-        <point x="4.4" y="5.0"/>
-        <point x="3.9" y="5.4"/>
-      </controlPoints2>
-      <color hex="00ff00"/>
-      <pointCount>FOUR</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W52</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="6.1" y="4.1"/>
-        <point x="4.7" y="4.4"/>
-        <point x="4.0" y="5.0"/>
-        <point x="3.5" y="5.4"/>
-      </controlPoints2>
-      <color hex="00ff00"/>
-      <pointCount>FOUR</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
-      <name>W53</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="4.9" y="4.1"/>
-        <point x="4.3" y="4.4"/>
-        <point x="3.6" y="5.0"/>
-        <point x="3.1" y="5.4"/>
-      </controlPoints2>
-      <color hex="00ff00"/>
-      <pointCount>FOUR</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_28</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
     <diylc.connectivity.HookupWire>
       <name>W54</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="4.8" y="4.1"/>
-        <point x="3.9" y="4.4"/>
-        <point x="3.2" y="5.0"/>
-        <point x="2.7" y="5.4"/>
+        <point x="6.0" y="4.1"/>
+        <point x="4.4" y="3.4"/>
+        <point x="4.1" y="3.5"/>
+        <point x="3.8" y="3.6"/>
       </controlPoints2>
       <color hex="00ff00"/>
       <pointCount>FOUR</pointCount>
@@ -2172,10 +2376,74 @@
       <name>W38</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="4.4" y="3.6"/>
-        <point x="4.5" y="3.6"/>
+        <point x="4.8" y="3.6"/>
+        <point x="4.9" y="3.3"/>
       </controlPoints2>
       <color hex="000000"/>
+      <pointCount>TWO</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W39</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="5.6" y="3.6"/>
+        <point x="5.7" y="3.3"/>
+      </controlPoints2>
+      <color hex="000000"/>
+      <pointCount>TWO</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W41</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="5.7" y="3.6"/>
+        <point x="5.8" y="3.3"/>
+      </controlPoints2>
+      <color hex="000000"/>
+      <pointCount>TWO</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W43</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="5.8" y="4.3"/>
+        <point x="4.9" y="4.3"/>
+      </controlPoints2>
+      <color hex="9999ff"/>
+      <pointCount>TWO</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W42</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="5.7" y="4.2"/>
+        <point x="4.8" y="4.2"/>
+      </controlPoints2>
+      <color hex="9999ff"/>
       <pointCount>TWO</pointCount>
       <style>SOLID</style>
       <smooth>true</smooth>
@@ -2188,11 +2456,12 @@
       <name>W44</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="5.6" y="3.6"/>
-        <point x="5.7" y="3.6"/>
+        <point x="6.1" y="3.6"/>
+        <point x="6.8" y="3.3"/>
+        <point x="8.3" y="4.1"/>
       </controlPoints2>
-      <color hex="000000"/>
-      <pointCount>TWO</pointCount>
+      <color hex="cccc00"/>
+      <pointCount>THREE</pointCount>
       <style>SOLID</style>
       <smooth>true</smooth>
       <lastUpdatePointIndex>-1</lastUpdatePointIndex>
@@ -2201,14 +2470,15 @@
       <stripeColor hex="ffff00"/>
     </diylc.connectivity.HookupWire>
     <diylc.connectivity.HookupWire>
-      <name>W34</name>
+      <name>W45</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="3.0" y="4.8"/>
-        <point x="2.9000000000000004" y="5.2"/>
+        <point x="7.9" y="4.0"/>
+        <point x="6.0" y="4.2"/>
+        <point x="5.7" y="4.4"/>
       </controlPoints2>
-      <color hex="000000"/>
-      <pointCount>TWO</pointCount>
+      <color hex="9999ff"/>
+      <pointCount>THREE</pointCount>
       <style>SOLID</style>
       <smooth>true</smooth>
       <lastUpdatePointIndex>-1</lastUpdatePointIndex>
@@ -2217,14 +2487,15 @@
       <stripeColor hex="ffff00"/>
     </diylc.connectivity.HookupWire>
     <diylc.connectivity.HookupWire>
-      <name>W31</name>
+      <name>W46</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="3.3" y="4.8"/>
-        <point x="3.3" y="5.2"/>
+        <point x="8.0" y="4.1"/>
+        <point x="7.6" y="3.9"/>
+        <point x="5.8" y="4.4"/>
       </controlPoints2>
-      <color hex="000000"/>
-      <pointCount>TWO</pointCount>
+      <color hex="9999ff"/>
+      <pointCount>THREE</pointCount>
       <style>SOLID</style>
       <smooth>true</smooth>
       <lastUpdatePointIndex>-1</lastUpdatePointIndex>
@@ -2233,14 +2504,15 @@
       <stripeColor hex="ffff00"/>
     </diylc.connectivity.HookupWire>
     <diylc.connectivity.HookupWire>
-      <name>W32</name>
+      <name>W47</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="3.7" y="4.8"/>
-        <point x="3.7" y="5.2"/>
+        <point x="5.2" y="3.6"/>
+        <point x="5.6" y="3.0"/>
+        <point x="8.2" y="4.1"/>
       </controlPoints2>
-      <color hex="000000"/>
-      <pointCount>TWO</pointCount>
+      <color hex="cccc00"/>
+      <pointCount>THREE</pointCount>
       <style>SOLID</style>
       <smooth>true</smooth>
       <lastUpdatePointIndex>-1</lastUpdatePointIndex>
@@ -2249,14 +2521,16 @@
       <stripeColor hex="ffff00"/>
     </diylc.connectivity.HookupWire>
     <diylc.connectivity.HookupWire>
-      <name>W33</name>
+      <name>W48</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="4.1" y="4.8"/>
-        <point x="4.1" y="5.2"/>
+        <point x="6.0" y="3.6"/>
+        <point x="4.1" y="3.4"/>
+        <point x="3.8" y="3.5"/>
+        <point x="3.5" y="3.6"/>
       </controlPoints2>
-      <color hex="000000"/>
-      <pointCount>TWO</pointCount>
+      <color hex="00ff00"/>
+      <pointCount>FOUR</pointCount>
       <style>SOLID</style>
       <smooth>true</smooth>
       <lastUpdatePointIndex>-1</lastUpdatePointIndex>
@@ -2264,476 +2538,178 @@
       <striped>false</striped>
       <stripeColor hex="ffff00"/>
     </diylc.connectivity.HookupWire>
-    <diylc.misc.Label>
-      <name>LAB26</name>
-      <point x="9.2" y="3.0"/>
-      <text>Battery(+)</text>
-      <font name="Dialog.bold" size="14" style="1"/>
+    <diylc.connectivity.HookupWire>
+      <name>W49</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="5.0" y="4.4"/>
+        <point x="4.6" y="4.4"/>
+        <point x="4.3" y="3.3"/>
+        <point x="3.2" y="3.6"/>
+      </controlPoints2>
+      <color hex="00ff00"/>
+      <pointCount>FOUR</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W51</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="5.0" y="3.6"/>
+        <point x="3.5" y="3.4"/>
+        <point x="3.2" y="3.5"/>
+        <point x="2.9" y="3.6"/>
+      </controlPoints2>
+      <color hex="00ff00"/>
+      <pointCount>FOUR</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W52</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="4.7" y="4.8"/>
+        <point x="4.6" y="4.1"/>
+        <point x="4.7" y="3.3"/>
+      </controlPoints2>
       <color hex="000000"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB27</name>
-      <point x="7.2" y="2.6"/>
-      <text>TEST_LATCH_PIN</text>
-      <font name="Dialog.plain" size="14" style="0"/>
+      <pointCount>THREE</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W53</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="5.6" y="4.8"/>
+        <point x="5.5" y="4.1"/>
+        <point x="5.6" y="3.3"/>
+      </controlPoints2>
       <color hex="000000"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB28</name>
-      <point x="5.8" y="4.0"/>
-      <text>S0   </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB29</name>
-      <point x="5.7" y="4.0"/>
-      <text>S1   </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB30</name>
-      <point x="5.6" y="4.0"/>
-      <text>S2   </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB31</name>
-      <point x="5.9" y="4.0"/>
-      <text>A3   </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB32</name>
-      <point x="6.0" y="4.0"/>
-      <text>A0   </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB33</name>
-      <point x="6.1" y="4.0"/>
-      <text>A1   </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB34</name>
-      <point x="6.2" y="4.0"/>
-      <text>A2   </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB35</name>
-      <point x="6.3" y="4.0"/>
-      <text>Vcc  </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB36</name>
-      <point x="5.6" y="3.7"/>
-      <text>   GND</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB37</name>
-      <point x="5.7" y="3.7"/>
-      <text>   Vee</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB38</name>
-      <point x="5.8" y="3.7"/>
-      <text>   ~E</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB39</name>
-      <point x="5.9" y="3.7"/>
-      <text>   A5</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB40</name>
-      <point x="6.0" y="3.7"/>
-      <text>   A7</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB41</name>
-      <point x="6.1" y="3.7"/>
-      <text>   (A)</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB42</name>
-      <point x="6.2" y="3.7"/>
-      <text>   A6</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB43</name>
-      <point x="6.3" y="3.7"/>
-      <text>   A4</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB44</name>
-      <point x="4.6" y="4.0"/>
-      <text>S0   </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB45</name>
-      <point x="4.5" y="4.0"/>
-      <text>S1   </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB46</name>
-      <point x="4.4" y="4.0"/>
-      <text>S2   </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB47</name>
-      <point x="4.7" y="4.0"/>
-      <text>A3   </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB48</name>
-      <point x="4.8" y="4.0"/>
-      <text>A0   </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB49</name>
-      <point x="4.9" y="4.0"/>
-      <text>A1   </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB50</name>
-      <point x="5.0" y="4.0"/>
-      <text>A2   </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB51</name>
-      <point x="5.1" y="4.0"/>
-      <text>Vcc  </text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>RIGHT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB52</name>
-      <point x="4.4" y="3.7"/>
-      <text>   GND</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB53</name>
-      <point x="4.5" y="3.7"/>
-      <text>   Vee</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB54</name>
-      <point x="4.6" y="3.7"/>
-      <text>   ~E</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB55</name>
-      <point x="4.7" y="3.7"/>
-      <text>   A5</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB56</name>
-      <point x="4.8" y="3.7"/>
-      <text>   A7</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB57</name>
-      <point x="4.9" y="3.7"/>
-      <text>   (A)</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB58</name>
-      <point x="5.0" y="3.7"/>
-      <text>   A6</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB59</name>
-      <point x="5.1" y="3.7"/>
-      <text>   A4</text>
-      <font name="Dialog.plain" size="6" style="0"/>
-      <color hex="ffffff"/>
-      <horizontalAlignment>LEFT</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>_90</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB60</name>
-      <point x="4.0" y="5.9"/>
-      <text>20</text>
-      <font name="Dialog.bold" size="36" style="1"/>
-      <color hex="ff9900"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB61</name>
-      <point x="3.6" y="5.9"/>
-      <text>21</text>
-      <font name="Dialog.bold" size="36" style="1"/>
-      <color hex="ff9900"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB62</name>
-      <point x="3.2" y="5.9"/>
-      <text>22</text>
-      <font name="Dialog.bold" size="36" style="1"/>
-      <color hex="ff9900"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>LAB63</name>
-      <point x="2.8" y="5.9"/>
-      <text>23</text>
-      <font name="Dialog.bold" size="36" style="1"/>
-      <color hex="ff9900"/>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
+      <pointCount>THREE</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
   </components>
   <groups>
     <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[71]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[76]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[72]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[66]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[62]"/>
-      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[2]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[64]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[77]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[70]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[63]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[69]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[73]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[68]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[74]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[67]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[65]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[75]"/>
-    </set>
-    <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[57]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[58]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[59]"/>
-    </set>
-    <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[2]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[8]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[6]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[28]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[16]"/>
-      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[3]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[3]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[18]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[25]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[26]"/>
-      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[4]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[4]"/>
-      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[27]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[20]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[15]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[11]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[10]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[14]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[21]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[17]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[9]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[24]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[12]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[22]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[23]"/>
-      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[2]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[13]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[31]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[7]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[29]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[33]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[30]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[34]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[32]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[19]"/>
-      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[5]"/>
-    </set>
-    <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[55]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[54]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[56]"/>
-    </set>
-    <set>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[93]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[78]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[82]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[80]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[90]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[79]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[87]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[92]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[84]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[86]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[81]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[88]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[83]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[69]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[78]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[3]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[65]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[91]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[77]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[4]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[73]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[81]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[94]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[68]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[84]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[72]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[87]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[76]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[79]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[95]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[74]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[71]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[86]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[97]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[75]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[88]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[90]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[64]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[66]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[96]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[3]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[70]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[67]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[80]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[85]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[89]"/>
-      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[3]"/>
+    </set>
+    <set>
+      <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[3]"/>
+    </set>
+    <set>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[54]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[56]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[58]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[59]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[44]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[50]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[49]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[46]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[51]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[48]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[57]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[53]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[52]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[47]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[45]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[55]"/>
+    </set>
+    <set>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[17]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[18]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[19]"/>
+      <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel[2]"/>
+    </set>
+    <set>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[25]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[24]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[23]"/>
+    </set>
+    <set>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[28]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[29]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[30]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[41]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[39]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[37]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[40]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[36]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[38]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[35]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[31]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[43]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[32]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[42]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[33]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[34]"/>
+    </set>
+    <set>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[21]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[22]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[20]"/>
     </set>
   </groups>
   <lockedLayers/>

@@ -11,8 +11,8 @@ Use this [test circuit](../../Protoboards/ESP32-WROOM-DevKitC-1.diy):
 
 ![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.png)
 
-- We are using the multiplexed switches only: `TEST_AMTXER_SEL1`, `TEST_AMTXER_IN1` and `TEST_AMTXER_IN2`.
-- For later reference, buttons are named "D1" to "D4", no matter which bitmap is assigned to them.
+- We are using the multiplexed switches only: `TEST_AMTXER_SEL1`, `TEST_AMTXER_SEL2`, `TEST_AMTXER_SEL3`, `TEST_AMTXER_IN1` and `TEST_AMTXER_IN2`.
+- We are using buttons numbered 20 to 24. For later reference, buttons are named "D1" to "D4", no matter which bitmap is assigned to them.
 
 ## Procedure and expected output
 
@@ -25,7 +25,7 @@ Use this [test circuit](../../Protoboards/ESP32-WROOM-DevKitC-1.diy):
    ```text
    -- READY --
    MASK:
-   1111111111111111111111111111111111111111000011111111111111111111
+   0111111111111111111111111111111111111111000011111111111111111111
    -- GO --
    ```
 

@@ -27,33 +27,33 @@ Read this document from start to end before building anything. Ensure you unders
 Common:
 
 | **Item**                                 | **Quantity** | Notes                                                                                   |
-| ---------------------------------------- | :----------: | --------------------------------------------------------------------------------------- |
-| Bare bone rotary encoder                 |      3       | With built-in push button                                                               |
-| Roller lever                             |      2       | For shift paddles (maybe they are included with your wheel's case)                      |
-| Linear potentiometer 10 K-ohms or higher |      2       | For clutch paddles (maybe they are included with your wheel's case)                     |
-| Push buttons                             |   up to 10   | General purpose inputs (up to you)                                                      |
-| Analog multiplexer                       |      2       | 74HC4051N (*mandatory*)                                                                 |
-| Standard perfboard sized 24x10 holes     |      1       |                                                                                         |
-| Unexpected Maker's TinyPico Devkit board |      1       | With male pins already soldered                                                         |
-| Pin header (female)                      |      20      | For a DevKit board with male pins already soldered                                      |
-| Pin header (male or female up to you)    |      39      | For external wiring                                                                     |
-| External Antenna with U.FL connector     |      1       | Only required if TinyPico V3 with U.FL is chosen                                        |
-| Wires with Dupond plug in one end        |      2       | Male or female matching your pin headers (for the battery or the external power source) |
+| ---------------------------------------- |:------------:| --------------------------------------------------------------------------------------- |
+| Bare bone rotary encoder                 | 3            | With built-in push button                                                               |
+| Roller lever                             | 2            | For shift paddles (maybe they are included with your wheel's case)                      |
+| Linear potentiometer 10 K-ohms or higher | 2            | For clutch paddles (maybe they are included with your wheel's case)                     |
+| Push buttons                             | up to 10     | General purpose inputs (up to you)                                                      |
+| Analog multiplexer                       | 2            | 74HC4051N (*mandatory*)                                                                 |
+| Standard perfboard sized 24x10 holes     | 1            |                                                                                         |
+| Unexpected Maker's TinyPico Devkit board | 1            | With male pins already soldered                                                         |
+| Pin header (female)                      | 20           | For a DevKit board with male pins already soldered                                      |
+| Pin header (male or female up to you)    | 39           | For external wiring                                                                     |
+| External Antenna with U.FL connector     | 1            | Only required if TinyPico V3 with U.FL is chosen                                        |
+| Wires with Dupond plug in one end        | 2            | Male or female matching your pin headers (for the battery or the external power source) |
 
 Battery-operated:
 
-| **Item**                                      |    **Quantity**     | Notes                                                          |
-| --------------------------------------------- | :-----------------: | -------------------------------------------------------------- |
-| LiPo Battery 4.2V (max)                       |          1          | Must fit TinyPico's specification. Capacity and size up to you |
+| **Item**                                      | **Quantity**        | Notes                                                          |
+| --------------------------------------------- |:-------------------:| -------------------------------------------------------------- |
+| LiPo Battery 4.2V (max)                       | 1                   | Must fit TinyPico's specification. Capacity and size up to you |
 | Both male and female GX16 (5 pins) connectors | 1 male and 1 female | For the charging port                                          |
-| Micro-USB/USB-C spiral cable long enough      |          1          | For charging. Must match your TinyPico USB connector.          |
-| Battery connector                             |          1          | Depends on your battery                                        |
+| Micro-USB/USB-C spiral cable long enough      | 1                   | For charging. Must match your TinyPico USB connector.          |
+| Battery connector                             | 1                   | Depends on your battery                                        |
 
 External power source:
 
 | **Item**           | **Quantity** | Notes                                 |
-| ------------------ | :----------: | ------------------------------------- |
-| External connector |      1       | Depends on your external power source |
+| ------------------ |:------------:| ------------------------------------- |
+| External connector | 1            | Depends on your external power source |
 
 Other parts (quantity unknown):
 
@@ -67,22 +67,22 @@ Other notes:
 
 ## Pin-out plan for the TinyPico DevKit board
 
-| **GPIO** | **Input** | **Output** |       **Usage**        | **Notes**                  |
-| -------- | --------- | ---------- | :--------------------: | -------------------------- |
-| **25**   | OK        | OK         |        Left pot        |                            |
-| **26**   | OK        | OK         |       Right pot        |                            |
+| **GPIO** | **Input** | **Output** | **Usage**              | **Notes**                  |
+| -------- | --------- | ---------- |:----------------------:| -------------------------- |
+| **25**   | OK        | OK         | Left pot               |                            |
+| **26**   | OK        | OK         | Right pot              |                            |
 | **27**   | OK        | OK         | Multiplexer selector 1 |                            |
 | **15**   | OK        | OK         | Multiplexer selector 2 | outputs PWM signal at boot |
 | **14**   | OK        | OK         | Multiplexer selector 3 | outputs PWM signal at boot |
-| **4**    | OK        | OK         |     "start" button     |                            |
-| **23**   | OK        | OK         |         ROT3_B         |                            |
-| **19**   | OK        | OK         |         ROT3_A         |                            |
-| **18**   | OK        | OK         |         ROT2_B         |                            |
-| **5**    | OK        | OK         |         ROT2_A         | outputs PWM signal at boot |
-| **22**   | OK        | OK         |         ROT1_B         |                            |
-| **21**   | OK        | OK         |         ROT1_A         |                            |
-| **32**   | OK        | OK         |  Multiplexer input 1   |                            |
-| **33**   | OK        | OK         |  Multiplexer input 2   |                            |
+| **4**    | OK        | OK         | "start" button         |                            |
+| **23**   | OK        | OK         | ROT3_B                 |                            |
+| **19**   | OK        | OK         | ROT3_A                 |                            |
+| **18**   | OK        | OK         | ROT2_B                 |                            |
+| **5**    | OK        | OK         | ROT2_A                 | outputs PWM signal at boot |
+| **22**   | OK        | OK         | ROT1_B                 |                            |
+| **21**   | OK        | OK         | ROT1_A                 |                            |
+| **32**   | OK        | OK         | Multiplexer input 1    |                            |
+| **33**   | OK        | OK         | Multiplexer input 2    |                            |
 
 ## Circuit layout
 
@@ -138,3 +138,5 @@ Notes and build tips:
 2. Open the serial monitor (Arduino IDE).
 3. Reset.
 4. Check there are no error messages.
+
+
