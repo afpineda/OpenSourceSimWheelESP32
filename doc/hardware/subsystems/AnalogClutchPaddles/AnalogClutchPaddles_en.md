@@ -25,6 +25,10 @@ Notes:
 - `3V3` and `GND` are interchangeable. If the clutch (or axis) goes to 100% when idle, swap those terminals.
 - An high impedance potentiometer is advisable (10 K-ohms or more). Potentiometers will drain current at all times, which is bad for batteries.
 
+## Autocalibration
+
+By default, both potentiometers are expected to work in the full range of voltage. Many times, this is not the case due to a physical limit on the rotation of a potentiometer. In such a case, the user should ask for "recalibration". Once both potentiometers are moved from end to end, the actual ranges of voltage will be noted and saved to flash memory after a short delay.
+
 ## Firmware customization
 
 Customization takes place at file [CustomSetup.ino](../../../../src/Firmware/CustomSetup/CustomSetup.ino).
@@ -50,6 +54,18 @@ void simWheelSetup()
 
 Note that `inputs::setDigitalClutchPaddles()` is incompatible and must not be called.
 
-## Autocalibration
+Recalibration can be achieved through the companion app, but you may assign a button combination for that. Place a call to `setCalibrationCommandBitmaps()`:
 
-By default, both potentiometers are expected to work in the full range of voltage. Many times, this is not the case due to a physical limit on the rotation of a potentiometer. In such a case, the user should ask for "recalibration". Once both potentiometers are moved from end to end, the actual ranges of voltage will be noted and saved to flash memory after a short delay.
+- First parameter is a sequence of calls to `BITMAP(<input number>)` separated by `|`.  All buttons have to be pressed at the same time and none of the others.
+- Ignore the second (optional) parameter or set to zero, for now, since it is not related to this subsystem.
+
+The following example will set buttons `A` and `Start` for recalibration:
+
+```c
+void simWheelSetup()
+{
+    ...
+    inputs::setCalibrationCommandBitmaps(BITMAP(JOY_START)|BITMAP(JOY_A));
+    ...
+}
+```
