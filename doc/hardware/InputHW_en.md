@@ -78,7 +78,7 @@ When using a GPIO as a digital input, just one switch can be accommodated in it.
 
 ### Analog circuits
 
-There are some articles on the Internet claiming a lot of switches in a single pin. It may work in a circuit simulator or in a specific application but, un global terms, **they don't work properly**. I came to this conclusion after a lot of testing. Analog circuits may seem a good idea, but they **fail** to identify the correct inputs due to:
+There are some articles on the Internet claiming a lot of switches in a single pin. It may work in a circuit simulator or in a specific application but, in global terms, **they don't work properly**. I came to this conclusion after a lot of testing. Analog circuits may seem a good idea, but they **fail** to identify the correct inputs due to:
 
 - Voltage drops, when another part of the circuit is draining current.
 - Resistor tolerance and thermal noise.
