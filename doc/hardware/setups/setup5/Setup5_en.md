@@ -1,7 +1,7 @@
 # Ready to deploy design #5
 
 Read this document from start to end before building anything. Ensure you understand everything.
-**This setup has not been tested at the system level**. If you try, please, let me know.
+This setup was tested.
 
 ## Hardware features
 
@@ -129,6 +129,8 @@ At Arduino IDE, configure the board manager as this:
 - Board: "ESP32S3Dev"
 - USB CDC on boot: "Enabled".
 
+You may need to edit the [sketch](../../../../src/Firmware/Setup5/Setup5.ino).
+
 In a battery-operated setup:
 
 - **You should calibrate your battery first**. See the [Battery calibration procedure](../../../../src/Firmware/BatteryTools/BatteryCalibration/README.md).
@@ -146,7 +148,7 @@ When using an external power source:
   // #define BATTERY_ENABLE_READ_GPIO GPIO_NUM_4
   ```
 
-1. Plug the USB cable to the DevKit board and upload the [sketch](../../../../src/Firmware/Setup4/Setup4.ino) with Arduino IDE. If required, in order to enter "boot mode" click the reset button while holding "IO0".
+1. Plug the USB cable to the DevKit board and upload the [sketch](../../../../src/Firmware/Setup5/Setup5.ino) with Arduino IDE. If required, in order to enter "boot mode" click the reset button while holding "IO0".
 2. Open the serial monitor (Arduino IDE).
 3. Reset.
 4. Check there are no error messages.

@@ -42,7 +42,8 @@ The following article explains which pins can be used and how:
   
   - Input only.
   - Not suitable for bare bone rotary encoders, unless external pull-up resistors are in place.
-  - Not suitable for a button matrix, unless external pull-down resistors are in place.
+  - Not suitable for a button matrix, unless external pull-down resistors are in place (inputs only).
+  - Not suitable for an analog multiplexer, unless external pull-up resistors are in place (inputs only).
 
 - **GPIO #12**:
   

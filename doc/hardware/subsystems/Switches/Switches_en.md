@@ -54,14 +54,25 @@ Needed parts (not counting input hardware like push buttons):
 
 - *Schottky diodes*: x25. Any kind should work but choose low forward voltage ( $V_F$ ). Suggested: [1N4148](https://www.alldatasheet.com/datasheet-pdf/pdf/15021/PHILIPS/1N4148.html) ( $V_F=0.6V$ ).
 - *Dupond pin headers* (male or female):
-  - 25x2 (=50) for external inputs
-  - 5x1 (=5) for input pins
-  - 5x1 (=5) for selector pins
-- Thin wire
+  - 25x2 (=50) for external inputs.
+  - 5x1 (=5) for input pins.
+  - 5x1 (=5) for selector pins.
+- Thin wire.
 
 Open the [circuit design](./BtnMatrix25Inputs.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator). Inputs are externally wired to the light-blue pin header in columns.
 
-![Circuit design](./BtnMatrix25Inputs.png)
+![Circuit design 25 inputs](./BtnMatrix25Inputs.png)
+
+#### Button Matrix (16 inputs)
+
+Needed parts (not counting input hardware like push buttons):
+
+- *Schottky diodes*: x16. Same as above.
+- *Dupond pin headers* (male or female): x40.
+
+This [circuit design](./BtnMatrix16Inputs.diy) requires no wiring but takes more space:
+
+![Circuit design 16 inputs](./BtnMatrix16Inputs.png)
 
 #### Satellite circuit for potentiometers (at clutch paddles)
 
@@ -140,7 +151,7 @@ Needed parts (not counting input hardware like push buttons):
 - Wire the other terminal of each push button (or switch) to one of the light-blue pins.
 - Bare bone rotary encoders: their built-in push button must be wired like any other push button, being `SW` and `SW GND` the involved terminals.
 - KY-040 rotary encoders: wire `SW` to any light-blue pin.
-- Potentiometers as digital clutch paddles: build this [satellite circuit](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWEBmAHAJmgdgGzoRmACzICcpkORICkNNdCApgLRhgBQA5jeqiOkj8EfAUToSOAJRq4QRYXIlR5dZNGQqJ0BBwCy81HVI4UkaiZWZdBnFnQhLqBY9N1rHMFmp5qLuw5gonRg8NoI5GFR8BAAwgA2AK4ALgDGABacAO68-C4Ici6QHDm+hrKmRZ7eueUKIUTUIWFQ0HzoDgkpGejV1CL8gvxlxNQQofCtyOhgRtFRmgAq6QBOTADO6QD28QAmJSAjjRXgx8U5BaajtdfFAB4gWLTgXiCoCJpBdGN0i1sAOut4gBLLjpZKAgBGSSYgIADsCAHaA9JMACGuyYKw4D3QpCwLwJ4hCgnk4F+AKBoPBUJh8KRKPRmOxDwQYFM6CoNDQAjsZNCIAA4gA5AAiOJoBAEeMO+IE035vxWoK4WMByVWG22e3hW2STERyWBWwAtkx9SzDshNDhSI8pfZFSAuml0vCMbt4rD1nC9QajabzViJWQCRFeA48E6XRl3btPd7ffrDcazRaOEA) which is quite simillar to that for the button matrix. All three potentiometers must have the same impedance. The higher, the better. The trigger threshold potentiometer is a trimmer one. Note that this satellite circuit will drain current at all times.
+- Potentiometers as digital clutch paddles: build this [satellite circuit](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWEBmAHAJmgdgGzoRmACzICcpkORICkNNdCApgLRhgBQA5jeqiOkj8EfAUToSOAJRq4QRYXIlR5dZNGQqJ0BBwCy81HVI4UkaiZWZdBnFnQhLqBY9N1rHMFmp5qLuw5gonRg8NoI5GFR8BAAwgA2AK4ALgDGABacAO68-C4Ici6QHDm+hrKmRZ7eueUKIUTUIWFQ0HzoDgkpGejV1CL8gvxlxNQQofCtyOhgRtFRmgAq6QBOTADO6QD28QAmJSAjjRXgx8U5BaajtdfFAB4gWLTgXiCoCJpBdGN0i1sAOut4gBLLjpZKAgBGSSYgIADsCAHaA9JMACGuyYKw4D3QpCwLwJ4hCgnk4F+AKBoPBUJh8KRKPRmOxDwQYFM6CoNDQAjsZNCIAA4gA5AAiOJoBAEeMO+IE035vxWoK4WMByVWG22e3hW2STERyWBWwAtkx9SzDshNDhSI8pfZFSAuml0vCMbt4rD1nC9QajabzViJWQCRFeA48E6XRl3btPd7ffrDcazRaOEA) which is quite simillar to that of the button matrix. All three potentiometers must have the same impedance. The higher, the better. The trigger threshold potentiometer is a trimmer one. Note that this satellite circuit will drain current at all times.
 
   ![Satellite circuit for clutch paddles](./Multiplexer2ClutchPaddles.png)
 

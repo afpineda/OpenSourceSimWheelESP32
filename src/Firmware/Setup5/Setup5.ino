@@ -67,7 +67,7 @@ const gpio_num_t WAKEUP_PINS[] = {GPIO_NUM_33};
 // [EN] Set an output-capable GPIO number for the "battEN" pin.
 // [ES] Indique el número de GPIO para el pin "battEN".
 
-#define BATTERY_ENABLE_READ_GPIO GPIO_NUM_4
+//#define BATTERY_ENABLE_READ_GPIO GPIO_NUM_4
 
 // [EN] Set an ADC-capable GPIO number for the "battREAD" pin.
 // [ES] Indique el número de GPIO para el pin ADC de "battREAD".
@@ -139,6 +139,15 @@ void setup()
     power::startBatteryMonitor(
         (gpio_num_t)BATTERY_ENABLE_READ_GPIO,
         (gpio_num_t)BATTERY_READ_GPIO);
+    hidImplementation::begin(
+        DEVICE_NAME,
+        DEVICE_MANUFACTURER,
+        true);
+#else
+    hidImplementation::begin(
+        DEVICE_NAME,
+        DEVICE_MANUFACTURER,
+        false);
 #endif
 
     inputs::start();

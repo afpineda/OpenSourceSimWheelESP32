@@ -2,7 +2,7 @@
 <project>
   <fileVersion>
     <major>4</major>
-    <minor>23</minor>
+    <minor>35</minor>
     <build>0</build>
   </fileVersion>
   <title>Button matrix for 25 inputs</title>
@@ -4916,7 +4916,6 @@
       <text>S0</text>
       <font reference="../../diylc.misc.WrapLabel/font"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -4927,7 +4926,6 @@
       <text>S1</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -4938,7 +4936,6 @@
       <text>S2</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -4949,7 +4946,6 @@
       <text>S3</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -4960,7 +4956,6 @@
       <text>S4</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -4971,7 +4966,6 @@
       <text>I0</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -4982,7 +4976,6 @@
       <text>I1</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -4993,7 +4986,6 @@
       <text>I2</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5004,7 +4996,6 @@
       <text>I3</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5015,7 +5006,6 @@
       <text>I4</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>RIGHT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5026,7 +5016,6 @@
       <text>00</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5042,7 +5031,7 @@
       <font name="Dialog.bold" size="10" style="1"/>
       <color hex="006666"/>
       <horizontalAlignment>CENTER</horizontalAlignment>
-      <value>Input numbers - númeración de las entradas</value>
+      <value>Index of switch</value>
     </diylc.misc.WrapLabel>
     <diylc.misc.Label>
       <name>L17</name>
@@ -5050,7 +5039,6 @@
       <text>01</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5061,7 +5049,6 @@
       <text>02</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5072,7 +5059,6 @@
       <text>03</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5083,7 +5069,6 @@
       <text>04</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5094,7 +5079,6 @@
       <text>09</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5105,7 +5089,6 @@
       <text>05</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5116,7 +5099,6 @@
       <text>06</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5127,7 +5109,6 @@
       <text>07</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5138,7 +5119,6 @@
       <text>08</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5149,7 +5129,6 @@
       <text>10</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5160,7 +5139,6 @@
       <text>15</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5171,7 +5149,6 @@
       <text>20</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5182,7 +5159,6 @@
       <text>11</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5193,7 +5169,6 @@
       <text>16</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5204,7 +5179,6 @@
       <text>21</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5215,7 +5189,6 @@
       <text>12</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5226,7 +5199,6 @@
       <text>17</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5237,7 +5209,6 @@
       <text>22</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5248,7 +5219,6 @@
       <text>13</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5259,7 +5229,6 @@
       <text>18</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5270,7 +5239,6 @@
       <text>23</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5281,7 +5249,6 @@
       <text>14</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5292,7 +5259,6 @@
       <text>19</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5303,7 +5269,6 @@
       <text>24</text>
       <font name="Dialog.plain" size="10" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>CENTER</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
@@ -5332,47 +5297,43 @@
       <font name="Dialog.bold" size="10" style="1"/>
       <color hex="006666"/>
       <horizontalAlignment>CENTER</horizontalAlignment>
-      <value>Ejemplo de cableado externo</value>
+      <value>(attach switches in columns)</value>
     </diylc.misc.WrapLabel>
   </components>
   <groups>
     <set>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[15]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[16]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[19]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[26]"/>
       <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[33]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[35]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[14]"/>
       <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[17]"/>
       <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[23]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[32]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[20]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[18]"/>
       <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[34]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[13]"/>
       <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[30]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[19]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[11]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[25]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[28]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[29]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[27]"/>
       <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[21]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[26]"/>
       <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[12]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[24]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[25]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[18]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[28]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[35]"/>
       <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[22]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[20]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[14]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[24]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[27]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[15]"/>
       <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[31]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[16]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[11]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[13]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[29]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[32]"/>
     </set>
     <set>
-      <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel[7]"/>
-      <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel[6]"/>
-    </set>
-    <set>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[2]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[5]"/>
       <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[4]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[5]"/>
       <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[3]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[2]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[4]"/>
     </set>
     <set/>
   </groups>

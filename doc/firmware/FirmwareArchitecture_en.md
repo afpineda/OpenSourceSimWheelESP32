@@ -25,6 +25,7 @@ All modules can be found at the `/common` folder.
 Some namespaces are implemented with the help of auxiliary modules which are not exposed at _SimWheel.h_, one _cpp_ file for each:
 
 - *adcTools*: Reading of ADC pins.
+- *AnalogMultiplexerInput.cpp*: Everything related to multiplexed buttons/switches.
 - *ButtonMatrixInput.cpp*: Everything related to button/switch matrices.
 - *debugUtils.cpp*: Minor utilities for debugging and testing.
 - *PolledInput*: Related to inputs that must be read in a polling (or sampling) loop. Defines two main c++ classes: `AnalogPolledInput` and `DigitalPolledInput`
@@ -68,6 +69,8 @@ classDiagram
     inputs <-- AnalogPolledInput: events
     inputs --> clutchState: state changes
     inputs <-- clutchState: configuration
+    DigitalPolledInput <|-- ButtonMatrixInput
+    DigitalPolledInput <|-- AnalogMultiplexerInput
     inputHub <-- clutchState: state
     inputHub <--> clutchState: configuration
     inputHub --> hidImplementation: processed events
@@ -78,7 +81,7 @@ classDiagram
     power <-- batteryCalibration: computed battery level
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNVMFu2zAM_RVBpw2rf8AYCqRtigZosaDd0RdFph0BsuhKVIYgyL9Pkh1PmY22PsnieyQf-aATl1gDL7nUwrkHJVorusqw8KUb9ook7HFtIsxuTO-J5WEVbxw7jZeM_TBIqjkm5PoAhr59n0IupJr-z7M0T37HThMYzRsJgvu9MC3UiyypPcl9gmVE5e6FVjsrSKHZmK3F1oJzeR9Ad4pgi-qqPeVWz79f4d2Do38VQ0BoegnyH9GuNN15IjRuCkpvbZD56I2MBRfa3Kt60_UaugBLTWXNWujRUprWosQe_4DN8On_V9MsgneCCOwxk58x2yB6iD_DAXQm77_IyhNeUswGPy3qZ1GMyy-ZSxuQaVMuw7mEmjuoZBCdMYc-qFaR0FvUGuqPoSsjNLafIYviNnfJZ61eQSWaRrV-GOSC-nneOej26ykjeOaUkvUWZXAv1Ffy5pb6UrE5LbKSp0omwt6Hc4FNwz4odGGM1r_4julon4E3-DZmn5uynAgH1CRayCkx_RJFYhcGFcZwVYzf8A5sJ1QdnrDk9YrTPnRb8TIca2iE11TxypwD1Pd1mMy6VoSWl2Q93PCo-u1oJC8boR1cQONLON6e_wLZdr1Y)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNVMFu2zAM_RVBpw2rf8AoCqRtigVosKDd0RdFph0BsuRJVNYgy79Pkh1PqYxkPtnke-Ij-eQj5boGWlIumbXPgrWGdZUi_okR8qaRmcNSBZhZqd4hSdMiRCw5jkFCvimNojlE5HIPCr98nVLWHzV9n7JjvrstOU5grd6RITztmGqhnmVx6ZDvIiwhCvvEpNgahkKrldoY3RqwNtUB-CgQNlpcyBN28frzDX45sPivok8wiWvf_os2C4mPDlErOyW5M8a3-eIUDwVnZO5Evep6CZ2HRVGJWAO9NhinNdtir3-DSfDx-0fTzIK3DBHMIWk_Yba-6SH_CnuQSXufMguH-nxENvhpUfdFMS6_JDZugMdN2QRnIyp3UEkgOCOHPotWIJMbLSXU16ELxaRubyGL4iF1yS2pF1CuVSNaNwxygOb6yP0fzxs8sWZoxEcMX4cP2tdOovC2-BinMjPgXHoOeripekIHcGbGkvRGc39BoL6YYO7a_yqW0wIr2rYkzFtreC9005Arhc6M8XadrU1kcOjAG65GOD33fTkR9loiayGlhOPnKFx3flB-DBfF6B3twHRM1P4vGa9TRXHn1Va09K81NMwvsqKVOnlo6PD9oDgtGyYt3FHX135U44_1U3RZC9SGlmgcnP4CfKXg6g)
 
 ```mermaid
 classDiagram

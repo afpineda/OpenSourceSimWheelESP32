@@ -1,6 +1,7 @@
 # Power latch subsystem
 
 **You don't build this subsystem**, it may come equipped with your powerboost module/shield.
+This subsystem has little sense if there is no battery.
 
 ## Purpose
 
@@ -19,7 +20,7 @@ Customization takes place at file [CustomSetup.ino](../../../../src/Firmware/Cus
 
 ### No power latch circuit
 
-A "wake up source" is mandatory if there is no power latch circuit, this is, a set of GPIO numbers. It is recommended even if there is a power latch circuit, as a fallback measure in case the power latch is not wired. Anything wired to the button matrix is unable to act as a wake up source, since the button matrix will not be powered while in deep sleep. There are some choices:
+A "wake up source" is mandatory if there is no power latch circuit, this is, a set of GPIO numbers. It is recommended even if there is a power latch circuit, as a fallback measure in case the power latch is not wired. Anything wired to a button matrix (or analog multiplexer) is unable to act as a wake up source, since the button matrix/multiplexer will not be powered while in deep sleep. There are some choices:
 
 #### Wake up source: RESET button
 
@@ -27,7 +28,7 @@ With this choice, a reset push button is the only way to wake up from deep sleep
 
 #### Wake up source: Rotary encoders or a dedicated push button
 
-With this choice one or more rotary encoders may be configured. All of them have to be activated at the same time to wake up from deep sleep. This is more reliable for their built in push buttons (`SW` pin) than for rotation (`CLK` or `DT`), as long as they are not attached to the button matrix.
+With this choice one or more rotary encoders may be configured. All of them have to be activated at the same time to wake up from deep sleep. This is more reliable for their built in push buttons (`SW` pin) than for rotation (`CLK` or `DT`), as long as they are not attached to a button matrix/multiplexer.
 
 Locate the following line at *CustomSetup.ino*:
 

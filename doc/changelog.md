@@ -33,3 +33,9 @@ First release.
 - A "notification" subsystem replaces the OLED-based user interface, which is not tied to a particular hardware. A frame server is available, too.
 - Removed documentation in Spanish. A nightmare to maintain.
 - The battery calibration/backup procedures have been simplified. Now, no particular circuit is required.
+
+## 2.1.0
+
+- Analog multiplexers are now supported as input circuitry, which simplifies everything, requires less GPIO pins and allows smaller DevKits and circuit boards. Call this "miniaturization".
+- New "ready to deploy" designs.
+- Despite several ESP32 DevKit boards were allways supported, now explicit advise is given on the matter.
