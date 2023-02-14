@@ -58,27 +58,27 @@ Additional notes:
 | -------- | ---------- | ---------- | :--------------------: | -------------------------------------- |
 | **36**   | OK         |            |        Left pot        | input only (no internal pull resistor) |
 | **39**   | OK         |            |       Right pot        | input only (no internal pull resistor) |
-| **34**   | OK         |            |         ROT1_A         | input only (no internal pull resistor) |
-| **35**   | OK         |            |         ROT1_B         | input only (no internal pull resistor) |
+| **34**   | OK         |            |                        | input only (no internal pull resistor) |
+| **35**   | OK         |            |                        | input only (no internal pull resistor) |
 | **32**   | OK         | OK         |         ROT1_A         |                                        |
-| **33**   | OK         | OK         |         ROT2_B         |                                        |
-| **25**   | OK         | OK         |         ROT3_A         |                                        |
-| **26**   | OK         | OK         |         ROT3_B         |                                        |
-| **27**   | OK         | OK         |         ROT4_A         |                                        |
+| **33**   | OK         | OK         |         ROT1_B         |                                        |
+| **25**   | OK         | OK         |         ROT2_A         |                                        |
+| **26**   | OK         | OK         |         ROT2_B         |                                        |
+| **27**   | OK         | OK         |         ROT3_A         |                                        |
 | **14**   | OK         | OK         |  Multiplexer input 1   | outputs PWM signal at boot             |
-| **12**   | OK         | OK         |         ROT4_B         | boot fail if pulled high               |
+| **12**   | OK         | OK         |         ROT3_B         | boot fail if pulled high               |
 | **13**   | OK         | OK         |  Multiplexer input 2   |                                        |
-| **15**   | OK         | OK         |        ROT4_SW         | outputs PWM signal at boot             |
-| **2**    | OK         | OK         |        ROT3_SW         | connected to on-board LED              |
+| **15**   | OK         | OK         |                        | outputs PWM signal at boot             |
+| **2**    | OK         | OK         |                        | connected to on-board LED              |
 | **0**    | pulled up? | OK         |        ROT2_SW         | outputs PWM signal at boot             |
 | **4**    | OK         | OK         |        ROT1_SW         |                                        |
 | **16**   | OK         | OK         | Multiplexer selector 1 |                                        |
 | **17**   | OK         | OK         | Multiplexer selector 2 |                                        |
 | **5**    | OK         | OK         | Multiplexer selector 3 | outputs PWM signal at boot             |
-| **18**   | OK         | OK         |     single switch      |                                        |
-| **23**   | OK         | OK         |      FUNKY_ENC_A       |                                        |
-| **19**   | OK         | OK         |      FUNKY_ENC_B       |                                        |
-| **22**   | OK         | OK         |       FUNKY_PUSH       |                                        |
+| **18**   | OK         | OK         |        ROT3_SW         |                                        |
+| **23**   | OK         | OK         |        ROT4_SW         |                                        |
+| **19**   | OK         | OK         |         ROT4_A         |                                        |
+| **22**   | OK         | OK         |         ROT4_B         |                                        |
 
 ## Circuit layout
 
@@ -123,7 +123,6 @@ Notes and build tips:
 At Arduino IDE, configure the board manager as this:
 
 - Board: "WEMOS LOLIN32 Lite"
-
 1. Detach the DevKit board from the circuit before continuing.
 2. Plug the USB cable to the Devkit board and upload the [sketch](../../../../src/Firmware/Setup1/Setup1.ino) with Arduino IDE.
 3. Attach the DevKit board to the circuit. Keep the USB cable plugged in.
