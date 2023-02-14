@@ -10,9 +10,10 @@
 #include "RotaryEncoderInput.h"
 #include "PolledInput.h"
 #include "ButtonMatrixInput.h"
+#include "AnalogMultiplexerInput.h"
 #include <Preferences.h>
 
-//#include "debugUtils.h"
+// #include "debugUtils.h"
 
 // ----------------------------------------------------------------------------
 // Globals
@@ -275,6 +276,28 @@ void inputs::addButtonMatrix(
     abortDueToCallBeforeBegin();
 }
 
+void inputs::addAnalogMultiplexer(
+    const gpio_num_t selectorPins[],
+    const uint8_t selectorPinCount,
+    const gpio_num_t inputPins[],
+    const uint8_t inputPinCount,
+    inputNumber_t *buttonNumbersArray)
+{
+  if ((!pollingTask) && (hubTask))
+  {
+    digitalInputChain = new AnalogMultiplexerInput(
+        selectorPins,
+        selectorPinCount,
+        inputPins,
+        inputPinCount,
+        buttonNumbersArray,
+        true,
+        digitalInputChain);
+  }
+  else
+    abortDueToCallBeforeBegin();  
+}
+
 void inputs::setAnalogClutchPaddles(
     const gpio_num_t leftClutchPin,
     const gpio_num_t rightClutchPin,
@@ -399,13 +422,14 @@ void hubLoop(void *unused)
           if ((axisEvent->value) >= CLUTCH_3_4_VALUE)
             newState = (globalState & axisEvent->inputMask) | axisEvent->inputBitmap;
           else if ((axisEvent->value) <= CLUTCH_1_4_VALUE)
-            newState = (globalState & axisEvent->inputMask); 
+            newState = (globalState & axisEvent->inputMask);
           else
             newState = globalState;
           changes = globalState ^ newState;
-          if (changes) {
+          if (changes)
+          {
             globalState = newState;
-            inputHub::onStateChanged(globalState,changes);
+            inputHub::onStateChanged(globalState, changes);
           }
         }
         else

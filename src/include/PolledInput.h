@@ -83,6 +83,22 @@ protected:
      */
     void updateMask(inputNumber_t *inputNumbersArray, uint8_t inputsCount);
 
+    /**
+     * @brief Check and initilize a GPIO pin for digital output
+     *
+     * @param aPin GPIO pin
+     */
+    void checkAndInitializeSelectorPin(gpio_num_t aPin);
+
+    /**
+     * @brief Check and initilize a GPIO pin for digital input
+     *
+     * @param aPin GPIO pin
+     * @param enablePullDown True to enable internal pull-down resistor
+     * @param enablePullUp True to enable internal pull-up resistor
+     */
+    void checkAndInitializeInputPin(gpio_num_t aPin, bool enablePullDown = true, bool enablePullUp = false);
+
 public:
     /**
      * @brief Construct a new Digital Polled Input object

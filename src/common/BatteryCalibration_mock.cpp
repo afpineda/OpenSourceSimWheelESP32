@@ -15,16 +15,12 @@
 
 volatile bool batteryCalibration::calibrationInProgress = false;
 
-void batteryCalibration::clear()
-{
-}
-
 void batteryCalibration::begin()
 {
 
 }
 
-void batteryCalibration::save()
+void batteryCalibration::clear()
 {
 
 }
@@ -44,9 +40,19 @@ void batteryCalibration::restoreCalibrationData(const uint16_t data[])
 
 }
 
+void batteryCalibration::save()
+{
+
+}
+
 int batteryCalibration::getBatteryLevel(int reading)
 {
     return -1;
+}
+
+void batteryCalibration::restartAutoCalibration()
+{
+
 }
 
 int batteryCalibration::getBatteryLevelAutoCalibrated(int reading)

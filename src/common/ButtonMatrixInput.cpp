@@ -29,9 +29,12 @@ ButtonMatrixInput::ButtonMatrixInput(
     inputNumber_t alternateFirstInputNumber,
     DigitalPolledInput *nextInChain) : DigitalPolledInput(nextInChain)
 {
-    if ((selectorPinCount > MAX_MATRIX_SELECTOR_COUNT) || (inputPinCount > MAX_MATRIX_INPUT_COUNT))
+    if ((selectorPinCount > MAX_MATRIX_SELECTOR_COUNT) ||
+        (inputPinCount > MAX_MATRIX_INPUT_COUNT) ||
+        (selectorPinCount == 0) ||
+        (inputPinCount == 0))
     {
-        log_e("Too many input or selector pins at ButtonMatrixInput::ButtonMatrixInput()");
+        log_e("Too few/many input or selector pins at ButtonMatrixInput::ButtonMatrixInput()");
         abort();
     }
     else
@@ -45,7 +48,7 @@ ButtonMatrixInput::ButtonMatrixInput(
         for (int i = 0; i < selectorPinCount; i++)
             checkAndInitializeSelectorPin(selectorPins[i]);
         for (int i = 0; i < inputPinCount; i++)
-            checkAndInitializeInputPin(inputPins[i]);
+            checkAndInitializeInputPin(inputPins[i],true,false);
     }
 
     this->selectorPinCount = selectorPinCount;
@@ -63,52 +66,6 @@ ButtonMatrixInput::ButtonMatrixInput(
     {
         log_e("Unknown input numbers in call to ButtonMatrixInput::ButtonMatrixInput()");
         abort();
-    }
-}
-
-// ----------------------------------------------------------------------------
-// Pin setup
-// ----------------------------------------------------------------------------
-
-void ButtonMatrixInput::checkAndInitializeSelectorPin(gpio_num_t aPin)
-{
-    if (!GPIO_IS_VALID_OUTPUT_GPIO(aPin))
-    {
-        log_e("Requested GPIO %d at ButtonMatrixInput can't be used as output", aPin);
-        abort();
-    }
-    else
-    {
-        // ESP_ERROR_CHECK(gpio_set_direction(aPin, GPIO_MODE_OUTPUT));
-        gpio_config_t io_conf = {};
-        io_conf.intr_type = GPIO_INTR_DISABLE;
-        io_conf.mode = GPIO_MODE_OUTPUT;
-        io_conf.pin_bit_mask = (1ULL << aPin);
-        io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
-        io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
-        ESP_ERROR_CHECK(gpio_config(&io_conf));
-        gpio_set_level(aPin, 0);
-    }
-}
-
-void ButtonMatrixInput::checkAndInitializeInputPin(gpio_num_t aPin)
-{
-    if (!GPIO_IS_VALID_GPIO(aPin))
-    {
-        log_e("Requested GPIO %d at ButtonMatrixInput can't be used as input", aPin);
-        abort();
-    }
-    else
-    {
-        // ESP_ERROR_CHECK(gpio_set_direction(aPin, GPIO_MODE_INPUT));
-        // ESP_ERROR_CHECK(gpio_set_pull_mode(aPin, GPIO_PULLDOWN_ONLY));
-        gpio_config_t io_conf = {};
-        io_conf.intr_type = GPIO_INTR_DISABLE;
-        io_conf.mode = GPIO_MODE_INPUT;
-        io_conf.pin_bit_mask = (1ULL << aPin);
-        io_conf.pull_down_en = GPIO_PULLDOWN_ENABLE;
-        io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
-        ESP_ERROR_CHECK(gpio_config(&io_conf));
     }
 }
 
