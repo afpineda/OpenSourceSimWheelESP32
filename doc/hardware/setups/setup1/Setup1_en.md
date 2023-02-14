@@ -92,7 +92,7 @@ Additional notes:
 
 Open the [circuit layout](./setup1.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
 
-![Setup #3 circuit layout](./setup1.png)
+![Setup #1 circuit layout](./setup1.png)
 
 This layout includes the following subsystems (read for an in-depth explanation):
 
