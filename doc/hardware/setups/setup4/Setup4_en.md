@@ -100,8 +100,7 @@ This layout includes the following subsystems (read for an in-depth explanation)
 
 Notes and build tips:
 
-- Some components may look very small, not matching their actual size. This is not a mistake. They must be placed in vertical position, so they lie in a minimal surface of the perfboard.
-- There is a lot of wiring, which is prone to human error. Check wiring and traces twice before soldering.
+- The packaging of the analog multiplexers will show a small circle next to pin #1, wich is tagged as `A4` here.
 
 ### External wiring
 
@@ -111,7 +110,7 @@ Notes and build tips:
   - There are three `ALL_SW_COM` pins. They are intended for the left, center and right sides of the steering wheel, but you may use any of them.
   - Wire `ALL_SW_COM` to just one terminal of each push button *in a chain*.
   - Wire the other terminal of each push button to one of the light-blue pins.
-  - Bare bone rotary encoders: their built-in push button must be wired like any other push button, being `SW` and `SW GND` the involved terminals.
+  - Bare bone rotary encoders: their built-in push button must be wired like any other push button, being `SW` and `SW COM` the involved terminals.
 - In a battery-operated setup:
   - Solder the battery connector to the standalone wires with Dupond plugs in the other end.
   - `Battery(+)` is the positive pole of the battery.
@@ -138,5 +137,3 @@ Notes and build tips:
 2. Open the serial monitor (Arduino IDE).
 3. Reset.
 4. Check there are no error messages.
-
-

@@ -119,7 +119,7 @@ Notes and build tips:
 - Bare bone rotary encoders:
   - The involved terminals are:
     - For rotation: `A` or `CLK` attached to `ROTn_A`, `B` or `DT` attached to `ROTn_B`, `COM` attached to `ROTn_COM`.
-    - The built-in push button must be wired to the button matrix just like any other push button, being `SW` and `SW GND` the involved terminals. `SW` attached to the upper row of pin headers, `SW COM` attached to the lower row of pin headers.
+    - The built-in push button must be wired to the button matrix just like any other push button, being `SW` and `SW COM` the involved terminals. `SW` attached to the upper row of pin headers, `SW COM` attached to the lower row of pin headers.
   - Do not confuse `COM` and `SW COM`.
   - `ROT1` is mandatory. The others are optional.
 

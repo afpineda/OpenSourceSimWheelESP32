@@ -38,4 +38,5 @@ First release.
 
 - Analog multiplexers are now supported as input circuitry, which simplifies everything, requires less GPIO pins and allows smaller DevKits and circuit boards. Call this "miniaturization".
 - New "ready to deploy" designs.
-- Despite several ESP32 DevKit boards were allways supported, now explicit advise is given on the matter.
+- Despite several ESP32 DevKit boards were always supported, now explicit advise is given on the matter.
+- Improved documentation and minor errata fixes.

@@ -7,10 +7,11 @@ Some interesting ESP32 boards for this project are:
 - [Tinypico](https://www.tinypico.com/) and [the alike](https://unexpectedmaker.com/shop?category=Development+Boards).
 - [Adafruit Feather 32u4 Bluefruit LE](https://www.adafruit.com/product/2829).
 - [Wemos D32 boards](https://www.wemos.cc/en/latest/d32/d32.html), aka "Lolin32".
+  - *Note*: Wemos "Lolin32 Lite" is an outdated and deprecated board. However, very cheap clones are still sold at some retailers. This board features battery support, but lacks a bult-in "state of charge" monitoring circuit.
 - [Sparkfun Thing Plus](https://www.sparkfun.com/products/17381).
 - [Some LilyGO boards](http://www.lilygo.cn/) even if their built-in display is not used.
 
-You need to balance two key aspects: **Size and pin availability**. The larger the board, the higher the count of available pins, so you can fit more buttons, padles, etc, but the greater is the required space inside the sim sheel's housing.
+You need to balance two key aspects: **size and pin availability**. The larger the board, the higher the count of available pins, so you can fit more buttons, padles, etc, but the greater is the space required inside the sim sheel's housing.
 
 In order to reduce size and circuit complexity, it is recommended to use multiplexed switches (will be explained later) and small devkit boards like Unexpected Maker's "TinyPico" or LilyGO's "T-QT".
 
@@ -57,6 +58,7 @@ The following article explains which pins can be used and how:
 - **GPIO #0**:
   
   - Despite being described as pulled-up, it seems to work in other modes.
+  - The board will enter "bootloader mode" if this pin is set to low voltage at startup.
 
 - **GPIO #3**:
   
