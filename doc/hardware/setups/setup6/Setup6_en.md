@@ -65,20 +65,20 @@ Additional notes:
 | **25**   | OK         | OK         |         ROT2_A         |                                        |
 | **26**   | OK         | OK         |         ROT2_B         |                                        |
 | **27**   | OK         | OK         |         ROT3_A         |                                        |
-| **14**   | OK         | OK         |  Multiplexer input 1   | outputs PWM signal at boot             |
-| **12**   | OK         | OK         |         ROT3_B         | boot fail if pulled high               |
-| **13**   | OK         | OK         |  Multiplexer input 2   |                                        |
-| **15**   | OK         | OK         |                        | outputs PWM signal at boot             |
-| **2**    | OK         | OK         |                        | connected to on-board LED              |
-| **0**    | pulled up? | OK         |        ROT2_SW         | outputs PWM signal at boot             |
-| **4**    | OK         | OK         |        ROT1_SW         |                                        |
+| **14**   | OK         | OK         |         ROT3_B         | outputs PWM signal at boot             |
+| **12**   | OK         | OK         |         ROT4_A         | boot fail if pulled high               |
+| **13**   | OK         | OK         |         ROT4_B         |                                        |
+| **15**   | OK         | OK         |        ROT1_SW         | outputs PWM signal at boot             |
+| **2**    | OK         | OK         |        ROT2_SW         | connected to on-board LED              |
+| **0**    | pulled up? | OK         |  Multiplexer input 1   | outputs PWM signal at boot             |
+| **4**    | OK         | OK         |        ROT3_SW         |                                        |
 | **16**   | OK         | OK         | Multiplexer selector 1 |                                        |
 | **17**   | OK         | OK         | Multiplexer selector 2 |                                        |
 | **5**    | OK         | OK         | Multiplexer selector 3 | outputs PWM signal at boot             |
-| **18**   | OK         | OK         |        ROT3_SW         |                                        |
-| **23**   | OK         | OK         |        ROT4_SW         |                                        |
-| **19**   | OK         | OK         |         ROT4_A         |                                        |
-| **22**   | OK         | OK         |         ROT4_B         |                                        |
+| **18**   | OK         | OK         |        ROT4_SW         |                                        |
+| **23**   | OK         | OK         |    single button 1     |                                        |
+| **19**   | OK         | OK         |    single button 2     |                                        |
+| **22**   | OK         | OK         |  Multiplexer input 2   |                                        |
 
 ## Circuit layout
 
