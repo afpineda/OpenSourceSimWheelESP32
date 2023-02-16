@@ -74,4 +74,4 @@ The following article explains which pins can be used and how:
 
 In order to upload a firmware to a DevKit board, certain pins, called "bootstrap" pins are used. If some device is attached to those pins, it may get in the way. You should detach the board from the circuit before uploading, just in case.
 
-In Arduino IDE, you need to configure the "board manager" with the proper parameters. Most times, you only need to select the correct board and go with the default parameters. Most times, those boards are "ESP32 Dev Module (esp32)" or "ESP32S3 Dev Module (esp32)". However, check the manufacturer's datasheet.
+In Arduino IDE, you need to configure the "board manager" with the proper parameters. Most times, you only need to select the correct board and go with the default parameters. Most times, those boards are "ESP32 Dev Module" or "ESP32S3 Dev Module". However, check the manufacturer's datasheet.

@@ -2,7 +2,7 @@
 
 Read this document from start to end before building anything. Ensure you understand everything.
 
-**This setup has not been tested at the system level**. If you try, please, let me know.
+This setup has been tested.
 
 ## Hardware features
 
@@ -28,9 +28,9 @@ Do not hold `Rotary #2 push button` at startup, or it won't boot (but may be use
 |                     **Item**                     | **Quantity** | Notes                                                               |
 | :----------------------------------------------: | :----------: | ------------------------------------------------------------------- |
 |            Lolin32 Lite DevKit board             |      1       | NO PIN HEADERS already soldered                                     |
-|               13 pins male header                |    2 rows    | Maybe they are included in your Lolin32 Lite purchase               |
+|            Row of 13 male pin headers            |    2 rows    | Maybe they are included in your Lolin32 Lite purchase               |
 |       Standard perfboard sized 24x10 holes       |      1       | Double side recommended                                             |
-| Kit of Dupond wires the kind used in protoboards |    1 kit     | Make sure wires are long enough                                     |
+| Kit of Dupond wires the kind used in protoboards |    1 kit     | See below                                                           |
 |                Analog multiplexer                |      2       | 74HC4051N (*mandatory*)                                             |
 |               Roller lever switch                |      2       | For shift paddles (maybe they are included with your wheel's case)  |
 |       Linear potentiometer (any impedance)       |      2       | For clutch paddles (maybe they are included with your wheel's case) |
@@ -49,8 +49,8 @@ Other parts (quantity unknown):
 Additional notes:
 
 - Chose an appropriate male/female power connector depending on your quick release. Make sure to identify the positive and negative terminals correctly. If you have a *Simagic QR*, negative is the yellow wire and positive is the green one.
-- For the male micro-USB connector you may reuse an spare USB cable.
-- Make sure you have enough wires in your kit.
+- For the male micro-USB plug you may reuse an spare USB cable. Cut one end.
+- Make sure you have enough Dupond wires in your kit. You may use them both for internal and external wiring. Check they have the proper length for your needs.
 
 ## Pin-out plan for the ESP32-DevKit-C board
 
@@ -89,9 +89,9 @@ You have to build this by yourself. One end requires a male micro-USB plug. The 
 |   5V    |    pin #1     |      red       | positive terminal |          green wire          |
 |   GND   |    pin #5     |     black      | negative terminal |         yellow wire          |
 
-## Pin header for the DevKit board
+## Pin headers for the DevKit board
 
-You also have to build this by yourself. The DevKit board will be mounted upside-down in the main board. So you have to solder the male pin headers facing up, as shown in the following picture:
+You also have to build this by yourself. The DevKit board will be mounted upside-down into the main board. So you have to solder the male pin headers facing up, as shown in the following picture:
 
 ![Lolin32 Lite pin header](../../pictures/L32_Lite_pin_header.png)
 
@@ -111,10 +111,11 @@ This layout includes the following subsystems (read for an in-depth explanation)
 Notes and build tips:
 
 - There is a lot of wiring, which is prone to human error. Check wiring and traces twice before soldering.
-- We are using some Dupond wires instead of pin headers, so you have to cut the connector at one end. This simplifies the circuit a lot.
+- We are using some Dupond wires instead of pin headers, so you have to cut the connector at one end. This simplifies the circuit a lot. **Put a label** on those wires using a piece of paper and adhesive tape in order to know which is which.
 - Note that the striped wires are soldered on the back side while the others are soldered on the front side.
-- The packaging of the analog multiplexers will show a small circle next to pin #1, wich is tagged as `A4` here.
-- Make sure to place the analog multiplexers properly. Note that they are not both pointing in the same direction.
+- The packaging of the analog multiplexers will show a small circle next to pin #1, which is tagged as `A4` here.
+- Make sure to place the analog multiplexers properly. Note that both multiplexers are placed symmetrically, not pointing to the same place.
+- When finished, put some isolation tape at the back of the main circuit board.
 
 ### External wiring
 
@@ -126,7 +127,7 @@ Notes and build tips:
   - The involved terminals are:
     - For rotation: `A` or `CLK` attached to `ROTn_A`, `B` or `DT` attached to `ROTn_B`, `COM` attached to `GND`.
     - The built-in push button must be wired as any other push button, being `SW` and `SW COM` the involved terminals. `SW` attached to their reserved pin headers and `SW COM` attached to `GND`.
-  - You may wire `COM` and `SW COM` together, since both should be attached to `GND`.
+  - You may wire `COM` and `SW COM` together, since both must be attached to `GND`.
   - Rotary encoder #1 is mandatory.
 
 ## Firmware upload

@@ -106,8 +106,8 @@ void simWheelSetup()
     inputs::addRotaryEncoder(GPIO_NUM_13, GPIO_NUM_15, ROT4_CW, ROT4_CCW);
     inputs::addDigital(GPIO_NUM_2, ROT1_SW);
     inputs::addDigital(GPIO_NUM_0, ROT2_SW);
-    inputs::addDigital(GPIO_NUM_4, ROT1_SW);
-    inputs::addDigital(GPIO_NUM_18, ROT1_SW);
+    inputs::addDigital(GPIO_NUM_4, ROT3_SW);
+    inputs::addDigital(GPIO_NUM_18, ROT4_SW);
     inputs::addDigital(GPIO_NUM_23, JOY_LSHIFT_PADDLE);
     inputs::addDigital(GPIO_NUM_19, JOY_RSHIFT_PADDLE);
     inputs::setAnalogClutchPaddles(GPIO_NUM_36, GPIO_NUM_39, LCLUTCH, RCLUTCH);

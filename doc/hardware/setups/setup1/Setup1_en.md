@@ -20,7 +20,7 @@ Read this document from start to end before building anything. Ensure you unders
 - *Bite point calibration*: rotary #1 clockwise and counter-clockwise (while holding one and only one clutch paddle).
 - *Next clutch function*: `START` and `Left shift paddle`.
 - *ALT buttons mode*: `START` and `Right shift paddle`.
-- *Recalibrate clutch paddles*: `START`, `Left shift paddle` and `Right shift paddle`.
+- *Recalibrate clutch paddles*: `Left shift paddle`, `Right shift paddle` and `START`.
 
 ## Needed parts
 
@@ -126,6 +126,8 @@ Notes and build tips:
 **Under no circumstances should you plug an USB cable and an external power source at the same time**. You could damage the DevKit board.
 
 ## Firmware upload
+
+At Arduino IDE, configure the board manager for "ESP32 Dev Module".
 
 1. Detach the DevKit board from the circuit before continuing.
 2. Plug the USB cable to the Devkit board and upload the [sketch](../../../../src/Firmware/Setup1/Setup1.ino) with Arduino IDE.

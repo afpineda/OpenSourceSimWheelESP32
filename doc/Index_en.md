@@ -1,17 +1,12 @@
 # Index
 
-## Build manual
+## Build manual and electronics
 
 - [Overview](./overview_en.md)
 - [Required skills and tools](./skills_en.md)
 - [Prepare the source code for compilation and uploading](./firmware/sourcesSetup_en.md)
-
-## Electronics
-
 - [Know your ESP32 DevKit board](./hardware/DevKits_en.md)
-
 - [Overview of input hardware suitable (or not) for a sim wheel/button box](./hardware/InputHW_en.md)
-
 - [How to customize in order to build your own hardware and firmware setup](./hardware/subsystems/CustomizeHowto_en.md).
 
 - Ready to deploy designs:
@@ -22,7 +17,8 @@
   | [Setup2](./hardware/setups/setup2/Setup2_en.md) |   Button box   | ESP32-WROOM-32E/UE |                             Rotary encoders x4, 52 push buttons                             |      External       |
   | [Setup3](./hardware/setups/setup3/Setup3_en.md) | Steering wheel |      TinyPico      |         Rotary encoders x2, DPAD (optional), analog clutch paddles, 10 push buttons         |       Battery       |
   | [Setup4](./hardware/setups/setup4/Setup4_en.md) | Steering wheel |      TinyPico      |                 Rotary encoders x3, analog clutch paddles, 10 push buttons                  | Battery or external |
-  | [Setup5](./hardware/setups/setup5/Setup5_en.md) | Steering wheel |  LilyGO T-QT PRO   |                     Rotary encoders x3, digital clutch, 9 push buttons                      | Battery or external |
+  | [Setup5](./hardware/setups/setup5/Setup5_en.md) | Steering wheel |  LilyGO T-QT PRO   |                     Rotary encoders x3, digital clutch paddles, 9 push buttons                      | Battery or external |
+  | [Setup6](./hardware/setups/setup6/Setup6_en.md) | Steering wheel |  Lolin32 Lite   |                     Rotary encoders x4, analog clutch paddles, 16 push buttons                      | External |
   
 ## Contributing
 
