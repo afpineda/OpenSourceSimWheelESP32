@@ -97,6 +97,8 @@ Notes and build tips:
 
 ## Firmware upload
 
+At Arduino IDE, configure the board manager for "ESP32 Dev Module".
+
 1. Detach the DevKit board from the circuit before continuing.
 2. Plug the USB cable to the Devkit board and upload the [sketch](../../../../src/Firmware/Setup2/Setup2.ino) with Arduino IDE.
 3. Attach the DevKit board to the circuit. Keep the USB cable plugged in.

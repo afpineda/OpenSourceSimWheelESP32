@@ -12,8 +12,7 @@ Indispensable:
 
 May be needed:
 
-- [ESP32 drivers](http://esp32.net/usb-uart/) on Windows. A tutorial: [Installing drivers for the ESP32](https://www.bromleysat.com/installing-drivers-for-the-esp32/).
-- [ss_oled](https://www.arduino.cc/reference/en/libraries/ss_oled/)
+- [ESP32 drivers](http://esp32.net/usb-uart/) on Windows. A tutorial: [Installing drivers for the ESP32](https://www.bromleysat.com/installing-drivers-for-the-esp32/). Depending on what DevKit board you choose, a different driver may be needed. Check all information available from the manufacturer.
 
 Recommended:
 

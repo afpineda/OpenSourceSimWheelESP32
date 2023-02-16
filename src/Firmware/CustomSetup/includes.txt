@@ -1,14 +1,15 @@
 SimWheelTypes.h
 SimWheel.h
 ButtonMatrixInput.h
+AnalogMultiplexerInput.h
 PolledInput.h
 RotaryEncoderInput.h
-strings.h
 adcTools.h
 HID_definitions.h
 adcTools.cpp
 BatteryCalibration.cpp
 ButtonMatrixInput.cpp
+AnalogMultiplexerInput.cpp
 hidImplementation_NimBLE.cpp
 inputHub.cpp
 inputs.cpp

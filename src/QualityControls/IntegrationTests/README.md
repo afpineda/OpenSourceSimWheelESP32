@@ -65,3 +65,9 @@ Ensure that all unit test have failed before proceeding to integration testing (
 - **batteryCalibration**
 
 *Note*: This is a system test except for the involved hardware.
+
+## Other
+
+> *Test name*: [TQTSystemTest](./TQTSystemTest/README.md)
+
+This is a *big-bang* test for the [LilyGO T-QT devkit board](https://github.com/Xinyuan-LilyGO/T-QT).

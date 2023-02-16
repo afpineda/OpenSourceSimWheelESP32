@@ -103,6 +103,56 @@ void DigitalPolledInput::updateMask(inputNumber_t *inputNumbersArray, uint8_t in
 }
 
 // ----------------------------------------------------------------------------
+// Pin setup
+// ----------------------------------------------------------------------------
+
+void DigitalPolledInput::checkAndInitializeSelectorPin(gpio_num_t aPin)
+{
+    if (!GPIO_IS_VALID_OUTPUT_GPIO(aPin))
+    {
+        log_e("Requested GPIO %d can't be used as output", aPin);
+        abort();
+    }
+    else
+    {
+        // ESP_ERROR_CHECK(gpio_set_direction(aPin, GPIO_MODE_OUTPUT));
+        gpio_config_t io_conf = {};
+        io_conf.intr_type = GPIO_INTR_DISABLE;
+        io_conf.mode = GPIO_MODE_OUTPUT;
+        io_conf.pin_bit_mask = (1ULL << aPin);
+        io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
+        io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
+        ESP_ERROR_CHECK(gpio_config(&io_conf));
+        gpio_set_level(aPin, 0);
+    }
+}
+
+void DigitalPolledInput::checkAndInitializeInputPin(gpio_num_t aPin, bool enablePullDown, bool enablePullUp)
+{
+    if (!GPIO_IS_VALID_GPIO(aPin))
+    {
+        log_e("Requested GPIO %d can't be used as input", aPin);
+        abort();
+    }
+    else
+    {
+        gpio_config_t io_conf = {};
+        io_conf.intr_type = GPIO_INTR_DISABLE;
+        io_conf.mode = GPIO_MODE_INPUT;
+        io_conf.pin_bit_mask = (1ULL << aPin);
+        if (enablePullDown)
+            io_conf.pull_down_en = GPIO_PULLDOWN_ENABLE;
+        else
+            io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
+        if (enablePullUp)
+            io_conf.pull_up_en = GPIO_PULLUP_ENABLE;
+        else
+            io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
+        ESP_ERROR_CHECK(gpio_config(&io_conf));
+    }
+}
+
+// ----------------------------------------------------------------------------
 // Class methods
 // ----------------------------------------------------------------------------
 

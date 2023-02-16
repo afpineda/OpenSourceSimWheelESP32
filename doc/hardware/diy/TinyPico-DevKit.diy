@@ -2,8 +2,8 @@
 <project>
   <fileVersion>
     <major>4</major>
-    <minor>30</minor>
-    <build>1</build>
+    <minor>35</minor>
+    <build>0</build>
   </fileVersion>
   <title>TiniPico board</title>
   <author>h004511p</author>
@@ -15,7 +15,7 @@
   <components>
     <diylc.shapes.Rectangle>
       <name>RECT2</name>
-      <alpha>127</alpha>
+      <alpha>107</alpha>
       <value></value>
       <controlPoints>
         <point x="0.745" y="1.12"/>
@@ -23,14 +23,14 @@
       </controlPoints>
       <firstPoint x="0.745" y="1.12"/>
       <secondPoint x="0.9550000000000002" y="1.58"/>
-      <color hex="ffffff"/>
+      <color hex="cccccc"/>
       <borderColor hex="000000"/>
       <borderThickness value="0.1" unit="mm"/>
       <edgeRadius value="0.0" unit="mm"/>
     </diylc.shapes.Rectangle>
     <diylc.shapes.Rectangle>
       <name>RECT3</name>
-      <alpha>127</alpha>
+      <alpha>107</alpha>
       <value></value>
       <controlPoints>
         <point x="1.94" y="1.12"/>
@@ -38,15 +38,15 @@
       </controlPoints>
       <firstPoint x="1.94" y="1.12"/>
       <secondPoint x="2.025" y="1.58"/>
-      <color hex="ffffff"/>
+      <color hex="cccccc"/>
       <borderColor hex="000000"/>
       <borderThickness value="0.1" unit="mm"/>
       <edgeRadius value="0.0" unit="mm"/>
     </diylc.shapes.Rectangle>
     <diylc.semiconductors.DIL__IC>
-      <name>TinyPico</name>
-      <alpha>127</alpha>
-      <value></value>
+      <name></name>
+      <alpha>107</alpha>
+      <value>TinyPico</value>
       <orientation>_90</orientation>
       <pinCount>_20</pinCount>
       <pinSpacing value="0.1" unit="in"/>
@@ -73,8 +73,8 @@
         <point x="1.1" y="1.6"/>
         <point x="1.0000000000000002" y="1.6"/>
       </controlPoints>
-      <display>NONE</display>
-      <bodyColor hex="ffffff"/>
+      <display>VALUE</display>
+      <bodyColor hex="cccccc"/>
       <borderColor hex="595959"/>
       <labelColor hex="ffffff"/>
       <indentColor hex="595959"/>
@@ -101,7 +101,6 @@
       <text>    BAT</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff0033"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -112,7 +111,6 @@
       <text>    GND</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -123,7 +121,6 @@
       <text>    5V</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff0033"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -134,7 +131,6 @@
       <text>    3V3</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="ff0033"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -145,7 +141,6 @@
       <text>    4</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="0066ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -156,7 +151,6 @@
       <text>    14</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="0066ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -167,7 +161,6 @@
       <text>    15</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="0066ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -178,7 +171,6 @@
       <text>    27</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="0066ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -189,7 +181,6 @@
       <text>    26</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="0066ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -200,7 +191,6 @@
       <text>    25</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="0066ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_270</orientation>
@@ -211,7 +201,6 @@
       <text>    GND</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="000000"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_90</orientation>
@@ -222,7 +211,6 @@
       <text>    RESET</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="999999"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_90</orientation>
@@ -233,7 +221,6 @@
       <text>    33</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="0066ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_90</orientation>
@@ -244,7 +231,6 @@
       <text>    32</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="0066ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_90</orientation>
@@ -255,7 +241,6 @@
       <text>    21/SDA</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="0066ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_90</orientation>
@@ -266,7 +251,6 @@
       <text>    22/SCL</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="0066ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_90</orientation>
@@ -277,7 +261,6 @@
       <text>    5/SS</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="0066ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_90</orientation>
@@ -288,7 +271,6 @@
       <text>    18/SCK</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="0066ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_90</orientation>
@@ -299,7 +281,6 @@
       <text>    19/MISO</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="0066ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_90</orientation>
@@ -310,54 +291,38 @@
       <text>    23/MOSI</text>
       <font name="Dialog.plain" size="6" style="0"/>
       <color hex="0066ff"/>
-      <center>false</center>
       <horizontalAlignment>LEFT</horizontalAlignment>
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>_90</orientation>
     </diylc.misc.Label>
-    <diylc.misc.Label>
-      <name>L21</name>
-      <point x="1.45" y="1.36"/>
-      <text>TinyPico</text>
-      <font name="Dialog.plain" size="14" style="0"/>
-      <color hex="000000"/>
-      <center>false</center>
-      <horizontalAlignment>CENTER</horizontalAlignment>
-      <verticalAlignment>CENTER</verticalAlignment>
-      <orientation>DEFAULT</orientation>
-    </diylc.misc.Label>
   </components>
   <groups>
     <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[9]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[8]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[12]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[11]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[20]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[15]"/>
-      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[13]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[3]"/>
       <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[3]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[5]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[10]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[19]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[4]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[6]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[13]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[17]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[14]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[7]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[21]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[2]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[16]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[18]"/>
-      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[10]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[11]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[16]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[15]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[20]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[19]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[6]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[8]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[17]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[5]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[7]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[12]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[9]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[4]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[14]"/>
       <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[2]"/>
     </set>
-    <set/>
-    <set/>
-    <set/>
   </groups>
   <lockedLayers/>
   <lockedComponents/>

@@ -44,7 +44,7 @@ Arduino's sketch named [**CustomSetup**](../../../src/Firmware/CustomSetup/Custo
 
 ### DPAD
 
-A DPAD is optional. Despite this function is designed for funky switches and directional pads, it may be assigned to _any_ input, including rotary encoders and push buttons. Place a call to `inputHub::setDPADControls()`:
+A DPAD is optional. Despite this function is designed for funky switches and directional pads, it may be assigned to *any* input, including rotary encoders and push buttons. Place a call to `inputHub::setDPADControls()`:
 
 - 1st parameter is the input number for the "up" button
 - 2nd parameter is the input number for the "down" button
