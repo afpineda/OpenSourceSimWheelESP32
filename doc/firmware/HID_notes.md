@@ -54,7 +54,7 @@ Note that feature reports are both read and write.
 | Feature notification | 4         | 19         |
 
 - Buttons state: one bit per button (1=pressed, 0=non-pressed). The least significant bit is the first button.
-- Axes: a signed byte in the range 0 to 254.
+- Axes: an unsigned byte in the range 0 to 254.
   - Rz: F1-Style clutch (combined input from left and right clutch paddles)
   - Ry: Left clutch paddle
   - Rx: Right clutch paddle
