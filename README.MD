@@ -6,7 +6,7 @@ This project provides open hardware and software for a sim-racing wheel or butto
 
 - **Wireless connection** through Bluetooth Low Energy with zero configuration effort
 - **Several hardware setups** to choose from and detailed instructions about how to **customize** them with **minimum effort**
-- Power through rechargeable **batteries** or through the wheel base
+- Power through rechargeable **batteries** or through the wheel's base
 - **Alternate mode**. While activated, any input is reported as an alternate one, thus, duplicating the number of effective inputs. Much like the SHIFT key in your keyboard.
 - **Clutch paddles** that can be mapped to one of four functions through user preferences:
   - **F1-style clutch** with bite point calibration
@@ -19,11 +19,13 @@ This project provides open hardware and software for a sim-racing wheel or butto
 - **Automatic power-off** when not in use
 - **Quality controls** (you don't want your wheel to fail in the middle of a race)
 - **Extensive documentation**
-- **Budget friendly**
+- **Low budget**
 
 Please, start at the [documentation index](./doc/Index_en.md).
 
 There is a [companion app](https://github.com/afpineda/SimWheelESP32Config) for user preferences (not mandatory).
+
+ This project is **fully operational**.
 
 > Español
 
@@ -51,5 +53,7 @@ Este proyecto proporciona hardware y software abierto para un volante de simulac
 Por favor, comience por el [índice de documentación (inglés)](./doc/Index_en.md).
 
 Existe una [aplicación auxiliar](https://github.com/afpineda/SimWheelESP32Config) para las preferencias de usuario (no obligatoria).
+
+Este proyecto está **totalmente operativo**.
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)

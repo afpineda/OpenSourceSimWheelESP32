@@ -135,7 +135,7 @@ Notes and build tips:
 At Arduino IDE, configure the board manager for "WEMOS LOLIN32 Lite".
 
 1. Detach the DevKit board from the circuit before continuing.
-2. Plug the USB cable to the Devkit board and upload the [sketch](../../../../src/Firmware/Setup1/Setup6.ino) with Arduino IDE.
+2. Plug the USB cable to the Devkit board and upload the [sketch](../../../../src/Firmware/Setup6/Setup6.ino) with Arduino IDE.
 3. Attach the DevKit board to the circuit. Keep the USB cable plugged in.
 4. Open the serial monitor (Arduino IDE).
 5. Reset.
