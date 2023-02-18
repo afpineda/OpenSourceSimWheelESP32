@@ -40,3 +40,8 @@ First release.
 - New "ready to deploy" designs.
 - Despite several ESP32 DevKit boards were always supported, now explicit advise is given on the matter.
 - Improved documentation and minor errata fixes.
+
+## 2.2.0
+
+- Added "the teabox" design.
+- Minor errata fixes.
