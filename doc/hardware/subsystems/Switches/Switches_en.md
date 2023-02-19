@@ -13,8 +13,9 @@ And also **potentiometers** as digital clutch paddles, in case you are short of 
 
 There are several, non-exclusive, **implementation** choices:
 
-- Button matrix
+- Button matrix.
 - Analog Multiplexers. This is the recommended way to go, since it requires less wiring, less free space, less available pins and less effort.
+- PISO shift registers. Not recommended since it takes too much space, unless you are really short of available GPIO pins.
 - Single switch (or button) attached to a single pin.
 
 Take a look at the article on [input hardware](../../InputHW_en.md) for an introduction.
@@ -125,7 +126,7 @@ Please, note that a bare bone rotary encoder is a better option since no satelli
 
 ## Analog multiplexer implementation
 
-This implementation is based on the widely available [74HC4051N](https://pdf1.alldatasheet.com/datasheet-pdf/view/15612/PHILIPS/74HC4051N.html) analog multiplexer: an *8 to 1* multiplexer. If you want another kind of analog multiplexer (for example, a *16 to 1*), the firmware will work "as-is", but some changes may be needed in the circuit design. In any case, all switches must work in *negative logic*, so their common pole must be attached to `GND`. See below.
+This implementation is based on the widely available [74HC4051N](../../esp32reference/75HC4051_datasheet.pdf) analog multiplexer: an *8 to 1* multiplexer. If you want another kind of analog multiplexer (for example, a *16 to 1*), the firmware will work "as-is", but some changes may be needed in the circuit design. In any case, all switches must work in *negative logic*, so their common pole must be attached to `GND`. See below.
 
 The following circuit design provides 24 inputs using 6 pins, which should be enough for most steering wheels. However, this design can be extended easily:
 
@@ -155,7 +156,22 @@ Needed parts (not counting input hardware like push buttons):
 
   ![Satellite circuit for clutch paddles](./Multiplexer2ClutchPaddles.png)
 
-## Single switch attached to a single pin
+## Shift registers implementation
+
+This implementation is based on the widely available [74HC165N](../../esp32reference/SN74HC165_datasheet.pdf) *parallel-in-serial-out* shift register of 8 bits.
+The following circuit design provides **25 inputs using just 3 pins**, which should be enough for most steering wheels.
+
+![Shift register based design](./ShiftRegister.png)
+
+Open this [circuit layout](./ShiftRegister.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator). Hit `CTRL+5` to obtain a clear view of the back traces.
+
+This is a "recursive" design. Use it as a template to add more shift registers and more switches if you want.
+
+### External wiring for the shift registers
+
+Just the same as for analog multiplexers. See above.
+
+## Implementation of a single switch attached to a single pin
 
 There is no circuit involved here, just wiring. Attach one terminal to an input-capable GPIO pin. Attach the other terminal to `GND`. An internal pull-up resistor is required since we are using negative logic. If not available, add an external pull-up resistor.
 
@@ -220,6 +236,36 @@ void simWheelSetup()
       mtxInputs,
       sizeof(mtxInputs)/sizeof(mtxInputs[0]),
       mtxNumbers
+      );
+    ...
+}
+```
+
+### Shift registers
+
+`SERIAL` must be wired to a valid input-capable GPIO, but it does not require any pull resistor. `LOAD` and `NEXT` must be wired to valid output-capable GPIOs.
+
+Place a call to `inputs::addShiftRegisters()`. Parameters are as follows:
+
+- First parameter is the `SERIAL` GPIO pin number.
+- Second parameter is the `LOAD` GPIO pin number.
+- Third parameter is the `NEXT` GPIO pin number.
+- Fourth parameter is a constant static array of input numbers for each switch (in the range from 0 to 63). The size of this array must match the fifth parameter.
+- Fifth parameter is the count of switches attached to the circuit, in the range from 1 to 64.
+
+There are further optional parameters which defaults to the 74HC165N requirements. An example:
+
+```c
+void simWheelSetup()
+{
+    static const inputNumber_t srNumbers[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14};
+    ...
+    inputs::addShiftRegisters(
+      GPIO_NUM_36,
+      GPIO_NUM_32,
+      GPIO_NUM_33,
+      srNumbers,
+      sizeof(srNumbers)/sizeof(srNumbers[0])
       );
     ...
 }
