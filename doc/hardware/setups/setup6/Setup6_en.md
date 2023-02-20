@@ -52,7 +52,7 @@ Additional notes:
 - For the male micro-USB plug you may reuse an spare USB cable. Cut one end.
 - Make sure you have enough Dupond wires in your kit. You may use them both for internal and external wiring. Check they have the proper length for your needs.
 
-## Pin-out plan for the ESP32-DevKit-C board
+## Pin-out plan for the Lolin32 Lite board
 
 | **GPIO** | **Input**  | **Output** |       **Usage**        | **Notes**                              |
 | -------- | ---------- | ---------- | :--------------------: | -------------------------------------- |
