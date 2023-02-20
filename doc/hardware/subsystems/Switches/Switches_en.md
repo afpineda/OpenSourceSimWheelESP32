@@ -14,7 +14,7 @@ And also **potentiometers** as digital clutch paddles, in case you are short of 
 There are several, non-exclusive, **implementation** choices:
 
 - Button matrix.
-- Analog Multiplexers. This is the recommended way to go, since it requires less wiring, less free space, less available pins and less effort.
+- Analog Multiplexers. This is the recommended way to go, since it requires less wiring, less space, less available pins and less effort.
 - PISO shift registers. Not recommended since it takes too much space, unless you are really short of available GPIO pins.
 - Single switch (or button) attached to a single pin.
 
@@ -51,7 +51,7 @@ You should be able to extrapolate those designs to your needs.
 
 #### Button Matrix (25 inputs)
 
-Needed parts (not counting input hardware like push buttons):
+Needed parts (not counting input hardware like push buttons nor a perfboard):
 
 - *Schottky diodes*: x25. Any kind should work but choose low forward voltage ( $V_F$ ). Suggested: [1N4148](https://www.alldatasheet.com/datasheet-pdf/pdf/15021/PHILIPS/1N4148.html) ( $V_F=0.6V$ ).
 - *Dupond pin headers* (male or female):
@@ -66,7 +66,7 @@ Open the [circuit design](./BtnMatrix25Inputs.diy) using [DIY Layout Creator](ht
 
 #### Button Matrix (16 inputs)
 
-Needed parts (not counting input hardware like push buttons):
+Needed parts (not counting input hardware like push buttons nor a perfboard):
 
 - *Schottky diodes*: x16. Same as above.
 - *Dupond pin headers* (male or female): x40.
@@ -167,6 +167,13 @@ Open this [circuit layout](./ShiftRegister.diy) using [DIY Layout Creator](https
 
 This is a "recursive" design. Use it as a template to add more shift registers and more switches if you want.
 
+Needed parts (not counting input hardware like push buttons):
+
+- Standard-sized perfboard 24x10 holes.
+- 74HC165N shift registers: x3.
+- Dupond pin headers (male or female): x36.
+- Thin wire.
+
 ### External wiring for the shift registers
 
 Just the same as for analog multiplexers. See above.
@@ -215,6 +222,8 @@ void simWheelSetup()
 }
 ```
 
+The index of a switch at `mtxNumbers` is as follows: $IndexAt(mtxNumbers) = IndexAt(mtxInputs) * SizeOf(mtxSelectors) + IndexAt(mtxSelectors)$. All indices are zero-based.
+
 ### Analog multiplexers
 
 Input pins must be wired to valid input-capable GPIO pins with internal pull-up resistors.  Otherwise, external pull-up resistors must be added to the circuit design. Selector pins must be wired to valid output-capable GPIO pins.
@@ -226,9 +235,9 @@ For example:
 ```c
 void simWheelSetup()
 {
-    static const gpio_num_t mtxSelectors[] = {GPIO_NUM_24,GPIO_NUM_33};
+    static const gpio_num_t mtxSelectors[] = {GPIO_NUM_24,GPIO_NUM_33,GPIO_NUM_32};
     static const gpio_num_t mtxInputs[] = {GPIO_NUM_15, GPIO_NUM_2 };
-    static const inputNumber_t mtxNumbers[] = {0,1,2,3,4,5,6,7};
+    static const inputNumber_t mtxNumbers[] = {8,9,10,11,12,13,14,15,0,1,2,3,4,5,6,7};
     ...
     inputs::addAnalogMultiplexer(
       mtxSelectors,
@@ -241,6 +250,8 @@ void simWheelSetup()
 }
 ```
 
+The index of a switch at `mtxNumbers` is as follows: $IndexAt(mtxNumbers) = 2^{BITMAP(mtxSelectors)} * IndexAt(mtxInputs)$. All indices are zero-based.
+
 ### Shift registers
 
 `SERIAL` must be wired to a valid input-capable GPIO, but it does not require any pull resistor. `LOAD` and `NEXT` must be wired to valid output-capable GPIOs.
@@ -251,7 +262,7 @@ Place a call to `inputs::addShiftRegisters()`. Parameters are as follows:
 - Second parameter is the `LOAD` GPIO pin number.
 - Third parameter is the `NEXT` GPIO pin number.
 - Fourth parameter is a constant static array of input numbers for each switch (in the range from 0 to 63). The size of this array must match the fifth parameter.
-- Fifth parameter is the count of switches attached to the circuit, in the range from 1 to 64.
+- Fifth parameter is the count of switches attached to the circuit, in the range from 1 to 64. Let's say `srNumbers`.
 
 There are further optional parameters which defaults to the 74HC165N requirements. An example:
 
@@ -270,6 +281,21 @@ void simWheelSetup()
     ...
 }
 ```
+
+The index of a switch at `srNumbers` is as follows: $IndexAt(srNumbers) = IndexAt(ShiftRegistersChain) * IndexAt(PinTable)$, where $PinTable$ is:
+
+| Index | Pin tag at 74HC165N |
+| :---: | :-----------------: |
+|   0   |          H          |
+|   1   |          G          |
+|   2   |          F          |
+|   3   |          E          |
+|   4   |          D          |
+|   5   |          C          |
+|   6   |          B          |
+|   7   |          A          |
+
+And $IndexAt(ShiftRegistersChain)$ is the (zero-based) position of the 74HC165N chip in the chain of `Qh` to `SER` joints, being the chip that exposes `SERIAL` the first one ($IndexAt(ShiftRegistersChain) = 0$).
 
 ### Single switch
 
