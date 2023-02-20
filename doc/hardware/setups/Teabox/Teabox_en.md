@@ -80,7 +80,7 @@ Use welding tin to build an electrical connection between all pins of the row, a
 
 There is no circuit, just wiring. Open the [layout](./teabox.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
 
-![Teabox layout](./teabox.png)
+![Teabox layout](./Teabox.png)
 
 Notes and build tips:
 
