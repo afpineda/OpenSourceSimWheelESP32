@@ -25,10 +25,10 @@ ShiftRegistersInput::ShiftRegistersInput(
     const gpio_num_t nextPin,
     inputNumber_t *buttonNumbersArray,
     const uint8_t switchCount,
-    const bool negativeLogic = true,
-    const bool loadHighOrLow = false,
-    const bool nextHighToLowOrLowToHigh = false,
-    DigitalPolledInput *nextInChain = nullptr) : DigitalPolledInput(nextInChain)
+    const bool negativeLogic,
+    const bool loadHighOrLow,
+    const bool nextHighToLowOrLowToHigh,
+    DigitalPolledInput *nextInChain) : DigitalPolledInput(nextInChain)
 {
     this->serialPin = serialPin;
     this->loadPin = loadPin;
@@ -41,7 +41,7 @@ ShiftRegistersInput::ShiftRegistersInput(
 
     if ((switchCount > 64) || (switchCount == 0))
     {
-        log_e("Too few/many input or selector pins at ShiftRegistersInput::ShiftRegistersInput()");
+        log_e("Too few/many switches at ShiftRegistersInput::ShiftRegistersInput()");
         abort();
     }
 
@@ -65,7 +65,7 @@ ShiftRegistersInput::ShiftRegistersInput(
     gpio_set_level(nextPin, nextHighToLowOrLowToHigh);
 }
 
-ShiftRegistersInput::~AnalogMultiplexerInput()
+ShiftRegistersInput::~ShiftRegistersInput()
 {
     if (debounce)
         free(debounce);

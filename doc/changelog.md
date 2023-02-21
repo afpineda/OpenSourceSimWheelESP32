@@ -45,3 +45,13 @@ First release.
 
 - Added "the teabox" design.
 - Minor errata fixes.
+
+## 2.2.1
+
+- Minor errata fixes.
+
+## 2.3.0
+
+- PISO shift registers are now supported as input circuitry.
+- Fixed wrong "includes.txt" files in some setups.
+- Minor errata fixes.

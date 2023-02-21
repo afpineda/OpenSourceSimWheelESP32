@@ -201,7 +201,7 @@ namespace batteryCalibration
      *
      */
     extern volatile int maxBatteryReadingEver;
-    
+
     /**
      * @brief Restart autocalibration algorithm.
      *
@@ -210,15 +210,15 @@ namespace batteryCalibration
 
     /**
      * @brief Get a percentage of battery charge using auto-calibration.
-     *        Will provide incorrect battery levels (higher) until 
-     *        the battery is fully charged. 
+     *        Will provide incorrect battery levels (higher) until
+     *        the battery is fully charged.
      *        Anyway, this algorithm is not accurate.
      *
      * @param reading An ADC reading of current battery(+) voltage
      *
      * @return If auto-calibration is available, a percentage in the range 0%-100%.
      *         Otherwise, the constant `UNKNOWN_BATTERY_LEVEL`.
-     * 
+     *
      * @note Based on https://blog.ampow.com/lipo-voltage-chart/
      */
     int getBatteryLevelAutoCalibrated(int reading);
@@ -319,9 +319,9 @@ namespace inputs
     void start();
 
     /**
-     * @brief Force an update in inputs' current state. Called from other namespaces after a 
+     * @brief Force an update in inputs' current state. Called from other namespaces after a
      *        change in configuration.
-     * 
+     *
      */
     void update();
 
@@ -408,6 +408,23 @@ namespace inputs
         const gpio_num_t inputPins[],
         const uint8_t inputPinCount,
         inputNumber_t *buttonNumbersArray);
+
+    /**
+     * @brief Add PISO shift registers bound to specific button numbers.
+     *        Must be called before `start()`. You can have more than one.
+     *
+     * @param serialPin GPIO number of the serial output pin
+     * @param loadPin GPIO number of the load pin
+     * @param nextPin GPIO number of the next/clock pin
+     * @param buttonNumbersArray Array of switch numbers in the range 0-63
+     * @param switchCount Count of switches or size of the previous array
+     */
+    void addShiftRegisters(
+        const gpio_num_t serialPin,
+        const gpio_num_t loadPin,
+        const gpio_num_t nextPin,
+        inputNumber_t *buttonNumbersArray,
+        const uint8_t switchCount);
 
     /**
      * @brief Set two potentiometers attached to clutch paddles. Each one
@@ -575,10 +592,10 @@ namespace inputHub
     /**
      * @brief Set up a bitmap of buttons for two recalibration commands.
      *        All buttons in the bitmap must be pressed at the same time and none of the others.
-     * 
+     *
      * @param recalibrateAxisBitmap A bitmap of button numbers to ask for autocalibration of analog axes.
      * @param recalibrateBatteryBitmap A bitmap of button numbers to ask for recalibration of battery levels.
-     * 
+     *
      * @note Set to zero if a command is not required (e.g. there is no battery)
      */
     void setCalibrationCommandBitmaps(
@@ -619,7 +636,7 @@ namespace notify
 
     /**
      * @brief Notify bluetooth radio is in discovery mode
-     * 
+     *
      */
     void BLEdiscovering();
 

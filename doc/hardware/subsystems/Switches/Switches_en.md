@@ -264,7 +264,7 @@ Place a call to `inputs::addShiftRegisters()`. Parameters are as follows:
 - Fourth parameter is a constant static array of input numbers for each switch (in the range from 0 to 63). The size of this array must match the fifth parameter.
 - Fifth parameter is the count of switches attached to the circuit, in the range from 1 to 64. Let's say `srNumbers`.
 
-There are further optional parameters which defaults to the 74HC165N requirements. An example:
+For example:
 
 ```c
 void simWheelSetup()

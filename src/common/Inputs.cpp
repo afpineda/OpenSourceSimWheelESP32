@@ -11,6 +11,7 @@
 #include "PolledInput.h"
 #include "ButtonMatrixInput.h"
 #include "AnalogMultiplexerInput.h"
+#include "ShiftRegistersInput.h"
 #include <Preferences.h>
 
 // #include "debugUtils.h"
@@ -295,7 +296,31 @@ void inputs::addAnalogMultiplexer(
         digitalInputChain);
   }
   else
-    abortDueToCallBeforeBegin();  
+    abortDueToCallBeforeBegin();
+}
+
+void inputs::addShiftRegisters(
+    const gpio_num_t serialPin,
+    const gpio_num_t loadPin,
+    const gpio_num_t nextPin,
+    inputNumber_t *buttonNumbersArray,
+    const uint8_t switchCount)
+{
+  if ((!pollingTask) && (hubTask))
+  {
+    digitalInputChain = new ShiftRegistersInput(
+        serialPin,
+        loadPin,
+        nextPin,
+        buttonNumbersArray,
+        switchCount,
+        true,
+        false,
+        false,
+        digitalInputChain);
+  }
+  else
+    abortDueToCallBeforeBegin();
 }
 
 void inputs::setAnalogClutchPaddles(

@@ -21,7 +21,7 @@ class ShiftRegistersInput : public DigitalPolledInput
 {
 private:
     uint8_t switchCount;
-    const gpio_num_t loadPin, nextPin, serialPin;
+    gpio_num_t loadPin, nextPin, serialPin;
     BaseType_t *debounce = nullptr;
     inputNumber_t *buttonNumbersArray;
     bool negativeLogic;
@@ -65,7 +65,7 @@ public:
     ~ShiftRegistersInput();
 
     /**
-     * @brief Read the current state of parallel switches
+     * @brief Read the current state of all switches
      *
      * @param lastState Returned state of the previous call. This is required for debouncing.
      *        Set to zero at first call.

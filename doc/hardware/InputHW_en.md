@@ -169,13 +169,15 @@ The idea behind shift registers is to capture the state of every button in paral
 - Input: read the value of a single bit (this is, the state of a single button)
 - Clock (CLK): a pulse at this pin will move to the next bit, this is, the state of the next button.
 
-Typical shift registers stores 8 bits, but they may be chained together to achieve any number of bits. This is an electrical circuit for two shift registers, 4 bits each one:
+Typical shift registers stores 8 bits, but they may be chained together to achieve almost any number of bits. This is an electrical circuit for two shift registers, 4 bits each one:
 
 ![PISO shift registers](./pictures/PISO.png)
 
 Note that pull resistors are needed for each button, which is unpractical. It will require extra space at the PCB, too. In this sense, shift registers offer no advantage over analog multiplexers. However, this is the best choice when you are very very short of GPIO pins.
 
 [Test this circuit at Falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKDD0JG207Ty8L8+IPGGIAWEJOzRsUNhxFVhzFCGGiJUrrPkB3LpEkpxVbr3zyATuHGTx-QpLAp+VMPBYBnW-f5i1Bmw1dxAAMwBDABsvOhYDMDspfySwDE5IePB07M40zgdrXOSQYjzXKGQ4b2LClBMQIJDKyJi4m2E6vH8K908DTqFLfKKTKkLg916qzJ9B9QROJsqqVtiasZLXfmXQtbiE4kDg9QbdrPrJZZRFxpPMgdvr7ruQrIDX0qX7lgBzECc4AqgLAhCo4JYACUvp9CrtKqYdHJwVBoAgWABZChg9SIsFCRHKNHvCz8PDKSwPJS49ycSb6Lg8GnqDBqelU0FcNAstnczIAGR5XLMTPZLWisSRDPJQs52AQbwM5iFmDZCoZcvVqq46oFQvlbNFuvA4QldClmQAHgD2CzHBgIK4IMZJABJAB2AAcAK4AFxY1rBdMg5BIZg82gaAFF3b6rBEACYRANcDBmBqUaSYSOSfkAe0TAB0vAxiwBjCJWX7J608fjy-gIbD1wjO3EgABydEtvuLpa8AGUAJa-b1DuixuL-TkqXiE+T-MpA-hL0EozL-bbL9QvNcrP7C7f0vcQgaIuqIkZU8RLwo3vI5DcUHIuRsvnEQ-4IVIVb-OD8LjqaivkB4AAdecInFu5wGAgLifH+nzXjKyxwccipSJBagOFQ5w+PeJSIfCED7DU4iAoUaFIeKbQsDYBGUS+0weNUBjkX4Uggo+dGcRxiEgX01T4Scd4ofcNHrPRIn1uqAkzFk4gnCMinYW4ClwCUpjuNx+EaXeWGVCRZo8VpJTHsxnhAA)
+
+Actual implementation in this project uses negative logic and pull-up resistors.
 
 ## Summary of input hardware
 
@@ -186,6 +188,6 @@ Note that pull resistors are needed for each button, which is unpractical. It wi
 |     Multiplexers     | $S$ selectors and $I$ inputs |     $2^{S}*I$      |          Push buttons and DPADS           | Many buttons and error-free. Less wiring. | Extra cost                       |        analog only        |
 |    Voltage ladder    |              1               |       enough       | DPADS, rotary switches and funky switches |        Single pin for many inputs         | Prone to error                   |            no             |
 |   Voltage divider    |              1               |         2          |               Push buttons                |                   None                    | Prone to error                   |            no             |
-| PISO shift registers |              3               |  almost unlimited  |          Push buttons and DPADS           |        Many buttons and error-free        | Extra cost and space at the PCB  |            no             |
+| PISO shift registers |              3               |  almost unlimited  |          Push buttons and DPADS           |        Many buttons and error-free        | Extra cost and space at the PCB  |            yes             |
 
 Input circuitry takes some space inside the housing. Their physical layout must be carefully designed to fit into the steering wheel (or button box).
