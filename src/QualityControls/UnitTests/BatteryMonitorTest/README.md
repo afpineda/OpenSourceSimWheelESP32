@@ -7,7 +7,7 @@ To test that the battery monitor runs in the background taking ADC readings of b
 ## Hardware setup
 
 Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
-Use this [test circuit](../../Protoboards/ESP32-WROOM-DevKitC-1.diy):
+Use this [test circuit](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.diy):
 
 ![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.png)
 

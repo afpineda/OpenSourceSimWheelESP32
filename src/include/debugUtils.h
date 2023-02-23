@@ -63,4 +63,14 @@ static inputNumber_t amtxerNumbers[] = {
 #define TEST_LATCH_MODE POWER_OPEN_DRAIN
 #define TEST_LATCH_DELAY pdMS_TO_TICKS(5000)
 
+// PISO shift registers testing
+#define TEST_SR_SERIAL GPIO_NUM_36
+#define TEST_SR_LOAD GPIO_NUM_32
+#define TEST_SR_NEXT GPIO_NUM_33
+
+static inputNumber_t srNumbers[] = {
+    63, 63, 63, 2, 63, 63, 4, 63,
+    3, 63, 63, 63, 63, 5, 63, 63,
+    6};
+
 #endif

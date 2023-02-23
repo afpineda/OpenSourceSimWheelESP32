@@ -2204,7 +2204,7 @@
     <diylc.misc.Label>
       <name>LAB1</name>
       <point x="2.0" y="1.2"/>
-      <text>S4</text>
+      <text>S3</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="000000"/>
       <horizontalAlignment>LEFT</horizontalAlignment>
@@ -2214,7 +2214,7 @@
     <diylc.misc.Label>
       <name>LAB2</name>
       <point x="2.0" y="0.3"/>
-      <text>S3</text>
+      <text>S2</text>
       <font name="Dialog.plain" size="14" style="0"/>
       <color hex="000000"/>
       <horizontalAlignment>LEFT</horizontalAlignment>
@@ -2487,15 +2487,15 @@
       <null/>
     </set>
     <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[14]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[13]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[11]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[12]"/>
+      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[7]"/>
+      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[8]"/>
+      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[6]"/>
+      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass"/>
     </set>
     <set>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[8]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[9]"/>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[6]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[9]"/>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[7]"/>
     </set>
     <set>
@@ -2505,34 +2505,34 @@
       <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[14]"/>
     </set>
     <set>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[5]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[2]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[4]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[3]"/>
+      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[3]"/>
+      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[5]"/>
+      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[4]"/>
+      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[2]"/>
     </set>
     <set>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[16]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[15]"/>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[18]"/>
       <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[17]"/>
-      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[15]"/>
     </set>
     <set>
-      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[11]"/>
-      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[9]"/>
-      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[10]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[11]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[12]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[13]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[14]"/>
+    </set>
+    <set>
       <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[12]"/>
+      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[10]"/>
+      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[9]"/>
+      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[11]"/>
     </set>
     <set>
-      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass"/>
-      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[7]"/>
-      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[8]"/>
-      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[6]"/>
-    </set>
-    <set>
-      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[2]"/>
-      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[4]"/>
-      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[3]"/>
-      <diylc.semiconductors.DiodeGlass reference="../../../components/diylc.semiconductors.DiodeGlass[5]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[2]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[5]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[3]"/>
+      <diylc.connectivity.CopperTrace reference="../../../components/diylc.connectivity.CopperTrace[4]"/>
     </set>
   </groups>
   <lockedLayers/>

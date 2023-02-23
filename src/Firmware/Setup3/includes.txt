@@ -2,6 +2,8 @@ SimWheelTypes.h
 SimWheel.h
 ButtonMatrixInput.h
 RotaryEncoderInput.h
+AnalogMultiplexerInput.h
+ShiftRegistersInput.h
 PolledInput.h
 HID_definitions.h
 adcTools.h
@@ -9,6 +11,8 @@ adcTools.cpp
 capabilities.cpp
 ButtonMatrixInput.cpp
 RotaryEncoderInput.cpp
+AnalogMultiplexerInput.cpp
+ShiftRegistersInput.cpp
 PolledInput.cpp
 Inputs.cpp
 InputHub.cpp
