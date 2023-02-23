@@ -38,7 +38,7 @@ Rotary encoders can be very noisy, despite of debouncing techniques, some rotati
 
 ## Absolute rotary switches
 
-They are similar in shape to rotary encoders, but they work in a complete different way. A N-position rotary switch is just the same as N **non-momentary** switches where one and only one of them is closed at all times. **This makes them unpractical**, since the PC side will detect a button as "always on". When trying to configure another button in the simulator, that one will get in the way. 
+They are similar in shape to rotary encoders, but they work in a complete different way. A N-position rotary switch is just the same as N **non-momentary** switches where one and only one of them is closed at all times. **This makes them unpractical**, since the PC side will detect a button as "always on". When trying to configure another button in the simulator, that one will get in the way.
 
 We could alleviate the situation by instructing the firmware to report a button press only if there is a change in the position of the rotary switch. However, the simulator will never known what such position is at first.
 
@@ -179,15 +179,17 @@ Note that pull resistors are needed for each button, which is unpractical. It wi
 
 Actual implementation in this project uses negative logic and pull-up resistors.
 
+Note that the `SER` (serial input) pin of the last shit register in the chain may hold another switch. If you have $S$ shift registers, $N$ bits each, you can have up to $(2^{N}*S)+1$ switches.
+
 ## Summary of input hardware
 
-|      Circuitry       |        Required pins         | Number of switches |              Best suited for              |                Advantages                 | Disadvantages                    | Supported by this project |
-| :------------------: | :--------------------------: | :----------------: | :---------------------------------------: | :---------------------------------------: | :------------------------------- | :-----------------------: |
-|         None         |              1               |         1          |              Rotary encoders              |            Easy and error-free            | Not enough pins for many buttons |            yes            |
-|    Button Matrix     |             $N$              |    $(N/2)^{2}$     |          Push buttons and DPADS           |        Many buttons and error-free        | Complex wiring                   |            yes            |
-|     Multiplexers     | $S$ selectors and $I$ inputs |     $2^{S}*I$      |          Push buttons and DPADS           | Many buttons and error-free. Less wiring. | Extra cost                       |        analog only        |
-|    Voltage ladder    |              1               |       enough       | DPADS, rotary switches and funky switches |        Single pin for many inputs         | Prone to error                   |            no             |
-|   Voltage divider    |              1               |         2          |               Push buttons                |                   None                    | Prone to error                   |            no             |
-| PISO shift registers |              3               |  almost unlimited  |          Push buttons and DPADS           |        Many buttons and error-free        | Extra cost and space at the PCB  |            yes             |
+|      Circuitry       |        Required pins         | Number of switches |              Best suited for              |                     Advantages                     | Disadvantages                    | Supported by this project |
+| :------------------: | :--------------------------: | :----------------: | :---------------------------------------: | :------------------------------------------------: | :------------------------------- | :-----------------------: |
+|         None         |              1               |         1          |              Rotary encoders              |                Easy and error-free                 | Not enough pins for many buttons |            yes            |
+|    Button Matrix     |             $N$              |    $(N/2)^{2}$     |          Push buttons and DPADS           |            Many buttons and error-free             | Complex wiring                   |            yes            |
+|     Multiplexers     | $S$ selectors and $I$ inputs |     $2^{S}*I$      |          Push buttons and DPADS           |     Many buttons and error-free. Less wiring.      | Extra cost                       |        analog only        |
+|    Voltage ladder    |              1               |       enough       | DPADS, rotary switches and funky switches |             Single pin for many inputs             | Prone to error                   |            no             |
+|   Voltage divider    |              1               |         2          |               Push buttons                |                        None                        | Prone to error                   |            no             |
+| PISO shift registers |              3               |  almost unlimited  |          Push buttons and DPADS           | Many buttons and error-free. Less pin expenditure. | Extra cost and space at the PCB  |            yes            |
 
 Input circuitry takes some space inside the housing. Their physical layout must be carefully designed to fit into the steering wheel (or button box).

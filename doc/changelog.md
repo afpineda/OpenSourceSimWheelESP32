@@ -54,4 +54,5 @@ First release.
 
 - PISO shift registers are now supported as input circuitry.
 - Fixed wrong "includes.txt" files in some setups.
-- Minor errata fixes.
+- Minor errata fixes and documentation updates.
+- Added another "ready to deploy" design based on shift registers.

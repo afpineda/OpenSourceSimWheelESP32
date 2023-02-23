@@ -171,7 +171,8 @@ Needed parts (not counting input hardware like push buttons):
 
 - Standard-sized perfboard 24x10 holes.
 - 74HC165N shift registers: x3.
-- Dupond pin headers (male or female): x36.
+- Dupond pin headers (male or female): x37.
+- Resistors (any impedance from 1K-ohms to 10K-ohms): x25.
 - Thin wire.
 
 ### External wiring for the shift registers

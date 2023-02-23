@@ -2,7 +2,7 @@
 
 ## Modules
 
-The _system_ have been broken into several _modules_ that have been implemented as C++ namespaces. All of them are defined at _SimWheel.h_:
+The *system* have been broken into several *modules* that have been implemented as C++ namespaces. All of them are defined at *SimWheel.h*:
 
 - **batteryCalibration**: Everything related to the estimation of battery charge.
 - **capabilities**: Everything related to the capabilities of the hardware and firmware.
@@ -13,20 +13,21 @@ The _system_ have been broken into several _modules_ that have been implemented 
 - **notify**: Everything related to the notification of some events to the user if an user interface is available.
 - **power**: Everything related to power management.
 
-Each namespace is implemented in a single _cpp_ file with its name, however, some of them have alternate implementations in order to enable unit and integration testing. Those files are named following this pattern: `<namespace><underscore><implementation>.cpp`. Some implementations are:
+Each namespace is implemented in a single *cpp* file with its name, however, some of them have alternate implementations in order to enable unit and integration testing. Those files are named following this pattern: `<namespace><underscore><implementation>.cpp`. Some implementations are:
 
-- _mock_: dummy implementation with no actual behavior.
-- _serial_: implementation providing output to the serial port.
+- *mock*: dummy implementation with no actual behavior.
+- *serial*: implementation providing output to the serial port.
 
 All modules can be found at the `/common` folder.
 
 ### Auxiliary modules
 
-Some namespaces are implemented with the help of auxiliary modules which are not exposed at _SimWheel.h_, one _cpp_ file for each:
+Some namespaces are implemented with the help of auxiliary modules which are not exposed at *SimWheel.h*, one *cpp* file for each:
 
 - *adcTools*: Reading of ADC pins.
 - *AnalogMultiplexerInput.cpp*: Everything related to multiplexed buttons/switches.
 - *ButtonMatrixInput.cpp*: Everything related to button/switch matrices.
+- *ShiftRegistersInput.cpp*: Everything related to serialized buttons/switches.
 - *debugUtils.cpp*: Minor utilities for debugging and testing.
 - *PolledInput*: Related to inputs that must be read in a polling (or sampling) loop. Defines two main c++ classes: `AnalogPolledInput` and `DigitalPolledInput`
 - *RotaryEncoderInput.cpp*: Everything related to rotary encoders.
@@ -71,6 +72,7 @@ classDiagram
     inputs <-- clutchState: configuration
     DigitalPolledInput <|-- ButtonMatrixInput
     DigitalPolledInput <|-- AnalogMultiplexerInput
+    DigitalPolledInput <|-- ShiftRegistersInput
     inputHub <-- clutchState: state
     inputHub <--> clutchState: configuration
     inputHub --> hidImplementation: processed events
@@ -81,7 +83,7 @@ classDiagram
     power <-- batteryCalibration: computed battery level
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNVMFu2zAM_RVBpw2rf8AoCqRtigVosKDd0RdFph0BsuRJVNYgy79Pkh1PqYxkPtnke-Ij-eQj5boGWlIumbXPgrWGdZUi_okR8qaRmcNSBZhZqd4hSdMiRCw5jkFCvimNojlE5HIPCr98nVLWHzV9n7JjvrstOU5grd6RITztmGqhnmVx6ZDvIiwhCvvEpNgahkKrldoY3RqwNtUB-CgQNlpcyBN28frzDX45sPivok8wiWvf_os2C4mPDlErOyW5M8a3-eIUDwVnZO5Evep6CZ2HRVGJWAO9NhinNdtir3-DSfDx-0fTzIK3DBHMIWk_Yba-6SH_CnuQSXufMguH-nxENvhpUfdFMS6_JDZugMdN2QRnIyp3UEkgOCOHPotWIJMbLSXU16ELxaRubyGL4iF1yS2pF1CuVSNaNwxygOb6yP0fzxs8sWZoxEcMX4cP2tdOovC2-BinMjPgXHoOeripekIHcGbGkvRGc39BoL6YYO7a_yqW0wIr2rYkzFtreC9005Arhc6M8XadrU1kcOjAG65GOD33fTkR9loiayGlhOPnKFx3flB-DBfF6B3twHRM1P4vGa9TRXHn1Va09K81NMwvsqKVOnlo6PD9oDgtGyYt3FHX135U44_1U3RZC9SGlmgcnP4CfKXg6g)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNVNuOmzAQ_RXLT626_ABarZTdzaqRNmqU9JEXxwxgydjUHqcbpfn3GkOos0ZJeYKZc-Z6hhPlugSaUy6Zta-C1Ya1hSL-CRay1cjMcal6mFmpziGJ3aK3WHIajYR8UxpFdQzI5QEUfvk6uawPNX2fkzDf3Z6cJrBWO2QILw1TNZSzLC4d8ibAIqKwL0yKvWEotFqpjdG1AWvjOgCfBcJGi6vyhF28_9zCLwcW_2X0DiZx7dt_02Yh8dkhamUnJ3fG-DbfnOJ9wpkyG1Gu2k5C62GhqKhYA502GKY122Knf4OJ8OH7R1XNgvcMEcwxaj9i1r7pwf8OB5BRe588C4f6EiIZ_LSoxywbl58TGzbAw6ZshLMBlSooJ9ArI4W-ilogkxstJZS3oQvFpK7vIbPsKVbJvVKvoFyrStRuGOQATesjj388b9DEmqERH8F8Gz7UvnYShZfFxziV25xdIyrcQi28No2NCFcbSXtNQU9325zQPThRb046o7m_KCivRp7K_L-SpbSeFXSeE-a1OLxnuqrIjUQXxniOl1sgspf0wBtuqY-eHko-EQ5aIqshpvTh5yhct35QfgxXyegDbcG0TJT-txrur6DY-GoLmvvXEirmN1_QQp09tO9wd1Sc5hWTFh6o60o_qvFP_Mm6LAVqQ3M0Ds5_AerZ8no)
 
 ```mermaid
 classDiagram
@@ -108,7 +110,7 @@ Most relevant are:
 
 ## Brief description of most relevant modules
 
-For detailed description, see the doxigen's documentation at _SimWheel.h_.
+For detailed description, see the doxigen's documentation at *SimWheel.h*.
 
 ### RotaryEncoderInput
 
@@ -202,7 +204,7 @@ Provides an estimation of the "State of Charge" (SOC).
 
 #### Most accurate algorithm
 
-Battery calibration is required for accurate battery levels. Calibration goes from full charge to battery depletion, taking a sample of battery voltage every minute. All possible voltages are divided into 32 evenly distributed ranges, called _quantum_. Calibration data is just a set of counters of voltage samples for each quantum. The sum of all counters is equivalent to 100% battery charge. Calibration data is stored in flash memory.
+Battery calibration is required for accurate battery levels. Calibration goes from full charge to battery depletion, taking a sample of battery voltage every minute. All possible voltages are divided into 32 evenly distributed ranges, called *quantum*. Calibration data is just a set of counters of voltage samples for each quantum. The sum of all counters is equivalent to 100% battery charge. Calibration data is stored in flash memory.
 
 Let's be $V_{min}(i)$ the minimum voltage that falls into quantum $i$ (a natural number), $a < b \iff V_{min}(a)<V_{min}(b)$. Let's be $QSIZE = V_{min}(i+1)-V_{min}(i)+1$ (the same for every quantum). Let's be $S(i)$ the count of samples for quantum number $i$. Let's say we have a battery voltage $V_n$ that falls into the quantum number $n$ (0-index).
 
@@ -230,14 +232,14 @@ See [HID notes](./HID_notes.md) for more details.
 
 Every input is assigned a single number starting from 0 and up to 63.
 
-The state of an input is represented by a single bit, 1 meaning a pressed button, 0 meaning a released button. So, the combined state of all inputs is represented as a 64-bits word, where the n-th bit represents the n-th input number. This is called an _input bitmap_. Least significant bit is numbered as zero.
+The state of an input is represented by a single bit, 1 meaning a pressed button, 0 meaning a released button. So, the combined state of all inputs is represented as a 64-bits word, where the n-th bit represents the n-th input number. This is called an *input bitmap*. Least significant bit is numbered as zero.
 For example, the word `00000000 ... 00000101` means that buttons 0 and 2 are pressed, and the others are released.
 
 An input can also be identified by a bitmap. For example, the button number 3 can be expressed as `...01000`.
 
 ### Input masks
 
-A mask is a 64-bits word where each bit represent a button number (the same as input bitmaps), but a bit set to 1 means that an input is not set and _must be ignored_ in the corresponding bitmap. Input masks are used in combination with bitmaps to build a combined state. For example:
+A mask is a 64-bits word where each bit represent a button number (the same as input bitmaps), but a bit set to 1 means that an input is not set and *must be ignored* in the corresponding bitmap. Input masks are used in combination with bitmaps to build a combined state. For example:
 
 | State              | Bitmap   | Bitmask  |
 | ------------------ | -------- | -------- |
