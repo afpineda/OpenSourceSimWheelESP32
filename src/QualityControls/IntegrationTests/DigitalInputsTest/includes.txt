@@ -4,12 +4,16 @@ SimWheel.h
 Inputs.cpp
 ButtonMatrixInput.h
 RotaryEncoderInput.h
+AnalogMultiplexerInput.h
+ShiftRegistersInput.h
 PolledInput.h
 adcTools.h
 debugUtils.cpp
 PolledInput.cpp
 RotaryEncoderInput.cpp
 ButtonMatrixInput.cpp
+AnalogMultiplexerInput.cpp
+ShiftRegistersInput.cpp
 power_mock.cpp
 adcTools.cpp
 clutchState.cpp

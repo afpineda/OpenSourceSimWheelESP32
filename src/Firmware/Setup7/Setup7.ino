@@ -1,7 +1,7 @@
 /**
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2023-02-11
- * @brief Sim wheel setup #5
+ * @brief Sim wheel setup #7
  *
  * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
  *
@@ -31,7 +31,7 @@
 // [EN] Set a name for this device between double quotes
 // [ES] Indique un nombre para este dispositivo entre comillas
 
-std::string DEVICE_NAME = "Open steering wheel-5";
+std::string DEVICE_NAME = "Open steering wheel-7";
 
 // [EN] Set a manufacturer's name for this device between double quotes
 // [ES] Indique un nombre para el fabricante de este dispositivo entre comillas
@@ -67,7 +67,7 @@ const gpio_num_t WAKEUP_PINS[] = {GPIO_NUM_33};
 // [EN] Set an output-capable GPIO number for the "battEN" pin.
 // [ES] Indique el número de GPIO para el pin "battEN".
 
-//#define BATTERY_ENABLE_READ_GPIO GPIO_NUM_4
+// #define BATTERY_ENABLE_READ_GPIO GPIO_NUM_4
 
 // [EN] Set an ADC-capable GPIO number for the "battREAD" pin.
 // [ES] Indique el número de GPIO para el pin ADC de "battREAD".
@@ -75,25 +75,17 @@ const gpio_num_t WAKEUP_PINS[] = {GPIO_NUM_33};
 #define BATTERY_READ_GPIO -1
 
 /* -----------------------------------------------------------------
- >>>> [EN] MULTIPLEXED BUTTONS
- >>>> [ES] BOTONES MULTIPLEXADOS
+ >>>> [EN] SHIFT REGISTERS
+ >>>> [ES] REGISTROS DE DESPLAZAMIENTO
 ------------------------------------------------------------------ */
-
-// [EN] Set all GPIO numbers for selector pins between curly brackets
-// [ES] Indique los números de GPIO de todos los pines selectores entre las llaves
-static const gpio_num_t mpxSelectors[] = {GPIO_NUM_48, GPIO_NUM_18, GPIO_NUM_17};
-
-// [EN] Set all GPIO numbers for input pins between curly brackets
-// [ES] Indique los números de GPIO de todos los pines de entrada entre las llaves
-static const gpio_num_t mpxInputs[] = {GPIO_NUM_16, GPIO_NUM_34};
 
 // [EN] Set all input numbers. The order of those numbers depends on the wiring
 // [ES] Indique los números de entrada. Su orden depende del cableado.
-static inputNumber_t mpxNumbers[] = {
-    JOY_BACK, JOY_LB, LCLUTCH, JOY_A,
-    RCLUTCH, JOY_B, JOY_RB, JOY_START,
-    10, 8, JOY_X, 12,
-    JOY_Y, 13, 9, 11};
+static inputNumber_t srNumbers[] = {
+    JOY_LB, JOY_A, 8, JOY_RB, 16, 15, 10, 9,
+    JOY_B, JOY_X, JOY_Y, JOY_BACK, 14, 13, 12, 11,
+    19, 20, 21, 22, JOY_START, 24, 18, 17,
+    23 };
 
 //------------------------------------------------------------------
 // Setup
@@ -101,18 +93,21 @@ static inputNumber_t mpxNumbers[] = {
 
 void simWheelSetup()
 {
-    inputs::addAnalogMultiplexer(
-        mpxSelectors,
-        sizeof(mpxSelectors) / sizeof(mpxSelectors[0]),
-        mpxInputs,
-        sizeof(mpxInputs) / sizeof(mpxInputs[0]),
-        mpxNumbers);
+    inputs::addShiftRegisters(
+        GPIO_NUM_34,
+        GPIO_NUM_48,
+        GPIO_NUM_18,
+        srNumbers,
+        sizeof(srNumbers) / sizeof(srNumbers[0]));
     inputs::addRotaryEncoder(GPIO_NUM_33, GPIO_NUM_39, ROT1_CW, ROT1_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_38, GPIO_NUM_37, ROT2_CW, ROT2_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_35, ROT3_CW, ROT3_CCW);
-    inputs::setDigitalClutchPaddles(LCLUTCH, RCLUTCH);
+
+    inputs::setAnalogClutchPaddles(GPIO_NUM_16, GPIO_NUM_17, LCLUTCH, RCLUTCH);
     inputHub::setClutchCalibrationButtons(ROT1_CW, ROT1_CCW);
     inputHub::setCycleClutchFunctionBitmap(BITMAP(JOY_START) | BITMAP(JOY_LB));
+    inputHub::setCalibrationCommandBitmaps(
+        BITMAP(JOY_START) | BITMAP(JOY_LB) | BITMAP(JOY_RB));
 }
 
 //------------------------------------------------------------------
@@ -126,7 +121,6 @@ void setup()
         WAKEUP_PINS,
         sizeof(WAKEUP_PINS) / sizeof(gpio_num_t),
         WAKEUP_ANYorALL);
-
     clutchState::begin();
     inputs::begin();
     simWheelSetup();

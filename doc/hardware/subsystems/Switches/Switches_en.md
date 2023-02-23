@@ -13,8 +13,9 @@ And also **potentiometers** as digital clutch paddles, in case you are short of 
 
 There are several, non-exclusive, **implementation** choices:
 
-- Button matrix
-- Analog Multiplexers. This is the recommended way to go, since it requires less wiring, less free space, less available pins and less effort.
+- Button matrix.
+- Analog Multiplexers. This is the recommended way to go, since it requires less wiring, less space, less available pins and less effort.
+- PISO shift registers. Not recommended since it takes too much space, unless you are really short of available GPIO pins.
 - Single switch (or button) attached to a single pin.
 
 Take a look at the article on [input hardware](../../InputHW_en.md) for an introduction.
@@ -50,7 +51,7 @@ You should be able to extrapolate those designs to your needs.
 
 #### Button Matrix (25 inputs)
 
-Needed parts (not counting input hardware like push buttons):
+Needed parts (not counting input hardware like push buttons nor a perfboard):
 
 - *Schottky diodes*: x25. Any kind should work but choose low forward voltage ( $V_F$ ). Suggested: [1N4148](https://www.alldatasheet.com/datasheet-pdf/pdf/15021/PHILIPS/1N4148.html) ( $V_F=0.6V$ ).
 - *Dupond pin headers* (male or female):
@@ -65,7 +66,7 @@ Open the [circuit design](./BtnMatrix25Inputs.diy) using [DIY Layout Creator](ht
 
 #### Button Matrix (16 inputs)
 
-Needed parts (not counting input hardware like push buttons):
+Needed parts (not counting input hardware like push buttons nor a perfboard):
 
 - *Schottky diodes*: x16. Same as above.
 - *Dupond pin headers* (male or female): x40.
@@ -125,7 +126,7 @@ Please, note that a bare bone rotary encoder is a better option since no satelli
 
 ## Analog multiplexer implementation
 
-This implementation is based on the widely available [74HC4051N](https://pdf1.alldatasheet.com/datasheet-pdf/view/15612/PHILIPS/74HC4051N.html) analog multiplexer: an *8 to 1* multiplexer. If you want another kind of analog multiplexer (for example, a *16 to 1*), the firmware will work "as-is", but some changes may be needed in the circuit design. In any case, all switches must work in *negative logic*, so their common pole must be attached to `GND`. See below.
+This implementation is based on the widely available [74HC4051N](../../esp32reference/75HC4051_datasheet.pdf) analog multiplexer: an *8 to 1* multiplexer. If you want another kind of analog multiplexer (for example, a *16 to 1*), the firmware will work "as-is", but some changes may be needed in the circuit design. In any case, all switches must work in *negative logic*, so their common pole must be attached to `GND`. See below.
 
 The following circuit design provides 24 inputs using 6 pins, which should be enough for most steering wheels. However, this design can be extended easily:
 
@@ -155,7 +156,30 @@ Needed parts (not counting input hardware like push buttons):
 
   ![Satellite circuit for clutch paddles](./Multiplexer2ClutchPaddles.png)
 
-## Single switch attached to a single pin
+## Shift registers implementation
+
+This implementation is based on the widely available [74HC165N](../../esp32reference/SN74HC165_datasheet.pdf) *parallel-in-serial-out* shift register of 8 bits.
+The following circuit design provides **25 inputs using just 3 pins**, which should be enough for most steering wheels.
+
+![Shift register based design](./ShiftRegister.png)
+
+Open this [circuit layout](./ShiftRegister.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator). Hit `CTRL+5` to obtain a clear view of the back traces.
+
+This is a "recursive" design. Use it as a template to add more shift registers and more switches if you want.
+
+Needed parts (not counting input hardware like push buttons):
+
+- Standard-sized perfboard 24x10 holes.
+- 74HC165N shift registers: x3.
+- Dupond pin headers (male or female): x37.
+- Resistors (any impedance from 1K-ohms to 10K-ohms): x25.
+- Thin wire.
+
+### External wiring for the shift registers
+
+Just the same as for analog multiplexers. See above.
+
+## Implementation of a single switch attached to a single pin
 
 There is no circuit involved here, just wiring. Attach one terminal to an input-capable GPIO pin. Attach the other terminal to `GND`. An internal pull-up resistor is required since we are using negative logic. If not available, add an external pull-up resistor.
 
@@ -199,6 +223,8 @@ void simWheelSetup()
 }
 ```
 
+The index of a switch at `mtxNumbers` is as follows: $IndexAt(mtxNumbers) = IndexAt(mtxInputs) * SizeOf(mtxSelectors) + IndexAt(mtxSelectors)$. All indices are zero-based.
+
 ### Analog multiplexers
 
 Input pins must be wired to valid input-capable GPIO pins with internal pull-up resistors.  Otherwise, external pull-up resistors must be added to the circuit design. Selector pins must be wired to valid output-capable GPIO pins.
@@ -210,9 +236,9 @@ For example:
 ```c
 void simWheelSetup()
 {
-    static const gpio_num_t mtxSelectors[] = {GPIO_NUM_24,GPIO_NUM_33};
+    static const gpio_num_t mtxSelectors[] = {GPIO_NUM_24,GPIO_NUM_33,GPIO_NUM_32};
     static const gpio_num_t mtxInputs[] = {GPIO_NUM_15, GPIO_NUM_2 };
-    static const inputNumber_t mtxNumbers[] = {0,1,2,3,4,5,6,7};
+    static const inputNumber_t mtxNumbers[] = {8,9,10,11,12,13,14,15,0,1,2,3,4,5,6,7};
     ...
     inputs::addAnalogMultiplexer(
       mtxSelectors,
@@ -224,6 +250,53 @@ void simWheelSetup()
     ...
 }
 ```
+
+The index of a switch at `mtxNumbers` is as follows: $IndexAt(mtxNumbers) = 2^{BITMAP(mtxSelectors)} * IndexAt(mtxInputs)$. All indices are zero-based.
+
+### Shift registers
+
+`SERIAL` must be wired to a valid input-capable GPIO, but it does not require any pull resistor. `LOAD` and `NEXT` must be wired to valid output-capable GPIOs.
+
+Place a call to `inputs::addShiftRegisters()`. Parameters are as follows:
+
+- First parameter is the `SERIAL` GPIO pin number.
+- Second parameter is the `LOAD` GPIO pin number.
+- Third parameter is the `NEXT` GPIO pin number.
+- Fourth parameter is a constant static array of input numbers for each switch (in the range from 0 to 63). The size of this array must match the fifth parameter.
+- Fifth parameter is the count of switches attached to the circuit, in the range from 1 to 64. Let's say `srNumbers`.
+
+For example:
+
+```c
+void simWheelSetup()
+{
+    static const inputNumber_t srNumbers[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14};
+    ...
+    inputs::addShiftRegisters(
+      GPIO_NUM_36,
+      GPIO_NUM_32,
+      GPIO_NUM_33,
+      srNumbers,
+      sizeof(srNumbers)/sizeof(srNumbers[0])
+      );
+    ...
+}
+```
+
+The index of a switch at `srNumbers` is as follows: $IndexAt(srNumbers) = IndexAt(ShiftRegistersChain) * IndexAt(PinTable)$, where $PinTable$ is:
+
+| Index | Pin tag at 74HC165N |
+| :---: | :-----------------: |
+|   0   |          H          |
+|   1   |          G          |
+|   2   |          F          |
+|   3   |          E          |
+|   4   |          D          |
+|   5   |          C          |
+|   6   |          B          |
+|   7   |          A          |
+
+And $IndexAt(ShiftRegistersChain)$ is the (zero-based) position of the 74HC165N chip in the chain of `Qh` to `SER` joints, being the chip that exposes `SERIAL` the first one ($IndexAt(ShiftRegistersChain) = 0$).
 
 ### Single switch
 

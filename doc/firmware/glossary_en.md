@@ -1,5 +1,7 @@
 # Glossary of terms and definitions
 
+- **ADC**: Analog to Digital Converter.
+
 - **Alternate mode** (or "ALT mode"): a function for certain buttons. When enabled, other input numbers will be reported as `input number + 64`. This duplicates the number of reported inputs in the _HID_ protocol.
 
 - **Bite point**: a certain value of the _clutch_ where the simulated car begins to transfer torque from the engine to the wheels.
@@ -41,6 +43,8 @@
 - **LiPo** (battery): Lithium-polymer battery.
 
 - **Paddle**: a momentary switch or a potentiometer shaped as a lever.
+
+- **PISO**: Parallel-In Serial-Out (shift register).
 
 - **Polling loop**: a perpetual task that reads the state of some inputs and generates input events from state changes.
 

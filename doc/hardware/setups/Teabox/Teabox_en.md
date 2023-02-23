@@ -44,7 +44,7 @@ Additional notes:
 - A "NO-NO switch lever" is the physical combination of two normally-open switches into one device. The push lever has three positions: rest, up/left and down/right. There are three terminals, being the one in the middle a common pole for both NO switches. Make sure this is a momentary switch: the lever must automatically return to rest after activation.
 - You may use any tinplate-made box as housing. The name of this design comes from a popular tea brand that sells square-shaped tea cans.
 
-## Pin-out plan for the ESP32-DevKit-C board
+## Pin-out plan for the Lolin32 lite board
 
 | **GPIO** | **Input**  | **Output** |       **Usage**        | **Notes**                              |
 | -------- | ---------- | ---------- | :--------------------: | -------------------------------------- |
@@ -80,7 +80,7 @@ Use welding tin to build an electrical connection between all pins of the row, a
 
 There is no circuit, just wiring. Open the [layout](./teabox.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
 
-![Teabox layout](./teabox.png)
+![Teabox layout](./Teabox.png)
 
 Notes and build tips:
 
