@@ -78,7 +78,7 @@ When using a GPIO as a digital input, just one switch can be accommodated in it.
 
 ### Analog circuits
 
-There are some articles on the Internet claiming a lot of switches in a single pin. It may work in a circuit simulator or in a specific application but, in global terms, **they don't work properly**. I came to this conclusion after a lot of testing. Analog circuits may seem a good idea, but they **fail** to identify the correct inputs due to:
+There are some articles in the Internet claiming a lot of switches in a single pin. It may work in a circuit simulator or in a specific application but, in global terms, **they don't work properly**. I came to this conclusion after a lot of testing. Analog circuits may seem a good idea, but they **fail** to identify the correct inputs due to:
 
 - Voltage drops, when another part of the circuit is draining current.
 - Resistor tolerance and thermal noise.
@@ -179,7 +179,7 @@ Note that pull resistors are needed for each button, which is unpractical. It wi
 
 Actual implementation in this project uses negative logic and pull-up resistors.
 
-Note that the `SER` (serial input) pin of the last shit register in the chain may hold another switch. If you have $S$ shift registers, $N$ bits each, you can have up to $(2^{N}*S)+1$ switches.
+Note that the `SER` (serial input) pin of the last shift register in the chain may hold another switch. If you have $S$ shift registers, $N$ bits each, you can have up to $(2^{N}*S)+1$ switches.
 
 ## Summary of input hardware
 
