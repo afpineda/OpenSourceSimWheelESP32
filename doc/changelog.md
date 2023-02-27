@@ -56,3 +56,12 @@ First release.
 - Fixed wrong "includes.txt" files in some setups.
 - Minor errata fixes and documentation updates.
 - Added another "ready to deploy" design based on shift registers.
+
+## 2.3.1
+
+- Fixed some documentation errata.
+
+## 2.3.2
+
+- There are no changes in the source code of this version.
+- Added a project logo.

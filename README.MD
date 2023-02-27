@@ -1,3 +1,7 @@
+<p align="center">
+    <img width="400" src="./logo/ESP32SimWheel_logo_400x400.png" alt="Project logo">
+</p>
+
 > English
 
 # Open source wireless steering wheel/button box for ESP32 boards

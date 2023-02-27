@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   sodipodi:docname="ESP32SimWheel_logo.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="2.3786088"
+     inkscape:cx="257.29325"
+     inkscape:cy="241.10732"
+     inkscape:window-width="2160"
+     inkscape:window-height="1330"
+     inkscape:window-x="-12"
+     inkscape:window-y="-12"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <rect
+       x="206.00277"
+       y="301.85712"
+       width="206.42318"
+       height="45.404692"
+       id="rect23754" />
+    <rect
+       x="168.55632"
+       y="64.509209"
+       width="285.98092"
+       height="36.862405"
+       id="rect1782" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient818">
+      <stop
+         style="stop-color:#fc9627;stop-opacity:1;"
+         offset="0.1067028"
+         id="stop814" />
+      <stop
+         style="stop-color:#f8ba76;stop-opacity:1"
+         offset="1"
+         id="stop816" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient818"
+       id="linearGradient820"
+       x1="56.294144"
+       y1="12.735861"
+       x2="153.1796"
+       y2="140.5696"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     inkscape:label="Background"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline">
+    <rect
+       style="display:inline;fill:url(#linearGradient820);fill-opacity:1;stroke-width:0.264583"
+       id="rect16994"
+       width="100"
+       height="100"
+       x="32.248409"
+       y="12.112818"
+       inkscape:label="Background box"
+       ry="4.1756444"
+       inkscape:export-filename="rect16994.png"
+       inkscape:export-xdpi="101.6"
+       inkscape:export-ydpi="101.6" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Logo">
+    <g
+       id="g27206"
+       inkscape:label="Traces"
+       transform="matrix(0.80949323,0,0,0.80949323,15.082064,5.9189322)">
+      <path
+         style="display:inline;fill:#ffffff;fill-opacity:0;stroke:#fffffa;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:3.3;stroke-dasharray:none;stroke-opacity:1"
+         d="m 50.542207,38.926371 c 4.034665,-4.034665 8.069329,-8.069329 12.103994,-12.103994 l 25.472972,0.09637"
+         id="path24447" />
+      <circle
+         style="display:inline;fill:#ffffff;fill-opacity:0;stroke:#ffffff;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:3.3;stroke-dasharray:none;stroke-opacity:1"
+         id="path24501"
+         cx="48.686546"
+         cy="40.98991"
+         r="2.2" />
+      <circle
+         style="display:inline;fill:#ffffff;fill-opacity:0;stroke:#ffffff;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:3.3;stroke-dasharray:none;stroke-opacity:1"
+         id="circle26928"
+         cx="90.95565"
+         cy="26.974367"
+         r="2.2" />
+      <path
+         style="fill:#ffffff;fill-opacity:0;stroke:#ffffff;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:3.3;stroke-dasharray:none;stroke-opacity:1"
+         d="m 63.53635,41.712932 28.142325,2e-6 13.459375,-15.016656"
+         id="path26930"
+         sodipodi:nodetypes="ccc" />
+      <path
+         style="fill:#ffffff;fill-opacity:0;stroke:#ffffff;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:3.3;stroke-dasharray:none;stroke-opacity:1"
+         d="M 91.344972,41.712934 114.70421,41.601698"
+         id="path26985" />
+      <circle
+         style="display:inline;fill:#ffffff;fill-opacity:0;stroke:#ffffff;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:3.3;stroke-dasharray:none;stroke-opacity:1"
+         id="circle26987"
+         cx="106.86218"
+         cy="24.527208"
+         r="2.2" />
+      <circle
+         style="display:inline;fill:#ffffff;fill-opacity:0;stroke:#ffffff;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:3.3;stroke-dasharray:none;stroke-opacity:1"
+         id="circle27087"
+         cx="60.92234"
+         cy="41.768551"
+         r="2.2" />
+      <circle
+         style="display:inline;fill:#ffffff;fill-opacity:0;stroke:#ffffff;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:3.3;stroke-dasharray:none;stroke-opacity:1"
+         id="circle27089"
+         cx="117.20699"
+         cy="41.546082"
+         r="2.2" />
+      <circle
+         style="display:inline;fill:#ffffff;fill-opacity:0;stroke:#ffffff;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:3.3;stroke-dasharray:none;stroke-opacity:1"
+         id="circle27185"
+         cx="88.828873"
+         cy="57.341381"
+         r="2.2" />
+      <path
+         style="fill:#ffffff;fill-opacity:0;stroke:#ffffff;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:3.3;stroke-dasharray:none;stroke-opacity:1"
+         d="M 74.415871,41.824166 86.985368,55.283541"
+         id="path27183" />
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Text">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.3526px;font-family:'Calisto MT';-inkscape-font-specification:'Calisto MT, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0.667257px;word-spacing:0.155289px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.161403;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       x="104.13633"
+       y="64.231071"
+       id="text1788"
+       transform="matrix(0.92176451,0,-0.2051054,1.0848758,0,0)"
+       inkscape:label="ESP32SW"><tspan
+         sodipodi:role="line"
+         id="tspan1840"
+         x="104.46996"
+         y="64.231071"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.3526px;font-family:'Calisto MT';-inkscape-font-specification:'Calisto MT, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.161403">ESP32 Sim Wheel</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:0;stroke:#fffffa;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:3.3;stroke-dasharray:none;stroke-opacity:1"
+       x="80.86747"
+       y="84.315742"
+       id="text23760"
+       inkscape:label="DIY"><tspan
+         sodipodi:role="line"
+         id="tspan23758"
+         style="stroke-width:1.2;fill:#ffffff;fill-opacity:0;-inkscape-font-specification:'Noto Sans, Normal';font-family:'Noto Sans';font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11.28890033px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-dasharray:none"
+         x="80.86747"
+         y="84.315742">Do it yourself</tspan></text>
+  </g>
+</svg>
