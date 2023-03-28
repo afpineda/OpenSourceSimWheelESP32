@@ -43,7 +43,7 @@
 #define BLE_PRODUCT_ID 0xffff
 
 // Hardware revision
-#define PRODUCT_REVISION 0x01
+#define PRODUCT_REVISION 0x0100
 
 // Data specification version
 #define DATA_MAJOR_VERSION 1
