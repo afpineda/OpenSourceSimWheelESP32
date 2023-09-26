@@ -22,6 +22,10 @@
   | [Teabox](./hardware/setups/Teabox/Teabox_en.md) |   Button box   |    Lolin32 Lite    |                     Rotary encoder, two-way push lever, 3 push buttons                      |      External       |
   | [Setup7](./hardware/setups/setup7/Setup7_en.md) | Steering wheel |  LilyGO T-QT PRO   |                 Rotary encoders x3, analog clutch paddles, 20 push buttons                  | Battery or external |
 
+## Known issues
+
+- [ESP32C3](https://www.espressif.com/en/products/socs/esp32-c3) boards exposes a slightly different power management API than other ESP32 boards. The firmware has been updated, but not tested. Deep sleep mode may not work properly in battery-operated setups on these boards.
+
 ## Contributing
 
 - Ways to contribute:
