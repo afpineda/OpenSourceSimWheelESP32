@@ -65,3 +65,9 @@ First release.
 
 - There are no changes in the source code of this version.
 - Added a project logo.
+
+## 2.3.3
+
+- Issue #2: fixed compilation errors on ESP32C3 boards due to a different power management API.
+  The firmware has been updated to work with these boards. However, the fix cannot be tested since I don't have such a board.
+- Minor errata fixes on documentation.
