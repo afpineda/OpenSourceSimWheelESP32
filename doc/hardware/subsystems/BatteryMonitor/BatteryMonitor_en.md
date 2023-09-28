@@ -12,6 +12,13 @@ There are two alternative implementations to choose from:
 - Battery monitor: recommended since it avoids excessive battery drainage.
 - Simple voltage divider: can be found in some ESP32 DevKit boards as a built-in feature. It drains current at all times.
 
+## Limitations
+
+Please, be aware that **accurate battery SoC can not be achieved** in this project (nor in most home-made electronics). SoC estimation is harder than you may think. For SoC, consumer electronics use a combination of complex circuitry, factory measurements and software (even Artificial Intelligence). This is out of scope for a home-made project.
+
+For further reading, look at this article:
+[Battery Management System (BMS): Effective Ways to Measure State-of-Charge and State-of-Health](https://www.integrasources.com/blog/battery-management-system-bms-state-charge-and-state-health/)
+
 ## Working principles
 
 A battery monitor needs to read the output voltage of the battery (*not* the powerboost output voltage), this is, the voltage at the positive terminal (the negative terminal is wired to ground (`GND`) at the powerboost module). As the battery gets discharged, that voltage will go down. The output voltage of a LiPo battery is in this range (more or less):
@@ -27,7 +34,7 @@ In some way, this output voltage should be read through an ADC pin, however, the
 
 The firmware will read the battery level every few minutes and it takes only a few milliseconds long.
 
-**Warning**: this subsystem is designed to work with batteries below 5 volts ("1S" Lithium-Polymer  or LiPo batteries). Higher voltages may damage your DevKit board. Some adjustments are required for other kind of batteries.
+**Warning**: this subsystem is designed to work with batteries below 5 volts ("1S" Lithium-Polymer or LiPo batteries). Higher voltages may damage your DevKit board. Some adjustments are required for other kind of batteries.
 
 ## Circuit: battery monitor
 
