@@ -7,11 +7,11 @@ Some interesting ESP32 boards for this project are:
 - [Tinypico](https://www.tinypico.com/) and [the alike](https://unexpectedmaker.com/shop?category=Development+Boards).
 - [Adafruit Feather 32u4 Bluefruit LE](https://www.adafruit.com/product/2829).
 - [Wemos D32 boards](https://www.wemos.cc/en/latest/d32/d32.html), aka "Lolin32".
-  - *Note*: Wemos "Lolin32 Lite" is an outdated and deprecated board. However, very cheap clones are still sold at some retailers. This board features battery support, but lacks a bult-in "state of charge" monitoring circuit.
+  - *Note*: Wemos "Lolin32 Lite" is an outdated and deprecated board. However, very cheap clones are still sold at some retailers. This board features battery support, but lacks a built-in "state of charge" monitoring circuit.
 - [Sparkfun Thing Plus](https://www.sparkfun.com/products/17381).
 - [Some LilyGO boards](http://www.lilygo.cn/) even if their built-in display is not used.
 
-You need to balance two key aspects: **size and pin availability**. The larger the board, the higher the count of available pins, so you can fit more buttons, padles, etc, but the greater is the space required inside the sim sheel's housing.
+You need to balance two key aspects: **size and pin availability**. The larger the board, the higher the count of available pins, so you can fit more buttons, paddles, etc, but the greater is the space required inside the sim wheel's housing.
 
 In order to reduce size and circuit complexity, it is recommended to use multiplexed switches (will be explained later) and small devkit boards like Unexpected Maker's "TinyPico" or LilyGO's "T-QT".
 
@@ -74,4 +74,4 @@ The following article explains which pins can be used and how:
 
 In order to upload a firmware to a DevKit board, certain pins, called "bootstrap" pins are used. If some device is attached to those pins, it may get in the way. You should detach the board from the circuit before uploading, just in case.
 
-In Arduino IDE, you need to configure the "board manager" with the proper parameters. Most times, you only need to select the correct board and go with the default parameters. Most times, those boards are "ESP32 Dev Module" or "ESP32S3 Dev Module". However, check the manufacturer's datasheet.
+In Arduino IDE, you need to configure the "board manager" with the proper parameters. Most times, you only need to select the correct board and go with the default parameters. Most times, those boards are "ESP32 Dev Module" or "ESP32S3 Dev Module". However, check the manufacturer's data sheet.
