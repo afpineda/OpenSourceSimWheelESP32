@@ -2,20 +2,17 @@
 
 ## Purpose and summary
 
-To test deep sleep and wake up.
+To test deep sleep and wake up **on ESP32C3** boards, which expose a slightly different power management API than other ESP32 boards.
 
 ## Hardware setup
 
-Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
-Use this [test circuit](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.diy):
-
-![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.png)
-
-We are using a single digital button, **externally** pulled up, wired to `TEST_ROTARY_SW`. Named "power button" for later reference. The existing KY-040 rotary encoder do the work.
+A single push button is required in pull-up configuration. One end wired to `GPIO #2`, the other end wired to `GND` (ground). Named "power button" for later reference.
 
 Output through USB serial port at 115200 bauds.
 
 ## Procedure and expected output
+
+Note that this procedure does not differ from [DeepSleepTest](../DeepSleepTest/README.md). Differs in the hardware being tested.
 
 1. Reset. Ignore all output.
 2. Wait for the message:
