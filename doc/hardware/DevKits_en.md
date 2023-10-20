@@ -9,7 +9,7 @@ Some interesting ESP32 boards for this project are:
 - [Wemos D32 boards](https://www.wemos.cc/en/latest/d32/d32.html), aka "Lolin32".
   - *Note*: Wemos "Lolin32 Lite" is an outdated and deprecated board. However, very cheap clones are still sold at some retailers. This board features battery support, but lacks a built-in "state of charge" monitoring circuit.
 - [Sparkfun Thing Plus](https://www.sparkfun.com/products/17381).
-- [Some LilyGO boards](http://www.lilygo.cn/) even if their built-in display is not used.
+- [Some LilyGO boards](http://www.lilygo.cc/) even if their built-in display is not used.
 
 You need to balance two key aspects: **size and pin availability**. The larger the board, the higher the count of available pins, so you can fit more buttons, paddles, etc, but the greater is the space required inside the sim wheel's housing.
 
