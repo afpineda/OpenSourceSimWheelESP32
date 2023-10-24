@@ -212,5 +212,5 @@ If you go for a purely wired USB implementation:
 - Set USB-Mode to "USB-OTG (TinyUSB)" in Arduino-IDE (board configuration).
 - Edit the file "includes.txt" at your sketch folder (under [src/Firmware](../../../src/Firmware/)). Replace the text "hidImplementation_NimBLE.cpp" with "hidImplementation_USB.cpp". Save.
 - Run the [sources setup procedure](../../firmware/sourcesSetup_en.md) again.
-- There is no sense in using a battery-operated design if you have USB power available, but it is up to you.
+- There is no sense in using a battery-operated design if you have USB power available. For this reason, automatic power-off is not available within this implementation.
 - Note that you can not have both Bluetooth and USB at the same time in the same device.
