@@ -5,9 +5,9 @@
 Indispensable:
 
 - [Arduino IDE](https://www.arduino.cc/en/software). Choose a stable release and follow instructions.
-- Official [Arduino-ESP32 support package](https://docs.espressif.com/projects/arduino-esp32/en/latest/getting_started.html). Follow [this link](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html) for installation instructions.
+- Official [Arduino-ESP32 support package](https://docs.espressif.com/projects/arduino-esp32/en/latest/getting_started.html). Follow [this link](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html) for installation instructions. This project has been successfully tested with **version 2.0.6**.
 - Indispensable [Arduino libraries](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries) for this project. Install their dependencies as well.
-  - [NimBLE-Arduino](https://www.arduino.cc/reference/en/libraries/nimble-arduino/)
+  - [NimBLE-Arduino](https://www.arduino.cc/reference/en/libraries/nimble-arduino/). This project has been successfully tested with **version 1.4.1**.
 - [Powershell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.2). Already installed in Windows.
 
 May be needed:

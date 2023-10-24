@@ -7,7 +7,7 @@
  *
  */
 
-// Implementation heavely inspired by
+// Implementation heavily inspired by
 // https://github.com/lemmingDev/ESP32-BLE-Gamepad
 //
 // Use this app for testing:

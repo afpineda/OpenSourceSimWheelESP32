@@ -52,13 +52,4 @@ debug_custom.json
 debug.cfg
 
 # other
-src/UnitTests/InputHubTest/debugUtils.cpp
-src/UnitTests/InputHubTest/debugUtils.h
-src/UnitTests/InputHubTest/InputHub.cpp
-src/UnitTests/InputHubTest/Inputs.cpp
-src/UnitTests/InputHubTest/PolledInput.cpp
-src/UnitTests/InputHubTest/PolledInput.h
-src/UnitTests/InputHubTest/RotaryEncoderInput.cpp
-src/UnitTests/InputHubTest/RotaryEncoderInput.h
-src/UnitTests/InputHubTest/SimWheel.h
-src/UnitTests/InputHubTest/SimWheelTypes.h
+

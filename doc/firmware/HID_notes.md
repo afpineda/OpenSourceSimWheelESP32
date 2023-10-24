@@ -12,11 +12,9 @@ Any HID device requires a vendor identifier ("VID" from now on) in order to work
 
 More information at [Open source Hardware Association](https://www.oshwa.org/faq/#usb-vendor-id)
 
+**This project features an USB implementation** using the existing PID (product identifier) and VID from your DevKit manufacturer, which you should not change in the source code.
+
 As a result, you are not allowed to use this project outside of your personal sphere. You are not allowed to exhibit the USB logo nor any other licensed material from the USB-IF.
-
-Derivative works should obtain a different VID.
-
-**This project does not feature an USB implementation right now**. However, it is prepared for that.
 
 ### Bluetooth
 

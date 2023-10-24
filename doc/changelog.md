@@ -71,3 +71,10 @@ First release.
 - Issue #2: fixed compilation errors on ESP32C3 boards due to a different power management API.
   The firmware has been updated to work with these boards. However, the fix cannot be tested since I don't have such a board.
 - Minor errata fixes on documentation.
+
+## 2.3.4
+
+- Improved documentation.
+- Added test unit for deep sleep on ESP32C3 boards (not run yet).
+- Improved BLE advertising.
+- Added USB implementation (for USB-capable boards like the ESP32S3)
