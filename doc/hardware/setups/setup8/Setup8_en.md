@@ -1,12 +1,13 @@
 # Ready to deploy design #8
 
 Read this document from start to end before building anything. Ensure you understand everything.
-This setup was not tested at the system level.
+
+**This setup has not been tested at the system level**. If you try, please, let me know.
 
 ## Hardware features
 
-- USB connectivity.
-- Powered through USB cable
+- USB connectivity
+- Power through USB cable
 - Relative rotary encoders (with push button): x4
 - Up to 21 additional push buttons
 
@@ -24,7 +25,7 @@ Common:
 | LilyGO T-QT PRO DevKit board           |      1       | With male pins already soldered                     |
 | Pin header (male or female up to you)  |      37      | For external wiring                                 |
 | External Antenna with proper connector |      1       | Optional                                            |
-| USB-C cable                            |      1       | Fitting T-QT 's USB header                          |
+| USB type C cable                       |      1       |                                                     |
 
 Other parts (quantity unknown):
 
@@ -34,6 +35,7 @@ Other parts (quantity unknown):
 Other notes:
 
 - The packaging of the shift registers will show a small circle next to pin #1, which is tagged as `~LD` here.
+- T-QT's builtin push buttons will also work as input numbers 60 and 61. There is little use for them, except for testing.
 
 ## Pin-out plan for the T-QT DevKit board
 
@@ -84,8 +86,9 @@ Notes and build tips:
 
 At Arduino IDE, configure the board manager as this:
 
-- Board: "ESP32S3Dev"
+- Board: "ESP32S3Dev".
 - USB CDC on boot: "Enabled".
+- USB-Mode: "USB-OTG (TinyUSB)".
 
 1. Plug the USB cable to the DevKit board and upload the [sketch](../../../../src/Firmware/Setup8/Setup8.ino) with Arduino IDE. If required, in order to enter "boot mode" click the reset button while holding "IO0".
 2. Reset.

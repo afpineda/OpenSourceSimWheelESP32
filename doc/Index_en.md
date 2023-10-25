@@ -21,7 +21,7 @@
   | [Setup6](./hardware/setups/setup6/Setup6_en.md) | Steering wheel |    Lolin32 Lite    |                 Rotary encoders x4, analog clutch paddles, 16 push buttons                  |      External       |
   | [Teabox](./hardware/setups/Teabox/Teabox_en.md) |   Button box   |    Lolin32 Lite    |                     Rotary encoder, two-way push lever, 3 push buttons                      |      External       |
   | [Setup7](./hardware/setups/setup7/Setup7_en.md) | Steering wheel |  LilyGO T-QT PRO   |                 Rotary encoders x3, analog clutch paddles, 20 push buttons                  | Battery or external |
-  | [Setup8](./hardware/setups/setup8/Setup8_en.md) | Button box |  LilyGO T-QT PRO   |                 Rotary encoders x4, 21 push buttons                  | USB |
+  | [Setup8](./hardware/setups/setup8/Setup8_en.md) |   Button box   |  LilyGO T-QT PRO   |                             Rotary encoders x4, 21 push buttons                             |         USB         |
 
 ## Known issues
 

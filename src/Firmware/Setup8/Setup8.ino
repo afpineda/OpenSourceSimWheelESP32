@@ -68,6 +68,10 @@ void simWheelSetup()
     inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_35, ROT2_CW, ROT2_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_48, GPIO_NUM_18, ROT3_CW, ROT3_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_17, GPIO_NUM_16, ROT4_CW, ROT4_CCW);
+    
+    // LilyGo T-QT built-in push buttons
+    inputs::addDigital(GPIO_NUM_0,60);
+    inputs::addDigital(GPIO_NUM_47,61);
 }
 
 //------------------------------------------------------------------

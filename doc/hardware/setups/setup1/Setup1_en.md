@@ -7,8 +7,8 @@ Read this document from start to end before building anything. Ensure you unders
 ## Hardware features
 
 - Bluetooth Low Energy
-- Powered through external power source (quick release): DC +5V ~ +7V - 500 mA.
-- Analog clutch paddles (potentiometers).
+- Powered through external power source (quick release): DC +5V ~ +7V - 500 mA
+- Analog clutch paddles (potentiometers)
 - Shift paddles (x2)
 - Optional: "ALT" buttons (x2)
 - Optional: DPAD, funky switch or 4 push buttons arranged in a cross

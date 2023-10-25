@@ -24,7 +24,7 @@ Computer:
 _Notes_:
 
 Your DevKit must enter *bootloader* mode in order to upload the test sketch.
-Reset while holding `GPIO #0` to low voltage. In LillyGo T-QT, press `reset` button while holding `I00` button.
+Reset while holding `GPIO #0` to low voltage. In LillyGo T-QT, press `reset` button while holding `IO0` button.
 Use this board configuration in Arduino IDE:
 
 - Board: "ESP32S3 Dev Module (esp32)" (or your actual board brand).
