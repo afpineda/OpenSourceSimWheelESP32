@@ -2,7 +2,7 @@
 
 You may choose any devkit board you want as long as it is based on Expressif's "ESP32" architecture and features BLE support. To be more precise, "ESP32" or "ESP32S3" boards, since they are supported by [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino). However, Expressif's "ESP32C3" boards are not recommended since they have a single CPU core. They work, but this project takes advantage of dual core architectures.
 
-Alternatively, you may use any ESP32 *USB-capable* board for a purely wired implementation, for example, "ESP32S3" boards. "USB-capable" means your devkit is able to work as a fully-featured USB device. Note that most USB ports found in devkit boards are just serial port devices, not fully featured ones, so check a data sheet before purchasing. Right now, this project does not support both USB and BLE communications at the same time in the same device.
+Alternatively, you may use any ESP32 *USB-capable* board for a purely wired implementation, for example, "ESP32S3" boards. "USB-capable" means your devkit is able to work as a fully-featured USB device. Note that most USB ports found in devkit boards are just serial port devices, not fully featured ones, so check a data sheet before purchasing. Right now, this project does not support both USB and BLE connectivity at the same time in the same device.
 
 Some interesting ESP32 boards for this project are:
 

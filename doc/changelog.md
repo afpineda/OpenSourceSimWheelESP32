@@ -75,6 +75,7 @@ First release.
 ## 2.3.4
 
 - Improved documentation.
-- Added test unit for deep sleep on ESP32C3 boards (not run yet).
+- Added test unit for deep sleep on ESP32C3 boards (but not run).
 - Improved BLE advertising.
 - Added USB implementation (for USB-capable boards like the ESP32S3).
+- Added another "ready to deploy" design as an example of USB implementation.

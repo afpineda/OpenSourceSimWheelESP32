@@ -1,0 +1,3302 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project>
+  <fileVersion>
+    <major>4</major>
+    <minor>35</minor>
+    <build>0</build>
+  </fileVersion>
+  <title>Setup #8</title>
+  <author>Ángel Fernández Pineda. Madrid. Spain. 2023</author>
+  <width value="17.0" unit="cm"/>
+  <height value="13.0" unit="cm"/>
+  <gridSpacing value="0.1" unit="in"/>
+  <dotSpacing>1</dotSpacing>
+  <components>
+    <diylc.boards.PerfBoard>
+      <name>Board4</name>
+      <alpha>63</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="0.8" y="2.0999999999999996"/>
+        <point x="3.3" y="1.0"/>
+      </controlPoints>
+      <firstPoint x="0.8" y="1.0"/>
+      <secondPoint x="3.3" y="2.0999999999999996"/>
+      <boardColor hex="f8ebb3"/>
+      <borderColor hex="ada47d"/>
+      <coordinateColor hex="b6b6b6"/>
+      <xType>Letters</xType>
+      <coordinateOrigin>Bottom_Left</coordinateOrigin>
+      <coordinateDisplay>Both_Sides</coordinateDisplay>
+      <yType>Numbers</yType>
+      <length value="63.5" unit="mm"/>
+      <width value="27.939999999999984" unit="mm"/>
+      <mode>TwoPoints</mode>
+      <spacing value="0.1" unit="in"/>
+      <padColor hex="da8a67"/>
+    </diylc.boards.PerfBoard>
+    <diylc.connectivity.Dot>
+      <name>Dot4</name>
+      <size value="1.1" unit="mm"/>
+      <color hex="ff0000"/>
+      <point x="5.1" y="2.0"/>
+    </diylc.connectivity.Dot>
+    <diylc.connectivity.Dot>
+      <name>Dot3</name>
+      <size value="1.1" unit="mm"/>
+      <color hex="000000"/>
+      <point x="5.2" y="1.9"/>
+    </diylc.connectivity.Dot>
+    <diylc.shapes.Rectangle>
+      <name>RECT5</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="5.2" y="0.8"/>
+        <point x="4.6" y="2.0"/>
+      </controlPoints>
+      <firstPoint x="4.6" y="0.8"/>
+      <secondPoint x="5.2" y="2.0"/>
+      <color hex="cccccc"/>
+      <borderColor hex="000000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="0.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.semiconductors.DIL__IC>
+      <name>IC7</name>
+      <alpha>127</alpha>
+      <value>T-QT</value>
+      <orientation>_180</orientation>
+      <pinCount>_14</pinCount>
+      <pinSpacing value="0.1" unit="in"/>
+      <rowSpacing value="0.6" unit="in"/>
+      <controlPoints>
+        <point x="5.2" y="1.7"/>
+        <point x="5.2" y="1.6"/>
+        <point x="5.2" y="1.5"/>
+        <point x="5.2" y="1.4"/>
+        <point x="5.2" y="1.3"/>
+        <point x="5.2" y="1.2"/>
+        <point x="5.2" y="1.1"/>
+        <point x="4.6" y="1.7"/>
+        <point x="4.6" y="1.6"/>
+        <point x="4.6" y="1.5"/>
+        <point x="4.6" y="1.4"/>
+        <point x="4.6" y="1.3"/>
+        <point x="4.6" y="1.2"/>
+        <point x="4.6" y="1.1"/>
+      </controlPoints>
+      <display>VALUE</display>
+      <bodyColor hex="cccccc"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+      <indentColor hex="595959"/>
+      <displayNumbers>NO</displayNumbers>
+    </diylc.semiconductors.DIL__IC>
+    <diylc.shapes.Rectangle>
+      <name>RECT6</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="4.7" y="1.8"/>
+        <point x="4.6" y="2.0"/>
+      </controlPoints>
+      <firstPoint x="4.6" y="1.8"/>
+      <secondPoint x="4.7" y="2.0"/>
+      <color hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="3.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.shapes.Rectangle>
+      <name>RECT7</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="5.2" y="1.8"/>
+        <point x="5.1" y="2.0"/>
+      </controlPoints>
+      <firstPoint x="5.1" y="1.8"/>
+      <secondPoint x="5.2" y="2.0"/>
+      <color hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="3.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.shapes.Rectangle>
+      <name>RECT8</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="5.1" y="1.8"/>
+        <point x="4.7" y="2.1"/>
+      </controlPoints>
+      <firstPoint x="4.7" y="1.8"/>
+      <secondPoint x="5.1" y="2.1"/>
+      <color hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="2.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.connectivity.Line>
+      <name>LN5</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="4.4" y="1.1"/>
+        <point x="4.6" y="1.1"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN17</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="4.4" y="1.2"/>
+        <point x="4.6" y="1.2"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN18</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="4.4" y="1.3"/>
+        <point x="4.6" y="1.3"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN19</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="4.4" y="1.4"/>
+        <point x="4.6" y="1.4"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN20</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="4.4" y="1.5"/>
+        <point x="4.6" y="1.5"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN21</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="4.4" y="1.6"/>
+        <point x="4.6" y="1.6"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN22</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="4.4" y="1.7"/>
+        <point x="4.6" y="1.7"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN40</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="5.2" y="1.2"/>
+        <point x="5.4" y="1.2"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN41</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="5.2" y="1.3"/>
+        <point x="5.4" y="1.3"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN42</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="5.2" y="1.4"/>
+        <point x="5.4" y="1.4"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN43</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="5.2" y="1.5"/>
+        <point x="5.4" y="1.5"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN44</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="5.2" y="1.6"/>
+        <point x="5.4" y="1.6"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN45</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="5.2" y="1.7"/>
+        <point x="5.4" y="1.7"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.electromechanical.TactileMicroSwitch>
+      <name>SW1</name>
+      <alpha>127</alpha>
+      <value></value>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="1.3" y="3.0"/>
+        <point x="1.3" y="3.175"/>
+        <point x="1.555" y="3.0"/>
+        <point x="1.555" y="3.175"/>
+      </controlPoints>
+      <display>NONE</display>
+      <bodyColor hex="c0c0c0"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+    </diylc.electromechanical.TactileMicroSwitch>
+    <diylc.electromechanical.TactileMicroSwitch>
+      <name>SW2</name>
+      <alpha>127</alpha>
+      <value></value>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="1.8" y="3.0"/>
+        <point x="1.8" y="3.175"/>
+        <point x="2.055" y="3.0"/>
+        <point x="2.055" y="3.175"/>
+      </controlPoints>
+      <display>NONE</display>
+      <bodyColor hex="c0c0c0"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+    </diylc.electromechanical.TactileMicroSwitch>
+    <diylc.shapes.TapeMeasure>
+      <name>TM5</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="4.6" y="0.7"/>
+        <point x="5.2" y="0.7"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowStart>true</arrowStart>
+      <arrowEnd>true</arrowEnd>
+      <unit>cm</unit>
+      <decimals>2</decimals>
+    </diylc.shapes.TapeMeasure>
+    <diylc.shapes.TapeMeasure>
+      <name>TM6</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="4.6" y="2.2"/>
+        <point x="5.2" y="2.2"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowStart>true</arrowStart>
+      <arrowEnd>true</arrowEnd>
+      <unit>in</unit>
+      <decimals>2</decimals>
+    </diylc.shapes.TapeMeasure>
+    <diylc.shapes.TapeMeasure>
+      <name>TM7</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="6.2" y="2.1"/>
+        <point x="6.2" y="0.8"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowStart>true</arrowStart>
+      <arrowEnd>true</arrowEnd>
+      <unit>cm</unit>
+      <decimals>2</decimals>
+    </diylc.shapes.TapeMeasure>
+    <diylc.shapes.TapeMeasure>
+      <name>TM8</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="6.3" y="2.1"/>
+        <point x="6.3" y="0.8"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowStart>true</arrowStart>
+      <arrowEnd>true</arrowEnd>
+      <unit>in</unit>
+      <decimals>2</decimals>
+    </diylc.shapes.TapeMeasure>
+    <diylc.shapes.Rectangle>
+      <name>RECT3</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="4.1" y="2.8999999999999995"/>
+        <point x="4.8" y="3.6"/>
+      </controlPoints>
+      <firstPoint x="4.1" y="2.8999999999999995"/>
+      <secondPoint x="4.8" y="3.6"/>
+      <color hex="cccccc"/>
+      <borderColor hex="000000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="0.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.shapes.Ellipse>
+      <name>ELL1</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="4.2" y="3.0"/>
+        <point x="4.7" y="3.5"/>
+      </controlPoints>
+      <firstPoint x="4.2" y="3.0"/>
+      <secondPoint x="4.7" y="3.5"/>
+      <color hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <borderThickness value="0.2" unit="mm"/>
+    </diylc.shapes.Ellipse>
+    <diylc.connectivity.Line>
+      <name>LN2</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="4.1" y="3.0"/>
+        <point x="3.8" y="3.0"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="mm"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN3</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="4.09" y="3.2400000000000007"/>
+        <point x="3.79" y="3.2400000000000007"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="mm"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN4</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="4.1" y="3.5"/>
+        <point x="3.8" y="3.5"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="mm"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN6</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="5.1" y="3.1"/>
+        <point x="4.8" y="3.1"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="mm"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN7</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="5.1" y="3.3999999999999995"/>
+        <point x="4.8" y="3.3999999999999995"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="mm"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.electromechanical.PinHeader>
+      <name>PH23</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="2.7" y="1.7"/>
+        <point x="2.7" y="1.8"/>
+        <point x="2.7" y="1.9"/>
+        <point x="2.7" y="2.0"/>
+      </controlPoints>
+      <rowCount>1</rowCount>
+      <columnCount>4</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ccffff"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.electromechanical.PinHeader>
+      <name>PH24</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="2.7" y="1.3"/>
+        <point x="2.7" y="1.4"/>
+        <point x="2.7" y="1.5"/>
+        <point x="2.7" y="1.6"/>
+      </controlPoints>
+      <rowCount>1</rowCount>
+      <columnCount>4</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ccffff"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.electromechanical.PinHeader>
+      <name>PH25</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="2.3000000000000007" y="1.3"/>
+        <point x="2.3000000000000007" y="1.4"/>
+        <point x="2.3000000000000007" y="1.5"/>
+        <point x="2.3000000000000007" y="1.6"/>
+      </controlPoints>
+      <rowCount>1</rowCount>
+      <columnCount>4</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ccffff"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.electromechanical.PinHeader>
+      <name>PH26</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="2.3000000000000007" y="1.7"/>
+        <point x="2.3000000000000007" y="1.8"/>
+        <point x="2.3000000000000007" y="1.9"/>
+        <point x="2.3000000000000007" y="2.0"/>
+      </controlPoints>
+      <rowCount>1</rowCount>
+      <columnCount>4</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ccffff"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.electromechanical.PinHeader>
+      <name>PH27</name>
+      <alpha>127</alpha>
+      <orientation>_180</orientation>
+      <controlPoints>
+        <point x="1.6" y="2.0"/>
+        <point x="1.6" y="1.9"/>
+        <point x="1.6" y="1.8"/>
+        <point x="1.6" y="1.7"/>
+      </controlPoints>
+      <rowCount>1</rowCount>
+      <columnCount>4</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ccffff"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.electromechanical.PinHeader>
+      <name>PH28</name>
+      <alpha>127</alpha>
+      <orientation>_180</orientation>
+      <controlPoints>
+        <point x="1.6" y="1.6"/>
+        <point x="1.6" y="1.5"/>
+        <point x="1.6" y="1.4"/>
+        <point x="1.6" y="1.3"/>
+      </controlPoints>
+      <rowCount>1</rowCount>
+      <columnCount>4</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ccffff"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.electromechanical.PinHeader>
+      <name>PH32</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="2.7" y="1.2"/>
+      </controlPoints>
+      <rowCount>1</rowCount>
+      <columnCount>1</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ccffff"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.electromechanical.PinHeader>
+      <name>PH11</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="0.9" y="1.2999999999999998"/>
+        <point x="0.9" y="1.4"/>
+      </controlPoints>
+      <rowCount>1</rowCount>
+      <columnCount>2</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="0000cc"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.electromechanical.PinHeader>
+      <name>PH12</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="0.9" y="1.5"/>
+        <point x="0.9" y="1.6"/>
+        <point x="0.9" y="1.7"/>
+        <point x="0.9" y="1.8"/>
+        <point x="0.9" y="1.9"/>
+        <point x="0.9" y="2.0"/>
+      </controlPoints>
+      <rowCount>1</rowCount>
+      <columnCount>6</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="000000"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.electromechanical.PinHeader>
+      <name>PH14</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="0.9" y="1.2000000000000002"/>
+      </controlPoints>
+      <rowCount>1</rowCount>
+      <columnCount>1</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ff6600"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.electromechanical.PinHeader>
+      <name>PH16</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="2.2" y="1.2"/>
+        <point x="2.3" y="1.2"/>
+      </controlPoints>
+      <rowCount>2</rowCount>
+      <columnCount>1</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ff0000"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.electromechanical.PinHeader>
+      <name>PH30</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="3.0" y="1.2"/>
+        <point x="3.1" y="1.2"/>
+      </controlPoints>
+      <rowCount>2</rowCount>
+      <columnCount>1</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ff0000"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.connectivity.Line>
+      <name>LN8</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="3.1" y="1.2"/>
+        <point x="3.1" y="0.8"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN9</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="0.7" y="1.5"/>
+        <point x="0.9" y="1.5"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN10</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="0.5" y="1.7"/>
+        <point x="0.9" y="1.6"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN11</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="0.7" y="1.4"/>
+        <point x="0.9" y="1.4"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN12</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="0.7" y="1.3"/>
+        <point x="0.9" y="1.3"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN13</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="0.7" y="1.2"/>
+        <point x="0.9" y="1.2"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN14</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="0.5" y="1.7"/>
+        <point x="0.9" y="1.7"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN15</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="0.5" y="1.7"/>
+        <point x="0.9" y="1.8"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN16</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="0.5" y="1.7"/>
+        <point x="0.9" y="1.9"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN25</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="0.5" y="1.7"/>
+        <point x="0.9" y="2.0"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN28</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="1.6" y="1.3"/>
+        <point x="1.6" y="0.9"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN29</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="1.6" y="2.2"/>
+        <point x="1.6" y="2.0"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN30</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.7" y="1.2"/>
+        <point x="2.7" y="0.9"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN33</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="1.5" y="1.4"/>
+        <point x="1.6" y="1.4"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN36</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="1.5" y="1.5"/>
+        <point x="1.6" y="1.5"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN37</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="1.5" y="1.6"/>
+        <point x="1.6" y="1.6"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN38</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="1.5" y="1.7"/>
+        <point x="1.6" y="1.7"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN48</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="1.5" y="1.8"/>
+        <point x="1.6" y="1.8"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN49</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="1.5" y="1.9"/>
+        <point x="1.6" y="1.9"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN51</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.2" y="1.3"/>
+        <point x="2.3" y="1.3"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN52</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.2" y="1.4"/>
+        <point x="2.3" y="1.4"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN53</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.2" y="1.5"/>
+        <point x="2.3" y="1.5"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN54</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.2" y="1.6"/>
+        <point x="2.3" y="1.6"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN55</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.2" y="1.7"/>
+        <point x="2.3" y="1.7"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN56</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.2" y="1.8"/>
+        <point x="2.3" y="1.8"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN57</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.2" y="1.9"/>
+        <point x="2.3" y="1.9"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN58</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.2" y="2.0"/>
+        <point x="2.3" y="2.0"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN59</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.6" y="1.3"/>
+        <point x="2.7" y="1.3"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN60</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.6" y="1.4"/>
+        <point x="2.7" y="1.4"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN61</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.6" y="1.5"/>
+        <point x="2.7" y="1.5"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN62</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.6" y="1.6"/>
+        <point x="2.7" y="1.6"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN63</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.6" y="1.7"/>
+        <point x="2.7" y="1.7"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN64</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.6" y="1.8"/>
+        <point x="2.7" y="1.8"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN65</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.6" y="1.9"/>
+        <point x="2.7" y="1.9"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.connectivity.Line>
+      <name>LN66</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="2.6" y="2.0"/>
+        <point x="2.7" y="2.0"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="ff9900"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowTx serialization="custom">
+        <java.awt.geom.AffineTransform>
+          <default>
+            <m00>1.0</m00>
+            <m01>0.0</m01>
+            <m02>0.0</m02>
+            <m10>0.0</m10>
+            <m11>1.0</m11>
+            <m12>0.0</m12>
+          </default>
+        </java.awt.geom.AffineTransform>
+      </arrowTx>
+      <arrowStart>false</arrowStart>
+      <arrowEnd>false</arrowEnd>
+    </diylc.connectivity.Line>
+    <diylc.shapes.TapeMeasure>
+      <name>TM1</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="0.8" y="2.3"/>
+        <point x="3.3" y="2.3"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowStart>true</arrowStart>
+      <arrowEnd>true</arrowEnd>
+      <unit>cm</unit>
+      <decimals>2</decimals>
+    </diylc.shapes.TapeMeasure>
+    <diylc.shapes.TapeMeasure>
+      <name>TM2</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="3.3" y="2.4"/>
+        <point x="0.8" y="2.4"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowStart>true</arrowStart>
+      <arrowEnd>true</arrowEnd>
+      <unit>in</unit>
+      <decimals>2</decimals>
+    </diylc.shapes.TapeMeasure>
+    <diylc.shapes.TapeMeasure>
+      <name>TM3</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="3.4" y="2.1"/>
+        <point x="3.4" y="1.0"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowStart>true</arrowStart>
+      <arrowEnd>true</arrowEnd>
+      <unit>cm</unit>
+      <decimals>2</decimals>
+    </diylc.shapes.TapeMeasure>
+    <diylc.shapes.TapeMeasure>
+      <name>TM4</name>
+      <alpha>127</alpha>
+      <points>
+        <point x="3.5" y="2.1"/>
+        <point x="3.5" y="1.0"/>
+        <point x="0.0" y="0.0"/>
+      </points>
+      <bodyColor hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>NAME</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <color hex="000000"/>
+      <style>SOLID</style>
+      <thickness value="1.0" unit="px"/>
+      <arrowSize value="5.0" unit="px"/>
+      <arrowStart>true</arrowStart>
+      <arrowEnd>true</arrowEnd>
+      <unit>in</unit>
+      <decimals>2</decimals>
+    </diylc.shapes.TapeMeasure>
+    <diylc.connectivity.HookupWire>
+      <name>W8</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="1.8" y="3.0"/>
+        <point x="1.5" y="2.8"/>
+        <point x="1.3" y="3.0"/>
+      </controlPoints2>
+      <color hex="000000"/>
+      <pointCount>THREE</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W14</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="2.3" y="3.0"/>
+        <point x="2.0" y="2.8"/>
+        <point x="1.8" y="3.0"/>
+      </controlPoints2>
+      <color hex="000000"/>
+      <pointCount>THREE</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W15</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="1.3" y="3.0"/>
+        <point x="1.0" y="2.8"/>
+        <point x="0.8" y="2.9"/>
+      </controlPoints2>
+      <color hex="000000"/>
+      <pointCount>THREE</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W16</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="1.3" y="3.2"/>
+        <point x="1.0" y="3.3"/>
+      </controlPoints2>
+      <color hex="00ffff"/>
+      <pointCount>TWO</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W17</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="1.8" y="3.2"/>
+        <point x="1.5" y="3.4"/>
+      </controlPoints2>
+      <color hex="00ffff"/>
+      <pointCount>TWO</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.misc.Label>
+      <name>L27</name>
+      <point x="3.4" y="0.3"/>
+      <text>External wiring</text>
+      <font name="Dialog.bold" size="24" style="1"/>
+      <color hex="000099"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB34</name>
+      <point x="4.3" y="1.3"/>
+      <text>SERIAL</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB35</name>
+      <point x="4.3" y="1.4"/>
+      <text>ROT1_A</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB36</name>
+      <point x="4.3" y="1.6"/>
+      <text>ROT2_A</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB37</name>
+      <point x="5.5" y="1.7"/>
+      <text>ROT3_A</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB38</name>
+      <point x="4.3" y="1.5"/>
+      <text>ROT1_B</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB39</name>
+      <point x="4.3" y="1.7"/>
+      <text>ROT2_B</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB40</name>
+      <point x="5.5" y="1.6"/>
+      <text>ROT3_B</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB43</name>
+      <point x="5.5" y="1.2"/>
+      <text>GND</text>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="000000"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB49</name>
+      <point x="5.5" y="1.3"/>
+      <text>3V3</text>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="000000"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB51</name>
+      <point x="4.3" y="1.1"/>
+      <text>NEXT</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB53</name>
+      <point x="5.5" y="1.4"/>
+      <text>ROT4_B</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB54</name>
+      <point x="5.5" y="1.5"/>
+      <text>ROT4_A</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB55</name>
+      <point x="4.3" y="1.2"/>
+      <text>LOAD</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB58</name>
+      <point x="1.5" y="2.7"/>
+      <text>Switch wiring example</text>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="000000"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB59</name>
+      <point x="0.7" y="2.9"/>
+      <text>COM</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB60</name>
+      <point x="1.0" y="3.3"/>
+      <text>To light blue pin header</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB61</name>
+      <point x="1.5" y="3.4"/>
+      <text>To light blue pin header</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB62</name>
+      <point x="2.4" y="3.0"/>
+      <text>...</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB101</name>
+      <point x="4.0" y="1.4"/>
+      <text>(40)</text>
+      <font name="Dialog.italic" size="14" style="2"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB102</name>
+      <point x="4.0" y="1.5"/>
+      <text>(41)</text>
+      <font name="Dialog.italic" size="14" style="2"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB134</name>
+      <point x="4.0" y="1.6"/>
+      <text>(42)</text>
+      <font name="Dialog.italic" size="14" style="2"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB135</name>
+      <point x="4.0" y="1.7"/>
+      <text>(43)</text>
+      <font name="Dialog.italic" size="14" style="2"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB136</name>
+      <point x="5.8" y="1.7"/>
+      <text>(44)</text>
+      <font name="Dialog.italic" size="14" style="2"/>
+      <color hex="006699"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB137</name>
+      <point x="5.8" y="1.6"/>
+      <text>(45)</text>
+      <font name="Dialog.italic" size="14" style="2"/>
+      <color hex="006699"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB149</name>
+      <point x="4.7" y="2.7"/>
+      <text>Bare bone rotary encoder</text>
+      <font name="Dialog.bold" size="20" style="1"/>
+      <color hex="000000"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB150</name>
+      <point x="3.79" y="3.2400000000000007"/>
+      <text>COM  </text>
+      <font name="Dialog.plain" size="17" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB151</name>
+      <point x="3.8" y="3.0"/>
+      <text>ROTn_A  </text>
+      <font name="Dialog.plain" size="17" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB152</name>
+      <point x="3.8" y="3.5"/>
+      <text>ROTn_B  </text>
+      <font name="Dialog.plain" size="17" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB153</name>
+      <point x="5.2" y="3.1"/>
+      <text>COM  </text>
+      <font name="Dialog.plain" size="17" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB154</name>
+      <point x="5.2" y="3.3999999999999995"/>
+      <text>To light blue pin header</text>
+      <font name="Dialog.plain" size="17" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB30</name>
+      <point x="3.1" y="0.8"/>
+      <text>3V3</text>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="000000"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB31</name>
+      <point x="0.7" y="1.5"/>
+      <text>GND</text>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB98</name>
+      <point x="0.7" y="1.4"/>
+      <text>NEXT</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB99</name>
+      <point x="0.7" y="1.3"/>
+      <text>LOAD</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB100</name>
+      <point x="0.7" y="1.2"/>
+      <text>SERIAL</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB45</name>
+      <point x="0.5" y="1.7"/>
+      <text>COM</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB57</name>
+      <point x="2.1" y="2.2"/>
+      <text>button number (gamepad function)</text>
+      <font name="Dialog.italic" size="14" style="2"/>
+      <color hex="006699"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB168</name>
+      <point x="1.5" y="1.9"/>
+      <text>0 (A)</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB48</name>
+      <point x="1.5" y="1.8"/>
+      <text>1 (B)</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB50</name>
+      <point x="1.5" y="1.7"/>
+      <text>2 (X)</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB52</name>
+      <point x="1.5" y="1.6"/>
+      <text>3 (Y)</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB56</name>
+      <point x="1.6" y="2.2"/>
+      <text>4 (LB)</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB64</name>
+      <point x="1.6" y="0.9"/>
+      <text>5 (RB)</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB169</name>
+      <point x="2.7" y="0.9"/>
+      <text>7 (Start)</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB63</name>
+      <point x="1.5" y="1.5"/>
+      <text>6 (Back)</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB65</name>
+      <point x="1.5" y="1.4"/>
+      <text>8</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB66</name>
+      <point x="2.2" y="2.0"/>
+      <text>9</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB67</name>
+      <point x="2.2" y="1.9"/>
+      <text>10</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB68</name>
+      <point x="2.2" y="1.8"/>
+      <text>11</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB69</name>
+      <point x="2.2" y="1.7"/>
+      <text>12</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB70</name>
+      <point x="2.2" y="1.6"/>
+      <text>13</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB71</name>
+      <point x="2.2" y="1.5"/>
+      <text>14</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB72</name>
+      <point x="2.2" y="1.4"/>
+      <text>15</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB73</name>
+      <point x="2.2" y="1.3"/>
+      <text>16</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB74</name>
+      <point x="2.6" y="2.0"/>
+      <text>17</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB75</name>
+      <point x="2.6" y="1.9"/>
+      <text>18</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB76</name>
+      <point x="2.6" y="1.8"/>
+      <text>19</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB77</name>
+      <point x="2.6" y="1.7"/>
+      <text>20</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB78</name>
+      <point x="2.6" y="1.5"/>
+      <text>22</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB79</name>
+      <point x="2.6" y="1.6"/>
+      <text>21</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB80</name>
+      <point x="2.6" y="1.4"/>
+      <text>23</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB81</name>
+      <point x="2.6" y="1.3"/>
+      <text>24</text>
+      <font name="Dialog.bolditalic" size="14" style="3"/>
+      <color hex="006699"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB1</name>
+      <point x="5.8" y="1.5"/>
+      <text>(46)</text>
+      <font name="Dialog.italic" size="14" style="2"/>
+      <color hex="006699"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB2</name>
+      <point x="5.8" y="1.4"/>
+      <text>(47)</text>
+      <font name="Dialog.italic" size="14" style="2"/>
+      <color hex="006699"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+  </components>
+  <groups>
+    <set/>
+    <set>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[48]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[49]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[50]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[52]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[46]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[51]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[47]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[53]"/>
+    </set>
+    <set>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[28]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[30]"/>
+      <diylc.shapes.Ellipse reference="../../../components/diylc.shapes.Ellipse"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[18]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[31]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[14]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[26]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[15]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[29]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[17]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[16]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[27]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[5]"/>
+    </set>
+    <set>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[41]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[45]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[38]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[44]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[43]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[40]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[39]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[42]"/>
+    </set>
+    <set>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[17]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[19]"/>
+      <diylc.electromechanical.TactileMicroSwitch reference="../../../components/diylc.electromechanical.TactileMicroSwitch[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[16]"/>
+      <diylc.electromechanical.TactileMicroSwitch reference="../../../components/diylc.electromechanical.TactileMicroSwitch"/>
+      <diylc.connectivity.HookupWire reference="../../../components/diylc.connectivity.HookupWire"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[18]"/>
+      <diylc.connectivity.HookupWire reference="../../../components/diylc.connectivity.HookupWire[4]"/>
+      <diylc.connectivity.HookupWire reference="../../../components/diylc.connectivity.HookupWire[5]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[15]"/>
+      <diylc.connectivity.HookupWire reference="../../../components/diylc.connectivity.HookupWire[3]"/>
+      <diylc.connectivity.HookupWire reference="../../../components/diylc.connectivity.HookupWire[2]"/>
+    </set>
+  </groups>
+  <lockedLayers/>
+  <lockedComponents/>
+  <hiddenLayers/>
+  <font name="Dialog.plain" size="14" style="0"/>
+</project>
