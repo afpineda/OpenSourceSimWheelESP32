@@ -79,3 +79,7 @@ First release.
 - Improved BLE advertising.
 - Added USB implementation (for USB-capable boards like the ESP32S3).
 - Added another "ready to deploy" design as an example of USB implementation.
+
+## 2.3.5
+
+- Fixed some documentation errata.
