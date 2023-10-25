@@ -27,10 +27,6 @@
 
 - [ESP32C3](https://www.espressif.com/en/products/socs/esp32-c3) boards exposes a slightly different power management API than other ESP32 boards. The firmware has been updated, but not tested. Deep sleep mode may not work properly in battery-operated setups on these boards.
 
-## Known issues
-
-- [ESP32C3](https://www.espressif.com/en/products/socs/esp32-c3) boards exposes a slightly different power management API than other ESP32 boards. The firmware has been updated, but not tested. Deep sleep mode may not work properly in battery-operated setups on these boards.
-
 ## Contributing
 
 - Ways to contribute:
