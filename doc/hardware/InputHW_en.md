@@ -64,6 +64,12 @@ They are just 4 (sometimes 8) push buttons arranged as a cross. Note that one an
 
 A funky switch is just the physical combination of a rotary encoder, a 4-way joystick and a push button into a single device. A note of caution here: funky switches are priced around 4 dollars at AliExpress, but 30 dollars at some other retailers. The main disadvantage of funky switches is that can't be mounted into a panel (they lack a nut).
 
+## Magnets (magnetic shift paddles and the alike)
+
+Magnetic shift paddles are a common choice for sim wheels these days due to their "feel" but, in the end, most of them are equiped with roller lever switches like any other shift paddle. However, magnets could be used as contactless switches, thus beating the lifetime of any mechanical switch.
+
+Any mechanical switch may be replaced with [Hall-effect (HE)](https://en.wikipedia.org/wiki/Hall_effect_sensor) sensors. Note that there are many different kinds of HE sensors, not all suitable for this application. Discrete (or "digital") HE sensors/switches, like the widely available [KY-003](https://sensorkit.joy-it.net/en/sensors/ky-003) will work, but note that the sensor itself have to be positioned very close to the magnet.
+
 ## Input circuitry
 
 When using a GPIO as a digital input, just one switch can be accommodated in it. There are not enough input pins to accommodate all the required inputs in this way, so another technique must come into place. There are several choices:

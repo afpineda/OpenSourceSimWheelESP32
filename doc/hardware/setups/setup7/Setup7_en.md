@@ -60,7 +60,7 @@ Other parts (quantity unknown):
 Other notes:
 
 - The GX16 connector may be replaced by any other kind. The GX16 features a knot that prevents accidental unplug. The 5 pins flavor allows to build a fully capable USB port, not just a charging/power port, if you want.
-- The packaging of the shift registers will show a small circle next to pin #1, wich is tagged as `~LD` here.
+- The packaging of the shift registers will show a small circle next to pin #1, which is tagged as `~LD` here.
 - There are several flavors of the T-QT DevKit board. Choose the **"PRO"** flavor, since it features a built-in powerboost module, unless you don't need the battery.
 - The T-QT DevKit board is sold with some wires included for the (optional) battery.
 
@@ -95,7 +95,7 @@ This layout includes the following subsystems (read for an in-depth explanation)
 
 - [Power](../../subsystems/Power/Power_en.md) through a powerboost module already built in the DevKit board or an external power source.
 - [Battery monitor](../../subsystems/BatteryMonitor/BatteryMonitor_en.md) through a built in voltage divider.
-- [Switches](../../subsystems/Switches/Switches_en.md) through analog multiplexers.
+- [Switches](../../subsystems/Switches/Switches_en.md) through shift registers.
 - [Relative rotary encoder](../../subsystems/RelativeRotaryEncoder/RelativeRotaryEncoder_en.md) bare bone type.
 
 Notes and build tips:

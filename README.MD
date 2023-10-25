@@ -8,7 +8,8 @@
 
 This project provides open hardware and software for a sim-racing wheel or button box, featuring:
 
-- **Wireless connection** through Bluetooth Low Energy with zero configuration effort
+- **Wireless connection** through **Bluetooth Low Energy**, with zero configuration effort
+- **Wired connection** is also available through **USB**
 - **Several hardware setups** to choose from and detailed instructions about how to **customize** them with **minimum effort**
 - Power through rechargeable **batteries** or through the wheel's base
 - **Alternate mode**. While activated, any input is reported as an alternate one, thus, duplicating the number of effective inputs. Much like the SHIFT key in your keyboard.
@@ -37,7 +38,8 @@ There is a [companion app](https://github.com/afpineda/SimWheelESP32Config) for 
 
 Este proyecto proporciona hardware y software abierto para un volante de simulación o una caja de botones con las siguientes características:
 
-- **Conexión inalámbrica** a través de Bluetooth de baja energía y sin esfuerzo de configuración
+- **Conexión inalámbrica** a través de **Bluetooth de baja energía** y sin esfuerzo de configuración
+- **Conexión por cable** también disponible mediante **USB**
 - **Varias configuraciones hardware** para elegir e instrucciones detalladas para **personalizarlas** con el **mínimo esfuerzo**
 - Alimentación mediante **baterías** recargables, o bien, mediante la base del volante
 - **Modo alternativo**. Mientras está activado, cualquier entrada se reporta como una entrada alternativa, duplicando su número en consecuencia. Similar a la tecla SHIFT de un teclado.
