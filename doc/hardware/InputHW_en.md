@@ -185,7 +185,7 @@ Note that pull resistors are needed for each button, which is unpractical. It wi
 
 Actual implementation in this project uses negative logic and pull-up resistors.
 
-Note that the `SER` (serial input) pin of the last shift register in the chain may hold another switch. If you have $S$ shift registers, $N$ bits each, you can have up to $(2^{N}*S)+1$ switches.
+Note that the `SER` (serial input) pin of the last shift register in the chain may hold another switch. If you have $S$ shift registers, $N$ bits each, you can have up to $(N*S)+1$ switches.
 
 ## Summary of input hardware
 

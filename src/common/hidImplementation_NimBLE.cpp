@@ -47,21 +47,6 @@ static bool notifyConfigChanges = false;
 // BLE Server callbacks and advertising
 // ----------------------------------------------------------------------------
 
-void bleAdvertise()
-{
-    if (pServer != nullptr)
-    {
-        NimBLEAdvertising *pAdvertising = pServer->getAdvertising();
-        pAdvertising->reset();
-        pAdvertising->setAppearance(HID_GAMEPAD);
-        pAdvertising->addServiceUUID(hid->hidService()->getUUID());
-        pAdvertising->addServiceUUID(hid->batteryService()->getUUID());
-        pAdvertising->addServiceUUID(hid->deviceInfo()->getUUID());
-        pAdvertising->start();
-        notify::BLEdiscovering();
-    }
-}
-
 class BleConnectionStatus : public NimBLEServerCallbacks
 {
 public:
@@ -79,7 +64,8 @@ public:
     void onDisconnect(NimBLEServer *pServer)
     {
         connected = false;
-        bleAdvertise();
+        NimBLEDevice::startAdvertising();
+        notify::BLEdiscovering();
         if (autoPowerOffTimer != nullptr)
             esp_timer_start_once(autoPowerOffTimer, AUTO_POWER_OFF_DELAY_SECS * 1000000);
     };
@@ -193,18 +179,14 @@ void hidImplementation::begin(
             log_e("Unable to create HID device");
             abort();
         }
-        hid->manufacturer(deviceManufacturer);
+        hid->manufacturer()->setValue(deviceManufacturer); // Workaround for bug in `hid->manufacturer(deviceManufacturer)`
         hid->pnp(BLE_VENDOR_SOURCE, BLE_VENDOR_ID, BLE_PRODUCT_ID, PRODUCT_REVISION);
         hid->hidInfo(0x00, 0x01);
-        
         NimBLECharacteristic* modelString_chr = hid->deviceInfo()->createCharacteristic((uint16_t)0x2A24,NIMBLE_PROPERTY::READ);
         modelString_chr->setValue(deviceName);
-
-        NimBLESecurity *pSecurity = new NimBLESecurity();
-        pSecurity->setAuthenticationMode(ESP_LE_AUTH_BOND);
         hid->reportMap((uint8_t *)hid_descriptor, sizeof(hid_descriptor));
-        hid->setBatteryLevel(UNKNOWN_BATTERY_LEVEL);
 
+        // Create HID reports
         inputGamepad = hid->inputReport(RID_INPUT_GAMEPAD);
         configReport = hid->featureReport(RID_FEATURE_CONFIG);
         capabilitiesReport = hid->featureReport(RID_FEATURE_CAPABILITIES);
@@ -215,9 +197,25 @@ void hidImplementation::begin(
         configReport->setCallbacks(&configFRCallbacks);
         capabilitiesReport->setCallbacks(&capabilitiesFRCallbacks);
 
+        // Configure BLE advertising
+        NimBLEAdvertising *pAdvertising = pServer->getAdvertising();
+        pAdvertising->setAppearance(HID_GAMEPAD);
+        pAdvertising->setScanResponse(true);
+        pAdvertising->setMinPreferred(0x06);
+        pAdvertising->setMinPreferred(0x12);
+        pAdvertising->addServiceUUID(hid->hidService()->getUUID());
+        pAdvertising->addServiceUUID(hid->batteryService()->getUUID());
+        pAdvertising->addServiceUUID(hid->deviceInfo()->getUUID());
+
+        // Configure BLE security
+        NimBLESecurity *pSecurity = new NimBLESecurity();
+        pSecurity->setAuthenticationMode(ESP_LE_AUTH_BOND);
+
+
         // Start services
         hid->startServices();
-        connectionStatus.onDisconnect(pServer);
+        hid->setBatteryLevel(UNKNOWN_BATTERY_LEVEL);
+        connectionStatus.onDisconnect(pServer); // start advertising
     }
 }
 
