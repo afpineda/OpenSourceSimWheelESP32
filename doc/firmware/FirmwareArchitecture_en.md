@@ -276,3 +276,13 @@ Event capture is detached from event processing at the **input hub daemon**, whi
 ## About auto power off
 
 In a battery-operated system, when there is no bluetooth connection, the systems goes to advertising. If no connection is made in a certain time lapse, the system goes to deep sleep or power off.
+
+## About connectivity
+
+The firmware relies in the [HID](https://en.wikipedia.org/wiki/Human_interface_device) standard to provide connectivy.
+The device will appear as a [Gamepad](https://en.wikipedia.org/wiki/Gamepad) to the hosting computer.
+The *hidImplementation* namespace is in charge of that. However, this project provides several alternate implementations:
+
+- *hidImplementation_NimBLE.cpp*: BLE using the [NimBLE stack](https://mynewt.apache.org/latest/network/). Requires an additional Arduino [library](https://www.arduino.cc/reference/en/libraries/nimble-arduino/).
+- *hidImplementation_ESPBLE.cpp*: BLE using the native ESP-Arduino stack. Does not require additional libraries, but it takes way more flash memory than *NimBLE*.
+- *hidImplementation_USB.cpp*: wired USB implementation.

@@ -197,20 +197,38 @@ Note that the following input numbers have a special meaning in Windows:
 - *06*: "Back" button
 - *07*: "Start" button
 
-## Build your design into a perfboard
+### Connectivity
 
-Some of the circuit designs may show very small resistors and diodes which does not fit the real ones. This is not a mistake. They must be placed in "vertical" layout, so they lie in a minimal surface of the perfboard.
+This project provides three (exclusive) connectivity choices:
 
-<img src="../pictures/VerticalLayout.png" alt="Vertical layout" width="40%" margin-lefet="auto" />
+- Bluetooth Low Energy (BLE) using the [NimBLE stack](https://mynewt.apache.org/latest/network/). This is the default. If you are happy with this, ignore this section.
 
-Note that some components may be placed on top of others to save more space.
+- Bluetooth Low Energy using the ESP32-Arduino stack. Currently not used (except for a test unit), but available. This stack requires more flash memory compared to *NimBLE* (about 500 KB). If you have issues with *NimBLE*, this is a workaround.
 
-## USB implementation
+- Universal Serial Bus (USB).
+
+In order to use any of them:
+
+- Edit the file **"includes.txt"** at your sketch folder (under [src/Firmware](../../../src/Firmware/)). Replace the text "hidImplementation_NimBLE.cpp" with a filename chosen from this table:
+
+  | Connectivity | Stack         | Filename                     |
+  | ------------ | ------------- | ---------------------------- |
+  | BLE          | NimBLE        | hidImplementation_NimBLE.cpp |
+  | BLE          | ESP32-Arduino | hidImplementation_ESPBLE.cpp |
+  | USB          | ESP32-Arduino | hidImplementation_USB.cpp    |
+  
+- Run the [sources setup procedure](../../firmware/sourcesSetup_en.md) again. **This is mandatory**.
 
 If you go for a purely wired USB implementation:
 
 - Set USB-Mode to "USB-OTG (TinyUSB)" in Arduino-IDE (board configuration).
-- Edit the file "includes.txt" at your sketch folder (under [src/Firmware](../../../src/Firmware/)). Replace the text "hidImplementation_NimBLE.cpp" with "hidImplementation_USB.cpp". Save.
-- Run the [sources setup procedure](../../firmware/sourcesSetup_en.md) again.
 - There is no sense in using a battery-operated design if you have USB power available. For this reason, automatic power-off is not available within this implementation.
 - Note that you can not have both Bluetooth and USB at the same time in the same device.
+
+## Build your design into a perfboard
+
+Some of the circuit designs may show very small resistors and diodes which does not fit the real ones. This is not a mistake. They must be placed in "vertical" layout, so they lie in a minimal surface of the perfboard.
+
+<img src="../pictures/VerticalLayout.png" alt="Vertical layout" width="40%" margin-left="auto" />
+
+Note that some components may be placed on top of others to save more space.
