@@ -16,10 +16,12 @@ This setup has been tested.
 
 ## Button mapping
 
-- *Rotary encoder clockwise/counter-clockwise*: left/right.
-- *Switch lever*: up/down.
+- *Rotary encoder clockwise/counter-clockwise*: Left/Right thumb stick button.
+- *Switch lever*: left/right shoulder button.
 - *Rotary encoder push button*: "A".
 - *Other buttons*: "B", "X" and "Y".
+
+*Note*: previous firmware versions up to 2.3.5 showed a different button mapping.
 
 ## Needed parts
 
@@ -87,6 +89,7 @@ Notes and build tips:
 - Dupond connectors are not suitable for the switches: cut one end of the wire and solder it to the proper terminal.
 - Your KY-040 rotary may use a different pin-out than the one shown here. Check first.
 - Use isolation tape to cover all unused pins and exposed solder points.
+- Connectivity provided by the ESP-Arduino stack, since flash memory size is not an issue here.
 
 ![teabox wiring](../../pictures/Teabox_inside.png)
 

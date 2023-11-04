@@ -18,10 +18,10 @@
 #define BTN1 JOY_B
 #define BTN2 JOY_X
 #define BTN3 JOY_Y
-#define ROT1_CW 24
-#define ROT1_CCW 25
-#define BTN_UP 26
-#define BTN_DOWN 27
+#define ROT1_CW JOY_LTHUMBSTICK_CLICK
+#define ROT1_CCW JOY_RTHUMBSTICK_CLICK
+#define BTN_UP JOY_LB
+#define BTN_DOWN JOY_RB
 
 /* -----------------------------------------------------------------
  >>>> [EN] DEVICE IDENTIFICATION
@@ -51,7 +51,9 @@ void simWheelSetup()
     inputs::addDigital(GPIO_NUM_13, BTN1);
     inputs::addDigital(GPIO_NUM_15, BTN2);
     inputs::addDigital(GPIO_NUM_2, BTN3);
-    inputHub::setDPADControls(BTN_UP,BTN_DOWN,ROT1_CCW,ROT1_CW);
+    // Some simulators are unable to map DPAD inputs.
+    // Uncomment if you wish
+    // inputHub::setDPADControls(BTN_UP,BTN_DOWN,ROT1_CCW,ROT1_CW);
 }
 
 //------------------------------------------------------------------
