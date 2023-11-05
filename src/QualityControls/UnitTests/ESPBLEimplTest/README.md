@@ -126,3 +126,12 @@ _Notes_:
 2. Enter `00 00 00 00 00 00 00 00` at fields below `ReportID`.
 3. Click on `Set Feature` , then on `Get Feature`.
 4. Must show the following line: `RD 02  51 BF xx xx xx xx 07 00`. Ignore `xx`.
+
+## Reconnect
+
+(Regression test for Issue #3)
+
+1. Reset. Wait a few seconds.
+2. Ensure the device is connected again to the host computer.
+3. Reopen the joystick test application (close and ).
+4. Ensure the buttons test is running again (as described before).

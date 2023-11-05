@@ -89,7 +89,6 @@ Notes and build tips:
 - Dupond connectors are not suitable for the switches: cut one end of the wire and solder it to the proper terminal.
 - Your KY-040 rotary may use a different pin-out than the one shown here. Check first.
 - Use isolation tape to cover all unused pins and exposed solder points.
-- Connectivity provided by the ESP-Arduino stack, since flash memory size is not an issue here.
 
 ![teabox wiring](../../pictures/Teabox_inside.png)
 

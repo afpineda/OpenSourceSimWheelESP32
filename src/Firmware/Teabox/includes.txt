@@ -16,7 +16,7 @@ RotaryEncoderInput.cpp
 PolledInput.cpp
 Inputs.cpp
 InputHub.cpp
-hidImplementation_ESPBLE.cpp
+hidImplementation_NimBLE.cpp
 batteryCalibration.cpp
 clutchState.cpp
 power.cpp

@@ -89,3 +89,7 @@ First release.
 - Added BLE implementation through the "native" ESP-Arduino stack. This is a caution against bugs.
   NimBLE continues to be the default stack.
 - The "Teabox" design now uses that implementation. Button mapping has changed, too.
+
+## 2.4.1
+
+- The "Teabox" design has been reverted to the NimBLE stack due to issue #3.

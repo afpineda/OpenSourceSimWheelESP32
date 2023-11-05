@@ -23,7 +23,7 @@
 
 #include "SimWheel.h"
 #include "HID_definitions.h"
-//#include <arduino.h>
+#include <arduino.h>
 
 // ----------------------------------------------------------------------------
 // Globals
@@ -54,6 +54,7 @@ public:
         if (autoPowerOffTimer != nullptr)
             esp_timer_stop(autoPowerOffTimer);
         connected = true;
+        Serial.println("BLE connected");
         notify::connected();
         hidImplementation::reset();
     };
@@ -63,6 +64,7 @@ public:
         connected = false;
         BLEDevice::startAdvertising();
         notify::BLEdiscovering();
+        Serial.println("Advertising");
         if (autoPowerOffTimer != nullptr)
             esp_timer_start_once(autoPowerOffTimer, AUTO_POWER_OFF_DELAY_SECS * 1000000);
     };
@@ -205,8 +207,8 @@ void hidImplementation::begin(
         pAdvertising->addServiceUUID(hid->deviceInfo()->getUUID());
 
         // Configure BLE security
-        BLESecurity *pSecurity = new BLESecurity();
-        pSecurity->setAuthenticationMode(ESP_LE_AUTH_BOND);
+        //BLESecurity *pSecurity = new BLESecurity();
+        //pSecurity->setAuthenticationMode(ESP_LE_AUTH_BOND);
 
         // Start services
         hid->startServices();
@@ -256,6 +258,7 @@ void hidImplementation::reportInput(
 {
     if (connectionStatus.connected)
     {
+        Serial.print("reportInput (connected)");
         uint8_t report[GAMEPAD_REPORT_SIZE];
         if (altEnabled)
         {
@@ -306,6 +309,8 @@ void hidImplementation::reportInput(
         inputGamepad->setValue(report, GAMEPAD_REPORT_SIZE);
         inputGamepad->notify();
     }
+    else 
+    Serial.print("reportInput (NOT connected)");
 }
 
 void hidImplementation::reportBatteryLevel(int level)
