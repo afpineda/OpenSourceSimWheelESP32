@@ -54,7 +54,6 @@ public:
         if (autoPowerOffTimer != nullptr)
             esp_timer_stop(autoPowerOffTimer);
         connected = true;
-        Serial.println("BLE connected");
         notify::connected();
         hidImplementation::reset();
     };
@@ -64,7 +63,6 @@ public:
         connected = false;
         BLEDevice::startAdvertising();
         notify::BLEdiscovering();
-        Serial.println("Advertising");
         if (autoPowerOffTimer != nullptr)
             esp_timer_start_once(autoPowerOffTimer, AUTO_POWER_OFF_DELAY_SECS * 1000000);
     };
@@ -82,23 +80,28 @@ class ConfigFRCallbacks : public BLECharacteristicCallbacks
     {
         int size = pCharacteristic->getLength();
         const uint8_t *data = pCharacteristic->getData();
-        if ((size>0) && (data[0]>=CF_CLUTCH) && (data[0]<=CF_BUTTON)) { 
+        if ((size > 0) && (data[0] >= CF_CLUTCH) && (data[0] <= CF_BUTTON))
+        {
             // clutch function
             clutchState::setFunction((clutchFunction_t)data[0]);
         }
-        if ((size>1) && (data[1]!=0xff))  {
+        if ((size > 1) && (data[1] != 0xff))
+        {
             // ALT Buttons mode
             clutchState::setALTModeForALTButtons((bool)data[1]);
         }
-        if ((size>2) && ((clutchValue_t)data[2]>=CLUTCH_NONE_VALUE) && ((clutchValue_t)data[2]<=CLUTCH_FULL_VALUE)) {
+        if ((size > 2) && ((clutchValue_t)data[2] >= CLUTCH_NONE_VALUE) && ((clutchValue_t)data[2] <= CLUTCH_FULL_VALUE))
+        {
             // Bite point
             clutchState::setBitePoint((clutchValue_t)data[2]);
         }
-        if ((size>3) && (data[3]==(uint8_t)simpleCommands_t::CMD_AXIS_RECALIBRATE)) {
+        if ((size > 3) && (data[3] == (uint8_t)simpleCommands_t::CMD_AXIS_RECALIBRATE))
+        {
             // Force analog axis recalibration
             inputs::recalibrateAxes();
         }
-        if ((size>3) && (data[3]==(uint8_t)simpleCommands_t::CMD_BATT_RECALIBRATE)) {
+        if ((size > 3) && (data[3] == (uint8_t)simpleCommands_t::CMD_BATT_RECALIBRATE))
+        {
             // Restart auto calibration algoritm
             batteryCalibration::restartAutoCalibration();
         }
@@ -129,9 +132,9 @@ class CapabilitiesFRCallbacks : public BLECharacteristicCallbacks
         uint8_t data[CAPABILITIES_REPORT_SIZE];
         data[0] = MAGIC_NUMBER_LOW;
         data[1] = MAGIC_NUMBER_HIGH;
-        *(uint16_t *)(data+2) = DATA_MAJOR_VERSION;
-        *(uint16_t *)(data+4) = DATA_MINOR_VERSION;
-        *(uint16_t *)(data+6) = capabilities::flags;
+        *(uint16_t *)(data + 2) = DATA_MAJOR_VERSION;
+        *(uint16_t *)(data + 4) = DATA_MINOR_VERSION;
+        *(uint16_t *)(data + 6) = capabilities::flags;
         pCharacteristic->setValue(data, sizeof(data));
     }
 } capabilitiesFRCallbacks;
@@ -169,27 +172,28 @@ void hidImplementation::begin(
 
         // Stack initialization
         BLEDevice::init(deviceName);
+        // NOTE: this library lacks BLEDevice::setSecurityAuth(BLE_SM_PAIR_AUTHREQ_BOND);
         pServer = BLEDevice::createServer();
         pServer->setCallbacks(&connectionStatus);
 
         // HID initialization
         hid = new BLEHIDDevice(pServer);
-        if (!hid) {
+        if (!hid)
+        {
             log_e("Unable to create HID device");
             abort();
         }
         hid->manufacturer()->setValue(deviceManufacturer); // Workaround for bug in `hid->manufacturer(deviceManufacturer)`
         hid->pnp(BLE_VENDOR_SOURCE, BLE_VENDOR_ID, BLE_PRODUCT_ID, PRODUCT_REVISION);
         hid->hidInfo(0x00, 0x01);
-        BLECharacteristic* modelString_chr = hid->deviceInfo()->createCharacteristic((uint16_t)0x2A24,BLECharacteristic::PROPERTY_READ);
-        modelString_chr->setValue(deviceName);
         hid->reportMap((uint8_t *)hid_descriptor, sizeof(hid_descriptor));
 
         // Create HID reports
         inputGamepad = hid->inputReport(RID_INPUT_GAMEPAD);
         configReport = hid->featureReport(RID_FEATURE_CONFIG);
         capabilitiesReport = hid->featureReport(RID_FEATURE_CAPABILITIES);
-        if (!inputGamepad || !configReport || !capabilitiesReport) {
+        if (!inputGamepad || !configReport || !capabilitiesReport)
+        {
             log_e("Unable to create HID report characteristics");
             abort();
         }
@@ -205,10 +209,6 @@ void hidImplementation::begin(
         pAdvertising->addServiceUUID(hid->hidService()->getUUID());
         pAdvertising->addServiceUUID(hid->batteryService()->getUUID());
         pAdvertising->addServiceUUID(hid->deviceInfo()->getUUID());
-
-        // Configure BLE security
-        //BLESecurity *pSecurity = new BLESecurity();
-        //pSecurity->setAuthenticationMode(ESP_LE_AUTH_BOND);
 
         // Start services
         hid->startServices();
@@ -252,13 +252,12 @@ void hidImplementation::reset()
 }
 
 void hidImplementation::reportInput(
-        inputBitmap_t globalState,
-        bool altEnabled,
-        uint8_t POVstate = 0)
+    inputBitmap_t globalState,
+    bool altEnabled,
+    uint8_t POVstate = 0)
 {
     if (connectionStatus.connected)
     {
-        Serial.print("reportInput (connected)");
         uint8_t report[GAMEPAD_REPORT_SIZE];
         if (altEnabled)
         {
@@ -302,15 +301,15 @@ void hidImplementation::reportInput(
         report[17] = (uint8_t)clutchState::leftAxis;
         report[18] = (uint8_t)clutchState::rightAxis;
         report[19] = POVstate;
-        if (notifyConfigChanges) {
+        if (notifyConfigChanges)
+        {
             report[19] |= (RID_FEATURE_CONFIG << 4);
             notifyConfigChanges = false;
         }
         inputGamepad->setValue(report, GAMEPAD_REPORT_SIZE);
-        inputGamepad->notify();
+        inputGamepad->setNotifyProperty(true);
+        inputGamepad->notify(true);
     }
-    else 
-    Serial.print("reportInput (NOT connected)");
 }
 
 void hidImplementation::reportBatteryLevel(int level)
@@ -321,7 +320,7 @@ void hidImplementation::reportBatteryLevel(int level)
         level = 0;
 
     hid->setBatteryLevel(level);
-    //hid->batteryLevel()->notify();
+    // hid->batteryLevel()->notify(); not needed
 }
 
 void hidImplementation::reportChangeInConfig()

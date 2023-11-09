@@ -72,7 +72,7 @@ int power::getLastBatteryLevel()
 
 void setup()
 {
-    esp_log_level_set("*", ESP_LOG_ERROR);
+    esp_log_level_set("*", ESP_LOG_VERBOSE);
     Serial.begin(115200);
     while (!Serial)
         ;
@@ -92,6 +92,7 @@ uint8_t POV = 0;
 
 void loop()
 {
+    log_i("LOOP");
     if (!powerSim)
     {
         // Simulate power off

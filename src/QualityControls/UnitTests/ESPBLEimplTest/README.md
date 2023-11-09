@@ -133,5 +133,5 @@ _Notes_:
 
 1. Reset. Wait a few seconds.
 2. Ensure the device is connected again to the host computer.
-3. Reopen the joystick test application (close and ).
+3. Reopen the joystick test application (close and run again).
 4. Ensure the buttons test is running again (as described before).

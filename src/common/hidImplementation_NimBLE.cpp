@@ -170,6 +170,7 @@ void hidImplementation::begin(
 
         // Stack initialization
         NimBLEDevice::init(deviceName);
+        NimBLEDevice::setSecurityAuth(BLE_SM_PAIR_AUTHREQ_BOND);
         pServer = NimBLEDevice::createServer();
         pServer->setCallbacks(&connectionStatus);
 
@@ -182,8 +183,6 @@ void hidImplementation::begin(
         hid->manufacturer()->setValue(deviceManufacturer); // Workaround for bug in `hid->manufacturer(deviceManufacturer)`
         hid->pnp(BLE_VENDOR_SOURCE, BLE_VENDOR_ID, BLE_PRODUCT_ID, PRODUCT_REVISION);
         hid->hidInfo(0x00, 0x01);
-        NimBLECharacteristic* modelString_chr = hid->deviceInfo()->createCharacteristic((uint16_t)0x2A24,NIMBLE_PROPERTY::READ);
-        modelString_chr->setValue(deviceName);
         hid->reportMap((uint8_t *)hid_descriptor, sizeof(hid_descriptor));
 
         // Create HID reports
@@ -206,11 +205,6 @@ void hidImplementation::begin(
         pAdvertising->addServiceUUID(hid->hidService()->getUUID());
         pAdvertising->addServiceUUID(hid->batteryService()->getUUID());
         pAdvertising->addServiceUUID(hid->deviceInfo()->getUUID());
-
-        // Configure BLE security
-        NimBLESecurity *pSecurity = new NimBLESecurity();
-        pSecurity->setAuthenticationMode(ESP_LE_AUTH_BOND);
-
 
         // Start services
         hid->startServices();
