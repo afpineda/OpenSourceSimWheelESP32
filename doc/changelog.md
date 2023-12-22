@@ -93,3 +93,7 @@ First release.
 ## 2.4.1
 
 - The "Teabox" design has been reverted to the NimBLE stack due to issue #3.
+
+## 2.4.2
+
+- Due to issue #4, explicit advice is given about the wiring of funky switches. No changes in the source code.

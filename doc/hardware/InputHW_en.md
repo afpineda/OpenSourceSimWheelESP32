@@ -64,6 +64,8 @@ They are just 4 (sometimes 8) push buttons arranged as a cross. Note that one an
 
 A funky switch is just the physical combination of a rotary encoder, a 4-way joystick and a push button into a single device. A note of caution here: funky switches are priced around 4 dollars at AliExpress, but 30 dollars at some other retailers. The main disadvantage of funky switches is that can't be mounted into a panel (they lack a nut).
 
+**Warning**: misleading terminal tags have been reported at some ALPS funky switches (more information later).
+
 ## Magnets (magnetic shift paddles and the alike)
 
 Magnetic shift paddles are a common choice for sim wheels these days due to their "feel" but, in the end, most of them are equiped with roller lever switches like any other shift paddle. However, magnets could be used as contactless switches, thus beating the lifetime of any mechanical switch.
@@ -92,7 +94,7 @@ There are some articles in the Internet claiming a lot of switches in a single p
 
 Note that analog circuits must be connected to ADC pins. Many pins are not suitable.
 
-There are other kinds of analog circuits that have been discarded, too, because they drain current at all times.  
+There are other kinds of analog circuits that have been discarded, too, because they drain current at all times.
 
 - *Voltage ladders*
 

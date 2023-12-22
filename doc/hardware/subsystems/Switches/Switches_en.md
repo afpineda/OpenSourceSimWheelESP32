@@ -27,21 +27,24 @@ Take a look at the article on [input hardware](../../InputHW_en.md) for an intro
 Before going into design details, take note on how to wire (externally) all inputs to this subsystem:
 
 - **Push buttons, push levers or roller levers**. They have two interchangeable terminals. If there are three terminals, choose the two terminals for the NO (normally open) switch.
-  
+
   - One terminal wired to a selector pin header at the button matrix.
   - Other terminal wired to an input pin header at the button matrix.
 
 - **Built in push button of rotary encoders**:
-  
+
   - **Barebone**: They are wired to the button matrix as any other push button, being `SW` and `SW GND` the involved terminals.
   - **KY-040**. There are two options:
     - *Single pin*: wire `SW` to any input-capable GPIO.
     - *Wired to the button matrix*, using a satellite circuit (see below). Terminals are **not** interchangeable.
 
 - **Directional pads (DPADs) and funky switches (except for rotation)**. Terminals are **not** interchangeable:
-  
-  - The common terminal must be wired to a single input pin header at the button matrix.
-  - Each other terminal wired to a different selector pin header at the button matrix.
+
+  - The common terminal (`COM`) must be wired to a single input pin header at the button matrix.
+  - Each other terminal (`A`, `B`, `C`, `D` and `Push`) wired to a different selector pin header at the button matrix.
+  - **Warning**: it has been reported that some ALPS funky switches shows erroneusly swapped `Push` and `COM` tags, at least, in their data sheet. You can check this with the help of a basic polimeter/multimeter.
+
+    ![Misleading ALPS data sheet](./ALPS_sheet_mistake.png)
 
 - **Potentiometers**: a satellite circuit is required (see below) for each potentiometer. Terminals are **not** interchangeable.
 
@@ -90,7 +93,7 @@ Since clutch paddles come in pairs, the following [electrical circuit (falstad.c
 
 Needed parts (not counting the potentiometer) for one clutch paddle:
 
-- A "vertically operated" 100K-ohms trimmer linear potentiometer. Any impedance, higher than 3 times that of the clutch's potentiometer, should work. These are some examples of trimmer potentiometers: [https://www.bourns.com/docs/technical-documents/technical-library/trimmers/publications/trimpot_handout.pdf](https://www.bourns.com/docs/technical-documents/technical-library/trimmers/publications/trimpot_handout.pdf) 
+- A "vertically operated" 100K-ohms trimmer linear potentiometer. Any impedance, higher than 3 times that of the clutch's potentiometer, should work. These are some examples of trimmer potentiometers: [https://www.bourns.com/docs/technical-documents/technical-library/trimmers/publications/trimpot_handout.pdf](https://www.bourns.com/docs/technical-documents/technical-library/trimmers/publications/trimpot_handout.pdf)
   ![Trimmer potentiometers](./TrimmerPotentiometers.png)
 - A *Schottky diode*: the same as for the button matrix.
 
@@ -152,6 +155,8 @@ Needed parts (not counting input hardware like push buttons):
 - Wire the other terminal of each push button (or switch) to one of the light-blue pins.
 - Bare bone rotary encoders: their built-in push button must be wired like any other push button, being `SW` and `SW GND` the involved terminals.
 - KY-040 rotary encoders: wire `SW` to any light-blue pin.
+- Funky switches (except for rotation): wire `COM` to `GND`. Wire `A`, `B`, `C`, `D` and `Push` to a light-blue pin header.
+  - **Warning**: it has been reported that some ALPS funky switches shows erroneusly swapped `Push` and `COM` tags, at least, in their data sheet. You can check this with the help of a basic polimeter/multimeter.
 - Potentiometers as digital clutch paddles: build this [satellite circuit](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWEBmAHAJmgdgGzoRmACzICcpkORICkNNdCApgLRhgBQA5jeqiOkj8EfAUToSOAJRq4QRYXIlR5dZNGQqJ0BBwCy81HVI4UkaiZWZdBnFnQhLqBY9N1rHMFmp5qLuw5gonRg8NoI5GFR8BAAwgA2AK4ALgDGABacAO68-C4Ici6QHDm+hrKmRZ7eueUKIUTUIWFQ0HzoDgkpGejV1CL8gvxlxNQQofCtyOhgRtFRmgAq6QBOTADO6QD28QAmJSAjjRXgx8U5BaajtdfFAB4gWLTgXiCoCJpBdGN0i1sAOut4gBLLjpZKAgBGSSYgIADsCAHaA9JMACGuyYKw4D3QpCwLwJ4hCgnk4F+AKBoPBUJh8KRKPRmOxDwQYFM6CoNDQAjsZNCIAA4gA5AAiOJoBAEeMO+IE035vxWoK4WMByVWG22e3hW2STERyWBWwAtkx9SzDshNDhSI8pfZFSAuml0vCMbt4rD1nC9QajabzViJWQCRFeA48E6XRl3btPd7ffrDcazRaOEA) which is quite simillar to that of the button matrix. All three potentiometers must have the same impedance. The higher, the better. The trigger threshold potentiometer is a trimmer one. Note that this satellite circuit will drain current at all times.
 
   ![Satellite circuit for clutch paddles](./Multiplexer2ClutchPaddles.png)
@@ -196,7 +201,7 @@ Input pins must be wired to valid input-capable GPIO pins with internal pull-dow
 1. Create a constant static array for all the selector's GPIO numbers, let's say `mtxSelectors`.
 2. Create another constant static array for all the input's GPIO numbers, let's say `mtxInputs`.
 3. Create another constant static array for the assigned input numbers, let's say `mtxNumbers`. All of them in the range from 0 to 63.
-4. Call `inputs::addButtonMatrix()`. 
+4. Call `inputs::addButtonMatrix()`.
    - First parameter is `mtxSelectors`.
    - Second parameter is the count of GPIOs in `mtxSelectors`.
    - Third parameter is `mtxInputs`.
@@ -310,7 +315,7 @@ Place a call to `inputs::addDigital()`:
 For example:
 
 ```c
-void simWheelSetup() 
+void simWheelSetup()
 {
    ...
    inputs::addDigital(GPIO_NUM_26, 1, true, true);
