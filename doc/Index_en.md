@@ -5,8 +5,8 @@
 - [Overview](./overview_en.md)
 - [Required skills and tools](./skills_en.md)
 - [Prepare the source code for compilation and uploading](./firmware/sourcesSetup_en.md)
-- [Know your ESP32 DevKit board](./hardware/DevKits_en.md)
 - [Overview of input hardware suitable (or not) for a sim wheel/button box](./hardware/InputHW_en.md)
+- [Know your ESP32 DevKit board](./hardware/DevKits_en.md)
 - [How to customize in order to build your own hardware and firmware setup](./hardware/subsystems/CustomizeHowto_en.md).
 
 - Ready to deploy designs:
@@ -30,14 +30,14 @@
 ## Contributing
 
 - Ways to contribute:
-  
+
   - Report bugs.
   - Contribute with an open design for a steering wheel housing.
   - Contribute a ready-to-deploy circuit layout for other ESP32-based boards.
   - Share your experience and contribute with a tutorial.
 
 - Pull request policy (contributing with new code):
-  
+
   - Code for custom projects will be rejected. Provide code that everyone can benefit from.
   - All relevant quality controls must be updated along with the new code.
   - You must run all relevant quality controls.
