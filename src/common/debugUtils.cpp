@@ -1,10 +1,12 @@
 /**
+ * @file debugUtils.cpp
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
  * @brief Testing and debugging utilities
- * 
+ *
  * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
- * 
+ *
  */
 
 #include "debugUtils.h"

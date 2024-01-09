@@ -244,8 +244,8 @@ void inputs::addRotaryEncoder(
     if ((cwInputNumber <= MAX_INPUT_NUMBER) &&
         (ccwInputNumber <= MAX_INPUT_NUMBER) &&
         (cwInputNumber != ccwInputNumber))
-      new RotaryEncoderInput(
-          clkPin, dtPin, cwInputNumber, ccwInputNumber, useAlternateEncoding);
+      digitalInputChain = new RotaryEncoderInput(
+          clkPin, dtPin, cwInputNumber, ccwInputNumber, useAlternateEncoding, digitalInputChain);
     else
       abortDueToInvalidInputNumber();
   }

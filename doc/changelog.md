@@ -97,3 +97,7 @@ First release.
 ## 2.4.2
 
 - Due to issue #4, explicit advice is given about the wiring of funky switches. No changes in the source code.
+
+## ??
+
+- Rework on rotary encoders: no dedicated task is required anymore, thus saving a significant amount of memory.

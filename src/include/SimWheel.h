@@ -1,4 +1,6 @@
 /**
+ * @file SimWheel.h
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
  * @brief Main header for common sources

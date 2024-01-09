@@ -1,4 +1,6 @@
 /**
+ * @file PolledInput.cpp
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
  * @brief Detect input events in a polling (or sampling) loop.
@@ -10,6 +12,7 @@
 #include "PolledInput.h"
 #include "adcTools.h"
 #include <climits>
+#include <Arduino.h> // function map()
 // #include <limits.h>
 
 // ============================================================================

@@ -39,8 +39,8 @@ Only most relevant information is shown below:
 
 ```mermaid
 classDiagram
-    class RotaryEncoderInput 
-    class inputs { 
+    class RotaryEncoderInput
+    class inputs {
       +notifyInputEvent()
       +start()
     }
@@ -77,7 +77,7 @@ classDiagram
     inputHub <--> clutchState: configuration
     inputHub --> hidImplementation: processed events
     hidImplementation <--> clutchState: configuration
-    hidImplementation --> power: auto power-off 
+    hidImplementation --> power: auto power-off
     hidImplementation <-- power: current battery level
     power --> batteryCalibration: battery voltage
     power <-- batteryCalibration: computed battery level
@@ -111,10 +111,6 @@ Most relevant are:
 ## Brief description of most relevant modules
 
 For detailed description, see the doxigen's documentation at *SimWheel.h*.
-
-### RotaryEncoderInput
-
-Each detent of a rotary encoder generates two input events in quick succession: a button press and then, release. This requires a dedicated thread for every rotary encoder, but they are dormant most of the time. Decoding is implemented by hardware interrupts.
 
 ### DigitalPolledInput and descendant classes
 
@@ -193,7 +189,7 @@ For user interfaces in need of a perpetual loop or for persistent notifications.
 
    void MyImpl::serveSingleFrame() {
     // Called one time per second
-    if (batteryIsLow) 
+    if (batteryIsLow)
       switchLed();
    }
 ```
@@ -251,27 +247,38 @@ where `bitmap(C) = bitmap(B) OR (bitmask(B) AND bitmap(A))` being AND/OR bitwise
 
 ### Event processing
 
-Input events are captured from hardware interrupts or daemons. Most relevant are:
-
-- **Rotary encoder daemons**: simulates a button press on each "detent". These daemons are dormant most time. They react to hardware interrupts.
-- **Input poll daemon**: it checks the state of polled inputs every 50 ms. This period is short enough not to miss any event, but long enough to prevent other threads from starvation.
+Input events are captured in the **Input poll daemon**: it checks the state of all inputs every 50 ms. This period is short enough not to miss any event, but long enough to prevent other threads from starvation.
 
 Event processing takes long, so later input events would be missed while processing sooner ones. To prevent this, input events are posted into a queue.
 
 ```mermaid
 flowchart LR
-  RE((Rotary encoder daemon))
   IP((Input poll daemon))
   Q[input event queue]
   IH((Input hub daemon))
-  RE -- event --> Q
   IP -- event --> Q
   Q -- event --> IH
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNptj8sOgkAMRX-l6QoS-QEWriSRxIXg0nFRmSokzAxOOhpi_Hd5yELjrj333DR9YuU0Y4qX1j2qmrzArlQWoMyiqHRCvge2o-NBExtn43iM830U5bYLAp1r25-wODZTxHe2ArfAgU9TabuU6nD-apQZJMnHT5I1FPONP7D4ZvkWV2jYG2r08MVzVBRKzYYVpsOo-UKhFYXKvgY1dJqEM92I85iKD7xCCuIOva2WfXY2DV09mRm-3lPKX_4)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNpVjssOgjAQRX-lmRUk9AdYuNKEJi5Al9ZFpYM06QObqcYQ_l1AXbCbnHvuzYzQBo1QQmfDq-1VJHY8Sc-YqLNM-CERG4K1TCt0wef5EjUXswb4RE_skTDhda1U_0qfbpuGqBnnP5_zHWvWmS0TFRTgMDpl9PzPuCgSqEeHEsr51NipZEmC9NOsqkTh_PYtlBQTFpAGrQj3Rt2jclt40IZC_LLpAwzyT0k)
 
 Event capture is detached from event processing at the **input hub daemon**, which runs most of the code. Note that such a daemon is implemented inside `inputs.cpp`, not `inputHub.cpp`.
+
+#### A note on rotary encoders
+
+Each detent of a rotary encoder generates two input events in quick succession: a button press and then, release. Decoding is implemented by hardware interrupts, but input events are read in the *input poll daemon*. In summary:
+
+1. `DT` and `CLK` signals are decoded in an interrupt service routine. If a rotation event is detected (clockwise or counter-clockwise), that event is pushed into a simple bit-oriented queue.
+2. The *input poll daemon* extracts an event from the queue, then modifies the state of the corresponding button as pressed.
+3. At the next iteration, it will reset the state of that button as non-pressed, thus simulating a press-then-release sequence of events.
+
+The bit-oriented queue shows the following properties:
+
+- Implemented as a [circular buffer](https://en.wikipedia.org/wiki/Circular_buffer).
+- Thread-safe.
+- Unnoticeable memory footprint.
+- Size for 64 rotation events. If the queue were full, latest events would be discarded.
+- Since each rotary is polled every 50 ms, it is unlikely for the queue to get full.
 
 ## About auto power off
 

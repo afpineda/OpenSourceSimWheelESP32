@@ -1,22 +1,22 @@
 # Unit test: Rotary Encoder input
 
-## Purpouse and summary
+## Purpose and summary
 
 To test correct identification of rotary encoder events: clockwise and counter-clockwise rotation. Two consecutive events must happen for each detent with a mostly unnoticeable delay between them: STATE = 1, then STATE = 0. This is equivalent to a short button press and release.
 
-## Harware setup
+## Hardware setup
 
 Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
 Use this [test circuit](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.diy):
 
 ![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.png)
 
-Two rotary encoderes are tested:
+Two rotary encoders are tested:
 
 - KY-040 type (with external pull up resistors). `CLK` pin attached to `TEST_ROTARY_CLK`. `DT` pin attached to `TEST_ROTARY_DT`. `V+` and `GND` pins as usual.
 - ALPS RKJX series. `Encoder A` pin attached to `TEST_ROTARY_ALPS_A`, `Encoder B` pin attached to `TEST_ROTARY_ALPS_B`. `Encoder COM` pin attached to `GND`.
 
-If you are not using both rotary encoders, ensure the missing pins are attached to `3V3`. Otherwise, ghost inputs will apppear.
+If you are not using both rotary encoders, ensure the missing pins are attached to `3V3`. Otherwise, ghost inputs will appear.
 
 Note that this procedure works the same for both rotary encoders. Test one first, then the other.
 

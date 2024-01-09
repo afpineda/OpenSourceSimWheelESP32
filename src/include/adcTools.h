@@ -1,4 +1,6 @@
 /**
+ * @file adcTools.h
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-12-20
  * @brief Tools for reading of ADC pins

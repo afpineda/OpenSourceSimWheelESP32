@@ -1,7 +1,9 @@
 /**
+ * @file RotaryEncodeInput.h
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
- * @brief Use a rotary encoder rotation, both clockwise and counter-clocwise,
+ * @brief Use a rotary encoder's rotation, both clockwise and counter-clocwise,
  *        as inputs for a sim racing wheel or button box.
  *
  * @section DESCRIPTION
@@ -16,39 +18,59 @@
 #ifndef __ROTARYENCODERINPUT_H__
 #define __ROTARYENCODERINPUT_H__
 
-#include <Arduino.h>
+// #include <Arduino.h> // For debug
 #include "SimWheelTypes.h"
 #include "esp32-hal.h"
 #include "esp_intr_alloc.h"
-//#include <FreeRTOS.h>
-
-/**
- * @brief Fixed elapsed time between "virtual button" press and release
- *
- */
-#define ROTARY_CLICK_TICKS 50 / portTICK_RATE_MS
+#include "PolledInput.h"
 
 /**
  * @brief Input from a rotary encoder
  *
  */
-class RotaryEncoderInput
+class RotaryEncoderInput : public DigitalPolledInput
 {
 private:
-  gpio_num_t clkPin, dtPin;
-  QueueHandle_t eventQueue;
-  TaskHandle_t daemon;
-  uint8_t code;
-  uint16_t sequence;
+  // Hardware related
+  gpio_num_t clkPin, dtPin; // pins
+  uint8_t code;             // State of decoding algoritm
+  uint16_t sequence;        // Last sequence of states in "alternate encoding"
 
+  // Firmware related
   inputNumber_t cwButtonNumber;
   inputNumber_t ccwButtonNumber;
-  inputBitmap_t mask;
+
+  // Circular bits queue
+  uint64_t bitsQueue;      // data: bit 1 = clockwise rotation, 0 = counter-clockwise rotation
+  uint8_t bqHead;          // "pointer" (short of) to head
+  uint8_t bqTail;          // "pointer" to tail
+  bool pressEventNotified; // a "virtual button" press event was notified at read(), so a release event must be notified next
 
 private:
   friend void IRAM_ATTR isrh(void *instance);
   friend void IRAM_ATTR isrhAlternateEncoding(void *instance);
-  friend void rotaryDaemonLoop(void *instance);
+
+protected:
+  void incBitQueuePointer(uint8_t &pointer)
+  {
+    pointer = (pointer + 1) % sizeof(bitsQueue);
+  };
+
+  /**
+   * @brief Push rotation event into the queue
+   *
+   * @param cwOrCcw True for clockwise rotation event, False for counter-clockwise.
+   */
+  void bitsQueuePush(bool cwOrCcw);
+
+  /**
+   * @brief Extract a rotation event from the queue
+   *
+   * @param[out] cwOrCcw The extracted event, if any
+   * @return true if the queue was not empty, so @p cwOrCcw contains valid data .
+   * @return false if the queue was empty, so @p cwOrCcw was not written.
+   */
+  bool bitsQueuePop(bool &cwOrCcw);
 
 public:
   /**
@@ -59,8 +81,10 @@ public:
    * @param[in] cwButtonNumber A number for the "virtual button" of a clockwise rotation event.
    * @param[in] ccwButtonNumber A number for the "virtual button" of a counter-clockwise rotation event.
    *                           If not given, `cwButtonNumber`+1 is used.
-   * @param[in] useAlternateEncoding Set to true in order to use the signal encoding of 
+   * @param[in] useAlternateEncoding Set to true in order to use the signal encoding of
    *                                 ALPS RKJX series of rotary encoders, and the alike.
+   * @param[in] nextInChain Another instance to build a chain, or nullptr
+   *
    * @note Interal pullup resistors will be enabled when available.
    */
   RotaryEncoderInput(
@@ -68,7 +92,10 @@ public:
       gpio_num_t dtPin,
       inputNumber_t cwButtonNumber,
       inputNumber_t ccwButtonNumber = UNSPECIFIED_INPUT_NUMBER,
-      bool useAlternateEncoding = false);
+      bool useAlternateEncoding = false,
+      DigitalPolledInput *nextInChain = nullptr);
+
+  virtual inputBitmap_t read(inputBitmap_t lastState) override;
 };
 
 #endif

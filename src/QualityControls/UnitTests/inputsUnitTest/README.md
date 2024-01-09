@@ -12,7 +12,7 @@ To test that input events are properly reported under these circumstances:
   - Digital clutch state is properly translated into an axis position.
   - Analog clutch position is properly reported as an axis position.
 
-## Harware setup
+## Hardware setup
 
 Nothing required. This is an automated test.
 Output through USB serial port at 115200 bauds.
@@ -63,5 +63,5 @@ Output through USB serial port at 115200 bauds.
       L: 0 R: 0 C: 0
    0000000000000000000000000000000000000000000000000000000000000000
       L: 0 R: 0 C: 0
-   -- END --  
+   -- END --
    ```

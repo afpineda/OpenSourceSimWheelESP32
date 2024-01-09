@@ -1,6 +1,9 @@
 RotaryEncoderInput.h
 debugUtils.h
-SimWheel.h
 SimWheelTypes.h
 RotaryEncoderInput.cpp
 debugUtils.cpp
+adcTools.h
+adcTools.cpp
+PolledInput.h
+PolledInput.cpp

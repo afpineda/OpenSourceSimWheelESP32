@@ -1,4 +1,6 @@
 /**
+ * @file SimWheelTypes.h
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
  * @brief Types and constants used everywhere

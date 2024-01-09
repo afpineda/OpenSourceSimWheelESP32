@@ -1,12 +1,13 @@
 /**
+ * @file PolledInput.h
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
  * @brief Detect input events in a polling (or sampling) loop.
  *
  * @section DESCRIPTION
  *
- * Events are detected by a polling loop that runs in a separate thread. Note that rotary encoder events
- * (rotation) are not polled, but interrupt-driven.
+ * Events are detected by a polling loop that runs in a separate thread.
  *
  * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
  *
@@ -17,7 +18,7 @@
 
 #include "SimWheelTypes.h"
 #include "esp32-hal.h"
-#include <Arduino.h> // for debug
+//#include <Arduino.h> // for debug
 
 /**
  * @brief Base class for all polled inputs
@@ -103,7 +104,6 @@ public:
     /**
      * @brief Construct a new Digital Polled Input object
      *
-     * @param[in] firstInputNumber A number for the first input
      * @param[in] nextInChain Another instance to build a chain, or nullptr
      */
     DigitalPolledInput(DigitalPolledInput *nextInChain = nullptr);
@@ -232,7 +232,6 @@ public:
     /**
      * @brief Set autocalibration data (loaded from persistent storage).
      *
-     * @param[out] axisIndex Index of this input
      * @param[out] minReading Minimun adc reading
      * @param[out] maxReading Maximun adc reading
      */

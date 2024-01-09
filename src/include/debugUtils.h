@@ -1,4 +1,6 @@
 /**
+ * @file debugUtils.h
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
  * @brief Debug and testing utilities

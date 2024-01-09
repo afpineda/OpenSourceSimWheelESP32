@@ -7,20 +7,11 @@
  *
  */
 
-#include <Arduino.h>
 #include "RotaryEncoderInput.h"
 #include "SimWheelTypes.h"
-#include "SimWheel.h"
 
 // This implementation is based on:
 // https://www.best-microcontroller-projects.com/rotary-encoder.html
-
-#define RT_STACK_SIZE 1264
-//#define RT_STACK_SIZE 2048
-
-#define OUTPUT_NONE 0
-#define OUTPUT_CW 1
-#define OUTPUT_CCW 2
 
 // ----------------------------------------------------------------------------
 // Interrupt service routine for rotary encoders
@@ -38,8 +29,6 @@ void IRAM_ATTR isrh(void *instance)
     portCLEAR_INTERRUPT_MASK_FROM_ISR(lock);
     // taskEXIT_CRITICAL_FROM_ISR(lock);
 
-    uint8_t output = OUTPUT_NONE;
-
     rotary->code <<= 2;
     rotary->code = rotary->code | (dt << 1) | clk;
     rotary->code &= 0x0f;
@@ -50,17 +39,11 @@ void IRAM_ATTR isrh(void *instance)
         rotary->sequence |= rotary->code;
         uint16_t aux = rotary->sequence & 0xff;
         if (aux == 0x2b)
-            output = OUTPUT_CCW;
+            // Counter-clockwise rotation event
+            rotary->bitsQueuePush(false);
         else if (aux == 0x17)
-            output = OUTPUT_CW;
-    }
-
-    if (output != OUTPUT_NONE)
-    {
-        BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-        xQueueSendFromISR(rotary->eventQueue, &output, &xHigherPriorityTaskWoken);
-        if (xHigherPriorityTaskWoken)
-            portYIELD_FROM_ISR();
+            // Clockwise rotation event
+            rotary->bitsQueuePush(true);
     }
 }
 
@@ -70,7 +53,7 @@ void IRAM_ATTR isrh(void *instance)
 //
 // States and transitions (mermaid graph):
 // graph TD
-//  0011 --01--> 1101 --00--> 0100 --CCW--> 0000 
+//  0011 --01--> 1101 --00--> 0100 --CCW--> 0000
 //  0000 --10--> 0010 --11--> 1011 --CCW--> 0011
 //  0011 --10--> 1110 --00--> 1000 --CW--> 0000
 //  0000 --01--> 0001 --11--> 0111 --CW--> 0011
@@ -98,7 +81,6 @@ void IRAM_ATTR isrhAlternateEncoding(void *instance)
     portCLEAR_INTERRUPT_MASK_FROM_ISR(lock);
     // taskEXIT_CRITICAL_FROM_ISR(lock);
 
-    uint8_t output = OUTPUT_NONE;
     uint8_t reading = ((clk << 1) | dt);
     uint8_t nextCode = ((rotary->code << 2) | reading) & 0b1111;
     uint8_t transition = (rotary->code << 4) | nextCode;
@@ -112,81 +94,37 @@ void IRAM_ATTR isrhAlternateEncoding(void *instance)
         (transition == 0b00000001) ||
         (transition == 0b00010111))
     {
-        if (transition == 0b11010100) 
+        if (transition == 0b11010100)
         {
+            // Clockwise rotation event
             rotary->code = 0;
-            output = OUTPUT_CW;
+            rotary->bitsQueuePush(true);
         }
         else if (transition == 0b00101011)
         {
+            // Clockwise rotation event
             rotary->code = 0b11;
-            output = OUTPUT_CW;
+            rotary->bitsQueuePush(true);
         }
         else if (transition == 0b11101000)
         {
+            // Counter-clockwise rotation event
             rotary->code = 0;
-            output = OUTPUT_CCW;
+            rotary->bitsQueuePush(false);
         }
         else if (transition == 0b00010111)
         {
+            // Counter-clockwise rotation event
             rotary->code = 0b11;
-            output = OUTPUT_CCW;
+            rotary->bitsQueuePush(false);
         }
         else
             rotary->code = nextCode;
     }
-
-    if (output != OUTPUT_NONE)
-    {
-        BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-        xQueueSendFromISR(rotary->eventQueue, &output, &xHigherPriorityTaskWoken);
-        if (xHigherPriorityTaskWoken)
-            portYIELD_FROM_ISR();
-    }
 }
 
 // ----------------------------------------------------------------------------
-// Service task for rotary encoders
-// ----------------------------------------------------------------------------
-
-void rotaryDaemonLoop(void *instance)
-{
-    RotaryEncoderInput *rotary = (RotaryEncoderInput *)instance;
-    uint8_t event;
-    inputBitmap_t bitmap;
-    while (true)
-    {
-        if (xQueueReceive(rotary->eventQueue, &event, portMAX_DELAY))
-        {
-            if (event == OUTPUT_CW)
-            {
-                // Clockwise rotation
-                bitmap = BITMAP(rotary->cwButtonNumber);
-            }
-            else if (event == OUTPUT_CCW)
-            {
-                // Counter-clockwise rotation
-                bitmap = BITMAP(rotary->ccwButtonNumber);
-            }
-            else {
-                // Should not happen
-                log_e("unknown event at rotaryDaemonLoop()");
-                abort();
-            }
-
-            // Send button push event
-            inputs::notifyInputEvent(rotary->mask, bitmap);
-            // wait
-            vTaskDelay(ROTARY_CLICK_TICKS);
-            // Send button release event
-            inputs::notifyInputEvent(rotary->mask, 0);
-
-        } // end if
-    }     // end while
-}
-
-// ----------------------------------------------------------------------------
-// Implementation of class: RotaryEncoderInput
+// Constructor
 // ----------------------------------------------------------------------------
 
 RotaryEncoderInput::RotaryEncoderInput(
@@ -194,11 +132,10 @@ RotaryEncoderInput::RotaryEncoderInput(
     gpio_num_t dtPin,
     inputNumber_t cwButtonNumber,
     inputNumber_t ccwButtonNumber,
-    bool useAlternateEncoding)
+    bool useAlternateEncoding,
+    DigitalPolledInput *nextInChain) : DigitalPolledInput(nextInChain)
 {
     // Check parameters
-    GPIO_IS_VALID_GPIO(clkPin);
-    GPIO_IS_VALID_GPIO(dtPin);
     if (clkPin == dtPin)
     {
         log_e("clkPin and dtPin must not match in RotaryEncoderInput::RotaryEncoderInput()");
@@ -219,25 +156,17 @@ RotaryEncoderInput::RotaryEncoderInput(
     this->ccwButtonNumber = ccwButtonNumber;
     mask = ~(BITMAP(cwButtonNumber) | BITMAP(ccwButtonNumber));
     sequence = 0;
-
-    // Config task and queue
-    eventQueue = xQueueCreate(64, sizeof(uint8_t));
-    if (eventQueue == nullptr)
-        abort();
-    daemon = nullptr;
-    xTaskCreate(rotaryDaemonLoop, "RotaryEnc", RT_STACK_SIZE, (void *)this, INPUT_TASK_PRIORITY, &daemon);
-    if (daemon == nullptr)
-        abort();
+    bitsQueue = 0ULL;
+    bqHead = 0;
+    bqTail = 0;
+    pressEventNotified = false;
 
     // Config clkPin
-    ESP_ERROR_CHECK(gpio_set_direction(clkPin, GPIO_MODE_INPUT));
-    ESP_ERROR_CHECK(gpio_set_pull_mode(clkPin, GPIO_PULLUP_ONLY));
-
+    checkAndInitializeInputPin(clkPin, false, true);
     // Config dtPin
-    ESP_ERROR_CHECK(gpio_set_direction(dtPin, GPIO_MODE_INPUT));
-    ESP_ERROR_CHECK(gpio_set_pull_mode(dtPin, GPIO_PULLUP_ONLY));
+    checkAndInitializeInputPin(dtPin, false, true);
 
-    // Initialize state
+    // Initialize decoding state machine
     if (useAlternateEncoding)
     {
         code = 0b11;
@@ -267,3 +196,56 @@ RotaryEncoderInput::RotaryEncoderInput(
         ESP_ERROR_CHECK(gpio_isr_handler_add(clkPin, isrh, (void *)this));
     ESP_ERROR_CHECK(gpio_intr_enable(clkPin));
 };
+
+// ----------------------------------------------------------------------------
+// Read
+// ----------------------------------------------------------------------------
+
+inputBitmap_t RotaryEncoderInput::read(inputBitmap_t lastState)
+{
+    if (!pressEventNotified)
+    {
+        bool cwOrCcw;
+        if (bitsQueuePop(cwOrCcw))
+        {
+            pressEventNotified = true;
+            if (cwOrCcw)
+                return BITMAP(cwButtonNumber);
+            else
+                return BITMAP(ccwButtonNumber);
+        }
+    }
+    pressEventNotified = false;
+    return 0;
+}
+
+// ----------------------------------------------------------------------------
+// Circular bits queue
+// ----------------------------------------------------------------------------
+
+void RotaryEncoderInput::bitsQueuePush(bool cwOrCcw)
+{
+    uint8_t bqTailNext = bqTail;
+    incBitQueuePointer(bqTailNext);
+    if (bqTailNext != bqHead)
+    {
+        // Queue not full
+        uint64_t aux = (1ULL << bqTail);
+        bitsQueue &= (~aux);
+        if (cwOrCcw)
+            bitsQueue |= aux;
+        bqTail = bqTailNext;
+    } // Queue full, overflow
+}
+
+bool RotaryEncoderInput::bitsQueuePop(bool &cwOrCcw)
+{
+    bool isNotEmpty = (bqHead != bqTail);
+    if (isNotEmpty)
+    {
+        uint64_t bitState = (1ULL << bqHead) & bitsQueue;
+        cwOrCcw = (bitState != 0ULL);
+        incBitQueuePointer(bqHead);
+    }
+    return isNotEmpty;
+}
