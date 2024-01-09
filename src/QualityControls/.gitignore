@@ -1,0 +1,5 @@
+# ignore c/c++ files since they are copied from the "common" folder
+*.cpp
+*.c
+*.hpp
+*.h
