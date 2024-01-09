@@ -64,15 +64,19 @@ classDiagram
       +getBatteryLevel()
       +getBatteryLevelAutoCalibrated()
     }
+    class PolledInput {
+      +read()
+    }
     inputHub <-- inputs: state changes
-    inputs <-- RotaryEncoderInput: events
-    inputs <-- DigitalPolledInput: events
-    inputs <-- AnalogPolledInput: events
+    inputs <-- PolledInput: events
     inputs --> clutchState: state changes
     inputs <-- clutchState: configuration
     DigitalPolledInput <|-- ButtonMatrixInput
     DigitalPolledInput <|-- AnalogMultiplexerInput
     DigitalPolledInput <|-- ShiftRegistersInput
+    DigitalPolledInput <|-- RotaryEncoderInput
+    PolledInput <|-- DigitalPolledInput
+    PolledInput <|-- AnalogPolledInput
     inputHub <-- clutchState: state
     inputHub <--> clutchState: configuration
     inputHub --> hidImplementation: processed events
@@ -83,7 +87,7 @@ classDiagram
     power <-- batteryCalibration: computed battery level
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNVNuOmzAQ_RXLT626_ABarZTdzaqRNmqU9JEXxwxgydjUHqcbpfn3GkOos0ZJeYKZc-Z6hhPlugSaUy6Zta-C1Ya1hSL-CRay1cjMcal6mFmpziGJ3aK3WHIajYR8UxpFdQzI5QEUfvk6uawPNX2fkzDf3Z6cJrBWO2QILw1TNZSzLC4d8ibAIqKwL0yKvWEotFqpjdG1AWvjOgCfBcJGi6vyhF28_9zCLwcW_2X0DiZx7dt_02Yh8dkhamUnJ3fG-DbfnOJ9wpkyG1Gu2k5C62GhqKhYA502GKY122Knf4OJ8OH7R1XNgvcMEcwxaj9i1r7pwf8OB5BRe588C4f6EiIZ_LSoxywbl58TGzbAw6ZshLMBlSooJ9ArI4W-ilogkxstJZS3oQvFpK7vIbPsKVbJvVKvoFyrStRuGOQATesjj388b9DEmqERH8F8Gz7UvnYShZfFxziV25xdIyrcQi28No2NCFcbSXtNQU9325zQPThRb046o7m_KCivRp7K_L-SpbSeFXSeE-a1OLxnuqrIjUQXxniOl1sgspf0wBtuqY-eHko-EQ5aIqshpvTh5yhct35QfgxXyegDbcG0TJT-txrur6DY-GoLmvvXEirmN1_QQp09tO9wd1Sc5hWTFh6o60o_qvFP_Mm6LAVqQ3M0Ds5_AerZ8no)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNVF1v2yAU_SuIp01r_oBVVUrbVIvUaFGyR78QfG0jYfDgkjXq8t-HceLhYK_1E-aec78P75TrAmhGuWTWPgtWGdbkivgv3JCdRmZOK9XBzFq1DmOr6C4see_vCPmmNIryFHCrIyj88nUwWe9o-D8nXr67Q-RHqz0yhKeaqQqKSRaXDnkdYBFR2CcmxcEwFFqt1dboyoC1cR6AjwJhq8UoPWGXrz938MuBxX8RvYFJ3PjiX7RZSnx0iFrZwcidMb7MF6d4F3AizVoU66aV0HhYSCpK1kCrDYZuTZbY6t9gInz4_1GWk-ADQwRzisqPmJUvure_whFkVN6NZelQX13MNH6rpYQiZD2qhd3Ch7neLxaXVcmIDQPjYbA2wtmAinxnBLoNGmMWi4d48B-5G0G5VqWoXN-bHvosKoFMxhXd__G8fswbhka8RUs_B18qJnW1cRKFn_TbSChznH0tStxBJfy6GfsJwpwSE2DqYAbYp53gRmNLm52CHj7s84DuwIkiMtIazb1KoRjNPJXOp4KltI4VtJMR5ve7Py90Wf4nzpVwUfhVXkR2Kul5vTw756n2soFw1BJZBTGlcz9F4brxffJdGAWjd7QB0zBR-Hc6CC6nWPtsc5r5YwEl85uX01ydPbQrcH9SnGYlkxbuqGsL36nL035zuyoEakMzNA7OfwGfTQ0L)
 
 ```mermaid
 classDiagram
