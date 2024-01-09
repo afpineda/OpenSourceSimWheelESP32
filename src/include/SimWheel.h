@@ -308,14 +308,8 @@ namespace power
 namespace inputs
 {
     /**
-     * @brief Must be called before anything else in this namespace
-     *
-     */
-    void begin();
-
-    /**
      * @brief Start the polling loop, so input events are available from now on.
-     *        Must be called after `inputHub::begin()` and also after any `add*()` or `set*()`
+     *        Must be called after any `add*()` or `set*()`
      *        function.
      */
     void start();
@@ -326,15 +320,6 @@ namespace inputs
      *
      */
     void update();
-
-    /**
-     * @brief Used from input classes to report a new event.
-     *        Should not be called if there is no change since the last report (of the same input).
-     *
-     * @param mask Bit mask for the input being reported
-     * @param state Current state of such an input. Should not set any bit outside of its mask.
-     */
-    void notifyInputEvent(inputBitmap_t mask, inputBitmap_t state);
 
     /**
      * @brief Add a digital button bound to a specific input number. Must be called before `start()`
@@ -474,10 +459,9 @@ namespace inputs
      *
      */
     void notifyInputEventForTesting(
-        uint8_t id,
-        inputBitmap_t bitmap,
-        inputBitmap_t mask,
-        clutchValue_t value);
+        inputBitmap_t state,
+        clutchValue_t leftAxisValue,
+        clutchValue_t rightAxisValue);
 }
 
 /**

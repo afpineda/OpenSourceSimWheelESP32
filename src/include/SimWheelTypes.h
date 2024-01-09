@@ -11,14 +11,14 @@
  *
  */
 
-#ifndef __SIMWHEELTYPES_H__
-#define __SIMWHEELTYPES_H__
+#ifndef __SIM_WHEEL_TYPES_H__
+#define __SIM_WHEEL_TYPES_H__
 
 #include <stdint.h>
 
 /**
  * @brief A bit array which assembles the state of every button, being the least significant bit
- *        the button numbered as 0, and the most significant bit the button numbered as 31.
+ *        the button numbered as 0, and the most significant bit the button numbered as 63.
  *        A bit set to 1 means the button is pressed, 0 means not pressed.
  *        May be used to identify a number of buttons, too.
  */
@@ -30,8 +30,8 @@ typedef uint64_t inputBitmap_t;
  */
 typedef uint8_t inputNumber_t;
 
-#define UNSPECIFIED_INPUT_NUMBER 0xFF /// Input number is not required or is implicit or is unknown
-#define MAX_INPUT_NUMBER 63           /// Maximun allowed input number, including itself
+#define UNSPECIFIED_INPUT_NUMBER 0xFF // Input number is not required or is implicit or is unknown
+#define MAX_INPUT_NUMBER 63           // Maximum allowed input number, including itself
 
 // Well-known input numbers for PC game controllers
 #define JOY_A 0
@@ -89,13 +89,11 @@ typedef uint16_t analogReading_t;
  *
  */
 #define NBITMASK(count, first) (((1ULL << static_cast<inputBitmap_t>(count)) - 1ULL) << static_cast<inputBitmap_t>(first))
-// #define NBITMASK(count, first) (((1 << count) - 1) << first)
 
 /**
  * @brief Debounce time for buttons, in system ticks
  *
  */
-// #define DEBOUNCE_TICKS 30 / portTICK_RATE_MS
 #define DEBOUNCE_TICKS pdMS_TO_TICKS(30)
 
 /**
@@ -103,7 +101,6 @@ typedef uint16_t analogReading_t;
  *
  */
 #define INPUT_TASK_PRIORITY (tskIDLE_PRIORITY + 2)
-// #define UI_TASK_PRIORITY (tskIDLE_PRIORITY + 1)
 
 /**
  * @brief User-selected function of the clutch paddles
@@ -114,7 +111,7 @@ typedef uint16_t analogReading_t;
 typedef enum
 {
     CF_CLUTCH = 0, /// F1-Style clutch. Must be the first in the enum: do not change
-    CF_AXIS,       /// Indepent axes
+    CF_AXIS,       /// Independent axes
     CF_ALT,        /// "ALT" mode
     CF_BUTTON      /// Regular buttons. Must be the last in the enum: do not change
 } clutchFunction_t;
@@ -124,26 +121,6 @@ typedef enum
  *
  */
 #define DEFAULT_AUTOSAVE_us 20 * 1000 * 1000
-
-// /**
-//  * @brief Display types supported by the ss_oled library
-//  *        Must match `iType` parameter for the `oledInit` function.
-//  */
-// typedef enum
-// {
-//     SSOLED_128x128 = 1,
-//     SSOLED_128x32,
-//     SSOLED_128x64,
-//     SSOLED_132x64,
-//     SSOLED_64x32,
-//     SSOLED_96x16,
-//     SSOLED_72x40
-// } displayType_t;
-
-// // OLED SETUP
-// #define SCREEN_RESET_PIN -1
-// #define SCREEN_SDA_PIN 21
-// #define SCREEN_SCL_PIN 22
 
 // Time to wait for connection before power off (in seconds)
 #define AUTO_POWER_OFF_DELAY_SECS 60

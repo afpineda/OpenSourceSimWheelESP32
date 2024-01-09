@@ -274,7 +274,6 @@ AnalogAxisInput::AnalogAxisInput(
     this->mask = BITMASK(1, inputNumber);
     this->reversed = reversed;
     lastADCReading = 0;
-    lastValue = -128;
 
     // Note: we assume the potentiometer works on the full range of voltage.
     // If that is not the case, the user should ask for recalibration.
@@ -287,7 +286,7 @@ AnalogAxisInput::AnalogAxisInput(
 // Methods
 // ----------------------------------------------------------------------------
 
-void AnalogAxisInput::read(clutchValue_t *value, bool *changed, bool *autocalibrated)
+void AnalogAxisInput::read(clutchValue_t &value, bool &autocalibrated)
 {
     // read ADC and remove 4 bits of noise
     int currentReading = getADCreading(pinNumber, ADC_ATTEN_DB_11) >> 4;
@@ -295,26 +294,24 @@ void AnalogAxisInput::read(clutchValue_t *value, bool *changed, bool *autocalibr
     currentReading = (currentReading + lastADCReading) >> 1; // average
 
     // Autocalibrate
-    *autocalibrated = false;
+    autocalibrated = false;
     if (currentReading < minADCReading)
     {
         minADCReading = currentReading;
-        *autocalibrated = true;
+        autocalibrated = true;
     }
     if (currentReading > maxADCReading)
     {
         maxADCReading = currentReading;
-        *autocalibrated = true;
+        autocalibrated = true;
     }
 
     // map ADC reading to axis value
     if (reversed)
-        *value = map(currentReading, minADCReading, maxADCReading, CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
+        value = map(currentReading, minADCReading, maxADCReading, CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
     else
-        *value = map(currentReading, minADCReading, maxADCReading, CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
-    *changed = ((*value) != lastValue);
+        value = map(currentReading, minADCReading, maxADCReading, CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
     lastADCReading = currentReading;
-    lastValue = *value;
 }
 
 void AnalogAxisInput::getCalibrationData(int *minReading, int *maxReading)

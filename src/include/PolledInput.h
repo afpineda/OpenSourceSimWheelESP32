@@ -18,7 +18,7 @@
 
 #include "SimWheelTypes.h"
 #include "esp32-hal.h"
-//#include <Arduino.h> // for debug
+// #include <Arduino.h> // for debug
 
 /**
  * @brief Base class for all polled inputs
@@ -215,13 +215,11 @@ public:
      *        end to the other for autocalibration.
      *
      * @param[out] value Current axis position.
-     * @param[out] changed True if axis position has changed since last call.
      * @param[out] autocalibrated True if this axis has been autocalibrated.
      */
     void read(
-        clutchValue_t *value,
-        bool *changed,
-        bool *autocalibrated);
+        clutchValue_t &value,
+        bool &autocalibrated);
 
     /**
      * @brief Force autocalibration.

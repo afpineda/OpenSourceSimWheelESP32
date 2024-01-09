@@ -31,33 +31,25 @@ static inputBitmap_t rightClutchButtonBitmap = 0ULL;
 static inputBitmap_t clutchButtonsMask = ~0ULL;
 static bool forceUpdate = false;
 
-// Related to the polling task and event queue
+// Related to the polling task and decoupling queue
 #define SAMPLING_RATE_TICKS DEBOUNCE_TICKS * 2
 #define POLLING_TASK_STACK_SIZE 1 * 1024
-#define EVENT_TYPE_AXIS 0
-#define EVENT_TYPE_SWITCH 1
-#define EVENT_SIZE sizeof(inputEvent_t) > sizeof(axisEvent_t) ? sizeof(inputEvent_t) : sizeof(axisEvent_t)
 
 typedef struct
 {
-  uint8_t eventType;
-  inputBitmap_t mask;
-  inputBitmap_t state;
-} inputEvent_t;
+  inputBitmap_t rawInputBitmap;
+  inputBitmap_t rawInputChanges;
+  bool axesChanged;
+  clutchValue_t leftAxisValue;
+  clutchValue_t rightAxisValue;
+} decouplingEvent_t;
 
-typedef struct
-{
-  uint8_t eventType;
-  inputBitmap_t inputBitmap;
-  inputBitmap_t inputMask;
-  clutchValue_t value;
-  uint8_t id;
-} axisEvent_t;
+#define EVENT_SIZE sizeof(decouplingEvent_t)
 
 // Related to the hub task
 #define HUB_STACK_SIZE 4 * 1024
 static TaskHandle_t hubTask = nullptr;
-static QueueHandle_t eventQueue = nullptr;
+static QueueHandle_t decouplingQueue = nullptr;
 
 // Related to axis calibration data
 static esp_timer_handle_t autoSaveTimer = nullptr;
@@ -138,67 +130,149 @@ void inputs::update()
 
 void inputPollingLoop(void *param)
 {
-  inputBitmap_t newState;
-  inputBitmap_t oldState = 0;
-  inputBitmap_t combinedMask = DigitalPolledInput::getChainMask(digitalInputChain);
-  bool axisChanged, leftAxisAutocalibrated, rightAxisAutocalibrated;
-  axisEvent_t axisEvent;
-  axisEvent.eventType = EVENT_TYPE_AXIS;
+  // inputBitmap_t combinedMask = DigitalPolledInput::getChainMask(digitalInputChain);
+  decouplingEvent_t currentState, previousState;
+  bool leftAxisAutocalibrated = false;
+  bool rightAxisAutocalibrated = false;
+  bool stateChanged;
+  currentState.leftAxisValue = CLUTCH_NONE_VALUE;
+  currentState.rightAxisValue = CLUTCH_NONE_VALUE;
+  currentState.rawInputBitmap = 0;
+  currentState.axesChanged = false;
+  previousState = currentState;
 
   // loop
   while (true)
   {
-    // Digital inputs
-    newState = DigitalPolledInput::readInChain(oldState, digitalInputChain);
-    if ((newState != oldState) || forceUpdate)
-      inputs::notifyInputEvent(combinedMask, newState);
-    oldState = newState;
+    // Read digital inputs
+    currentState.rawInputBitmap =
+        DigitalPolledInput::readInChain(previousState.rawInputBitmap, digitalInputChain);
+    currentState.rawInputChanges = currentState.rawInputBitmap ^ previousState.rawInputBitmap;
+    stateChanged = forceUpdate || (currentState.rawInputChanges);
 
-    // Analog inputs
+    // Read analog inputs
     if (leftClutchAxis)
     {
       // Left clutch axis
       leftClutchAxis->read(
-          &(axisEvent.value),
-          &axisChanged,
+          &(currentState.leftAxisValue),
           &leftAxisAutocalibrated);
-      if (axisChanged || forceUpdate)
-      {
-        axisEvent.id = LEFT_CLUTCH_INDEX;
-        axisEvent.inputBitmap = leftClutchAxis->bitmap;
-        axisEvent.inputMask = leftClutchAxis->mask;
-        xQueueSend(eventQueue, &axisEvent, SAMPLING_RATE_TICKS); // portMAX_DELAY);
-      }
 
       // Right clutch axis
       rightClutchAxis->read(
-          &(axisEvent.value),
-          &axisChanged,
+          &(currentState.rightAxisValue),
           &rightAxisAutocalibrated);
-      if (axisChanged || forceUpdate)
-      {
-        axisEvent.id = RIGHT_CLUTCH_INDEX;
-        axisEvent.inputBitmap = rightClutchAxis->bitmap;
-        axisEvent.inputMask = rightClutchAxis->mask;
-        xQueueSend(eventQueue, &axisEvent, SAMPLING_RATE_TICKS); // portMAX_DELAY);
-      }
 
       if (leftAxisAutocalibrated || rightAxisAutocalibrated)
         requestSaveAxisCalibration();
+
+      currentState.axesChanged =
+          (currentState.leftAxisValue != previousState.leftAxisValue) ||
+          (currentState.rightAxisValue != previousState.rightAxisValue);
+      stateChanged = stateChanged || currentState.axesChanged;
     }
+
+    // Check for a state change
+    if (stateChanged)
+    {
+      // Push state into the decoupling queue
+      xQueueSend(decouplingQueue, &currentState, 0);
+      previousState = currentState;
+    }
+
+    // Prepare for next iteration
     forceUpdate = false;
+
     // wait for next sampling interval
     vTaskDelay(SAMPLING_RATE_TICKS);
   }
 }
 
 // ----------------------------------------------------------------------------
+// Input hub
+// ----------------------------------------------------------------------------
+
+void hubLoop(void *unused)
+{
+  while (true)
+  {
+    if (xQueueReceive(decouplingQueue, &currentState, portMAX_DELAY))
+      inputHub::onStateChanged(
+          currentState.rawInputBitmap,
+          currentState.rawInputChanges,
+          currentState.leftAxisValue,
+          currentState.rightAxisValue,
+          currentState.axesChanged);
+
+    // if (buffer[0] == EVENT_TYPE_SWITCH)
+    // {
+    //   newState = (globalState & switchEvent->mask) | switchEvent->state;
+    //   if (clutchState::currentFunction != CF_BUTTON)
+    //   {
+    //     // Translate digital clutch inputs into analog axis values
+    //     changes = globalState ^ newState;
+    //     if (changes & leftClutchButtonBitmap)
+    //       clutchState::setLeftAxis((newState & leftClutchButtonBitmap) ? CLUTCH_FULL_VALUE : CLUTCH_NONE_VALUE);
+    //     if (changes & rightClutchButtonBitmap)
+    //       clutchState::setRightAxis((newState & rightClutchButtonBitmap) ? CLUTCH_FULL_VALUE : CLUTCH_NONE_VALUE);
+    //     inputFilter = clutchButtonsMask;
+    //   }
+    //   else
+    //     inputFilter = ~0ULL;
+    //   changes = globalState ^ newState;
+    //   globalState = newState;
+    //   inputHub::onStateChanged(globalState & inputFilter, changes & inputFilter);
+    // }
+    // else
+    // {
+    //   // buffer[0] == EVENT_TYPE_AXIS
+    //   if (clutchState::currentFunction == CF_BUTTON)
+    //   {
+    //     // Translate analog axis values into digital input
+    //     if ((axisEvent->value) >= CLUTCH_3_4_VALUE)
+    //       newState = (globalState & axisEvent->inputMask) | axisEvent->inputBitmap;
+    //     else if ((axisEvent->value) <= CLUTCH_1_4_VALUE)
+    //       newState = (globalState & axisEvent->inputMask);
+    //     else
+    //       newState = globalState;
+    //     changes = globalState ^ newState;
+    //     if (changes)
+    //     {
+    //       globalState = newState;
+    //       inputHub::onStateChanged(globalState, changes);
+    //     }
+    //   }
+    //   else
+    //   {
+    //     bool oldAltEnabled = clutchState::isALTRequested();
+    //     clutchValue_t oldClutchValue = clutchState::combinedAxis;
+
+    //     if (axisEvent->id)
+    //       clutchState::setRightAxis(axisEvent->value);
+    //     else
+    //       clutchState::setLeftAxis(axisEvent->value);
+
+    //     globalState = globalState & (axisEvent->inputMask);
+    //     if (
+    //         (clutchState::currentFunction == CF_AXIS) ||
+    //         ((clutchState::currentFunction == CF_ALT) &&
+    //          (oldAltEnabled != clutchState::isALTRequested())) ||
+    //         ((clutchState::currentFunction == CF_CLUTCH) &&
+    //          (oldClutchValue != clutchState::combinedAxis)))
+    //       inputHub::onStateChanged(globalState, 0);
+    //   }
+    // }
+
+  } // end while
+}
+
+// ----------------------------------------------------------------------------
 // Configure inputs
 // ----------------------------------------------------------------------------
 
-void abortDueToCallBeforeBegin()
+void abortDueToCallAfterStart()
 {
-  log_e("inputs::add*() or inputs::set*() called before inputs::begin() or after inputs::start()");
+  log_e("inputs::add*() or inputs::set*() called after inputs::start()");
   abort();
 }
 
@@ -216,7 +290,7 @@ void inputs::addDigital(
     bool pullupOrPulldown,
     bool enableInternalPull)
 {
-  if ((!pollingTask) && (hubTask))
+  if ((!pollingTask) && (!hubTask))
   {
     if (inputNumber <= MAX_INPUT_NUMBER)
       digitalInputChain = new DigitalButton(
@@ -229,7 +303,7 @@ void inputs::addDigital(
       abortDueToInvalidInputNumber();
   }
   else
-    abortDueToCallBeforeBegin();
+    abortDueToCallAfterStart();
 }
 
 // ----------------------------------------------------------------------------
@@ -241,18 +315,23 @@ void inputs::addRotaryEncoder(
     inputNumber_t ccwInputNumber,
     bool useAlternateEncoding)
 {
-  if ((!pollingTask) && (hubTask))
+  if ((!pollingTask) && (!hubTask))
   {
     if ((cwInputNumber <= MAX_INPUT_NUMBER) &&
         (ccwInputNumber <= MAX_INPUT_NUMBER) &&
         (cwInputNumber != ccwInputNumber))
+    {
+      esp_err_t err = gpio_install_isr_service(0);
+      if (err != ESP_ERR_INVALID_STATE)
+        ESP_ERROR_CHECK(err);
       digitalInputChain = new RotaryEncoderInput(
           clkPin, dtPin, cwInputNumber, ccwInputNumber, useAlternateEncoding, digitalInputChain);
+    }
     else
       abortDueToInvalidInputNumber();
   }
   else
-    abortDueToCallBeforeBegin();
+    abortDueToCallAfterStart();
 }
 
 // ----------------------------------------------------------------------------
@@ -264,7 +343,7 @@ void inputs::addButtonMatrix(
     const uint8_t inputPinCount,
     inputNumber_t *buttonNumbersArray)
 {
-  if ((!pollingTask) && (hubTask))
+  if ((!pollingTask) && (!hubTask))
   {
     digitalInputChain = new ButtonMatrixInput(
         selectorPins,
@@ -276,7 +355,7 @@ void inputs::addButtonMatrix(
         digitalInputChain);
   }
   else
-    abortDueToCallBeforeBegin();
+    abortDueToCallAfterStart();
 }
 
 void inputs::addAnalogMultiplexer(
@@ -286,7 +365,7 @@ void inputs::addAnalogMultiplexer(
     const uint8_t inputPinCount,
     inputNumber_t *buttonNumbersArray)
 {
-  if ((!pollingTask) && (hubTask))
+  if ((!pollingTask) && (!hubTask))
   {
     digitalInputChain = new AnalogMultiplexerInput(
         selectorPins,
@@ -298,7 +377,7 @@ void inputs::addAnalogMultiplexer(
         digitalInputChain);
   }
   else
-    abortDueToCallBeforeBegin();
+    abortDueToCallAfterStart();
 }
 
 void inputs::addShiftRegisters(
@@ -308,7 +387,7 @@ void inputs::addShiftRegisters(
     inputNumber_t *buttonNumbersArray,
     const uint8_t switchCount)
 {
-  if ((!pollingTask) && (hubTask))
+  if ((!pollingTask) && (!hubTask))
   {
     digitalInputChain = new ShiftRegistersInput(
         serialPin,
@@ -322,7 +401,7 @@ void inputs::addShiftRegisters(
         digitalInputChain);
   }
   else
-    abortDueToCallBeforeBegin();
+    abortDueToCallAfterStart();
 }
 
 void inputs::setAnalogClutchPaddles(
@@ -351,7 +430,7 @@ void inputs::setAnalogClutchPaddles(
       abortDueToInvalidInputNumber();
   }
   else
-    abortDueToCallBeforeBegin();
+    abortDueToCallAfterStart();
 }
 
 void inputs::setDigitalClutchPaddles(
@@ -369,7 +448,7 @@ void inputs::setDigitalClutchPaddles(
   {
     abortDueToInvalidInputNumber();
   }
-  else if ((!pollingTask) && (hubTask))
+  else if ((!pollingTask) && (!hubTask))
   {
     leftClutchButtonBitmap = BITMAP(leftClutchInputNumber);
     rightClutchButtonBitmap = BITMAP(rightClutchInputNumber);
@@ -377,111 +456,23 @@ void inputs::setDigitalClutchPaddles(
     capabilities::setFlag(CAP_CLUTCH_BUTTON);
   }
   else
-    abortDueToCallBeforeBegin();
+    abortDueToCallAfterStart();
 }
 
 // ----------------------------------------------------------------------------
 // Macros to send events
 // ----------------------------------------------------------------------------
 
-void inputs::notifyInputEvent(inputBitmap_t mask, inputBitmap_t state)
+void inputs::notifyInputEventForTesting(inputBitmap_t state, clutchValue_t leftAxisValue, clutchValue_t rightAxisValue)
 {
-  inputEvent_t event;
-  event.eventType = EVENT_TYPE_SWITCH;
-  event.mask = mask;
-  event.state = state;
-  xQueueSend(eventQueue, &event, SAMPLING_RATE_TICKS); // portMAX_DELAY);
-}
-
-void inputs::notifyInputEventForTesting(uint8_t id, inputBitmap_t bitmap, inputBitmap_t mask, clutchValue_t value)
-{
-  axisEvent_t event;
-  event.eventType = EVENT_TYPE_AXIS;
-  event.inputBitmap = bitmap;
-  event.inputMask = mask;
-  event.value = value;
-  event.id = id;
-  xQueueSend(eventQueue, &event, SAMPLING_RATE_TICKS); // portMAX_DELAY);
-}
-
-// ----------------------------------------------------------------------------
-// Input hub
-// ----------------------------------------------------------------------------
-
-void hubLoop(void *unused)
-{
-  inputBitmap_t globalState = 0;
-  inputBitmap_t newState, changes, inputFilter;
-
-  uint8_t buffer[EVENT_SIZE];
-  inputEvent_t *switchEvent = (inputEvent_t *)buffer;
-  axisEvent_t *axisEvent = (axisEvent_t *)buffer;
-
-  while (true)
+  if (decouplingQueue)
   {
-    if (xQueueReceive(eventQueue, buffer, portMAX_DELAY))
-    {
-      if (buffer[0] == EVENT_TYPE_SWITCH)
-      {
-        newState = (globalState & switchEvent->mask) | switchEvent->state;
-        if (clutchState::currentFunction != CF_BUTTON)
-        {
-          // Translate digital clutch inputs into analog axis values
-          changes = globalState ^ newState;
-          if (changes & leftClutchButtonBitmap)
-            clutchState::setLeftAxis((newState & leftClutchButtonBitmap) ? CLUTCH_FULL_VALUE : CLUTCH_NONE_VALUE);
-          if (changes & rightClutchButtonBitmap)
-            clutchState::setRightAxis((newState & rightClutchButtonBitmap) ? CLUTCH_FULL_VALUE : CLUTCH_NONE_VALUE);
-          inputFilter = clutchButtonsMask;
-        }
-        else
-          inputFilter = ~0ULL;
-        changes = globalState ^ newState;
-        globalState = newState;
-        inputHub::onStateChanged(globalState & inputFilter, changes & inputFilter);
-      }
-      else
-      {
-        // buffer[0] == EVENT_TYPE_AXIS
-        if (clutchState::currentFunction == CF_BUTTON)
-        {
-          // Translate analog axis values into digital input
-          if ((axisEvent->value) >= CLUTCH_3_4_VALUE)
-            newState = (globalState & axisEvent->inputMask) | axisEvent->inputBitmap;
-          else if ((axisEvent->value) <= CLUTCH_1_4_VALUE)
-            newState = (globalState & axisEvent->inputMask);
-          else
-            newState = globalState;
-          changes = globalState ^ newState;
-          if (changes)
-          {
-            globalState = newState;
-            inputHub::onStateChanged(globalState, changes);
-          }
-        }
-        else
-        {
-          bool oldAltEnabled = clutchState::isALTRequested();
-          clutchValue_t oldClutchValue = clutchState::combinedAxis;
-
-          if (axisEvent->id)
-            clutchState::setRightAxis(axisEvent->value);
-          else
-            clutchState::setLeftAxis(axisEvent->value);
-
-          globalState = globalState & (axisEvent->inputMask);
-          if (
-              (clutchState::currentFunction == CF_AXIS) ||
-              ((clutchState::currentFunction == CF_ALT) &&
-               (oldAltEnabled != clutchState::isALTRequested())) ||
-              ((clutchState::currentFunction == CF_CLUTCH) &&
-               (oldClutchValue != clutchState::combinedAxis)))
-            inputHub::onStateChanged(globalState, 0);
-        }
-      }
-
-    } // end if
-  }   // end while
+    decouplingEvent_t event;
+    event.leftAxisValue = leftAxisValue;
+    event.rightAxisValue = rightAxisValue;
+    event.rawInputBitmap = state;
+    xQueueSend(decouplingQueue, &event, SAMPLING_RATE_TICKS); // portMAX_DELAY);
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -491,11 +482,6 @@ void hubLoop(void *unused)
 void inputs::start()
 {
   void *dummy;
-  if (hubTask == nullptr)
-  {
-    log_e("inputs::start() called before inputs::begin()");
-    abort();
-  }
   if (pollingTask == nullptr)
   {
     // Load axis callibration data, if any
@@ -510,20 +496,6 @@ void inputs::start()
       prefs.end();
     }
 
-    // Create and run polling task
-    xTaskCreate(inputPollingLoop, "PolledInputs", POLLING_TASK_STACK_SIZE, nullptr, INPUT_TASK_PRIORITY, &pollingTask);
-    if (pollingTask == nullptr)
-    {
-      log_e("Unable to create polling task");
-      abort();
-    }
-  }
-}
-
-void inputs::begin()
-{
-  if (hubTask == nullptr)
-  {
     // create autosave timer
     esp_timer_create_args_t args;
     args.callback = &axisCalibrationAutoSaveCallback;
@@ -532,10 +504,9 @@ void inputs::begin()
     args.dispatch_method = ESP_TIMER_TASK;
     ESP_ERROR_CHECK(esp_timer_create(&args, &autoSaveTimer));
 
-    // Enable interrupts for rotary encoders and create event queue
-    ESP_ERROR_CHECK(gpio_install_isr_service(0));
-    eventQueue = xQueueCreate(64, EVENT_SIZE);
-    if (eventQueue == nullptr)
+    // Create event queue
+    decouplingQueue = xQueueCreate(64, EVENT_SIZE);
+    if (decouplingQueue == nullptr)
     {
       log_e("Unable to create event queue");
       abort();
@@ -546,6 +517,14 @@ void inputs::begin()
     if (hubTask == nullptr)
     {
       log_e("Unable to create inputHub task");
+      abort();
+    }
+
+    // Create and run polling task
+    xTaskCreate(inputPollingLoop, "PolledInputs", POLLING_TASK_STACK_SIZE, nullptr, INPUT_TASK_PRIORITY, &pollingTask);
+    if (pollingTask == nullptr)
+    {
+      log_e("Unable to create polling task");
       abort();
     }
   }
