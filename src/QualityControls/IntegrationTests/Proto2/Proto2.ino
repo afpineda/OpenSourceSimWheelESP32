@@ -33,7 +33,7 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
 
-    clutchState::begin();
+    userSettings::begin();
     power::begin(TEST_ROTARY_SW,false);
 
     inputs::addButtonMatrix(

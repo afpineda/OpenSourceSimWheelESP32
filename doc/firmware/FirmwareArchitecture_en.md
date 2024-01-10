@@ -6,12 +6,12 @@ The *system* have been broken into several *modules* that have been implemented 
 
 - **batteryCalibration**: Everything related to the estimation of battery charge.
 - **capabilities**: Everything related to the capabilities of the hardware and firmware.
-- **clutchState**: Holds the working mode of clutch paddles, ALT buttons and directional pad.
 - **hidImplementation**: Everything related to the HID protocol.
 - **inputs**: Everything related to hardware inputs and their events.
 - **inputHub**: Everything related to the combined state of all inputs and their treatment. Translates input events into a HID report.
 - **notify**: Everything related to the notification of some events to the user if an user interface is available.
 - **power**: Everything related to power management.
+- **userSettings**: Holds the working mode of clutch paddles, ALT buttons and directional pad.
 
 Each namespace is implemented in a single *cpp* file with its name, however, some of them have alternate implementations in order to enable unit and integration testing. Those files are named following this pattern: `<namespace><underscore><implementation>.cpp`. Some implementations are:
 
@@ -40,12 +40,12 @@ Some namespaces are implemented with the help of auxiliary modules which are not
 | adcTools               | Requirements to ADC readings (for example, attenuation) |
 | batteryCalibration     | SoC algorithm                                           |
 | capabilities           | Hardware and firmware features relevant to the user     |
-| clutchState            | Device functionality                                    |
 | hidImplementation      | Device-computer intercommunication                      |
 | inputs                 | Input hardware                                          |
 | inputHub               | Device functionality                                    |
 | notify                 | User interface hardware (if any)                        |
 | power                  | Underlying power management capabilities                |
+| userSettings           | Device functionality                                    |
 | AnalogAxisInput        | Hardware design                                         |
 | AnalogMultiplexerInput | Hardware design                                         |
 | ButtonMatrixInput      | Hardware design                                         |
@@ -65,7 +65,7 @@ classDiagram
     class inputHub {
       +onRawInput()
     }
-    class clutchState {
+    class userSettings {
       +bitePoint
       +cpWorkingMode
       +altButtonsWorkingMode
@@ -91,16 +91,16 @@ classDiagram
     DigitalPolledInput <|-- RotaryEncoderInput
     PolledInput <|-- DigitalPolledInput
     PolledInput <|-- AnalogPolledInput
-    inputHub <--> clutchState: configuration
+    inputHub <--> userSettings: configuration
     inputHub --> hidImplementation: processed events
-    hidImplementation <--> clutchState: configuration
+    hidImplementation <--> userSettings: configuration
     hidImplementation --> power: auto power-off
     hidImplementation <-- power: current battery level
     power --> batteryCalibration: battery voltage
     power <-- batteryCalibration: computed battery level
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNlMFu4yAQhl8FcdldbfMCqFqp3VbaSo22Sg69-EJg7KBisGBoG7V59wWTWCTEq_pie_j-mfHw4w8qrATKqNDc-zvFO8f7xpB4jRGyssjd7t4kzD2YIWC5qlLAk48cI-SnjzR-_5Hf9xX6J2wK2JoVfxtzXlQIHVBs18gRCtFGITxZZXCKiOHZuhdlumXscYpyjbcB0RpfrZ5U2Sr50A8aejCxkrKmqOVgsA7nOxzsG7iCH9__tu1FeMMRwe1-c6027rxSB3ib1x_hFfQxQb1yE9AeU4C8WOjJag1y7PrkW_g5Pm3J9WJx2Ep2uH8jPs294PxIFbkZif0Y9I3J1J3qFHJdVr_-jJK8C0uOTr0XBprDbwzXtlsGjSruyvuJ6eY0661qcQWd8nFO_guCOVdXYJ1gBsxtV1w54l-loxkR1rSqC9kKZ3SCK2MyMjgrwHuQ0-iTqnbwl4rVsqQaLcwIjzbLzwvbtv-pcxSI4FyMH11OdDJr1uVTkpLXR4BNglerkXdQSlL6SxJh-zinOIWTYvSK9uB6rmT8nY2-byhuY7cNZfFRQsujqRramH1E0weud0ZQhi7AFQ2DjIM6_AApa7n2U_ReKrQuk_t_nKbERw)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNlMFu2zAMhl9F0GUb1ryAUAxo1wIrsGBFctjFF8WiHWGyZEhU26DLu4-2EkOO4qG5xKa-n6TJ337ntVPABa-NDOFBy9bLrrKMfmOEbRxKf3i0A-afbB8xP9VDILD3FGPsayAaP39J98cC_RF3GezsRr6OOa8qYgC_BURt27zETiM8O21xitT9b-f_ELamJqeoNHgfEZ0NxemszF6rp6430IFFidrZrJaH3nlcbrF3r-Azfrz_1TRX4Z1EBH_4Lo3e-ctKLeB9Ov8JL2DOCcqTu4junALU1ULPzhhQY9ezZ5GX-LST29XqtEtx-v_EaJUIGRdGKsstGPVjMSTmQbcapclr3_4lQdrBWqLXb5l_lvA7K41r19Ggpp28zTy3pNnudYMbaHWgKYUPCJZMXYBlggUwtV1w-YC_zQwtWO1so9uYnHCBD3ThS8F672oIAdRs8qWBP1at1A2y0cKCSbJZul65pvlPobOgjt5T_OxyZgazJl16S4bk5SsgJsGLMyhbyCVD-muS2nU0KBrDrBi_4R34TmpF37PR9xXHPXVbcUGXChpJtqp4ZY-EDg-4PdiaC_QRbnjsFfn99AXkopEmTNFHpdH5RB7_AamuxSE)
 
 ```mermaid
 classDiagram
@@ -108,10 +108,10 @@ classDiagram
     hidImplementation --> power: command to recalibrate battery
     hidImplementation --> notify: connected, discovering
     power --> notify: powerOff, low battery
-    clutchState --> notify: bite point
+    userSettings --> notify: bite point
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9kLFuwzAMRH9F0Oz8gIdO7dCpQ1YttETbBCRSkKgmRpB_r5wUaL2EE3G4e0fwZr0EtKP1EWp9J1gKJMemz0rhM-WICVlBSdicTm-GODeto_GSEnAwKsZDpKmAogGGKIuBK9ZXjCwXLAdEwT_IBKpYtlcAFqV52wnM6BXDYAJVL99YiJdn8lFycD-Ur3keTJTLscbHpn49697_PzJRF7IQq2M72IQlAYX-rtuec1bXfpmzY18DztCiOuv43q3QVM4beztqaTjYlkOH_z74KH4EUilP7f4DXRmMXw)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9kD1uwzAMha8iaHYu4KFTO3TqkFULLdEOAYkUJKqpEeTuVX6AQEs4EQ98Hx95sV4C2tn6CLV-EmwFkmPT60ThO-WICVlBSdgcDh-GODets_GSEnAwKsZDpKWAogGGKJuBP6zvGFnOWAZEwRdkAVUs-zsAi9K63wjM6BXDZAJVL79YiLeH875kmL4rP-s6mSjncU2rWI6o2t118CzUE2UhVjvZhCUBhf6ty83mrJ56MGfn3gZcoUV11vG1j0JTOe7s7ayl4WRbDv22539H8SuQSnlo13_g14wh)
 
 Some modules have a `begin()` method that must be called at system startup (`main()`or `setup()`). The calling order is defined by the previous diagram, where bottom modules must be called first.
 
@@ -151,7 +151,7 @@ else
    HID button number = raw input number
 ```
 
-### InputHub and clutchState
+### InputHub and userSettings
 
 Almost all the logic behind the behavior of the sim wheel is implemented at these modules.
 Wheel's functions are mapped to input numbers at `InputHub`.

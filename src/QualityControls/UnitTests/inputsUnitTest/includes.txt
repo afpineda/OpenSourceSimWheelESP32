@@ -8,7 +8,7 @@ AnalogMultiplexerInput.h
 ShiftRegistersInput.h
 adcTools.h
 inputs.cpp
-clutchState.cpp
+userSettings.cpp
 debugUtils.cpp
 RotaryEncoderInput.cpp
 ButtonMatrixInput.cpp

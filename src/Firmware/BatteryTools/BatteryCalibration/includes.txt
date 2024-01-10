@@ -7,5 +7,5 @@ BatteryCalibration.cpp
 power.cpp
 hidImplementation_NimBLE.cpp
 capabilities.cpp
-clutchState.cpp
+userSettings.cpp
 notify.cpp

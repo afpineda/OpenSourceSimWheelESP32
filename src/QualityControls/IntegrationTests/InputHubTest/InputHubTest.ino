@@ -54,7 +54,7 @@ void hidImplementation::reportInput(
                  clutchAxis,
                  leftAxis,
                  rightAxis,
-                 clutchState::bitePoint);
+                 userSettings::bitePoint);
     if (altEnabled)
         Serial.print(" (ALT)");
     Serial.println("");
@@ -104,11 +104,11 @@ void setup()
     inputHub::setClutchCalibrationButtons(CW_IN, CCW_IN);
 
     oldCP = CF_BUTTON;
-    clutchState::setCPWorkingMode(oldCP);
+    userSettings::setCPWorkingMode(oldCP);
     oldAltF = true;
-    clutchState::setALTButtonsWorkingMode(oldAltF);
+    userSettings::setALTButtonsWorkingMode(oldAltF);
 
-    clutchState::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    userSettings::setBitePoint(CLUTCH_DEFAULT_VALUE);
 
     Serial.println("-- GO --");
     inputs::start();
@@ -117,8 +117,8 @@ void setup()
 
 void loop()
 {
-    clutchFunction_t newCP = clutchState::cpWorkingMode;
-    bool newAltF = clutchState::altButtonsWorkingMode;
+    clutchFunction_t newCP = userSettings::cpWorkingMode;
+    bool newAltF = userSettings::altButtonsWorkingMode;
     if (newCP != oldCP)
     {
         oldCP = newCP;

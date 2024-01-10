@@ -93,7 +93,7 @@ void setup()
         nullptr,
         0,
         false);
-    clutchState::begin();
+    userSettings::begin();
     inputs::begin();
     simWheelSetup();
     hidImplementation::begin(

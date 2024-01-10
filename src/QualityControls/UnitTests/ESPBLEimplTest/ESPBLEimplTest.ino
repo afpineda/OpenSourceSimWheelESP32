@@ -78,9 +78,9 @@ void setup()
         ;
     Serial.println("--START--");
     hidImplementation::begin("ESPBLEimplTest", "Mamandurrio", true);
-    clutchState::setCPWorkingMode(CF_CLUTCH);
-    clutchState::setALTButtonsWorkingMode(true);
-    clutchState::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    userSettings::setCPWorkingMode(CF_CLUTCH);
+    userSettings::setALTButtonsWorkingMode(true);
+    userSettings::setBitePoint(CLUTCH_DEFAULT_VALUE);
     Serial.println("--GO--");
 }
 
@@ -127,9 +127,9 @@ void loop()
         axis = axis + 5;
         if (axis >= CLUTCH_FULL_VALUE - 5)
             axis = CLUTCH_NONE_VALUE;
-        clutchState::leftAxis = axis;
-        clutchState::rightAxis = axis;
-        clutchState::combinedAxis = axis;
+        userSettings::leftAxis = axis;
+        userSettings::rightAxis = axis;
+        userSettings::combinedAxis = axis;
     }
     delay(1000);
 }

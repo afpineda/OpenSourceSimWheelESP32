@@ -12,7 +12,7 @@ SerialNotification.h
 adcTools.h
 adcTools.cpp
 capabilities.cpp
-clutchState.cpp
+userSettings.cpp
 PolledInput.cpp
 RotaryEncoderInput.cpp
 ButtonMatrixInput.cpp

@@ -147,10 +147,10 @@ void simWheelSetup()
     inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_39,25,26);
     inputs::addRotaryEncoder(GPIO_NUM_35, GPIO_NUM_32,27,28);
     inputs::addRotaryEncoder(GPIO_NUM_25, GPIO_NUM_26,29,30);
-    inputs::addRotaryEncoder(GPIO_NUM_14, GPIO_NUM_18,31,32); 
+    inputs::addRotaryEncoder(GPIO_NUM_14, GPIO_NUM_18,31,32);
     inputs::addDigital(GPIO_NUM_34, true, false,33);
-    inputs::addDigital(GPIO_NUM_33, true, false,34);       
-    inputs::addDigital(GPIO_NUM_27, true, false,35);       
+    inputs::addDigital(GPIO_NUM_33, true, false,34);
+    inputs::addDigital(GPIO_NUM_27, true, false,35);
 
     inputs::setDigitalClutchPaddles(4, 12);
     inputHub::setDPADControls(19, 15, 11, 7);
@@ -177,7 +177,7 @@ void setup()
         LATCH_POWEROFF_DELAY);
 #endif
 
-    clutchState::begin();
+    userSettings::begin();
     inputs::begin();
     simWheelSetup();
     hidImplementation::begin(

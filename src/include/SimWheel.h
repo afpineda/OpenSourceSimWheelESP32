@@ -55,7 +55,7 @@ namespace capabilities
  *        for convenience, working mode of "ALT" buttons
  *
  */
-namespace clutchState
+namespace userSettings
 {
     // For read only. do not touch
     extern volatile clutchValue_t bitePoint;

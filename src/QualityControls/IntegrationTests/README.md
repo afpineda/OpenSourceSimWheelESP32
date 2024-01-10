@@ -22,7 +22,7 @@ Ensure that all unit test have failed before proceeding to integration testing (
 - DigitalPolledInput
 - inputs
 - **AnalogPolledInput**
-- **clutchState**
+- **userSettings**
 - **inputHub**
 
 ## Step
@@ -33,7 +33,7 @@ Ensure that all unit test have failed before proceeding to integration testing (
 - DigitalPolledInput
 - AnalogPolledInput
 - inputs
-- clutchState
+- userSettings
 - inputHub
 - **hidImplementation**
 - **notify**
@@ -57,7 +57,7 @@ Ensure that all unit test have failed before proceeding to integration testing (
 - DigitalPolledInput
 - AnalogPolledInput
 - inputs
-- clutchState
+- userSettings
 - inputHub
 - hidImplementation
 - notify

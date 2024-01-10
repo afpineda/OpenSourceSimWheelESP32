@@ -16,5 +16,5 @@ AnalogMultiplexerInput.cpp
 ShiftRegistersInput.cpp
 debugUtils.cpp
 InputHub.cpp
-clutchState.cpp
+userSettings.cpp
 capabilities.cpp

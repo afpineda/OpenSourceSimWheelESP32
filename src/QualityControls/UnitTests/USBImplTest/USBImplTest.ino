@@ -71,9 +71,9 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
     hidImplementation::begin("USBimplTest", "Mamandurrio", false);
-    clutchState::setCPWorkingMode(CF_CLUTCH);
-    clutchState::setALTButtonsWorkingMode(true);
-    clutchState::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    userSettings::setCPWorkingMode(CF_CLUTCH);
+    userSettings::setALTButtonsWorkingMode(true);
+    userSettings::setBitePoint(CLUTCH_DEFAULT_VALUE);
 }
 
 uint64_t data = 0;
@@ -105,9 +105,9 @@ void loop()
         axis = axis + 5;
         if (axis >= CLUTCH_FULL_VALUE - 5)
             axis = CLUTCH_NONE_VALUE;
-        clutchState::leftAxis = axis;
-        clutchState::rightAxis = axis;
-        clutchState::combinedAxis = axis;
+        userSettings::leftAxis = axis;
+        userSettings::rightAxis = axis;
+        userSettings::combinedAxis = axis;
     }
     delay(1000);
 }

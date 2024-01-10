@@ -48,9 +48,9 @@ class SimWheelHIDImpl : public USBHIDDevice
         else if ((report_id == RID_FEATURE_CONFIG) && (len >= CONFIG_REPORT_SIZE))
         {
 
-            buffer[0] = (uint8_t)clutchState::cpWorkingMode;
-            buffer[1] = (uint8_t)clutchState::altButtonsWorkingMode;
-            buffer[2] = (uint8_t)clutchState::bitePoint;
+            buffer[0] = (uint8_t)userSettings::cpWorkingMode;
+            buffer[1] = (uint8_t)userSettings::altButtonsWorkingMode;
+            buffer[2] = (uint8_t)userSettings::bitePoint;
             buffer[3] = (uint8_t)power::getLastBatteryLevel();
             return CONFIG_REPORT_SIZE;
         }
@@ -65,17 +65,17 @@ class SimWheelHIDImpl : public USBHIDDevice
             if ((len > 0) && (buffer[0] >= CF_CLUTCH) && (buffer[0] <= CF_BUTTON))
             {
                 // clutch function
-                clutchState::setCPWorkingMode((clutchFunction_t)buffer[0]);
+                userSettings::setCPWorkingMode((clutchFunction_t)buffer[0]);
             }
             if ((len > 1) && (buffer[1] != 0xff))
             {
                 // ALT Buttons mode
-                clutchState::setALTButtonsWorkingMode((bool)buffer[1]);
+                userSettings::setALTButtonsWorkingMode((bool)buffer[1]);
             }
             if ((len > 2) && ((clutchValue_t)buffer[2] >= CLUTCH_NONE_VALUE) && ((clutchValue_t)buffer[2] <= CLUTCH_FULL_VALUE))
             {
                 // Bite point
-                clutchState::setBitePoint((clutchValue_t)buffer[2]);
+                userSettings::setBitePoint((clutchValue_t)buffer[2]);
             }
             if ((len > 3) && (buffer[3] == (uint8_t)simpleCommands_t::CMD_AXIS_RECALIBRATE))
             {

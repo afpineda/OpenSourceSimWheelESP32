@@ -37,8 +37,8 @@ void inputHub::onRawInput(
 {
     debugPrintBool(rawInputBitmap);
     serialPrintf("\n   L: %d R: %d\n",
-                 clutchState::leftAxis,
-                 clutchState::rightAxis);
+                 userSettings::leftAxis,
+                 userSettings::rightAxis);
 }
 
 void hidImplementation::reportChangeInConfig()
@@ -60,7 +60,7 @@ void setup()
     Serial.println("-- GO --");
 
     Serial.println("---- AXIS function ---");
-    clutchState::setCPWorkingMode(CF_AXIS);
+    userSettings::setCPWorkingMode(CF_AXIS);
 
     Serial.println("-- Analog CP");
     inputs::notifyInputEventForTesting(0, AXIS_LEFT_BMP, ~AXIS_LEFT_BMP, CLUTCH_1_4_VALUE);
@@ -77,7 +77,7 @@ void setup()
 
     delay(500);
     Serial.println("---- BUTTON function ---");
-    clutchState::setCPWorkingMode(CF_BUTTON);
+    userSettings::setCPWorkingMode(CF_BUTTON);
 
     Serial.println("-- Analog CP");
     inputs::notifyInputEventForTesting(0, AXIS_LEFT_BMP, ~AXIS_LEFT_BMP, CLUTCH_1_4_VALUE);

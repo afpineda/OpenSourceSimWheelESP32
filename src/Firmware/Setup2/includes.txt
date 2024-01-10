@@ -17,6 +17,6 @@ Inputs.cpp
 InputHub.cpp
 hidImplementation_NimBLE.cpp
 power_mock.cpp
-clutchState.cpp
+userSettings.cpp
 notify.cpp
 capabilities.cpp

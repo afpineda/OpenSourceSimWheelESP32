@@ -36,10 +36,6 @@ Place a single call to `inputs::setAnalogClutchPaddles()` inside `simWheelSetup(
 
 - First parameter is the ADC pin number for the left clutch paddle.
 - Second parameter is the ADC pin number for the right clutch paddle.
-- Third parameter is an arbitrary button number for the left clutch paddle, in the range 0 to 63.
-- Fourth parameter is an arbitrary button number for the right clutch paddle, in the range 0 to 63.
-
-Those button numbers will be reported in "regular buttons" mode. Do not have any other meaning.
 
 For example:
 
@@ -47,14 +43,14 @@ For example:
 void simWheelSetup()
 {
     ...
-    inputs::setAnalogClutchPaddles(GPIO_NUM_12, GPIO_NUM_13, 40, 41);
+    inputs::setAnalogClutchPaddles(GPIO_NUM_12, GPIO_NUM_13);
     ...
 }
 ```
 
-Note that `inputs::setDigitalClutchPaddles()` is incompatible and must not be called.
+You should also set two input numbers for the clutch paddles to work in "regular buttons" mode: place a call to `inputHub::setClutchInputNumbers()`. More on this later.
 
-Recalibration can be achieved through the companion app, but you may assign a button combination for that. Place a call to `setCalibrationCommandBitmaps()`:
+Recalibration can be achieved through the companion app, but you may assign a button combination for that. Place a call to `inputHub:setCalibrationCommandBitmaps()`:
 
 - First parameter is a sequence of calls to `BITMAP(<input number>)` separated by `|`.  All buttons have to be pressed at the same time and none of the others.
 - Ignore the second (optional) parameter or set to zero, for now, since it is not related to this subsystem.

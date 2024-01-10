@@ -121,7 +121,7 @@ void setup()
         WAKEUP_PINS,
         sizeof(WAKEUP_PINS) / sizeof(gpio_num_t),
         WAKEUP_ANYorALL);
-    clutchState::begin();
+    userSettings::begin();
     inputs::begin();
     simWheelSetup();
 

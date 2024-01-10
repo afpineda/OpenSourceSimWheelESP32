@@ -17,5 +17,5 @@ PolledInput.cpp
 power.cpp
 RotaryEncoderInput.cpp
 notify.cpp
-clutchState.cpp
+userSettings.cpp
 capabilities.cpp

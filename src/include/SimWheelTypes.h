@@ -50,7 +50,7 @@ typedef uint8_t inputNumber_t;
 /**
  * @brief The value of a joystick's axis
  *
- * @note DO NOT CHANGE. hidImplementation and clutchState depends on it.
+ * @note DO NOT CHANGE. hidImplementation and userSettings depends on it.
  */
 typedef uint8_t clutchValue_t;
 

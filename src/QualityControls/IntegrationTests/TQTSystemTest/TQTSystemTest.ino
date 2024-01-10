@@ -25,7 +25,7 @@ void setup()
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
     Serial.println("--READY--");
-    clutchState::begin();
+    userSettings::begin();
     power::begin(GPIO_NUM_0,true);
 
     inputs::addDigital(GPIO_NUM_0, 0, true, false );

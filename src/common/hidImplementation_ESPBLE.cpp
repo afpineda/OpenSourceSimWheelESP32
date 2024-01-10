@@ -85,17 +85,17 @@ class ConfigFRCallbacks : public BLECharacteristicCallbacks
         if ((size > 0) && (data[0] >= CF_CLUTCH) && (data[0] <= CF_BUTTON))
         {
             // clutch function
-            clutchState::setCPWorkingMode((clutchFunction_t)data[0]);
+            userSettings::setCPWorkingMode((clutchFunction_t)data[0]);
         }
         if ((size > 1) && (data[1] != 0xff))
         {
             // ALT Buttons mode
-            clutchState::setALTButtonsWorkingMode((bool)data[1]);
+            userSettings::setALTButtonsWorkingMode((bool)data[1]);
         }
         if ((size > 2) && ((clutchValue_t)data[2] >= CLUTCH_NONE_VALUE) && ((clutchValue_t)data[2] <= CLUTCH_FULL_VALUE))
         {
             // Bite point
-            clutchState::setBitePoint((clutchValue_t)data[2]);
+            userSettings::setBitePoint((clutchValue_t)data[2]);
         }
         if ((size > 3) && (data[3] == (uint8_t)simpleCommands_t::CMD_AXIS_RECALIBRATE))
         {
@@ -113,9 +113,9 @@ class ConfigFRCallbacks : public BLECharacteristicCallbacks
     void onRead(BLECharacteristic *pCharacteristic)
     {
         uint8_t data[CONFIG_REPORT_SIZE];
-        data[0] = (uint8_t)clutchState::cpWorkingMode;
-        data[1] = (uint8_t)clutchState::altButtonsWorkingMode;
-        data[2] = (uint8_t)clutchState::bitePoint;
+        data[0] = (uint8_t)userSettings::cpWorkingMode;
+        data[1] = (uint8_t)userSettings::altButtonsWorkingMode;
+        data[2] = (uint8_t)userSettings::bitePoint;
         data[3] = (uint8_t)power::getLastBatteryLevel();
         pCharacteristic->setValue(data, sizeof(data));
     }

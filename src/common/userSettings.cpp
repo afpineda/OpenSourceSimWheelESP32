@@ -1,7 +1,9 @@
 /**
+ * @file userSettings.cpp
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-12-21
- * @brief Implementation of the `clutchState` namespace
+ * @brief Implementation of the `userSettings` namespace
  *
  * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
  *
@@ -15,11 +17,11 @@
 // Globals
 // ----------------------------------------------------------------------------
 
-// Clutch state (exported for read-only)
+// Settings (exported for read-only)
 
-volatile clutchValue_t clutchState::bitePoint = CLUTCH_DEFAULT_VALUE;
-volatile clutchFunction_t clutchState::cpWorkingMode = clutchFunction_t::CF_CLUTCH;
-volatile bool clutchState::altButtonsWorkingMode = false;
+volatile clutchValue_t userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
+volatile clutchFunction_t userSettings::cpWorkingMode = clutchFunction_t::CF_CLUTCH;
+volatile bool userSettings::altButtonsWorkingMode = false;
 
 // Related to the autosave feature and user preferences
 
@@ -38,9 +40,9 @@ void autoSaveCallback(void *param)
     Preferences prefs;
     if (prefs.begin(PREFS_NAMESPACE, false))
     {
-        prefs.putBool(KEY_ALT_FUNCTION, clutchState::altButtonsWorkingMode);
-        prefs.putUChar(KEY_CLUTCH_FUNCTION, (uint8_t)clutchState::cpWorkingMode);
-        prefs.putUChar(KEY_CLUTCH_CALIBRATION, (uint8_t)clutchState::bitePoint);
+        prefs.putBool(KEY_ALT_FUNCTION, userSettings::altButtonsWorkingMode);
+        prefs.putUChar(KEY_CLUTCH_FUNCTION, (uint8_t)userSettings::cpWorkingMode);
+        prefs.putUChar(KEY_CLUTCH_CALIBRATION, (uint8_t)userSettings::bitePoint);
         prefs.end();
     }
 }
@@ -58,7 +60,7 @@ void requestSave()
 // Initialization
 // ----------------------------------------------------------------------------
 
-void clutchState::begin()
+void userSettings::begin()
 {
     if (autoSaveTimer == nullptr)
     {
@@ -73,15 +75,15 @@ void clutchState::begin()
         Preferences prefs;
         if (prefs.begin(PREFS_NAMESPACE, true))
         {
-            clutchState::altButtonsWorkingMode = prefs.getBool(KEY_ALT_FUNCTION, clutchState::altButtonsWorkingMode);
+            userSettings::altButtonsWorkingMode = prefs.getBool(KEY_ALT_FUNCTION, userSettings::altButtonsWorkingMode);
 
-            uint8_t value1 = prefs.getUChar(KEY_CLUTCH_FUNCTION, (uint8_t)clutchState::cpWorkingMode);
+            uint8_t value1 = prefs.getUChar(KEY_CLUTCH_FUNCTION, (uint8_t)userSettings::cpWorkingMode);
             if ((value1 >= CF_CLUTCH) && (value1 <= CF_BUTTON))
-                clutchState::cpWorkingMode = (clutchFunction_t)value1;
+                userSettings::cpWorkingMode = (clutchFunction_t)value1;
 
-            uint8_t value2 = prefs.getUChar(KEY_CLUTCH_CALIBRATION, (uint8_t)clutchState::bitePoint);
+            uint8_t value2 = prefs.getUChar(KEY_CLUTCH_CALIBRATION, (uint8_t)userSettings::bitePoint);
             if ((value2 >= CLUTCH_NONE_VALUE) && (value2 <= CLUTCH_FULL_VALUE))
-                clutchState::bitePoint = (clutchValue_t)value2;
+                userSettings::bitePoint = (clutchValue_t)value2;
 
             prefs.end();
         }
@@ -92,36 +94,36 @@ void clutchState::begin()
 // setters
 // ----------------------------------------------------------------------------
 
-void clutchState::setALTButtonsWorkingMode(bool newMode)
+void userSettings::setALTButtonsWorkingMode(bool newMode)
 {
-    if (clutchState::altButtonsWorkingMode != newMode)
+    if (userSettings::altButtonsWorkingMode != newMode)
     {
-        clutchState::altButtonsWorkingMode = newMode;
+        userSettings::altButtonsWorkingMode = newMode;
         requestSave();
         hidImplementation::reportChangeInConfig();
         inputs::update();
     }
 }
 
-void clutchState::setCPWorkingMode(clutchFunction_t newFunction)
+void userSettings::setCPWorkingMode(clutchFunction_t newFunction)
 {
-    if ((newFunction != clutchState::cpWorkingMode) &&
+    if ((newFunction != userSettings::cpWorkingMode) &&
         (newFunction>=CF_CLUTCH) && (newFunction<=CF_BUTTON))
     {
-        clutchState::cpWorkingMode = newFunction;
+        userSettings::cpWorkingMode = newFunction;
         requestSave();
         hidImplementation::reportChangeInConfig();
         inputs::update();
     }
 }
 
-void clutchState::setBitePoint(clutchValue_t newBitePoint)
+void userSettings::setBitePoint(clutchValue_t newBitePoint)
 {
-    if (newBitePoint != clutchState::bitePoint)
+    if (newBitePoint != userSettings::bitePoint)
     {
         if ((newBitePoint != CLUTCH_INVALID_VALUE))
         {
-            clutchState::bitePoint = newBitePoint;
+            userSettings::bitePoint = newBitePoint;
             requestSave();
             hidImplementation::reportChangeInConfig();
             notify::bitePoint(newBitePoint);

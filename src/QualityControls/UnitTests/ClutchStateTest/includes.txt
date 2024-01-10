@@ -1,5 +1,5 @@
 SimWheel.h
 SimwheelTypes.h
 debugUtils.h
-clutchState.cpp
+userSettings.cpp
 debugUtils.cpp

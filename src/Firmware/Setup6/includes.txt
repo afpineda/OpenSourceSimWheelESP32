@@ -18,6 +18,6 @@ Inputs.cpp
 InputHub.cpp
 hidImplementation_NimBLE.cpp
 batteryCalibration.cpp
-clutchState.cpp
+userSettings.cpp
 power.cpp
 notify.cpp

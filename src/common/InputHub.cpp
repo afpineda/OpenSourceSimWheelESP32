@@ -64,35 +64,35 @@ static inputBitmap_t dpadMask = ~0ULL;
 //     // These input events never translate into a HID report
 //     if ((changes & cycleALTWorkingModeBitmap) && (globalState == cycleALTWorkingModeBitmap))
 //     {
-//         clutchState::setALTButtonsWorkingMode(!clutchState::altButtonsWorkingMode);
+//         userSettings::setALTButtonsWorkingMode(!userSettings::altButtonsWorkingMode);
 //         return;
 //     }
 //     if ((changes & cycleClutchWorkingModeBitmap) && (globalState == cycleClutchWorkingModeBitmap))
 //     {
-//         int f = clutchState::cpWorkingMode + 1;
+//         int f = userSettings::cpWorkingMode + 1;
 //         if (f > CF_BUTTON)
 //             f = CF_CLUTCH;
-//         clutchState::setCPWorkingMode((clutchFunction_t)f);
+//         userSettings::setCPWorkingMode((clutchFunction_t)f);
 //         return;
 //     }
 //     if ((changes & cmdCPWorkingModeBitmap_clutch) && (globalState == cmdCPWorkingModeBitmap_clutch))
 //     {
-//         clutchState::setCPWorkingMode(CF_CLUTCH);
+//         userSettings::setCPWorkingMode(CF_CLUTCH);
 //         return;
 //     }
 //     if ((changes & cmdCPWorkingModeBitmap_axis) && (globalState == cmdCPWorkingModeBitmap_axis))
 //     {
-//         clutchState::setCPWorkingMode(CF_AXIS);
+//         userSettings::setCPWorkingMode(CF_AXIS);
 //         return;
 //     }
 //     if ((changes & cmdCPWorkingModeBitmap_alt) && (globalState == cmdCPWorkingModeBitmap_alt))
 //     {
-//         clutchState::setCPWorkingMode(CF_ALT);
+//         userSettings::setCPWorkingMode(CF_ALT);
 //         return;
 //     }
 //     if ((changes & cmdCPWorkingModeBitmap_button) && (globalState == cmdCPWorkingModeBitmap_button))
 //     {
-//         clutchState::setCPWorkingMode(CF_BUTTON);
+//         userSettings::setCPWorkingMode(CF_BUTTON);
 //         return;
 //     }
 //     if ((changes & cmdAxisAutocalibrationBitmap) && (globalState == cmdAxisAutocalibrationBitmap))
@@ -108,8 +108,8 @@ static inputBitmap_t dpadMask = ~0ULL;
 
 //     // Check alt mode
 //     inputBitmap_t filteredInputs;
-//     bool altEnabled = clutchState::isALTRequested();
-//     if (clutchState::altButtonsWorkingMode)
+//     bool altEnabled = userSettings::isALTRequested();
+//     if (userSettings::altButtonsWorkingMode)
 //     {
 //         filteredInputs = altBitmap;
 //         altEnabled |= (globalState & altBitmap);
@@ -120,28 +120,28 @@ static inputBitmap_t dpadMask = ~0ULL;
 //     }
 
 //     // bite point calibration
-//     if (clutchState::isCalibrationInProgress())
+//     if (userSettings::isCalibrationInProgress())
 //     {
 //         // One and only one clutch paddle is pressed
 //         // Check for bite point calibration events
 //         int aux;
 //         if ((calibrateUpBitmap & changes) &&
 //             (calibrateUpBitmap & globalState) &&
-//             (clutchState::bitePoint < CLUTCH_FULL_VALUE))
+//             (userSettings::bitePoint < CLUTCH_FULL_VALUE))
 //         {
-//             aux = clutchState::bitePoint + CALIBRATION_INCREMENT;
+//             aux = userSettings::bitePoint + CALIBRATION_INCREMENT;
 //             if (aux > CLUTCH_FULL_VALUE)
 //                 aux = CLUTCH_FULL_VALUE;
-//             clutchState::setBitePoint((clutchValue_t)aux);
+//             userSettings::setBitePoint((clutchValue_t)aux);
 //         }
 //         else if ((calibrateDownBitmap & changes) &&
 //                  (calibrateDownBitmap & globalState) &&
-//                  (clutchState::bitePoint > CLUTCH_NONE_VALUE))
+//                  (userSettings::bitePoint > CLUTCH_NONE_VALUE))
 //         {
-//             aux = clutchState::bitePoint - CALIBRATION_INCREMENT;
+//             aux = userSettings::bitePoint - CALIBRATION_INCREMENT;
 //             if (aux < CLUTCH_NONE_VALUE)
 //                 aux = CLUTCH_NONE_VALUE;
-//             clutchState::setBitePoint((clutchValue_t)aux);
+//             userSettings::setBitePoint((clutchValue_t)aux);
 //         }
 //         filteredInputs |= (calibrateDownBitmap | calibrateUpBitmap);
 //     }
@@ -186,35 +186,35 @@ bool inputHub_commands_filter(
     // These input events never translate into a HID report
     if ((changes & cycleALTWorkingModeBitmap) && (globalState == cycleALTWorkingModeBitmap))
     {
-        clutchState::setALTButtonsWorkingMode(!clutchState::altButtonsWorkingMode);
+        userSettings::setALTButtonsWorkingMode(!userSettings::altButtonsWorkingMode);
         return true;
     }
     if ((changes & cycleClutchWorkingModeBitmap) && (globalState == cycleClutchWorkingModeBitmap))
     {
-        int f = clutchState::cpWorkingMode + 1;
+        int f = userSettings::cpWorkingMode + 1;
         if (f > CF_BUTTON)
             f = CF_CLUTCH;
-        clutchState::setCPWorkingMode((clutchFunction_t)f);
+        userSettings::setCPWorkingMode((clutchFunction_t)f);
         return true;
     }
     if ((changes & cmdCPWorkingModeBitmap_clutch) && (globalState == cmdCPWorkingModeBitmap_clutch))
     {
-        clutchState::setCPWorkingMode(CF_CLUTCH);
+        userSettings::setCPWorkingMode(CF_CLUTCH);
         return true;
     }
     if ((changes & cmdCPWorkingModeBitmap_axis) && (globalState == cmdCPWorkingModeBitmap_axis))
     {
-        clutchState::setCPWorkingMode(CF_AXIS);
+        userSettings::setCPWorkingMode(CF_AXIS);
         return true;
     }
     if ((changes & cmdCPWorkingModeBitmap_alt) && (globalState == cmdCPWorkingModeBitmap_alt))
     {
-        clutchState::setCPWorkingMode(CF_ALT);
+        userSettings::setCPWorkingMode(CF_ALT);
         return true;
     }
     if ((changes & cmdCPWorkingModeBitmap_button) && (globalState == cmdCPWorkingModeBitmap_button))
     {
-        clutchState::setCPWorkingMode(CF_BUTTON);
+        userSettings::setCPWorkingMode(CF_BUTTON);
         return true;
     }
     if ((changes & cmdAxisAutocalibrationBitmap) && (globalState == cmdAxisAutocalibrationBitmap))
@@ -243,7 +243,7 @@ void inputHub_bitePointCalibration_filter(
     clutchValue_t rightAxis)
 {
     bool isCalibrationInProgress =
-        (clutchState::cpWorkingMode == CF_CLUTCH) &&
+        (userSettings::cpWorkingMode == CF_CLUTCH) &&
         ((leftAxis >= CLUTCH_DEFAULT_VALUE) ^
          (rightAxis >= CLUTCH_DEFAULT_VALUE));
     if (isCalibrationInProgress)
@@ -253,21 +253,21 @@ void inputHub_bitePointCalibration_filter(
         int aux;
         if ((calibrateUpBitmap & changes) &&
             (calibrateUpBitmap & globalState) &&
-            (clutchState::bitePoint < CLUTCH_FULL_VALUE))
+            (userSettings::bitePoint < CLUTCH_FULL_VALUE))
         {
-            aux = clutchState::bitePoint + CALIBRATION_INCREMENT;
+            aux = userSettings::bitePoint + CALIBRATION_INCREMENT;
             if (aux > CLUTCH_FULL_VALUE)
                 aux = CLUTCH_FULL_VALUE;
-            clutchState::setBitePoint((clutchValue_t)aux);
+            userSettings::setBitePoint((clutchValue_t)aux);
         }
         else if ((calibrateDownBitmap & changes) &&
                  (calibrateDownBitmap & globalState) &&
-                 (clutchState::bitePoint > CLUTCH_NONE_VALUE))
+                 (userSettings::bitePoint > CLUTCH_NONE_VALUE))
         {
-            aux = clutchState::bitePoint - CALIBRATION_INCREMENT;
+            aux = userSettings::bitePoint - CALIBRATION_INCREMENT;
             if (aux < CLUTCH_NONE_VALUE)
                 aux = CLUTCH_NONE_VALUE;
-            clutchState::setBitePoint((clutchValue_t)aux);
+            userSettings::setBitePoint((clutchValue_t)aux);
         }
         globalState &= (~(calibrateDownBitmap | calibrateUpBitmap));
         changes &= (~(calibrateDownBitmap | calibrateUpBitmap));
@@ -288,7 +288,7 @@ void inputHub_AxisButton_filter(
     clutchValue_t &rightAxis,
     bool &axesChanged)
 {
-    if (axesChanged && (clutchState::cpWorkingMode == CF_BUTTON))
+    if (axesChanged && (userSettings::cpWorkingMode == CF_BUTTON))
     {
         // Transform analog axis position into an input state
         if (leftAxis >= CLUTCH_3_4_VALUE)
@@ -303,7 +303,7 @@ void inputHub_AxisButton_filter(
         rightAxis = CLUTCH_NONE_VALUE;
         axesChanged = false;
     }
-    else if ((clutchState::cpWorkingMode == CF_AXIS) || (clutchState::cpWorkingMode == CF_CLUTCH))
+    else if ((userSettings::cpWorkingMode == CF_AXIS) || (userSettings::cpWorkingMode == CF_CLUTCH))
     {
         // Transform input state into as axis position
         axesChanged = (rawInputChanges & (leftClutchBitmap | rightClutchBitmap));
@@ -331,22 +331,22 @@ void inputHub_combinedAxis_filter(
     clutchValue_t &rightAxis,
     clutchValue_t &clutchAxis)
 {
-    if (clutchState::cpWorkingMode == CF_CLUTCH)
+    if (userSettings::cpWorkingMode == CF_CLUTCH)
     {
         if (leftAxis > rightAxis)
             clutchAxis =
-                (leftAxis * clutchState::bitePoint +
-                 (rightAxis * (255 - clutchState::bitePoint))) /
+                (leftAxis * userSettings::bitePoint +
+                 (rightAxis * (255 - userSettings::bitePoint))) /
                 255;
         else
             clutchAxis =
-                (rightAxis * clutchState::bitePoint +
-                 (leftAxis * (255 - clutchState::bitePoint))) /
+                (rightAxis * userSettings::bitePoint +
+                 (leftAxis * (255 - userSettings::bitePoint))) /
                 255;
         leftAxis = CLUTCH_NONE_VALUE;
         rightAxis = CLUTCH_NONE_VALUE;
     }
-    else if (clutchState::cpWorkingMode == CF_AXIS)
+    else if (userSettings::cpWorkingMode == CF_AXIS)
     {
         clutchAxis = CLUTCH_NONE_VALUE;
     }
@@ -370,12 +370,12 @@ void inputHub_AltRequest_filter(
     clutchValue_t &rightAxis,
     bool &isAltRequested)
 {
-    if (clutchState::altButtonsWorkingMode)
+    if (userSettings::altButtonsWorkingMode)
     {
         isAltRequested = (rawInputBitmap & altBitmap);
         rawInputBitmap &= ~altBitmap;
     }
-    if (clutchState::cpWorkingMode == CF_ALT)
+    if (userSettings::cpWorkingMode == CF_ALT)
     {
         leftAxis = CLUTCH_NONE_VALUE;
         rightAxis = CLUTCH_NONE_VALUE;

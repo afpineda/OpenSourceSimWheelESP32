@@ -64,12 +64,11 @@ void simWheelSetup()
 }
 ```
 
-### Clutch paddless
+### Clutch paddles
 
-Clutch paddles are optional. You can have *analog* or *digital* clutch paddles, but not both. They work just the same.
-Analog clutch paddles are configured in the `inputs` namespace as stated in the [corresponding subsystem](./AnalogClutchPaddles/AnalogClutchPaddles_en.md) (nothing else is required).
+Clutch paddles are optional. You can have *analog* or *digital* clutch paddles. They work just the same.
 
-Digital clutch paddles requires just two existing input numbers. Place a call to `inputs::setDigitalClutchPaddles()`. Each parameter (there are two) is the input number assigned to a clutch paddle.
+Place a call to `inputHub::setClutchInputNumbers()`. Each parameter (there are two) is the input number assigned to a clutch paddle.
 For example, let's say the button matrix contains input numbers 45 and 46:
 
 ```c
@@ -79,10 +78,26 @@ void simWheelSetup()
    ...
    inputs::addButtonMatrix(... , btnMatrixNumbers);
    ...
-   inputs::setDigitalClutchPaddles(45, 46);
+   inputHub::setClutchInputNumbers(45, 46);
    ...
 }
 ```
+
+Now, those input numbers may work as clutch paddles depending on user preferences.
+
+It works the same for analog clutch paddles, but no existing input number is required, as shown in the following example:
+
+```c
+void simWheelSetup()
+{
+   inputs::setAnalogClutchPaddles(...);
+   ...
+   inputHub::setClutchInputNumbers(45, 46);
+   ...
+}
+```
+
+Now, the analog clutch paddles may work as input numbers 45 and 46 depending on user preferences.
 
 ### Clutch's bite point calibration
 
@@ -181,7 +196,8 @@ void simWheelSetup()
 Each time this function is activated, the working mode of the "ALT" buttons will move to the next one : "ALT" mode, regular buttons and back to the first mode. There is no point on this if there are no "ALT" buttons.
 
 Assign a combination of input numbers to activate this function by placing a call to
-`inputHub::cycleALTButtonsWorkingMode_setBitmap()`. There is one parameter: a sequence of calls to `BITMAP(<input number>)` separated by
+`inputHub::cycleALTButtonsWorkingMode_setBitmap()`.
+There is one parameter: a sequence of calls to `BITMAP(<input number>)` separated by
 `|`. All the inputs have to be active at the same time, and none of the others.
 
 ### Other game pad controls

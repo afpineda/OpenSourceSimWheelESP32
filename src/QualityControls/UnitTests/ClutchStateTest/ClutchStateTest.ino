@@ -88,125 +88,125 @@ void setup()
 
     // Bite point
     Serial.println("-- Set bite point");
-    clutchState::setBitePoint(CLUTCH_DEFAULT_VALUE);
-    clutchState::setBitePoint(CLUTCH_1_4_VALUE);
-    assertEquals<clutchValue_t>(STR_BITEP, CLUTCH_1_4_VALUE, clutchState::bitePoint);
+    userSettings::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    userSettings::setBitePoint(CLUTCH_1_4_VALUE);
+    assertEquals<clutchValue_t>(STR_BITEP, CLUTCH_1_4_VALUE, userSettings::bitePoint);
 
     // Button function
     Serial.println("-- CF_BUTTON");
-    clutchState::setCPWorkingMode(CF_BUTTON);
-    assertEquals<clutchFunction_t>(STR_FUNCTION, CF_BUTTON, clutchState::currentFunction);
-    clutchState::setLeftAxis(CLUTCH_1_4_VALUE);
-    clutchState::setRightAxis(CLUTCH_3_4_VALUE);
-    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_NONE_VALUE, clutchState::leftAxis);
-    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_NONE_VALUE, clutchState::rightAxis);
-    assertEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_NONE_VALUE, clutchState::combinedAxis);
-    assertEquals<bool>(STR_ALT, false, clutchState::isALTRequested());
-    assertEquals<bool>(STR_CAL, false, clutchState::isCalibrationInProgress());
+    userSettings::setCPWorkingMode(CF_BUTTON);
+    assertEquals<clutchFunction_t>(STR_FUNCTION, CF_BUTTON, userSettings::currentFunction);
+    userSettings::setLeftAxis(CLUTCH_1_4_VALUE);
+    userSettings::setRightAxis(CLUTCH_3_4_VALUE);
+    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_NONE_VALUE, userSettings::leftAxis);
+    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_NONE_VALUE, userSettings::rightAxis);
+    assertEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_NONE_VALUE, userSettings::combinedAxis);
+    assertEquals<bool>(STR_ALT, false, userSettings::isALTRequested());
+    assertEquals<bool>(STR_CAL, false, userSettings::isCalibrationInProgress());
 
     // ALT function
     Serial.println("-- CF_ALT");
-    clutchState::setCPWorkingMode(CF_ALT);
-    clutchState::setLeftAxis(CLUTCH_1_4_VALUE);
-    clutchState::setRightAxis(CLUTCH_NONE_VALUE);
-    assertEquals<clutchFunction_t>(STR_FUNCTION, CF_ALT, clutchState::currentFunction);
-    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_NONE_VALUE, clutchState::leftAxis);
-    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_NONE_VALUE, clutchState::rightAxis);
-    assertEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_NONE_VALUE, clutchState::combinedAxis);
-    assertEquals<bool>(STR_CAL, false, clutchState::isCalibrationInProgress());
-    assertEquals<bool>(STR_ALT, false, clutchState::isALTRequested());
+    userSettings::setCPWorkingMode(CF_ALT);
+    userSettings::setLeftAxis(CLUTCH_1_4_VALUE);
+    userSettings::setRightAxis(CLUTCH_NONE_VALUE);
+    assertEquals<clutchFunction_t>(STR_FUNCTION, CF_ALT, userSettings::currentFunction);
+    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_NONE_VALUE, userSettings::leftAxis);
+    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_NONE_VALUE, userSettings::rightAxis);
+    assertEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_NONE_VALUE, userSettings::combinedAxis);
+    assertEquals<bool>(STR_CAL, false, userSettings::isCalibrationInProgress());
+    assertEquals<bool>(STR_ALT, false, userSettings::isALTRequested());
 
     Serial.println("-- CF_ALT: left on, right off");
-    clutchState::setLeftAxis(CLUTCH_3_4_VALUE);
-    clutchState::setRightAxis(CLUTCH_NONE_VALUE);
-    assertEquals<bool>(STR_ALT, true, clutchState::isALTRequested());
+    userSettings::setLeftAxis(CLUTCH_3_4_VALUE);
+    userSettings::setRightAxis(CLUTCH_NONE_VALUE);
+    assertEquals<bool>(STR_ALT, true, userSettings::isALTRequested());
     Serial.println("-- CF_ALT: left off, right on");
-    clutchState::setLeftAxis(CLUTCH_1_4_VALUE);
-    clutchState::setRightAxis(CLUTCH_FULL_VALUE);
-    assertEquals<bool>(STR_ALT, true, clutchState::isALTRequested());
+    userSettings::setLeftAxis(CLUTCH_1_4_VALUE);
+    userSettings::setRightAxis(CLUTCH_FULL_VALUE);
+    assertEquals<bool>(STR_ALT, true, userSettings::isALTRequested());
     Serial.println("-- CF_ALT: left on, right on");
-    clutchState::setLeftAxis(CLUTCH_FULL_VALUE);
-    clutchState::setRightAxis(CLUTCH_3_4_VALUE);
-    assertEquals<bool>(STR_ALT, true, clutchState::isALTRequested());
+    userSettings::setLeftAxis(CLUTCH_FULL_VALUE);
+    userSettings::setRightAxis(CLUTCH_3_4_VALUE);
+    assertEquals<bool>(STR_ALT, true, userSettings::isALTRequested());
     Serial.println("-- CF_ALT: left off, right off");
-    clutchState::setLeftAxis(CLUTCH_NONE_VALUE);
-    clutchState::setRightAxis(CLUTCH_1_4_VALUE);
-    assertEquals<bool>(STR_ALT, false, clutchState::isALTRequested());
+    userSettings::setLeftAxis(CLUTCH_NONE_VALUE);
+    userSettings::setRightAxis(CLUTCH_1_4_VALUE);
+    assertEquals<bool>(STR_ALT, false, userSettings::isALTRequested());
 
     // AXIS function
     Serial.println("-- CF_AXIS");
-    clutchState::setCPWorkingMode(CF_AXIS);
-    assertEquals<clutchFunction_t>(STR_FUNCTION, CF_AXIS, clutchState::currentFunction);
-    clutchState::setLeftAxis(CLUTCH_1_4_VALUE);
-    clutchState::setRightAxis(CLUTCH_3_4_VALUE);
-    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_1_4_VALUE, clutchState::leftAxis);
-    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_3_4_VALUE, clutchState::rightAxis);
-    assertEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_NONE_VALUE, clutchState::combinedAxis);
-    assertEquals<bool>(STR_ALT, false, clutchState::isALTRequested());
-    assertEquals<bool>(STR_CAL, false, clutchState::isCalibrationInProgress());
+    userSettings::setCPWorkingMode(CF_AXIS);
+    assertEquals<clutchFunction_t>(STR_FUNCTION, CF_AXIS, userSettings::currentFunction);
+    userSettings::setLeftAxis(CLUTCH_1_4_VALUE);
+    userSettings::setRightAxis(CLUTCH_3_4_VALUE);
+    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_1_4_VALUE, userSettings::leftAxis);
+    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_3_4_VALUE, userSettings::rightAxis);
+    assertEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_NONE_VALUE, userSettings::combinedAxis);
+    assertEquals<bool>(STR_ALT, false, userSettings::isALTRequested());
+    assertEquals<bool>(STR_CAL, false, userSettings::isCalibrationInProgress());
 
     Serial.println("-- CF_AXIS: new bite point");
-    clutchState::setBitePoint(CLUTCH_DEFAULT_VALUE);
-    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_1_4_VALUE, clutchState::leftAxis);
-    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_3_4_VALUE, clutchState::rightAxis);
-    assertEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_NONE_VALUE, clutchState::combinedAxis);
+    userSettings::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_1_4_VALUE, userSettings::leftAxis);
+    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_3_4_VALUE, userSettings::rightAxis);
+    assertEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_NONE_VALUE, userSettings::combinedAxis);
 
     // CLUTCH FUNCTION
     Serial.println("-- CF_CLUTCH");
-    clutchState::setCPWorkingMode(CF_CLUTCH);
-    assertEquals<clutchFunction_t>(STR_FUNCTION, CF_CLUTCH, clutchState::currentFunction);
-    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_NONE_VALUE, clutchState::leftAxis);
-    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_NONE_VALUE, clutchState::rightAxis);
-    assertNonEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_NONE_VALUE, clutchState::combinedAxis);
-    assertEquals<bool>(STR_ALT, false, clutchState::isALTRequested());
+    userSettings::setCPWorkingMode(CF_CLUTCH);
+    assertEquals<clutchFunction_t>(STR_FUNCTION, CF_CLUTCH, userSettings::currentFunction);
+    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_NONE_VALUE, userSettings::leftAxis);
+    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_NONE_VALUE, userSettings::rightAxis);
+    assertNonEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_NONE_VALUE, userSettings::combinedAxis);
+    assertEquals<bool>(STR_ALT, false, userSettings::isALTRequested());
 
     Serial.println("-- CF_CLUTCH: left off, right off");
-    clutchState::setLeftAxis(CLUTCH_NONE_VALUE);
-    clutchState::setRightAxis(CLUTCH_NONE_VALUE);
-    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_NONE_VALUE, clutchState::leftAxis);
-    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_NONE_VALUE, clutchState::rightAxis);
-    assertEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_NONE_VALUE, clutchState::combinedAxis);
-    assertEquals<bool>(STR_CAL, false, clutchState::isCalibrationInProgress());
+    userSettings::setLeftAxis(CLUTCH_NONE_VALUE);
+    userSettings::setRightAxis(CLUTCH_NONE_VALUE);
+    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_NONE_VALUE, userSettings::leftAxis);
+    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_NONE_VALUE, userSettings::rightAxis);
+    assertEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_NONE_VALUE, userSettings::combinedAxis);
+    assertEquals<bool>(STR_CAL, false, userSettings::isCalibrationInProgress());
 
     Serial.println("-- CF_CLUTCH: left on, right off");
-    clutchState::setBitePoint(CLUTCH_DEFAULT_VALUE);
-    clutchState::setLeftAxis(CLUTCH_FULL_VALUE);
-    clutchState::setRightAxis(CLUTCH_NONE_VALUE);
-    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_NONE_VALUE, clutchState::leftAxis);
-    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_NONE_VALUE, clutchState::rightAxis);
-    assertAlmostEquals(STR_C_AXIS, clutchState::bitePoint, clutchState::combinedAxis);
-    assertEquals<clutchValue_t>(STR_BITEP, CLUTCH_DEFAULT_VALUE, clutchState::bitePoint);
-    assertEquals<bool>(STR_CAL, true, clutchState::isCalibrationInProgress());
+    userSettings::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    userSettings::setLeftAxis(CLUTCH_FULL_VALUE);
+    userSettings::setRightAxis(CLUTCH_NONE_VALUE);
+    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_NONE_VALUE, userSettings::leftAxis);
+    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_NONE_VALUE, userSettings::rightAxis);
+    assertAlmostEquals(STR_C_AXIS, userSettings::bitePoint, userSettings::combinedAxis);
+    assertEquals<clutchValue_t>(STR_BITEP, CLUTCH_DEFAULT_VALUE, userSettings::bitePoint);
+    assertEquals<bool>(STR_CAL, true, userSettings::isCalibrationInProgress());
 
     Serial.println("-- CF_CLUTCH: left on, right off, new bite point");
-    clutchState::setBitePoint(CLUTCH_3_4_VALUE);
-    assertAlmostEquals(STR_C_AXIS, clutchState::bitePoint, clutchState::combinedAxis);
-    assertEquals<clutchValue_t>(STR_BITEP, CLUTCH_3_4_VALUE, clutchState::bitePoint);
+    userSettings::setBitePoint(CLUTCH_3_4_VALUE);
+    assertAlmostEquals(STR_C_AXIS, userSettings::bitePoint, userSettings::combinedAxis);
+    assertEquals<clutchValue_t>(STR_BITEP, CLUTCH_3_4_VALUE, userSettings::bitePoint);
 
     Serial.println("-- CF_CLUTCH: left off, right on");
-    clutchState::setBitePoint(CLUTCH_DEFAULT_VALUE);
-    clutchState::setLeftAxis(CLUTCH_NONE_VALUE);
-    clutchState::setRightAxis(CLUTCH_FULL_VALUE);
-    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_NONE_VALUE, clutchState::leftAxis);
-    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_NONE_VALUE, clutchState::rightAxis);
-    assertAlmostEquals(STR_C_AXIS, clutchState::bitePoint, clutchState::combinedAxis);
-    assertEquals<clutchValue_t>(STR_BITEP, CLUTCH_DEFAULT_VALUE, clutchState::bitePoint);
-    assertEquals<bool>(STR_CAL, true, clutchState::isCalibrationInProgress());
+    userSettings::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    userSettings::setLeftAxis(CLUTCH_NONE_VALUE);
+    userSettings::setRightAxis(CLUTCH_FULL_VALUE);
+    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_NONE_VALUE, userSettings::leftAxis);
+    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_NONE_VALUE, userSettings::rightAxis);
+    assertAlmostEquals(STR_C_AXIS, userSettings::bitePoint, userSettings::combinedAxis);
+    assertEquals<clutchValue_t>(STR_BITEP, CLUTCH_DEFAULT_VALUE, userSettings::bitePoint);
+    assertEquals<bool>(STR_CAL, true, userSettings::isCalibrationInProgress());
 
     Serial.println("-- CF_CLUTCH: left off, right on, new bite point");
-    clutchState::setBitePoint(CLUTCH_1_4_VALUE);
-    assertAlmostEquals(STR_C_AXIS, clutchState::bitePoint, clutchState::combinedAxis);
-    assertEquals<clutchValue_t>(STR_BITEP, CLUTCH_1_4_VALUE, clutchState::bitePoint);
+    userSettings::setBitePoint(CLUTCH_1_4_VALUE);
+    assertAlmostEquals(STR_C_AXIS, userSettings::bitePoint, userSettings::combinedAxis);
+    assertEquals<clutchValue_t>(STR_BITEP, CLUTCH_1_4_VALUE, userSettings::bitePoint);
 
     Serial.println("-- CF_CLUTCH: left on, right on, new bite point");
-    clutchState::setLeftAxis(CLUTCH_FULL_VALUE);
-    clutchState::setRightAxis(CLUTCH_FULL_VALUE);
-    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_NONE_VALUE, clutchState::leftAxis);
-    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_NONE_VALUE, clutchState::rightAxis);
-    assertEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_FULL_VALUE, clutchState::combinedAxis);
-    assertEquals<bool>(STR_CAL, false, clutchState::isCalibrationInProgress());
-    clutchState::setBitePoint(CLUTCH_DEFAULT_VALUE);
-    assertEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_FULL_VALUE, clutchState::combinedAxis);
+    userSettings::setLeftAxis(CLUTCH_FULL_VALUE);
+    userSettings::setRightAxis(CLUTCH_FULL_VALUE);
+    assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_NONE_VALUE, userSettings::leftAxis);
+    assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_NONE_VALUE, userSettings::rightAxis);
+    assertEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_FULL_VALUE, userSettings::combinedAxis);
+    assertEquals<bool>(STR_CAL, false, userSettings::isCalibrationInProgress());
+    userSettings::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    assertEquals<clutchValue_t>(STR_C_AXIS, CLUTCH_FULL_VALUE, userSettings::combinedAxis);
 
     Serial.println("-- END --");
 }

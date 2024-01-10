@@ -51,7 +51,7 @@ void setup()
         ;
 
     Serial.println("-- READY --");
-    // clutchState::begin();
+    // userSettings::begin();
 
     notify::begin(new SerialNotificationImpl());
 
@@ -73,8 +73,8 @@ void setup()
     inputHub::setDPADControls(UP, DOWN, LEFT, RIGHT);
 
     hidImplementation::begin("Proto1", "Mamandurrio", false);
-    clutchState::setCPWorkingMode(CF_CLUTCH);
-    clutchState::setALTButtonsWorkingMode(true);
+    userSettings::setCPWorkingMode(CF_CLUTCH);
+    userSettings::setALTButtonsWorkingMode(true);
     Serial.println("-- GO --");
     inputs::start();
 }

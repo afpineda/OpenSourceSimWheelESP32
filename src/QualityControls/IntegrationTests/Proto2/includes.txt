@@ -10,7 +10,7 @@ PolledInput.h
 HID_definitions.h
 adcTools.cpp
 notify.cpp
-clutchState.cpp
+userSettings.cpp
 ButtonMatrixInput.cpp
 AnalogMultiplexerInput.cpp
 ShiftRegistersInput.cpp
