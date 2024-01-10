@@ -83,14 +83,14 @@ classDiagram
     class PolledInput {
       +read()
     }
-    inputHub <-- inputs: inputs' state
-    inputs <-- PolledInput: events
+    inputHub <-- inputs: input events
+    inputs <-- AnalogAxisInput: axis position
+    inputs <-- PolledInput: state of input hardware
     DigitalPolledInput <|-- ButtonMatrixInput
     DigitalPolledInput <|-- AnalogMultiplexerInput
     DigitalPolledInput <|-- ShiftRegistersInput
     DigitalPolledInput <|-- RotaryEncoderInput
     PolledInput <|-- DigitalPolledInput
-    PolledInput <|-- AnalogPolledInput
     inputHub <--> userSettings: configuration
     inputHub --> hidImplementation: processed events
     hidImplementation <--> userSettings: configuration
@@ -100,7 +100,7 @@ classDiagram
     power <-- batteryCalibration: computed battery level
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNlMFu2zAMhl9F0GUb1ryAUAxo1wIrsGBFctjFF8WiHWGyZEhU26DLu4-2EkOO4qG5xKa-n6TJ337ntVPABa-NDOFBy9bLrrKMfmOEbRxKf3i0A-afbB8xP9VDILD3FGPsayAaP39J98cC_RF3GezsRr6OOa8qYgC_BURt27zETiM8O21xitT9b-f_ELamJqeoNHgfEZ0NxemszF6rp6430IFFidrZrJaH3nlcbrF3r-Azfrz_1TRX4Z1EBH_4Lo3e-ctKLeB9Ov8JL2DOCcqTu4junALU1ULPzhhQY9ezZ5GX-LST29XqtEtx-v_EaJUIGRdGKsstGPVjMSTmQbcapclr3_4lQdrBWqLXb5l_lvA7K41r19Ggpp28zTy3pNnudYMbaHWgKYUPCJZMXYBlggUwtV1w-YC_zQwtWO1so9uYnHCBD3ThS8F672oIAdRs8qWBP1at1A2y0cKCSbJZul65pvlPobOgjt5T_OxyZgazJl16S4bk5SsgJsGLMyhbyCVD-muS2nU0KBrDrBi_4R34TmpF37PR9xXHPXVbcUGXChpJtqp4ZY-EDg-4PdiaC_QRbnjsFfn99AXkopEmTNFHpdH5RB7_AamuxSE)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNVMFu4yAQ_RXEaVfb_ACqKqXbSltpo1bJYS--EDN20GKwYGgSdfPvOzZJhENS1Rfj4b15w8zDH7x2CrjgtZEhPGnZetlVltEzRtjSofT7ZzvA_IvtI-a7eggE9pFijP0IhMZv39P3oYD-iusM7OxSbsecVxkxgF8BorZtLrHWCG9OWzxH6v6P838JtqAiz1Fp8DEiOhuK3YnMRquXrjfQgUWJ2tlMy0PvPN4usXdb8Bl-_H5tmqvgtUQEv_8pjV77S6UW8DHt_4Z3MKcE5c48ojulAHVV6M0ZA2qsenIWeQk_z-R-NjvOUqQ3IymLIYOFETS30rh2vtNhTC-YpCW1IejhPAU8q0Qw8gYCc81RYSO92kp_HMmTbjVKk5d-_48ypBEuJHq9y-x3C57qW0SDmka6m1j2Fme10Q0uodWBmhy-QLh1JwpgmaDs-8PE54LVzja6jckgF_ABXdhVsN67GkIANZla6euvqZW8gTY6m8ZN7kvrmWuaT4ROhDp6T_GT-ZkZPJx46fIMycubIc6Ed2dQtpBThvTXKLXrqFHUhokYv-Md-E5qRb-58TpUHDdUbcUFLRU0kuxS8coeCDoccLW3NReNNAHueOwV2fb4Z7yIPiuNznOBPsLhP65HzhU)
 
 ```mermaid
 classDiagram

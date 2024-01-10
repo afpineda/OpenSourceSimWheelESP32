@@ -436,14 +436,14 @@ namespace inputHub
      *                            1 means changed, 0 means not changed.
      * @param[in] leftAxis Position of the left analog clutch paddle (zero if not available)
      * @param[in] rightAxis Position of the right analog clutch paddle (zero if not available)
-     * @param[in] axesChanged True if any analog clutch paddle has changed in position since last call.
+     * @param[in] axesAvailable True if there are analog clutch paddles. False otherwise.
      */
     void onRawInput(
         inputBitmap_t rawInputBitmap,
         inputBitmap_t rawInputChanges,
         clutchValue_t leftAxis,
         clutchValue_t rightAxis,
-        bool axesChanged);
+        bool axesAvailable);
 
     /**
      * @brief Set the bitmap for all ALT buttons. For example:

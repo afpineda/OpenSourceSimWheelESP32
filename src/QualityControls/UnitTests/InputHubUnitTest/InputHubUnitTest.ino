@@ -7,7 +7,7 @@
  *
  */
 
-#include <Arduino.h>
+#include <HardwareSerial.h>
 #include "SimWheel.h"
 #include "debugUtils.h"
 
@@ -15,8 +15,8 @@
 // Globals
 //------------------------------------------------------------------
 
-// #define LCLUTCH 1
-// #define RCLUTCH 2
+#define LCLUTCH 1
+#define RCLUTCH 2
 #define ALT 3
 #define CMD 4
 #define CYCLE_CLUTCH 5
@@ -52,17 +52,19 @@ void hidImplementation::reset()
     currentPOV = 0;
     currentALTEnabled = false;
     currentState = 0;
-    //Serial.println("hidImplementation::reset()");
 }
 
 void hidImplementation::reportInput(
-    inputBitmap_t globalState,
-    bool altEnabled,
-    uint8_t POVstate)
+    inputBitmap_t inputsLow,
+    inputBitmap_t inputsHigh,
+    uint8_t POVstate,
+    clutchValue_t leftAxis,
+    clutchValue_t rightAxis,
+    clutchValue_t clutchAxis)
 {
-    currentState = globalState;
+    currentALTEnabled = (inputsLow == 0ULL);
+    currentState = currentALTEnabled ? inputsHigh : inputsLow;
     currentPOV = POVstate;
-    currentALTEnabled = altEnabled;
     // Serial.println(".");
 }
 
@@ -76,32 +78,37 @@ void hidImplementation::reportChangeInConfig()
 {
 }
 
-void capabilities::setFlag(deviceCapability_t a, bool b)
-{
-}
-
 void inputs::recalibrateAxes()
 {
-
 }
 
 void batteryCalibration::restartAutoCalibration()
 {
-
 }
 
 //------------------------------------------------------------------
 // Auxiliary
 //------------------------------------------------------------------
 
+uint8_t simulatedLeftAxis = CLUTCH_NONE_VALUE;
+uint8_t simulatedRightAxis = CLUTCH_NONE_VALUE;
+bool simulateAnalogAxes = true;
+
 void push(inputBitmap_t bmp)
 {
-    inputHub::onStateChanged(bmp, bmp);
+    inputHub::onRawInput(bmp, bmp, simulatedLeftAxis, simulatedRightAxis, simulateAnalogAxes);
 }
 
 void release(inputBitmap_t bmp)
 {
-    inputHub::onStateChanged(0, bmp);
+    inputHub::onRawInput(0ULL, bmp, simulatedLeftAxis, simulatedRightAxis, simulateAnalogAxes);
+}
+
+void axisEvent(clutchValue_t leftAxis, clutchValue_t rightAxis)
+{
+    simulatedLeftAxis = leftAxis;
+    simulatedRightAxis = rightAxis;
+    inputHub::onRawInput(0ULL, 0ULL, leftAxis, rightAxis, simulateAnalogAxes);
 }
 
 template <typename T>
@@ -116,14 +123,13 @@ void assertEquals(const char *text, T expected, T found)
 template <typename T>
 void pushAssertEqualsRelease(inputBitmap_t bmp, const char *text, T expected, T *found)
 {
-    inputHub::onStateChanged(bmp, bmp);
+    push(bmp);
     assertEquals<T>(text, expected, *found);
-    inputHub::onStateChanged(0, bmp);
+    release(bmp);
 }
 
 void inputs::update()
 {
-
 }
 
 //------------------------------------------------------------------
@@ -136,8 +142,6 @@ void setup()
 
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
-    while (!Serial)
-        ;
     Serial.println("-- READY --");
 
     inputHub::setALTButton(ALT);
@@ -150,6 +154,8 @@ void setup()
         BMP_SELECT_ALT_F,
         BMP_SELECT_BUTTON_F);
     inputHub::setClutchCalibrationButtons(UP, DOWN);
+    capabilities::setFlag(CAP_CLUTCH_ANALOG);
+    inputHub::setClutchInputNumbers(LCLUTCH, RCLUTCH);
 
     Serial.println("-- GO --");
     assertEquals<inputBitmap_t>("state at start", 0, currentState);
@@ -193,39 +199,38 @@ void setup()
 
     Serial.println("- simulate cycle ALT function -");
     userSettings::setALTButtonsWorkingMode(true);
-    pushAssertEqualsRelease<bool>(BMP_CYCLE_ALT, "Cycle alt 1", false, (bool *)&userSettings::altModeForAltButtons);
-    pushAssertEqualsRelease<bool>(BMP_CYCLE_ALT, "Cycle alt 2", true, (bool *)&userSettings::altModeForAltButtons);
+    pushAssertEqualsRelease<bool>(BMP_CYCLE_ALT, "Cycle alt 1", false, (bool *)&userSettings::altButtonsWorkingMode);
+    pushAssertEqualsRelease<bool>(BMP_CYCLE_ALT, "Cycle alt 2", true, (bool *)&userSettings::altButtonsWorkingMode);
 
     Serial.println("- simulate cycle clutch function -");
     userSettings::setCPWorkingMode(CF_BUTTON);
-    pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 1", CF_CLUTCH, (clutchFunction_t *)&userSettings::currentFunction);
-    pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 2", CF_AXIS, (clutchFunction_t *)&userSettings::currentFunction);
-    pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 3", CF_ALT, (clutchFunction_t *)&userSettings::currentFunction);
-    pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 4", CF_BUTTON, (clutchFunction_t *)&userSettings::currentFunction);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 1", CF_CLUTCH, (clutchFunction_t *)&userSettings::cpWorkingMode);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 2", CF_AXIS, (clutchFunction_t *)&userSettings::cpWorkingMode);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 3", CF_ALT, (clutchFunction_t *)&userSettings::cpWorkingMode);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 4", CF_BUTTON, (clutchFunction_t *)&userSettings::cpWorkingMode);
 
     Serial.println("- simulate explicit selection of clutch function -");
     userSettings::setCPWorkingMode(CF_BUTTON);
-    pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_ALT_F, "CF_ALT", CF_ALT, (clutchFunction_t *)&userSettings::currentFunction);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_ALT_F, "CF_ALT", CF_ALT, (clutchFunction_t *)&userSettings::cpWorkingMode);
     userSettings::setCPWorkingMode(CF_BUTTON);
-    pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_CLUTCH_F, "CF_CLUTCH", CF_CLUTCH, (clutchFunction_t *)&userSettings::currentFunction);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_CLUTCH_F, "CF_CLUTCH", CF_CLUTCH, (clutchFunction_t *)&userSettings::cpWorkingMode);
     userSettings::setCPWorkingMode(CF_ALT);
-    pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_BUTTON_F, "CF_BUTTON", CF_BUTTON, (clutchFunction_t *)&userSettings::currentFunction);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_BUTTON_F, "CF_BUTTON", CF_BUTTON, (clutchFunction_t *)&userSettings::cpWorkingMode);
     userSettings::setCPWorkingMode(CF_BUTTON);
-    pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_AXIS_F, "CF_AXIS", CF_AXIS, (clutchFunction_t *)&userSettings::currentFunction);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_AXIS_F, "CF_AXIS", CF_AXIS, (clutchFunction_t *)&userSettings::cpWorkingMode);
 
     Serial.println("- simulate non-mapped button combinations -");
     userSettings::setCPWorkingMode(CF_BUTTON);
     userSettings::setALTButtonsWorkingMode(true);
     push(BMP_CYCLE_ALT | BMP_CYCLE_CLUTCH);
-    assertEquals<clutchFunction_t>("CF_BUTTON", CF_BUTTON, userSettings::currentFunction);
-    assertEquals<bool>("alt mode", true, userSettings::altModeForAltButtons);
+    assertEquals<clutchFunction_t>("CF_BUTTON", CF_BUTTON, userSettings::cpWorkingMode);
+    assertEquals<bool>("alt mode", true, userSettings::altButtonsWorkingMode);
     release(BMP_CYCLE_ALT | BMP_CYCLE_CLUTCH);
 
     Serial.println("- simulate bite point calibration -");
     userSettings::setCPWorkingMode(CF_CLUTCH);
     userSettings::setBitePoint(CLUTCH_DEFAULT_VALUE);
-    userSettings::setLeftAxis(CLUTCH_FULL_VALUE);
-    userSettings::setRightAxis(CLUTCH_NONE_VALUE);
+    axisEvent(CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
     biteP = userSettings::bitePoint;
     push(UP_B);
     release(UP_B);

@@ -1,8 +1,8 @@
-# Integration test: combined input from several buttons and a rotary enconder
+# Integration test: combined input from several buttons and a rotary encoder
 
 ## Purpose and summary
 
-To test correct identification and combination of events caused by different kinds of inputs.
+To test correct identification and combination of events caused by different kinds of digital inputs.
 Individual events are combined into a global state bitmap (one bit for each input).
 
 ## Hardware setup
@@ -28,7 +28,7 @@ Output through USB serial port at 115200 bauds.
 For later reference:
 
 - "BM1" is the button in the matrix whose output is:
-  
+
   ```text
   STATE : 0000000000000000000000000000000000000000000000000000000000000100
   ```

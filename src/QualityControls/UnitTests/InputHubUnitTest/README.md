@@ -11,7 +11,7 @@ To test that:
 - Bite point calibration works as expected.
 - D-PAD input is properly reported.
 
-## Harware setup
+## Hardware setup
 
 Nothing required. This is an automated test.
 Output through USB serial port at 115200 bauds. Connect before reset.

@@ -50,126 +50,12 @@ static inputBitmap_t cmdBatteryRecalibrationBitmap = 0;
 #define DPAD_DOWN_LEFT 6
 #define DPAD_LEFT 7
 #define DPAD_UP_LEFT 8
-static inputBitmap_t dpadBitmap[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-static inputBitmap_t dpadNegMask = 0;
+static inputBitmap_t dpadBitmap[9] = {0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL};
+static inputBitmap_t dpadNegMask = 0ULL;
 static inputBitmap_t dpadMask = ~0ULL;
 
 // ----------------------------------------------------------------------------
 // Input processing
-// ----------------------------------------------------------------------------
-
-// void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
-// {
-//     // Look for input events requesting a change in simwheel functions
-//     // These input events never translate into a HID report
-//     if ((changes & cycleALTWorkingModeBitmap) && (globalState == cycleALTWorkingModeBitmap))
-//     {
-//         userSettings::setALTButtonsWorkingMode(!userSettings::altButtonsWorkingMode);
-//         return;
-//     }
-//     if ((changes & cycleClutchWorkingModeBitmap) && (globalState == cycleClutchWorkingModeBitmap))
-//     {
-//         int f = userSettings::cpWorkingMode + 1;
-//         if (f > CF_BUTTON)
-//             f = CF_CLUTCH;
-//         userSettings::setCPWorkingMode((clutchFunction_t)f);
-//         return;
-//     }
-//     if ((changes & cmdCPWorkingModeBitmap_clutch) && (globalState == cmdCPWorkingModeBitmap_clutch))
-//     {
-//         userSettings::setCPWorkingMode(CF_CLUTCH);
-//         return;
-//     }
-//     if ((changes & cmdCPWorkingModeBitmap_axis) && (globalState == cmdCPWorkingModeBitmap_axis))
-//     {
-//         userSettings::setCPWorkingMode(CF_AXIS);
-//         return;
-//     }
-//     if ((changes & cmdCPWorkingModeBitmap_alt) && (globalState == cmdCPWorkingModeBitmap_alt))
-//     {
-//         userSettings::setCPWorkingMode(CF_ALT);
-//         return;
-//     }
-//     if ((changes & cmdCPWorkingModeBitmap_button) && (globalState == cmdCPWorkingModeBitmap_button))
-//     {
-//         userSettings::setCPWorkingMode(CF_BUTTON);
-//         return;
-//     }
-//     if ((changes & cmdAxisAutocalibrationBitmap) && (globalState == cmdAxisAutocalibrationBitmap))
-//     {
-//         inputs::recalibrateAxes();
-//         return;
-//     }
-//     if ((changes & cmdBatteryRecalibrationBitmap) && (globalState == cmdBatteryRecalibrationBitmap))
-//     {
-//         batteryCalibration::restartAutoCalibration();
-//         return;
-//     }
-
-//     // Check alt mode
-//     inputBitmap_t filteredInputs;
-//     bool altEnabled = userSettings::isALTRequested();
-//     if (userSettings::altButtonsWorkingMode)
-//     {
-//         filteredInputs = altBitmap;
-//         altEnabled |= (globalState & altBitmap);
-//     }
-//     else
-//     {
-//         filteredInputs = 0;
-//     }
-
-//     // bite point calibration
-//     if (userSettings::isCalibrationInProgress())
-//     {
-//         // One and only one clutch paddle is pressed
-//         // Check for bite point calibration events
-//         int aux;
-//         if ((calibrateUpBitmap & changes) &&
-//             (calibrateUpBitmap & globalState) &&
-//             (userSettings::bitePoint < CLUTCH_FULL_VALUE))
-//         {
-//             aux = userSettings::bitePoint + CALIBRATION_INCREMENT;
-//             if (aux > CLUTCH_FULL_VALUE)
-//                 aux = CLUTCH_FULL_VALUE;
-//             userSettings::setBitePoint((clutchValue_t)aux);
-//         }
-//         else if ((calibrateDownBitmap & changes) &&
-//                  (calibrateDownBitmap & globalState) &&
-//                  (userSettings::bitePoint > CLUTCH_NONE_VALUE))
-//         {
-//             aux = userSettings::bitePoint - CALIBRATION_INCREMENT;
-//             if (aux < CLUTCH_NONE_VALUE)
-//                 aux = CLUTCH_NONE_VALUE;
-//             userSettings::setBitePoint((clutchValue_t)aux);
-//         }
-//         filteredInputs |= (calibrateDownBitmap | calibrateUpBitmap);
-//     }
-
-//     // Report
-//     globalState = globalState & (~filteredInputs);
-
-//     uint8_t povInput = DPAD_CENTERED;
-//     if (!altEnabled)
-//     {
-//         // Map directional pad buttons to POV input as needed
-//         inputBitmap_t povState = globalState & dpadNegMask;
-
-//         if (povState)
-//         {
-//             uint8_t n = 1;
-//             while ((povInput == 0) && (n < 9))
-//             {
-//                 if (povState == dpadBitmap[n])
-//                     povInput = n;
-//                 n++;
-//             }
-//         }
-//         globalState = globalState & (dpadMask);
-//     }
-//     hidImplementation::reportInput(globalState, altEnabled, povInput);
-// }
-
 // ----------------------------------------------------------------------------
 
 /**
@@ -232,6 +118,8 @@ bool inputHub_commands_filter(
 
 // ----------------------------------------------------------------------------
 
+// #include <HardwareSerial.h> // Debug
+
 /**
  * @brief Executes bite point calibration from user input
  *
@@ -242,12 +130,18 @@ void inputHub_bitePointCalibration_filter(
     clutchValue_t leftAxis,
     clutchValue_t rightAxis)
 {
+    if (userSettings::cpWorkingMode != CF_CLUTCH)
+        // not in clutch mode
+        return;
+
     bool isCalibrationInProgress =
-        (userSettings::cpWorkingMode == CF_CLUTCH) &&
-        ((leftAxis >= CLUTCH_DEFAULT_VALUE) ^
-         (rightAxis >= CLUTCH_DEFAULT_VALUE));
+        ((leftAxis == CLUTCH_FULL_VALUE) && (rightAxis == CLUTCH_NONE_VALUE));
+    isCalibrationInProgress =
+        isCalibrationInProgress ||
+        ((leftAxis == CLUTCH_NONE_VALUE) && (rightAxis == CLUTCH_FULL_VALUE));
     if (isCalibrationInProgress)
     {
+        // Serial.println("isCalibrationInProgress");
         // One and only one clutch paddle is pressed
         // Check for bite point calibration events
         int aux;
@@ -286,27 +180,38 @@ void inputHub_AxisButton_filter(
     inputBitmap_t &rawInputChanges,
     clutchValue_t &leftAxis,
     clutchValue_t &rightAxis,
-    bool &axesChanged)
+    bool axesAvailable)
 {
-    if (axesChanged && (userSettings::cpWorkingMode == CF_BUTTON))
+    if (axesAvailable && (userSettings::cpWorkingMode == CF_BUTTON))
     {
         // Transform analog axis position into an input state
         if (leftAxis >= CLUTCH_3_4_VALUE)
+        {
             rawInputBitmap |= leftClutchBitmap;
+            rawInputChanges |= leftClutchBitmap;
+        }
         else if (leftAxis <= CLUTCH_1_4_VALUE)
-            rawInputBitmap = rawInputBitmap & (~leftClutchBitmap);
+        {
+            rawInputBitmap &= (~leftClutchBitmap);
+            rawInputChanges |= leftClutchBitmap;
+        }
         if (rightAxis >= CLUTCH_3_4_VALUE)
+        {
             rawInputBitmap |= rightClutchBitmap;
+            rawInputChanges |= rightClutchBitmap;
+        }
         else if (rightAxis <= CLUTCH_1_4_VALUE)
-            rawInputBitmap = rawInputBitmap & (~rightClutchBitmap);
+        {
+            rawInputBitmap &= (~rightClutchBitmap);
+            rawInputChanges |= rightClutchBitmap;
+        }
         leftAxis = CLUTCH_NONE_VALUE;
         rightAxis = CLUTCH_NONE_VALUE;
-        axesChanged = false;
     }
-    else if ((userSettings::cpWorkingMode == CF_AXIS) || (userSettings::cpWorkingMode == CF_CLUTCH))
+    else if ((!axesAvailable) &&
+             ((userSettings::cpWorkingMode == CF_AXIS) || (userSettings::cpWorkingMode == CF_CLUTCH)))
     {
-        // Transform input state into as axis position
-        axesChanged = (rawInputChanges & (leftClutchBitmap | rightClutchBitmap));
+        // Transform input state into an axis position
         if (rawInputBitmap & leftClutchBitmap)
             leftAxis = CLUTCH_FULL_VALUE;
         else
@@ -315,8 +220,8 @@ void inputHub_AxisButton_filter(
             rightAxis = CLUTCH_FULL_VALUE;
         else
             rightAxis = CLUTCH_NONE_VALUE;
-        rawInputBitmap = rawInputBitmap & clutchInputMask;
-        axesChanged = true;
+        rawInputChanges = (rawInputChanges & clutchInputMask);
+        rawInputBitmap = (rawInputBitmap & clutchInputMask);
     }
 }
 
@@ -400,7 +305,7 @@ void inputHub_DPAD_filter(
         if (povState)
         {
             uint8_t n = 1;
-            while ((povInput == 0) && (n < 9))
+            while ((povInput == DPAD_CENTERED) && (n < 9))
             {
                 if (povState == dpadBitmap[n])
                     povInput = n;
@@ -418,30 +323,42 @@ void inputHub ::onRawInput(
     inputBitmap_t rawInputChanges,
     clutchValue_t leftAxis,
     clutchValue_t rightAxis,
-    bool axesChanged)
+    bool axesAvailable)
 {
     // Step 1: Execute user commands if any
     if (inputHub_commands_filter(rawInputBitmap, rawInputChanges))
         return;
 
+    // Serial.printf("after step 1: %llx %u %u\n", rawInputBitmap, leftAxis, rightAxis);
+
     // Step 2: digital input <--> analog axes
-    inputHub_AxisButton_filter(rawInputBitmap, rawInputChanges, leftAxis, rightAxis, axesChanged);
+    inputHub_AxisButton_filter(rawInputBitmap, rawInputChanges, leftAxis, rightAxis, axesAvailable);
+
+    // Serial.printf("after step 2: %llx %u %u\n", rawInputBitmap, leftAxis, rightAxis);
 
     // Step 3: bite point calibration
     inputHub_bitePointCalibration_filter(rawInputBitmap, rawInputChanges, leftAxis, rightAxis);
+
+    // Serial.printf("after step 3: %llx %u %u\n", rawInputBitmap, leftAxis, rightAxis);
 
     // Step 4: check if ALT mode is requested
     bool isALTRequested = false;
     inputHub_AltRequest_filter(rawInputBitmap, leftAxis, rightAxis, isALTRequested);
 
+    // Serial.printf("after step 4: %llx %u %u\n", rawInputBitmap, leftAxis, rightAxis);
+
     // Step 5: compute F1-style clutch position
     clutchValue_t clutchAxis;
     inputHub_combinedAxis_filter(leftAxis, rightAxis, clutchAxis);
+
+    // Serial.printf("after step 5: %llx %u %u\n", rawInputBitmap, leftAxis, rightAxis);
 
     // Step 6: compute DPAD input
     uint8_t povInput = DPAD_CENTERED;
     if (!isALTRequested)
         inputHub_DPAD_filter(rawInputBitmap, povInput);
+
+    // Serial.printf("after step 6: %llx %u %u\n", rawInputBitmap, leftAxis, rightAxis);
 
     // Step 7: map raw input state into HID button state
     inputBitmap_t inputsLow, inputsHigh;
@@ -568,7 +485,7 @@ void inputHub::setDPADControls(
     else
         dpadBitmap[DPAD_DOWN_RIGHT] = dpadBitmap[DPAD_DOWN] | dpadBitmap[DPAD_RIGHT];
 
-    dpadNegMask = 0;
+    dpadNegMask = 0ULL;
     for (int n = 1; n < 9; n++)
     {
         dpadNegMask |= dpadBitmap[n];

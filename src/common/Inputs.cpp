@@ -41,7 +41,7 @@ typedef struct
 {
   inputBitmap_t rawInputBitmap;
   inputBitmap_t rawInputChanges;
-  bool axesChanged;
+  bool axesAvailable;
   clutchValue_t leftAxisValue;
   clutchValue_t rightAxisValue;
 } decouplingEvent_t;
@@ -143,7 +143,7 @@ void inputPollingLoop(void *param)
   currentState.leftAxisValue = CLUTCH_NONE_VALUE;
   currentState.rightAxisValue = CLUTCH_NONE_VALUE;
   currentState.rawInputBitmap = 0;
-  currentState.axesChanged = false;
+  currentState.axesAvailable = (leftClutchAxis != nullptr);
   previousState = currentState;
 
   // loop
@@ -167,10 +167,10 @@ void inputPollingLoop(void *param)
       if (leftAxisAutocalibrated || rightAxisAutocalibrated)
         requestSaveAxisCalibration();
 
-      currentState.axesChanged =
+      stateChanged =
+          stateChanged ||
           (currentState.leftAxisValue != previousState.leftAxisValue) ||
           (currentState.rightAxisValue != previousState.rightAxisValue);
-      stateChanged = stateChanged || currentState.axesChanged;
     }
 
     // Check for a state change
@@ -205,7 +205,7 @@ void hubLoop(void *unused)
           currentState.rawInputChanges,
           currentState.leftAxisValue,
           currentState.rightAxisValue,
-          currentState.axesChanged);
+          currentState.axesAvailable);
   } // end while
 }
 
@@ -385,7 +385,7 @@ void inputs::notifyInputEventForTesting(
     event.leftAxisValue = leftAxisValue;
     event.rightAxisValue = rightAxisValue;
     event.rawInputBitmap = state;
-    event.axesChanged = true;
+    event.axesAvailable = true;
     event.rawInputChanges = state;
     xQueueSend(decouplingQueue, &event, SAMPLING_RATE_TICKS); // portMAX_DELAY);
   }
