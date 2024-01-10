@@ -1,4 +1,6 @@
 /**
+ * @file BatteryCalibrationTest.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-04-11
  * @brief Unit Test. See [README](./README.md)
@@ -123,11 +125,6 @@ int samplesCount[TEST_DATA_COUNT] = {
 // Mocks
 //-------------------------------------------------------
 
-void capabilities::setFlag(deviceCapability_t a, bool b)
-{
-
-}
-
 //-------------------------------------------------------
 // Auxiliary
 //-------------------------------------------------------
@@ -193,8 +190,6 @@ void setup()
 
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
-    while (!Serial)
-        ;
 
     // Check that calibration data is properly cleared
     printTestHeader(testnumber++); // #1
@@ -253,7 +248,7 @@ void setup()
     // Test LiPo characterization data
     printTestHeader(testnumber++); // #7
     // removed since getGenericLiPoBatteryLevel is not exposed anymore
-    
+
     // batteryCalibrationAssertEquals(0, batteryCalibration::getGenericLiPoBatteryLevel(1000));
     // batteryCalibrationAssertEquals(8, batteryCalibration::getGenericLiPoBatteryLevel(2240));
     // batteryCalibrationAssertEquals(27, batteryCalibration::getGenericLiPoBatteryLevel(2327));

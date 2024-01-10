@@ -100,4 +100,5 @@ First release.
 
 ## ??
 
+- Huge source code rework and refactoring. Technical debt paid.
 - Rework on rotary encoders: no dedicated task is required anymore, thus saving a significant amount of memory.

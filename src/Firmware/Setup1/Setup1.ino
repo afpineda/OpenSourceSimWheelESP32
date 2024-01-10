@@ -1,4 +1,6 @@
 /**
+ * @file Setup1.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2023-01-13
  * @brief Sim wheel setup #1
@@ -67,7 +69,7 @@ void simWheelSetup()
         mtxInputs,
         sizeof(mtxInputs) / sizeof(mtxInputs[0]),
         mtxNumbers);
-    inputs::setAnalogClutchPaddles(GPIO_NUM_36, GPIO_NUM_39, 18, 19);
+    inputs::setAnalogClutchPaddles(GPIO_NUM_36, GPIO_NUM_39); // 18 and 19
     inputs::addRotaryEncoder(GPIO_NUM_34, GPIO_NUM_35, 40, 41);
     inputs::addRotaryEncoder(GPIO_NUM_32, GPIO_NUM_33, 42, 43);
     inputs::addRotaryEncoder(GPIO_NUM_25, GPIO_NUM_26, 44, 45);
@@ -76,6 +78,7 @@ void simWheelSetup()
 
     inputHub::setDPADControls(IN_UP, IN_DOWN, IN_LEFT, IN_RIGHT);
     inputHub::setALTBitmap(BITMAP(IN_ALT1) | BITMAP(IN_ALT2));
+    inputHub::setClutchInputNumbers(18,19);
     inputHub::setClutchCalibrationButtons(40, 41); // Rotary 1
     inputHub::cycleCPWorkingMode_setBitmap(BITMAP(JOY_START) | BITMAP(JOY_LB));
     inputHub::cycleALTButtonsWorkingMode_setBitmap(BITMAP(JOY_START) | BITMAP(JOY_RB));
@@ -94,7 +97,6 @@ void setup()
         0,
         false);
     userSettings::begin();
-    inputs::begin();
     simWheelSetup();
     hidImplementation::begin(
         DEVICE_NAME,

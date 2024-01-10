@@ -69,7 +69,7 @@ namespace userSettings
      * @note Do not call while testing. This way, autosaving will get disabled.
      **/
     void begin();
-//
+    //
     /**
      * @brief Set operation mode for "ALT" buttons (not clutch related)
      *
@@ -543,17 +543,39 @@ namespace inputHub
         const inputBitmap_t buttonModeBitmap);
 
     /**
+     * @brief Set up a bitmap of buttons for the axis calibration command
+     *
+     * @param recalibrateAxisBitmap A bitmap of button numbers to ask for autocalibration of analog axes.
+     *                              Set to zero if not required (default).
+     */
+    void cmdRecalibrateAnalogAxis_setBitmap(const inputBitmap_t recalibrateAxisBitmap = 0ULL);
+
+    /**
+     * @brief Set up a bitmap of buttons for the battery calibration command
+     *
+     * @param recalibrateAxisBitmap A bitmap of button numbers to ask for recalibration of battery levels.
+     *                              Set to zero if not required (default).
+     */
+    void cmdRecalibrateBattery_setBitmap(const inputBitmap_t recalibrateBatteryBitmap = 0ULL);
+
+    /**
      * @brief Set up a bitmap of buttons for two recalibration commands.
      *        All buttons in the bitmap must be pressed at the same time and none of the others.
+     *
+     * @deprecated Use cmdRecalibrateAnalogAxis_setBitmap() or cmdRecalibrateBattery_setBitmap()
      *
      * @param recalibrateAxisBitmap A bitmap of button numbers to ask for autocalibration of analog axes.
      * @param recalibrateBatteryBitmap A bitmap of button numbers to ask for recalibration of battery levels.
      *
      * @note Set to zero if a command is not required (e.g. there is no battery)
      */
-    void setCalibrationCommandBitmaps(
+    inline void setCalibrationCommandBitmaps(
         const inputBitmap_t recalibrateAxisBitmap,
-        const inputBitmap_t recalibrateBatteryBitmap = 0);
+        const inputBitmap_t recalibrateBatteryBitmap = 0ULL)
+    {
+        inputHub::cmdRecalibrateAnalogAxis_setBitmap(recalibrateAxisBitmap);
+        inputHub::cmdRecalibrateBattery_setBitmap(recalibrateBatteryBitmap);
+    };
 }
 
 /**

@@ -607,10 +607,17 @@ void inputHub::cpWorkingMode_setBitmaps(
 
 // ----------------------------------------------------------------------------
 
-void inputHub::setCalibrationCommandBitmaps(
-    const inputBitmap_t recalibrateAxisBitmap,
-    const inputBitmap_t recalibrateBatteryBitmap)
+void inputHub::cmdRecalibrateAnalogAxis_setBitmap(const inputBitmap_t recalibrateAxisBitmap)
 {
     cmdAxisAutocalibrationBitmap = recalibrateAxisBitmap;
+}
+
+// ----------------------------------------------------------------------------
+
+void inputHub::cmdRecalibrateBattery_setBitmap(const inputBitmap_t recalibrateBatteryBitmap)
+{
+
     cmdBatteryRecalibrationBitmap = recalibrateBatteryBitmap;
 }
+
+// ----------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 # Unit test: input event report
 
-## Purpouse and summary
+## Purpose and summary
 
 To test that input events are properly reported under these circumstances:
 

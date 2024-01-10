@@ -1,4 +1,6 @@
 /**
+ * @file ESPBLEimplTest.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
  * @brief Unit Test. See [README](./README.md)
@@ -7,7 +9,7 @@
  *
  */
 
-#include <Arduino.h>
+#include <HardwareSerial.h>
 #include "Simwheel.h"
 
 // Use this app for testing:
@@ -74,8 +76,6 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_VERBOSE);
     Serial.begin(115200);
-    while (!Serial)
-        ;
     Serial.println("--START--");
     hidImplementation::begin("ESPBLEimplTest", "Mamandurrio", true);
     userSettings::setCPWorkingMode(CF_CLUTCH);

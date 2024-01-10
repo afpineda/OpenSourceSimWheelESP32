@@ -1,4 +1,6 @@
 /**
+ * @file AnalogAxisTest.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-03-03
  * @brief Unit Test. See [README](./README.md)
@@ -17,6 +19,7 @@
 //------------------------------------------------------------------
 
 AnalogAxisInput *input;
+clutchValue_t oldValue = CLUTCH_INVALID_VALUE;
 
 //------------------------------------------------------------------
 // Arduino entry point
@@ -26,8 +29,6 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
-    while (!Serial)
-        ;
     Serial.println("-- READY --");
 
     input = new AnalogAxisInput(TEST_ANALOG_PIN1, TEST_ANALOG_PIN1);
@@ -38,18 +39,17 @@ void setup()
 void loop()
 {
     clutchValue_t value;
-    bool autocal;
-    bool changed;
+    bool autocalibrated;
 
-    input->read(&value, &changed, &autocal);
-    if (changed || autocal)
+    input->read(value, autocalibrated);
+    if ((oldValue != value) || autocalibrated)
     {
         serialPrintf("Axis: %d ", value);
-        if (autocal)
+        if (autocalibrated)
             Serial.println("(autocalibrated)");
         else
             Serial.println("");
     }
-
+    oldValue = value;
     delay(30);
 }

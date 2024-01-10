@@ -50,10 +50,8 @@ void simWheelSetup()
 
 You should also set two input numbers for the clutch paddles to work in "regular buttons" mode: place a call to `inputHub::setClutchInputNumbers()`. More on this later.
 
-Recalibration can be achieved through the companion app, but you may assign a button combination for that. Place a call to `inputHub:setCalibrationCommandBitmaps()`:
-
-- First parameter is a sequence of calls to `BITMAP(<input number>)` separated by `|`.  All buttons have to be pressed at the same time and none of the others.
-- Ignore the second (optional) parameter or set to zero, for now, since it is not related to this subsystem.
+Recalibration can be achieved through the companion app, but you may assign a button combination for that. Place a call to `inputHub:cmdRecalibrateAnalogAxis_setBitmap()`.
+Parameter is a sequence of calls to `BITMAP(<input number>)` separated by `|`.  All buttons have to be pressed at the same time and none of the others.
 
 The following example will set buttons `A` and `Start` for recalibration:
 
@@ -61,7 +59,7 @@ The following example will set buttons `A` and `Start` for recalibration:
 void simWheelSetup()
 {
     ...
-    inputs::setCalibrationCommandBitmaps(BITMAP(JOY_START)|BITMAP(JOY_A));
+    inputHub::cmdRecalibrateAnalogAxis_setBitmap(BITMAP(JOY_START)|BITMAP(JOY_A));
     ...
 }
 ```
