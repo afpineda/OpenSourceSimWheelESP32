@@ -110,10 +110,10 @@ typedef uint16_t analogReading_t;
  */
 typedef enum
 {
-    CF_CLUTCH = 0, /// F1-Style clutch. Must be the first in the enum: do not change
-    CF_AXIS,       /// Independent axes
-    CF_ALT,        /// "ALT" mode
-    CF_BUTTON      /// Regular buttons. Must be the last in the enum: do not change
+    CF_CLUTCH = 0, // F1-Style clutch. Must be the first in the enum: do not change
+    CF_AXIS,       // Independent axes
+    CF_ALT,        // "ALT" mode
+    CF_BUTTON      // Regular buttons. Must be the last in the enum: do not change
 } clutchFunction_t;
 
 /**

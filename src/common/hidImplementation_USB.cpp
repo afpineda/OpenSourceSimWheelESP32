@@ -166,8 +166,22 @@ void hidImplementation::reportInput(
     if (hid.ready())
     {
         uint8_t report[GAMEPAD_REPORT_SIZE];
-        *((inputBitmap_t *)&report) = inputsLow;
-        *((inputBitmap_t *)(&report + sizeof(inputsLow))) = inputsHigh;
+        report[0] = ((uint8_t *)&inputsLow)[0];
+        report[1] = ((uint8_t *)&inputsLow)[1];
+        report[2] = ((uint8_t *)&inputsLow)[2];
+        report[3] = ((uint8_t *)&inputsLow)[3];
+        report[4] = ((uint8_t *)&inputsLow)[4];
+        report[5] = ((uint8_t *)&inputsLow)[5];
+        report[6] = ((uint8_t *)&inputsLow)[6];
+        report[7] = ((uint8_t *)&inputsLow)[7];
+        report[8] = ((uint8_t *)&inputsHigh)[0];
+        report[9] = ((uint8_t *)&inputsHigh)[1];
+        report[10] = ((uint8_t *)&inputsHigh)[2];
+        report[11] = ((uint8_t *)&inputsHigh)[3];
+        report[12] = ((uint8_t *)&inputsHigh)[4];
+        report[13] = ((uint8_t *)&inputsHigh)[5];
+        report[14] = ((uint8_t *)&inputsHigh)[6];
+        report[15] = ((uint8_t *)&inputsHigh)[7];
         report[16] = (uint8_t)clutchAxis;
         report[17] = (uint8_t)leftAxis;
         report[18] = (uint8_t)rightAxis;

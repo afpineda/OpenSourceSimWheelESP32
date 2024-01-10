@@ -1,15 +1,23 @@
-# Unit test: bluetooth game pad
+# Unit test: game pad
 
 ## Purpose and summary
 
 To test that:
 
-- the device works properly as a wireless gamepad in a computer.
+- the device works properly as a gamepad in a computer.
 - the device can send and receive data by the means of HID feature reports.
+
+This procedure is the same for all HID implementations, however, each implementation requires a different sketch:
+
+- [NimBLE implementation](./NimBLEimplTest.ino)
+- [ESP-Arduinop BLE implementation](./../ESPBLEimplTest/ESPBLEimplTest.ino)
+- [USB implementation](./../USBImplTest/USBImplTest.ino)
 
 ## Hardware setup
 
-Nothing required, except for an external antenna on some devices.
+- BLE implementations: nothing required, except for an external antenna on some devices.
+- USB implementation: an ESP32-S3 DevKit board is required (LillyGo T-QT was tested).
+
 Output through USB serial port at 115200 bauds.
 
 ## Software setup
@@ -17,19 +25,32 @@ Output through USB serial port at 115200 bauds.
 Computer:
 
 - Windows 10 or later
-- Bluetooth 4.2 or later
+- Bluetooth 4.2 or later (not required in USB implementation)
 - Joystick testing software from Planet's Pointy ( [http://www.planetpointy.co.uk/joystick-test-application/](http://www.planetpointy.co.uk/joystick-test-application/) ) or any other able to display 128 buttons. Note that Window's device property page is not suitable for this.
 - SimpleHIDWrite.exe: available at [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm). There is a modern clone at [https://github.com/Robmaister/SimplerHidWrite](https://github.com/Robmaister/SimplerHidWrite).
 
+## Specific notes for USB implementation
+
+Your DevKit must enter *boot loader* mode in order to upload the test sketch.
+Reset while holding `GPIO #0` to low voltage. In LillyGo T-QT, press `reset` button while holding `IO0` button.
+Use this board configuration in Arduino IDE:
+
+- Board: "ESP32S3 Dev Module (esp32)" (or your actual board brand).
+- USB-Mode: "USB-OTG (TinyUSB)".
+
+## Specific notes for BLE implementation
+
+- If the device is paired because of a previous test, unpair it first (delete from the bluetooth control panel).
+- Before pairing, wait for the "Device ready" notification at the serial monitor.
+- Will show as "NimBLEimplTest", "ESPBLEimplTest" (depending on which implementation is being tested).
+
 ## Procedure and expected output
 
-_Notes_:
-
-- Ignore this output message while running this test: `(Waiting for connection)`
-- At pairing, wait for the "Device ready" notification.
-- If the device is paired because of a previous test, unpair it first (delete from the bluetooth control panel). Will show as "SimWheelTest".
+- Ignore this output message while running this test: `(Waiting for connection)`.
 
 ### Auto power off
+
+Not applicable to USB implementation.
 
 1. Reset
 2. Output must match:
@@ -71,32 +92,21 @@ _Notes_:
 
 ### Battery level
 
+Not applicable to USB implementation.
+
 1. Go to the bluetooth page of the control panel. Look for the device.
 2. Check battery level. Must show a decreasing number from 100% down to 50%, then up to 100% again.
 
 ### Buttons
 
 1. Buttons should be pressed and released every second. Pressed buttons must follow this timed pattern:
-   - First, buttons in the range 1-64
-   - Then, buttons in the range 65-128
-   - Back to first
-
-2. Pressed buttons also follows a binary pattern starting from 0. So check this sequence at the very connection time (pressed button numbers):
-   - None
-   - 64
-   - 2
-   - 64,65
-   - 3
-   - 64,66
-   - 2,3
-   - 64,65,66
-   - 4
-   - 64,67
-   - 2,4
-   - 64,65,67
-   - ...
-3. Restart this test if something is missed.
-4. Point-of-view control (aka "Hat switch" or "POV") must follow this pattern in a loop:
+   - Buttons #1 and #64 are pressed at the same time.
+   - Previous buttons are released and buttons #2 and #65 are pressed at the same time.
+   - Previous buttons are released and buttons #3 and #66 are pressed at the same time.
+   - The pattern continues until buttons #32 and #128 are pressed.
+   - Then, the pattern starts again.
+2. Restart this test if something is missed.
+3. Point-of-view control (aka "Hat switch" or "POV") must follow this pattern in a loop:
    - None pressed
    - Up
    - Up-right
@@ -126,3 +136,12 @@ _Notes_:
 2. Enter `00 00 00 00 00 00 00 00` at fields below `ReportID`.
 3. Click on `Set Feature` , then on `Get Feature`.
 4. Must show the following line: `RD 02  51 BF xx xx xx xx 07 00`. Ignore `xx`.
+
+## Reconnect
+
+Regression test for Issue #3. Not applicable to USB implementation.
+
+1. Reset. Wait a few seconds.
+2. Ensure the device is connected again to the host computer.
+3. Reopen the joystick test application (close and run again).
+4. Ensure the buttons test is running again (as described before).

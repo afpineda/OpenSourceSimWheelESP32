@@ -57,9 +57,22 @@ namespace capabilities
  */
 namespace userSettings
 {
-    // For read only. do not touch
+    /**
+     * @brief Current clutch's bite point
+     * @note For read only. Do not overwrite.
+     */
     extern volatile clutchValue_t bitePoint;
+
+    /**
+     * @brief Current working mode of clutch paddles
+     * @note For read only. Do not overwrite.
+     */
     extern volatile clutchFunction_t cpWorkingMode;
+
+    /**
+     * @brief Current working mode of ALT buttons
+     * @note For read only. Do not overwrite.
+     */
     extern volatile bool altButtonsWorkingMode;
 
     /**
@@ -71,15 +84,15 @@ namespace userSettings
     void begin();
     //
     /**
-     * @brief Set operation mode for "ALT" buttons (not clutch related)
+     * @brief Set working mode for "ALT" buttons
      *
-     * @param newMode When True, "ALT" buttons should activate "ALT" mode.
+     * @param newMode When True, "ALT" buttons should engage "ALT" mode.
      *                Otherwise, they behave as regular buttons.
      */
     void setALTButtonsWorkingMode(bool newMode);
 
     /**
-     * @brief Assign a function to the clutch paddles
+     * @brief Assign a working mode to the clutch paddles
      *
      * @param newFunction Function of the clutch paddles
      */

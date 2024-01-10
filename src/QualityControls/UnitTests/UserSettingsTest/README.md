@@ -1,10 +1,10 @@
-# Unit test: clutch beaviour
+# Unit test: clutch behavior
 
-## Purpouse and summary
+## Purpose and summary
 
-To test correct behaviour of clutch paddles depending on each available function.
+To test correct behavior of clutch paddles depending on each available function.
 
-## Harware setup
+## Hardware setup
 
 Nothing required. This is an automated test.
 Output through USB serial port at 115200 bauds.

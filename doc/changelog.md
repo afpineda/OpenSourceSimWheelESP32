@@ -98,7 +98,10 @@ First release.
 
 - Due to issue #4, explicit advice is given about the wiring of funky switches. No changes in the source code.
 
-## ??
+## 3.0.0
 
 - Huge source code rework and refactoring. Technical debt paid.
 - Rework on rotary encoders: no dedicated task is required anymore, thus saving a significant amount of memory.
+- Test unit for deep sleep on ESP32C3 boards is not needed anymore.
+  [DeepSleepTest](../src/QualityControls/UnitTests/DeepSleepTest/README.md) do the work for all boards.
+- Unified unit test procedure for all HID implementations.

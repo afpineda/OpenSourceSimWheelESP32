@@ -1,4 +1,6 @@
 /**
+ * @file DeepSleepTest.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
  * @brief Unit Test. See [README](./README.md)
@@ -7,15 +9,19 @@
  *
  */
 
-#include <Arduino.h>
+#include <HardwareSerial.h>
 #include "SimWheel.h"
-#include "debugUtils.h"
 
 //-------------------------------------------------------
 // Globals
 //-------------------------------------------------------
 
+#ifndef CONFIG_IDF_TARGET_ESP32C3
+#include "debugUtils.h"
 #define TEST_POWER_PIN TEST_ROTARY_SW
+#else
+#define TEST_POWER_PIN GPIO_NUM_2
+#endif
 
 //-------------------------------------------------------
 // Mocks
@@ -38,22 +44,22 @@ void print_wakeup_reason()
   switch (wakeup_reason)
   {
   case ESP_SLEEP_WAKEUP_EXT0:
-    Serial.println("Wakeup caused by external signal using RTC_IO");
+    Serial.println("Wake up caused by external signal using RTC_IO");
     break;
   case ESP_SLEEP_WAKEUP_EXT1:
-    Serial.println("Wakeup caused by external signal using RTC_CNTL");
+    Serial.println("Wake up caused by external signal using RTC_CNTL");
     break;
   case ESP_SLEEP_WAKEUP_TIMER:
-    Serial.println("Wakeup caused by timer");
+    Serial.println("Wake up caused by timer");
     break;
   case ESP_SLEEP_WAKEUP_TOUCHPAD:
-    Serial.println("Wakeup caused by touchpad");
+    Serial.println("Wake up caused by touchpad");
     break;
   case ESP_SLEEP_WAKEUP_ULP:
-    Serial.println("Wakeup caused by ULP program");
+    Serial.println("Wake up caused by ULP program");
     break;
   default:
-    Serial.printf("Wakeup was not caused by deep sleep: %d\n", wakeup_reason);
+    Serial.printf("Wake up was not caused by deep sleep: %d\n", wakeup_reason);
     break;
   }
 }
@@ -74,9 +80,6 @@ void setup()
 {
   esp_log_level_set("*", ESP_LOG_ERROR);
   Serial.begin(115200);
-  while (!Serial)
-    ;
-  // delay(2000);
   Serial.println("--START--");
 
   print_wakeup_reason();
@@ -88,12 +91,6 @@ void setup()
   Serial.println("POWER ON and running");
   Serial.println("Push POWER button to enter deep sleep mode...");
   waitForButton();
-  // Serial.println("Going to sleep in 10 seconds");
-  // for (int i=10; i>=0; i--) {
-  //   Serial.print("...");
-  //   Serial.print(i);
-  //   delay(1000);
-  // }
   Serial.println("");
   Serial.println("Entering deep sleep mode");
   delay(1000);

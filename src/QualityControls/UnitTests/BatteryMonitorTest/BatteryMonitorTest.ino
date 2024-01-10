@@ -1,4 +1,6 @@
 /**
+ * @file BatteryMonitorTest.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-04-17
  * @brief Unit Test. See [README](./README.md)
@@ -68,8 +70,6 @@ void setup()
 
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
-    while (!Serial)
-        ;
     Serial.println("--GO--");
     power::startBatteryMonitor(
         TEST_BATTERY_READ_ENABLE,

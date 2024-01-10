@@ -1,4 +1,6 @@
 /**
+ * @file USBImplTest.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2023-10-24
  * @brief Unit Test. See [README](./README.md)
@@ -7,7 +9,7 @@
  *
  */
 
-#include <Arduino.h>
+#include <HardwareSerial.h>
 #include "Simwheel.h"
 
 // Use this app for testing:
@@ -71,15 +73,14 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
     hidImplementation::begin("USBimplTest", "Mamandurrio", false);
-    userSettings::setCPWorkingMode(CF_CLUTCH);
-    userSettings::setALTButtonsWorkingMode(true);
-    userSettings::setBitePoint(CLUTCH_DEFAULT_VALUE);
 }
 
-uint64_t data = 0;
+
+//------------------------------------------------------------------
+
+uint8_t btnIndex = 0;
 clutchValue_t axis = CLUTCH_NONE_VALUE;
 uint8_t battery = 99;
-bool alt = false;
 uint8_t POV = 0;
 
 void loop()
@@ -90,9 +91,21 @@ void loop()
     }
     else
     {
-        hidImplementation::reportInput(data, alt, POV);
+        inputBitmap_t data = BITMAP(btnIndex);
+        hidImplementation::reportInput(
+            data,
+            data,
+            POV,
+            axis,
+            axis,
+            axis);
 
-        data = data + 1;
+        // Update pressed buttons
+        btnIndex++;
+        if (btnIndex > MAX_INPUT_NUMBER)
+            btnIndex = 0;
+
+        // Update DPAD state
         POV = POV + 1;
         if (POV > 8)
         {
@@ -100,14 +113,16 @@ void loop()
             hidImplementation::reportChangeInConfig();
         }
 
-        alt = !alt;
+        // Update battery info
+        battery--;
+        if (battery < 50)
+            battery = 100;
+        hidImplementation::reportBatteryLevel(battery);
 
+        // Update analog axis values
         axis = axis + 5;
         if (axis >= CLUTCH_FULL_VALUE - 5)
             axis = CLUTCH_NONE_VALUE;
-        userSettings::leftAxis = axis;
-        userSettings::rightAxis = axis;
-        userSettings::combinedAxis = axis;
     }
     delay(1000);
 }

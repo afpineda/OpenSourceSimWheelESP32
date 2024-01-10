@@ -1,4 +1,6 @@
 /**
+ * @file ButtonMatrixTest.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-03-03
  * @brief Unit Test. See [README](./README.md)
@@ -7,7 +9,7 @@
  *
  */
 
-#include <Arduino.h>
+#include <HardwareSerial.h>
 #include "SimWheel.h"
 #include "debugUtils.h"
 #include "ButtonMatrixInput.h"
@@ -33,8 +35,6 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
-    while (!Serial)
-        ;
     Serial.println("-- READY --");
 
     btns = new ButtonMatrixInput(
