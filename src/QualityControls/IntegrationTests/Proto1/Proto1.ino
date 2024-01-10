@@ -1,4 +1,6 @@
 /**
+ * @file Proto1.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-03-01
  * @brief Integration test. See [Readme](./README.md)
@@ -7,7 +9,7 @@
  *
  */
 
-#include <Arduino.h>
+#include <HardwareSerial.h>
 #include "debugUtils.h"
 #include "SimWheel.h"
 #include "SerialNotification.h"
@@ -35,7 +37,6 @@
 
 void batteryCalibration::restartAutoCalibration()
 {
-    
 }
 
 //------------------------------------------------------------------
@@ -50,8 +51,8 @@ void setup()
         ;
 
     Serial.println("-- READY --");
-    //clutchState::begin();
-    inputs::begin();
+    // clutchState::begin();
+
     notify::begin(new SerialNotificationImpl());
 
     inputs::addButtonMatrix(
@@ -60,19 +61,20 @@ void setup()
         mtxInputs,
         sizeof(mtxInputs) / sizeof(mtxInputs[0]),
         mtxNumbers);
-    inputs::addDigital(TEST_ROTARY_SW, ALT_IN, true, true );
-    inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, CW_IN, CCW_IN,false);
-    inputs::setAnalogClutchPaddles(TEST_ANALOG_PIN1,TEST_ANALOG_PIN2,LEFT_CLUTCH_IN,RIGHT_CLUTCH_IN);
+    inputs::addDigital(TEST_ROTARY_SW, ALT_IN, true, true);
+    inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, CW_IN, CCW_IN, false);
+    inputs::setAnalogClutchPaddles(TEST_ANALOG_PIN1, TEST_ANALOG_PIN2);
 
     inputHub::setALTButton(ALT_IN);
-    inputHub::setCycleALTFunctionBitmap(BITMAP(COMMAND_IN)|BITMAP(CYCLE_ALT_IN));
-    inputHub::setCycleClutchFunctionBitmap(BITMAP(COMMAND_IN)|BITMAP(CYCLE_CLUTCH_IN));
+    inputHub::cycleALTButtonsWorkingMode_setBitmap(BITMAP(COMMAND_IN) | BITMAP(CYCLE_ALT_IN));
+    inputHub::cycleCPWorkingMode_setBitmap(BITMAP(COMMAND_IN) | BITMAP(CYCLE_CLUTCH_IN));
+    inputHub::setClutchInputNumbers(LEFT_CLUTCH_IN, RIGHT_CLUTCH_IN);
     inputHub::setClutchCalibrationButtons(CW_IN, CCW_IN);
-    inputHub::setDPADControls(UP,DOWN,LEFT,RIGHT);
+    inputHub::setDPADControls(UP, DOWN, LEFT, RIGHT);
 
-    hidImplementation::begin("Proto1","Mamandurrio",false);
-    clutchState::setFunction(CF_CLUTCH);
-    clutchState::setALTModeForALTButtons(true);
+    hidImplementation::begin("Proto1", "Mamandurrio", false);
+    clutchState::setCPWorkingMode(CF_CLUTCH);
+    clutchState::setALTButtonsWorkingMode(true);
     Serial.println("-- GO --");
     inputs::start();
 }

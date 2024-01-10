@@ -94,7 +94,7 @@ void setup()
 
     // Button function
     Serial.println("-- CF_BUTTON");
-    clutchState::setFunction(CF_BUTTON);
+    clutchState::setCPWorkingMode(CF_BUTTON);
     assertEquals<clutchFunction_t>(STR_FUNCTION, CF_BUTTON, clutchState::currentFunction);
     clutchState::setLeftAxis(CLUTCH_1_4_VALUE);
     clutchState::setRightAxis(CLUTCH_3_4_VALUE);
@@ -106,7 +106,7 @@ void setup()
 
     // ALT function
     Serial.println("-- CF_ALT");
-    clutchState::setFunction(CF_ALT);
+    clutchState::setCPWorkingMode(CF_ALT);
     clutchState::setLeftAxis(CLUTCH_1_4_VALUE);
     clutchState::setRightAxis(CLUTCH_NONE_VALUE);
     assertEquals<clutchFunction_t>(STR_FUNCTION, CF_ALT, clutchState::currentFunction);
@@ -135,7 +135,7 @@ void setup()
 
     // AXIS function
     Serial.println("-- CF_AXIS");
-    clutchState::setFunction(CF_AXIS);
+    clutchState::setCPWorkingMode(CF_AXIS);
     assertEquals<clutchFunction_t>(STR_FUNCTION, CF_AXIS, clutchState::currentFunction);
     clutchState::setLeftAxis(CLUTCH_1_4_VALUE);
     clutchState::setRightAxis(CLUTCH_3_4_VALUE);
@@ -153,7 +153,7 @@ void setup()
 
     // CLUTCH FUNCTION
     Serial.println("-- CF_CLUTCH");
-    clutchState::setFunction(CF_CLUTCH);
+    clutchState::setCPWorkingMode(CF_CLUTCH);
     assertEquals<clutchFunction_t>(STR_FUNCTION, CF_CLUTCH, clutchState::currentFunction);
     assertEquals<clutchValue_t>(STR_L_AXIS, CLUTCH_NONE_VALUE, clutchState::leftAxis);
     assertEquals<clutchValue_t>(STR_R_AXIS, CLUTCH_NONE_VALUE, clutchState::rightAxis);

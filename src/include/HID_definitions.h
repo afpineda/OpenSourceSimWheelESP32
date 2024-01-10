@@ -126,4 +126,15 @@ static const uint8_t hid_descriptor[] = {
     0xC0 // EndCollection()
 };
 
+// Input report packed structure:
+// typedef struct {
+//     uint64_t inputsLow;
+//     uint64_t inputsHigh;
+//     uint8_t clutchAxis;
+//     uint8_t leftAxis;
+//     uint8_t rightAxis;
+//     uint8_t POVState: 4;
+//     uint8_t notifyConfigChanges: 4;
+// } hidInputReport_t;
+
 #endif

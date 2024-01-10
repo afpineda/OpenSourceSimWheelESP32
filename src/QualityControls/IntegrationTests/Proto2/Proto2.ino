@@ -1,4 +1,6 @@
 /**
+ * @file Proto2.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-04-21
  * @brief Integration test. See [Readme](./README.md)
@@ -32,7 +34,6 @@ void setup()
     esp_log_level_set("*", ESP_LOG_ERROR);
 
     clutchState::begin();
-    inputs::begin();
     power::begin(TEST_ROTARY_SW,false);
 
     inputs::addButtonMatrix(
@@ -43,11 +44,11 @@ void setup()
         mtxNumbers);
     inputs::addDigital(TEST_ROTARY_SW, ALT_IN, true, true );
     inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, CW_IN, CCW_IN,false);
-    inputs::setDigitalClutchPaddles(LEFT_CLUTCH_IN,RIGHT_CLUTCH_IN);
 
-    inputHub::setCycleClutchFunctionBitmap(BITMAP(COMMAND_IN)|BITMAP(CYCLE_CLUTCH_IN));
+    inputHub::setClutchInputNumbers(LEFT_CLUTCH_IN,RIGHT_CLUTCH_IN);
+    inputHub::cycleCPWorkingMode_setBitmap(BITMAP(COMMAND_IN)|BITMAP(CYCLE_CLUTCH_IN));
     inputHub::setClutchCalibrationButtons(CW_IN, CCW_IN);
-    
+
     hidImplementation::begin("Proto2", "Mamandurrio", true);
     inputs::start();
     power::startBatteryMonitor(TEST_BATTERY_READ_ENABLE,TEST_BATTERY_READ,false);

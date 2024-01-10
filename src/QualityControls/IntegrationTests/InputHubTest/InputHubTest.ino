@@ -1,4 +1,6 @@
 /**
+ * @file InputHubTest.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-03-05
  * @brief Integration test. See [Readme](./README.md)
@@ -32,14 +34,27 @@ bool oldAltF;
 // Mocks
 //------------------------------------------------------------------
 
-void hidImplementation::reportInput(inputBitmap_t globalState, bool altEnabled, uint8_t POV)
+void hidImplementation::reportInput(
+    inputBitmap_t inputsLow,
+    inputBitmap_t inputsHigh,
+    uint8_t POVstate,
+    clutchValue_t leftAxis,
+    clutchValue_t rightAxis,
+    clutchValue_t clutchAxis)
 {
+    inputBitmap_t globalState = inputsLow;
+    bool altEnabled = false;
+    if (inputsLow == 0ULL)
+    {
+        altEnabled = true;
+        globalState = inputsHigh;
+    }
     debugPrintBool(globalState);
     serialPrintf(" | %d | %d | %d || %d",
-        clutchState::combinedAxis,
-        clutchState::leftAxis, 
-        clutchState::rightAxis, 
-        clutchState::bitePoint);
+                 clutchAxis,
+                 leftAxis,
+                 rightAxis,
+                 clutchState::bitePoint);
     if (altEnabled)
         Serial.print(" (ALT)");
     Serial.println("");
@@ -52,17 +67,14 @@ void hidImplementation::reset()
 
 void hidImplementation::reportChangeInConfig()
 {
-
 }
 
 void notify::bitePoint(inputNumber_t b)
 {
-
 }
 
 void batteryCalibration::restartAutoCalibration()
 {
-
 }
 
 //------------------------------------------------------------------
@@ -73,10 +85,7 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
-    while (!Serial)
-        ;
     Serial.println("-- READY --");
-    inputs::begin();
 
     inputs::addButtonMatrix(
         mtxSelectors,
@@ -84,19 +93,20 @@ void setup()
         mtxInputs,
         sizeof(mtxInputs) / sizeof(mtxInputs[0]),
         mtxNumbers);
-    inputs::addDigital(TEST_ROTARY_SW, ALT_IN, true, true );
-    inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, CW_IN, CCW_IN,false);
-    inputs::setAnalogClutchPaddles(TEST_ANALOG_PIN1,TEST_ANALOG_PIN2,LEFT_CLUTCH_IN,RIGHT_CLUTCH_IN);
+    inputs::addDigital(TEST_ROTARY_SW, ALT_IN, true, true);
+    inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, CW_IN, CCW_IN, false);
+    inputs::setAnalogClutchPaddles(TEST_ANALOG_PIN1, TEST_ANALOG_PIN2);
 
+    inputHub::setClutchInputNumbers(LEFT_CLUTCH_IN, RIGHT_CLUTCH_IN);
     inputHub::setALTButton(ALT_IN);
-    inputHub::setCycleALTFunctionBitmap(BITMAP(COMMAND_IN)|BITMAP(CYCLE_ALT_IN));
-    inputHub::setCycleClutchFunctionBitmap(BITMAP(COMMAND_IN)|BITMAP(CYCLE_CLUTCH_IN));
+    inputHub::cycleALTButtonsWorkingMode_setBitmap(BITMAP(COMMAND_IN) | BITMAP(CYCLE_ALT_IN));
+    inputHub::cycleCPWorkingMode_setBitmap(BITMAP(COMMAND_IN) | BITMAP(CYCLE_CLUTCH_IN));
     inputHub::setClutchCalibrationButtons(CW_IN, CCW_IN);
 
     oldCP = CF_BUTTON;
-    clutchState::setFunction(oldCP);
+    clutchState::setCPWorkingMode(oldCP);
     oldAltF = true;
-    clutchState::setALTModeForALTButtons(oldAltF);
+    clutchState::setALTButtonsWorkingMode(oldAltF);
 
     clutchState::setBitePoint(CLUTCH_DEFAULT_VALUE);
 
@@ -107,15 +117,17 @@ void setup()
 
 void loop()
 {
-    clutchFunction_t newCP = clutchState::currentFunction;
-    bool newAltF = clutchState::altModeForAltButtons;
-    if (newCP!=oldCP) {
+    clutchFunction_t newCP = clutchState::cpWorkingMode;
+    bool newAltF = clutchState::altButtonsWorkingMode;
+    if (newCP != oldCP)
+    {
         oldCP = newCP;
-        serialPrintf("Clutch Mode: %d\n",oldCP);
+        serialPrintf("Clutch Mode: %d\n", oldCP);
     }
-    if (newAltF!=oldAltF) {
+    if (newAltF != oldAltF)
+    {
         oldAltF = newAltF;
-        serialPrintf("ALT Mode: %d\n",oldAltF);
+        serialPrintf("ALT Mode: %d\n", oldAltF);
     }
     delay(500);
 }

@@ -1,4 +1,6 @@
 /**
+ * @file DigitalInputsTest.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-03-01
  * @brief Integration test. See [Readme](./README.md)
@@ -7,7 +9,7 @@
  *
  */
 
-#include <Arduino.h>
+#include <HardwareSerial.h>
 #include "debugUtils.h"
 #include "SimWheel.h"
 
@@ -23,13 +25,18 @@
 // Mocks
 //------------------------------------------------------------------
 
-void inputHub::onStateChanged(inputBitmap_t globalState, inputBitmap_t changes)
+void inputHub::onRawInput(
+    inputBitmap_t rawInputBitmap,
+    inputBitmap_t rawInputChanges,
+    clutchValue_t leftAxis,
+    clutchValue_t rightAxis,
+    bool axesChanged)
 {
     Serial.print("STATE : ");
-    debugPrintBool(globalState);
+    debugPrintBool(rawInputBitmap);
     Serial.println("");
     Serial.print("CHANGE: ");
-    debugPrintBool(changes);
+    debugPrintBool(rawInputChanges);
     Serial.println("");
 }
 
@@ -41,10 +48,7 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
-    while (!Serial)
-        ;
     Serial.println("-- READY --");
-    inputs::begin();
     inputs::addButtonMatrix(
         mtxSelectors,
         sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
@@ -52,7 +56,7 @@ void setup()
         sizeof(mtxInputs) / sizeof(mtxInputs[0]),
         mtxNumbers);
     inputs::addDigital(TEST_ROTARY_SW, ROTARY_PUSH_BN, true, true);
-    inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, ROTARY_CW_BN, ROTARY_CCW_BN,false);
+    inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, ROTARY_CW_BN, ROTARY_CCW_BN, false);
 
     inputs::start();
     Serial.println("-- GO --");

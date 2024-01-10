@@ -257,7 +257,6 @@ inputBitmap_t DigitalButton::read(inputBitmap_t lastState)
 
 AnalogAxisInput::AnalogAxisInput(
     gpio_num_t pinNumber,
-    inputNumber_t inputNumber,
     bool reversed)
 {
     // Check parameters
@@ -270,8 +269,6 @@ AnalogAxisInput::AnalogAxisInput(
 
     // Initialize
     this->pinNumber = pinNumber;
-    this->bitmap = BITMAP(inputNumber);
-    this->mask = BITMASK(1, inputNumber);
     this->reversed = reversed;
     lastADCReading = 0;
 

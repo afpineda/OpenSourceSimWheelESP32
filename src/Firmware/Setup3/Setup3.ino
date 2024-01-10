@@ -116,8 +116,8 @@ void simWheelSetup()
     inputs::setAnalogClutchPaddles(GPIO_NUM_25, GPIO_NUM_26, LCLUTCH, RCLUTCH);
     inputHub::setALTBitmap(BITMAP(ALT1) | BITMAP(ALT2));
     inputHub::setClutchCalibrationButtons(ROT1_CW, ROT1_CCW);
-    inputHub::setCycleClutchFunctionBitmap(BITMAP(JOY_START) | BITMAP(JOY_LB));
-    inputHub::setCycleALTFunctionBitmap(BITMAP(JOY_START) | BITMAP(JOY_RB));
+    inputHub::cycleCPWorkingMode_setBitmap(BITMAP(JOY_START) | BITMAP(JOY_LB));
+    inputHub::cycleALTButtonsWorkingMode_setBitmap(BITMAP(JOY_START) | BITMAP(JOY_RB));
     inputHub::setCalibrationCommandBitmaps(BITMAP(JOY_RB) | BITMAP(JOY_LB) | BITMAP(JOY_START));
 }
 

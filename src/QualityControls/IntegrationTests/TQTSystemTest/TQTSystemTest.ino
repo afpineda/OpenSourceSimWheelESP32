@@ -1,4 +1,6 @@
 /**
+ * @file TQTSystemTest.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2023-02-09
  * @brief System test for the Lilygo T-QT board. See [Readme](./README.md)
@@ -24,12 +26,11 @@ void setup()
     Serial.begin(115200);
     Serial.println("--READY--");
     clutchState::begin();
-    inputs::begin();
     power::begin(GPIO_NUM_0,true);
 
     inputs::addDigital(GPIO_NUM_0, 0, true, false );
     inputs::addDigital(GPIO_NUM_47, 1, true, false );
-    
+
     hidImplementation::begin("TQTSystemTestBLE", "Mamandurrio", true);
     inputs::start();
     power::startBatteryMonitor((gpio_num_t)-1, GPIO_NUM_4, true);

@@ -71,8 +71,8 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
     hidImplementation::begin("USBimplTest", "Mamandurrio", false);
-    clutchState::setFunction(CF_CLUTCH);
-    clutchState::setALTModeForALTButtons(true);
+    clutchState::setCPWorkingMode(CF_CLUTCH);
+    clutchState::setALTButtonsWorkingMode(true);
     clutchState::setBitePoint(CLUTCH_DEFAULT_VALUE);
 }
 

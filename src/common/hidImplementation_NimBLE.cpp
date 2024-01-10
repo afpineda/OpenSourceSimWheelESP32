@@ -1,4 +1,6 @@
 /**
+ * @file hidImplementation_NimBLE.cpp
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
  * @brief Implementation of a HID device through the NimBLE stack
@@ -26,7 +28,7 @@
 
 #include "SimWheel.h"
 #include "HID_definitions.h"
-//#include <Arduino.h>
+// #include <Arduino.h>
 
 // ----------------------------------------------------------------------------
 // Globals
@@ -83,23 +85,28 @@ class ConfigFRCallbacks : public NimBLECharacteristicCallbacks
     {
         int size = pCharacteristic->getValue().length();
         const uint8_t *data = pCharacteristic->getValue().data();
-        if ((size>0) && (data[0]>=CF_CLUTCH) && (data[0]<=CF_BUTTON)) { 
+        if ((size > 0) && (data[0] >= CF_CLUTCH) && (data[0] <= CF_BUTTON))
+        {
             // clutch function
-            clutchState::setFunction((clutchFunction_t)data[0]);
+            clutchState::setCPWorkingMode((clutchFunction_t)data[0]);
         }
-        if ((size>1) && (data[1]!=0xff))  {
+        if ((size > 1) && (data[1] != 0xff))
+        {
             // ALT Buttons mode
-            clutchState::setALTModeForALTButtons((bool)data[1]);
+            clutchState::setALTButtonsWorkingMode((bool)data[1]);
         }
-        if ((size>2) && ((clutchValue_t)data[2]>=CLUTCH_NONE_VALUE) && ((clutchValue_t)data[2]<=CLUTCH_FULL_VALUE)) {
+        if ((size > 2) && ((clutchValue_t)data[2] >= CLUTCH_NONE_VALUE) && ((clutchValue_t)data[2] <= CLUTCH_FULL_VALUE))
+        {
             // Bite point
             clutchState::setBitePoint((clutchValue_t)data[2]);
         }
-        if ((size>3) && (data[3]==(uint8_t)simpleCommands_t::CMD_AXIS_RECALIBRATE)) {
+        if ((size > 3) && (data[3] == (uint8_t)simpleCommands_t::CMD_AXIS_RECALIBRATE))
+        {
             // Force analog axis recalibration
             inputs::recalibrateAxes();
         }
-        if ((size>3) && (data[3]==(uint8_t)simpleCommands_t::CMD_BATT_RECALIBRATE)) {
+        if ((size > 3) && (data[3] == (uint8_t)simpleCommands_t::CMD_BATT_RECALIBRATE))
+        {
             // Restart auto calibration algoritm
             batteryCalibration::restartAutoCalibration();
         }
@@ -109,8 +116,8 @@ class ConfigFRCallbacks : public NimBLECharacteristicCallbacks
     void onRead(NimBLECharacteristic *pCharacteristic)
     {
         uint8_t data[CONFIG_REPORT_SIZE];
-        data[0] = (uint8_t)clutchState::currentFunction;
-        data[1] = (uint8_t)clutchState::altModeForAltButtons;
+        data[0] = (uint8_t)clutchState::cpWorkingMode;
+        data[1] = (uint8_t)clutchState::altButtonsWorkingMode;
         data[2] = (uint8_t)clutchState::bitePoint;
         data[3] = (uint8_t)power::getLastBatteryLevel();
         pCharacteristic->setValue(data, sizeof(data));
@@ -130,9 +137,9 @@ class CapabilitiesFRCallbacks : public NimBLECharacteristicCallbacks
         uint8_t data[CAPABILITIES_REPORT_SIZE];
         data[0] = MAGIC_NUMBER_LOW;
         data[1] = MAGIC_NUMBER_HIGH;
-        *(uint16_t *)(data+2) = DATA_MAJOR_VERSION;
-        *(uint16_t *)(data+4) = DATA_MINOR_VERSION;
-        *(uint16_t *)(data+6) = capabilities::flags;
+        *(uint16_t *)(data + 2) = DATA_MAJOR_VERSION;
+        *(uint16_t *)(data + 4) = DATA_MINOR_VERSION;
+        *(uint16_t *)(data + 6) = capabilities::flags;
         pCharacteristic->setValue(data, sizeof(data));
     }
 } capabilitiesFRCallbacks;
@@ -176,7 +183,8 @@ void hidImplementation::begin(
 
         // HID initialization
         hid = new NimBLEHIDDevice(pServer);
-        if (!hid) {
+        if (!hid)
+        {
             log_e("Unable to create HID device");
             abort();
         }
@@ -189,7 +197,8 @@ void hidImplementation::begin(
         inputGamepad = hid->inputReport(RID_INPUT_GAMEPAD);
         configReport = hid->featureReport(RID_FEATURE_CONFIG);
         capabilitiesReport = hid->featureReport(RID_FEATURE_CAPABILITIES);
-        if (!inputGamepad || !configReport || !capabilitiesReport) {
+        if (!inputGamepad || !configReport || !capabilitiesReport)
+        {
             log_e("Unable to create HID report characteristics");
             abort();
         }
@@ -246,58 +255,25 @@ void hidImplementation::reset()
         inputGamepad->notify();
     }
 }
-
 void hidImplementation::reportInput(
-        inputBitmap_t globalState,
-        bool altEnabled,
-        uint8_t POVstate = 0)
+    inputBitmap_t inputsLow,
+    inputBitmap_t inputsHigh,
+    uint8_t POVstate,
+    clutchValue_t leftAxis,
+    clutchValue_t rightAxis,
+    clutchValue_t clutchAxis)
 {
     if (connectionStatus.connected)
     {
         uint8_t report[GAMEPAD_REPORT_SIZE];
-        if (altEnabled)
-        {
-            report[0] = 0;
-            report[1] = 0;
-            report[2] = 0;
-            report[3] = 0;
-            report[4] = 0;
-            report[5] = 0;
-            report[6] = 0;
-            report[7] = 0;
-            report[8] = ((uint8_t *)&globalState)[0];
-            report[9] = ((uint8_t *)&globalState)[1];
-            report[10] = ((uint8_t *)&globalState)[2];
-            report[11] = ((uint8_t *)&globalState)[3];
-            report[12] = ((uint8_t *)&globalState)[4];
-            report[13] = ((uint8_t *)&globalState)[5];
-            report[14] = ((uint8_t *)&globalState)[6];
-            report[15] = ((uint8_t *)&globalState)[7];
-        }
-        else
-        {
-            report[0] = ((uint8_t *)&globalState)[0];
-            report[1] = ((uint8_t *)&globalState)[1];
-            report[2] = ((uint8_t *)&globalState)[2];
-            report[3] = ((uint8_t *)&globalState)[3];
-            report[4] = ((uint8_t *)&globalState)[4];
-            report[5] = ((uint8_t *)&globalState)[5];
-            report[6] = ((uint8_t *)&globalState)[6];
-            report[7] = ((uint8_t *)&globalState)[7];
-            report[8] = 0;
-            report[9] = 0;
-            report[10] = 0;
-            report[11] = 0;
-            report[12] = 0;
-            report[13] = 0;
-            report[14] = 0;
-            report[15] = 0;
-        }
-        report[16] = (uint8_t)clutchState::combinedAxis;
-        report[17] = (uint8_t)clutchState::leftAxis;
-        report[18] = (uint8_t)clutchState::rightAxis;
+        *((inputBitmap_t *)&report) = inputsLow;
+        *((inputBitmap_t *)(&report + sizeof(inputsLow))) = inputsHigh;
+        report[16] = (uint8_t)clutchAxis;
+        report[17] = (uint8_t)leftAxis;
+        report[18] = (uint8_t)rightAxis;
         report[19] = POVstate;
-        if (notifyConfigChanges) {
+        if (notifyConfigChanges)
+        {
             report[19] |= (RID_FEATURE_CONFIG << 4);
             notifyConfigChanges = false;
         }

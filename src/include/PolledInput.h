@@ -185,21 +185,14 @@ protected:
     bool reversed;
 
 public:
-    // for read-only
-    inputBitmap_t bitmap;
-    inputBitmap_t mask;
-
-public:
     /**
      * @brief Construct a new Analog Axis Input object
      *
      * @param pinNumber ADC-capable pin number
-     * @param inputNumber An alternate input number for on/off operation (if supported)
      * @param reversed True if the highest voltage is for the idle position. False, otherwise.
      */
     AnalogAxisInput(
         gpio_num_t pinNumber,
-        inputNumber_t inputNumber,
         bool reversed = true);
 
     /**

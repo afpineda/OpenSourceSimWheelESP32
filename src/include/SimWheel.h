@@ -27,7 +27,7 @@
  */
 namespace capabilities
 {
-    // For read only
+    // For read only. Do not write
     extern volatile uint32_t flags;
 
     /**
@@ -47,23 +47,20 @@ namespace capabilities
      * @return true The device has the given capability
      * @return false The device does not have the given capability
      */
-    bool inline hasFlag(deviceCapability_t flag);
+    bool hasFlag(deviceCapability_t flag);
 }
 
 /**
  * @brief Current state of the clutch paddles (if any) and,
- *        for convenience, mode of "ALT" buttons
+ *        for convenience, working mode of "ALT" buttons
  *
  */
 namespace clutchState
 {
     // For read only. do not touch
-    extern volatile clutchValue_t leftAxis;
-    extern volatile clutchValue_t rightAxis;
-    extern volatile clutchValue_t combinedAxis;
     extern volatile clutchValue_t bitePoint;
-    extern volatile clutchFunction_t currentFunction;
-    extern volatile bool altModeForAltButtons;
+    extern volatile clutchFunction_t cpWorkingMode;
+    extern volatile bool altButtonsWorkingMode;
 
     /**
      * @brief Must be called before anything else in this namespace. Will
@@ -72,59 +69,28 @@ namespace clutchState
      * @note Do not call while testing. This way, autosaving will get disabled.
      **/
     void begin();
-
+//
     /**
      * @brief Set operation mode for "ALT" buttons (not clutch related)
      *
      * @param newMode When True, "ALT" buttons should activate "ALT" mode.
      *                Otherwise, they behave as regular buttons.
      */
-    void setALTModeForALTButtons(bool newMode);
+    void setALTButtonsWorkingMode(bool newMode);
 
     /**
      * @brief Assign a function to the clutch paddles
      *
      * @param newFunction Function of the clutch paddles
      */
-    void setFunction(clutchFunction_t newFunction);
+    void setCPWorkingMode(clutchFunction_t newFunction);
 
     /**
      * @brief Set the current bite point
      *
-     * @param newBitePoint
+     * @param newBitePoint Clutch bite point
      */
     void setBitePoint(clutchValue_t newBitePoint);
-
-    /**
-     * @brief Set the position of the left padlle axis
-     *
-     * @param newValue Axis position
-     */
-    void setLeftAxis(clutchValue_t newValue);
-
-    /**
-     * @brief Set the position of the right paddle axis
-     *
-     * @param newValue Axis position
-     */
-    void setRightAxis(clutchValue_t newValue);
-
-    /**
-     * @brief Check if any clutch paddle is pressed while
-     *        "ALT" function is selected
-     *
-     * @return true if ALT mode is requested
-     * @return false otherwise
-     */
-    bool isALTRequested();
-
-    /**
-     * @brief Check if bite point calibration is requested by the user
-     *
-     * @return true if bite point can be manually calibrated
-     * @return false otherwise
-     */
-    bool isCalibrationInProgress();
 }
 
 /**
@@ -420,33 +386,10 @@ namespace inputs
      * @param leftClutchPin ADC pin for the left clutch paddle
      * @param rightClutchPin ADC pin for the right clutch paddle.
      *        Must differ from `leftClutchPin`.
-     * @param leftClutchInputNumber Input number for the left paddle
-     *        (to be reported in button mode)
-     * @param rightClutchInputNumber Input number for the right paddle
-     *        (to be reported in button mode)
-     *
-     * @note Only one `set*ClutchPaddles` method can be called and only once.
-     *       Otherwise an error is raised.
      */
     void setAnalogClutchPaddles(
         const gpio_num_t leftClutchPin,
-        const gpio_num_t rightClutchPin,
-        const inputNumber_t leftClutchInputNumber,
-        const inputNumber_t rightClutchInputNumber);
-
-    /**
-     * @brief Set two inputs to digital clutch paddles. Must be called before `start()`.
-     *
-     * @param leftClutchInputNumber Input number for the left clutch
-     * @param rightClutchInputNumber Input number for the right clutch.
-     *        Must differ from `leftClutchInputNumber`.
-     *
-     * @note Only one `set*ClutchPaddles` method can be called and only once.
-     *       Otherwise an error is raised.
-     */
-    void setDigitalClutchPaddles(
-        const inputNumber_t leftClutchInputNumber,
-        const inputNumber_t rightClutchInputNumber);
+        const gpio_num_t rightClutchPin);
 
     /**
      * @brief Force autocalibration of all axes (analog clutch paddles)
@@ -471,18 +414,23 @@ namespace inputs
 namespace inputHub
 {
     /**
-     * @brief Handle a change in the state of any input. The states of all digital inputs
-     *        are combined into a single global state.
-     *        Will be called from a single separate background thread.
+     * @brief Handle raw user input
      *
-     * @param globalState Current state of all inputs
-     * @param changes A bit array assembling which inputs have changed since last report.
-     *                1 means changed, 0 means not changed.
+     * @note Raw user input is translated into wheel functionality or HID reports.
      *
-     * @note May be called even if `changes==0`, due to changes in the state of
-     *       an analog axis or a digital clutch.
+     * @param[in] rawInputBitmap Combined current state of all inputs
+     * @param[in] rawInputChanges A bit array assembling which inputs have changed since last call.
+     *                            1 means changed, 0 means not changed.
+     * @param[in] leftAxis Position of the left analog clutch paddle (zero if not available)
+     * @param[in] rightAxis Position of the right analog clutch paddle (zero if not available)
+     * @param[in] axesChanged True if any analog clutch paddle has changed in position since last call.
      */
-    void onStateChanged(inputBitmap_t globalState, inputBitmap_t changes);
+    void onRawInput(
+        inputBitmap_t rawInputBitmap,
+        inputBitmap_t rawInputChanges,
+        clutchValue_t leftAxis,
+        clutchValue_t rightAxis,
+        bool axesChanged);
 
     /**
      * @brief Set the bitmap for all ALT buttons. For example:
@@ -499,6 +447,25 @@ namespace inputHub
      * @param altNumber Number assigned to the ALT button
      */
     void setALTButton(const inputNumber_t altNumber);
+
+    /**
+     * @brief Assign two input numbers to work as clutch paddles and vice-versa
+     *
+     * @note If there are analog clutch paddles, the given parameters will be used in the "buttons"
+     *       working mode of clutch paddles. If there are no analog clutch paddles,
+     *       the given parameters must have been assigned to
+     *       existing input hardware, so they become "digital" clutch paddles.
+     *
+     * @note The firmware automatically translates an input number to an axis position and vice-versa,
+     *       depending on the user-selected mode for clutch paddles.
+     *
+     * @param leftClutchInputNumber Input number for the left clutch
+     * @param rightClutchInputNumber Input number for the right clutch.
+     *        Must differ from `leftClutchInputNumber`.
+     */
+    void setClutchInputNumbers(
+        const inputNumber_t leftClutchInputNumber,
+        const inputNumber_t rightClutchInputNumber);
 
     /**
      * @brief Set up buttons for clutch calibration while one and only one clutch paddle is pressed
@@ -544,7 +511,7 @@ namespace inputHub
      *
      * @note Make sure all buttons in the bitmap are able to be pressed at the same time.
      */
-    void setCycleALTFunctionBitmap(const inputBitmap_t bitmap);
+    void cycleALTButtonsWorkingMode_setBitmap(const inputBitmap_t bitmap);
 
     /**
      * @brief Set up a bitmap of buttons to cycle the function of clutch paddles (if any).
@@ -554,12 +521,12 @@ namespace inputHub
      *
      * @note Make sure all buttons in the bitmap are able to be pressed at the same time.
      */
-    void setCycleClutchFunctionBitmap(const inputBitmap_t bitmap);
+    void cycleCPWorkingMode_setBitmap(const inputBitmap_t bitmap);
 
     /**
      * @brief Set up a bitmap of buttons to enable each specific clutch function for clutch paddles.
      *        All buttons in the bitmap must be pressed at the same time and none of the others.
-     *        This is compatible with `setCycleClutchFunctionbitmap`.
+     *        This is compatible with `cycleCPWorkingMode_setBitmap`.
      *
      * @param clutchModeBitmap A bitmap of button numbers to enable the F1-style clutch function
      * @param axisModeBitmap A bitmap of button numbers to enable the analog axes function
@@ -569,7 +536,7 @@ namespace inputHub
      * @note Set the bitmap to `0` if a particular function must not be mapped to any input.
      *       Make sure all buttons in a bitmap are able to be pressed at the same time.
      */
-    void setSelectClutchFunctionBitmaps(
+    void cpWorkingMode_setBitmaps(
         const inputBitmap_t clutchModeBitmap,
         const inputBitmap_t axisModeBitmap,
         const inputBitmap_t altModeBitmap,
@@ -682,17 +649,21 @@ namespace hidImplementation
     /**
      * @brief Report HID inputs
      *
-     * @param globalState input bitmap
-     * @param altEnabled TRUE if ALT is enabled
-     * @param POVtate State of the hat switch (POV or DPAD), this is, a button number
-     *                in the range 0 (no input) to 8 (up-left)
-     *
-     * @note Axis values are taken from `clutchState`.
+     * @param[in] inputsLow State of input numbers 0 to 63
+     * @param[in] inputsHigh State of input numbers 64 to 127
+     * @param[in] POVstate State of the hat switch (POV or DPAD), this is, a button number
+     *                     in the range 0 (no input) to 8 (up-left).
+     * @param[in] leftAxis Position of the left clutch, in the range 0-254.
+     * @param[in] rightAxis Position of the right clutch, in the range 0-254.
+     * @param[in] clutchAxis Position of the combined clutch, in the range 0-254.
      */
     void reportInput(
-        inputBitmap_t globalState,
-        bool altEnabled,
-        uint8_t POVstate);
+        inputBitmap_t inputsLow,
+        inputBitmap_t inputsHigh,
+        uint8_t POVstate,
+        clutchValue_t leftAxis,
+        clutchValue_t rightAxis,
+        clutchValue_t clutchAxis);
 
     /**
      * @brief Report all inputs as not active

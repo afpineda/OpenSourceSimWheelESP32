@@ -22,18 +22,20 @@
 // Globals
 // ----------------------------------------------------------------------------
 
-static TaskHandle_t pollingTask = nullptr;
+// Related to hardware inputs
+
 static DigitalPolledInput *digitalInputChain = nullptr;
 static AnalogAxisInput *leftClutchAxis = nullptr;
 static AnalogAxisInput *rightClutchAxis = nullptr;
-static inputBitmap_t leftClutchButtonBitmap = 0ULL;
-static inputBitmap_t rightClutchButtonBitmap = 0ULL;
-static inputBitmap_t clutchButtonsMask = ~0ULL;
-static bool forceUpdate = false;
 
-// Related to the polling task and decoupling queue
+// Related to the polling task
+
+static TaskHandle_t pollingTask = nullptr;
+static bool forceUpdate = false;
 #define SAMPLING_RATE_TICKS DEBOUNCE_TICKS * 2
 #define POLLING_TASK_STACK_SIZE 1 * 1024
+
+// Related to the decoupling queue
 
 typedef struct
 {
@@ -44,14 +46,17 @@ typedef struct
   clutchValue_t rightAxisValue;
 } decouplingEvent_t;
 
+static QueueHandle_t decouplingQueue = nullptr;
+
 #define EVENT_SIZE sizeof(decouplingEvent_t)
 
 // Related to the hub task
+
 #define HUB_STACK_SIZE 4 * 1024
 static TaskHandle_t hubTask = nullptr;
-static QueueHandle_t decouplingQueue = nullptr;
 
 // Related to axis calibration data
+
 static esp_timer_handle_t autoSaveTimer = nullptr;
 #define AXIS_NAMESPACE "axis"
 #define KEY_MIN_CAL_DATA "a"
@@ -154,14 +159,10 @@ void inputPollingLoop(void *param)
     if (leftClutchAxis)
     {
       // Left clutch axis
-      leftClutchAxis->read(
-          &(currentState.leftAxisValue),
-          &leftAxisAutocalibrated);
+      leftClutchAxis->read(currentState.leftAxisValue, leftAxisAutocalibrated);
 
       // Right clutch axis
-      rightClutchAxis->read(
-          &(currentState.rightAxisValue),
-          &rightAxisAutocalibrated);
+      rightClutchAxis->read(currentState.rightAxisValue, rightAxisAutocalibrated);
 
       if (leftAxisAutocalibrated || rightAxisAutocalibrated)
         requestSaveAxisCalibration();
@@ -194,75 +195,17 @@ void inputPollingLoop(void *param)
 
 void hubLoop(void *unused)
 {
+  decouplingEvent_t currentState;
+
   while (true)
   {
     if (xQueueReceive(decouplingQueue, &currentState, portMAX_DELAY))
-      inputHub::onStateChanged(
+      inputHub::onRawInput(
           currentState.rawInputBitmap,
           currentState.rawInputChanges,
           currentState.leftAxisValue,
           currentState.rightAxisValue,
           currentState.axesChanged);
-
-    // if (buffer[0] == EVENT_TYPE_SWITCH)
-    // {
-    //   newState = (globalState & switchEvent->mask) | switchEvent->state;
-    //   if (clutchState::currentFunction != CF_BUTTON)
-    //   {
-    //     // Translate digital clutch inputs into analog axis values
-    //     changes = globalState ^ newState;
-    //     if (changes & leftClutchButtonBitmap)
-    //       clutchState::setLeftAxis((newState & leftClutchButtonBitmap) ? CLUTCH_FULL_VALUE : CLUTCH_NONE_VALUE);
-    //     if (changes & rightClutchButtonBitmap)
-    //       clutchState::setRightAxis((newState & rightClutchButtonBitmap) ? CLUTCH_FULL_VALUE : CLUTCH_NONE_VALUE);
-    //     inputFilter = clutchButtonsMask;
-    //   }
-    //   else
-    //     inputFilter = ~0ULL;
-    //   changes = globalState ^ newState;
-    //   globalState = newState;
-    //   inputHub::onStateChanged(globalState & inputFilter, changes & inputFilter);
-    // }
-    // else
-    // {
-    //   // buffer[0] == EVENT_TYPE_AXIS
-    //   if (clutchState::currentFunction == CF_BUTTON)
-    //   {
-    //     // Translate analog axis values into digital input
-    //     if ((axisEvent->value) >= CLUTCH_3_4_VALUE)
-    //       newState = (globalState & axisEvent->inputMask) | axisEvent->inputBitmap;
-    //     else if ((axisEvent->value) <= CLUTCH_1_4_VALUE)
-    //       newState = (globalState & axisEvent->inputMask);
-    //     else
-    //       newState = globalState;
-    //     changes = globalState ^ newState;
-    //     if (changes)
-    //     {
-    //       globalState = newState;
-    //       inputHub::onStateChanged(globalState, changes);
-    //     }
-    //   }
-    //   else
-    //   {
-    //     bool oldAltEnabled = clutchState::isALTRequested();
-    //     clutchValue_t oldClutchValue = clutchState::combinedAxis;
-
-    //     if (axisEvent->id)
-    //       clutchState::setRightAxis(axisEvent->value);
-    //     else
-    //       clutchState::setLeftAxis(axisEvent->value);
-
-    //     globalState = globalState & (axisEvent->inputMask);
-    //     if (
-    //         (clutchState::currentFunction == CF_AXIS) ||
-    //         ((clutchState::currentFunction == CF_ALT) &&
-    //          (oldAltEnabled != clutchState::isALTRequested())) ||
-    //         ((clutchState::currentFunction == CF_CLUTCH) &&
-    //          (oldClutchValue != clutchState::combinedAxis)))
-    //       inputHub::onStateChanged(globalState, 0);
-    //   }
-    // }
-
   } // end while
 }
 
@@ -406,54 +349,22 @@ void inputs::addShiftRegisters(
 
 void inputs::setAnalogClutchPaddles(
     const gpio_num_t leftClutchPin,
-    const gpio_num_t rightClutchPin,
-    const inputNumber_t leftClutchInputNumber,
-    const inputNumber_t rightClutchInputNumber)
+    const gpio_num_t rightClutchPin)
 {
-  if (rightClutchAxis || leftClutchAxis || leftClutchButtonBitmap || rightClutchButtonBitmap)
+  if ((!pollingTask) && (hubTask))
   {
-    log_e("inputs::set*ClutchPaddles() called twice");
-    abort();
-  }
-  else if ((!pollingTask) && (hubTask))
-  {
-    if ((leftClutchPin != rightClutchPin) &&
-        (leftClutchInputNumber <= MAX_INPUT_NUMBER) &&
-        (rightClutchInputNumber <= MAX_INPUT_NUMBER) &&
-        (rightClutchInputNumber != leftClutchInputNumber))
+    if ((leftClutchPin != rightClutchPin) && (rightClutchAxis == nullptr) && (leftClutchAxis == nullptr))
     {
-      rightClutchAxis = new AnalogAxisInput(rightClutchPin, rightClutchInputNumber);
-      leftClutchAxis = new AnalogAxisInput(leftClutchPin, leftClutchInputNumber);
+      rightClutchAxis = new AnalogAxisInput(rightClutchPin);
+      leftClutchAxis = new AnalogAxisInput(leftClutchPin);
       capabilities::setFlag(CAP_CLUTCH_ANALOG);
+      capabilities::setFlag(CAP_CLUTCH_BUTTON, false);
     }
     else
-      abortDueToInvalidInputNumber();
-  }
-  else
-    abortDueToCallAfterStart();
-}
-
-void inputs::setDigitalClutchPaddles(
-    const inputNumber_t leftClutchInputNumber,
-    const inputNumber_t rightClutchInputNumber)
-{
-  if (rightClutchAxis || leftClutchAxis || leftClutchButtonBitmap || rightClutchButtonBitmap)
-  {
-    log_e("inputs::set*ClutchPaddles() called twice");
-    abort();
-  }
-  else if ((leftClutchInputNumber == rightClutchInputNumber) ||
-           (leftClutchInputNumber > MAX_INPUT_NUMBER) ||
-           (rightClutchInputNumber > MAX_INPUT_NUMBER))
-  {
-    abortDueToInvalidInputNumber();
-  }
-  else if ((!pollingTask) && (!hubTask))
-  {
-    leftClutchButtonBitmap = BITMAP(leftClutchInputNumber);
-    rightClutchButtonBitmap = BITMAP(rightClutchInputNumber);
-    clutchButtonsMask = ~(leftClutchButtonBitmap | rightClutchButtonBitmap);
-    capabilities::setFlag(CAP_CLUTCH_BUTTON);
+    {
+      log_e("inputs::setAnalogClutchPaddles() called twice or for two identical GPIO pins");
+      abort();
+    }
   }
   else
     abortDueToCallAfterStart();
@@ -463,7 +374,10 @@ void inputs::setDigitalClutchPaddles(
 // Macros to send events
 // ----------------------------------------------------------------------------
 
-void inputs::notifyInputEventForTesting(inputBitmap_t state, clutchValue_t leftAxisValue, clutchValue_t rightAxisValue)
+void inputs::notifyInputEventForTesting(
+    inputBitmap_t state,
+    clutchValue_t leftAxisValue,
+    clutchValue_t rightAxisValue)
 {
   if (decouplingQueue)
   {
@@ -471,6 +385,8 @@ void inputs::notifyInputEventForTesting(inputBitmap_t state, clutchValue_t leftA
     event.leftAxisValue = leftAxisValue;
     event.rightAxisValue = rightAxisValue;
     event.rawInputBitmap = state;
+    event.axesChanged = true;
+    event.rawInputChanges = state;
     xQueueSend(decouplingQueue, &event, SAMPLING_RATE_TICKS); // portMAX_DELAY);
   }
 }
@@ -484,7 +400,7 @@ void inputs::start()
   void *dummy;
   if (pollingTask == nullptr)
   {
-    // Load axis callibration data, if any
+    // Load axis calibration data, if any
     Preferences prefs;
     if ((leftClutchAxis) && (rightClutchAxis) && prefs.begin(AXIS_NAMESPACE, true))
     {

@@ -15,67 +15,19 @@
 // Globals
 // ----------------------------------------------------------------------------
 
-// Effective clutch state (exported for read-only)
-volatile clutchValue_t clutchState::leftAxis = CLUTCH_NONE_VALUE;
-volatile clutchValue_t clutchState::rightAxis = CLUTCH_NONE_VALUE;
-volatile clutchValue_t clutchState::combinedAxis = CLUTCH_NONE_VALUE;
-volatile clutchValue_t clutchState::bitePoint = CLUTCH_DEFAULT_VALUE;
-volatile clutchFunction_t clutchState::currentFunction = clutchFunction_t::CF_CLUTCH;
-volatile bool clutchState::altModeForAltButtons = false;
+// Clutch state (exported for read-only)
 
-// Internal clutch state (non exported)
-static clutchValue_t auxLeftAxis = CLUTCH_NONE_VALUE;
-static clutchValue_t auxRightAxis = CLUTCH_NONE_VALUE;
+volatile clutchValue_t clutchState::bitePoint = CLUTCH_DEFAULT_VALUE;
+volatile clutchFunction_t clutchState::cpWorkingMode = clutchFunction_t::CF_CLUTCH;
+volatile bool clutchState::altButtonsWorkingMode = false;
 
 // Related to the autosave feature and user preferences
+
 static esp_timer_handle_t autoSaveTimer = nullptr;
 #define PREFS_NAMESPACE "inputHub" // reused from a previous version
 #define KEY_ALT_FUNCTION "af"
 #define KEY_CLUTCH_FUNCTION "cf"
 #define KEY_CLUTCH_CALIBRATION "ccal"
-
-// ----------------------------------------------------------------------------
-// Auxiliary
-// ----------------------------------------------------------------------------
-
-void inline updateCombinedAxis()
-{
-    if (auxLeftAxis > auxRightAxis)
-        clutchState::combinedAxis =
-            (auxLeftAxis * clutchState::bitePoint +
-             (auxRightAxis * (255 - clutchState::bitePoint))) /
-            255;
-    else
-        clutchState::combinedAxis =
-            (auxRightAxis * clutchState::bitePoint +
-             (auxLeftAxis * (255 - clutchState::bitePoint))) /
-            255;
-}
-
-void inline update()
-{
-    switch (clutchState::currentFunction)
-    {
-    case CF_CLUTCH:
-        clutchState::leftAxis = CLUTCH_NONE_VALUE;
-        clutchState::rightAxis = CLUTCH_NONE_VALUE;
-        updateCombinedAxis();
-        break;
-    case CF_AXIS:
-        clutchState::leftAxis = auxLeftAxis;
-        clutchState::rightAxis = auxRightAxis;
-        clutchState::combinedAxis = CLUTCH_NONE_VALUE;
-        break;
-    case CF_ALT:
-    case CF_BUTTON:
-        clutchState::leftAxis = CLUTCH_NONE_VALUE;
-        clutchState::rightAxis = CLUTCH_NONE_VALUE;
-        clutchState::combinedAxis = CLUTCH_NONE_VALUE;
-        break;
-    default:
-        break;
-    }
-}
 
 // ----------------------------------------------------------------------------
 // Autosave current settings
@@ -86,8 +38,8 @@ void autoSaveCallback(void *param)
     Preferences prefs;
     if (prefs.begin(PREFS_NAMESPACE, false))
     {
-        prefs.putBool(KEY_ALT_FUNCTION, clutchState::altModeForAltButtons);
-        prefs.putUChar(KEY_CLUTCH_FUNCTION, (uint8_t)clutchState::currentFunction);
+        prefs.putBool(KEY_ALT_FUNCTION, clutchState::altButtonsWorkingMode);
+        prefs.putUChar(KEY_CLUTCH_FUNCTION, (uint8_t)clutchState::cpWorkingMode);
         prefs.putUChar(KEY_CLUTCH_CALIBRATION, (uint8_t)clutchState::bitePoint);
         prefs.end();
     }
@@ -121,11 +73,11 @@ void clutchState::begin()
         Preferences prefs;
         if (prefs.begin(PREFS_NAMESPACE, true))
         {
-            clutchState::altModeForAltButtons = prefs.getBool(KEY_ALT_FUNCTION, clutchState::altModeForAltButtons);
+            clutchState::altButtonsWorkingMode = prefs.getBool(KEY_ALT_FUNCTION, clutchState::altButtonsWorkingMode);
 
-            uint8_t value1 = prefs.getUChar(KEY_CLUTCH_FUNCTION, (uint8_t)clutchState::currentFunction);
+            uint8_t value1 = prefs.getUChar(KEY_CLUTCH_FUNCTION, (uint8_t)clutchState::cpWorkingMode);
             if ((value1 >= CF_CLUTCH) && (value1 <= CF_BUTTON))
-                clutchState::currentFunction = (clutchFunction_t)value1;
+                clutchState::cpWorkingMode = (clutchFunction_t)value1;
 
             uint8_t value2 = prefs.getUChar(KEY_CLUTCH_CALIBRATION, (uint8_t)clutchState::bitePoint);
             if ((value2 >= CLUTCH_NONE_VALUE) && (value2 <= CLUTCH_FULL_VALUE))
@@ -140,24 +92,23 @@ void clutchState::begin()
 // setters
 // ----------------------------------------------------------------------------
 
-void clutchState::setALTModeForALTButtons(bool newMode)
+void clutchState::setALTButtonsWorkingMode(bool newMode)
 {
-    if (clutchState::altModeForAltButtons != newMode)
+    if (clutchState::altButtonsWorkingMode != newMode)
     {
-        clutchState::altModeForAltButtons = newMode;
+        clutchState::altButtonsWorkingMode = newMode;
         requestSave();
         hidImplementation::reportChangeInConfig();
         inputs::update();
     }
 }
 
-void clutchState::setFunction(clutchFunction_t newFunction)
+void clutchState::setCPWorkingMode(clutchFunction_t newFunction)
 {
-    if ((newFunction != clutchState::currentFunction) &&
+    if ((newFunction != clutchState::cpWorkingMode) &&
         (newFunction>=CF_CLUTCH) && (newFunction<=CF_BUTTON))
     {
-        clutchState::currentFunction = newFunction;
-        update();
+        clutchState::cpWorkingMode = newFunction;
         requestSave();
         hidImplementation::reportChangeInConfig();
         inputs::update();
@@ -171,46 +122,10 @@ void clutchState::setBitePoint(clutchValue_t newBitePoint)
         if ((newBitePoint != CLUTCH_INVALID_VALUE))
         {
             clutchState::bitePoint = newBitePoint;
-            update();
             requestSave();
             hidImplementation::reportChangeInConfig();
             notify::bitePoint(newBitePoint);
             inputs::update();
         }
     }
-}
-
-void clutchState::setLeftAxis(clutchValue_t newValue)
-{
-    if (newValue != CLUTCH_INVALID_VALUE)
-    {
-        auxLeftAxis = newValue;
-        update();
-    }
-}
-
-void clutchState::setRightAxis(clutchValue_t newValue)
-{
-    if (newValue != CLUTCH_INVALID_VALUE)
-    {
-        auxRightAxis = newValue;
-        update();
-    }
-}
-
-// ----------------------------------------------------------------------------
-// checks
-// ----------------------------------------------------------------------------
-
-bool clutchState::isALTRequested()
-{
-    return (clutchState::currentFunction == CF_ALT) &&
-           ((auxLeftAxis >= CLUTCH_DEFAULT_VALUE) || (auxRightAxis >= CLUTCH_DEFAULT_VALUE));
-}
-
-bool clutchState::isCalibrationInProgress()
-{
-    return (clutchState::currentFunction == CF_CLUTCH) &&
-           ((auxLeftAxis >= CLUTCH_DEFAULT_VALUE) ^
-            (auxRightAxis >= CLUTCH_DEFAULT_VALUE));
 }

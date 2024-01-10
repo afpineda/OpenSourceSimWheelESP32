@@ -112,7 +112,7 @@ void simWheelSetup()
     inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_35, ROT3_CW, ROT3_CCW);
     inputs::setDigitalClutchPaddles(LCLUTCH, RCLUTCH);
     inputHub::setClutchCalibrationButtons(ROT1_CW, ROT1_CCW);
-    inputHub::setCycleClutchFunctionBitmap(BITMAP(JOY_START) | BITMAP(JOY_LB));
+    inputHub::cycleCPWorkingMode_setBitmap(BITMAP(JOY_START) | BITMAP(JOY_LB));
 }
 
 //------------------------------------------------------------------

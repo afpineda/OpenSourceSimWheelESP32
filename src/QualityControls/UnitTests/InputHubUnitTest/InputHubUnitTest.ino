@@ -142,9 +142,9 @@ void setup()
 
     inputHub::setALTButton(ALT);
     inputHub::setDPADControls(UP, DOWN, LEFT, RIGHT);
-    inputHub::setCycleALTFunctionBitmap(BMP_CYCLE_ALT);
-    inputHub::setCycleClutchFunctionBitmap(BMP_CYCLE_CLUTCH);
-    inputHub::setSelectClutchFunctionBitmaps(
+    inputHub::cycleALTButtonsWorkingMode_setBitmap(BMP_CYCLE_ALT);
+    inputHub::cycleCPWorkingMode_setBitmap(BMP_CYCLE_CLUTCH);
+    inputHub::cpWorkingMode_setBitmaps(
         BMP_SELECT_CLUTCH_F,
         BMP_SELECT_AXIS_F,
         BMP_SELECT_ALT_F,
@@ -177,7 +177,7 @@ void setup()
     assertEquals<inputBitmap_t>("state at release", 0, currentState);
 
     Serial.println("- simulate POV operation while ALT pushed -");
-    clutchState::setALTModeForALTButtons(true);
+    clutchState::setALTButtonsWorkingMode(true);
     push(ALT_B);
     assertEquals<inputBitmap_t>("ALT filtered state", 0, currentState);
     push(ALT_B | UP_B);
@@ -192,37 +192,37 @@ void setup()
     release(ALT_B);
 
     Serial.println("- simulate cycle ALT function -");
-    clutchState::setALTModeForALTButtons(true);
+    clutchState::setALTButtonsWorkingMode(true);
     pushAssertEqualsRelease<bool>(BMP_CYCLE_ALT, "Cycle alt 1", false, (bool *)&clutchState::altModeForAltButtons);
     pushAssertEqualsRelease<bool>(BMP_CYCLE_ALT, "Cycle alt 2", true, (bool *)&clutchState::altModeForAltButtons);
 
     Serial.println("- simulate cycle clutch function -");
-    clutchState::setFunction(CF_BUTTON);
+    clutchState::setCPWorkingMode(CF_BUTTON);
     pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 1", CF_CLUTCH, (clutchFunction_t *)&clutchState::currentFunction);
     pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 2", CF_AXIS, (clutchFunction_t *)&clutchState::currentFunction);
     pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 3", CF_ALT, (clutchFunction_t *)&clutchState::currentFunction);
     pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 4", CF_BUTTON, (clutchFunction_t *)&clutchState::currentFunction);
 
     Serial.println("- simulate explicit selection of clutch function -");
-    clutchState::setFunction(CF_BUTTON);
+    clutchState::setCPWorkingMode(CF_BUTTON);
     pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_ALT_F, "CF_ALT", CF_ALT, (clutchFunction_t *)&clutchState::currentFunction);
-    clutchState::setFunction(CF_BUTTON);
+    clutchState::setCPWorkingMode(CF_BUTTON);
     pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_CLUTCH_F, "CF_CLUTCH", CF_CLUTCH, (clutchFunction_t *)&clutchState::currentFunction);
-    clutchState::setFunction(CF_ALT);
+    clutchState::setCPWorkingMode(CF_ALT);
     pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_BUTTON_F, "CF_BUTTON", CF_BUTTON, (clutchFunction_t *)&clutchState::currentFunction);
-    clutchState::setFunction(CF_BUTTON);
+    clutchState::setCPWorkingMode(CF_BUTTON);
     pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_AXIS_F, "CF_AXIS", CF_AXIS, (clutchFunction_t *)&clutchState::currentFunction);
 
     Serial.println("- simulate non-mapped button combinations -");
-    clutchState::setFunction(CF_BUTTON);
-    clutchState::setALTModeForALTButtons(true);
+    clutchState::setCPWorkingMode(CF_BUTTON);
+    clutchState::setALTButtonsWorkingMode(true);
     push(BMP_CYCLE_ALT | BMP_CYCLE_CLUTCH);
     assertEquals<clutchFunction_t>("CF_BUTTON", CF_BUTTON, clutchState::currentFunction);
     assertEquals<bool>("alt mode", true, clutchState::altModeForAltButtons);
     release(BMP_CYCLE_ALT | BMP_CYCLE_CLUTCH);
 
     Serial.println("- simulate bite point calibration -");
-    clutchState::setFunction(CF_CLUTCH);
+    clutchState::setCPWorkingMode(CF_CLUTCH);
     clutchState::setBitePoint(CLUTCH_DEFAULT_VALUE);
     clutchState::setLeftAxis(CLUTCH_FULL_VALUE);
     clutchState::setRightAxis(CLUTCH_NONE_VALUE);

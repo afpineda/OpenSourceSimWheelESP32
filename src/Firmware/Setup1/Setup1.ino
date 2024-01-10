@@ -77,8 +77,8 @@ void simWheelSetup()
     inputHub::setDPADControls(IN_UP, IN_DOWN, IN_LEFT, IN_RIGHT);
     inputHub::setALTBitmap(BITMAP(IN_ALT1) | BITMAP(IN_ALT2));
     inputHub::setClutchCalibrationButtons(40, 41); // Rotary 1
-    inputHub::setCycleClutchFunctionBitmap(BITMAP(JOY_START) | BITMAP(JOY_LB));
-    inputHub::setCycleALTFunctionBitmap(BITMAP(JOY_START) | BITMAP(JOY_RB));
+    inputHub::cycleCPWorkingMode_setBitmap(BITMAP(JOY_START) | BITMAP(JOY_LB));
+    inputHub::cycleALTButtonsWorkingMode_setBitmap(BITMAP(JOY_START) | BITMAP(JOY_RB));
     inputHub::setCalibrationCommandBitmaps(BITMAP(JOY_START) | BITMAP(JOY_LB) | BITMAP(JOY_RB), 0);
 }
 

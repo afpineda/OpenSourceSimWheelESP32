@@ -134,7 +134,7 @@ Any of the given input numbers will enter the "ALT" mode when activated, except 
 Each time this function is activated, the working mode of the clutch paddles will move to the next one : F1-style clutch, autonomous axes, "ALT" mode, regular buttons and back to the first mode. There is no point on this if there are no clutch paddles.
 
 Assign a combination of input numbers to activate this function by placing a call to
-`inputHub::setCycleClutchFunctionBitmap()`. There is one parameter: a sequence of calls to `BITMAP(<input number>)` separated by `|`. All the inputs have to be active at the same time, and none of the others.
+`inputHub::cycleCPWorkingMode_setBitmap()`. There is one parameter: a sequence of calls to `BITMAP(<input number>)` separated by `|`. All the inputs have to be active at the same time, and none of the others.
 For example:
 
 ```c
@@ -144,14 +144,14 @@ void simWheelSetup()
    ...
    inputs::addButtonMatrix(... , btnMatrixNumbers);
    ...
-   inputHub::setCycleClutchFunctionBitmap(BITMAP(60)|BITMAP(61));
+   inputHub::cycleCPWorkingMode_setBitmap(BITMAP(60)|BITMAP(61));
    ...
 }
 ```
 
 #### Select a specific working mode for clutch paddles
 
-As an alternative, you may assign specific button combinations to specific working modes. Place a call to `inputHub::setSelectClutchFunctionBitmaps()`. There are four parameters. Each one should contain a sequence of calls to `BITMAP(<input number>)` as seen in the previous calls:
+As an alternative, you may assign specific button combinations to specific working modes. Place a call to `inputHub::cpWorkingMode_setBitmaps()`. There are four parameters. Each one should contain a sequence of calls to `BITMAP(<input number>)` as seen in the previous calls:
 
 - First parameter: button combination to select F1-Style clutch mode.
 - Second parameter: button combination to select autonomous axes mode.
@@ -167,7 +167,7 @@ void simWheelSetup()
    ...
    inputs::addButtonMatrix(... , btnMatrixNumbers);
    ...
-   inputHub::setSelectClutchFunctionBitmaps(
+   inputHub::cpWorkingMode_setBitmaps(
       BITMAP(59)|BITMAP(60),
       BITMAP(59)|BITMAP(61),
       BITMAP(59)|BITMAP(62),
@@ -181,7 +181,7 @@ void simWheelSetup()
 Each time this function is activated, the working mode of the "ALT" buttons will move to the next one : "ALT" mode, regular buttons and back to the first mode. There is no point on this if there are no "ALT" buttons.
 
 Assign a combination of input numbers to activate this function by placing a call to
-`inputHub::setCycleALTFunctionBitmap()`. There is one parameter: a sequence of calls to `BITMAP(<input number>)` separated by
+`inputHub::cycleALTButtonsWorkingMode_setBitmap()`. There is one parameter: a sequence of calls to `BITMAP(<input number>)` separated by
 `|`. All the inputs have to be active at the same time, and none of the others.
 
 ### Other game pad controls
@@ -216,7 +216,7 @@ In order to use any of them:
   | BLE          | NimBLE        | hidImplementation_NimBLE.cpp |
   | BLE          | ESP32-Arduino | hidImplementation_ESPBLE.cpp |
   | USB          | ESP32-Arduino | hidImplementation_USB.cpp    |
-  
+
 - Run the [sources setup procedure](../../firmware/sourcesSetup_en.md) again. **This is mandatory**.
 
 If you go for a purely wired USB implementation:

@@ -6,7 +6,7 @@ The *system* have been broken into several *modules* that have been implemented 
 
 - **batteryCalibration**: Everything related to the estimation of battery charge.
 - **capabilities**: Everything related to the capabilities of the hardware and firmware.
-- **clutchState**: Implements the behavior of clutch paddles, holds their state and their configuration.
+- **clutchState**: Holds the working mode of clutch paddles, ALT buttons and directional pad.
 - **hidImplementation**: Everything related to the HID protocol.
 - **inputs**: Everything related to hardware inputs and their events.
 - **inputHub**: Everything related to the combined state of all inputs and their treatment. Translates input events into a HID report.
@@ -18,7 +18,7 @@ Each namespace is implemented in a single *cpp* file with its name, however, som
 - *mock*: dummy implementation with no actual behavior.
 - *serial*: implementation providing output to the serial port.
 
-All modules can be found at the `/common` folder.
+All modules can be found at the [/common](../../src/common/) folder.
 
 ### Auxiliary modules
 
@@ -27,11 +27,30 @@ Some namespaces are implemented with the help of auxiliary modules which are not
 - *adcTools*: Reading of ADC pins.
 - *AnalogMultiplexerInput.cpp*: Everything related to multiplexed buttons/switches.
 - *ButtonMatrixInput.cpp*: Everything related to button/switch matrices.
-- *ShiftRegistersInput.cpp*: Everything related to serialized buttons/switches.
 - *debugUtils.cpp*: Minor utilities for debugging and testing.
 - *PolledInput*: Related to inputs that must be read in a polling (or sampling) loop. Defines two main c++ classes: `AnalogPolledInput` and `DigitalPolledInput`
 - *RotaryEncoderInput.cpp*: Everything related to rotary encoders.
 - *SerialNotification*: For the testing of user notifications through the USB serial interface.
+- *ShiftRegistersInput.cpp*: Everything related to serialized buttons/switches.
+
+### Principle of single responsibility
+
+| Module                 | Reason to change                                        |
+| ---------------------- | ------------------------------------------------------- |
+| adcTools               | Requirements to ADC readings (for example, attenuation) |
+| batteryCalibration     | SoC algorithm                                           |
+| capabilities           | Hardware and firmware features relevant to the user     |
+| clutchState            | Device functionality                                    |
+| hidImplementation      | Device-computer intercommunication                      |
+| inputs                 | Input hardware                                          |
+| inputHub               | Device functionality                                    |
+| notify                 | User interface hardware (if any)                        |
+| power                  | Underlying power management capabilities                |
+| AnalogAxisInput        | Hardware design                                         |
+| AnalogMultiplexerInput | Hardware design                                         |
+| ButtonMatrixInput      | Hardware design                                         |
+| ShiftRegistersInput    | Hardware design                                         |
+| RotaryEncoderInput     | Hardware design                                         |
 
 ### Module dependencies
 
@@ -41,18 +60,15 @@ Only most relevant information is shown below:
 classDiagram
     class RotaryEncoderInput
     class inputs {
-      +notifyInputEvent()
       +start()
     }
     class inputHub {
-      +onStateChanged()
+      +onRawInput()
     }
     class clutchState {
-      +isCalibrationInProgress()
-      +setBitePoint()
-      +isALTRequested()
-      +altModeForAltButtons
-      +currentFunction
+      +bitePoint
+      +cpWorkingMode
+      +altButtonsWorkingMode
     }
     class hidImplementation {
       +reportInput()
@@ -67,17 +83,14 @@ classDiagram
     class PolledInput {
       +read()
     }
-    inputHub <-- inputs: state changes
+    inputHub <-- inputs: inputs' state
     inputs <-- PolledInput: events
-    inputs --> clutchState: state changes
-    inputs <-- clutchState: configuration
     DigitalPolledInput <|-- ButtonMatrixInput
     DigitalPolledInput <|-- AnalogMultiplexerInput
     DigitalPolledInput <|-- ShiftRegistersInput
     DigitalPolledInput <|-- RotaryEncoderInput
     PolledInput <|-- DigitalPolledInput
     PolledInput <|-- AnalogPolledInput
-    inputHub <-- clutchState: state
     inputHub <--> clutchState: configuration
     inputHub --> hidImplementation: processed events
     hidImplementation <--> clutchState: configuration
@@ -87,11 +100,10 @@ classDiagram
     power <-- batteryCalibration: computed battery level
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNVF1v2yAU_SuIp01r_oBVVUrbVIvUaFGyR78QfG0jYfDgkjXq8t-HceLhYK_1E-aec78P75TrAmhGuWTWPgtWGdbkivgv3JCdRmZOK9XBzFq1DmOr6C4see_vCPmmNIryFHCrIyj88nUwWe9o-D8nXr67Q-RHqz0yhKeaqQqKSRaXDnkdYBFR2CcmxcEwFFqt1dboyoC1cR6AjwJhq8UoPWGXrz938MuBxX8RvYFJ3PjiX7RZSnx0iFrZwcidMb7MF6d4F3AizVoU66aV0HhYSCpK1kCrDYZuTZbY6t9gInz4_1GWk-ADQwRzisqPmJUvure_whFkVN6NZelQX13MNH6rpYQiZD2qhd3Ch7neLxaXVcmIDQPjYbA2wtmAinxnBLoNGmMWi4d48B-5G0G5VqWoXN-bHvosKoFMxhXd__G8fswbhka8RUs_B18qJnW1cRKFn_TbSChznH0tStxBJfy6GfsJwpwSE2DqYAbYp53gRmNLm52CHj7s84DuwIkiMtIazb1KoRjNPJXOp4KltI4VtJMR5ve7Py90Wf4nzpVwUfhVXkR2Kul5vTw756n2soFw1BJZBTGlcz9F4brxffJdGAWjd7QB0zBR-Hc6CC6nWPtsc5r5YwEl85uX01ydPbQrcH9SnGYlkxbuqGsL36nL035zuyoEakMzNA7OfwGfTQ0L)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNlMFu4yAQhl8FcdldbfMCqFqp3VbaSo22Sg69-EJg7KBisGBoG7V59wWTWCTEq_pie_j-mfHw4w8qrATKqNDc-zvFO8f7xpB4jRGyssjd7t4kzD2YIWC5qlLAk48cI-SnjzR-_5Hf9xX6J2wK2JoVfxtzXlQIHVBs18gRCtFGITxZZXCKiOHZuhdlumXscYpyjbcB0RpfrZ5U2Sr50A8aejCxkrKmqOVgsA7nOxzsG7iCH9__tu1FeMMRwe1-c6027rxSB3ib1x_hFfQxQb1yE9AeU4C8WOjJag1y7PrkW_g5Pm3J9WJx2Ep2uH8jPs294PxIFbkZif0Y9I3J1J3qFHJdVr_-jJK8C0uOTr0XBprDbwzXtlsGjSruyvuJ6eY0661qcQWd8nFO_guCOVdXYJ1gBsxtV1w54l-loxkR1rSqC9kKZ3SCK2MyMjgrwHuQ0-iTqnbwl4rVsqQaLcwIjzbLzwvbtv-pcxSI4FyMH11OdDJr1uVTkpLXR4BNglerkXdQSlL6SxJh-zinOIWTYvSK9uB6rmT8nY2-byhuY7cNZfFRQsujqRramH1E0weud0ZQhi7AFQ2DjIM6_AApa7n2U_ReKrQuk_t_nKbERw)
 
 ```mermaid
 classDiagram
-    hidImplementation <--> clutchState: configuration
     hidImplementation --> inputs: command to calibrate analog axes
     hidImplementation --> power: command to recalibrate battery
     hidImplementation --> notify: connected, discovering
@@ -99,13 +111,13 @@ classDiagram
     clutchState --> notify: bite point
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9kbFuxCAMhl8FMedeIKo6tUOnDreyOGASS2BHxPQane7dS3Kt2gw9Jvj9f78tc7VeAtre-gTL8kIwFsiOTTsThbc8J8zICkrC5ul0ejY-VfXTuUnYGy8caaxlr_-HbRTxXHXZgJyBg1ExHhINjUQDDElGA5-4PMqY5YLlEFHwN2QAVSzrowAWpbjuUzN6xdCZQIuXDyzE453cmxzcu_IeY2eSXI5t_uzigAzUhFmI1bHtbMaSgULb8nXjnNWpTeZs364BI9Skzjq-NWudQwt7DaRSbK-lYmehqpxX9j_vu-f7r2wfIS14-wLihqBZ)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9kLFuwzAMRH9F0Oz8gIdO7dCpQ1YttETbBCRSkKgmRpB_r5wUaL2EE3G4e0fwZr0EtKP1EWp9J1gKJMemz0rhM-WICVlBSdicTm-GODeto_GSEnAwKsZDpKmAogGGKIuBK9ZXjCwXLAdEwT_IBKpYtlcAFqV52wnM6BXDYAJVL99YiJdn8lFycD-Ur3keTJTLscbHpn49697_PzJRF7IQq2M72IQlAYX-rtuec1bXfpmzY18DztCiOuv43q3QVM4beztqaTjYlkOH_z74KH4EUilP7f4DXRmMXw)
 
-Many modules have a `begin()` method that must be called at system startup (`main()`or `setup()`). The calling order is defined by the previous diagram, where bottom modules must be called first.
+Some modules have a `begin()` method that must be called at system startup (`main()`or `setup()`). The calling order is defined by the previous diagram, where bottom modules must be called first.
 
 ### Definitions (header files)
 
-All header files can be found at the `/include` folder.
+All header files can be found at the [/include](../../src/include/) folder.
 Most relevant are:
 
 - **SimWheel.h**: definition of all modules (namespaces).
@@ -114,26 +126,35 @@ Most relevant are:
 
 ## Brief description of most relevant modules
 
-For detailed description, see the doxigen's documentation at *SimWheel.h*.
+For detailed description, see the doxigen's documentation at [SimWheel.h](../../src/include/SimWheel.h).
 
 ### DigitalPolledInput and descendant classes
 
-There is a dedicated daemon that read the state of those inputs in a loop, every few milliseconds. Since many inputs are read at the same time, the combined state of all of them is reported to `inputHub` or `clutchSate`. Nothing is reported if there are no input events, this is, a state change since the previous iteration.
+There is a dedicated daemon that read the state of those inputs in a loop, every few milliseconds. Since many inputs are read at the same time, the combined state of all of them is reported to `inputHub`. Nothing is reported if there are no input events, this is, a state change since the previous iteration.
 
 ### AnalogPolledInput
 
-It works in a similar way to `DigitalPolledInput`, but for analog inputs, which are limited to two clutch paddles with potentiometers. Changes are notified to `clutchSate`.
+It works in a similar way to `DigitalPolledInput`, but for analog inputs, which are limited to two clutch paddles with potentiometers.
 
 ### Inputs
 
-This is the place where inputs are set up and a number assigned to them. The assigned input number will be reported to the hosting computer when needed.
+This is the place where inputs are set up and a number assigned to them.
 Use the `add*()` methods to set up any kind of inputs (button matrices, rotary encoders, etc) and their pins.
-Analog or digital clutch paddles are set here, too.
+Analog clutch paddles are set here, too.
+
+The assigned input number is mapped to a user-defined HID button number, which will be reported to the hosting computer when needed. If there is no user-defined map, dafaults to the following rule:
+
+```text
+if (alt mode enabled) then
+   HID button number = raw input number + 64
+else
+   HID button number = raw input number
+```
 
 ### InputHub and clutchState
 
 Almost all the logic behind the behavior of the sim wheel is implemented at these modules.
-Wheel's functions are mapped to input numbers at `InputHub`, using the `set*()` methods.
+Wheel's functions are mapped to input numbers at `InputHub`.
 
 ### Capabilities
 
@@ -230,7 +251,7 @@ See [HID notes](./HID_notes.md) for more details.
 
 ## About digital inputs and input events
 
-Every input is assigned a single number starting from 0 and up to 63.
+Every hardware input is assigned a single number starting from 0 and up to 63.
 
 The state of an input is represented by a single bit, 1 meaning a pressed button, 0 meaning a released button. So, the combined state of all inputs is represented as a 64-bits word, where the n-th bit represents the n-th input number. This is called an *input bitmap*. Least significant bit is numbered as zero.
 For example, the word `00000000 ... 00000101` means that buttons 0 and 2 are pressed, and the others are released.
@@ -239,7 +260,7 @@ An input can also be identified by a bitmap. For example, the button number 3 ca
 
 ### Input masks
 
-A mask is a 64-bits word where each bit represent a button number (the same as input bitmaps), but a bit set to 1 means that an input is not set and *must be ignored* in the corresponding bitmap. Input masks are used in combination with bitmaps to build a combined state. For example:
+A mask is a 64-bits word where each bit represent an input number (the same as input bitmaps), but a bit set to 1 means that an input is not set and *must be ignored* in the corresponding bitmap. Input masks are used in combination with bitmaps to build a combined state. For example:
 
 | State              | Bitmap   | Bitmask  |
 | ------------------ | -------- | -------- |
@@ -251,7 +272,7 @@ where `bitmap(C) = bitmap(B) OR (bitmask(B) AND bitmap(A))` being AND/OR bitwise
 
 ### Event processing
 
-Input events are captured in the **Input poll daemon**: it checks the state of all inputs every 50 ms. This period is short enough not to miss any event, but long enough to prevent other threads from starvation.
+Input events are captured in the **Input poll daemon**: it checks the state of all inputs every 50 ms (more or less). This period is short enough not to miss any event, but long enough to prevent other threads from starvation.
 
 Event processing takes long, so later input events would be missed while processing sooner ones. To prevent this, input events are posted into a queue.
 

@@ -1,4 +1,6 @@
 /**
+ * @file hidImplementation_USB.cpp
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2023-10-24
  * @brief Implementation of a HID device through the tinyUSB stack
@@ -17,10 +19,6 @@
 #include "HID_definitions.h"
 #include "USB.h"
 #include "USBHID.h"
-
-// #if ARDUINO_USB_MODE
-//     #error In ARDUINO-IDE set USB Mode: USB-OTG (TinyUSB)
-// #endif
 
 // ----------------------------------------------------------------------------
 // USB classes
@@ -50,8 +48,8 @@ class SimWheelHIDImpl : public USBHIDDevice
         else if ((report_id == RID_FEATURE_CONFIG) && (len >= CONFIG_REPORT_SIZE))
         {
 
-            buffer[0] = (uint8_t)clutchState::currentFunction;
-            buffer[1] = (uint8_t)clutchState::altModeForAltButtons;
+            buffer[0] = (uint8_t)clutchState::cpWorkingMode;
+            buffer[1] = (uint8_t)clutchState::altButtonsWorkingMode;
             buffer[2] = (uint8_t)clutchState::bitePoint;
             buffer[3] = (uint8_t)power::getLastBatteryLevel();
             return CONFIG_REPORT_SIZE;
@@ -67,12 +65,12 @@ class SimWheelHIDImpl : public USBHIDDevice
             if ((len > 0) && (buffer[0] >= CF_CLUTCH) && (buffer[0] <= CF_BUTTON))
             {
                 // clutch function
-                clutchState::setFunction((clutchFunction_t)buffer[0]);
+                clutchState::setCPWorkingMode((clutchFunction_t)buffer[0]);
             }
             if ((len > 1) && (buffer[1] != 0xff))
             {
                 // ALT Buttons mode
-                clutchState::setALTModeForALTButtons((bool)buffer[1]);
+                clutchState::setALTButtonsWorkingMode((bool)buffer[1]);
             }
             if ((len > 2) && ((clutchValue_t)buffer[2] >= CLUTCH_NONE_VALUE) && ((clutchValue_t)buffer[2] <= CLUTCH_FULL_VALUE))
             {
@@ -86,12 +84,11 @@ class SimWheelHIDImpl : public USBHIDDevice
             }
             if ((len > 3) && (buffer[3] == (uint8_t)simpleCommands_t::CMD_BATT_RECALIBRATE))
             {
-                // Restart auto calibration algoritm
+                // Restart auto calibration algorithm
                 batteryCalibration::restartAutoCalibration();
             }
         }
     };
-
 };
 
 // ----------------------------------------------------------------------------
@@ -117,7 +114,7 @@ void hidImplementation::begin(
         USB.manufacturerName(deviceManufacturer.c_str());
         USB.usbClass(0x03); // HID device class
         USB.usbSubClass(0); // No subclass
-        hid.addDevice(&simWheelHID,sizeof(hid_descriptor));
+        hid.addDevice(&simWheelHID, sizeof(hid_descriptor));
         hid.begin();
         USB.begin();
         notify::connected();
@@ -154,65 +151,33 @@ void hidImplementation::reset()
         report[17] = CLUTCH_NONE_VALUE;
         report[18] = CLUTCH_NONE_VALUE;
         report[19] = 0;
-        hid.SendReport(RID_INPUT_GAMEPAD,report, GAMEPAD_REPORT_SIZE);
+        hid.SendReport(RID_INPUT_GAMEPAD, report, GAMEPAD_REPORT_SIZE);
     }
 }
 
 void hidImplementation::reportInput(
-    inputBitmap_t globalState,
-    bool altEnabled,
-    uint8_t POVstate = 0)
+    inputBitmap_t inputsLow,
+    inputBitmap_t inputsHigh,
+    uint8_t POVstate,
+    clutchValue_t leftAxis,
+    clutchValue_t rightAxis,
+    clutchValue_t clutchAxis)
 {
     if (hid.ready())
     {
         uint8_t report[GAMEPAD_REPORT_SIZE];
-        if (altEnabled)
-        {
-            report[0] = 0;
-            report[1] = 0;
-            report[2] = 0;
-            report[3] = 0;
-            report[4] = 0;
-            report[5] = 0;
-            report[6] = 0;
-            report[7] = 0;
-            report[8] = ((uint8_t *)&globalState)[0];
-            report[9] = ((uint8_t *)&globalState)[1];
-            report[10] = ((uint8_t *)&globalState)[2];
-            report[11] = ((uint8_t *)&globalState)[3];
-            report[12] = ((uint8_t *)&globalState)[4];
-            report[13] = ((uint8_t *)&globalState)[5];
-            report[14] = ((uint8_t *)&globalState)[6];
-            report[15] = ((uint8_t *)&globalState)[7];
-        }
-        else
-        {
-            report[0] = ((uint8_t *)&globalState)[0];
-            report[1] = ((uint8_t *)&globalState)[1];
-            report[2] = ((uint8_t *)&globalState)[2];
-            report[3] = ((uint8_t *)&globalState)[3];
-            report[4] = ((uint8_t *)&globalState)[4];
-            report[5] = ((uint8_t *)&globalState)[5];
-            report[6] = ((uint8_t *)&globalState)[6];
-            report[7] = ((uint8_t *)&globalState)[7];
-            report[8] = 0;
-            report[9] = 0;
-            report[10] = 0;
-            report[11] = 0;
-            report[12] = 0;
-            report[13] = 0;
-            report[14] = 0;
-            report[15] = 0;
-        }
-        report[16] = (uint8_t)clutchState::combinedAxis;
-        report[17] = (uint8_t)clutchState::leftAxis;
-        report[18] = (uint8_t)clutchState::rightAxis;
+        *((inputBitmap_t *)&report) = inputsLow;
+        *((inputBitmap_t *)(&report + sizeof(inputsLow))) = inputsHigh;
+        report[16] = (uint8_t)clutchAxis;
+        report[17] = (uint8_t)leftAxis;
+        report[18] = (uint8_t)rightAxis;
         report[19] = POVstate;
-        if (notifyConfigChanges) {
+        if (notifyConfigChanges)
+        {
             report[19] |= (RID_FEATURE_CONFIG << 4);
             notifyConfigChanges = false;
         }
-        hid.SendReport(RID_INPUT_GAMEPAD,report, GAMEPAD_REPORT_SIZE);
+        hid.SendReport(RID_INPUT_GAMEPAD, report, GAMEPAD_REPORT_SIZE);
     }
 }
 
