@@ -51,8 +51,8 @@ void setup()
     Serial.begin(115200);
     Serial.println("-- READY --");
 
-    rotaries = new RotaryEncoderInput(TEST_ROTARY_ALPS_A, TEST_ROTARY_ALPS_B, 5, 6, true);
     rotaries = new RotaryEncoderInput(TEST_ROTARY_CLK, TEST_ROTARY_DT, 5, 6, false, rotaries);
+    rotaries = new RotaryEncoderInput(TEST_ROTARY_ALPS_A, TEST_ROTARY_ALPS_B, 0, 1, true, rotaries);
 
     mask = RotaryEncoderInput::getChainMask(rotaries);
     Serial.println("-- GO --");
@@ -60,7 +60,7 @@ void setup()
 
 void loop()
 {
-    inputBitmap_t newState = rotaries->read(globalState);
+    inputBitmap_t newState = RotaryEncoderInput::readInChain(globalState, rotaries);
     if (globalState != newState)
     {
         notifyInputEvent(mask, newState);
