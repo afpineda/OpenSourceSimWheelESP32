@@ -12,9 +12,13 @@
 #include "debugUtils.h"
 #include <Arduino.h>
 
-void debugPrintBool(inputBitmap_t state)
+void debugPrintBool(inputBitmap_t state, uint8_t bitCount)
 {
-    for (int i=((sizeof(inputBitmap_t)*8)-1); i>=0; i--) {
+    int maxBitCount = (sizeof(inputBitmap_t) * 8);
+    if ((bitCount == 0) || (bitCount > maxBitCount))
+        bitCount = maxBitCount;
+    for (int i = (bitCount - 1); i >= 0; i--)
+    {
         if (BITMAP(i) & state)
             Serial.print("1");
         else

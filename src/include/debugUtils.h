@@ -15,7 +15,7 @@
 #include <Arduino.h>
 #include "SimWheelTypes.h"
 
-void debugPrintBool(inputBitmap_t state);
+void debugPrintBool(inputBitmap_t state, uint8_t bitsCount = 0);
 void printTestHeader(int index);
 void serialPrintf(const char *fmt, ...);
 

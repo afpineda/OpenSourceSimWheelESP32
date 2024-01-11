@@ -17,15 +17,15 @@
 // Globals
 //------------------------------------------------------------------
 
-static bool inMenu = false;
+// Note: Do not assign an input number greater than 15 in this test
 #define LEFT_CLUTCH_IN 0
 #define RIGHT_CLUTCH_IN 1
-#define ALT_IN 10
-#define CW_IN 12
-#define CCW_IN 13
 #define COMMAND_IN 2
 #define CYCLE_ALT_IN 3
 #define CYCLE_CLUTCH_IN 4
+#define ALT_IN 10
+#define CW_IN 12
+#define CCW_IN 13
 
 clutchFunction_t oldCP;
 bool oldAltF;
@@ -42,22 +42,15 @@ void hidImplementation::reportInput(
     clutchValue_t rightAxis,
     clutchValue_t clutchAxis)
 {
-    inputBitmap_t globalState = inputsLow;
-    bool altEnabled = false;
-    if (inputsLow == 0ULL)
-    {
-        altEnabled = true;
-        globalState = inputsHigh;
-    }
-    debugPrintBool(globalState);
-    serialPrintf(" | %d | %d | %d || %d",
-                 clutchAxis,
-                 leftAxis,
-                 rightAxis,
-                 userSettings::bitePoint);
-    if (altEnabled)
-        Serial.print(" (ALT)");
-    Serial.println("");
+    Serial.print("...");
+    debugPrintBool(inputsHigh, 16);
+    Serial.print(" ...");
+    debugPrintBool(inputsLow, 16);
+    Serial.printf(" | %3.3d | %3.3d | %3.3d || %3.3d\n",
+                  leftAxis,
+                  rightAxis,
+                  clutchAxis,
+                  userSettings::bitePoint);
 }
 
 void hidImplementation::reset()

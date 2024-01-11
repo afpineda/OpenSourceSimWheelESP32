@@ -27,6 +27,7 @@
 static DigitalPolledInput *digitalInputChain = nullptr;
 static AnalogAxisInput *leftClutchAxis = nullptr;
 static AnalogAxisInput *rightClutchAxis = nullptr;
+static inputBitmap_t assignedInputsBitmap = 0ULL;
 
 // Related to the polling task
 
@@ -142,7 +143,7 @@ void inputPollingLoop(void *param)
   bool stateChanged;
   currentState.leftAxisValue = CLUTCH_NONE_VALUE;
   currentState.rightAxisValue = CLUTCH_NONE_VALUE;
-  currentState.rawInputBitmap = 0;
+  currentState.rawInputBitmap = 0ULL;
   currentState.axesAvailable = (leftClutchAxis != nullptr);
   previousState = currentState;
 
@@ -219,10 +220,34 @@ void abortDueToCallAfterStart()
   abort();
 }
 
-void abortDueToInvalidInputNumber()
+// void abortDueToInvalidInputNumber()
+// {
+//   log_e("invalid input or pin numbers at inputs::add*() or inputs::set*()");
+//   abort();
+// }
+
+// ----------------------------------------------------------------------------
+
+void checkInputNumber(inputNumber_t number)
 {
-  log_e("invalid input or pin numbers at inputs::add*() or inputs::set*()");
-  abort();
+  inputBitmap_t bmp = BITMAP(number);
+  if (number > MAX_INPUT_NUMBER)
+  {
+    log_e("Input number out of range");
+    abort();
+  }
+  else if (bmp & assignedInputsBitmap)
+  {
+    log_e("Input number already in use");
+    abort();
+  }
+  assignedInputsBitmap |= bmp;
+}
+
+void checkInputNumbers(int count, inputNumber_t numbers[])
+{
+  for (int i = 0; i < count; i++)
+    checkInputNumber(numbers[i]);
 }
 
 // ----------------------------------------------------------------------------
@@ -235,15 +260,13 @@ void inputs::addDigital(
 {
   if ((!pollingTask) && (!hubTask))
   {
-    if (inputNumber <= MAX_INPUT_NUMBER)
-      digitalInputChain = new DigitalButton(
-          pinNumber,
-          inputNumber,
-          pullupOrPulldown,
-          enableInternalPull,
-          digitalInputChain);
-    else
-      abortDueToInvalidInputNumber();
+    checkInputNumber(inputNumber);
+    digitalInputChain = new DigitalButton(
+        pinNumber,
+        inputNumber,
+        pullupOrPulldown,
+        enableInternalPull,
+        digitalInputChain);
   }
   else
     abortDueToCallAfterStart();
@@ -260,18 +283,13 @@ void inputs::addRotaryEncoder(
 {
   if ((!pollingTask) && (!hubTask))
   {
-    if ((cwInputNumber <= MAX_INPUT_NUMBER) &&
-        (ccwInputNumber <= MAX_INPUT_NUMBER) &&
-        (cwInputNumber != ccwInputNumber))
-    {
-      esp_err_t err = gpio_install_isr_service(0);
-      if (err != ESP_ERR_INVALID_STATE)
-        ESP_ERROR_CHECK(err);
-      digitalInputChain = new RotaryEncoderInput(
-          clkPin, dtPin, cwInputNumber, ccwInputNumber, useAlternateEncoding, digitalInputChain);
-    }
-    else
-      abortDueToInvalidInputNumber();
+    checkInputNumber(cwInputNumber);
+    checkInputNumber(ccwInputNumber);
+    esp_err_t err = gpio_install_isr_service(0);
+    if (err != ESP_ERR_INVALID_STATE)
+      ESP_ERROR_CHECK(err);
+    digitalInputChain = new RotaryEncoderInput(
+        clkPin, dtPin, cwInputNumber, ccwInputNumber, useAlternateEncoding, digitalInputChain);
   }
   else
     abortDueToCallAfterStart();
@@ -288,6 +306,7 @@ void inputs::addButtonMatrix(
 {
   if ((!pollingTask) && (!hubTask))
   {
+    checkInputNumbers(selectorPinCount * inputPinCount, buttonNumbersArray);
     digitalInputChain = new ButtonMatrixInput(
         selectorPins,
         selectorPinCount,
@@ -310,6 +329,7 @@ void inputs::addAnalogMultiplexer(
 {
   if ((!pollingTask) && (!hubTask))
   {
+    checkInputNumbers((1 << selectorPinCount) * inputPinCount, buttonNumbersArray);
     digitalInputChain = new AnalogMultiplexerInput(
         selectorPins,
         selectorPinCount,
@@ -332,6 +352,7 @@ void inputs::addShiftRegisters(
 {
   if ((!pollingTask) && (!hubTask))
   {
+    checkInputNumbers(switchCount, buttonNumbersArray);
     digitalInputChain = new ShiftRegistersInput(
         serialPin,
         loadPin,
