@@ -351,7 +351,7 @@ void inputs::setAnalogClutchPaddles(
     const gpio_num_t leftClutchPin,
     const gpio_num_t rightClutchPin)
 {
-  if ((!pollingTask) && (hubTask))
+  if ((!pollingTask) && (!hubTask))
   {
     if ((leftClutchPin != rightClutchPin) && (rightClutchAxis == nullptr) && (leftClutchAxis == nullptr))
     {
