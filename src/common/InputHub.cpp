@@ -390,7 +390,7 @@ void inputHub::setClutchInputNumbers(
         (rightClutchInputNumber <= MAX_INPUT_NUMBER) && (leftClutchInputNumber != rightClutchInputNumber))
     {
         leftClutchBitmap = BITMAP(leftClutchInputNumber);
-        rightClutchBitmap = BITMAP(rightClutchBitmap);
+        rightClutchBitmap = BITMAP(rightClutchInputNumber);
         clutchInputMask = ~(leftClutchBitmap | rightClutchBitmap);
         if (!capabilities::hasFlag(CAP_CLUTCH_ANALOG))
             capabilities::setFlag(CAP_CLUTCH_BUTTON);

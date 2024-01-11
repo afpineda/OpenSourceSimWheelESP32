@@ -474,7 +474,7 @@ namespace inputHub
      *
      * @param leftClutchInputNumber Input number for the left clutch
      * @param rightClutchInputNumber Input number for the right clutch.
-     *        Must differ from `leftClutchInputNumber`.
+     *                               Must differ from @p leftClutchInputNumber.
      */
     void setClutchInputNumbers(
         const inputNumber_t leftClutchInputNumber,
