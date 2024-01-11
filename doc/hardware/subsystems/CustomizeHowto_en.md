@@ -36,7 +36,12 @@ Arduino's sketch named [**CustomSetup**](../../../src/Firmware/CustomSetup/Custo
 
 2. Configure inputs:
 
-   As shown for each subsystem, a call to a function in the `inputs` namespace will enable them. You must also assign an "input number" to each input, in the range from 0 to 63. Each input number maps to a certain position in a pin header at your hardware design. Some input numbers have a concrete meaning in the hosting PC.
+   As shown for each subsystem, a call to a function in the `inputs` namespace will enable them.
+   You must also assign a unique "input number" to each input, **in the range from 0 to 63**.
+   Each input number corresponds to a certain position in a pin header in your hardware design.
+   Some input numbers have a certain meaning in the hosting PC.
+   You are **not** allowed to assign the same input number to two different inputs.
+   If you fail to provide valid input numbers, the firmware will not boot up.
 
 3. Map certain input numbers to specific functions, as explained below. Edit the body of `simWheelSetup()` and place the required calls at the end of it. All of those mappings are optional, but take care not to build a dis functional firmware. Do not assign two functions to the same input numbers. Where available, do not use a combination of input numbers which can not be activated at the same time. Do not map a specific function to non-existent input numbers.
 
