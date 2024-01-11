@@ -25,6 +25,7 @@
 #define DOWN 8
 #define LEFT 9
 #define RIGHT 10
+#define OTHER 20
 
 #define BMP_CYCLE_CLUTCH BITMAP(CMD) | BITMAP(CYCLE_CLUTCH)
 #define BMP_CYCLE_ALT BITMAP(CMD) | BITMAP(CYCLE_ALT)
@@ -108,6 +109,8 @@ void InputSimulator::axis(clutchValue_t left, clutchValue_t right)
 uint8_t currentPOV = 0;
 bool currentALTEnabled = false;
 inputBitmap_t currentState = 0ULL;
+inputBitmap_t currentLow = 0ULL;
+inputBitmap_t currentHigh = 0ULL;
 clutchValue_t currentClutch = CLUTCH_NONE_VALUE;
 clutchValue_t currentLeftAxis = CLUTCH_NONE_VALUE;
 clutchValue_t currentRightAxis = CLUTCH_NONE_VALUE;
@@ -127,12 +130,14 @@ void hidImplementation::reportInput(
     clutchValue_t rightAxis,
     clutchValue_t clutchAxis)
 {
-    currentALTEnabled = (inputsLow == 0ULL);
-    currentState = currentALTEnabled ? inputsHigh : inputsLow;
+    currentLow = inputsLow;
+    currentHigh = inputsHigh;
     currentPOV = POVstate;
     currentClutch = clutchAxis;
     currentLeftAxis = leftAxis;
     currentRightAxis = rightAxis;
+    currentALTEnabled = (inputsLow == 0ULL) && (inputsHigh != 0ULL);
+    currentState = currentALTEnabled ? inputsHigh : inputsLow;
     // Serial.println(".");
 }
 
@@ -163,7 +168,10 @@ void assertEquals(const char *text, T expected, T found)
 {
     if (expected != found)
     {
-        serialPrintf("[assertEquals] (%s). Expected: %d, found: %d\n", text, expected, found);
+        if (sizeof(T) <= 4)
+            serialPrintf("[assertEquals] (%s). Expected: %d, found: %d\n", text, expected, found);
+        else
+            serialPrintf("[assertEquals] (%s). Expected: %lld, found: %lld\n", text, expected, found);
     }
 }
 
@@ -174,7 +182,10 @@ void assertAlmostEquals(const char *text, T expected, T found, T tolerance)
     T upperLimit = expected + tolerance;
     if ((found < lowerLimit) || (found > upperLimit))
     {
-        serialPrintf("[assertAlmostEquals] (%s). Expected: %d, found: %d\n", text, expected, found);
+        if (sizeof(T) <= 4)
+            serialPrintf("[assertAlmostEquals] (%s). Expected: %d, found: %d\n", text, expected, found);
+        else
+            serialPrintf("[assertAlmostEquals] (%s). Expected: %lld, found: %lld\n", text, expected, found);
     }
 }
 
@@ -194,11 +205,79 @@ void inputs::update()
 // Test groups for easier maintenance
 //------------------------------------------------------------------
 
+void TG_altEngagement()
+{
+    // Send input for ALT engagement: clutch paddles in ALT mode and ALT buttons in ALT mode,
+    // test that ALT is engaged
+    input.release();
+    userSettings::setCPWorkingMode(CF_ALT);
+    userSettings::setALTButtonsWorkingMode(true);
+    input.hasAnalogAxes = true;
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
+
+    // With ALT button
+    input.push(ALT);
+    assertEquals<inputBitmap_t>("ALT, inputs state low", 0ULL, currentLow);
+    assertEquals<inputBitmap_t>("ALT, inputs state high", 0ULL, currentHigh);
+    input.push(OTHER);
+    assertEquals<inputBitmap_t>("ALT+OTHER, inputs state low", 0ULL, currentLow);
+    assertEquals<inputBitmap_t>("ALT+OTHER, inputs state high", BITMAP(OTHER), currentHigh);
+    input.release();
+    assertEquals<inputBitmap_t>("ALT release, inputs state low", 0ULL, currentLow);
+    assertEquals<inputBitmap_t>("ALT release, inputs state high", 0ULL, currentHigh);
+
+    // With analog clutch paddles
+    input.axis(CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
+    assertEquals<inputBitmap_t>("Analog paddle, inputs state low", 0ULL, currentLow);
+    assertEquals<inputBitmap_t>("Analog paddle, inputs state high", 0ULL, currentHigh);
+    assertEquals<clutchValue_t>("Analog paddle, left axis", CLUTCH_NONE_VALUE, currentLeftAxis);
+    input.push(OTHER);
+    assertEquals<inputBitmap_t>("Analog paddle+OTHER, inputs state low", 0ULL, currentLow);
+    assertEquals<inputBitmap_t>("Analog paddle+OTHER, inputs state high", BITMAP(OTHER), currentHigh);
+    input.release();
+    assertEquals<inputBitmap_t>("Analog release, inputs state low", 0ULL, currentLow);
+    assertEquals<inputBitmap_t>("Analog release, inputs state high", 0ULL, currentHigh);
+
+    // With digital clutch paddles
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
+    input.hasAnalogAxes = false;
+    input.push(LCLUTCH);
+    assertEquals<inputBitmap_t>("Digital paddle, inputs state low", 0ULL, currentLow);
+    assertEquals<inputBitmap_t>("Digital paddle, inputs state high", 0ULL, currentHigh);
+    input.push(OTHER);
+    assertEquals<inputBitmap_t>("Digital paddle+OTHER, inputs state low", 0ULL, currentLow);
+    assertEquals<inputBitmap_t>("Digital paddle+OTHER, inputs state high", BITMAP(OTHER), currentHigh);
+    input.release();
+    assertEquals<inputBitmap_t>("Digital release, inputs state low", 0ULL, currentLow);
+    assertEquals<inputBitmap_t>("Digital release, inputs state high", 0ULL, currentHigh);
+    input.hasAnalogAxes = true;
+}
+
+void TG_altInButtonsMode()
+{
+    // Simulate ALT button usage while in "regular buttons" mode
+    userSettings::setCPWorkingMode(CF_CLUTCH);
+    input.release();
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
+    userSettings::setALTButtonsWorkingMode(false);
+    input.push(ALT);
+    assertEquals<inputBitmap_t>("ALT push, buttons mode, low", ALT_B, currentLow);
+    assertEquals<inputBitmap_t>("ALT push, buttons mode, high", 0ULL, currentHigh);
+    input.push(OTHER);
+    assertEquals<inputBitmap_t>("ALT+OTHER, buttons mode, low", ALT_B | BITMAP(OTHER), currentLow);
+    assertEquals<inputBitmap_t>("ALT+OTHER, buttons mode, high", 0ULL, currentHigh);
+    input.release();
+    assertEquals<inputBitmap_t>("release, buttons mode, low", 0ULL, currentLow);
+    assertEquals<inputBitmap_t>("release, buttons mode, high", 0ULL, currentHigh);
+}
+
 void TG_POV_validInput()
 {
     // Simulate a single push of each DPAD direction,
     // test POV is detected,
     // test their input numbers are NOT detected.
+    input.release();
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     pushAssertEqualsRelease<uint8_t>(UP_B, "UP_B", 1, &currentPOV);
     pushAssertEqualsRelease<uint8_t>(DOWN_B, "DOWN_B", 5, &currentPOV);
     pushAssertEqualsRelease<uint8_t>(LEFT_B, "LEFT_B", 7, &currentPOV);
@@ -218,6 +297,8 @@ void TG_POV_invalidInput()
     // Simulate impossible DPAD input,
     // test POV is NOT detected,
     // test their input numbers are NOT detected.
+    input.release();
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     pushAssertEqualsRelease<uint8_t>(UP_B | DOWN_B, "UP_B | DOWN_B", 0, &currentPOV);
     pushAssertEqualsRelease<uint8_t>(LEFT_B | RIGHT_B, "LEFT_B | RIGHT_B", 0, &currentPOV);
     input.pushSeveral(UP_B | DOWN_B);
@@ -233,6 +314,9 @@ void TG_POV_whileAlt()
     // test POV is NOT detected,
     // test DPAD input numbers ARE detected
     userSettings::setALTButtonsWorkingMode(true);
+    userSettings::setCPWorkingMode(CF_CLUTCH);
+    input.release();
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     input.push(ALT);
     assertEquals<inputBitmap_t>("ALT filtered state", 0, currentState);
     input.push(UP);
@@ -250,6 +334,7 @@ void TG_POV_whileAlt()
 void TG_cycleAlt()
 {
     // Cycle working mode of ALT buttons
+    userSettings::setCPWorkingMode(CF_CLUTCH);
     userSettings::setALTButtonsWorkingMode(true);
     pushAssertEqualsRelease<bool>(BMP_CYCLE_ALT, "Cycle alt 1", false, (bool *)&userSettings::altButtonsWorkingMode);
     pushAssertEqualsRelease<bool>(BMP_CYCLE_ALT, "Cycle alt 2", true, (bool *)&userSettings::altButtonsWorkingMode);
@@ -365,7 +450,7 @@ void TG_digitalClutchInAxisMode()
     // Simulate operation of digital clutch paddles in axis mode,
     // test that analog axes are detected
     // test that buttons are not detected
-     userSettings::setCPWorkingMode(CF_AXIS);
+    userSettings::setCPWorkingMode(CF_AXIS);
     input.hasAnalogAxes = false;
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     input.release();
@@ -389,6 +474,54 @@ void TG_digitalClutchInAxisMode()
     assertEquals<clutchValue_t>("(4) right", (clutchValue_t)CLUTCH_NONE_VALUE, currentRightAxis);
     assertEquals<inputBitmap_t>("(4) state", 0ULL, currentState);
     input.hasAnalogAxes = true;
+}
+
+void TG_digitalClutchInButtonsMode()
+{
+    // Simulate operation of digital clutch paddles in buttons mode,
+    // test that analog axes are not detected
+    // test that buttons are detected
+    userSettings::setCPWorkingMode(CF_BUTTON);
+    input.hasAnalogAxes = false;
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
+    input.release();
+    assertEquals<clutchValue_t>("(1) clutch", (clutchValue_t)CLUTCH_NONE_VALUE, currentClutch);
+    assertEquals<clutchValue_t>("(1) axis", (clutchValue_t)CLUTCH_NONE_VALUE, currentLeftAxis);
+    assertEquals<inputBitmap_t>("(1) state", 0ULL, currentState);
+    input.push(LCLUTCH);
+    assertEquals<clutchValue_t>("(2) clutch", (clutchValue_t)CLUTCH_NONE_VALUE, currentClutch);
+    assertEquals<clutchValue_t>("(2) axis", (clutchValue_t)CLUTCH_NONE_VALUE, currentLeftAxis);
+    assertEquals<inputBitmap_t>("(2) state", BITMAP(LCLUTCH), currentState);
+    input.push(RCLUTCH);
+    assertEquals<clutchValue_t>("(3) clutch", (clutchValue_t)CLUTCH_NONE_VALUE, currentClutch);
+    assertEquals<clutchValue_t>("(3) axis", (clutchValue_t)CLUTCH_NONE_VALUE, currentLeftAxis);
+    assertEquals<inputBitmap_t>("(3) state", BITMAP(RCLUTCH) | BITMAP(LCLUTCH), currentState);
+    input.release(LCLUTCH);
+    assertEquals<clutchValue_t>("(4) clutch", (clutchValue_t)CLUTCH_NONE_VALUE, currentClutch);
+    assertEquals<clutchValue_t>("(4) axis", (clutchValue_t)CLUTCH_NONE_VALUE, currentLeftAxis);
+    assertEquals<inputBitmap_t>("(4) state", BITMAP(RCLUTCH), currentState);
+    input.release();
+}
+
+void TG_analogClutchInAxisMode()
+{
+    // Simulate operation of analog clutch paddles in axis mode,
+    // test that analog axes are detected,
+    // test that combined clutch axis is not detected
+    // test that buttons are not detected
+    userSettings::setCPWorkingMode(CF_AXIS);
+    input.hasAnalogAxes = true;
+    input.release();
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
+    assertEquals<clutchValue_t>("(1) clutch", (clutchValue_t)CLUTCH_NONE_VALUE, currentClutch);
+    assertEquals<clutchValue_t>("(1) left", (clutchValue_t)CLUTCH_NONE_VALUE, currentLeftAxis);
+    assertEquals<clutchValue_t>("(1) right", (clutchValue_t)CLUTCH_NONE_VALUE, currentRightAxis);
+    assertEquals<inputBitmap_t>("(1) state", 0ULL, currentState);
+    input.axis(CLUTCH_1_4_VALUE, CLUTCH_3_4_VALUE);
+    assertEquals<clutchValue_t>("(2) clutch", (clutchValue_t)CLUTCH_NONE_VALUE, currentClutch);
+    assertEquals<clutchValue_t>("(2) left", (clutchValue_t)CLUTCH_1_4_VALUE, currentLeftAxis);
+    assertEquals<clutchValue_t>("(2) right", (clutchValue_t)CLUTCH_3_4_VALUE, currentRightAxis);
+    assertEquals<inputBitmap_t>("(2) state", 0ULL, currentState);
 }
 
 void TG_repeatedCommand()
@@ -433,6 +566,12 @@ void setup()
 
     assertEquals<inputBitmap_t>("state at start", 0, currentState);
 
+    Serial.println("- simulate ALT engagement with clutch paddles or buttons -");
+    TG_altEngagement();
+
+    Serial.println("- simulate ALT button input when working mode is regular button -");
+    TG_altInButtonsMode();
+
     Serial.println("- simulate POV operation (valid input) -");
     TG_POV_validInput();
 
@@ -448,7 +587,7 @@ void setup()
     Serial.println("- simulate cycle clutch function -");
     TG_cycleClutchWorkingMode();
 
-    Serial.println("- simulate explicit selection of clutch function -");
+    Serial.println("- simulate explicit selection of clutch working mode -");
     TG_selectClutchWorkingMode();
 
     Serial.println("- simulate non-mapped button combinations -");
@@ -465,6 +604,12 @@ void setup()
 
     Serial.println("- simulate digital clutch operation in axis mode -");
     TG_digitalClutchInAxisMode();
+
+    Serial.println("- simulate digital clutch operation in buttons mode -");
+    TG_digitalClutchInButtonsMode();
+
+    Serial.println("- simulate analog clutch operation in axis mode -");
+    TG_analogClutchInAxisMode();
 
     Serial.println("- simulate repeated input without real change in inputs state -");
     TG_repeatedCommand();

@@ -266,7 +266,7 @@ void inputHub_combinedAxis_filter(
 // ----------------------------------------------------------------------------
 
 /**
- * @brief Check if ALT mode is requested by the user
+ * @brief Check if ALT mode is engaged by the user
  *
  */
 void inputHub_AltRequest_filter(
@@ -282,11 +282,15 @@ void inputHub_AltRequest_filter(
     }
     if (userSettings::cpWorkingMode == CF_ALT)
     {
+        isAltRequested =
+            isAltRequested ||
+            (leftAxis >= CLUTCH_DEFAULT_VALUE) ||
+            (rightAxis >= CLUTCH_DEFAULT_VALUE) ||
+            (rawInputBitmap & leftClutchBitmap) ||
+            (rawInputBitmap & rightClutchBitmap);
         leftAxis = CLUTCH_NONE_VALUE;
         rightAxis = CLUTCH_NONE_VALUE;
-        isAltRequested = isAltRequested ||
-                         (leftAxis >= CLUTCH_DEFAULT_VALUE) ||
-                         (rightAxis >= CLUTCH_DEFAULT_VALUE);
+        rawInputBitmap &= clutchInputMask;
     }
 }
 
@@ -365,13 +369,13 @@ void inputHub ::onRawInput(
     // TO DO: apply user defined map
     if (isALTRequested)
     {
-        inputsLow = 0;
+        inputsLow = 0ULL;
         inputsHigh = rawInputBitmap;
     }
     else
     {
         inputsLow = rawInputBitmap;
-        inputsHigh = 0;
+        inputsHigh = 0ULL;
     }
 
     // Step 8: send HID report
