@@ -18,6 +18,7 @@ To test that:
 - When clutch working mode is set to "individual axes":
   - Digital clutch state is properly translated into an axis position.
   - Analog clutch position is properly reported as an axis position.
+- User-defined button map is applied.
 
 ## Hardware setup
 
@@ -37,8 +38,10 @@ Output through USB serial port at 115200 bauds. Connect before reset.
 - simulate POV operation (valid input) -
 - simulate POV operation (invalid input) -
 - simulate POV operation while ALT pushed -
-- simulate cycle ALT function -
-- simulate cycle clutch function -
+- simulate POV operation in buttons mode -
+- simulate cycle ALT working mode -
+- simulate cycle clutch working mode -
+- simulate cycle DPAD working mode -
 - simulate explicit selection of clutch working mode -
 - simulate non-mapped button combinations -
 - simulate bite point calibration -
@@ -48,5 +51,6 @@ Output through USB serial port at 115200 bauds. Connect before reset.
 - simulate digital clutch operation in buttons mode -
 - simulate analog clutch operation in axis mode -
 - simulate repeated input without real change in inputs state -
+- simulate input in user-defined buttons map -
 -- END --
 ```

@@ -32,6 +32,7 @@ typedef uint8_t inputNumber_t;
 
 #define UNSPECIFIED_INPUT_NUMBER 0xFF // Input number is not required or is implicit or is unknown
 #define MAX_INPUT_NUMBER 63           // Maximum allowed input number, including itself
+#define MAX_USER_INPUT_NUMBER 127     // Maximum allowed input number, including itself, in user-defined button maps
 
 // Well-known input numbers for PC game controllers
 #define JOY_A 0
@@ -148,11 +149,11 @@ typedef enum
  */
 typedef enum
 {
-    CAP_CLUTCH_BUTTON = 0,  /// has digital clutch paddles (switches)
-    CAP_CLUTCH_ANALOG = 1,  /// has analog clutch paddles (potentiometers)
-    CAP_ALT = 2,            /// has "ALT" buttons
-    CAP_DPAD = 3,           /// has a directional pad
-    CAP_BATTERY = 4,        /// battery-operated
+    CAP_CLUTCH_BUTTON = 0,                /// has digital clutch paddles (switches)
+    CAP_CLUTCH_ANALOG = 1,                /// has analog clutch paddles (potentiometers)
+    CAP_ALT = 2,                          /// has "ALT" buttons
+    CAP_DPAD = 3,                         /// has a directional pad
+    CAP_BATTERY = 4,                      /// battery-operated
     CAP_BATTERY_CALIBRATION_AVAILABLE = 5 // has battery calibration data
 } deviceCapability_t;
 
@@ -200,7 +201,7 @@ public:
     /**
      * @brief Draw a single frame.
      *        Called in a loop when no notifications are pending
-	 *        (from a separate thread).
+     *        (from a separate thread).
      *        Not called at all if `getTargetFPS()==0`.
      *        Must not enter a loop itself.
      */

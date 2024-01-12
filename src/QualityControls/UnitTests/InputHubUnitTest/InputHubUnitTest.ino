@@ -25,7 +25,11 @@
 #define DOWN 8
 #define LEFT 9
 #define RIGHT 10
+#define CYCLE_DPAD 11
 #define OTHER 20
+
+#define OTHER_MAP 126
+#define OTHER_MAP_ALT 21
 
 #define BMP_CYCLE_CLUTCH BITMAP(CMD) | BITMAP(CYCLE_CLUTCH)
 #define BMP_CYCLE_ALT BITMAP(CMD) | BITMAP(CYCLE_ALT)
@@ -33,6 +37,10 @@
 #define BMP_SELECT_ALT_F BITMAP(CMD) | BITMAP(DOWN)
 #define BMP_SELECT_AXIS_F BITMAP(CMD) | BITMAP(LEFT)
 #define BMP_SELECT_BUTTON_F BITMAP(CMD) | BITMAP(RIGHT)
+#define BMP_OTHER_MAP_LOW 0ULL
+#define BMP_OTHER_MAP_HIGH BITMAP(OTHER_MAP - 64)
+#define BMP_OTHER_MAP_ALT_LOW BITMAP(OTHER_MAP_ALT)
+#define BMP_OTHER_MAP_ALT_HIGH 0ULL
 
 #define ALT_B BITMAP(ALT)
 #define UP_B BITMAP(UP)
@@ -276,6 +284,7 @@ void TG_POV_validInput()
     // Simulate a single push of each DPAD direction,
     // test POV is detected,
     // test their input numbers are NOT detected.
+    userSettings::setDPADWorkingMode(true);
     input.release();
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     pushAssertEqualsRelease<uint8_t>(UP_B, "UP_B", 1, &currentPOV);
@@ -297,6 +306,7 @@ void TG_POV_invalidInput()
     // Simulate impossible DPAD input,
     // test POV is NOT detected,
     // test their input numbers are NOT detected.
+    userSettings::setDPADWorkingMode(true);
     input.release();
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     pushAssertEqualsRelease<uint8_t>(UP_B | DOWN_B, "UP_B | DOWN_B", 0, &currentPOV);
@@ -309,10 +319,11 @@ void TG_POV_invalidInput()
 
 void TG_POV_whileAlt()
 {
-    // Simulate DPAD operation in ALT mode,
+    // Simulate DPAD operation while ALT is engaged,
     // test ALT button is not detected,
     // test POV is NOT detected,
     // test DPAD input numbers ARE detected
+    userSettings::setDPADWorkingMode(true);
     userSettings::setALTButtonsWorkingMode(true);
     userSettings::setCPWorkingMode(CF_CLUTCH);
     input.release();
@@ -329,6 +340,25 @@ void TG_POV_whileAlt()
     pushAssertEqualsRelease<uint8_t>(LEFT_B | ALT_B, "LEFT_B | ALT_B", 0, &currentPOV);
     pushAssertEqualsRelease<uint8_t>(RIGHT_B | ALT_B, "RIGHT_B | ALT_B", 0, &currentPOV);
     input.release();
+}
+
+void TG_POV_ButtonsMode()
+{
+    // Simulate DPAD operation ,
+    // test DPAD input numbers ARE detected,
+    // test POV is not detected
+    userSettings::setDPADWorkingMode(false);
+    input.release();
+    input.push(UP);
+    assertEquals<inputBitmap_t>("UP, bitmap", UP_B, currentLow);
+    assertEquals<uint8_t>("UP, pov", 0, currentPOV);
+    input.push(RIGHT);
+    assertEquals<inputBitmap_t>("UP+RIGHT, bitmap", UP_B|RIGHT_B, currentLow);
+    assertEquals<uint8_t>("UP+RIGHT, pov", 0, currentPOV);
+    input.release();
+    assertEquals<inputBitmap_t>("release, bitmap", 0ULL, currentLow);
+    assertEquals<uint8_t>("release, pov", 0, currentPOV);
+    userSettings::setDPADWorkingMode(true);
 }
 
 void TG_cycleAlt()
@@ -348,6 +378,18 @@ void TG_cycleClutchWorkingMode()
     pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 2", CF_AXIS, (clutchFunction_t *)&userSettings::cpWorkingMode);
     pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 3", CF_ALT, (clutchFunction_t *)&userSettings::cpWorkingMode);
     pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 4", CF_BUTTON, (clutchFunction_t *)&userSettings::cpWorkingMode);
+}
+
+void TG_cycleDPADWorkingMode()
+{
+    // Cycle working mode of DPAD inputs
+    userSettings::setDPADWorkingMode(true);
+    input.push(CMD);
+    pushAssertEqualsRelease<bool>(BMP_CYCLE_ALT, "Cycle dpad 1", true, (bool *)&userSettings::dpadWorkingMode);
+    input.push(CYCLE_DPAD);
+    pushAssertEqualsRelease<bool>(BMP_CYCLE_ALT, "Cycle dpad 2", false, (bool *)&userSettings::altButtonsWorkingMode);
+    input.release();
+    userSettings::setDPADWorkingMode(true);
 }
 
 void TG_selectClutchWorkingMode()
@@ -538,6 +580,34 @@ void TG_repeatedCommand()
     input.release();
 }
 
+void TG_userMappedInput()
+{
+    // Adjust user-defined button map
+    userSettings::resetButtonsMap();
+    userSettings::setButtonMap(false, OTHER, OTHER_MAP);
+    userSettings::setButtonMap(true, OTHER, OTHER_MAP_ALT);
+    userSettings::setALTButtonsWorkingMode(true);
+    assertEquals<inputNumber_t>("map 1", OTHER_MAP, userSettings::buttonsMap[0][OTHER]);
+    assertEquals<inputNumber_t>("map 2", OTHER_MAP_ALT, userSettings::buttonsMap[1][OTHER]);
+
+    // send input and check
+    input.release();
+    input.push(OTHER);
+    assertEquals<inputBitmap_t>("OTHER->OTHER_MAP (low)", BMP_OTHER_MAP_LOW, currentLow);
+    assertEquals<inputBitmap_t>("OTHER->OTHER_MAP (high)", BMP_OTHER_MAP_HIGH, currentHigh);
+    input.release();
+    input.push(ALT);
+    input.push(OTHER);
+    assertEquals<inputBitmap_t>("OTHER_ALT->OTHER_MAP_ALT (low)", BMP_OTHER_MAP_ALT_LOW, currentLow);
+    assertEquals<inputBitmap_t>("OTHER_ALT->OTHER_MAP_ALT (high)", BMP_OTHER_MAP_ALT_HIGH, currentHigh);
+    input.release();
+
+    // Reset
+    userSettings::resetButtonsMap();
+    assertEquals<inputNumber_t>("reset map 1", UNSPECIFIED_INPUT_NUMBER, userSettings::buttonsMap[0][OTHER]);
+    assertEquals<inputNumber_t>("reset map 2", UNSPECIFIED_INPUT_NUMBER, userSettings::buttonsMap[1][OTHER]);
+}
+
 //------------------------------------------------------------------
 // Arduino entry point
 //------------------------------------------------------------------
@@ -581,11 +651,17 @@ void setup()
     Serial.println("- simulate POV operation while ALT pushed -");
     TG_POV_whileAlt();
 
-    Serial.println("- simulate cycle ALT function -");
+    Serial.println("- simulate POV operation in buttons mode -");
+    TG_POV_ButtonsMode();
+
+    Serial.println("- simulate cycle ALT working mode -");
     TG_cycleAlt();
 
-    Serial.println("- simulate cycle clutch function -");
+    Serial.println("- simulate cycle clutch working mode -");
     TG_cycleClutchWorkingMode();
+
+    Serial.println("- simulate cycle DPAD working mode -");
+    TG_cycleDPADWorkingMode();
 
     Serial.println("- simulate explicit selection of clutch working mode -");
     TG_selectClutchWorkingMode();
@@ -613,6 +689,9 @@ void setup()
 
     Serial.println("- simulate repeated input without real change in inputs state -");
     TG_repeatedCommand();
+
+    Serial.println("- simulate input in user-defined buttons map -");
+    TG_userMappedInput();
 
     Serial.println("-- END --");
     for (;;)

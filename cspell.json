@@ -1,0 +1,10 @@
+{
+    "version": "0.2",
+    "ignorePaths": [],
+    "dictionaryDefinitions": [],
+    "dictionaries": [],
+    "words": ["dpad","bitmask","autocalibration"],
+    "ignoreWords": ["ccal"],
+    "import": []
+}
+// for syntax, see: https://cspell.org/configuration/

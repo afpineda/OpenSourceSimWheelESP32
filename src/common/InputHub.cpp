@@ -17,27 +17,28 @@
 
 // Related to ALT buttons
 
-static inputBitmap_t altBitmap = 0;
+static inputBitmap_t altBitmap = 0ULL;
 
 // Related to clutch
 
 #define CALIBRATION_INCREMENT 3
-static inputBitmap_t calibrateUpBitmap = 0;
-static inputBitmap_t calibrateDownBitmap = 0;
+static inputBitmap_t calibrateUpBitmap = 0ULL;
+static inputBitmap_t calibrateDownBitmap = 0ULL;
 static inputBitmap_t leftClutchBitmap = 0ULL;
 static inputBitmap_t rightClutchBitmap = 0ULL;
 static inputBitmap_t clutchInputMask = ~0ULL;
 
 // Related to wheel functions
 
-static inputBitmap_t cycleALTWorkingModeBitmap = 0;
-static inputBitmap_t cycleClutchWorkingModeBitmap = 0;
-static inputBitmap_t cmdCPWorkingModeBitmap_clutch = 0;
-static inputBitmap_t cmdCPWorkingModeBitmap_axis = 0;
-static inputBitmap_t cmdCPWorkingModeBitmap_alt = 0;
-static inputBitmap_t cmdCPWorkingModeBitmap_button = 0;
-static inputBitmap_t cmdAxisAutocalibrationBitmap = 0;
-static inputBitmap_t cmdBatteryRecalibrationBitmap = 0;
+static inputBitmap_t cycleALTWorkingModeBitmap = 0ULL;
+static inputBitmap_t cycleClutchWorkingModeBitmap = 0ULL;
+static inputBitmap_t cmdCPWorkingModeBitmap_clutch = 0ULL;
+static inputBitmap_t cmdCPWorkingModeBitmap_axis = 0ULL;
+static inputBitmap_t cmdCPWorkingModeBitmap_alt = 0ULL;
+static inputBitmap_t cmdCPWorkingModeBitmap_button = 0ULL;
+static inputBitmap_t cmdAxisAutocalibrationBitmap = 0ULL;
+static inputBitmap_t cmdBatteryRecalibrationBitmap = 0ULL;
+static inputBitmap_t cycleDPADWorkingModeBitmap = 0ULL;
 
 // Related to POV buttons
 
@@ -81,6 +82,11 @@ bool inputHub_commands_filter(
         if (f > CF_BUTTON)
             f = CF_CLUTCH;
         userSettings::setCPWorkingMode((clutchFunction_t)f);
+        return true;
+    }
+    if ((changes & cycleDPADWorkingModeBitmap) && (globalState == cycleDPADWorkingModeBitmap))
+    {
+        userSettings::setDPADWorkingMode(!userSettings::dpadWorkingMode);
         return true;
     }
     if ((changes & cmdCPWorkingModeBitmap_clutch) && (globalState == cmdCPWorkingModeBitmap_clutch))
@@ -301,7 +307,7 @@ void inputHub_DPAD_filter(
     uint8_t &povInput)
 {
     povInput = DPAD_CENTERED;
-    if (true) // TO DO: user-defined working mode of DPAD
+    if (userSettings::dpadWorkingMode)
     {
         // Map directional buttons to POV input as needed
         inputBitmap_t povState = rawInputBitmap & dpadNegMask;
@@ -318,6 +324,39 @@ void inputHub_DPAD_filter(
         }
         rawInputBitmap = rawInputBitmap & dpadMask;
     }
+}
+
+// ----------------------------------------------------------------------------
+
+void inputHub_UserMap_filter(
+    bool isALTRequested,
+    inputBitmap_t &rawInputBitmap,
+    inputBitmap_t &low,
+    inputBitmap_t &high)
+{
+    low = 0ULL;
+    high = 0ULL;
+    uint8_t altIndex = isALTRequested ? 1 : 0;
+    for (int i = 0; i <= MAX_INPUT_NUMBER; i++)
+    {
+        inputBitmap_t singleInputBmp = BITMAP(i);
+        if (rawInputBitmap & singleInputBmp)
+        {
+            inputNumber_t map = userSettings::buttonsMap[altIndex][i];
+            if (map <= MAX_INPUT_NUMBER)
+                low |= BITMAP(map);
+            else if (map <= MAX_USER_INPUT_NUMBER)
+                high |= BITMAP(map);
+            else
+            {
+                // default mapping
+                if (isALTRequested)
+                    high |= singleInputBmp;
+                else
+                    low |= singleInputBmp;
+            } // end if-else
+        }     // end if
+    }         // end for
 }
 
 // ----------------------------------------------------------------------------
@@ -366,17 +405,7 @@ void inputHub ::onRawInput(
 
     // Step 7: map raw input state into HID button state
     inputBitmap_t inputsLow, inputsHigh;
-    // TO DO: apply user defined map
-    if (isALTRequested)
-    {
-        inputsLow = 0ULL;
-        inputsHigh = rawInputBitmap;
-    }
-    else
-    {
-        inputsLow = rawInputBitmap;
-        inputsHigh = 0ULL;
-    }
+    inputHub_UserMap_filter(isALTRequested, rawInputBitmap, inputsLow, inputsHigh);
 
     // Step 8: send HID report
     hidImplementation::reportInput(inputsLow, inputsHigh, povInput, leftAxis, rightAxis, clutchAxis);
@@ -510,6 +539,13 @@ void inputHub::cycleALTButtonsWorkingMode_setBitmap(const inputBitmap_t bitmap)
 void inputHub::cycleCPWorkingMode_setBitmap(const inputBitmap_t bitmap)
 {
     cycleClutchWorkingModeBitmap = bitmap;
+}
+
+// ----------------------------------------------------------------------------
+
+void inputHub::cycleDPADWorkingMode_setBitmap(const inputBitmap_t bitmap)
+{
+    cycleDPADWorkingModeBitmap = bitmap;
 }
 
 // ----------------------------------------------------------------------------

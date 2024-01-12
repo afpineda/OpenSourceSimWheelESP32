@@ -142,7 +142,7 @@ This is the place where inputs are set up and a number assigned to them.
 Use the `add*()` methods to set up any kind of inputs (button matrices, rotary encoders, etc) and their pins.
 Analog clutch paddles are set here, too.
 
-The assigned input number is mapped to a user-defined HID button number, which will be reported to the hosting computer when needed. If there is no user-defined map, dafaults to the following rule:
+The assigned input number will be mapped to a user-defined HID button number, which will be reported to the hosting computer when needed. If there is no user-defined map, it defaults to the following rule:
 
 ```text
 if (alt mode enabled) then
@@ -288,6 +288,16 @@ flowchart LR
 [Render this graph at mermaid.live](https://mermaid.live/view#pako:eNpVjssOgjAQRX-lmRUk9AdYuNKEJi5Al9ZFpYM06QObqcYQ_l1AXbCbnHvuzYzQBo1QQmfDq-1VJHY8Sc-YqLNM-CERG4K1TCt0wef5EjUXswb4RE_skTDhda1U_0qfbpuGqBnnP5_zHWvWmS0TFRTgMDpl9PzPuCgSqEeHEsr51NipZEmC9NOsqkTh_PYtlBQTFpAGrQj3Rt2jclt40IZC_LLpAwzyT0k)
 
 Event capture is detached from event processing at the **input hub daemon**, which runs most of the code. Note that such a daemon is implemented inside `inputs.cpp`, not `inputHub.cpp`.
+
+Raw inputs are transformed into a HID input report in a sequence of "filters" or steps:
+
+1. Detected and execute user commands, if any. If a command is detected and executed, this sequence is interrupted.
+2. Depending on user settings, transform analog axis input into buttons input or vice-versa.
+3. Execute clutch bite point calibration when requested.
+4. Determine if ALT mode is engaged.
+5. Compute F1-style clutch position.
+6. Transform DPAD inputs into navigational input, depending on user settings.
+7. Map raw button inputs into user-defined inputs, if any, or use default mapping.
 
 #### A note on rotary encoders
 

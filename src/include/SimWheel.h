@@ -14,8 +14,8 @@
  *
  */
 
-#ifndef __SIMWHEEL_H__
-#define __SIMWHEEL_H__
+#ifndef __SIM_WHEEL_H__
+#define __SIM_WHEEL_H__
 
 #include "SimWheelTypes.h"
 #include "esp32-hal.h" // declares gpio_num_t
@@ -76,6 +76,18 @@ namespace userSettings
     extern volatile bool altButtonsWorkingMode;
 
     /**
+     * @brief Current working mode of directional pad
+     * @note For read only. Do not overwrite.
+     */
+    extern volatile bool dpadWorkingMode;
+
+    /**
+     * @brief User-defined buttons map
+     * @note For read only. Do not overwrite.
+     */
+    extern volatile inputNumber_t buttonsMap[2][64];
+
+    /**
      * @brief Must be called before anything else in this namespace. Will
      *        load user settings from flash memory.
      *
@@ -104,6 +116,38 @@ namespace userSettings
      * @param newBitePoint Clutch bite point
      */
     void setBitePoint(clutchValue_t newBitePoint);
+
+    /**
+     * @brief Set working mode of directional pad
+     *
+     * @param[in] newMode True for navigation. False for regular buttons.
+     */
+    void setDPADWorkingMode(bool newMode);
+
+    /**
+     * @brief Reset user-defined buttons map to "factory defaults"
+     * @note Not automatically saved.
+     */
+    void resetButtonsMap();
+
+    /**
+     * @brief Maps a single "firmware" input number to a user-defined button number
+     *
+     * @note Changes are **not** automatically saved to flash memory. Must call saveNow().
+     *
+     * @param altMode True if this setting is intended for "ALT" mode, false otherwise.
+     * @param rawInputNumber Firmware-defined input number in the range 0-63.
+     * @param userInputNumber User-defined input number in the range 0-127.
+     *                        Set to `UNSPECIFIED_INPUT_NUMBER` for "factory defaults".
+     */
+    void setButtonMap(bool altMode, inputNumber_t rawInputNumber, inputNumber_t userInputNumber = UNSPECIFIED_INPUT_NUMBER);
+
+    /**
+     * @brief Force permanent storage of all user settings immediately
+     *
+     * @note This is the only way to save the user-defined buttons map.
+     */
+    void saveNow();
 }
 
 /**
@@ -535,6 +579,14 @@ namespace inputHub
      * @note Make sure all buttons in the bitmap are able to be pressed at the same time.
      */
     void cycleCPWorkingMode_setBitmap(const inputBitmap_t bitmap);
+
+    /**
+     * @brief Set up a bitmap of buttons to cycle the function of DPAD inputs (if any).
+     *        All buttons in the bitmap must be pressed at the same time and none of the others.
+     *
+     * @param bitmap A bitmap of button numbers, for example `BITMAP(JOY_BACK) | BITMAP(JOY_X)`.
+     */
+    void cycleDPADWorkingMode_setBitmap(const inputBitmap_t bitmap);
 
     /**
      * @brief Set up a bitmap of buttons to enable each specific clutch function for clutch paddles.
