@@ -26,6 +26,7 @@ bool powerSim = true;
 //------------------------------------------------------------------
 
 volatile uint32_t capabilities::flags = 0x07;
+volatile inputBitmap_t capabilities::availableInputs = 0b0111ULL;
 
 void notify::connected()
 {
@@ -77,6 +78,10 @@ void setup()
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
     Serial.println("--START--");
+    userSettings::altButtonsWorkingMode = true;
+    userSettings::cpWorkingMode = CF_CLUTCH;
+    userSettings::dpadWorkingMode = true;
+    userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
     hidImplementation::begin("NimBLEimplTest", "Mamandurrio", true);
     Serial.println("--GO--");
 }

@@ -47,11 +47,7 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
-    while (!Serial)
-        ;
-
     Serial.println("-- READY --");
-    // userSettings::begin();
 
     notify::begin(new SerialNotificationImpl());
 

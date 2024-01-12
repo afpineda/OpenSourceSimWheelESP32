@@ -39,6 +39,7 @@ static BLEHIDDevice *hid = nullptr;
 static BLECharacteristic *inputGamepad = nullptr;
 static BLECharacteristic *configReport = nullptr;
 static BLECharacteristic *capabilitiesReport = nullptr;
+static BLECharacteristic *buttonsMapReport = nullptr;
 static BLEServer *pServer = nullptr;
 static bool notifyConfigChanges = false;
 
@@ -80,44 +81,17 @@ class ConfigFRCallbacks : public BLECharacteristicCallbacks
     // RECEIVE DATA
     void onWrite(BLECharacteristic *pCharacteristic)
     {
-        int size = pCharacteristic->getLength();
+        size_t size = pCharacteristic->getLength();
         const uint8_t *data = pCharacteristic->getData();
-        if ((size > 0) && (data[0] >= CF_CLUTCH) && (data[0] <= CF_BUTTON))
-        {
-            // clutch function
-            userSettings::setCPWorkingMode((clutchFunction_t)data[0]);
-        }
-        if ((size > 1) && (data[1] != 0xff))
-        {
-            // ALT Buttons mode
-            userSettings::setALTButtonsWorkingMode((bool)data[1]);
-        }
-        if ((size > 2) && ((clutchValue_t)data[2] >= CLUTCH_NONE_VALUE) && ((clutchValue_t)data[2] <= CLUTCH_FULL_VALUE))
-        {
-            // Bite point
-            userSettings::setBitePoint((clutchValue_t)data[2]);
-        }
-        if ((size > 3) && (data[3] == (uint8_t)simpleCommands_t::CMD_AXIS_RECALIBRATE))
-        {
-            // Force analog axis recalibration
-            inputs::recalibrateAxes();
-        }
-        if ((size > 3) && (data[3] == (uint8_t)simpleCommands_t::CMD_BATT_RECALIBRATE))
-        {
-            // Restart auto calibration algoritm
-            batteryCalibration::restartAutoCalibration();
-        }
+        hidImplementation::common::onSetFeature(RID_FEATURE_CONFIG, data, size);
     }
 
     // SEND REQUESTED DATA
     void onRead(BLECharacteristic *pCharacteristic)
     {
         uint8_t data[CONFIG_REPORT_SIZE];
-        data[0] = (uint8_t)userSettings::cpWorkingMode;
-        data[1] = (uint8_t)userSettings::altButtonsWorkingMode;
-        data[2] = (uint8_t)userSettings::bitePoint;
-        data[3] = (uint8_t)power::getLastBatteryLevel();
-        pCharacteristic->setValue(data, sizeof(data));
+        hidImplementation::common::onGetFeature(RID_FEATURE_CONFIG, data, CONFIG_REPORT_SIZE);
+        pCharacteristic->setValue(data, CONFIG_REPORT_SIZE);
     }
 
 } configFRCallbacks;
@@ -132,14 +106,36 @@ class CapabilitiesFRCallbacks : public BLECharacteristicCallbacks
     void onRead(BLECharacteristic *pCharacteristic)
     {
         uint8_t data[CAPABILITIES_REPORT_SIZE];
-        data[0] = MAGIC_NUMBER_LOW;
-        data[1] = MAGIC_NUMBER_HIGH;
-        *(uint16_t *)(data + 2) = DATA_MAJOR_VERSION;
-        *(uint16_t *)(data + 4) = DATA_MINOR_VERSION;
-        *(uint16_t *)(data + 6) = capabilities::flags;
-        pCharacteristic->setValue(data, sizeof(data));
+        hidImplementation::common::onGetFeature(RID_FEATURE_CAPABILITIES, data, CAPABILITIES_REPORT_SIZE);
+        pCharacteristic->setValue(data, CAPABILITIES_REPORT_SIZE);
     }
 } capabilitiesFRCallbacks;
+
+// ----------------------------------------------------------------------------
+
+class ButtonsMapFRCallbacks : public BLECharacteristicCallbacks
+{
+    inputNumber_t selectedInput = UNSPECIFIED_INPUT_NUMBER;
+
+    // RECEIVED DATA:
+    // Select firmware-defined input number or set button map
+    void onWrite(BLECharacteristic *pCharacteristic)
+    {
+        size_t size = pCharacteristic->getLength();
+        const uint8_t *data = pCharacteristic->getData();
+        hidImplementation::common::onSetFeature(RID_FEATURE_BUTTONS_MAP, data, size);
+    }
+
+    // SEND DATA:
+    // Map for selected button
+    void onRead(BLECharacteristic *pCharacteristic)
+    {
+        uint8_t data[BUTTONS_MAP_REPORT_SIZE];
+        hidImplementation::common::onGetFeature(RID_FEATURE_BUTTONS_MAP, data, BUTTONS_MAP_REPORT_SIZE);
+        pCharacteristic->setValue(data, BUTTONS_MAP_REPORT_SIZE);
+    }
+
+} buttonsMapFRCallbacks;
 
 // ----------------------------------------------------------------------------
 // Auto power-off
@@ -194,7 +190,8 @@ void hidImplementation::begin(
         inputGamepad = hid->inputReport(RID_INPUT_GAMEPAD);
         configReport = hid->featureReport(RID_FEATURE_CONFIG);
         capabilitiesReport = hid->featureReport(RID_FEATURE_CAPABILITIES);
-        if (!inputGamepad || !configReport || !capabilitiesReport)
+        buttonsMapReport = hid->featureReport(RID_FEATURE_BUTTONS_MAP);
+        if (!inputGamepad || !configReport || !capabilitiesReport | !buttonsMapReport)
         {
             log_e("Unable to create HID report characteristics");
             abort();
@@ -228,26 +225,7 @@ void hidImplementation::reset()
     if (connectionStatus.connected)
     {
         uint8_t report[GAMEPAD_REPORT_SIZE];
-        report[0] = 0;
-        report[1] = 0;
-        report[2] = 0;
-        report[3] = 0;
-        report[4] = 0;
-        report[5] = 0;
-        report[6] = 0;
-        report[7] = 0;
-        report[8] = 0;
-        report[9] = 0;
-        report[10] = 0;
-        report[11] = 0;
-        report[12] = 0;
-        report[13] = 0;
-        report[14] = 0;
-        report[15] = 0;
-        report[16] = CLUTCH_NONE_VALUE;
-        report[17] = CLUTCH_NONE_VALUE;
-        report[18] = CLUTCH_NONE_VALUE;
-        report[19] = 0;
+        hidImplementation::common::onReset(report);
         inputGamepad->setValue(report, GAMEPAD_REPORT_SIZE);
         inputGamepad->notify();
     }
@@ -264,32 +242,15 @@ void hidImplementation::reportInput(
     if (connectionStatus.connected)
     {
         uint8_t report[GAMEPAD_REPORT_SIZE];
-        report[0] = ((uint8_t *)&inputsLow)[0];
-        report[1] = ((uint8_t *)&inputsLow)[1];
-        report[2] = ((uint8_t *)&inputsLow)[2];
-        report[3] = ((uint8_t *)&inputsLow)[3];
-        report[4] = ((uint8_t *)&inputsLow)[4];
-        report[5] = ((uint8_t *)&inputsLow)[5];
-        report[6] = ((uint8_t *)&inputsLow)[6];
-        report[7] = ((uint8_t *)&inputsLow)[7];
-        report[8] = ((uint8_t *)&inputsHigh)[0];
-        report[9] = ((uint8_t *)&inputsHigh)[1];
-        report[10] = ((uint8_t *)&inputsHigh)[2];
-        report[11] = ((uint8_t *)&inputsHigh)[3];
-        report[12] = ((uint8_t *)&inputsHigh)[4];
-        report[13] = ((uint8_t *)&inputsHigh)[5];
-        report[14] = ((uint8_t *)&inputsHigh)[6];
-        report[15] = ((uint8_t *)&inputsHigh)[7];
-        report[16] = (uint8_t)clutchAxis;
-        report[17] = (uint8_t)leftAxis;
-        report[18] = (uint8_t)rightAxis;
-        report[19] = POVstate;
-        if (notifyConfigChanges)
-        {
-            report[19] |= (RID_FEATURE_CONFIG << 4);
-            notifyConfigChanges = false;
-        }
-
+        hidImplementation::common::onReportInput(
+            report,
+            notifyConfigChanges,
+            inputsLow,
+            inputsHigh,
+            POVstate,
+            leftAxis,
+            rightAxis,
+            clutchAxis);
         inputGamepad->setValue(report, GAMEPAD_REPORT_SIZE);
         inputGamepad->setNotifyProperty(true);
         inputGamepad->notify(true);

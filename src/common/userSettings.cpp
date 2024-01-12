@@ -21,7 +21,7 @@
 
 volatile clutchValue_t userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
 volatile clutchFunction_t userSettings::cpWorkingMode = clutchFunction_t::CF_CLUTCH;
-volatile bool userSettings::altButtonsWorkingMode = false;
+volatile bool userSettings::altButtonsWorkingMode = true;
 volatile bool userSettings::dpadWorkingMode = true;
 #define FF_x_4 UNSPECIFIED_INPUT_NUMBER, UNSPECIFIED_INPUT_NUMBER, UNSPECIFIED_INPUT_NUMBER, UNSPECIFIED_INPUT_NUMBER
 #define FF_x_16 FF_x_4, FF_x_4, FF_x_4, FF_x_4

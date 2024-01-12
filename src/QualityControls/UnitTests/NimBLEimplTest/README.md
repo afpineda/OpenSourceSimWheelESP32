@@ -1,5 +1,7 @@
 # Unit test: game pad
 
+**NOTE**:: This is also an integration test for modules `hidImplementation` and `userSettings`.
+
 ## Purpose and summary
 
 To test that:
@@ -122,12 +124,12 @@ Not applicable to USB implementation.
 1. Open "SimpleHidWriter.exe". Locate `Device VID=501D` in the top area, and click on it.
 2. You should see continuous report lines starting with `RD 01`. Ignore them. Click on `Clear` from time to time.
 3. Enter `03` at field `ReportID`.
-4. Enter `FF FF FF FF` at fields below `ReportID`.
+4. Enter `FF FF FF FF FF` at fields below `ReportID`.
 5. Click on `Set Feature` , then on `Get Feature`.
-6. Must show a line starting with: `RD 03  00 01 7F 42`.
-7. Enter `01 FF 40 01` at fields below `ReportID`.
+6. Must show a line starting with: `RD 03  00 01 7F 42 01`.
+7. Enter `01 FF 40 01 FF` at fields below `ReportID`.
 8. Click on `Set Feature` , then on `Get Feature`.
-9. Must show a line starting with: `RD 03  01 01 40 42`.
+9. Must show a line starting with: `RD 03  01 01 40 42 01`.
 10. Serial output must show: `CMD: recalibrate axes`.
 
 ### Capabilities (HID report)
@@ -135,7 +137,23 @@ Not applicable to USB implementation.
 1. Enter `02` at field `ReportID`.
 2. Enter `00 00 00 00 00 00 00 00` at fields below `ReportID`.
 3. Click on `Set Feature` , then on `Get Feature`.
-4. Must show the following line: `RD 02  51 BF xx xx xx xx 07 00`. Ignore `xx`.
+4. Must show the following line: `RD 02  51 BF xx xx xx xx 07 00 xx xx xx xx xx xx xx xx`. Ignore `xx`.
+
+### Buttons map (HID report)
+
+1. Enter `04` at field `ReportID`.
+2. Enter `00 FF FF` at fields below `ReportID`.
+3. Click on `Set Feature` , then on `Get Feature`.
+4. Must show a line starting with: `RD 04  00 00 40`.
+5. Enter `02 FF FF` at fields below `ReportID`.
+6. Click on `Set Feature` , then on `Get Feature`.
+7. Must show a line starting with: `RD 04  02 02 42`.
+8. Enter `02 00 40` at fields below `ReportID`.
+9. Click on `Set Feature` , then on `Get Feature`.
+10. Must show a line starting with: `RD 04  02 00 40`.
+11. Enter `AA 00 00` at fields below `ReportID`.
+12. Click on `Set Feature` , then on `Get Feature`.
+13. Must show a line again starting with: `RD 04  02 00 40`.
 
 ## Reconnect
 

@@ -26,6 +26,7 @@ bool powerSim = true;
 //------------------------------------------------------------------
 
 volatile uint32_t capabilities::flags = 0x07;
+volatile inputBitmap_t capabilities::availableInputs = 0b0111ULL;
 
 void notify::connected()
 {

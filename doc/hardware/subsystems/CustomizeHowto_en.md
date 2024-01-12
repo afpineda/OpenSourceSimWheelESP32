@@ -224,7 +224,7 @@ This project provides three (exclusive) connectivity choices:
 
 - Bluetooth Low Energy (BLE) using the [NimBLE stack](https://mynewt.apache.org/latest/network/). This is the default. If you are happy with this, ignore this section.
 
-- Bluetooth Low Energy using the ESP32-Arduino stack. Currently not used (except for a test unit), but available. This stack requires more flash memory compared to *NimBLE* (about 500 KB). If you have issues with *NimBLE*, this is a workaround.
+- Bluetooth Low Energy using the ESP32-Arduino stack. Currently not used (except for a test unit), but available. This stack requires more flash memory compared to *NimBLE* (about 500 KB). If you have issues with *NimBLE*, this is a workaround. As of ESP-Arduino core version 2.0.14, this implementation does not work.
 
 - Universal Serial Bus (USB).
 
@@ -238,6 +238,7 @@ In order to use any of them:
   | BLE          | ESP32-Arduino | hidImplementation_ESPBLE.cpp |
   | USB          | ESP32-Arduino | hidImplementation_USB.cpp    |
 
+- Do not confuse those with "hidImplementation_common.cpp". Do not touch that line.
 - Run the [sources setup procedure](../../firmware/sourcesSetup_en.md) again. **This is mandatory**.
 
 If you go for a purely wired USB implementation:

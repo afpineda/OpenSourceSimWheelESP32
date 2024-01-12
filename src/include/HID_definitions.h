@@ -1,4 +1,6 @@
 /**
+ * @file HID_definitions.h
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-12-17
  * @brief Key definitions of the sim wheel as a HID device.
@@ -22,7 +24,7 @@
 // Report sizes (bytes)
 #define GAMEPAD_REPORT_SIZE 20
 #define CAPABILITIES_REPORT_SIZE 16
-#define CONFIG_REPORT_SIZE 4
+#define CONFIG_REPORT_SIZE 5
 #define BUTTONS_MAP_REPORT_SIZE 3
 
 // GAME CONTROLLER APPEARANCES
@@ -31,13 +33,6 @@
 
 // INPUT REPORT constants
 #define BUTTON_COUNT 128
-
-// PNP identifiers
-
-//   USB NOT IMPLEMENTED
-// See http://wiki.openmoko.org/wiki/USB_Product_IDs
-// #define USB_VENDOR_ID // Not defined on purpose
-// #define USB_PRODUCT_ID 0xffff
 
 //   BLE
 #define BLE_VENDOR_SOURCE 0x00
@@ -49,7 +44,7 @@
 
 // Data specification version
 #define DATA_MAJOR_VERSION 1
-#define DATA_MINOR_VERSION 0
+#define DATA_MINOR_VERSION 1
 
 // Magic number, do not change
 #define MAGIC_NUMBER_LOW 0x51

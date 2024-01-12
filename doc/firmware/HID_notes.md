@@ -10,7 +10,7 @@ This document does not intent to explain HID devices. A good source is [Jan Axel
 
 Any HID device requires a vendor identifier ("VID" from now on) in order to work. Those identifiers are assigned to individual vendors through a license managed by ["The USB Implementers Forum"](https://www.usb.org/about), aka "USB-IF". That license is not open-source-friendly and the $6000 fee discourages any home-made project attempt.
 
-More information at [Open source Hardware Association](https://www.oshwa.org/faq/#usb-vendor-id)
+More information at [Open source Hardware Association](https://www.oshwa.org/faq/#usb-vendor-id).
 
 **This project features an USB implementation** using the existing PID (product identifier) and VID from your DevKit manufacturer, which you should not change in the source code.
 
@@ -64,13 +64,13 @@ Note that feature reports are both read and write.
 
 Write attempts will be ignored, so this report is read only.
 
-| Byte index | Size (Bytes) | Purpose (field) | Note                             |
-| :--------: | :----------: | --------------- | -------------------------------- |
-|     0      |      2       | Magic number    | Always set to BF51 (hexadecimal) |
-|     2      |      2       | Major Version   | Version of this specification    |
-|     4      |      2       | Minor Version   | Version of this specification    |
-|     6      |      2       | Flags           | Device capabilities              |
-|     8      |      8       | ID              | Chip identifier                  |
+| Byte index | Size (Bytes) | Purpose (field) | Note                             | Since data version |
+| :--------: | :----------: | --------------- | -------------------------------- | ------------------ |
+|     0      |      2       | Magic number    | Always set to BF51 (hexadecimal) | 1.0                |
+|     2      |      2       | Major Version   | Version of this specification    | 1.0                |
+|     4      |      2       | Minor Version   | Version of this specification    | 1.0                |
+|     6      |      2       | Flags           | Device capabilities              | 1.0                |
+|     8      |      8       | ID              | Chip identifier                  | 1.1                |
 
 Report ID 1 (input) is not affected by versioning.
 
@@ -108,23 +108,24 @@ A bitmap of all available inputs. If the n-th bit (0-based) is set to "1", the i
 
 While writing, any value outside of the valid range will be ignored, so they me be used to mask which fields to modify or not.
 
-| Byte index | Size (bytes) | Purpose (field)                        |
-| :--------: | :----------: | -------------------------------------- |
-|     0      |      1       | Function of clutch paddles             |
-|     1      |      1       | "ALT" buttons state                    |
-|     2      |      1       | Current bite point                     |
-|     3      |      1       | Simple command / Current battery level |
+| Byte index | Size (bytes) | Purpose (field)                        | Since data version |
+| :--------: | :----------: | -------------------------------------- | ------------------ |
+|     0      |      1       | Working mode of clutch paddles         | 1.0                |
+|     1      |      1       | Working mode of ALT buttons            | 1.0                |
+|     2      |      1       | Current bite point                     | 1.0                |
+|     3      |      1       | Simple command / Current battery level | 1.0                |
+|     4      |      1       | Working mode of DPAD inputs            | 1.1                |
 
-### Function of clutch paddles
+### Working mode of clutch paddles
 
 Read/write.
 Valid values are enumerated in `clutchFunction_t` at file [SimWheelTypes.h][def].
 Write FF (hexadecimal) to ignore this field.
 
-### "ALT" buttons state
+### Working mode of ALT buttons
 
 Read/write.
-Non zero means enabled.
+Non zero means "ALT mode". Zero means "regular buttons".
 Write FF (hexadecimal) to ignore this field.
 
 ### Current bite point
@@ -143,13 +144,19 @@ At write:
 - Send a simple command. Valid commands are enumerated in `simpleCommands_t` at file [SimWheelTypes.h][def].
 - Write FF (hexadecimal) to ignore this field.
 
+### Working mode of DPAD inputs
+
+Read/write.
+Non zero means "navigation controls". Zero means "regular buttons".
+Write FF (hexadecimal) to ignore this field.
+
 ## Data format of report ID 4
 
-| Byte index | Size (bytes) | Purpose (field)                                        |
-| :--------: | :----------: | ------------------------------------------------------ |
-|     0      |      1       | Selected firmware-defined button number                |
-|     1      |      1       | User-defined button number when ALT mode is disengaged |
-|     2      |      1       | User-defined button number when ALT mode is engaged    |
+| Byte index | Size (bytes) | Purpose (field)                                        | Since data version |
+| :--------: | :----------: | ------------------------------------------------------ | ------------------ |
+|     0      |      1       | Selected firmware-defined button number                | 1.1                |
+|     1      |      1       | User-defined button number when ALT mode is disengaged | 1.1                |
+|     2      |      1       | User-defined button number when ALT mode is engaged    | 1.1                |
 
 **Important note**: any change in the user-defined map is **not** automatically saved to flash memory.
 In order to save, you must issue the corresponding *simple command* using report ID 3.
@@ -184,41 +191,42 @@ Examples (pseudo-code):
 
 - To list all available inputs and current map:
 
-```c++
-for (uint8_t i = 0; i < 64; i++) {
-   report4.write(i,0xFF,0xFF);
-   report4.read(j,map,mapAlt);
-   if (i != j)
-      another_app_is_interfering();
-   else if ((map > 127) || (mapAlt > 127))
-      input_number_not_available_for_mapping(i);
-   else
-      show_map(i,map,mapAlt);
-}
-```
+  ```c++
+  for (uint8_t i = 0; i < 64; i++) {
+     report4.write(i,0xFF,0xFF);
+     report4.read(j,map,mapAlt);
+     if (i != j)
+        another_app_is_interfering();
+     else if ((map > 127) || (mapAlt > 127))
+        input_number_not_available(i);
+     else
+        show_map(i,map,mapAlt);
+  }
+  ```
 
 - To map button number 13 to button numbers 16 (ALT disengaged) and 112 (ALT engaged):
 
-```c++
-report4.write(13,16,112);
-```
+  ```c++
+  report4.write(13,16,112);
+  ```
 
 - To map button number 17 as it was in factory defaults:
 
-```c++
-report4.write(17,17,17+64);
-```
+  ```c++
+  report4.write(17,17,17+64);
+  ```
 
 - To save current map to flash memory:
 
-```c++
-report3.write(0xFF,0xFF,0xFF,4);
-```
+  ```c++
+  report3.write(0xFF,0xFF,0xFF,4);
+  ```
 
-- To revert user-defined map to factory defaults:
+- To revert user-defined map to factory defaults (and save):
 
-```c++
-report3.write(0xFF,0xFF,0xFF,3);
-```
+  ```c++
+  report3.write(0xFF,0xFF,0xFF,3);
+  report3.write(0xFF,0xFF,0xFF,4);
+  ```
 
 [def]: ../../src/include/SimWheelTypes.h

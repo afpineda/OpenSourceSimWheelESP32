@@ -786,6 +786,58 @@ namespace hidImplementation
      *
      */
     void reset();
+
+    /**
+     * @brief Common functionality to all HID implementations
+     *
+     * @note Implemented at file `hidImplementation_common.cpp`
+     *
+     */
+    namespace common
+    {
+        /**
+         * @brief Send feature report
+         *
+         * @param[in] report_id A valid report id
+         * @param[out] buffer Pointer to buffer to be sent
+         * @param[in] len Size of @p buffer
+         * @return uint16_t Count of bytes put into @p buffer
+         */
+        uint16_t onGetFeature(uint8_t report_id, uint8_t *buffer, uint16_t len);
+
+        /**
+         * @brief Receive a feature report
+         *
+         * @param[in] report_id Report identification
+         * @param[in] buffer Pointer to buffer that contains received data
+         * @param[in] len Size of @p buffer
+         */
+        void onSetFeature(uint8_t report_id, const uint8_t *buffer, uint16_t len);
+
+        /**
+         * @brief Resets data for the input report
+         *
+         * @param[out] report Pointer to report buffer.
+         *                    Size is defined by GAMEPAD_REPORT_SIZE.
+         */
+        void onReset(uint8_t *report);
+
+        /**
+         * @brief Sets data for the input report
+         *
+         * @param[out] report Pointer to report buffer.
+         *                    Size is defined by GAMEPAD_REPORT_SIZE.
+         */
+        void onReportInput(
+            uint8_t *report,
+            bool &notifyConfigChanges,
+            inputBitmap_t &inputsLow,
+            inputBitmap_t &inputsHigh,
+            uint8_t &POVstate,
+            clutchValue_t &leftAxis,
+            clutchValue_t &rightAxis,
+            clutchValue_t &clutchAxis);
+    }
 }
 
 #endif
