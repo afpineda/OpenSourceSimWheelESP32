@@ -15,6 +15,7 @@
 // ----------------------------------------------------------------------------
 
 volatile uint32_t capabilities::flags = 0;
+volatile inputBitmap_t capabilities::availableInputs = 0ULL;
 
 // ----------------------------------------------------------------------------
 // Flags
@@ -31,4 +32,10 @@ void capabilities::setFlag(deviceCapability_t newFlag, bool setOrClear)
 bool capabilities::hasFlag(deviceCapability_t flag)
 {
     return capabilities::flags & (1 << flag);
+}
+
+void capabilities::addInputNumber(inputNumber_t number)
+{
+    if (number <= MAX_INPUT_NUMBER)
+        capabilities::availableInputs |= BITMAP(number);
 }

@@ -3,7 +3,7 @@
     "ignorePaths": [],
     "dictionaryDefinitions": [],
     "dictionaries": [],
-    "words": ["dpad","bitmask","autocalibration"],
+    "words": ["dpad","bitmask","autocalibration","gamepad"],
     "ignoreWords": ["ccal"],
     "import": []
 }

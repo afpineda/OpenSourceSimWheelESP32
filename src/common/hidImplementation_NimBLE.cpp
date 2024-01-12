@@ -42,6 +42,7 @@ static NimBLEHIDDevice *hid = nullptr;
 static NimBLECharacteristic *inputGamepad = nullptr;
 static NimBLECharacteristic *configReport = nullptr;
 static NimBLECharacteristic *capabilitiesReport = nullptr;
+static NimBLECharacteristic *buttonsMapReport = nullptr;
 static NimBLEServer *pServer = nullptr;
 static bool notifyConfigChanges = false;
 
@@ -107,8 +108,18 @@ class ConfigFRCallbacks : public NimBLECharacteristicCallbacks
         }
         if ((size > 3) && (data[3] == (uint8_t)simpleCommands_t::CMD_BATT_RECALIBRATE))
         {
-            // Restart auto calibration algoritm
+            // Restart auto calibration algorithm
             batteryCalibration::restartAutoCalibration();
+        }
+        if ((size > 3) && (data[3] == (uint8_t)simpleCommands_t::CMD_RESET_BUTTONS_MAP))
+        {
+            // Reset buttons map to factory defaults
+            userSettings::resetButtonsMap();
+        }
+        if ((size > 3) && (data[3] == (uint8_t)simpleCommands_t::CMD_SAVE_NOW))
+        {
+            // save settings now
+            userSettings::saveNow();
         }
     }
 
@@ -140,9 +151,49 @@ class CapabilitiesFRCallbacks : public NimBLECharacteristicCallbacks
         *(uint16_t *)(data + 2) = DATA_MAJOR_VERSION;
         *(uint16_t *)(data + 4) = DATA_MINOR_VERSION;
         *(uint16_t *)(data + 6) = capabilities::flags;
+
+        // esp_efuse_mac_get_default(); // TO DO
+
         pCharacteristic->setValue(data, sizeof(data));
     }
 } capabilitiesFRCallbacks;
+
+// ----------------------------------------------------------------------------
+
+class ButtonsMapFRCallbacks : public NimBLECharacteristicCallbacks
+{
+    uint8_t selectedInput = UNSPECIFIED_INPUT_NUMBER;
+
+    // Select firmware-defined input number/read current map
+    void onWrite(NimBLECharacteristic *pCharacteristic)
+    {
+        inputNumber_t data[BUTTONS_MAP_REPORT_SIZE];
+        if (data[0] <= MAX_INPUT_NUMBER)
+        {
+            selectedInput = data[0];
+            if ((data[1] <= MAX_USER_INPUT_NUMBER) && (data[2] <= MAX_USER_INPUT_NUMBER))
+                userSettings::setButtonMap(data[0], data[1], data[2]);
+        }
+    }
+
+    // Get map for selected button
+    void onRead(NimBLECharacteristic *pCharacteristic)
+    {
+        uint8_t data[BUTTONS_MAP_REPORT_SIZE];
+        data[0] = selectedInput;
+        if ((selectedInput <= MAX_INPUT_NUMBER) && (capabilities::availableInputs & BITMAP(selectedInput)))
+        {
+            userSettings::getEffectiveButtonMap(selectedInput, data[1], data[2]);
+        }
+        else
+        {
+            data[1] = UNSPECIFIED_INPUT_NUMBER;
+            data[2] = UNSPECIFIED_INPUT_NUMBER;
+        }
+        pCharacteristic->setValue(data, sizeof(data));
+    }
+
+} buttonsMapFRCallbacks;
 
 // ----------------------------------------------------------------------------
 // Auto power-off
@@ -197,13 +248,15 @@ void hidImplementation::begin(
         inputGamepad = hid->inputReport(RID_INPUT_GAMEPAD);
         configReport = hid->featureReport(RID_FEATURE_CONFIG);
         capabilitiesReport = hid->featureReport(RID_FEATURE_CAPABILITIES);
-        if (!inputGamepad || !configReport || !capabilitiesReport)
+        buttonsMapReport = hid->featureReport(RID_FEATURE_BUTTONS_MAP);
+        if (!inputGamepad || !configReport || !capabilitiesReport || !buttonsMapReport)
         {
             log_e("Unable to create HID report characteristics");
             abort();
         }
         configReport->setCallbacks(&configFRCallbacks);
         capabilitiesReport->setCallbacks(&capabilitiesFRCallbacks);
+        buttonsMapReport->setCallbacks(&buttonsMapFRCallbacks);
 
         // Configure BLE advertising
         NimBLEAdvertising *pAdvertising = pServer->getAdvertising();

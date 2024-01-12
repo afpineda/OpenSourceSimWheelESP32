@@ -29,6 +29,7 @@ namespace capabilities
 {
     // For read only. Do not write
     extern volatile uint32_t flags;
+    extern volatile inputBitmap_t availableInputs;
 
     /**
      * @brief Set a device capability. Should be called before `hidImplementation::begin()`.
@@ -48,6 +49,13 @@ namespace capabilities
      * @return false The device does not have the given capability
      */
     bool hasFlag(deviceCapability_t flag);
+
+    /**
+     * @brief Add an input number to the set of available input numbers
+     *
+     * @param[in] number A firmware-defined input number.
+     */
+    void addInputNumber(inputNumber_t number);
 }
 
 /**
@@ -137,10 +145,16 @@ namespace userSettings
      *
      * @param altMode True if this setting is intended for "ALT" mode, false otherwise.
      * @param rawInputNumber Firmware-defined input number in the range 0-63.
-     * @param userInputNumber User-defined input number in the range 0-127.
-     *                        Set to `UNSPECIFIED_INPUT_NUMBER` for "factory defaults".
+     * @param userInputNumberNoAlt User-defined input number in the range 0-127
+     *                             to be used when ALT mode is disengaged.
+     *                             Set to `UNSPECIFIED_INPUT_NUMBER` for "factory defaults".
+     * @param userInputNumberAlt User-defined input number in the range 0-127
+     *                             to be used when ALT mode is engaged.
+     *                             Set to `UNSPECIFIED_INPUT_NUMBER` for "factory defaults".
      */
-    void setButtonMap(bool altMode, inputNumber_t rawInputNumber, inputNumber_t userInputNumber = UNSPECIFIED_INPUT_NUMBER);
+    void setButtonMap(inputNumber_t rawInputNumber,
+                      inputNumber_t userInputNumberNoAlt,
+                      inputNumber_t userInputNumberAlt);
 
     /**
      * @brief Force permanent storage of all user settings immediately
@@ -148,6 +162,21 @@ namespace userSettings
      * @note This is the only way to save the user-defined buttons map.
      */
     void saveNow();
+
+    /**
+     * @brief Get the user-defined button map or a factory default
+     *
+     * @param[in] rawInputNumber Firmware-defined input number in the range 0-63.
+     * @param[out] userInputNumberNoAlt User-defined or factory default input number
+     *                                  to be used when ALT mode is disengaged.
+     * @param[out] userInputNumberAlt User-defined or factory default input number
+     *                                to be used when ALT mode is engaged.
+     * @return true On success
+     * @return false If @p rawInputNumber is not valid
+     */
+    bool getEffectiveButtonMap(inputNumber_t rawInputNumber,
+                               inputNumber_t &userInputNumberNoAlt,
+                               inputNumber_t &userInputNumberAlt);
 }
 
 /**

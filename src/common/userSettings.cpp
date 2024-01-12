@@ -171,16 +171,18 @@ void userSettings::setDPADWorkingMode(bool newMode)
 }
 
 void userSettings::setButtonMap(
-    bool altMode,
     inputNumber_t rawInputNumber,
-    inputNumber_t userInputNumber)
+    inputNumber_t userInputNumberNoAlt,
+    inputNumber_t userInputNumberAlt)
 {
     if (rawInputNumber <= MAX_INPUT_NUMBER)
     {
-        int index = altMode ? 1 : 0;
-        if (userInputNumber > MAX_USER_INPUT_NUMBER)
-            userInputNumber = UNSPECIFIED_INPUT_NUMBER;
-        userSettings::buttonsMap[index][rawInputNumber] = userInputNumber;
+        if (userInputNumberNoAlt > MAX_USER_INPUT_NUMBER)
+            userInputNumberNoAlt = UNSPECIFIED_INPUT_NUMBER;
+        if (userInputNumberAlt > MAX_USER_INPUT_NUMBER)
+            userInputNumberAlt = UNSPECIFIED_INPUT_NUMBER;
+        userSettings::buttonsMap[0][rawInputNumber] = userInputNumberNoAlt;
+        userSettings::buttonsMap[1][rawInputNumber] = userInputNumberAlt;
     }
 }
 
@@ -191,4 +193,25 @@ void userSettings::resetButtonsMap()
         userSettings::buttonsMap[0][i] = UNSPECIFIED_INPUT_NUMBER;
         userSettings::buttonsMap[1][i] = UNSPECIFIED_INPUT_NUMBER;
     }
+}
+
+// ----------------------------------------------------------------------------
+// Getters
+// ----------------------------------------------------------------------------
+
+bool userSettings::getEffectiveButtonMap(inputNumber_t rawInputNumber,
+                                         inputNumber_t &userInputNumberNoAlt,
+                                         inputNumber_t &userInputNumberAlt)
+{
+    if (rawInputNumber <= MAX_INPUT_NUMBER)
+    {
+        userInputNumberNoAlt = buttonsMap[0][rawInputNumber];
+        if (userInputNumberNoAlt > MAX_USER_INPUT_NUMBER)
+            userInputNumberNoAlt = rawInputNumber;
+        userInputNumberAlt = buttonsMap[1][rawInputNumber];
+        if (userInputNumberAlt > MAX_USER_INPUT_NUMBER)
+            userInputNumberAlt = rawInputNumber + 64;
+        return true;
+    }
+    return false;
 }

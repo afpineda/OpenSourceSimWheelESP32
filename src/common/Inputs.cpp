@@ -27,7 +27,6 @@
 static DigitalPolledInput *digitalInputChain = nullptr;
 static AnalogAxisInput *leftClutchAxis = nullptr;
 static AnalogAxisInput *rightClutchAxis = nullptr;
-static inputBitmap_t assignedInputsBitmap = 0ULL;
 
 // Related to the polling task
 
@@ -136,7 +135,7 @@ void inputs::update()
 
 void inputPollingLoop(void *param)
 {
-  // inputBitmap_t combinedMask = DigitalPolledInput::getChainMask(digitalInputChain);
+  // Initialize
   decouplingEvent_t currentState, previousState;
   bool leftAxisAutocalibrated = false;
   bool rightAxisAutocalibrated = false;
@@ -230,18 +229,17 @@ void abortDueToCallAfterStart()
 
 void checkInputNumber(inputNumber_t number)
 {
-  inputBitmap_t bmp = BITMAP(number);
   if (number > MAX_INPUT_NUMBER)
   {
     log_e("Input number out of range");
     abort();
   }
-  else if (bmp & assignedInputsBitmap)
+  else if (BITMAP(number) & capabilities::availableInputs)
   {
     log_e("Input number already in use");
     abort();
   }
-  assignedInputsBitmap |= bmp;
+  capabilities::addInputNumber(number);
 }
 
 void checkInputNumbers(int count, inputNumber_t numbers[])

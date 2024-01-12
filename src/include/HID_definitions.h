@@ -17,11 +17,13 @@
 #define RID_INPUT_GAMEPAD 0x01
 #define RID_FEATURE_CAPABILITIES 0x02
 #define RID_FEATURE_CONFIG 0x03
+#define RID_FEATURE_BUTTONS_MAP 0x04
 
 // Report sizes (bytes)
 #define GAMEPAD_REPORT_SIZE 20
-#define CAPABILITIES_REPORT_SIZE 8
+#define CAPABILITIES_REPORT_SIZE 16
 #define CONFIG_REPORT_SIZE 4
+#define BUTTONS_MAP_REPORT_SIZE 3
 
 // GAME CONTROLLER APPEARANCES
 #define CONTROLLER_TYPE_GAMEPAD 0x05
@@ -112,7 +114,7 @@ static const uint8_t hid_descriptor[] = {
     0x25, 0xff,                     // LogicalMaximum(256)
     0x85, RID_FEATURE_CAPABILITIES, // REPORT ID
     0x75, 0x08,                     // Report Size (8)
-    0x95, CAPABILITIES_REPORT_SIZE,     // Report count
+    0x95, CAPABILITIES_REPORT_SIZE, // Report count
     0xb1, 0x23,                     // FEATURE (Cnst,var,abs,Nprf)
 
     // ___ CONFIG (FEATURE) REPORT ___
@@ -121,6 +123,13 @@ static const uint8_t hid_descriptor[] = {
     0x75, 0x08,               // Report Size (8)
     0x95, CONFIG_REPORT_SIZE, // Report count
     0xb1, 0xa2,               // FEATURE (Data,var,abs,Nprf,Vol)
+
+    // ___ MAP (FEATURE) REPORT ___
+    0x09, 0x00,            // USAGE (undefined)
+    0x85, RID_FEATURE_BUTTONS_MAP, // REPORT ID
+    0x75, 0x08,            // Report Size (8)
+    0x95, BUTTONS_MAP_REPORT_SIZE, // Report count
+    0xb1, 0xa2,            // FEATURE (Data,var,abs,Nprf,Vol)
 
     // END APPLICATION
     0xC0 // EndCollection()

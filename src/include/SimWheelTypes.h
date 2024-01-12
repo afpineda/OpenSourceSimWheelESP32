@@ -163,9 +163,11 @@ typedef enum
  */
 typedef enum
 {
-    CMD_RESERVED = 0,         /// Not a command, reserved to avoid mistakes
-    CMD_AXIS_RECALIBRATE = 1, /// Recalibrate analog axes (if any)
-    CMD_BATT_RECALIBRATE = 2  /// Restart battery auto-calibration
+    CMD_RESERVED = 0,          // Not a command, reserved to avoid mistakes
+    CMD_AXIS_RECALIBRATE = 1,  // Recalibrate analog axes (if any)
+    CMD_BATT_RECALIBRATE = 2,  // Restart battery auto-calibration
+    CMD_RESET_BUTTONS_MAP = 3, // Reset buttons map to factory defaults
+    CMD_SAVE_NOW = 4           // Save all user settings to flash memory immediately
 } simpleCommands_t;
 
 /**

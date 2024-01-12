@@ -353,7 +353,7 @@ void TG_POV_ButtonsMode()
     assertEquals<inputBitmap_t>("UP, bitmap", UP_B, currentLow);
     assertEquals<uint8_t>("UP, pov", 0, currentPOV);
     input.push(RIGHT);
-    assertEquals<inputBitmap_t>("UP+RIGHT, bitmap", UP_B|RIGHT_B, currentLow);
+    assertEquals<inputBitmap_t>("UP+RIGHT, bitmap", UP_B | RIGHT_B, currentLow);
     assertEquals<uint8_t>("UP+RIGHT, pov", 0, currentPOV);
     input.release();
     assertEquals<inputBitmap_t>("release, bitmap", 0ULL, currentLow);
@@ -584,8 +584,7 @@ void TG_userMappedInput()
 {
     // Adjust user-defined button map
     userSettings::resetButtonsMap();
-    userSettings::setButtonMap(false, OTHER, OTHER_MAP);
-    userSettings::setButtonMap(true, OTHER, OTHER_MAP_ALT);
+    userSettings::setButtonMap(OTHER, OTHER_MAP, OTHER_MAP_ALT);
     userSettings::setALTButtonsWorkingMode(true);
     assertEquals<inputNumber_t>("map 1", OTHER_MAP, userSettings::buttonsMap[0][OTHER]);
     assertEquals<inputNumber_t>("map 2", OTHER_MAP_ALT, userSettings::buttonsMap[1][OTHER]);

@@ -45,7 +45,7 @@ Some namespaces are implemented with the help of auxiliary modules which are not
 | inputHub               | Device functionality                                    |
 | notify                 | User interface hardware (if any)                        |
 | power                  | Underlying power management capabilities                |
-| userSettings           | Device functionality                                    |
+| userSettings           | Long term storage of user settings                      |
 | AnalogAxisInput        | Hardware design                                         |
 | AnalogMultiplexerInput | Hardware design                                         |
 | ButtonMatrixInput      | Hardware design                                         |
