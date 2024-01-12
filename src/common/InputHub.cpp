@@ -302,6 +302,10 @@ void inputHub_AltRequest_filter(
 
 // ----------------------------------------------------------------------------
 
+/**
+ * @brief Transform DPAD input into navigational input depending on user preferences
+ *
+ */
 void inputHub_DPAD_filter(
     inputBitmap_t &rawInputBitmap,
     uint8_t &povInput)
@@ -328,6 +332,10 @@ void inputHub_DPAD_filter(
 
 // ----------------------------------------------------------------------------
 
+/**
+ * @brief Transform firmware-defined input into user-defined input
+ *
+ */
 void inputHub_UserMap_filter(
     bool isALTRequested,
     inputBitmap_t &rawInputBitmap,
@@ -370,7 +378,10 @@ void inputHub ::onRawInput(
 {
     // Step 1: Execute user commands if any
     if (inputHub_commands_filter(rawInputBitmap, rawInputChanges))
+    {
+        hidImplementation::reset();
         return;
+    }
 
     // Serial.printf("after step 1: %llx %u %u\n", rawInputBitmap, leftAxis, rightAxis);
 

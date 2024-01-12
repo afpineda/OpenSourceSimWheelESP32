@@ -21,6 +21,7 @@ ShiftRegistersInput.cpp
 debugUtils.cpp
 InputHub.cpp
 hidImplementation_NimBLE.cpp
+hidImplementation_common.cpp
 notify.cpp
 SerialNotification.cpp
 power_mock.cpp

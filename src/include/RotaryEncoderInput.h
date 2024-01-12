@@ -3,7 +3,7 @@
  *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
- * @brief Use a rotary encoder's rotation, both clockwise and counter-clocwise,
+ * @brief Use a rotary encoder's rotation, both clockwise and counter-clockwise,
  *        as inputs for a sim racing wheel or button box.
  *
  * @section DESCRIPTION

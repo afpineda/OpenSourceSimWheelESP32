@@ -3,8 +3,8 @@
     "ignorePaths": [],
     "dictionaryDefinitions": [],
     "dictionaries": [],
-    "words": ["dpad","bitmask","autocalibration","gamepad","efuse"],
-    "ignoreWords": ["ccal","ESPBLE"],
+    "words": ["dpad","bitmask","autocalibration","gamepad","efuse","GPIO"],
+    "ignoreWords": ["ccal","ESPBLE","protoboard","RCCW"],
     "import": []
 }
 // for syntax, see: https://cspell.org/configuration/

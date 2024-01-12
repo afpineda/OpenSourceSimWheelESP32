@@ -1,4 +1,6 @@
 /**
+ * @file RotaryEncoderInput.cpp
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
  * @brief Everything about input from relative rotary encoders

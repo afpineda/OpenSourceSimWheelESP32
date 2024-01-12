@@ -20,5 +20,6 @@ Inputs.cpp
 InputHub.cpp
 power.cpp
 hidImplementation_NimBLE.cpp
+hidImplementation_common.cpp
 batteryCalibration.cpp
 capabilities.cpp

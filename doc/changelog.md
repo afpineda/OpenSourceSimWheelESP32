@@ -105,3 +105,7 @@ First release.
 - Test unit for deep sleep on ESP32C3 boards is not needed anymore.
   [DeepSleepTest](../src/QualityControls/UnitTests/DeepSleepTest/README.md) do the work for all boards.
 - Unified unit test procedure for all HID implementations.
+- DPAD inputs may work both as navigation controls or regular buttons depending on user preferences.
+- The user can choose which input number is reported for each physical button, even in alternate mode.
+  To swap steering wheels is much easier, since you can make your open source sim wheel to behave like any other sim wheel you have.
+- HID implementation has been updated to support all the new features. Companion app will be updated soon (if not done yet).

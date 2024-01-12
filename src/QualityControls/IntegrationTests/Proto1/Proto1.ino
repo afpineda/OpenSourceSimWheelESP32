@@ -26,6 +26,7 @@
 #define COMMAND_IN 2
 #define CYCLE_ALT_IN 3
 #define CYCLE_CLUTCH_IN 4
+#define CYCLE_DPAD_IN 5
 #define UP 3
 #define DOWN 4
 #define LEFT 5
@@ -64,13 +65,18 @@ void setup()
     inputHub::setALTButton(ALT_IN);
     inputHub::cycleALTButtonsWorkingMode_setBitmap(BITMAP(COMMAND_IN) | BITMAP(CYCLE_ALT_IN));
     inputHub::cycleCPWorkingMode_setBitmap(BITMAP(COMMAND_IN) | BITMAP(CYCLE_CLUTCH_IN));
+    inputHub::cycleDPADWorkingMode_setBitmap(BITMAP(COMMAND_IN) | BITMAP(CYCLE_DPAD_IN));
     inputHub::setClutchInputNumbers(LEFT_CLUTCH_IN, RIGHT_CLUTCH_IN);
     inputHub::setClutchCalibrationButtons(CW_IN, CCW_IN);
     inputHub::setDPADControls(UP, DOWN, LEFT, RIGHT);
 
+    userSettings::cpWorkingMode = CF_CLUTCH;
+    userSettings::altButtonsWorkingMode = true;
+    userSettings::dpadWorkingMode = true;
+    userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
+
     hidImplementation::begin("Proto1", "Mamandurrio", false);
-    userSettings::setCPWorkingMode(CF_CLUTCH);
-    userSettings::setALTButtonsWorkingMode(true);
+
     Serial.println("-- GO --");
     inputs::start();
 }
