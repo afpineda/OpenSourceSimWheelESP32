@@ -80,7 +80,7 @@ classDiagram
       +getBatteryLevel()
       +getBatteryLevelAutoCalibrated()
     }
-    class PolledInput {
+    class DigitalPolledInput {
       +read()
     }
     inputHub <-- inputs: input events
@@ -100,7 +100,7 @@ classDiagram
     power <-- batteryCalibration: computed battery level
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNVMFu4yAQ_RXEaVfb_ACqKqXbSltpo1bJYS--EDN20GKwYGgSdfPvOzZJhENS1Rfj4b15w8zDH7x2CrjgtZEhPGnZetlVltEzRtjSofT7ZzvA_IvtI-a7eggE9pFijP0IhMZv39P3oYD-iusM7OxSbsecVxkxgF8BorZtLrHWCG9OWzxH6v6P838JtqAiz1Fp8DEiOhuK3YnMRquXrjfQgUWJ2tlMy0PvPN4usXdb8Bl-_H5tmqvgtUQEv_8pjV77S6UW8DHt_4Z3MKcE5c48ojulAHVV6M0ZA2qsenIWeQk_z-R-NjvOUqQ3IymLIYOFETS30rh2vtNhTC-YpCW1IejhPAU8q0Qw8gYCc81RYSO92kp_HMmTbjVKk5d-_48ypBEuJHq9y-x3C57qW0SDmka6m1j2Fme10Q0uodWBmhy-QLh1JwpgmaDs-8PE54LVzja6jckgF_ABXdhVsN67GkIANZla6euvqZW8gTY6m8ZN7kvrmWuaT4ROhDp6T_GT-ZkZPJx46fIMycubIc6Ed2dQtpBThvTXKLXrqFHUhokYv-Md-E5qRb-58TpUHDdUbcUFLRU0kuxS8coeCDoccLW3NReNNAHueOwV2fb4Z7yIPiuNznOBPsLhP65HzhU)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNVMFu2zAM_RVBpw1rfkAoCqRrgRVY0CI57JILY9GOMFkyJLpJ0OXfR1tJYEdOUV8sU-_xUeKjP2ThNUolCwsxPhmoAtRrJ_jpI2LpCcLh2XWw8OKaloa7pgtE8ZFiQvyIjKZv39P3MYP-ajcDsHdL2PU5JxltxLBCIuOqocTGEL554-gSKZo_Pvxl2IKLvETB0mNL5F3MdkcyW6Nf6sZijY6AjHcDrYCND3S7xMbvMAzw_fdrWU6CN0CE4fATrNmEa6UK6THt_8Z3tOcE-c68JX9OgXpS6MlUhsC-eWtR98WPjgTXrEtr7mezU0tVegtWdBQHsNiD5g6sr-Z7E_v0SgAv-Tai6Y6VwQeVKMEWIRS-PClsIegdhFNnJkq__8cZUicXQMHsBy68BU_1LVpLhju7Hzn3Fme1NSUtsTKR7zp-gXBrNDJgniC_94eR3ZUovCtN1SafXME7dOZaJZrgC4wR9ahrub2_ppbzOlpvcG43mzCtZ74sPxE6E4o2BI6fZ0DYzsqJl2aoS54PiLoQ3r0lqHBI6dJPUQpf80XxNYzE5J2sMdRgNP_t-nFYS9pytWupeKmxBLbLWq7dkaHdAVcHV0hVgo14J9tGs21PP8ir6LM25INUFFo8_gdaWdDT)
 
 ```mermaid
 classDiagram
@@ -145,7 +145,7 @@ Analog clutch paddles are set here, too.
 The assigned input number will be mapped to a user-defined HID button number, which will be reported to the hosting computer when needed. If there is no user-defined map, it defaults to the following rule:
 
 ```text
-if (alt mode enabled) then
+if (alt mode engaged) then
    HID button number = raw input number + 64
 else
    HID button number = raw input number
@@ -291,7 +291,7 @@ Event capture is detached from event processing at the **input hub daemon**, whi
 
 Raw inputs are transformed into a HID input report in a sequence of "filters" or steps:
 
-1. Detected and execute user commands, if any. If a command is detected and executed, this sequence is interrupted.
+1. Detect and execute user commands, if any. If a command is detected and executed, this sequence is interrupted.
 2. Depending on user settings, transform analog axis input into buttons input or vice-versa.
 3. Execute clutch bite point calibration when requested.
 4. Determine if ALT mode is engaged.
