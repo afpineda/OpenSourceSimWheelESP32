@@ -17,6 +17,7 @@ PolledInput.cpp
 Inputs.cpp
 InputHub.cpp
 hidImplementation_NimBLE.cpp
+hidImplementation_common.cpp
 batteryCalibration.cpp
 userSettings.cpp
 power.cpp

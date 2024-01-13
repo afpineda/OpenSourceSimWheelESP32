@@ -1,10 +1,10 @@
 # Unit test: Input from PISO shift registers
 
-## Purpouse and summary
+## Purpose and summary
 
 To test correct identification of events caused by shift registers.
 
-## Harware setup
+## Hardware setup
 
 Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
 Use this [test circuit](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-2.diy):

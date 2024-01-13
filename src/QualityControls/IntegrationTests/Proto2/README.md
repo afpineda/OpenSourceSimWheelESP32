@@ -13,8 +13,8 @@ Use this [test circuit](../../Protoboards/ESP32-WROOM-DevKitC-1.diy):
 
 We are not using the potentiometers. For later reference (this differs from previous tests):
 
-- "CLUTCH1" is the button mumbered #2 in the protoboard.
-- "CLUTCH2" is the button mumbered #3 in the protoboard.
+- "CLUTCH1" is the button numbered #2 in the protoboard.
+- "CLUTCH2" is the button numbered #3 in the protoboard.
 - "Cycle CF" is the combination of buttons #7 and #6 in the protoboard.
 - "RSW" is the built-in push button of the rotary encoder.
 - "RCW" means rotary's clockwise rotation.

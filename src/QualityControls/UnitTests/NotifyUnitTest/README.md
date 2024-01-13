@@ -4,7 +4,7 @@
 
 To test that notifications are sent, received and executed.
 
-## Harware setup
+## Hardware setup
 
 Nothing required.
 Output through USB serial port at 115200 bauds. Connect before reset.

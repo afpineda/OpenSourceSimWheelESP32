@@ -132,9 +132,9 @@ typedef enum
  */
 typedef enum
 {
-    POWER_OPEN_DRAIN, /// Power on when open drain, power off when low voltage
-    POWER_OFF_HIGH,   /// Power on when low voltage, power off when high voltage
-    POWER_OFF_LOW,    /// Power on when high voltage, power off when low voltage
+    POWER_OPEN_DRAIN, // Power on when open drain, power off when low voltage
+    POWER_OFF_HIGH,   // Power on when low voltage, power off when high voltage
+    POWER_OFF_LOW,    // Power on when high voltage, power off when low voltage
 } powerLatchMode_t;
 
 /**
@@ -149,11 +149,11 @@ typedef enum
  */
 typedef enum
 {
-    CAP_CLUTCH_BUTTON = 0,                /// has digital clutch paddles (switches)
-    CAP_CLUTCH_ANALOG = 1,                /// has analog clutch paddles (potentiometers)
-    CAP_ALT = 2,                          /// has "ALT" buttons
-    CAP_DPAD = 3,                         /// has a directional pad
-    CAP_BATTERY = 4,                      /// battery-operated
+    CAP_CLUTCH_BUTTON = 0,                // has digital clutch paddles (switches)
+    CAP_CLUTCH_ANALOG = 1,                // has analog clutch paddles (potentiometers)
+    CAP_ALT = 2,                          // has "ALT" buttons
+    CAP_DPAD = 3,                         // has a directional pad
+    CAP_BATTERY = 4,                      // battery-operated
     CAP_BATTERY_CALIBRATION_AVAILABLE = 5 // has battery calibration data
 } deviceCapability_t;
 

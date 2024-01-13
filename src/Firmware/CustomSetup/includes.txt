@@ -11,6 +11,7 @@ BatteryCalibration.cpp
 ButtonMatrixInput.cpp
 AnalogMultiplexerInput.cpp
 hidImplementation_NimBLE.cpp
+hidImplementation_common.cpp
 inputHub.cpp
 inputs.cpp
 PolledInput.cpp

@@ -1,10 +1,10 @@
 # Unit test: Input from analog multiplexers
 
-## Purpouse and summary
+## Purpose and summary
 
 To test correct identification of events caused by analog multiplexers.
 
-## Harware setup
+## Hardware setup
 
 Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
 Use this [test circuit](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.diy):

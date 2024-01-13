@@ -1,10 +1,10 @@
 # Unit test: Input from a button matrix
 
-## Purpouse and summary
+## Purpose and summary
 
 To test correct identification of events caused by a button matrix.
 
-## Harware setup
+## Hardware setup
 
 Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
 Use this [test circuit](../../Protoboards/ESP32-WROOM-DevKitC-1.diy):

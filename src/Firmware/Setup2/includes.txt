@@ -16,6 +16,7 @@ PolledInput.cpp
 Inputs.cpp
 InputHub.cpp
 hidImplementation_NimBLE.cpp
+hidImplementation_common.cpp
 power_mock.cpp
 userSettings.cpp
 notify.cpp

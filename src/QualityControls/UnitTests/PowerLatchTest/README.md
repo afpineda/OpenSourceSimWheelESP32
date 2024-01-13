@@ -8,11 +8,11 @@ To test power off using an external latch circuit.
 
 In this particular case, **under no circumstances should you power the DevKit board with the powerboost module/shield nor the batteries**. The board could get damaged. The system will get power from the USB cable.
 
-## Harware setup
+## Hardware setup
 
 Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
 
-A [powerboost module/shield](../../../../doc/hardware/subsystems/PowerBoost/Powerboost_en.md) must be in place equiped with a latch circuit. However, we are not taking power from it. The constant `TEST_LATCH_MODE`, at [debugUtils.h](./debugUtils.h), may need modification depending on how it works. Wire `POWER_LATCH` (from the latch circuit) to `TEST_POWER_PIN` (at the DevKit board).
+A [powerboost module/shield](../../../../doc/hardware/subsystems/PowerBoost/Powerboost_en.md) must be in place equipped with a latch circuit. However, we are not taking power from it. The constant `TEST_LATCH_MODE`, at [debugUtils.h](./debugUtils.h), may need modification depending on how it works. Wire `POWER_LATCH` (from the latch circuit) to `TEST_POWER_PIN` (at the DevKit board).
 
 If the powerboost module does not have a power-on LED, use a multimeter to know if it is powered on or off.
 
