@@ -1,4 +1,6 @@
 /**
+ * @file Teabox.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2023-02-15
  * @brief Sim wheel setup "teabox"
@@ -7,7 +9,7 @@
  *
  */
 
-#include <Arduino.h>
+//#include <Arduino.h>
 #include "SimWheel.h"
 
 //------------------------------------------------------------------
@@ -64,7 +66,6 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
 
-    inputs::begin();
     simWheelSetup();
     hidImplementation::begin(
         DEVICE_NAME,

@@ -112,7 +112,7 @@ Notes and build tips:
   - Wire the other terminal of each push button to one of the light-blue pins.
   - Bare bone rotary encoders: their built-in push button must be wired like any other push button, being `SW` and `SW COM` the involved terminals.
 - In a battery-operated setup:
-  - Solder the battery connector to the small solder pads on the back of the T-QT dekvit board.
+  - Solder the battery connector to the small solder pads on the back of the T-QT devkit board.
   - `Battery(+)` is the positive pole of the battery.
   - `Battery(-)` is the negative pole of the battery.
   - Attach `Battery(+)` and `Battery(-)` properly. **Take care not to swap those terminals**. There are two small solder pads on the back of the T-QT for them.

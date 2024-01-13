@@ -97,7 +97,7 @@ You also have to build this by yourself. The DevKit board will be mounted upside
 
 ## Circuit layout
 
-Open the [circuit layout](./setup6.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator). If you nead a clear view of the back traces, hide the wires in DIY by hitting `CTRL+5`.
+Open the [circuit layout](./setup6.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator). If you need a clear view of the back traces, hide the wires in DIY by hitting `CTRL+5`.
 
 ![Setup #6 circuit layout](./setup6.png)
 

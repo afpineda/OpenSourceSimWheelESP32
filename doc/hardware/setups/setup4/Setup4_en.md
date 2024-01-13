@@ -100,7 +100,7 @@ This layout includes the following subsystems (read for an in-depth explanation)
 
 Notes and build tips:
 
-- The packaging of the analog multiplexers will show a small circle next to pin #1, wich is tagged as `A4` here.
+- The packaging of the analog multiplexers will show a small circle next to pin #1, which is tagged as `A4` here.
 
 ### External wiring
 

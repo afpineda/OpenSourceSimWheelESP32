@@ -1,4 +1,6 @@
 /**
+ * @file Setup7.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2023-02-11
  * @brief Sim wheel setup #7
@@ -7,7 +9,7 @@
  *
  */
 
-#include <Arduino.h>
+//#include <Arduino.h>
 #include "SimWheel.h"
 
 //------------------------------------------------------------------
@@ -103,7 +105,8 @@ void simWheelSetup()
     inputs::addRotaryEncoder(GPIO_NUM_38, GPIO_NUM_37, ROT2_CW, ROT2_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_35, ROT3_CW, ROT3_CCW);
 
-    inputs::setAnalogClutchPaddles(GPIO_NUM_16, GPIO_NUM_17, LCLUTCH, RCLUTCH);
+    inputs::setAnalogClutchPaddles(GPIO_NUM_16, GPIO_NUM_17);
+    inputHub::setClutchInputNumbers(LCLUTCH, RCLUTCH);
     inputHub::setClutchCalibrationButtons(ROT1_CW, ROT1_CCW);
     inputHub::cycleCPWorkingMode_setBitmap(BITMAP(JOY_START) | BITMAP(JOY_LB));
     inputHub::setCalibrationCommandBitmaps(
@@ -122,7 +125,6 @@ void setup()
         sizeof(WAKEUP_PINS) / sizeof(gpio_num_t),
         WAKEUP_ANYorALL);
     userSettings::begin();
-    inputs::begin();
     simWheelSetup();
 
 #ifdef BATTERY_ENABLE_READ_GPIO

@@ -21,7 +21,7 @@ This project provides open hardware and software for a sim-racing wheel or butto
 - **ALT buttons** that can be mapped to one of two functions through user preferences:
   - Alternate mode
   - Regular button.
-- A **directional pad/funky switch** is supported and can be mapped to one of two functions through user preferences:
+- One **directional pad/funky switch** can be mapped to one of two functions through user preferences:
   - Navigation controls
   - Regular buttons. Navigation controls can not be assigned to car functions in some simulators. This solves that problem.
 - **User-defined button mapping**. The user may adjust the button numbering on this steering wheel to match any other steering wheel. In this way, the simulator does not force the user to reconfigure inputs each time those wheels are swapped.
@@ -55,7 +55,7 @@ Este proyecto proporciona hardware y software abierto para un volante de simulac
 - **Botones "ALT"** que pueden ser configurados en una de dos funciones:
   - Modo alternativo
   - Botón normal y corriente.
-- Soporta una **cruceta direccional o funky switch** que puede ser configurada en una de dos funciones:
+- Una **cruceta direccional o funky switch** puede ser configurada en una de dos funciones:
   - Controles de navegación
   - Botones normales y corrientes. Los controles de navegación no se pueden asignar a funciones del coche en algunos simuladores. Esto solventa dicho problema.
 - **Mapa de botones definido por el usuario**. El usuario puede ajustar la numeración de los botones de manera que coincida con cualquier otro volante. De esta manera, el simulador no fuerza al usuario a reconfigurar las entradas cada vez que intercambia los volantes.

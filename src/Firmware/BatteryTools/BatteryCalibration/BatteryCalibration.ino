@@ -1,4 +1,6 @@
 /**
+ * @file BatteryCalibration.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-03-08
  * @brief Data acquisition for battery calibration. See [README](./README_en.md)

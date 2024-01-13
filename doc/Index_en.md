@@ -49,7 +49,8 @@
 - [Glossary of terms and definitions](./firmware/glossary_en.md)
 - [Firmware architecture](./firmware/FirmwareArchitecture_en.md)
 - [Overview of Quality Controls](./firmware/FirmwareTesting_en.md)
-- [Notes on HID device implementation](./firmware/HID_notes.md)
+- [Notes on HID device implementation](./firmware/HID_notes.md).
+  If you plan to develop an application that interfaces this firmware, you should read this.
 - [Change log](./changelog.md)
 
 ## Other

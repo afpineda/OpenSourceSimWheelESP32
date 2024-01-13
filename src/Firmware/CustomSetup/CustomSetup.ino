@@ -1,4 +1,6 @@
 /**
+ * @file CustomSetup.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-03-01
  * @brief Custom setup. Please, read
@@ -152,7 +154,7 @@ void simWheelSetup()
     inputs::addDigital(GPIO_NUM_33, true, false,34);
     inputs::addDigital(GPIO_NUM_27, true, false,35);
 
-    inputs::setDigitalClutchPaddles(4, 12);
+    inputHub::setClutchInputNumbers(4, 12);
     inputHub::setDPADControls(19, 15, 11, 7);
     inputHub::setALTBitmap(BITMAP(0) | BITMAP(8));
     inputHub::setClutchCalibrationButtons(25, 26); // Rotary 1
@@ -178,7 +180,6 @@ void setup()
 #endif
 
     userSettings::begin();
-    inputs::begin();
     simWheelSetup();
     hidImplementation::begin(
         DEVICE_NAME,

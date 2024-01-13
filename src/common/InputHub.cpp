@@ -369,7 +369,7 @@ void inputHub_UserMap_filter(
 
 // ----------------------------------------------------------------------------
 
-void inputHub ::onRawInput(
+void inputHub::onRawInput(
     inputBitmap_t rawInputBitmap,
     inputBitmap_t rawInputChanges,
     clutchValue_t leftAxis,

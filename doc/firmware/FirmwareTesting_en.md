@@ -5,7 +5,7 @@ Quality controls are implemented as a set of Arduino sketches located under the 
 1. **Unit tests**: to reveal bugs in the behavior of a single module.
 2. **Integration tests**: to reveal bugs in the interchange of data from the tested module to other modules and their behavior as a group.
 
-Those are **not** fully automated test. Inside each sktech's folder, a file named "README.md" can be found. This file describes the **testing procedure**:
+Those are **not** fully automated test. Inside each sketch's folder, a file named "README.md" can be found. This file describes the **testing procedure**:
 
 1. Required hardware (if any), to be built in a prototype board.
 2. Required software tools (if any).

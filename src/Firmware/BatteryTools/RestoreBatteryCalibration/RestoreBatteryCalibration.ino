@@ -1,4 +1,6 @@
 /**
+ * @file RestoreBatteryCalibration.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-03-08
  * @brief Restore battery calibration data. See [README](./README_en.md)
@@ -32,7 +34,7 @@ void setup()
     Serial.begin(115200);
     while (!Serial)
         ;
-    
+
     // Check data array
     int len = sizeof(customCalibrationData)/sizeof(uint16_t);
     if (len!=32) {

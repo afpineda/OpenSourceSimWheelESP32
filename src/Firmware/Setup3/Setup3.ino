@@ -1,4 +1,6 @@
 /**
+ * @file Setup3.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2023-01-13
  * @brief Sim wheel setup #3
@@ -7,7 +9,7 @@
  *
  */
 
-#include <Arduino.h>
+//#include <Arduino.h>
 #include "SimWheel.h"
 
 //------------------------------------------------------------------
@@ -96,10 +98,6 @@ static inputNumber_t mtxNumbers[] = {
     12, 10, 8, JOY_BACK};
 
 //------------------------------------------------------------------
-// Globals
-//------------------------------------------------------------------
-
-//------------------------------------------------------------------
 // Setup
 //------------------------------------------------------------------
 
@@ -113,7 +111,8 @@ void simWheelSetup()
         mtxNumbers);
     inputs::addRotaryEncoder(GPIO_NUM_26, GPIO_NUM_27, ROT1_CW, ROT1_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_14, GPIO_NUM_4, ROT2_CW, ROT2_CCW);
-    inputs::setAnalogClutchPaddles(GPIO_NUM_25, GPIO_NUM_26, LCLUTCH, RCLUTCH);
+    inputs::setAnalogClutchPaddles(GPIO_NUM_25, GPIO_NUM_26);
+    inputHub::setClutchInputNumbers(LCLUTCH, RCLUTCH);
     inputHub::setALTBitmap(BITMAP(ALT1) | BITMAP(ALT2));
     inputHub::setClutchCalibrationButtons(ROT1_CW, ROT1_CCW);
     inputHub::cycleCPWorkingMode_setBitmap(BITMAP(JOY_START) | BITMAP(JOY_LB));
@@ -134,7 +133,6 @@ void setup()
         WAKEUP_ANYorALL);
 
     userSettings::begin();
-    inputs::begin();
     simWheelSetup();
     hidImplementation::begin(
         DEVICE_NAME,

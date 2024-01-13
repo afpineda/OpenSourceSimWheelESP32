@@ -68,7 +68,7 @@ A funky switch is just the physical combination of a rotary encoder, a 4-way joy
 
 ## Magnets (magnetic shift paddles and the alike)
 
-Magnetic shift paddles are a common choice for sim wheels these days due to their "feel" but, in the end, most of them are equiped with roller lever switches like any other shift paddle. However, magnets could be used as contactless switches, thus beating the lifetime of any mechanical switch.
+Magnetic shift paddles are a common choice for sim wheels these days due to their "feel" but, in the end, most of them are equipped with roller lever switches like any other shift paddle. However, magnets could be used as contactless switches, thus beating the lifetime of any mechanical switch.
 
 Any mechanical switch may be replaced with [Hall-effect (HE)](https://en.wikipedia.org/wiki/Hall_effect_sensor) sensors. Note that there are many different kinds of HE sensors, not all suitable for this application. Discrete (or "digital") HE sensors/switches, like the widely available [KY-003](https://sensorkit.joy-it.net/en/sensors/ky-003) will work, but note that the sensor itself have to be positioned very close to the magnet.
 
@@ -113,7 +113,7 @@ There are other kinds of analog circuits that have been discarded, too, because 
   A voltage divider may accommodate two buttons into a single wire, but no more. This conclusion came from experimentation.
   Unlike voltage ladders, a voltage divider is able to detect any combination of buttons pushed at the same time.
 
-  Different resistors may be used, but they have to be tested. As a rule of thumb, each pull-up resistor should duplicate the impedance of the previous one. This voltage divider can be built using 1Kohms resistors only:
+  Different resistors may be used, but they have to be tested. As a rule of thumb, each pull-up resistor should duplicate the impedance of the previous one. This voltage divider can be built using 1 Kohms resistors only:
 
   ![Voltage divider for 2 push buttons using 1K resistors](./pictures/VDivider2Buttons1K.png)
 

@@ -1,4 +1,6 @@
 /**
+ * @file Setup6.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2023-02-15
  * @brief Sim wheel setup #6
@@ -7,7 +9,7 @@
  *
  */
 
-#include <Arduino.h>
+//#include <Arduino.h>
 #include "SimWheel.h"
 
 //------------------------------------------------------------------
@@ -110,7 +112,8 @@ void simWheelSetup()
     inputs::addDigital(GPIO_NUM_18, ROT4_SW);
     inputs::addDigital(GPIO_NUM_23, JOY_LSHIFT_PADDLE);
     inputs::addDigital(GPIO_NUM_19, JOY_RSHIFT_PADDLE);
-    inputs::setAnalogClutchPaddles(GPIO_NUM_36, GPIO_NUM_39, LCLUTCH, RCLUTCH);
+    inputs::setAnalogClutchPaddles(GPIO_NUM_36, GPIO_NUM_39);
+    inputHub::setClutchInputNumbers(LCLUTCH, RCLUTCH);
     inputHub::setALTBitmap(BITMAP(ALT1) | BITMAP(ALT2));
     inputHub::setClutchCalibrationButtons(ROT1_CW, ROT1_CCW);
     inputHub::cycleCPWorkingMode_setBitmap(BITMAP(ROT1_SW) | BITMAP(JOY_LB));
@@ -134,7 +137,6 @@ void setup()
         WAKEUP_ANYorALL);
 
     userSettings::begin();
-    inputs::begin();
     simWheelSetup();
     hidImplementation::begin(
         DEVICE_NAME,

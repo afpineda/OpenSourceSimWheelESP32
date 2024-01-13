@@ -34,7 +34,7 @@ This is not the only annoyance:
 - Not all pins can wake up the system from deep sleep.
 - Not all pins can be used for analog input.
 
-As a result, some devices can not be connected to any arbitrary pin, so a **pin-out plan** is needed. To develop such a plan, you need to know which constraints apply to your DevKit board. Look for a datasheet.
+As a result, some devices can not be connected to any arbitrary pin, so a **pin-out plan** is needed. To develop such a plan, you need to know which constraints apply to your DevKit board. Look for a data sheet.
 
 ### ESP-WROOM-32 DevKit
 
@@ -42,34 +42,34 @@ The following article explains which pins can be used and how:
 [https://randomnerdtutorials.com/esp32-pinout-reference-gpios/](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/). However, we can get more specific:
 
 - **GPIO #36, #39, #34 and #35**:
-  
+
   - Input only.
   - Not suitable for bare bone rotary encoders, unless external pull-up resistors are in place.
   - Not suitable for a button matrix, unless external pull-down resistors are in place (inputs only).
   - Not suitable for an analog multiplexer, unless external pull-up resistors are in place (inputs only).
 
 - **GPIO #12**:
-  
+
   - Not suitable for rotary encoders (any kind).
   - Not suitable for any pulled-up input. Boot will fail.
 
 - **GPIO #6, #7, #8, #9, #10 and #11**
-  
+
   - **UNUSABLE**. Do not attach anything to those pins.
 
 - **GPIO #0**:
-  
+
   - Despite being described as pulled-up, it seems to work in other modes.
   - The board will enter "bootloader mode" if this pin is set to low voltage at startup.
 
 - **GPIO #3**:
-  
+
   - Despite being described as input-capable, it works in pull-up mode only.
   - Not suitable for a button matrix.
   - Perfect for rotary encoders (any kind).
 
 - **GPIO #1**:
-  
+
   - Output only.
 
 ## Uploading firmware to your DevKit board

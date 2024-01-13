@@ -11,14 +11,14 @@ The purpose of this subsystem is to provide one or more relative rotary encoders
 Each rotary encoder requires two dedicated pins at the DevKit board, no matter if they are bare bone or KY-040 rotary encoders. Not counting any built in push button, this is the wiring of a rotary encoder:
 
 - KY-040 type:
-  
+
   - Pin labeled `Vcc` must be wired to `3V3` pin at the board.
   - Pin labeled `GND` must be wired to `GND` pin at the board.
   - Pin labeled `CLK` or `A`, must be wired to any input-capable GPIO pin.
   - Pin labeled `DT` or `B` must be wired to any input-capable GPIO pin.
 
 - Bare bone and funky switch type:
-  
+
   - There are two pins labeled `GND`. The one located between `A` (or `CLK`) and `B` (or `DT`) must be wired to `GND` pin at the board. The other one, sometimes labeled `SW GND`, is not related to this subsystem.
   - Pin labeled `CLK` or `A`, must be wired to any input-capable GPIO pin **with internal pull-up resistors**. Otherwise, a external pull-up resistor must be placed.
   - Pin labeled `DT` or `B` must be wired to any input-capable GPIO pin **with internal pull-up resistors**. Otherwise, a external pull-up resistor must be placed.
@@ -41,7 +41,7 @@ Edit the body of `simWheelSetup()` and place a call to `inputs::addRotaryEncoder
 - Second parameter is the GPIO assigned to `DT` or `B`.
 - Third parameter is the assigned input number for clockwise rotation.
 - Fourth parameter is the assigned input number for counter-clockwise rotation.
-- Fifth paramater must be set to `true` when "alternate encoding" is in place (optional parameter, defaults to `false`). Give a try to this parameter if your encoder does not work properly.
+- Fifth parameter must be set to `true` when "alternate encoding" is in place (optional parameter, defaults to `false`). Give a try to this parameter if your encoder does not work properly.
 
 For example, let's say that a bare bone rotary encoder has `A` attached to GPIO 33 and `B` attached to GPIO 25:
 

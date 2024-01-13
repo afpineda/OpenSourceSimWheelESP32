@@ -1,4 +1,6 @@
 /**
+ * @file Setup2.ino
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-05-01
  * @brief Sim wheel setup #2
@@ -62,7 +64,7 @@ static inputNumber_t mtxNumbers[] = {
 
 void batteryCalibration::restartAutoCalibration()
 {
-    
+
 }
 
 //------------------------------------------------------------------
@@ -89,7 +91,6 @@ void simWheelSetup()
 
 void setup()
 {
-    inputs::begin();
     simWheelSetup();
     hidImplementation::begin(
         DEVICE_NAME,

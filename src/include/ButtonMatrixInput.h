@@ -1,4 +1,6 @@
 /**
+ * @file ButtonMatrixInput.h
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-03-03
  * @brief Use of a switch/button matrix as inputs

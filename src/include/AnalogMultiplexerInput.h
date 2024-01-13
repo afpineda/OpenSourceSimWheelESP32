@@ -1,4 +1,6 @@
 /**
+ * @file AnalogMultiplexerInput.h
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2023-01-19
  * @brief Use of analog multiplexors as inputs
@@ -39,7 +41,7 @@ public:
      * @param inputPins Array of GPIO numbers for input pins.
      * @param inputPinCount Length of `inputPins`array.
      * @param buttonNumbersArray Array of input numbers to be assigned to every button.
-     *                           The length of this array is expected to match 
+     *                           The length of this array is expected to match
      *                           (2^selectorPinCount)*inputPinCount.
      * @param negativeLogic If true (default), a switch is closed when LOW voltage is detected.
      *                      If false, a switch is closed when HIGH voltage is detected.
@@ -56,7 +58,7 @@ public:
 
     /**
      * @brief Destroy the Analog Multiplexer Input object
-     * 
+     *
      * @note Should not be called.
      */
     ~AnalogMultiplexerInput();

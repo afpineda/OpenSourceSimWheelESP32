@@ -1,4 +1,6 @@
 /**
+ * @file SerialNotification.h
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-12-24
  * @brief Implement notifications through the USB serial interface (for testing)

@@ -4,7 +4,7 @@ Before compiling and uploading *any* of the Arduino sketches provided in this pr
 
 This is due to how the Arduino IDE works, **which prevents a single source file to be shared between many sketches**. Those source files are located at folders [src/common](../../src/common/) and [src/include](../../src/include/).
 
-This procedure relays on a **poweshell script**, named [**MakeSymLinks.ps1**](../../src/MakeSymLinks.ps1). In order to run any powershell script, you may need to enable them first:
+This procedure relays on a **powershell script**, named [**MakeSymLinks.ps1**](../../src/MakeSymLinks.ps1). In order to run any powershell script, you may need to enable them first:
 
 1. Run `powershell.exe`
 

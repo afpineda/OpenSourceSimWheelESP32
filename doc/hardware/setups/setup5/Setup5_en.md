@@ -58,7 +58,7 @@ Other notes:
 
 - The GX16 connector may be replaced by any other kind. The GX16 features a knot that prevents accidental unplug. The 5 pins flavor allows to build a fully capable USB port, not just a charging/power port, if you want.
 - Recommended male 90-degrees [bended pin headers](https://duckduckgo.com/?q=bended+pin+header&iax=images&ia=images).
-- The packaging of the analog multiplexers will show a small circle next to pin #1, wich is tagged as `A4` here.
+- The packaging of the analog multiplexers will show a small circle next to pin #1, which is tagged as `A4` here.
 - You may choose another perfboard as long as it features 17x6 holes. A single-sided board is all right.
 - There are several flavors of the T-QT DevKit board. Choose the **"PRO"** flavor, since it features a built-in powerboost module, unless you don't need the battery.
 - The T-QT DevKit board is sold with some wires included for the (optional) battery.
@@ -107,7 +107,7 @@ Notes and build tips:
   - Wire the other terminal of each push button to one of the light-blue pins.
   - Bare bone rotary encoders: their built-in push button must be wired like any other push button, being `SW` and `SW COM` the involved terminals.
 - In a battery-operated setup:
-  - Solder the battery connector to the small solder pads on the back of the T-QT dekvit board.
+  - Solder the battery connector to the small solder pads on the back of the T-QT devkit board.
   - `Battery(+)` is the positive pole of the battery.
   - `Battery(-)` is the negative pole of the battery.
   - Attach `Battery(+)` and `Battery(-)` properly. **Take care not to swap those terminals**. There are two small solder pads on the back of the T-QT for them.

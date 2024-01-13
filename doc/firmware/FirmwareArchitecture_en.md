@@ -11,9 +11,9 @@ The *system* have been broken into several *modules* that have been implemented 
 - **inputHub**: Everything related to the combined state of all inputs and their treatment. Translates input events into a HID report.
 - **notify**: Everything related to the notification of some events to the user if an user interface is available.
 - **power**: Everything related to power management.
-- **userSettings**: Holds the working mode of clutch paddles, ALT buttons and directional pad.
+- **userSettings**: Manages user settings and their long term storage.
 
-Each namespace is implemented in a single *cpp* file with its name, however, some of them have alternate implementations in order to enable unit and integration testing. Those files are named following this pattern: `<namespace><underscore><implementation>.cpp`. Some implementations are:
+Each namespace is implemented in a single *cpp* file with its name, however, some of them have alternate implementations in order to enable unit and integration testing. Those files are named following this pattern: `<namespace>_<implementation>.cpp`. Some implementations are:
 
 - *mock*: dummy implementation with no actual behavior.
 - *serial*: implementation providing output to the serial port.
@@ -328,3 +328,33 @@ The *hidImplementation* namespace is in charge of that. However, this project pr
 - *hidImplementation_NimBLE.cpp*: BLE using the [NimBLE stack](https://mynewt.apache.org/latest/network/). Requires an additional Arduino [library](https://www.arduino.cc/reference/en/libraries/nimble-arduino/).
 - *hidImplementation_ESPBLE.cpp*: BLE using the native ESP-Arduino stack. Does not require additional libraries, but it takes way more flash memory than *NimBLE*.
 - *hidImplementation_USB.cpp*: wired USB implementation.
+
+## Concurrency
+
+System concurrency comes from these OS task and daemons:
+
+- *Main task*: Performs initialization, then goes dormant.
+- *Input poll daemon*. May call:
+  - `inputs` and auxiliary modules.
+- *Input hub daemon*. May call:
+  - `inputHub`
+  - `hidImplementation`
+  - `inputs`
+  - `userSettings`
+  - `batteryCalibration`
+  - `notify`
+- *Battery monitor daemon*. May call:
+  - `power`
+  - `batteryCalibration`
+  - `hidImplementation`
+  - `notify`
+- *OS timers*. May call:
+  - `inputs`
+  - `userSettings`
+  - `notify`
+- *Bluetooth/USB stack*. May call:
+  - `hidImplementation`
+  - `userSettings`
+  - `inputs`
+  - `batteryCalibration`
+  - `notify`
