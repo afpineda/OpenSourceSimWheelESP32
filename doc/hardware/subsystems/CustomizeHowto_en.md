@@ -43,7 +43,12 @@ Arduino's sketch named [**CustomSetup**](../../../src/Firmware/CustomSetup/Custo
    You are **not** allowed to assign the same input number to two different inputs.
    If you fail to provide valid input numbers, the firmware will not boot up.
 
-3. Map certain input numbers to specific functions, as explained below. Edit the body of `simWheelSetup()` and place the required calls at the end of it. All of those mappings are optional, but take care not to build a dis functional firmware. Do not assign two functions to the same input numbers. Where available, do not use a combination of input numbers which can not be activated at the same time. Do not map a specific function to non-existent input numbers.
+3. Map certain input numbers to specific functions, as explained below. Edit the body of `simWheelSetup()` and place the required calls at the end of it.
+   All of those mappings are optional, but take care not to build a dis functional firmware.
+   Do not assign two functions to the same input numbers.
+   Where available, do not use a combination of input numbers which can not be activated at the same time.
+   Do not map a specific function to non-existent input numbers.
+   If you choose no to map those specific functions, they are still available thanks to the companion app.
 
 *Note:* "..." means other code not explicitly shown.
 
@@ -65,6 +70,29 @@ void simWheelSetup()
    inputs::addButtonMatrix(...);
    ...
    inputHub::setDPADControls(20, 22, 25, 28);
+   ...
+}
+```
+
+### Cycle working mode of DPAD
+
+Each time this function is activated, the working mode of the DPAD will move to the next one : navigation controls, regular buttons and back to the first mode.
+There is no point on this if there is no DPAD.
+
+Assign a combination of input numbers to activate this function by placing a call to
+`inputHub::cycleDPADWorkingMode_setBitmap()`. There is one parameter: a sequence of calls to `BITMAP(<input number>)` separated by `|`.
+All the inputs have to be active at the same time, and none of the others.
+
+For example:
+
+```c
+void simWheelSetup()
+{
+   inputNumber_t btnMatrixNumbers = [ ..., 60, 71, ...];
+   ...
+   inputs::addButtonMatrix(... , btnMatrixNumbers);
+   ...
+   inputHub::cycleDPADWorkingMode_setBitmap(BITMAP(60)|BITMAP(71));
    ...
 }
 ```

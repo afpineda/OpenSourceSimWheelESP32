@@ -109,3 +109,7 @@ First release.
 - The user can choose which input number is reported for each physical button, even in alternate mode.
   To swap steering wheels is much easier, since you can make your open source sim wheel to behave like any other sim wheel you have.
 - HID implementation has been updated to support all the new features. Companion app will be updated soon (if not done yet).
+
+## 3.0.1
+
+- Minor changes to the "teabox" firmware to take advantage of new features.

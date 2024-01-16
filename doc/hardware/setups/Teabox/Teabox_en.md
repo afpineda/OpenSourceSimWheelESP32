@@ -16,8 +16,12 @@ This setup has been tested.
 
 ## Button mapping
 
-- *Rotary encoder clockwise/counter-clockwise*: Left/Right thumb stick button.
-- *Switch lever*: left/right shoulder button.
+- *Rotary encoder clockwise/counter-clockwise*:
+  - In "regular buttons" mode: Left/Right thumb stick button.
+  - In "navigation" mode: DPAD left/right.
+- *Switch lever*:
+  - In "regular buttons" mode: left/right shoulder button.
+  - In "navigation" mode: DPAD up/down.
 - *Rotary encoder push button*: "A".
 - *Other buttons*: "B", "X" and "Y".
 

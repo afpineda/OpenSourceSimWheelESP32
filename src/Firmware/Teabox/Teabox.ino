@@ -53,9 +53,11 @@ void simWheelSetup()
     inputs::addDigital(GPIO_NUM_13, BTN1);
     inputs::addDigital(GPIO_NUM_15, BTN2);
     inputs::addDigital(GPIO_NUM_2, BTN3);
-    // Some simulators are unable to map DPAD inputs.
-    // Uncomment if you wish
-    // inputHub::setDPADControls(BTN_UP,BTN_DOWN,ROT1_CCW,ROT1_CW);
+    // Note: some simulators are unable to map DPAD inputs.
+    // By default, DPAD inputs will behave as regular buttons.
+    // Use the companion app to change that behaviour.
+    inputHub::setDPADControls(BTN_UP,BTN_DOWN,ROT1_CCW,ROT1_CW);
+    userSettings::dpadWorkingMode = false;
 }
 
 //------------------------------------------------------------------
@@ -67,6 +69,7 @@ void setup()
     esp_log_level_set("*", ESP_LOG_ERROR);
 
     simWheelSetup();
+    userSettings::begin();
     hidImplementation::begin(
         DEVICE_NAME,
         DEVICE_MANUFACTURER,
