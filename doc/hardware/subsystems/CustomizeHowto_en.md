@@ -48,7 +48,7 @@ Arduino's sketch named [**CustomSetup**](../../../src/Firmware/CustomSetup/Custo
    Do not assign two functions to the same input numbers.
    Where available, do not use a combination of input numbers which can not be activated at the same time.
    Do not map a specific function to non-existent input numbers.
-   If you choose no to map those specific functions, they are still available thanks to the companion app.
+   If you choose not to map those specific functions, they are still available thanks to the companion app.
 
 *Note:* "..." means other code not explicitly shown.
 

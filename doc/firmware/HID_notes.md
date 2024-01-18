@@ -100,10 +100,6 @@ The "flags" field is a set of 1-bit flags. Flags are indexed starting from the l
 
 This is the internal chip identifier as reported by [esp_efuse_mac_get_default()](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/misc_system_api.html). Useful to distinguish one device from another.
 
-### Available inputs
-
-A bitmap of all available inputs. If the n-th bit (0-based) is set to "1", the input number "n" is available for mapping.
-
 ## Data format of report ID 3
 
 While writing, any value outside of the valid range will be ignored, so they me be used to mask which fields to modify or not.
