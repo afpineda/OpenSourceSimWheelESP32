@@ -7,7 +7,7 @@
  *
  * @note Some types are renamed just for portability
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

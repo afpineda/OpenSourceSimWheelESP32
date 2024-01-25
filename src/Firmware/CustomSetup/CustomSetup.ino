@@ -6,7 +6,7 @@
  * @brief Custom setup. Please, read
  *        [How to customize](../../../doc/hardware/CustomizeHowto_en.md)
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

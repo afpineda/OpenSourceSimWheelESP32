@@ -6,7 +6,7 @@
  * @brief Key definitions of the sim wheel as a HID device.
  *        Independent from transport layer.
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

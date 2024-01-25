@@ -3,7 +3,7 @@
  * @date 2022-04-11
  * @brief Calibrate and measure battery charge
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

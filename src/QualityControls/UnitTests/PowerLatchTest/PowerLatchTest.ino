@@ -5,7 +5,7 @@
  * @date 2022-03-25
  * @brief Unit Test. See [README](./README.md)
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

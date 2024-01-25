@@ -1,7 +1,7 @@
 <############################################################################
 
 .SYNOPSYS
-    Copy or link required files from "common" and "include" folders into 
+    Copy or link required files from "common" and "include" folders into
     every Arduino's sketch folder for proper compilation
 
 .USAGE
@@ -16,8 +16,8 @@
     Ángel Fernández Pineda. Madrid. Spain. 2022.
 
 .LICENSE
-    Creative Commons Attribution 4.0 International (CC BY 4.0)
-    
+    Licensed under the EUPL
+
 #############################################################################>
 
 #setup
@@ -81,7 +81,7 @@ foreach ($folder in $sketchFolders) {
         Get-RequiredLinks $folder
     } catch {
         Write-Warning "$_includesFile not readable at $folder"
-        @() 
+        @()
     }
 
     #delete previous CPP and H files
@@ -99,9 +99,9 @@ foreach ($folder in $sketchFolders) {
             New-Item -ItemType SymbolicLink -Path $target -Target $linkSpec.source |Out-Null
         } catch [UnauthorizedAccessException] {
             # No admin privileges, copy files instead
-            Copy-Item $linkSpec.source -Destination $target -Force 
+            Copy-Item $linkSpec.source -Destination $target -Force
         } catch [System.Management.Automation.ItemNotFoundException] {
-           Write-Warning "$($linkSpec.source) not found" 
+           Write-Warning "$($linkSpec.source) not found"
         }
     }
 }

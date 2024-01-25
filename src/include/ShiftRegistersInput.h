@@ -5,7 +5,7 @@
  * @date 2023-02-19
  * @brief Use of PISO shift registers as inputs
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

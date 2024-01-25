@@ -113,3 +113,8 @@ First release.
 ## 3.0.1
 
 - Minor changes to the "teabox" firmware to take advantage of new features.
+
+## 3.0.2
+
+- Moving to EUPL 1.2.
+- No changes in the source code.

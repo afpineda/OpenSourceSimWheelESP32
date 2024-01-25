@@ -10,7 +10,7 @@
  * This file declares all the namespaces that builds the system architecture.
  * See the [Firmware Architecture document](../../doc/firmware/FirmwareArchitecture_en.md).
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

@@ -15,7 +15,7 @@
  * 3. Set the previous selector to LOW.
  * 4. Move to the next selector pin, and back to 1.
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

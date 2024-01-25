@@ -5,7 +5,7 @@
  * @date 2023-10-31
  * @brief Implementation of a HID device through the ESP32's native BLE stack
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

@@ -3,7 +3,7 @@
  * @date 2022-02-27
  * @brief Implementation of the `power` namespace
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 
@@ -173,9 +173,9 @@ void enterDeepSleep()
       ESP_ERROR_CHECK(esp_sleep_enable_ext1_wakeup(ext1_wakeup_sources, ext1_wakeup_mode));
     #else
       // NOTE: NOT TESTED
-      esp_deepsleep_gpio_wake_up_mode_t aux = 
-        (ext1_wakeup_mode==ESP_EXT1_WAKEUP_ANY_HIGH) ? ESP_GPIO_WAKEUP_GPIO_HIGH : ESP_GPIO_WAKEUP_GPIO_LOW; 
-      ESP_ERROR_CHECK(esp_deep_sleep_enable_gpio_wakeup(ext1_wakeup_sources,aux)); 
+      esp_deepsleep_gpio_wake_up_mode_t aux =
+        (ext1_wakeup_mode==ESP_EXT1_WAKEUP_ANY_HIGH) ? ESP_GPIO_WAKEUP_GPIO_HIGH : ESP_GPIO_WAKEUP_GPIO_LOW;
+      ESP_ERROR_CHECK(esp_deep_sleep_enable_gpio_wakeup(ext1_wakeup_sources,aux));
     #endif
   } // else reset is required for wake up
   esp_deep_sleep_start();

@@ -9,7 +9,7 @@
  *
  * Events are detected by a polling loop that runs in a separate thread.
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

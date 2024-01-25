@@ -5,7 +5,7 @@
  * @date 2023-10-25
  * @brief Sim wheel setup #8
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

@@ -5,7 +5,7 @@
  * @date 2022-03-08
  * @brief Data acquisition for battery calibration. See [README](./README_en.md)
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

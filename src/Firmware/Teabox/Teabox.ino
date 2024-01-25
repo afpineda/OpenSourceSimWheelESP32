@@ -5,7 +5,7 @@
  * @date 2023-02-15
  * @brief Sim wheel setup "teabox"
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

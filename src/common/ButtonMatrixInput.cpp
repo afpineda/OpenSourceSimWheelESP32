@@ -3,7 +3,7 @@
  * @date 2022-03-03
  * @brief Input from a switch/button matrix
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

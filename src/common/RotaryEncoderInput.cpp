@@ -5,7 +5,7 @@
  * @date 2022-02-27
  * @brief Everything about input from relative rotary encoders
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

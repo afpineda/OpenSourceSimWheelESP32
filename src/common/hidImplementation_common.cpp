@@ -6,7 +6,7 @@
  *
  * @brief Common functionality to all HID implementations
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

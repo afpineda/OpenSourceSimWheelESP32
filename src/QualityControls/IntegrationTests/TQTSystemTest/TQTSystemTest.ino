@@ -5,7 +5,7 @@
  * @date 2023-02-09
  * @brief System test for the Lilygo T-QT board. See [Readme](./README.md)
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

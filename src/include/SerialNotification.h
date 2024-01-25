@@ -5,7 +5,7 @@
  * @date 2022-12-24
  * @brief Implement notifications through the USB serial interface (for testing)
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

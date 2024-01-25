@@ -3,7 +3,7 @@
  * @date 2022-04-18
  * @brief Integration test. See [Readme](./README.md)
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

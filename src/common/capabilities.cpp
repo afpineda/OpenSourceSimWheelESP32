@@ -3,7 +3,7 @@
  * @date 2022-12-18
  * @brief Implementation of the `capabilities` namespace
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 

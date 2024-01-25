@@ -5,7 +5,7 @@
  * @date 2022-02-27
  * @brief Implementation of the `inputs` namespace
  *
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
+ * @copyright Licensed under the EUPL
  *
  */
 #include "SimWheel.h"

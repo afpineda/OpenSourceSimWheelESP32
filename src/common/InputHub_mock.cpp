@@ -2,9 +2,9 @@
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
  * @brief Dummy implementation of the `inputHub` namespace
- * 
- * @copyright Creative Commons Attribution 4.0 International (CC BY 4.0)
- * 
+ *
+ * @copyright Licensed under the EUPL
+ *
  */
 
 #include "SimWheel.h"
@@ -36,19 +36,19 @@ void inputHub::setClutchPaddles(
     const inputNumber_t leftClutchNumber,
     const inputNumber_t rightClutchNumber)
 {
-    
+
 }
 
 void inputHub::setClutchCalibrationButtons(
     const inputNumber_t upButtonNumber,
     const inputNumber_t downButtonNumber)
 {
-   
+
 }
 
 void inputHub::setMenuButton(const inputNumber_t menuButtonNumber)
 {
- 
+
 }
 
 void inputHub::setALTBitmap(const inputBitmap_t altBmp)
@@ -58,7 +58,7 @@ void inputHub::setALTBitmap(const inputBitmap_t altBmp)
 
 void inputHub::setALTButton(const inputNumber_t altNumber)
 {
-  
+
 }
 
 // ----------------------------------------------------------------------------
@@ -82,7 +82,7 @@ void inputHub::setALTFunction(bool altFunction, bool save)
 
 void inputHub::notifyMenuExit()
 {
-    
+
 }
 
 // ----------------------------------------------------------------------------
@@ -116,5 +116,5 @@ bool inputHub::hasALTButtons()
 
 void inputHub::begin()
 {
-   
+
 }
