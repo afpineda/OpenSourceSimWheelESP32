@@ -56,3 +56,4 @@
 ## Other
 
 - [Companion app](https://github.com/afpineda/SimWheelESP32Config)
+- [Some thoughts from the author](./Thoughts_en.md)

@@ -26,23 +26,24 @@
         "unwired"
     ],
     "ignoreWords": [
-        "ccal",
         "ESPBLE",
-        "protoboard",
-        "protoboards",
+        "Fanatec",
+        "Proto",
+        "RCCW",
+        "WROOM",
+        "bootloader",
+        "ccal",
+        "devkit",
+        "falstad",
+        "frameserver",
+        "kohms",
         "perfboard",
         "perfboards",
-        "RCCW",
         "powerboost",
-        "Proto",
-        "frameserver",
-        "devkit",
-        "simracing",
+        "protoboard",
+        "protoboards",
         "simracer",
-        "kohms",
-        "falstad",
-        "WROOM",
-        "bootloader"
+        "simracing"
     ],
     "import": []
 }

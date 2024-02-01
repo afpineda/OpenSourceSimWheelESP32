@@ -1,6 +1,7 @@
 {
     "C_Cpp.dimInactiveRegions": false,
     "arduino.enableUSBDetection": false,
+    "arduino.clearOutputOnBuild": true,
     "arduino.logLevel": "info",
     "files.associations": {
         "string_view": "cpp",
