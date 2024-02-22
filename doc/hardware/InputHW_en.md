@@ -25,16 +25,19 @@ This project provides debouncing by software means.
 
 ## Incremental Rotary Encoders
 
-They come in two flavors:
+They come in three flavors:
 
-- **Bare bone**: just a mechanical device with no pull resistors. They have 5 terminals: `common GND`, `A` and `B` (related to rotation) plus `SW GND` (sometimes `SW COM`) and `SW` (related to the built in push button). Those terminals are floating when idle. In this case, the label `GND` means nothing: it is just one of the two terminals of a switch.
-- **KY-040**: a bare bone rotary encoder with pull-up resistors. They have 5 terminals: `Vcc` and `Gnd`, related to the power source, `CLK` (or `A`) and `DT` (or `B`), related to rotation, and `SW`, related to the integrated push button. `CLK`, `DT` and `SW` terminals are set to high voltage when idle.
+- **Bare-bone**: just a mechanical device with no pull resistors. They have 5 terminals: `common GND`, `A` and `B` (related to rotation) plus `SW GND` (sometimes `SW COM`) and `SW` (related to the built in push button). Those terminals are floating when idle. In this case, the label `GND` means nothing: it is just one of the two terminals of a switch.
+- **KY-040**: a bare-bone rotary encoder with pull-up resistors. They have 5 terminals: `Vcc` and `Gnd`, related to the power source, `CLK` (or `A`) and `DT` (or `B`), related to rotation, and `SW`, related to the integrated push button. `CLK`, `DT` and `SW` terminals are set to high voltage when idle.
+- **I2C** or "chainable": a bare-bone rotary encoder with additional circuitry in order to offer an *I2C* serial interface.
+  A reasonable number of them can be chained together, using just 2 GPIO pins. An example is the [Adafruit I2C QT Rotary Encoder](https://learn.adafruit.com/adafruit-i2c-qt-rotary-encoder/overview).
+  You could even build your own (see [https://github.com/wagiminator/ATtiny412-I2C-Rotary-Encoder](https://github.com/wagiminator/ATtiny412-I2C-Rotary-Encoder)).
 
-[See pin-out at pinterest.com (thanks to Abhishek Ghosh)](https://in.pinterest.com/pin/436145545160682538/)
+See pin-out at [pinterest.com (thanks to Abhishek Ghosh)](https://in.pinterest.com/pin/436145545160682538/)
 
-Both encoders are supported by this project, as long as the proper input pins are used.
+*Bare-bone* and *KY-040* encoders are supported by this project, as long as the proper input pins are used.
 
-Rotary encoders can be very noisy, despite of debouncing techniques, some rotations may be missed. This project has eradicated this problem as far as I know.
+Rotary encoders can be very noisy. Despite debouncing techniques, some rotations may be missed. This project has eradicated this problem, as far as I know.
 
 ## Absolute rotary switches
 
@@ -51,7 +54,7 @@ They are similar in shape to rotary encoders and absolute rotary switches, but t
 - Current is drained at all times, which is bad for batteries.
 - Prone to failure after 10.000 usage cycles or so.
 
-As a result, **rotary potentiometers are discouraged**. However, some wheel cases are equipped with potentiometers at the clutch paddles, so we have to live with it. For example, the [GT2 steering wheel kit from 3DRap](https://www.3drap.it/product/gt2-steering-wheel-kit-by-3drap-thrustmaster-logitech-and-osw-adapters/). Potentiometers are supported by this project in two ways:
+As a result, rotary potentiometers are discouraged. However, some wheel cases are equipped with potentiometers at the clutch paddles, so we have to live with it. For example, the [GT2 steering wheel kit from 3DRap](https://www.3drap.it/product/gt2-steering-wheel-kit-by-3drap-thrustmaster-logitech-and-osw-adapters/). Potentiometers are supported by this project in two ways:
 
 - As an analog axis for each clutch paddle, attached to an ADC pin.
 - As a replacement for switch buttons, in case you are short of ADC pins.
@@ -84,6 +87,10 @@ When using a GPIO as a digital input, just one switch can be accommodated in it.
 
 - **PISO shift registers**. *"PISO"* means *"parallel input - serial output"*. Those are digital circuits, so they are not prone to error. There is almost *no limit* to the number of switches this circuit can hold and it takes just 3 pins.
 
+- **GPIO expanders**. Each GPIO expander will add a bunch of GPIO pins to the system. Those extra GPIO pins could be used by any input hardware,
+  including switches and rotary encoders. GPIO expanders are interfaced through standard serial-communication protocols
+  ([I2C](https://es.wikipedia.org/wiki/I%C2%B2C) or [SPI](https://es.wikipedia.org/wiki/Serial_Peripheral_Interface)).
+
 ### Analog circuits
 
 There are some articles in the Internet claiming a lot of switches in a single pin. It may work in a circuit simulator or in a specific application but, in global terms, **they don't work properly**. I came to this conclusion after a lot of testing. Analog circuits may seem a good idea, but they **fail** to identify the correct inputs due to:
@@ -106,7 +113,7 @@ There are other kinds of analog circuits that have been discarded, too, because 
 
   [Test this circuit at Falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKAGcQUFDweuewAFkFRwIAGYBDADZs67Tt3DCQ2PCKEiqEKbPkd+yjSjxHROmXIWHNivhhTmJl+QHc7Z7AkcoUWlgBKqt6cfiCCcKFaohGq0NiiVDAILABOHpiOYCZm2vBp4Dm2Njx5cAUlquq5yOUcXo4NwT5h2s56FUqZzT1lkCwA8j1NgnhUTUkFTU1ophO15QDmnPg9s+GRkwAeqiSceOSC2BAoxFTGIAAOAK5sABYAOmxsrgCWAC4AxncsO8cJYEIImw2AEhEOhRAqVeizu71+4AwpjAIPAxA0oPCkOkdHE8J2KFRB04gh4Zyx2RA10uCO6fjmkS4EAuABMAPauAB2LCAA)
 
-  This circuit does not involve rotation because no external circuit is needed for that (requires two different pins, apart from `GND`, as any other bare bone rotary encoder).
+  This circuit does not involve rotation because no external circuit is needed for that (requires two different pins, apart from `GND`, as any other bare-bone rotary encoder).
 
 - *Voltage dividers*
 
@@ -189,6 +196,16 @@ Actual implementation in this project uses negative logic and pull-up resistors.
 
 Note that the `SER` (serial input) pin of the last shift register in the chain may hold another switch. If you have $S$ shift registers, $N$ bits each, you can have up to $(N*S)+1$ switches.
 
+### GPIO expanders
+
+A GPIO expander is just a chip that will add a bunch of GPIO pins to the system, while offering a serial interface to the DevKit board in order to work with them.
+For example, the widely available [MCP23017/MCP23S17](https://ww1.microchip.com/downloads/en/devicedoc/20001952c.pdf) expander adds 16 GPIO pins each.
+You can wire up to eight of them, thus adding up to 128 GPIO pins.
+Note that those extra GPIO pins could work with rotary encoders too (for rotation events, I mean).
+The *MCP23017* requires just 2 pins for the *I2C* interface, no matter how many chips you need.
+
+This project does not support GPIO expanders right now.
+
 ## Summary of input hardware
 
 |      Circuitry       |        Required pins         | Number of switches |              Best suited for              |                     Advantages                     | Disadvantages                    | Supported by this project |
@@ -199,5 +216,6 @@ Note that the `SER` (serial input) pin of the last shift register in the chain m
 |    Voltage ladder    |              1               |       enough       | DPADS, rotary switches and funky switches |             Single pin for many inputs             | Prone to error                   |            no             |
 |   Voltage divider    |              1               |         2          |               Push buttons                |                        None                        | Prone to error                   |            no             |
 | PISO shift registers |              3               |  almost unlimited  |          Push buttons and DPADS           | Many buttons and error-free. Less pin expenditure. | Extra cost and space at the PCB  |            yes            |
+|    GPIO expanders    |   SPI: 4 or more, I2C:  2    |  almost unlimited  |     Push buttons and rotary encoders      |    Could hold both switches and rotary encoders    | Extra cost and space at the PCB  |            no             |
 
 Input circuitry takes some space inside the housing. Their physical layout must be carefully designed to fit into the steering wheel (or button box).
