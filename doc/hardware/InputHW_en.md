@@ -75,7 +75,7 @@ Magnetic shift paddles are a common choice for sim wheels these days due to thei
 
 Any mechanical switch may be replaced with [Hall-effect (HE)](https://en.wikipedia.org/wiki/Hall_effect_sensor) sensors. Note that there are many different kinds of HE sensors, not all suitable for this application. Discrete (or "digital") HE sensors/switches, like the widely available [KY-003](https://sensorkit.joy-it.net/en/sensors/ky-003) will work, but note that the sensor itself have to be positioned very close to the magnet.
 
-## Input circuitry
+## Input circuitry for switches
 
 When using a GPIO as a digital input, just one switch can be accommodated in it. There are not enough input pins to accommodate all the required inputs in this way, so another technique must come into place. There are several choices:
 
@@ -206,7 +206,7 @@ The *MCP23017* requires just 2 pins for the *I2C* interface, no matter how many 
 
 This project does not support GPIO expanders right now.
 
-## Summary of input hardware
+## Summary of input circuitry for switches
 
 |      Circuitry       |        Required pins         | Number of switches |              Best suited for              |                     Advantages                     | Disadvantages                    | Supported by this project |
 | :------------------: | :--------------------------: | :----------------: | :---------------------------------------: | :------------------------------------------------: | :------------------------------- | :-----------------------: |
@@ -219,3 +219,55 @@ This project does not support GPIO expanders right now.
 |    GPIO expanders    |   SPI: 4 or more, I2C:  2    |  almost unlimited  |     Push buttons and rotary encoders      |    Could hold both switches and rotary encoders    | Extra cost and space at the PCB  |            no             |
 
 Input circuitry takes some space inside the housing. Their physical layout must be carefully designed to fit into the steering wheel (or button box).
+
+## Input circuitry for incremental rotary encoders
+
+Each rotary encoder requires two GPIO pins to work.
+There are not enough input pins to accommodate a (relatively) large number of rotary encoders in this way,
+so another technique must come into place.
+
+Encoding signals are very short in nature and unpredictable.
+So, those techniques that work with switches do not work with rotary encoders.
+
+There are several choices:
+
+- **I2C rotary encoders**. Already described above. The main disadvantage of this approach is vendor dependence.
+  If you have two I2C encoders from different vendors, it is guaranteed that they can be wired together,
+  but there is no guarantee that they will accept the same set of commands.
+  Size is another concern due to the additional circuitry in each rotary encoder.
+  They are expensive, too.
+  The great advantage of this approach is pin expenditure: just 2 pins for all rotary encoders.
+  Another advantage is no need for extra circuitry, just wiring.
+
+- **GPIO expanders**. Already described above. Very close in nature to *I2C rotary encoders* and the same advantage.
+  Can hold switches along with rotary encoders.
+  The main disadvantage is size. For example, the *MCP23017* exposes 28 pins. It can hold up to eight rotary encoders.
+
+- **Rotary encoder matrix**. All encoders share `DT/A` and `CLK/B` input pins. Other input pins, called *witnesses*, tell which one is being operated.
+  Unfortunately, this circuit is **unable to detect input from two or more rotary encoders at the same time**.
+  Another disadvantage is the need for four diodes at each rotary encoder. Given $N$ rotary encoders, just $N+2$ input pins are required.
+  In an assessment of disadvantages and GPIO savings, this circuit **is barely a recommendable option**.
+
+### Rotary encoder matrix
+
+The idea behind this circuit is to share two input pins for all the `A` and `B` signals (tagged `A_COM` and `B_COM` below).
+Hardware interrupts are enabled at those two lines. On each signal change, the firmware will read all the *witness* signals (tagged `WITn` below)
+in order to know which rotary encoder caused that change. Unfortunately, the firmware cannot tell in case that two or more *witness* signals are activated
+at the same time, thus ignoring all input.
+
+The following circuit exposes the idea with four rotary encoders, saving two GPIO pins:
+
+![Rotary encoder matrix](./pictures/Rotary_encoder_matrix.png)
+
+[Test this circuit at Falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKACMQUEAWEJybCGzckuQZBYAnThhR9CvTHKaEoyeFJlyUKRbK1qw8CdKXgUeA2AyqqRjaf3Zt+vFTvH25y7j29sxOJeDNw+kLxkQniWEgAe4JEoYEgoAZxglrwZIADqAJIAKtws8WCk5hC6EGC6IFmW+QXYJQmqFpzYPhD1uYUoLWWqDPqplgwkdeANhawAsgY6-mictVQo0AgsAO58YG21ZotQLPNmNT7L52rrmzsq3lbtEqdOcs5UztcbJwbjS1R-L63XaqT5mT4SO57eR6ZQKY6lBApYiVMqcYi8HoAIQA+gBhADysxabWIcgwa2ISB6AEF8USfmBuP5sKomf5CDFON9pOyhKyVizbOo4NtwMzOAg2RLsALIeKsoQ7BKuLYxXz4Xy9u51RKGJ8Nbx5fdVQrJWqoWylWbtcdLSBNRL4cbofq5Hy3cd5m5+aofayuTdNP65b7DJ4dj6ynIQxaQD7iH67GS7fH3GmQInUz6GFmfTr7dGM0WXao81Qs6W1PnU-dc0m+JWxUwbA8W-sjc3rKDlN2HnE+Jh0uQmCsqLxLFsAJYAFwAdnQAM6L5uhQUg9fGn26AFr01btb4PhrkssRe7FVHhjbo92EAAMwAhgAbRd0M8XxTcAHb7+GB8vm+XaXmMfJHC6Kq1EwKp-gO16WGUYwEJwkDdMgIA0i09aSoIuZrFKkxGCAWLAYoUF9uBWFDjUECjjUmLxiA07zkuK53Ce7T3FcB5miECHWjxzDKGuTbntBWQ1HwUaSXeT6vu+YlanqUYSrJgHvlCEpCZ+-akW2SmdvE8HIMoyFGNS6GYUZWbJCOxB2NaWRUCRmlZJxfbcXpnztkIchwVmhC0fZDoMURJFGdEDpSXIxCEVQmGub5OlrhBio6RCH7iXUSHjlyEByUBilaUMUbCvl6nNqVx5cjxa58SFtZrt50IZUZQ5cLsnCZIxzELsuVEjhgtG0ZykyTrOfVsdVMIboCEgACazVm9XYXI810E+ACuz4ziwi0rfCK1ZmtG2Pttu37XVh11WCIDrVtO2VbuYw3X5T1Sc9jZqkVvDXj+-3-gVCk6StOYpeAAHyXpf0g860OHR6KVYZFeHRVJ5BORhWHLdgSCo56mMubDv19nNLAAEq-C14Qbumf7YNA4hqDAwI+YCPkZZTZj+jTNbjh8jPM1A3xc-ofa+OArZ0wLTPuCLCxODTZjS0IgvpizLAAOa7K2Rw+fuxz7a63mvZwd2nede209Nazmw9F0btdljwid9tW-cy0iW0dtnY9RtWp9tqu77DtcSm9VFsHlv++a02mlHj1c7UsodkIo0qwzsvC5slMfKGAZC-TavM98l0XDbZv3SH7tNcJzuKD70fTVc9XHY3fvN5xJ7Wgnod7lBJ4pr3NeWHre4EcPRnWO6aLQbFNRyJjhLElPIwk9wsVDkvDKr8oOAXrFwzjuhy9YdP6R40ym-ZNvxJAA)
+
+As usual, negative logic is in place. Note that each pair of switches is a rotary encoder.
+The dotted rectangles represent internal GPIO configuration at the DevKit board and are not part of the circuit.
+
+## Summary of input circuitry for rotary encoders
+
+|       Circuitry       | Required pins |                  Advantages                  |            Disadvantages            | Supported by this project |
+| :-------------------: | :-----------: | :------------------------------------------: | :---------------------------------: | :-----------------------: |
+|     I2C encoders      |       2       |                  Effortless                  |  Cost, size and vendor dependence   |            No             |
+|    GPIO expanders     |       2       | Could hold both switches and rotary encoders |         Size and extra cost         |            No             |
+| Rotary encoder matrix |     $N+2$     |                     None                     | Unable to detect simultaneous input |            No             |
