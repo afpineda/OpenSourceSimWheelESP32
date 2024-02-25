@@ -199,9 +199,9 @@ Note that the `SER` (serial input) pin of the last shift register in the chain m
 ### GPIO expanders
 
 A GPIO expander is just a chip that will add a bunch of GPIO pins to the system, while offering a serial interface to the DevKit board in order to work with them.
-For example, the widely available [MCP23017/MCP23S17](https://ww1.microchip.com/downloads/en/devicedoc/20001952c.pdf) expander adds 16 GPIO pins each.
+For example, the widely available [MCP23017/MCP23S17](./esp32reference/MCP23017_datasheet.pdf) expander adds 16 GPIO pins each.
 You can wire up to eight of them, thus adding up to 128 GPIO pins.
-The [PCF8574](https://www.ti.com/lit/ds/symlink/pcf8574.pdf) expander is another example that adds 8 GPIO pins each.
+The [PCF8574](./esp32reference/PCF8574_datasheet.pdf) expander is another example that adds 8 GPIO pins each.
 
 Note that those extra GPIO pins could work with rotary encoders too (for rotation events, I mean).
 The *MCP23017* and the *PCF8574* require just 2 pins for the *I2C* interface, no matter how many chips you need.
