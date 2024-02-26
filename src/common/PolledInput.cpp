@@ -14,6 +14,7 @@
 #include <climits>
 #include <Arduino.h> // function map()
 // #include <limits.h>
+#include "pins_arduino.h"
 
 // ============================================================================
 // Implementation of class: PolledInput
@@ -199,7 +200,7 @@ DigitalButton::DigitalButton(
     bool enableInternalPull,
     DigitalPolledInput *nextInChain) : DigitalPolledInput(nextInChain)
 {
-    // initalize
+    // initialize
     updateMask(1, buttonNumber);
     this->pinNumber = pinNumber;
     this->pullupOrPulldown = pullupOrPulldown;
@@ -327,4 +328,136 @@ void AnalogAxisInput::setCalibrationData(int minReading, int maxReading)
 {
     minADCReading = minReading;
     maxADCReading = maxReading;
+}
+
+// ============================================================================
+// Implementation of class: I2CInput
+// ============================================================================
+
+static bool isPrimaryBusInitialized = false;
+
+// ----------------------------------------------------------------------------
+// Driver initialization
+// ----------------------------------------------------------------------------
+
+void I2CInput::initializePrimaryBus(bool useFastClock)
+{
+    i2c_config_t conf;
+    conf.mode = I2C_MODE_MASTER;
+    conf.sda_io_num = SDA;
+    conf.scl_io_num = SCL;
+    conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
+    conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
+    conf.master.clk_speed = 100000;
+    if (useFastClock)
+        conf.master.clk_speed *= 4;
+    ESP_ERROR_CHECK(i2c_param_config(I2C_NUM_0, &conf));
+    ESP_ERROR_CHECK(i2c_driver_install(I2C_NUM_0, I2C_MODE_MASTER, 0, 0, 0));
+    isPrimaryBusInitialized = true;
+}
+
+void I2CInput::initializeSecondaryBus(gpio_num_t sdaPin, gpio_num_t sclPin, bool useFastClock)
+{
+    i2c_config_t conf;
+    conf.mode = I2C_MODE_MASTER;
+    conf.sda_io_num = sdaPin;
+    conf.scl_io_num = sclPin;
+    conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
+    conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
+    conf.master.clk_speed = 100000;
+    if (useFastClock)
+        conf.master.clk_speed *= 4;
+    ESP_ERROR_CHECK(i2c_param_config(I2C_NUM_1, &conf));
+    ESP_ERROR_CHECK(i2c_driver_install(I2C_NUM_1, I2C_MODE_MASTER, 0, 0, 0));
+}
+
+// ----------------------------------------------------------------------------
+// I2C probe
+// ----------------------------------------------------------------------------
+
+bool I2CInput::probe(uint8_t address7bits, i2c_port_t bus)
+{
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, (address7bits << 1) | I2C_MASTER_WRITE, true);
+    i2c_master_stop(cmd);
+    bool result = (i2c_master_cmd_begin(bus, cmd, 500 / portTICK_RATE_MS) == ESP_OK);
+    i2c_cmd_link_delete(cmd);
+    return result;
+}
+
+// ----------------------------------------------------------------------------
+// Constructor
+// ----------------------------------------------------------------------------
+
+I2CInput::I2CInput(
+    uint8_t address7bits,
+    bool useSecondaryBus,
+    DigitalPolledInput *nextInChain) : DigitalPolledInput(nextInChain)
+{
+    deviceAddress = address7bits;
+    if (useSecondaryBus)
+        busDriver = I2C_NUM_1;
+    else
+    {
+        busDriver = I2C_NUM_0;
+        if (!isPrimaryBusInitialized)
+            initializePrimaryBus();
+    }
+
+    if (!probe(address7bits, busDriver))
+    {
+        log_e("I2C device not found at address %x, bus=%d", address7bits, busDriver);
+        abort();
+    }
+}
+
+// ============================================================================
+// Implementation of class: I2CButtonsInput
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Constructor
+// ----------------------------------------------------------------------------
+
+I2CButtonsInput::I2CButtonsInput(
+    uint8_t buttonsCount,
+    inputNumber_t *buttonNumbersArray,
+    uint8_t address7Bits,
+    bool useSecondaryBus,
+    DigitalPolledInput *nextInChain) : I2CInput(address7Bits, useSecondaryBus, nextInChain)
+{
+    if ((buttonsCount > MAX_EXPANDED_GPIO_COUNT) || (buttonsCount > getMaxGPIOCount()))
+    {
+        log_e("Too many buttons at GPIO expander. Address=%x, bus=%d", address7Bits, busDriver);
+        abort();
+    }
+    updateMask(buttonNumbersArray, buttonsCount);
+    gpioCount = buttonsCount;
+    for (uint8_t i = 0; i < buttonsCount; i++)
+    {
+        gpioBitmap[i] = BITMAP(buttonNumbersArray[i]);
+    }
+    initialize();
+}
+
+// ----------------------------------------------------------------------------
+// Methods
+// ----------------------------------------------------------------------------
+
+inputBitmap_t I2CButtonsInput::read(inputBitmap_t lastState)
+{
+    inputBitmap_t GPIOstate;
+    if (getGPIOstate(GPIOstate))
+    {
+        inputBitmap_t result = 0ULL;
+        for (inputBitmap_t i = 0; i < gpioCount; i++)
+        {
+            if (!(GPIOstate & BITMAP(i)))
+                // Note: all buttons work in negative logic
+                result |= gpioBitmap[i];
+        }
+        return result;
+    }
+    return lastState;
 }

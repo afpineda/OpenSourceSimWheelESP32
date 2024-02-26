@@ -1,5 +1,5 @@
 /**
- * @file RotaryEncodeInput.h
+ * @file RotaryEncoderInput.h
  *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27

@@ -86,10 +86,6 @@ classDiagram
     inputHub <-- inputs: input events
     inputs <-- AnalogAxisInput: axis position
     inputs <-- PolledInput: state of input hardware
-    DigitalPolledInput <|-- ButtonMatrixInput
-    DigitalPolledInput <|-- AnalogMultiplexerInput
-    DigitalPolledInput <|-- ShiftRegistersInput
-    DigitalPolledInput <|-- RotaryEncoderInput
     PolledInput <|-- DigitalPolledInput
     inputHub <--> userSettings: configuration
     inputHub --> hidImplementation: processed events
@@ -100,7 +96,25 @@ classDiagram
     power <-- batteryCalibration: computed battery level
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNVMFu2zAM_RVBpw1rfkAoCqRrgRVY0CI57JILY9GOMFkyJLpJ0OXfR1tJYEdOUV8sU-_xUeKjP2ThNUolCwsxPhmoAtRrJ_jpI2LpCcLh2XWw8OKaloa7pgtE8ZFiQvyIjKZv39P3MYP-ajcDsHdL2PU5JxltxLBCIuOqocTGEL554-gSKZo_Pvxl2IKLvETB0mNL5F3MdkcyW6Nf6sZijY6AjHcDrYCND3S7xMbvMAzw_fdrWU6CN0CE4fATrNmEa6UK6THt_8Z3tOcE-c68JX9OgXpS6MlUhsC-eWtR98WPjgTXrEtr7mezU0tVegtWdBQHsNiD5g6sr-Z7E_v0SgAv-Tai6Y6VwQeVKMEWIRS-PClsIegdhFNnJkq__8cZUicXQMHsBy68BU_1LVpLhju7Hzn3Fme1NSUtsTKR7zp-gXBrNDJgniC_94eR3ZUovCtN1SafXME7dOZaJZrgC4wR9ahrub2_ppbzOlpvcG43mzCtZ74sPxE6E4o2BI6fZ0DYzsqJl2aoS54PiLoQ3r0lqHBI6dJPUQpf80XxNYzE5J2sMdRgNP_t-nFYS9pytWupeKmxBLbLWq7dkaHdAVcHV0hVgo14J9tGs21PP8ir6LM25INUFFo8_gdaWdDT)
+[Render this graph at mermaid.live](hhttps://mermaid.live/view#pako:eNqNVMtu2zAQ_BWCpxaNf4AICjhNgAZo0SA59KLLWlzJRCmuQC7jGqn_vSvJNiTTKaqLqOXMzj4GetM1WdRG1x5SunfQRuiqoOQZI-qZGOL-IQyw-Bj6zPNbNwSSeptiSn1KguYPH6fvQwH9mjczMIVn2I05rzJywviCzC60c4mNY3wiF_gcqfufFH8J7LsUeY6C57vMTCEVtwuZrbOPXe-xw8DAjsJMK2JPkd8vsacdxhl-_P7RNFfBG2DGuP8C3m3ipVKLfDfdf8NX9KcE5c06M51SoL0qdO9ax-CfyHu0Y_GLluCSdV7N7Wp1XKmZ3koUA6cZLI2gdQBP7fq3S2N6o0COMo3khrYK-KwSo8QijIqao8IWot1BPG5mXvPtH6GWvZQ1f15YxaiaQuPaPM34Aj6gi40b1UeqMSW0i45La_yfWskbaKM5ZFSywOm8oqb5h9CJUOcYJX7yj_KDDSbe5L8heWkucya8kmdocU4Z0l-j1NTJoGQMCzF9ozuMHTgrf4rRSpXmrVRbaSNHiw1kz5WuwkGgQ4Mv-1Br04BPeKNzb2Xlx5_LRfTBOqaoDceMh79PVIqW)
+
+```mermaid
+classDiagram
+    class I2CButtonsInput{
+      #getGPIOstate()
+      #initialize()
+    }
+    DigitalPolledInput <|-- ButtonMatrixInput
+    DigitalPolledInput <|-- AnalogMultiplexerInput
+    DigitalPolledInput <|-- ShiftRegistersInput
+    DigitalPolledInput <|-- RotaryEncoderInput
+    DigitalPolledInput <|-- I2CInput
+    I2CInput <|-- I2CButtonsInput
+    I2CButtonsInput <|-- PCF8574ButtonsInput
+    I2CButtonsInput <|-- MCP23017ButtonsInput
+```
+
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNkkFLxDAQhf9KiReFXdBVWSletLtKD8Wye-1laKbdgTQpyQR2Xfvfja2WsgdpLknefDOB93IWpZEoYlEqcG5DUFtoCh2F1StRukpePbPRLtWt5_NQi6KrGvk9Tz8cA-P1zSiTJiZQ9DmK3bBtqCYGlRulUPazouev5TIapmfAlo69_D_-okGZOvOKqVV4RDujZ3-gindYk2O0bkbDzjDY01b_eDPngWDShPq7jbWpgSMyFQcyT96eHtcPM-ksyVf3t3fraUUsRIO2AZIh0T6qQvABGyxEHI4SKwjGFaLQXUDBs9mfdCniCpTDhfCtDGH-foILdSuJjRUxW4_dN2N7v8c)
 
 ```mermaid
 classDiagram

@@ -18,7 +18,7 @@
 
 #include "SimWheelTypes.h"
 #include "esp32-hal.h"
-// #include <Arduino.h> // for debug
+#include "driver/i2c.h"
 
 /**
  * @brief Base class for all polled inputs
@@ -85,14 +85,14 @@ protected:
     void updateMask(inputNumber_t *inputNumbersArray, uint8_t inputsCount);
 
     /**
-     * @brief Check and initilize a GPIO pin for digital output
+     * @brief Check and initialize a GPIO pin for digital output
      *
      * @param aPin GPIO pin
      */
     void checkAndInitializeSelectorPin(gpio_num_t aPin);
 
     /**
-     * @brief Check and initilize a GPIO pin for digital input
+     * @brief Check and initialize a GPIO pin for digital input
      *
      * @param aPin GPIO pin
      * @param enablePullDown True to enable internal pull-down resistor
@@ -198,8 +198,8 @@ public:
     /**
      * @brief Get autocalibration data. Used for persistent storage.
      *
-     * @param[out] minReading Minimun adc reading
-     * @param[out] maxReading Maximun adc reading
+     * @param[out] minReading Minimum adc reading
+     * @param[out] maxReading Maximum adc reading
      */
     void getCalibrationData(int *minReading, int *maxReading);
 
@@ -223,10 +223,122 @@ public:
     /**
      * @brief Set autocalibration data (loaded from persistent storage).
      *
-     * @param[out] minReading Minimun adc reading
-     * @param[out] maxReading Maximun adc reading
+     * @param[out] minReading Minimum adc reading
+     * @param[out] maxReading Maximum adc reading
      */
     void setCalibrationData(int minReading, int maxReading);
+};
+
+/**
+ * @brief Base class for I2C GPIO Expanders
+ *
+ */
+class I2CInput : public DigitalPolledInput
+{
+public:
+    /**
+     * @brief Initialize the primary (and default) I2C bus.
+     *
+     * @note If not called, the primary I2C bus is automatically initialized with default parameters.
+     *
+     * @param useFastClock TRUE to use a 400Mhz clock, otherwise a 100Mhz clock is used.
+     */
+    static void initializePrimaryBus(bool useFastClock = false);
+
+    /**
+     * @brief Initialize a secondary I2C bus.
+     *
+     * @note Must be called before using the secondary bus.
+     *
+     * @param sdaPin SDA pin of the secondary bus.
+     * @param sclPin SCL pin of the secondary bus.
+     * @param useFastClock TRUE to use a 400Mhz clock, otherwise a 100Mhz clock is used.
+     */
+    static void initializeSecondaryBus(gpio_num_t sdaPin, gpio_num_t sclPin, bool useFastClock = false);
+
+protected:
+    /**
+     * @brief Check slave device availability on an I2C bus.
+     *
+     * @param address7bits Address of a slave device.
+     * @param bus Bus driver to use.
+     * @return true If the slave device is available and ready.
+     * @return false If the slave device is not responding.
+     */
+    static bool probe(uint8_t address7bits, i2c_port_t bus);
+
+protected:
+    uint8_t deviceAddress;
+    i2c_port_t busDriver;
+
+public:
+    /**
+     * @brief Construct a new I2CInput object
+     *
+     * @param[in] address7bits Address of a slave device.
+     * @param[in] useSecondaryBus TRUE if connected to the secondary bus, FALSE if connected to the primary bus.
+     * @param[in] nextInChain Another instance to build a chain, or nullptr.
+     */
+    I2CInput(
+        uint8_t address7bits,
+        bool useSecondaryBus = false,
+        DigitalPolledInput *nextInChain = nullptr);
+};
+
+#define MAX_EXPANDED_GPIO_COUNT 16
+
+/**
+ * @brief Base class for buttons attached to an I2C GPIO expander
+ * @note All buttons must work in negative logic (pulled up)
+ *
+ */
+class I2CButtonsInput : public I2CInput
+{
+protected:
+    uint8_t gpioCount;
+    inputBitmap_t gpioBitmap[MAX_EXPANDED_GPIO_COUNT];
+
+protected:
+    /**
+     * @brief Read the state of all GPIO pins in the expander
+     *
+     * @param state State of all GPIO pins in positive logic
+     * @return true On success
+     * @return false On failure
+     */
+    virtual bool getGPIOstate(inputBitmap_t &state) = 0;
+
+    /**
+     * @brief Get the count of GPIO pins available in the expander
+     *
+     * @return uint8_t Number of GPIO pins
+     */
+    virtual uint8_t getMaxGPIOCount() = 0;
+
+    /**
+     * @brief Initialize GPIO expander
+     * @note Called once.
+     */
+    virtual void initialize() = 0;
+
+public:
+    /**
+     * @brief Construct a new I2CButtonsInput object
+     *
+     * @param buttonsCount Count of attached buttons. Must not exceed the maximum allowed by the GPIO expander.
+     * @param buttonNumbersArray Array of input numbers for the attached buttons. Length is @p buttonsCount .
+     * @param address7Bits I2C address.
+     * @param useSecondaryBus TRUE to use the secondary bus, FALSE to use the primary bus.
+     * @param nextInChain Another instance to build a chain, or nullptr.
+     */
+    I2CButtonsInput(
+        uint8_t buttonsCount,
+        inputNumber_t *buttonNumbersArray,
+        uint8_t address7Bits,
+        bool useSecondaryBus = false,
+        DigitalPolledInput *nextInChain = nullptr);
+
+    virtual inputBitmap_t read(inputBitmap_t lastState) override;
 };
 
 #endif

@@ -17,3 +17,4 @@ ShiftRegistersInput.cpp
 power_mock.cpp
 adcTools.cpp
 userSettings.cpp
+capabilities.cpp
