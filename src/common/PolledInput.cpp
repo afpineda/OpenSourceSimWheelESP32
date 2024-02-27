@@ -427,7 +427,7 @@ I2CButtonsInput::I2CButtonsInput(
     bool useSecondaryBus,
     DigitalPolledInput *nextInChain) : I2CInput(address7Bits, useSecondaryBus, nextInChain)
 {
-    if ((buttonsCount > MAX_EXPANDED_GPIO_COUNT) || (buttonsCount > getMaxGPIOCount()))
+    if (buttonsCount > MAX_EXPANDED_GPIO_COUNT)
     {
         log_e("Too many buttons at GPIO expander. Address=%x, bus=%d", address7Bits, busDriver);
         abort();
@@ -438,7 +438,6 @@ I2CButtonsInput::I2CButtonsInput(
     {
         gpioBitmap[i] = BITMAP(buttonNumbersArray[i]);
     }
-    initialize();
 }
 
 // ----------------------------------------------------------------------------
@@ -450,11 +449,11 @@ inputBitmap_t I2CButtonsInput::read(inputBitmap_t lastState)
     inputBitmap_t GPIOstate;
     if (getGPIOstate(GPIOstate))
     {
+        GPIOstate = !GPIOstate; // Note: all buttons work in negative logic
         inputBitmap_t result = 0ULL;
         for (inputBitmap_t i = 0; i < gpioCount; i++)
         {
-            if (!(GPIOstate & BITMAP(i)))
-                // Note: all buttons work in negative logic
+            if (GPIOstate & BITMAP(i))
                 result |= gpioBitmap[i];
         }
         return result;

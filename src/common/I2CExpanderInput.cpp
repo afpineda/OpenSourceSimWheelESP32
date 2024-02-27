@@ -26,13 +26,24 @@
 // Implementation of class: PCF8574ButtonsInput
 // ============================================================================
 
+PCF8574ButtonsInput::PCF8574ButtonsInput(
+    uint8_t buttonsCount,
+    inputNumber_t *buttonNumbersArray,
+    uint8_t address7Bits,
+    bool useSecondaryBus,
+    DigitalPolledInput *nextInChain)
+    : I2CButtonsInput(buttonsCount, buttonNumbersArray, address7Bits, useSecondaryBus, nextInChain)
+{
+    // Nothing to do here, since the PCF8574 does not have internal registers
+}
+
 bool PCF8574ButtonsInput::getGPIOstate(inputBitmap_t &state)
 {
     state = 0ULL;
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (deviceAddress << 1) | I2C_MASTER_READ, true);
-    i2c_master_read_byte(cmd, &state, I2C_MASTER_NACK);
+    i2c_master_read_byte(cmd, (unsigned char *)&state, I2C_MASTER_NACK);
     i2c_master_stop(cmd);
     bool result = (i2c_master_cmd_begin(busDriver, cmd, DEBOUNCE_TICKS) == ESP_OK);
     i2c_cmd_link_delete(cmd);
@@ -43,7 +54,13 @@ bool PCF8574ButtonsInput::getGPIOstate(inputBitmap_t &state)
 // Implementation of class: MCP23017ButtonsInput
 // ============================================================================
 
-void MCP23017ButtonsInput::initialize()
+MCP23017ButtonsInput::MCP23017ButtonsInput(
+    uint8_t buttonsCount,
+    inputNumber_t *buttonNumbersArray,
+    uint8_t address7Bits,
+    bool useSecondaryBus,
+    DigitalPolledInput *nextInChain)
+    : I2CButtonsInput(buttonsCount, buttonNumbersArray, address7Bits, useSecondaryBus, nextInChain)
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
 

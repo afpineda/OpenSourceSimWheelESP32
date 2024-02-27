@@ -308,19 +308,6 @@ protected:
      */
     virtual bool getGPIOstate(inputBitmap_t &state) = 0;
 
-    /**
-     * @brief Get the count of GPIO pins available in the expander
-     *
-     * @return uint8_t Number of GPIO pins
-     */
-    virtual uint8_t getMaxGPIOCount() = 0;
-
-    /**
-     * @brief Initialize GPIO expander
-     * @note Called once.
-     */
-    virtual void initialize() = 0;
-
 public:
     /**
      * @brief Construct a new I2CButtonsInput object
