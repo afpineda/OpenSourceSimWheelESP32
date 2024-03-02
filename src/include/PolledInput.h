@@ -236,6 +236,14 @@ public:
 class I2CInput : public DigitalPolledInput
 {
 public:
+    static i2c_port_t getBusDriver(bool secondaryOrPrimary = false)
+    {
+        if (secondaryOrPrimary)
+            return I2C_NUM_1;
+        else
+            return I2C_NUM_0;
+    };
+
     /**
      * @brief Initialize the primary (and default) I2C bus.
      *
@@ -265,6 +273,20 @@ public:
      * @return false If the slave device is not responding.
      */
     static bool probe(uint8_t address7bits, i2c_port_t bus);
+
+    /**
+     * @brief Auto-detect a full 7-bits address given a hardware 3-bits address in an I2C bus.
+     *
+     * @param[in] address3bits A 3-bits address in the least significant bits of this parameter.
+     * @param[in] bus Bus driver to use.
+     * @param[out] address7bits The corresponding 7-bits address.
+     * @return true On success.
+     * @return false On failure.
+     */
+    static bool hardwareAddr2FullAddress(
+        uint8_t address3bits,
+        i2c_port_t bus,
+        uint8_t &address7bits);
 
 protected:
     /// @brief I2C address in 8 bits format (no need to shift left),

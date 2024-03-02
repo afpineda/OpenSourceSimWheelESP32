@@ -21,6 +21,27 @@
 I2CButtonsInput *chain;
 inputBitmap_t state = 0ULL;
 
+// bool hardwareAddr2FullAddress(
+//     uint8_t address3bits,
+//     i2c_port_t bus,
+//     uint8_t &address7bits)
+// {
+//     address3bits = address3bits & 0b00000111;
+//     Serial.printf("Hardware address: %x\n",address3bits);
+//     uint8_t count = 0;
+//     for (uint8_t other4bits = 0; other4bits < 16; other4bits++)
+//     {
+//         uint8_t tryAddress = (other4bits << 3) | address3bits;
+//         Serial.printf("Trying: %x\n",tryAddress);
+//         if (I2CInput::probe(tryAddress, bus)) {
+//             Serial.println("*Match*");
+//             address7bits = tryAddress;
+//             count++;
+//         }
+//     }
+//     return (count==1);
+// }
+
 //------------------------------------------------------------------
 // Arduino entry point
 //------------------------------------------------------------------
@@ -31,22 +52,39 @@ void setup()
     Serial.begin(115200);
     Serial.println("-- READY --");
 
-    // Serial.println("  ** I2C auto-discovery start");
-    // I2CInput::initializePrimaryBus();
-    // for (int addr=0; addr<127; addr++) {
-    //     if (I2CInput::probe(addr,0)) {
-    //          Serial.printf("  I2C device found at address 0x%x (%d)\n",addr,addr);
-    //     }
-    // }
-    // Serial.println("  ** I2C auto-discovery end");
+    uint8_t pcf8574FullAddress, mcp23017FullAddress;
+    I2CInput::initializePrimaryBus();
+    Serial.println("Auto-detecting PCF8574 address");
+    bool auto_detect_success = I2CInput::hardwareAddr2FullAddress(
+        PCF8574_I2C_ADDR3,
+        I2CInput::getBusDriver(),
+        pcf8574FullAddress);
+    if (auto_detect_success)
+    {
+        Serial.printf("Address is %x (hexadecimal)\n", pcf8574FullAddress);
+        Serial.println("Auto-detecting MCP23017 address");
+        auto_detect_success = I2CInput::hardwareAddr2FullAddress(
+            MCP23017_I2C_ADDR3,
+            I2CInput::getBusDriver(),
+            mcp23017FullAddress);
+    }
+    if (auto_detect_success)
+        Serial.printf("Address is %x (hexadecimal)\n", mcp23017FullAddress);
+    else
+    {
+        Serial.println("ERROR: unable to auto-detect hardware addresses of I2C devices");
+        Serial.println("Test failed.");
+        for (;;)
+            ;
+    }
 
     I2CButtonsInput *pcf8574;
     pcf8574 = new PCF8574ButtonsInput(
         pcf8574Numbers,
-        PCF8574_I2C_ADDR7);
+        pcf8574FullAddress);
     chain = new MCP23017ButtonsInput(
         mcp23017Numbers,
-        MCP23017_I2C_ADDR7,
+        mcp23017FullAddress,
         false,
         pcf8574);
 

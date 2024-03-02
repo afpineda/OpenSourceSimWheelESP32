@@ -14,18 +14,7 @@ Just the GPIO expanders are used.
 This test circuit does not have micro-switches attached to the GPIO expanders due to its excessive number.
 Two wires will replace them.
 For future reference, those wires are called "probe1" and "probe2".
-Yow have to manually wire/unwire them to the requested pin to close/open the circuit.
-
-Note that your actual GPIO expanders may use different I2C addresses than expected.
-**In such a case this test will always fail**.
-Actual I2C addresses have to be manually set in [debugUtils.h](./debugUtils.h):
-
-```c++
-#define MCP23017_I2C_ADDR7 0b00100000
-#define PCF8574_I2C_ADDR7 0b00111001
-```
-
-In order to reveal actual I2C addresses, run the [I2C probe firmware](../../../Firmware/I2C_probe/I2C_probe.ino).
+You have to manually wire/unwire them to/from the requested pin to close/open the circuit.
 
 ## Procedure and expected output
 
@@ -33,10 +22,9 @@ In order to reveal actual I2C addresses, run the [I2C probe firmware](../../../F
 
 1. Reset. Ignore output from the operating system itself.
 
-2. Output must match:
+2. The latest 3 lines of output must match:
 
    ```text
-   -- READY --
    MASK:
    1111111111111111111111111100000000110000000011000000001111111111
    -- GO --

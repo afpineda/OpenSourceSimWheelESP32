@@ -388,6 +388,24 @@ bool I2CInput::probe(uint8_t address7bits, i2c_port_t bus)
     return result;
 }
 
+bool I2CInput::hardwareAddr2FullAddress(
+    uint8_t address3bits,
+    i2c_port_t bus,
+    uint8_t &address7bits)
+{
+    address3bits = address3bits & 0b00000111;
+    uint8_t count = 0;
+    for (uint8_t other4bits = 0; other4bits < 16; other4bits++)
+    {
+        uint8_t tryAddress = (other4bits << 3) | address3bits;
+        if (probe(tryAddress, bus)) {
+            address7bits = tryAddress;
+            count++;
+        }
+    }
+    return (count==1);
+}
+
 // ----------------------------------------------------------------------------
 // Constructor
 // ----------------------------------------------------------------------------
@@ -398,14 +416,9 @@ I2CInput::I2CInput(
     DigitalPolledInput *nextInChain) : DigitalPolledInput(nextInChain)
 {
     deviceAddress = (address7bits << 1);
-    if (useSecondaryBus)
-        busDriver = I2C_NUM_1;
-    else
-    {
-        busDriver = I2C_NUM_0;
-        if (!isPrimaryBusInitialized)
-            initializePrimaryBus();
-    }
+    busDriver = I2CInput::getBusDriver(useSecondaryBus);
+    if (!useSecondaryBus && !isPrimaryBusInitialized)
+        initializePrimaryBus();
 
     if (!probe(address7bits, busDriver))
     {
