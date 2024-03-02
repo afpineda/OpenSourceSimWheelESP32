@@ -256,11 +256,10 @@ public:
      */
     static void initializeSecondaryBus(gpio_num_t sdaPin, gpio_num_t sclPin, bool useFastClock = false);
 
-protected:
     /**
      * @brief Check slave device availability on an I2C bus.
      *
-     * @param address7bits Address of a slave device.
+     * @param address7bits I2C address of a slave device in 7 bits format.
      * @param bus Bus driver to use.
      * @return true If the slave device is available and ready.
      * @return false If the slave device is not responding.
@@ -268,6 +267,8 @@ protected:
     static bool probe(uint8_t address7bits, i2c_port_t bus);
 
 protected:
+    /// @brief I2C address in 8 bits format (no need to shift left),
+    /// ready to overlap the R/W bit. By default, the R/W bit is set to "write".
     uint8_t deviceAddress;
     i2c_port_t busDriver;
 
@@ -302,7 +303,7 @@ protected:
     /**
      * @brief Read the state of all GPIO pins in the expander
      *
-     * @param state State of all GPIO pins in positive logic
+     * @param state State of all GPIO pins in positive logic. A bit set to 1 means a closed switch.
      * @return true On success
      * @return false On failure
      */
@@ -314,7 +315,7 @@ public:
      *
      * @param buttonsCount Count of attached buttons. Must not exceed the maximum allowed by the GPIO expander.
      * @param buttonNumbersArray Array of input numbers for the attached buttons. Length is @p buttonsCount .
-     * @param address7Bits I2C address.
+     * @param address7Bits I2C address in 7 bits format.
      * @param useSecondaryBus TRUE to use the secondary bus, FALSE to use the primary bus.
      * @param nextInChain Another instance to build a chain, or nullptr.
      */

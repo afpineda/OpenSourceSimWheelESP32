@@ -76,3 +76,15 @@ static inputNumber_t srNumbers[] = {
     6};
 
 #endif
+
+// GPIO expander testing
+
+#define MCP23017_I2C_ADDR7 0b00100000
+#define PCF8574_I2C_ADDR7 0b00111001
+
+static inputNumber_t mcp23017Numbers[] = {
+    10, 11, 12, 13, 14, 15, 16, 17,
+    20, 21, 22, 23, 24, 25, 26, 27};
+
+static inputNumber_t pcf8574Numbers[] = {
+    30, 31, 32, 33, 34, 35, 36, 37};

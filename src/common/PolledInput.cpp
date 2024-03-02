@@ -343,6 +343,7 @@ static bool isPrimaryBusInitialized = false;
 void I2CInput::initializePrimaryBus(bool useFastClock)
 {
     i2c_config_t conf;
+    memset(&conf, 0, sizeof(i2c_config_t));
     conf.mode = I2C_MODE_MASTER;
     conf.sda_io_num = SDA;
     conf.scl_io_num = SCL;
@@ -359,6 +360,7 @@ void I2CInput::initializePrimaryBus(bool useFastClock)
 void I2CInput::initializeSecondaryBus(gpio_num_t sdaPin, gpio_num_t sclPin, bool useFastClock)
 {
     i2c_config_t conf;
+    memset(&conf, 0, sizeof(i2c_config_t));
     conf.mode = I2C_MODE_MASTER;
     conf.sda_io_num = sdaPin;
     conf.scl_io_num = sclPin;
@@ -395,7 +397,7 @@ I2CInput::I2CInput(
     bool useSecondaryBus,
     DigitalPolledInput *nextInChain) : DigitalPolledInput(nextInChain)
 {
-    deviceAddress = address7bits;
+    deviceAddress = (address7bits << 1);
     if (useSecondaryBus)
         busDriver = I2C_NUM_1;
     else
@@ -449,7 +451,7 @@ inputBitmap_t I2CButtonsInput::read(inputBitmap_t lastState)
     inputBitmap_t GPIOstate;
     if (getGPIOstate(GPIOstate))
     {
-        GPIOstate = !GPIOstate; // Note: all buttons work in negative logic
+        // GPIOstate = !GPIOstate; // Note: all buttons work in negative logic
         inputBitmap_t result = 0ULL;
         for (inputBitmap_t i = 0; i < gpioCount; i++)
         {

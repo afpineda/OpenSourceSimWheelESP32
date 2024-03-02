@@ -26,8 +26,10 @@
         "unwired"
     ],
     "ignoreWords": [
+        "Abhishek",
         "ESPBLE",
         "Fanatec",
+        "Ghosh",
         "Proto",
         "RCCW",
         "WROOM",
@@ -39,6 +41,7 @@
         "kohms",
         "perfboard",
         "perfboards",
+        "pinterest",
         "powerboost",
         "protoboard",
         "protoboards",
