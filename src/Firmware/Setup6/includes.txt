@@ -4,6 +4,7 @@ ButtonMatrixInput.h
 AnalogMultiplexerInput.h
 RotaryEncoderInput.h
 ShiftRegistersInput.h
+I2CExpanderInput.h
 PolledInput.h
 HID_definitions.h
 adcTools.h
@@ -13,6 +14,7 @@ ButtonMatrixInput.cpp
 AnalogMultiplexerInput.cpp
 RotaryEncoderInput.cpp
 ShiftRegistersInput.cpp
+I2CExpanderInput.cpp
 PolledInput.cpp
 Inputs.cpp
 InputHub.cpp

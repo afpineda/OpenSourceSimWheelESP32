@@ -14,6 +14,7 @@
 #include "ButtonMatrixInput.h"
 #include "AnalogMultiplexerInput.h"
 #include "ShiftRegistersInput.h"
+#include "I2CExpanderInput.h"
 #include <Preferences.h>
 
 // #include "debugUtils.h"
@@ -231,18 +232,18 @@ void checkInputNumber(inputNumber_t number)
 {
   if (number > MAX_INPUT_NUMBER)
   {
-    log_e("Input number out of range");
+    log_e("Input number out of range: %d", number);
     abort();
   }
   else if (BITMAP(number) & capabilities::availableInputs)
   {
-    log_e("Input number already in use");
+    log_e("Input number already in use: %d", number);
     abort();
   }
   capabilities::addInputNumber(number);
 }
 
-void checkInputNumbers(int count, inputNumber_t numbers[])
+void checkInputNumbers(int count, const inputNumber_t numbers[])
 {
   for (int i = 0; i < count; i++)
     checkInputNumber(numbers[i]);
@@ -384,6 +385,64 @@ void inputs::setAnalogClutchPaddles(
       log_e("inputs::setAnalogClutchPaddles() called twice or for two identical GPIO pins");
       abort();
     }
+  }
+  else
+    abortDueToCallAfterStart();
+}
+
+void inputs::addPCF8574Digital(
+    const inputNumber_t *buttonNumbersArray,
+    uint8_t I2CAddress,
+    bool isFullAddress)
+{
+  if ((!pollingTask) && (!hubTask))
+  {
+    checkInputNumbers(8, buttonNumbersArray);
+    uint8_t fullAddress;
+    if (isFullAddress)
+      fullAddress = I2CAddress;
+    else
+    {
+      I2CInput::initializePrimaryBusWhenNeeded();
+      if (!I2CInput::hardwareAddr2FullAddress(
+              I2CAddress,
+              I2CInput::getBusDriver(),
+              fullAddress))
+      {
+        log_e("Unable to auto-detect full address of PCF8574. Hardware address is %x (hex)", I2CAddress);
+        abort();
+      }
+    }
+    digitalInputChain = new PCF8574ButtonsInput(buttonNumbersArray, fullAddress, false, digitalInputChain);
+  }
+  else
+    abortDueToCallAfterStart();
+}
+
+void inputs::addMCP23017Digital(
+    const inputNumber_t *buttonNumbersArray,
+    uint8_t I2CAddress,
+    bool isFullAddress)
+{
+  if ((!pollingTask) && (!hubTask))
+  {
+    checkInputNumbers(16, buttonNumbersArray);
+    uint8_t fullAddress;
+    if (isFullAddress)
+      fullAddress = I2CAddress;
+    else
+    {
+      I2CInput::initializePrimaryBusWhenNeeded();
+      if (!I2CInput::hardwareAddr2FullAddress(
+              I2CAddress,
+              I2CInput::getBusDriver(),
+              fullAddress))
+      {
+        log_e("Unable to auto-detect full address of MCP23017. Hardware address is %x (hex)", I2CAddress);
+        abort();
+      }
+    }
+    digitalInputChain = new MCP23017ButtonsInput(buttonNumbersArray, fullAddress, false, digitalInputChain);
   }
   else
     abortDueToCallAfterStart();

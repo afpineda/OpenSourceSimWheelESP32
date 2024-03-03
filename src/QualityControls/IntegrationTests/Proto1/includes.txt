@@ -5,6 +5,7 @@ RotaryEncoderInput.h
 ButtonMatrixInput.h
 AnalogMultiplexerInput.h
 ShiftRegistersInput.h
+I2CExpanderInput.h
 debugUtils.h
 Inputs.cpp
 HID_definitions.h
@@ -18,6 +19,7 @@ RotaryEncoderInput.cpp
 ButtonMatrixInput.cpp
 AnalogMultiplexerInput.cpp
 ShiftRegistersInput.cpp
+I2CExpanderInput.cpp
 debugUtils.cpp
 InputHub.cpp
 hidImplementation_NimBLE.cpp

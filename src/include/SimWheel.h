@@ -466,6 +466,32 @@ namespace inputs
         const uint8_t switchCount);
 
     /**
+     * @brief Add a PCF8574 GPIO expander for switches
+     *
+     * @param buttonNumbersArray Array of switch numbers in the range 0-63. Length is 8 (mandatory).
+     * @param I2CAddress Either a hardware address (3 bits) or a full address (7 bits).
+     * @param isFullAddress `true` if @p I2CAddress is a full address, `false` otherwise.
+     */
+    void addPCF8574Digital(
+        const inputNumber_t *buttonNumbersArray,
+        uint8_t I2CAddress,
+        bool isFullAddress = false
+    );
+
+    /**
+     * @brief Add a MCP23017 GPIO expander for switches
+     *
+     * @param buttonNumbersArray Array of switch numbers in the range 0-63. Length is 16 (mandatory).
+     * @param I2CAddress Either a hardware address (3 bits) or a full address (7 bits).
+     * @param isFullAddress `true` if @p I2CAddress is a full address, `false` otherwise.
+     */
+    void addMCP23017Digital(
+        const inputNumber_t *buttonNumbersArray,
+        uint8_t I2CAddress,
+        bool isFullAddress = false
+    );
+
+    /**
      * @brief Set two potentiometers attached to clutch paddles. Each one
      *        will work as an analog axis. Must be called before `start()`.
      *

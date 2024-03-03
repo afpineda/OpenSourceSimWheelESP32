@@ -254,6 +254,13 @@ public:
     static void initializePrimaryBus(bool useFastClock = false);
 
     /**
+     * @brief Initialize the primary (and default) I2C bus if not done yet.
+     *
+     * @note Default parameters are used.
+     */
+    static void initializePrimaryBusWhenNeeded();
+
+    /**
      * @brief Initialize a secondary I2C bus.
      *
      * @note Must be called before using the secondary bus.

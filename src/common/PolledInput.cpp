@@ -357,6 +357,12 @@ void I2CInput::initializePrimaryBus(bool useFastClock)
     isPrimaryBusInitialized = true;
 }
 
+void I2CInput::initializePrimaryBusWhenNeeded()
+{
+    if (!isPrimaryBusInitialized)
+        initializePrimaryBus();
+}
+
 void I2CInput::initializeSecondaryBus(gpio_num_t sdaPin, gpio_num_t sclPin, bool useFastClock)
 {
     i2c_config_t conf;
@@ -398,12 +404,13 @@ bool I2CInput::hardwareAddr2FullAddress(
     for (uint8_t other4bits = 0; other4bits < 16; other4bits++)
     {
         uint8_t tryAddress = (other4bits << 3) | address3bits;
-        if (probe(tryAddress, bus)) {
+        if (probe(tryAddress, bus))
+        {
             address7bits = tryAddress;
             count++;
         }
     }
-    return (count==1);
+    return (count == 1);
 }
 
 // ----------------------------------------------------------------------------

@@ -38,6 +38,7 @@
         "devkit",
         "falstad",
         "frameserver",
+        "gpio",
         "kohms",
         "perfboard",
         "perfboards",

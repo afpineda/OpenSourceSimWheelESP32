@@ -310,7 +310,7 @@ void setup()
     batteryCalibration::begin();
     checkAutoCalibration(3000);
 
-    // Reset to avoid misbehaviour in future firmwares
+    // Reset to avoid misbehavior in future firmware
     printTestHeader(testnumber++); // #12
     batteryCalibration::restartAutoCalibration();
     batteryCalibration::maxBatteryReadingEver = 3000;

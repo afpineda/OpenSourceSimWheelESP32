@@ -3,6 +3,7 @@ SimWheel.h
 ButtonMatrixInput.h
 AnalogMultiplexerInput.h
 ShiftRegistersInput.h
+I2CExpanderInput.h
 RotaryEncoderInput.h
 PolledInput.h
 HID_definitions.h
@@ -12,6 +13,7 @@ capabilities.cpp
 ButtonMatrixInput.cpp
 AnalogMultiplexerInput.cpp
 ShiftRegistersInput.cpp
+I2CExpanderInput.cpp
 RotaryEncoderInput.cpp
 PolledInput.cpp
 Inputs.cpp

@@ -5,6 +5,7 @@ RotaryEncoderInput.h
 ButtonMatrixInput.h
 AnalogMultiplexerInput.h
 ShiftRegistersInput.h
+I2CExpanderInput.h
 debugUtils.h
 adcTools.h
 adcTools.cpp
@@ -14,6 +15,7 @@ RotaryEncoderInput.cpp
 ButtonMatrixInput.cpp
 AnalogMultiplexerInput.cpp
 ShiftRegistersInput.cpp
+I2CExpanderInput.cpp
 debugUtils.cpp
 InputHub.cpp
 userSettings.cpp
