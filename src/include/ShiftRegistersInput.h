@@ -25,7 +25,7 @@ private:
     uint8_t switchCount;
     gpio_num_t loadPin, nextPin, serialPin;
     BaseType_t *debounce = nullptr;
-    inputNumber_t *buttonNumbersArray;
+    const inputNumber_t *buttonNumbersArray;
     bool negativeLogic;
     bool loadHighOrLow;
     bool nextHighToLowOrLowToHigh;
@@ -52,7 +52,7 @@ public:
         const gpio_num_t serialPin,
         const gpio_num_t loadPin,
         const gpio_num_t nextPin,
-        inputNumber_t *buttonNumbersArray,
+        const inputNumber_t *buttonNumbersArray,
         const uint8_t switchCount,
         const bool negativeLogic = true,
         const bool loadHighOrLow = false,

@@ -30,7 +30,7 @@ They come in three flavors:
 - **Bare-bone**: just a mechanical device with no pull resistors. They have 5 terminals: `common GND`, `A` and `B` (related to rotation) plus `SW GND` (sometimes `SW COM`) and `SW` (related to the built in push button). Those terminals are floating when idle. In this case, the label `GND` means nothing: it is just one of the two terminals of a switch.
 - **KY-040**: a bare-bone rotary encoder with pull-up resistors. They have 5 terminals: `Vcc` and `Gnd`, related to the power source, `CLK` (or `A`) and `DT` (or `B`), related to rotation, and `SW`, related to the integrated push button. `CLK`, `DT` and `SW` terminals are set to high voltage when idle.
 - **I2C** or "chainable": a bare-bone rotary encoder with additional circuitry in order to offer an *I2C* serial interface.
-  A reasonable number of them can be chained together, using just 2 GPIO pins. An example is the [Adafruit I2C QT Rotary Encoder](https://learn.adafruit.com/adafruit-i2c-qt-rotary-encoder/overview).
+  A reasonable number of them can be chained together, using just two GPIO pins. An example is the [Adafruit I2C QT Rotary Encoder](https://learn.adafruit.com/adafruit-i2c-qt-rotary-encoder/overview).
   You could even build your own (see [https://github.com/wagiminator/ATtiny412-I2C-Rotary-Encoder](https://github.com/wagiminator/ATtiny412-I2C-Rotary-Encoder)).
 
 See pin-out at [pinterest.com (thanks to Abhishek Ghosh)](https://in.pinterest.com/pin/436145545160682538/)
@@ -203,22 +203,22 @@ For example, the widely available [MCP23017/MCP23S17](./esp32reference/MCP23017_
 You can wire up to eight of them, thus adding up to 128 GPIO pins.
 The [PCF8574](./esp32reference/PCF8574_datasheet.pdf) expander is another example that adds 8 GPIO pins each.
 
-Note that those extra GPIO pins could work with rotary encoders too (for rotation events, I mean).
-The *MCP23017* and the *PCF8574* require just 2 pins for the *I2C* interface, no matter how many chips you need.
+This project supports the *MCP23017* and the *PCF8574* GPIO expanders at the *I2C* interface, but for switches only.
+They require just two pins, no matter how many chips you need.
 
-This project does not support GPIO expanders right now.
+*Note:* a mix of switches and rotary encoders attached to the same GPIO expander is not supported.
 
 ## Summary of input circuitry for switches
 
-|      Circuitry       |        Required pins         | Number of switches |              Best suited for              |                     Advantages                     | Disadvantages                    | Supported by this project |
-| :------------------: | :--------------------------: | :----------------: | :---------------------------------------: | :------------------------------------------------: | :------------------------------- | :-----------------------: |
-|         None         |              1               |         1          |              Rotary encoders              |                Easy and error-free                 | Not enough pins for many buttons |            yes            |
-|    Button Matrix     |             $N$              |    $(N/2)^{2}$     |          Push buttons and DPADS           |            Many buttons and error-free             | Complex wiring                   |            yes            |
-|     Multiplexers     | $S$ selectors and $I$ inputs |     $2^{S}*I$      |          Push buttons and DPADS           |     Many buttons and error-free. Less wiring.      | Extra cost                       |        analog only        |
-|    Voltage ladder    |              1               |       enough       | DPADS, rotary switches and funky switches |             Single pin for many inputs             | Prone to error                   |            no             |
-|   Voltage divider    |              1               |         2          |               Push buttons                |                        None                        | Prone to error                   |            no             |
-| PISO shift registers |              3               |  almost unlimited  |          Push buttons and DPADS           | Many buttons and error-free. Less pin expenditure. | Extra cost and space at the PCB  |            yes            |
-|    GPIO expanders    |   SPI: 4 or more, I2C:  2    |  almost unlimited  |     Push buttons and rotary encoders      |    Could hold both switches and rotary encoders    | Extra cost and space at the PCB  |            no             |
+|      Circuitry       |        Required pins         | Number of switches |              Best suited for              |                     Advantages                      | Disadvantages                    |         Supported by this project          |
+| :------------------: | :--------------------------: | :----------------: | :---------------------------------------: | :-------------------------------------------------: | :------------------------------- | :----------------------------------------: |
+|         None         |              1               |         1          |              Rotary encoders              |                 Easy and error-free                 | Not enough pins for many buttons |                    yes                     |
+|    Button Matrix     |             $N$              |    $(N/2)^{2}$     |          Push buttons and DPADS           |             Many buttons and error-free             | Complex wiring                   |                    yes                     |
+|     Multiplexers     | $S$ selectors and $I$ inputs |     $2^{S}*I$      |          Push buttons and DPADS           |      Many buttons and error-free. Less wiring.      | Extra cost                       |                analog only                 |
+|    Voltage ladder    |              1               |       enough       | DPADS, rotary switches and funky switches |             Single pin for many inputs              | Prone to error                   |                     no                     |
+|   Voltage divider    |              1               |         2          |               Push buttons                |                        None                         | Prone to error                   |                     no                     |
+| PISO shift registers |              3               |  almost unlimited  |          Push buttons and DPADS           | Many buttons and error-free. Less pin expenditure.  | Extra cost and space at the PCB  |                    yes                     |
+|    GPIO expanders    |   SPI: 4 or more, I2C:  2    |  almost unlimited  |               Push buttons                | The best switch-to-pin ratio and overall simplicity | Extra cost and space at the PCB  | yes (only for switches and I2C interfaces) |
 
 Input circuitry takes some space inside the housing. Their physical layout must be carefully designed to fit into the steering wheel (or button box).
 
@@ -240,7 +240,7 @@ There are several choices:
   but there is no guarantee that they will accept the same set of commands.
   Size is another concern due to the additional circuitry in each rotary encoder.
   They are expensive, too.
-  The great advantage of this approach is pin expenditure: just 2 pins for all rotary encoders.
+  The great advantage of this approach is pin expenditure: just two pins for all rotary encoders.
   Another advantage is no need for extra circuitry, just wiring.
 
 - **GPIO expanders**. Already described above. Very close in nature to *I2C rotary encoders* and the same advantage.
@@ -250,7 +250,7 @@ There are several choices:
 - **Rotary encoder matrix**. All encoders share `DT/A` and `CLK/B` input pins. Other input pins, called *witnesses*, tell which one is being operated.
   Unfortunately, this circuit is **unable to detect input from two or more rotary encoders at the same time**.
   Another disadvantage is the need for four diodes at each rotary encoder. Given $N$ rotary encoders, just $N+2$ input pins are required.
-  In an assessment of disadvantages and GPIO savings, this circuit **is barely a recommendable option**.
+  This circuit is **not a recommendable option**.
 
 ### Rotary encoder matrix
 

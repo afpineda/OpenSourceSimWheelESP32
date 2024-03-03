@@ -15,7 +15,7 @@ Some interesting ESP32 boards for this project are:
 
 You need to balance two key aspects: **size and pin availability**. The larger the board, the higher the count of available pins, so you can fit more buttons, paddles, etc, but the greater is the space required inside the sim wheel's housing.
 
-In order to reduce size and circuit complexity, it is recommended to use multiplexed switches (will be explained later) and small devkit boards like Unexpected Maker's "TinyPico" or LilyGO's "T-QT".
+In order to reduce size and circuit complexity, it is recommended to use GPIO expanders (will be explained later) and small devkit boards like Unexpected Maker's "TinyPico" or LilyGO's "T-QT".
 
 This project makes extensive use of the official "ESP-WROOM-32" board (aka "ESP32-DevKit-C") for testing and development purposes, but this is not the best choice due to its excessive size.
 
@@ -78,3 +78,30 @@ In order to upload a firmware to a DevKit board, certain pins, called "bootstrap
 
 In Arduino IDE, you need to configure the "board manager" with the proper parameters. Most times, you only need to select the correct board and go with the default parameters. Most times, those boards are "ESP32 Dev Module" or "ESP32S3 Dev Module". However, check the manufacturer's data sheet.
 When using the USB implementation, set USB-Mode to "USB-OTG (TinyUSB)".
+
+### Entering bootloader mode
+
+Some DevKit boards refuses to upload firmware unless you put them in "bootloader mode".
+To enter boot mode you have to either:
+
+- press the "reset" button while pressing the "boot" button, then release both.
+- keep the "boot" button pressed while Arduino IDE is uploading the firmware.
+
+If your DevKit board does not feature a "boot" button, drive `GPIO #0` to `GND` instead.
+
+If your DevKit board does not feature a "reset" button, drive `EN` to `GND` instead.
+
+It is said that some boards require a small capacitor between `EN` and `GND` pins to avoid this annoyance.
+I can not say if that is true.
+
+See [Expressif's documentation on "Select Bootloader Mode"](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html)
+for further information.
+
+### Troubleshooting firmware bugs
+
+If you go for a custom firmware and it does not work,
+your only chance to know what is happening is the *serial monitor* at Arduino IDE.
+
+However, most debug messages are **not shown by default**.
+In order to enable them, go to the "board manager" and find the "Core debug level" option.
+Configure that option to "error" or "verbose". Then, upload the firmware again.

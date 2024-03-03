@@ -70,7 +70,7 @@ static inputNumber_t amtxerNumbers[] = {
 #define TEST_SR_LOAD GPIO_NUM_32
 #define TEST_SR_NEXT GPIO_NUM_33
 
-static inputNumber_t srNumbers[] = {
+static const inputNumber_t srNumbers[] = {
     63, 63, 63, 2, 63, 63, 4, 63,
     3, 63, 63, 63, 63, 5, 63, 63,
     6};
@@ -82,11 +82,11 @@ static inputNumber_t srNumbers[] = {
 #define MCP23017_I2C_ADDR3 0
 #define PCF8574_I2C_ADDR3 1
 
-static inputNumber_t mcp23017Numbers[] = {
+static const inputNumber_t mcp23017Numbers[] = {
     10, 11, 12, 13, 14, 15, 16, 17,
     20, 21, 22, 23, 24, 25, 26, 27};
 
-static inputNumber_t pcf8574Numbers[] = {
+static const inputNumber_t pcf8574Numbers[] = {
     30, 31, 32, 33, 34, 35, 36, 37};
 
 #endif

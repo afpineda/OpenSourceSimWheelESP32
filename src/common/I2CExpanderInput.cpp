@@ -31,7 +31,7 @@
 // ============================================================================
 
 PCF8574ButtonsInput::PCF8574ButtonsInput(
-    inputNumber_t *buttonNumbersArray,
+    const inputNumber_t *buttonNumbersArray,
     uint8_t address7Bits,
     bool useSecondaryBus,
     DigitalPolledInput *nextInChain)
@@ -59,7 +59,7 @@ bool PCF8574ButtonsInput::getGPIOstate(inputBitmap_t &state)
 // ============================================================================
 
 MCP23017ButtonsInput::MCP23017ButtonsInput(
-    inputNumber_t *buttonNumbersArray,
+    const inputNumber_t *buttonNumbersArray,
     uint8_t address7Bits,
     bool useSecondaryBus,
     DigitalPolledInput *nextInChain)

@@ -84,7 +84,7 @@ void DigitalPolledInput::updateMask(uint8_t inputsCount, inputNumber_t firstInpu
     mask = BITMASK(inputsCount, firstInputNumber);
 }
 
-void DigitalPolledInput::updateMask(inputNumber_t *inputNumbersArray, uint8_t inputsCount)
+void DigitalPolledInput::updateMask(const inputNumber_t *inputNumbersArray, uint8_t inputsCount)
 {
     if (inputNumbersArray == nullptr)
     {
@@ -437,7 +437,7 @@ I2CInput::I2CInput(
 
 I2CButtonsInput::I2CButtonsInput(
     uint8_t buttonsCount,
-    inputNumber_t *buttonNumbersArray,
+    const inputNumber_t *buttonNumbersArray,
     uint8_t address7Bits,
     bool useSecondaryBus,
     DigitalPolledInput *nextInChain) : I2CInput(address7Bits, useSecondaryBus, nextInChain)

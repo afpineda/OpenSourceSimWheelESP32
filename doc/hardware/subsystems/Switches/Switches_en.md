@@ -14,8 +14,10 @@ And also **potentiometers** as digital clutch paddles, in case you are short of 
 There are several, non-exclusive, **implementation** choices:
 
 - Button matrix.
-- Analog Multiplexers. This is the recommended way to go, since it requires less wiring, less space, less available pins and less effort.
-- PISO shift registers. Not recommended since it takes too much space, unless you are really short of available GPIO pins.
+- Analog Multiplexers.
+- PISO shift registers. Not recommended since it takes too much space.
+- GPIO expanders. **The best option and recommended way to go** thanks to its minimal cost, size,
+  pin expenditure, and overall simplicity.
 - Single switch (or button) attached to a single pin.
 
 Take a look at the article on [input hardware](../../InputHW_en.md) for an introduction.
@@ -150,7 +152,7 @@ Needed parts (not counting input hardware like push buttons):
 
 ### External wiring for the analog multiplexers
 
-- There are many redundant `3V3` and `GND` pin headers. Attach one of each to the power source. Use the others as you wish or leave unattached.
+- There are many redundant `3V3` and `GND` pin headers. Attach one of each to the power source. Use the others as you wish, or leave unattached.
 - Use at least one of the `GND` pin headers as a common pole for all switches *in a chain* (as shown in the picture above).
 - Wire the other terminal of each push button (or switch) to one of the light-blue pins.
 - Bare bone rotary encoders: their built-in push button must be wired like any other push button, being `SW` and `SW GND` the involved terminals.
@@ -184,6 +186,62 @@ Needed parts (not counting input hardware like push buttons):
 
 Just the same as for analog multiplexers. See above.
 
+### GPIO expanders implementation
+
+This implementation is based on any of the following widely available GPIO expanders (*I2C* interface):
+
+- [PCF8574](../../esp32reference/PCF8574_datasheet.pdf): 8 additional switches per chip.
+- [MCP23017](../../esp32reference/MCP23017_datasheet.pdf): 16 additional switches per chip (**recommended**).
+  Do not confuse *MCP23017* with *MCP23S17*, which exposes a different interface.
+
+All chips must share the `SCL` and `SDA` pins with the DevKit board. Note that sometimes `SCL` is tagged as `SCK` (they are equivalent).
+Additional **external** pull-up resistors may be needed at those pins depending on wire capacitance, but that is unusual.
+Follow [Expressif's advice](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/i2c.html)
+on the matter.
+
+The `RESET` pin at the *MCP23017* must be wired to `3V3`, otherwise operation is unreliable.
+
+All switches must work in negative logic.
+Thus, one terminal must be wired to `GND` and the other terminal to one GPIO pin at each chip.
+Those GPIO pins are tagged `Pn`, `GPAn` or `GPBn` on the chip's datasheet.
+
+Make sure to configure a unique I2C address for each chip (more on this below).
+
+All those considerations are met in the following circuit design.
+It provides **32 inputs using just two pins**, which should be enough for most steering wheels.
+
+![MCP23017 switches design](./MCP23017Switches.png)
+
+Open this [circuit layout](./MCP23017Switches.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
+
+Needed parts (not counting input hardware like push buttons):
+
+- Standard-sized perfboard 28x6 holes.
+- MCP23017 GPIO expander: x2.
+- Dupond pin headers (male or female): x48.
+- Thin wire.
+
+#### External wiring for the GPIO expanders
+
+- Attach `3V3`, `SCL` and `SCA` to the corresponding pins at the DevKit board (same tag).
+- There are many redundant `GND` (ground) pin headers. Attach one to the DevKit board or power source (same tag).
+  Use the others as you wish, or leave unattached.
+- For components (switches, funky switches, etc.), follow the same rules as for analog multiplexers (see above).
+
+#### I2C Addressing
+
+Each chip must have a 7-bit-long **unique** address for the *I2C* interface. Those bits are called a "**full** address".
+
+Three of those bits are user-defined thanks to "address pins" (tagged `A0`, `A1` and `A2` on the chip's datasheet).
+They are called a "**hardware address**" and match the three least-significant bits of the full address.
+
+The other four bits are factory-defined and fixed. The chip's datasheet shows the value of those bits.
+**However, the actual factory-defined address bits may not match the datasheet** (I have proof of that).
+This could be caused by after-market changes or cloned (non-genuine) chips.
+The firmware will **automatically** detect those 4 bits,
+but **you must ensure** that all hardware addresses on the I2C bus are also **unique**.
+Otherwise, you have to manually provide a full I2C address to the firmware (see below).
+
 ## Implementation of a single switch attached to a single pin
 
 There is no circuit involved here, just wiring. Attach one terminal to an input-capable GPIO pin. Attach the other terminal to `GND`. An internal pull-up resistor is required since we are using negative logic. If not available, add an external pull-up resistor.
@@ -202,11 +260,11 @@ Input pins must be wired to valid input-capable GPIO pins with internal pull-dow
 2. Create another constant static array for all the input's GPIO numbers, let's say `mtxInputs`.
 3. Create another constant static array for the assigned input numbers, let's say `mtxNumbers`. All of them in the range from 0 to 63.
 4. Call `inputs::addButtonMatrix()`.
-   - First parameter is `mtxSelectors`.
-   - Second parameter is the count of GPIOs in `mtxSelectors`.
-   - Third parameter is `mtxInputs`.
-   - Fourth parameter is the count of GPIOs in `mtxInputs`.
-   - Fifth parameter is `mtxNumbers`. The count of items in this array must match the product of the second and fourth parameters.
+   - The first parameter is `mtxSelectors`.
+   - The second parameter is the count of GPIOs in `mtxSelectors`.
+   - The third parameter is `mtxInputs`.
+   - The fourth parameter is the count of GPIOs in `mtxInputs`.
+   - The fifth parameter is `mtxNumbers`. The count of items in this array must match the product of the second and fourth parameters.
 
 For example:
 
@@ -264,11 +322,13 @@ The index of a switch at `mtxNumbers` is as follows: $IndexAt(mtxNumbers) = 2^{B
 
 Place a call to `inputs::addShiftRegisters()`. Parameters are as follows:
 
-- First parameter is the `SERIAL` GPIO pin number.
-- Second parameter is the `LOAD` GPIO pin number.
-- Third parameter is the `NEXT` GPIO pin number.
-- Fourth parameter is a constant static array of input numbers for each switch (in the range from 0 to 63). The size of this array must match the fifth parameter.
-- Fifth parameter is the count of switches attached to the circuit, in the range from 1 to 64. Let's say `srNumbers`.
+- The first parameter is the `SERIAL` GPIO pin number.
+- The second parameter is the `LOAD` GPIO pin number.
+- The third parameter is the `NEXT` GPIO pin number.
+- The fourth parameter is a constant static array of input numbers for each switch (in the range from 0 to 63).
+  The size of this array must match the fifth parameter.
+- The fifth parameter is the count of switches attached to the circuit, in the range from 1 to 64.
+  Let's say `srNumbers`.
 
 For example:
 
@@ -303,11 +363,58 @@ The index of a switch at `srNumbers` is as follows: $IndexAt(srNumbers) = IndexA
 
 And $IndexAt(ShiftRegistersChain)$ is the (zero-based) position of the 74HC165N chip in the chain of `Qh` to `SER` joints, being the chip that exposes `SERIAL` the first one ($IndexAt(ShiftRegistersChain) = 0$).
 
+### GPIO expanders
+
+`SCL/SCK` and `SDA` pins must be wired to the corresponding pins at the DevKit board.
+
+Place a call to `inputs::addPCF8574Digital()` or `inputs::addMCP23017Digital()` depending on which chip is in place.
+Parameters are as follows:
+
+- The first parameter is a constant static array of input numbers for each switch (in the range from 0 to 63).
+  The size of this array is fixed:
+  - Eight numbers for the PCF8574 chip.
+  - Sixteen numbers for the MCP23017 chip.
+- The second parameter is the I2C address: either a *hardware address* or a *full address*.
+  By default, a hardware address is expected.
+- The third parameter must be set to `true` if the second parameter is a full address. Ignore otherwise.
+
+The following code will enable the example circuit above:
+
+```c
+void simWheelSetup()
+{
+    static const inputNumber_t mcp1Numbers[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+    static const inputNumber_t mcp2Numbers[] = {16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31};
+    ...
+    // Note: hardware addresses are used
+    inputs::addMCP23017Digital(mcp1Numbers,0);
+    inputs::addMCP23017Digital(mcp2Numbers,3);
+    ...
+}
+```
+
+The index of a switch in the first parameter is as follows:
+
+- In the PCF8574 chip, `P0` is indexed as 0 and so on, in ascending order.
+- In the MCP23017 chip, `GPA0` is indexed as 0, then in ascending order up to `GPA7`,
+  which is indexed as 7. `GPB0` is indexed as 8, then in ascending order up to `GPB7`,
+  which is indexed as 15.
+
+Be aware that **the firmware won't boot up** in the following cases:
+
+- A GPIO expander is not powered or found on the I2C bus. Check your wiring first, then your code.
+  Ensure you wrote the correct I2C address.
+- The hardware address is not unique. Use a full address instead.
+
+In case you have no clue about what the full address could be,
+upload and run the [I2C probe](../../../../src/Firmware/I2C_probe/I2C_probe.ino) firmware
+provided in this project. It will tell how many chips were found on the I2C bus and their full addresses.
+
 ### Single switch
 
 Place a call to `inputs::addDigital()`:
 
-- First parameter is the GPIO where the switch is attached to.
+- The first parameter is the GPIO where the switch is attached to.
 - Second parameter: assigned input number for this button.
 - Third parameter: always set to `true`.
 - Fourth parameter: always set to `true`.

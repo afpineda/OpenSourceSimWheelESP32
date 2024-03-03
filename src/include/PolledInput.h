@@ -82,7 +82,7 @@ protected:
      * @param inputNumbersArray A pointer to an array of input numbers.
      * @param inputsCount Number of items (input numbers) in the previous array.
      */
-    void updateMask(inputNumber_t *inputNumbersArray, uint8_t inputsCount);
+    void updateMask(const inputNumber_t *inputNumbersArray, uint8_t inputsCount);
 
     /**
      * @brief Check and initialize a GPIO pin for digital output
@@ -343,7 +343,7 @@ public:
      */
     I2CButtonsInput(
         uint8_t buttonsCount,
-        inputNumber_t *buttonNumbersArray,
+        const inputNumber_t *buttonNumbersArray,
         uint8_t address7Bits,
         bool useSecondaryBus = false,
         DigitalPolledInput *nextInChain = nullptr);

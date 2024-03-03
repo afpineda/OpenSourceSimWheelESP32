@@ -33,7 +33,7 @@ public:
      * @param nextInChain Another instance to build a chain, or nullptr.
      */
     PCF8574ButtonsInput(
-        inputNumber_t *buttonNumbersArray,
+        const inputNumber_t *buttonNumbersArray,
         uint8_t address7Bits,
         bool useSecondaryBus = false,
         DigitalPolledInput *nextInChain = nullptr);
@@ -58,7 +58,7 @@ public:
      * @param nextInChain Another instance to build a chain, or nullptr.
      */
     MCP23017ButtonsInput(
-        inputNumber_t *buttonNumbersArray,
+        const inputNumber_t *buttonNumbersArray,
         uint8_t address7Bits,
         bool useSecondaryBus = false,
         DigitalPolledInput *nextInChain = nullptr);
