@@ -346,7 +346,7 @@ void inputs::addShiftRegisters(
     const gpio_num_t serialPin,
     const gpio_num_t loadPin,
     const gpio_num_t nextPin,
-    inputNumber_t *buttonNumbersArray,
+    const inputNumber_t *buttonNumbersArray,
     const uint8_t switchCount)
 {
   if ((!pollingTask) && (!hubTask))

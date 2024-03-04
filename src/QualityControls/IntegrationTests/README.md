@@ -6,17 +6,20 @@ Ensure that all unit test have failed before proceeding to integration testing (
 - The `capabilities` module is always integrated but not explicitly shown below.
 - Just the modules being integrated are shown.
 
-## Step
-
-> *Test name*: [DigitalInputsTest](./DigitalInputsTest/README.md)
+## *Test name*: [DigitalInputsTest](./DigitalInputsTest/README.md)
 
 - RotaryEncoderInput
 - DigitalPolledInput
 - inputs
 
-## Step
+## *Test name*: [DigitalInputsTest2](./DigitalInputsTest2/README.md)
 
-> *Test name*: [InputHubTest](./InputHubTest/README.md)
+- DigitalPolledInput
+- inputs
+
+*Note:* This test differs from the previous one in the involved hardware.
+
+## *Test name*: [InputHubTest](./InputHubTest/README.md)
 
 - RotaryEncoderInput
 - DigitalPolledInput
@@ -25,9 +28,7 @@ Ensure that all unit test have failed before proceeding to integration testing (
 - **userSettings**
 - **inputHub**
 
-## Step
-
-> *Test name*: [Proto1](./Proto1/README.md)
+## *Test name*: [Proto1](./Proto1/README.md)
 
 - RotaryEncoderInput
 - DigitalPolledInput
@@ -40,18 +41,14 @@ Ensure that all unit test have failed before proceeding to integration testing (
 
 *Note*: This is a working prototype
 
-## Step
-
-> *Test name*: [BatteryAutocal](./BatteryAutocal/README.md)
+## *Test name*: [BatteryAutocal](./BatteryAutocal/README.md)
 
 - power
 - batteryCalibration
 
 *Note*: Only autocalibrated algorithm is tested.
 
-## Step
-
-> *Test name*: [Proto2](./Proto2/README.md)
+## *Test name*: [Proto2](./Proto2/README.md)
 
 - RotaryEncoderInput
 - DigitalPolledInput
@@ -66,8 +63,6 @@ Ensure that all unit test have failed before proceeding to integration testing (
 
 *Note*: This is a system test except for the involved hardware.
 
-## Other
-
-> *Test name*: [TQTSystemTest](./TQTSystemTest/README.md)
+## *Test name*: [TQTSystemTest](./TQTSystemTest/README.md)
 
 This is a *big-bang* test for the [LilyGO T-QT devkit board](https://github.com/Xinyuan-LilyGO/T-QT).
