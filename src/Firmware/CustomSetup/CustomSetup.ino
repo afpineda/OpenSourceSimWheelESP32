@@ -10,7 +10,6 @@
  *
  */
 
-#include <Arduino.h>
 #include "SimWheel.h"
 
 //------------------------------------------------------------------
@@ -39,7 +38,7 @@ std::string DEVICE_MANUFACTURER = "Me";
 
 // [EN] Wake up source: put a list of GPIO numbers between curly brackets.
 //      If empty, only a RESET will wake up the system.
-// [ES] Señales para despertar: indicar una lista de  numeros de GPIO entre llaves.
+// [ES] Señales para despertar: indicar una lista de  números de GPIO entre llaves.
 //      Si lo deja vacío, solamente un RESET despertará al sistema.
 
 const gpio_num_t WAKEUP_PINS[] = {};
@@ -59,7 +58,7 @@ const gpio_num_t WAKEUP_PINS[] = {};
 ------------------------------------------------------------------ */
 
 // [EN] Set an output-capable GPIO number for the "POWER_LATCH" pin.
-//      Comment out if there is no extenal power latch circuit.
+//      Comment out if there is no external power latch circuit.
 // [ES] Indique el número de GPIO para la señal "POWER_LATCH"
 //      Comente la línea si no hay circuito externo de power latch.
 
@@ -72,17 +71,17 @@ const gpio_num_t WAKEUP_PINS[] = {};
 //      POWER_OFF_HIGH --> Power on when low voltage, power off when high voltage
 //      POWER_OFF_LOW --> Power on when high voltage, power off when low voltage
 // [ES] Elija el modo de activación del pin "POWER_LATCH".
-//      Ignórelo si no hay circuito externo de power latch
+//      Ignóralo si no hay circuito externo de power latch
 //      POWER_OPEN_DRAIN --> Encendido mediante circuito abierto, apagado a bajo voltaje
-//      POWER_OFF_HIGH --> Encencido a bajo voltaje, apagado a alto voltaje
-//      POWER_OFF_LOW --> Encencido a alto voltaje, apagado a bajo voltaje
+//      POWER_OFF_HIGH --> Encendido a bajo voltaje, apagado a alto voltaje
+//      POWER_OFF_LOW --> Encendido a alto voltaje, apagado a bajo voltaje
 
 const powerLatchMode_t LATCH_MODE = POWER_OPEN_DRAIN;
 
 // [EN] Set a time delay, in milliseconds, to wait for the latch circuit to power
 //      the system off. Ignore if there is no external power latch circuit
 // [ES] Indicar un retardo, en milisegundos, a esperar para que el circuito apague
-//      el sistema. Ignórelo si no hay circuito externo de power latch.
+//      el sistema. Ignóralo si no hay circuito externo de power latch.
 
 #define LATCH_POWEROFF_DELAY 3000
 
