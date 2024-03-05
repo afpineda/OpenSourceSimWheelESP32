@@ -25,13 +25,14 @@ All modules can be found at the [/common](../../src/common/) folder.
 Some namespaces are implemented with the help of auxiliary modules which are not exposed at *SimWheel.h*, one *cpp* file for each:
 
 - *adcTools*: Reading of ADC pins.
-- *AnalogMultiplexerInput.cpp*: Everything related to multiplexed buttons/switches.
-- *ButtonMatrixInput.cpp*: Everything related to button/switch matrices.
+- *AnalogMultiplexerInput*: Everything related to multiplexed buttons/switches.
+- *ButtonMatrixInput*: Everything related to button/switch matrices.
 - *debugUtils.cpp*: Minor utilities for debugging and testing.
-- *PolledInput*: Related to inputs that must be read in a polling (or sampling) loop. Defines two main c++ classes: `AnalogPolledInput` and `DigitalPolledInput`
-- *RotaryEncoderInput.cpp*: Everything related to rotary encoders.
+- *PolledInput*: Related to inputs that must be read in a polling (or sampling) loop. Defines two main c++ classes: `AnalogAxisInput` and `DigitalPolledInput`
+- *RotaryEncoderInput*: Everything related to rotary encoders.
 - *SerialNotification*: For the testing of user notifications through the USB serial interface.
-- *ShiftRegistersInput.cpp*: Everything related to serialized buttons/switches.
+- *ShiftRegistersInput*: Everything related to serialized buttons/switches.
+- *I2CExpanderInputs*: Everything related to GPIO expanders on the I2C bus.
 
 ### Principle of single responsibility
 
@@ -51,6 +52,7 @@ Some namespaces are implemented with the help of auxiliary modules which are not
 | ButtonMatrixInput      | Hardware design                                         |
 | ShiftRegistersInput    | Hardware design                                         |
 | RotaryEncoderInput     | Hardware design                                         |
+| I2CExpanderInputs      | Hardware design                                         |
 
 ### Module dependencies
 
@@ -102,7 +104,6 @@ classDiagram
 classDiagram
     class I2CButtonsInput{
       #getGPIOstate()
-      #initialize()
     }
     DigitalPolledInput <|-- ButtonMatrixInput
     DigitalPolledInput <|-- AnalogMultiplexerInput
@@ -114,7 +115,7 @@ classDiagram
     I2CButtonsInput <|-- MCP23017ButtonsInput
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNkkFLxDAQhf9KiReFXdBVWSletLtKD8Wye-1laKbdgTQpyQR2Xfvfja2WsgdpLknefDOB93IWpZEoYlEqcG5DUFtoCh2F1StRukpePbPRLtWt5_NQi6KrGvk9Tz8cA-P1zSiTJiZQ9DmK3bBtqCYGlRulUPazouev5TIapmfAlo69_D_-okGZOvOKqVV4RDujZ3-gindYk2O0bkbDzjDY01b_eDPngWDShPq7jbWpgSMyFQcyT96eHtcPM-ksyVf3t3fraUUsRIO2AZIh0T6qQvABGyxEHI4SKwjGFaLQXUDBs9mfdCniCpTDhfCtDGH-foILdSuJjRUxW4_dN2N7v8c)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNkVFLwzAUhf9KuL4obKBTmRRftJvSh2LZXvtyaW67QJqU5AY2Zv-7sdVRfJDmJcm530ngnDNUVhIkUGn0fqOwcdiWRsQ1KCJbpa-B2RqfmS7weZwJcdUQvxfZh2dkur4Z5X7cNqpRjLqwWpMcbOL5c7kU40M5slPHQf4ffzGobZMHzarTdCQ3w7M_qJp31CjP5PwMw84yutPWfMcw54OYx4T6vV1m06wuyFQcySJ9e3pcP8yk87RY3d_eracTWEBLrkUlY3lDKyXwgVoqIYlHSTXG4EooTR9RDGz3J1NBUqP2tIDQydjbT99_1K1UbB0k7AL1X8JeuZc)
 
 ```mermaid
 classDiagram
@@ -146,7 +147,7 @@ For detailed description, see the doxigen's documentation at [SimWheel.h](../../
 
 There is a dedicated daemon that read the state of those inputs in a loop, every few milliseconds. Since many inputs are read at the same time, the combined state of all of them is reported to `inputHub`. Nothing is reported if there are no input events, this is, a state change since the previous iteration.
 
-### AnalogPolledInput
+### AnalogAxisInput
 
 It works in a similar way to `DigitalPolledInput`, but for analog inputs, which are limited to two clutch paddles with potentiometers.
 

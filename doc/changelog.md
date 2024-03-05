@@ -118,3 +118,10 @@ First release.
 
 - Moving to EUPL 1.2.
 - No changes in the source code.
+
+## 3.1.0
+
+- Two brands of GPIO expanders (on the I2C bus) are now supported as input circuitry (for switches only)--almost
+  unlimited switches with just two pins. This is the recommended way to go from now on.
+- Another [integration test](../src/QualityControls/IntegrationTests/DigitalInputsTest2/README.md)
+  is in place for GPIO expanders and PISO shift registers.

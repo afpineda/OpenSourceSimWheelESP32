@@ -43,7 +43,7 @@ Rotary encoders can be very noisy. Despite debouncing techniques, some rotations
 
 They are similar in shape to rotary encoders, but they work in a complete different way. A N-position rotary switch is just the same as N **non-momentary** switches where one and only one of them is closed at all times. **This makes them unpractical**, since the PC side will detect a button as "always on". When trying to configure another button in the simulator, that one will get in the way.
 
-We could alleviate the situation by instructing the firmware to report a button press only if there is a change in the position of the rotary switch. However, the simulator will never known what such position is at first.
+We could alleviate the situation by instructing the firmware to report a button press only if there is a change in the position of the rotary switch. However, the simulator will never know what such position is at first.
 
 ## Rotary Potentiometers
 
