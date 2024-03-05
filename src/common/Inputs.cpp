@@ -448,6 +448,11 @@ void inputs::addMCP23017Digital(
     abortDueToCallAfterStart();
 }
 
+void inputs::initializeI2C(gpio_num_t sdaPin, gpio_num_t sclPin)
+{
+  I2CInput::initializePrimaryBus(sdaPin,sclPin);
+}
+
 // ----------------------------------------------------------------------------
 // Macros to send events
 // ----------------------------------------------------------------------------

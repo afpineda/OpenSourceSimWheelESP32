@@ -492,6 +492,19 @@ namespace inputs
     );
 
     /**
+     * @brief Initialize the primary I2C bus to certain pins.
+     *
+     * @note Must be called if your board does not feature a default I2C bus.
+     *       Otherwise, there is no need to call, since the bus will be
+     *       automatically initialized.
+     * @note If required, must be called before addPCF8574Digital() or addMCP23017Digital()
+     *
+     * @param sdaPin SDA pin for the I2C bus.
+     * @param sclPin SCL pin for the I2C bus.
+     */
+    void initializeI2C(gpio_num_t sdaPin, gpio_num_t sclPin);
+
+    /**
      * @brief Set two potentiometers attached to clutch paddles. Each one
      *        will work as an analog axis. Must be called before `start()`.
      *

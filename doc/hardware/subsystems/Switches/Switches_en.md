@@ -410,6 +410,20 @@ In case you have no clue about what the full address could be,
 upload and run the [I2C probe](../../../../src/Firmware/I2C_probe/I2C_probe.ino) firmware
 provided in this project. It will tell how many chips were found on the I2C bus and their full addresses.
 
+#### I2C bus customization
+
+The firmware will use the default `SDA` and `SCL` pins in your DevKit board.
+If your board does not feature a default I2C bus (for example, *Lolin32 Lite*), the firmware won't boot up.
+In such a case, you must **explicitly** place a call to `inputs::initializeI2C()` with two parameters:
+
+- The first parameter is the desired SDA pin.
+- The second parameter is the desired SCL pin.
+
+Both pins **must** support input, output and pull-up resistors.
+This API function must be called **before** `inputs::addPCF8574Digital()` or `inputs::addMCP23017Digital()`.
+
+If your board features a default I2C, but you prefer to use other pins, you may call `inputs::initializeI2C()` too.
+
 ### Single switch
 
 Place a call to `inputs::addDigital()`:

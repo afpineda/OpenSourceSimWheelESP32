@@ -254,6 +254,15 @@ public:
     static void initializePrimaryBus(bool useFastClock = false);
 
     /**
+     * @brief Initialize the primary (and default) I2C bus with specific SDA and SCL pins.
+     *
+     * @note If not called, the primary I2C bus is automatically initialized with default parameters.
+     *
+     * @param useFastClock TRUE to use a 400Mhz clock, otherwise a 100Mhz clock is used.
+     */
+    static void initializePrimaryBus(gpio_num_t sdaPin, gpio_num_t sclPin, bool useFastClock = false);
+
+    /**
      * @brief Initialize the primary (and default) I2C bus if not done yet.
      *
      * @note Default parameters are used.
