@@ -48,10 +48,10 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
-    Serial.println("-- READY --");
+    Serial.println("-- READY (DigitalInputsTest2) --");
 
     inputs::addPCF8574Digital(pcf8574Numbers, PCF8574_I2C_ADDR3);
-    inputs::addPCF8574Digital(mcp23017Numbers, MCP23017_I2C_ADDR3);
+    inputs::addMCP23017Digital(mcp23017Numbers, MCP23017_I2C_ADDR3);
     inputs::addShiftRegisters(
         TEST_SR_SERIAL,
         TEST_SR_LOAD,

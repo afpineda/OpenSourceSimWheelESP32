@@ -77,7 +77,7 @@ ShiftRegistersInput::~ShiftRegistersInput()
 
 inputBitmap_t ShiftRegistersInput::read(inputBitmap_t lastState)
 {
-    inputBitmap_t state = 0;
+    inputBitmap_t state = 0ULL;
 
     // Parallel load
     gpio_set_level(loadPin, loadHighOrLow);

@@ -71,8 +71,8 @@ static inputNumber_t amtxerNumbers[] = {
 #define TEST_SR_NEXT GPIO_NUM_33
 
 static const inputNumber_t srNumbers[] = {
-    63, 63, 63, 2, 63, 63, 4, 63,
-    3, 63, 63, 63, 63, 5, 63, 63,
+    63, 62, 61, 2, 60, 59, 4, 58,
+    3, 57, 56, 55, 54, 5, 53, 52,
     6};
 
 // GPIO expander testing

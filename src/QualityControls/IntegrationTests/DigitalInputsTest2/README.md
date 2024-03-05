@@ -27,7 +27,7 @@ Output through USB serial port at 115200 bauds.
 2. On start, output must match the following:
 
    ```text
-   -- READY --
+   -- READY (DigitalInputsTest2) --
    -- GO --
    ```
 
