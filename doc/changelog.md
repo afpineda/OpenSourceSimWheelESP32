@@ -126,3 +126,8 @@ First release.
 - Another [integration test](../src/QualityControls/IntegrationTests/DigitalInputsTest2/README.md)
   is in place for GPIO expanders and PISO shift registers.
 - Added another "ready to deploy" design as an example of GPIO expanders.
+
+## 3.1.1
+
+- Fixed a mistake in DIY files, affecting "Setup 9".
+- No changes in the source code.
