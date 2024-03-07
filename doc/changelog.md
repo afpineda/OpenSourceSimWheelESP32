@@ -125,3 +125,4 @@ First release.
   unlimited switches with just two pins. This is the recommended way to go from now on.
 - Another [integration test](../src/QualityControls/IntegrationTests/DigitalInputsTest2/README.md)
   is in place for GPIO expanders and PISO shift registers.
+- Added another "ready to deploy" design as an example of GPIO expanders.

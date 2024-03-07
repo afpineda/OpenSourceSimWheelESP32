@@ -218,14 +218,17 @@ Needed parts (not counting input hardware like push buttons):
 
 - Standard-sized perfboard 28x6 holes.
 - MCP23017 GPIO expander: x2.
-- Dupond pin headers (male or female): x48.
+- Dupond pin headers (male or female): x50.
 - Thin wire.
 
 #### External wiring for the GPIO expanders
 
-- Attach `3V3`, `SCL` and `SCA` to the corresponding pins at the DevKit board (same tag).
-- There are many redundant `GND` (ground) pin headers. Attach one to the DevKit board or power source (same tag).
-  Use the others as you wish, or leave unattached.
+- Attach `SCL` and `SCA` to the corresponding pins at the DevKit board (same tag).
+- There are many redundant `GND` (ground) and `3V3` pin headers. Attach one of each to the DevKit board (same tag).
+  Use the others as you wish, or leave unattached. A suggestion:
+  - Redundant `GND` pins may be attached to switches (one terminal), rotary encoders (`COM` terminal) or
+    potentiometers (right or left terminal).
+  - Redundant `3V3` pins may be attached to potentiomers (right or left terminal, the opposite to `GND`).
 - For components (switches, funky switches, etc.), follow the same rules as for analog multiplexers (see above).
 
 #### I2C Addressing
@@ -388,7 +391,7 @@ void simWheelSetup()
     ...
     // Note: hardware addresses are used
     inputs::addMCP23017Digital(mcp1Numbers,0);
-    inputs::addMCP23017Digital(mcp2Numbers,3);
+    inputs::addMCP23017Digital(mcp2Numbers,7);
     ...
 }
 ```
@@ -410,6 +413,9 @@ In case you have no clue about what the full address could be,
 upload and run the [I2C probe](../../../../src/Firmware/I2C_probe/I2C_probe.ino) firmware
 provided in this project. It will tell how many chips were found on the I2C bus and their full addresses.
 
+Note that *hardware addresses* are in the range from 0 to 7 (inclusive), while *full addresses* are in the
+range from 0 to 127 (inclusive).
+
 #### I2C bus customization
 
 The firmware will use the default `SDA` and `SCL` pins in your DevKit board.
@@ -422,7 +428,7 @@ In such a case, you must **explicitly** place a call to `inputs::initializeI2C()
 Both pins **must** support input, output and pull-up resistors.
 This API function must be called **before** `inputs::addPCF8574Digital()` or `inputs::addMCP23017Digital()`.
 
-If your board features a default I2C, but you prefer to use other pins, you may call `inputs::initializeI2C()` too.
+If your board features a default I2C bus, but you prefer to use other pins, you may call `inputs::initializeI2C()` too.
 
 ### Single switch
 

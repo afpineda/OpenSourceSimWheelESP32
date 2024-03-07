@@ -7,7 +7,7 @@
 - [Prepare the source code for compilation and uploading](./firmware/sourcesSetup_en.md)
 - [Input hardware suitable (or not) for a sim wheel/button box](./hardware/InputHW_en.md)
 - [Know your ESP32 DevKit board](./hardware/DevKits_en.md)
-- [How to customize in order to build your own hardware and firmware setup](./hardware/subsystems/CustomizeHowto_en.md).
+- [How to customize in order to build your own hardware and firmware setup](./hardware/subsystems/CustomizeHowto_en.md)
 
 - Ready to deploy designs:
 
@@ -22,6 +22,7 @@
   | [Teabox](./hardware/setups/Teabox/Teabox_en.md) |   Button box   |    Lolin32 Lite    |                     Rotary encoder, two-way push lever, 3 push buttons                      |      External       |
   | [Setup7](./hardware/setups/setup7/Setup7_en.md) | Steering wheel |  LilyGO T-QT PRO   |                 Rotary encoders x3, analog clutch paddles, 20 push buttons                  | Battery or external |
   | [Setup8](./hardware/setups/setup8/Setup8_en.md) |   Button box   |  LilyGO T-QT PRO   |                             Rotary encoders x4, 21 push buttons                             |         USB         |
+  | [Setup9](./hardware/setups/setup9/Setup9_en.md) | Steering wheel |   Wemos S3 mini    |      Rotary encoders x7, funky switch or DPAD, analog clutch paddles, 32 push buttons       |      External       |
 
 ## Known issues
 
