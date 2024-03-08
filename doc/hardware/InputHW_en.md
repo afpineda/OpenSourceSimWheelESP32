@@ -91,6 +91,11 @@ When using a GPIO as a digital input, just one switch can be accommodated in it.
   including switches and rotary encoders. GPIO expanders are interfaced through standard serial-communication protocols
   ([I2C](https://es.wikipedia.org/wiki/I%C2%B2C) or [SPI](https://es.wikipedia.org/wiki/Serial_Peripheral_Interface)).
 
+- **Slave DevKit board**. If a single DevKit board does not have enough GPIO pins, two or more will.
+  A "master" board would coordinate the others ("slaves") using the I2C or UART buses.
+  The total count of GPIO pins depends on each DevKit. Unfortunately, the total count of "slave" boards would be limited by the power source.
+  Those additional GPIO pins could be used by any input hardware, including switches, rotary encoders, and other input hardware.
+
 ### Analog circuits
 
 There are some articles in the Internet claiming a lot of switches in a single pin. It may work in a circuit simulator or in a specific application but, in global terms, **they don't work properly**. I came to this conclusion after a lot of testing. Analog circuits may seem a good idea, but they **fail** to identify the correct inputs due to:
@@ -206,7 +211,23 @@ The [PCF8574](./esp32reference/PCF8574_datasheet.pdf) expander is another exampl
 This project supports the *MCP23017* and the *PCF8574* GPIO expanders at the *I2C* interface, but for switches only.
 They require just two pins, no matter how many chips you need.
 
-*Note:* a mix of switches and rotary encoders attached to the same GPIO expander is not supported.
+### *Slave* DevKit boards
+
+This approach is quite similar to GPIO expanders. Each "slave" board would work as a GPIO expander *on steroids*.
+
+The main disadvantage is the need for, at least, one custom firmware for the slave devices.
+Another disadvantage (and limitation) is power consumption.
+Typical power sources are unable to provide more than 500 mA of current.
+According to [this article](https://deepbluembedded.com/esp32-sleep-modes-power-consumption/#esp32-active-mode),
+an ESP32 board requires 130 mA for BLE operation. That makes room for one master and two slaves.
+Size is another concern. Each "slave" board holds a USB plug, an LDO regulator, and other circuitry not needed for this purpose,
+but it takes room.
+
+The main advantage is that each slave device can hold anything, including other input circuitry.
+
+The *I2C* bus seems to be the best approach for master-slave intercommunication.
+
+This project does not support *slave* DevKit boards right now.
 
 ## Summary of input circuitry for switches
 
@@ -214,11 +235,12 @@ They require just two pins, no matter how many chips you need.
 | :------------------: | :--------------------------: | :----------------: | :---------------------------------------: | :-------------------------------------------------: | :------------------------------- | :----------------------------------------: |
 |         None         |              1               |         1          |              Rotary encoders              |                 Easy and error-free                 | Not enough pins for many buttons |                    yes                     |
 |    Button Matrix     |             $N$              |    $(N/2)^{2}$     |          Push buttons and DPADS           |             Many buttons and error-free             | Complex wiring                   |                    yes                     |
-|     Multiplexers     | $S$ selectors and $I$ inputs |     $2^{S}*I$      |          Push buttons and DPADS           |      Many buttons and error-free. Less wiring.      | Extra cost                       |                analog only                 |
+|     Multiplexers     | $S$ selectors and $I$ inputs |     $2^{S}*I$      |          Push buttons and DPADS           |      Many buttons and error-free. Less wiring.      | Cost                             |                analog only                 |
 |    Voltage ladder    |              1               |       enough       | DPADS, rotary switches and funky switches |             Single pin for many inputs              | Prone to error                   |                     no                     |
 |   Voltage divider    |              1               |         2          |               Push buttons                |                        None                         | Prone to error                   |                     no                     |
-| PISO shift registers |              3               |  almost unlimited  |          Push buttons and DPADS           | Many buttons and error-free. Less pin expenditure.  | Extra cost and space at the PCB  |                    yes                     |
-|    GPIO expanders    |   SPI: 4 or more, I2C:  2    |  almost unlimited  |               Push buttons                | The best switch-to-pin ratio and overall simplicity | Extra cost and space at the PCB  | yes (only for switches and I2C interfaces) |
+| PISO shift registers |              3               |  almost unlimited  |          Push buttons and DPADS           | Many buttons and error-free. Less pin expenditure.  | Cost and size                    |                    yes                     |
+|    GPIO expanders    |   SPI: 4 or more, I2C:  2    |  almost unlimited  |               Push buttons                | The best switch-to-pin ratio and overall simplicity | Cost and size                    | yes (only for switches and I2C interfaces) |
+|     Slave boards     |           2 (I2C)            | Depends on DevKit  |                 Anything                  |              "Infinite possibilities"               | Complex firmware and size        |                     no                     |
 
 Input circuitry takes some space inside the housing. Their physical layout must be carefully designed to fit into the steering wheel (or button box).
 
@@ -252,6 +274,8 @@ There are several choices:
   Another disadvantage is the need for four diodes at each rotary encoder. Given $N$ rotary encoders, just $N+2$ input pins are required.
   This circuit is **not a recommendable option**.
 
+- **Slave DevKit boards**. Already described above.
+
 ### Rotary encoder matrix
 
 The idea behind this circuit is to share two input pins for all the `A` and `B` signals (tagged `A_COM` and `B_COM` below).
@@ -278,3 +302,4 @@ For $N$ rotary encoders:
 |     I2C encoders      |       2       |                  Effortless                  |   Cost, size and vendor dependence    |            No             |
 |    GPIO expanders     |       2       | Could hold both switches and rotary encoders |          Size and extra cost          |            No             |
 | Rotary encoder matrix |     $N+2$     |                     None                     |  Unable to detect simultaneous input  |            No             |
+|     Slave boards      |    2 (I2C)    |          Easy and straight-forward           |       Complex firmware and size       |            No             |
