@@ -342,10 +342,10 @@ static bool isPrimaryBusInitialized = false;
 
 void I2CInput::initializePrimaryBus(gpio_num_t sdaPin, gpio_num_t sclPin, bool useFastClock)
 {
-    if (isPrimaryBusInitialized)
-    {
-        ESP_ERROR_CHECK(i2c_driver_delete(I2C_NUM_0));
-    }
+    // if (isPrimaryBusInitialized)
+    // {
+    //     ESP_ERROR_CHECK(i2c_driver_delete(I2C_NUM_0));
+    // }
     i2c_config_t conf;
     memset(&conf, 0, sizeof(i2c_config_t));
     conf.mode = I2C_MODE_MASTER;
@@ -363,13 +363,7 @@ void I2CInput::initializePrimaryBus(gpio_num_t sdaPin, gpio_num_t sclPin, bool u
 
 void I2CInput::initializePrimaryBus(bool useFastClock)
 {
-#if defined(SDA) && defined(SCL)
-    I2CInput::initializePrimaryBus(SDA, SCL, useFastClock);
-#else
-    #warning "There is no default I2C bus for this board. You must explicitly initialize the primary I2C bus."
-    log_e("ERROR: this board does not feature a default I2C bus. You must explicitly initialize the primary I2C bus.");
-    abort();
-#endif
+    I2CInput::initializePrimaryBus((gpio_num_t)SDA, (gpio_num_t)SCL, useFastClock);
 }
 
 void I2CInput::initializePrimaryBusWhenNeeded()

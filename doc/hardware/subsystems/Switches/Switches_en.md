@@ -419,16 +419,13 @@ range from 0 to 127 (inclusive).
 #### I2C bus customization
 
 The firmware will use the default `SDA` and `SCL` pins in your DevKit board.
-If your board does not feature a default I2C bus (for example, *Lolin32 Lite*), the firmware won't boot up.
-In such a case, you must **explicitly** place a call to `inputs::initializeI2C()` with two parameters:
+If you prefer to use other pins, you must **explicitly** place a call to `inputs::initializeI2C()` with two parameters:
 
 - The first parameter is the desired SDA pin.
 - The second parameter is the desired SCL pin.
 
 Both pins **must** support input, output and pull-up resistors.
 This API function must be called **before** `inputs::addPCF8574Digital()` or `inputs::addMCP23017Digital()`.
-
-If your board features a default I2C bus, but you prefer to use other pins, you may call `inputs::initializeI2C()` too.
 
 ### Single switch
 
