@@ -67,7 +67,12 @@ MCP23017ButtonsInput::MCP23017ButtonsInput(
 {
     i2c_cmd_handle_t cmd;
 
-    // Configure IOCON register
+    // Configure IOCON register:
+    // - Registers are in the same bank
+    // - Interrupt pins mirrored
+    // - Sequential operation
+    // - Active driver output for interrupt pins
+    // - Interrupt pins active low
     cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, deviceAddress, true);
@@ -110,7 +115,7 @@ MCP23017ButtonsInput::MCP23017ButtonsInput(
     ESP_ERROR_CHECK(i2c_master_cmd_begin(busDriver, cmd, DEBOUNCE_TICKS * 10));
     i2c_cmd_link_delete(cmd);
 
-    // Enable interrupts
+    // Enable interrupts at all GPIO pins
     cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, deviceAddress, true);
@@ -137,11 +142,15 @@ MCP23017ButtonsInput::MCP23017ButtonsInput(
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, deviceAddress, true);
     i2c_master_write_byte(cmd, MCP23017_INTERRUPT_DEFAULT_VALUE, true);
-    i2c_master_write_byte(cmd, 0xFF, true); // Note: positive logic
-    i2c_master_write_byte(cmd, 0xFF, true);
+    i2c_master_write_byte(cmd, 0, true); // Note: negative logic
+    i2c_master_write_byte(cmd, 0, true);
     i2c_master_stop(cmd);
     ESP_ERROR_CHECK(i2c_master_cmd_begin(busDriver, cmd, DEBOUNCE_TICKS * 10));
     i2c_cmd_link_delete(cmd);
+
+    // Read GPIO registers in order to clear all interrupts
+    inputBitmap_t dummy;
+    getGPIOstate(dummy);
 }
 
 bool MCP23017ButtonsInput::getGPIOstate(inputBitmap_t &state)

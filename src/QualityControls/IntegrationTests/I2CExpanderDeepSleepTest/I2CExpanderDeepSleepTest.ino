@@ -1,9 +1,9 @@
 /**
- * @file DeepSleepTest.ino
+ * @file I2CExpanderDeepSleepTest.ino
  *
  * @author Ángel Fernández Pineda. Madrid. Spain.
- * @date 2022-02-27
- * @brief Unit Test. See [README](./README.md)
+ * @date 2024-03-08
+ * @brief Integration Test. See [README](./README.md)
  *
  * @copyright Licensed under the EUPL
  *
@@ -29,7 +29,7 @@ void notify::powerOff()
 // Auxiliary
 //-------------------------------------------------------
 
-void print_wakeup_reason()
+bool print_wakeup_reason()
 {
   esp_sleep_wakeup_cause_t wakeup_reason;
 
@@ -56,15 +56,10 @@ void print_wakeup_reason()
     Serial.printf("Wake up was not caused by deep sleep: %d\n", wakeup_reason);
     break;
   }
+  return (wakeup_reason == ESP_SLEEP_WAKEUP_EXT0) || (wakeup_reason == ESP_SLEEP_WAKEUP_EXT1);
 }
 
-void waitForButton()
-{
-  while (digitalRead(TEST_POWER_PIN) == LOW)
-    delay(50);
-  while (digitalRead(TEST_POWER_PIN) == HIGH)
-    delay(50);
-}
+#define TEST_POWER_PIN GPIO_NUM_14
 
 //-------------------------------------------------------
 // Entry point
@@ -74,20 +69,21 @@ void setup()
 {
   esp_log_level_set("*", ESP_LOG_ERROR);
   Serial.begin(115200);
-  Serial.println("--START--");
+  Serial.println("--START (I2CExpanderDeepSleepTest) --");
 
   print_wakeup_reason();
-  power::begin(TEST_POWER_PIN, false);
 
-  ESP_ERROR_CHECK(gpio_set_direction(TEST_POWER_PIN, GPIO_MODE_INPUT));
-  ESP_ERROR_CHECK(gpio_set_pull_mode(TEST_POWER_PIN, GPIO_PULLUP_ONLY));
+  inputs::addPCF8574Digital(pcf8574Numbers, PCF8574_I2C_ADDR3);
+  inputs::addMCP23017Digital(mcp23017Numbers, MCP23017_I2C_ADDR3);
 
-  Serial.println("POWER ON and running");
-  Serial.println("Push POWER button to enter deep sleep mode...");
-  waitForButton();
   Serial.println("");
+  Serial.printf("Using GPIO %d as wake up source. Wake up when LOW",TEST_POWER_PIN);
+  Serial.println("");
+
+  Serial.println("Please, wait...");
+  delay(5000);
   Serial.println("Entering deep sleep mode");
-  delay(1000);
+  power::begin(TEST_POWER_PIN, false);
   power::powerOff();
 }
 

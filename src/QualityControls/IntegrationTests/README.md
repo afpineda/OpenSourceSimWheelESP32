@@ -8,16 +8,30 @@ Ensure that all unit test have failed before proceeding to integration testing (
 
 ## *Test name*: [DigitalInputsTest](./DigitalInputsTest/README.md)
 
-- RotaryEncoderInput
 - DigitalPolledInput
+  - RotaryEncoderInput
+  - ButtonMatrixInput
+  - AnalogMultiplexerInput
 - inputs
 
 ## *Test name*: [DigitalInputsTest2](./DigitalInputsTest2/README.md)
 
 - DigitalPolledInput
+  - ShiftRegistersInput
+  - I2CExpanderInput
 - inputs
 
 *Note:* This test differs from the previous one in the involved hardware.
+
+## *Test name*: [I2CExpanderDeepSleepTest](./I2CExpanderDeepSleepTest/README.md)
+
+- DigitalPolledInput
+  - ShiftRegistersInput
+  - I2CExpanderInput
+- inputs
+- **power**
+
+*Note:* This test ensures the *inputs* subsystem properly configures interrupt pins at the GPIO expanders for wake up.
 
 ## *Test name*: [InputHubTest](./InputHubTest/README.md)
 

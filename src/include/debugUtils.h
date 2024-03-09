@@ -89,4 +89,11 @@ static const inputNumber_t mcp23017Numbers[] = {
 static const inputNumber_t pcf8574Numbers[] = {
     30, 31, 32, 33, 34, 35, 36, 37};
 
+// Deep sleep testing
+#ifndef CONFIG_IDF_TARGET_ESP32C3
+#define TEST_POWER_PIN TEST_ROTARY_SW
+#else
+#define TEST_POWER_PIN GPIO_NUM_2
+#endif
+
 #endif
