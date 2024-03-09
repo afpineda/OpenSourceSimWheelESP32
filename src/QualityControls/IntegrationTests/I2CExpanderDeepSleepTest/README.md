@@ -6,8 +6,7 @@ To test that GPIO expanders are able to wake up the system from deep sleep using
 
 ## Hardware setup
 
-Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h),
-except for `TEST_POWER_PIN` which is redefined inside the sketch itself.
+Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
 Use this [test circuit](../../Protoboards/ESP32-WROOM-DevKitC-2.diy):
 
 ![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-2.png)

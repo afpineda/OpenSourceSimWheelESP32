@@ -59,7 +59,7 @@ bool print_wakeup_reason()
   return (wakeup_reason == ESP_SLEEP_WAKEUP_EXT0) || (wakeup_reason == ESP_SLEEP_WAKEUP_EXT1);
 }
 
-#define TEST_POWER_PIN GPIO_NUM_14
+// #define TEST_POWER_PIN GPIO_NUM_14
 
 //-------------------------------------------------------
 // Entry point
@@ -83,7 +83,7 @@ void setup()
   Serial.println("Please, wait...");
   delay(5000);
   Serial.println("Entering deep sleep mode");
-  power::begin(TEST_POWER_PIN, false);
+  power::begin(TEST_POWER_PIN);
   power::powerOff();
 }
 

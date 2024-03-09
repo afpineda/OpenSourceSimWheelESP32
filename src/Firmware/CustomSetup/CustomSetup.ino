@@ -36,21 +36,13 @@ std::string DEVICE_MANUFACTURER = "Me";
  >>>> [ES] MODO DE SUEÑO PROFUNDO
 ------------------------------------------------------------------ */
 
-// [EN] Wake up source: put a list of GPIO numbers between curly brackets.
-//      If empty, only a RESET will wake up the system.
-// [ES] Señales para despertar: indicar una lista de  números de GPIO entre llaves.
-//      Si lo deja vacío, solamente un RESET despertará al sistema.
+// [EN] Set an output-capable GPIO number for the "wake up" pin.
+//      Comment out if not required, or set an RTC-capable GPIO number for wake up.
+// [ES] Indique el número de GPIO para la señal "despertar"
+//      Comente la línea si no hay necesidad de entrar en sueño profundo, o bien,
+//      indique un número de GPIO con capacidad RTC para despertar del sueño.
 
-const gpio_num_t WAKEUP_PINS[] = {};
-
-// [EN] Set to "true" or "false".
-//      If "true", wake up happens when any given pin are set to high voltage.
-//      If "false", wake up happens when all given pins are set to low voltage.
-// [ES] Seleccione "true" o "false"
-//      Con "true", se despierta con voltaje alto en cualquiera de los pines.
-//      Con "false", se despierta con voltaje bajo en todos los pines.
-
-#define WAKEUP_ANYorALL false
+//#define WAKE_UP_PIN
 
 /* -----------------------------------------------------------------
  >>>> [EN] POWER LATCH SUBSYSTEM
@@ -62,7 +54,7 @@ const gpio_num_t WAKEUP_PINS[] = {};
 // [ES] Indique el número de GPIO para la señal "POWER_LATCH"
 //      Comente la línea si no hay circuito externo de power latch.
 
-//#define POWER_LATCH GPIO_NUM_0
+//#define POWER_LATCH
 
 #ifdef POWER_LATCH
 // [EN] Set an the activation mode for the "POWER_LATCH" pin.
@@ -166,10 +158,10 @@ void simWheelSetup()
 void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
-    power::begin(
-        WAKEUP_PINS,
-        sizeof(WAKEUP_PINS) / sizeof(gpio_num_t),
-        WAKEUP_ANYorALL);
+
+#ifdef WAKE_UP_PIN
+    power::begin((gpio_num_t)WAKE_UP_PIN);
+#endif
 
 #ifdef POWER_LATCH
     power::setPowerLatch(

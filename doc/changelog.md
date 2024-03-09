@@ -131,3 +131,13 @@ First release.
 
 - Fixed a mistake in DIY files, affecting "Setup 9".
 - No changes in the source code.
+
+## 3.2.0
+
+- The deep sleep API has been simplified.
+  A single pin, active at low voltage, may be configured as a wake-up source.
+  You don't want to spend more GPIO pins on this.
+  Many signals could be combined into a single wake-up pin using diodes, if required.
+- The firmware now enables GPIO expanders to be used as wake-up sources through the interrupt pin(s).
+  Another integration test is in place for this use case.
+- Fixed some documentation errata.

@@ -284,6 +284,16 @@ namespace power
     /**
      * @brief Initialize power management
      *
+     * @param wakeUpPin RTC-capable GPIO pin to wake up the system after deep sleep.
+     *                  That pin is supposed to activate on LOW voltage.
+     */
+    void begin(const gpio_num_t wakeUpPin);
+
+    /**
+     * @brief Initialize power management
+     *
+     * @deprecated Use begin() with just one parameter.
+     *
      * @param wakeUpPins Array of RTC-capable GPIO pins to wake up the system after deep sleep.
      * @param wakeUpPinCount Number of pins in `wakeUpPins`. If no pins are provided, a system
      *                       reset is required for wakeup.
@@ -298,12 +308,13 @@ namespace power
     /**
      * @brief Initialize power management for single button wake up
      *
+     * @deprecated Use begin() with just one parameter.
+     *
      * @param wakeUpPin RTC-capable GPIO pin to wake up the system after deep sleep.
      * @param wakeUpHighOrLow If *true*, wakeup happens when `wakeUpPin` is set to high voltage.
      *                        If *false*, wakeup happens when `wakeUpPin` is set to low voltage.
      */
-    void begin(
-        const gpio_num_t wakeUpPin, bool wakeUpHighOrLow = true);
+    void begin(const gpio_num_t wakeUpPin, bool wakeUpHighOrLow);
 
     /**
      * @brief Configure an external latch circuit for power on and off
@@ -475,8 +486,7 @@ namespace inputs
     void addPCF8574Digital(
         const inputNumber_t *buttonNumbersArray,
         uint8_t I2CAddress,
-        bool isFullAddress = false
-    );
+        bool isFullAddress = false);
 
     /**
      * @brief Add a MCP23017 GPIO expander for switches
@@ -488,8 +498,7 @@ namespace inputs
     void addMCP23017Digital(
         const inputNumber_t *buttonNumbersArray,
         uint8_t I2CAddress,
-        bool isFullAddress = false
-    );
+        bool isFullAddress = false);
 
     /**
      * @brief Initialize the primary I2C bus to certain pins.

@@ -52,18 +52,36 @@ int lastBatteryLevel = 100;
 // Initialization
 // ----------------------------------------------------------------------------
 
-void power::begin(const gpio_num_t wakeUpPins[], const uint8_t wakeUpPinCount, bool AnyHighOrAllLow)
+void power::begin(const gpio_num_t wakeUpPin)
 {
   // https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/sleep_modes.html
   // After wake up from sleep, IO pad used for wakeup will be configured as RTC IO.
   // Before using this pad as digital GPIO, reconfigure it.
 
-  //#ifndef ARDUINO_ESP32C3_DEV
-  #ifndef CONFIG_IDF_TARGET_ESP32C3
+#ifndef CONFIG_IDF_TARGET_ESP32C3
   for (uint64_t p = 0; p < GPIO_NUM_MAX; p++)
     if (BITMAP(p) & ext1_wakeup_sources)
       rtc_gpio_deinit((gpio_num_t)p);
-  #endif
+#endif
+
+  if (rtc_gpio_is_valid_gpio(wakeUpPin))
+    ext1_wakeup_sources = BITMAP(wakeUpPin);
+  else
+    ext1_wakeup_sources = 0ULL;
+  ext1_wakeup_mode = ESP_EXT1_WAKEUP_ALL_LOW;
+}
+
+// NOTE: deprecated
+void power::begin(const gpio_num_t wakeUpPins[], const uint8_t wakeUpPinCount, bool AnyHighOrAllLow)
+{
+  if (wakeUpPinCount == 0)
+    return;
+
+#ifndef CONFIG_IDF_TARGET_ESP32C3
+  for (uint64_t p = 0; p < GPIO_NUM_MAX; p++)
+    if (BITMAP(p) & ext1_wakeup_sources)
+      rtc_gpio_deinit((gpio_num_t)p);
+#endif
 
   ext1_wakeup_sources = 0ULL;
   for (uint8_t i = 0; i < wakeUpPinCount; i++)
@@ -74,14 +92,15 @@ void power::begin(const gpio_num_t wakeUpPins[], const uint8_t wakeUpPinCount, b
   ext1_wakeup_mode = AnyHighOrAllLow ? ESP_EXT1_WAKEUP_ANY_HIGH : ESP_EXT1_WAKEUP_ALL_LOW;
 }
 
+// NOTE: deprecated
 void power::begin(
     const gpio_num_t wakeUpPin, bool wakeUpHighOrLow)
 {
-  #ifndef CONFIG_IDF_TARGET_ESP32C3
+#ifndef CONFIG_IDF_TARGET_ESP32C3
   for (uint64_t p = 0; p < GPIO_NUM_MAX; p++)
     if (BITMAP(p) & ext1_wakeup_sources)
       rtc_gpio_deinit((gpio_num_t)p);
-  #endif
+#endif
 
   if (rtc_gpio_is_valid_gpio(wakeUpPin))
     ext1_wakeup_sources = BITMAP(wakeUpPin);
@@ -142,7 +161,7 @@ void enterDeepSleep()
   // Disable pins to avoid current drainage through pull resistors
   // Enable proper pull resistors for wake up (if available)
   for (int p = 0; p < GPIO_NUM_MAX; p++)
-    if (GPIO_IS_VALID_GPIO((gpio_num_t)p) && !((p >= 6) && (p <= 11))) // Exclude flash memory pins
+    if (GPIO_IS_VALID_GPIO((gpio_num_t)p))
     {
       uint64_t pinBitmap = BITMAP(p);
       if (pinBitmap & ext1_wakeup_sources)
@@ -169,14 +188,14 @@ void enterDeepSleep()
   if (ext1_wakeup_sources != 0ULL)
   {
     ESP_ERROR_CHECK(esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_PERIPH, ESP_PD_OPTION_ON));
-    #ifndef CONFIG_IDF_TARGET_ESP32C3
-      ESP_ERROR_CHECK(esp_sleep_enable_ext1_wakeup(ext1_wakeup_sources, ext1_wakeup_mode));
-    #else
-      // NOTE: NOT TESTED
-      esp_deepsleep_gpio_wake_up_mode_t aux =
-        (ext1_wakeup_mode==ESP_EXT1_WAKEUP_ANY_HIGH) ? ESP_GPIO_WAKEUP_GPIO_HIGH : ESP_GPIO_WAKEUP_GPIO_LOW;
-      ESP_ERROR_CHECK(esp_deep_sleep_enable_gpio_wakeup(ext1_wakeup_sources,aux));
-    #endif
+#ifndef CONFIG_IDF_TARGET_ESP32C3
+    ESP_ERROR_CHECK(esp_sleep_enable_ext1_wakeup(ext1_wakeup_sources, ext1_wakeup_mode));
+#else
+    // NOTE: NOT TESTED
+    esp_deepsleep_gpio_wake_up_mode_t aux =
+        (ext1_wakeup_mode == ESP_EXT1_WAKEUP_ANY_HIGH) ? ESP_GPIO_WAKEUP_GPIO_HIGH : ESP_GPIO_WAKEUP_GPIO_LOW;
+    ESP_ERROR_CHECK(esp_deep_sleep_enable_gpio_wakeup(ext1_wakeup_sources, aux));
+#endif
   } // else reset is required for wake up
   esp_deep_sleep_start();
 

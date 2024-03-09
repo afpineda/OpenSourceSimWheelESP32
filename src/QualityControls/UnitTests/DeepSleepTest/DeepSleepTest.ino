@@ -77,7 +77,7 @@ void setup()
   Serial.println("--START--");
 
   print_wakeup_reason();
-  power::begin(TEST_POWER_PIN, false);
+  power::begin(TEST_POWER_PIN);
 
   ESP_ERROR_CHECK(gpio_set_direction(TEST_POWER_PIN, GPIO_MODE_INPUT));
   ESP_ERROR_CHECK(gpio_set_pull_mode(TEST_POWER_PIN, GPIO_PULLUP_ONLY));

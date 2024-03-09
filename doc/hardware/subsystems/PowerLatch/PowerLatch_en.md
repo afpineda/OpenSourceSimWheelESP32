@@ -14,44 +14,9 @@ The purpose of this subsystem is to completely **cut power off** to the system w
 
 Your powerboost module/shield may come equipped with this subsystem. You know that because there is a push button (**but not a switch**) to turn on/off the module. One of the two terminals where the push button is soldered will work as `POWER_LATCH`, so a wire has to be soldered there. To know which one, just do some testing using a wire. Connect a terminal to `GND` and wait a few seconds. If power goes on/off, that terminal is `POWER_LATCH`.
 
-## Firmware customization
+### Firmware customization for the external power latch circuit
 
 Customization takes place at file [CustomSetup.ino](../../../../src/Firmware/CustomSetup/CustomSetup.ino).
-
-### No power latch circuit
-
-A "wake up source" is mandatory if there is no power latch circuit, this is, a set of GPIO numbers. It is recommended even if there is a power latch circuit, as a fallback measure in case the power latch is not wired. Anything wired to a button matrix (or analog multiplexer) is unable to act as a wake up source, since the button matrix/multiplexer will not be powered while in deep sleep. There are some choices:
-
-#### Wake up source: RESET button
-
-With this choice, a reset push button is the only way to wake up from deep sleep: one terminal wired to `GND` and the other one wired to the `EN` pin at the DevKit Board. This is **not recommended**, as the reset button may be pushed by accident, thus ruining your race.  No firmware customization is required in this case.
-
-#### Wake up source: Rotary encoders or a dedicated push button
-
-With this choice one or more rotary encoders may be configured. All of them have to be activated at the same time to wake up from deep sleep. This is more reliable for their built in push buttons (`SW` pin) than for rotation (`CLK` or `DT`), as long as they are not attached to a button matrix/multiplexer.
-
-Locate the following line at *CustomSetup.ino*:
-
-```c
-const gpio_num_t WAKEUP_PINS[] = {};
-```
-
-Put inside the curly brackets a comma-separated list of GPIO numbers. Those GPIO numbers must be attached to a `CLK`, `DT` or `SW` pin. **Any other pulled up input may be used, too**. For example:
-
-```c
-const gpio_num_t WAKEUP_PINS[] = {GPIO_NUM_39, GPIO_NUM_32};
-```
-
-Locate the line starting with `#define WAKEUP_ANYorALL`. It must match the following:
-
-```c
-#define WAKEUP_ANYorALL false
-```
-
-If your custom setup does not use rotary encoders, you must provide a dedicated pulled up push button as a wake up source. The firmware will enable internal pull-up resistors if available. `GPIO_NUM_3` is perfect for this, since it is always pulled up.
-
-### External power latch circuit
-
 Locate the line that contains `#define POWER_LATCH`, and ensure it is not commented out:
 
 ```c
@@ -63,3 +28,75 @@ Then write the assigned GPIO number to `POWER_LATCH` at the right side. For exam
 ```c
 #define POWER_LATCH GPIO_NUM_1
 ```
+
+## No power latch circuit
+
+A "wake-up source" is mandatory if there is no power latch circuit.
+For simplification, a single GPIO pin, active on **low** voltage (pulled-up), is allowed as "wake-up source".
+It is recommended to configure a "wake-up source" even if there is a power latch circuit
+as a fallback measure in case the power latch is not wired.
+
+Since the "wake-up source" must be user-operated (like a "turn-on" push button),
+that GPIO pin depends on the [switches](../Switches/Switches_en.md) subsystem implementation.
+But **not all of those implementations** are suitable for this purpose.
+
+Additionally, the desired GPIO pin must be **"RTC-capable"**, otherwise it will not work.
+Look for a data sheet or pin-out reference.
+
+You may combine many signals into a single "wake-up" GPIO pin using diodes,
+as long as all of them are active at low voltage.
+Look at the example for GPIO expanders below.
+
+### RESET button
+
+A "reset" push button will wake up the system from deep sleep:
+one terminal wired to `GND` and the other one wired to the `EN` pin at the DevKit Board.
+This is **not recommended**, as the reset button may be pushed by accident, thus ruining your race.
+No firmware customization is required in this case since no GPIO pin is involved.
+
+### Firmware customization of a "wake-up source"
+
+Customization takes place at file [CustomSetup.ino](../../../../src/Firmware/CustomSetup/CustomSetup.ino).
+
+Locate the line that contains `#define WAKE_UP_PIN`, and ensure it is not commented out:
+
+```c
+#define WAKE_UP_PIN
+```
+
+Then write the assigned GPIO number to `WAKE_UP_PIN` at the right side. For example:
+
+```c
+#define WAKE_UP_PIN GPIO_NUM_3
+```
+
+There are some alternatives:
+
+#### Push button directly attached to a GPIO pin
+
+With this choice, a single switch will wake up the system from deep sleep.
+Any other pulled-up input may be used, too, for example, a rotary encoder.
+`GPIO_NUM_3` (in the ESP32 board) is perfect for this since it is always pulled up.
+
+#### Button Matrix, shift registers or analog multiplexers
+
+Sorry. Those implementations are unable to wake up the system from deep sleep.
+
+#### GPIO expanders
+
+The "interrupt pin" of a GPIO expander is able to wake up the system from deep sleep:
+
+- *PCF8574*: the "interrupt pin" is tagged as `~INT`.
+- *MCP23017*: there are two "interrupt pins" tagged as `INTA` and `INTB`.
+  Any of them will work.
+  You don't need to use both.
+
+Any of the switches attached to the GPIO expander will wake up the system from deep sleep.
+
+Note that "interrupt" pins are active LOW.
+You may combine many of them (from different chips) into a single "wake up" GPIO pin using diodes.
+The following example combines interrupt signals from three chips:
+
+![Interrupts OR](./InterruptsOR.png)
+
+Test this circuit at [falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKAA8QAWfEFYpBAkK9ieLr04gAkgDsALnQBOigK4AHOQB0AzmoCWMnaw7dy2TigqCQ5pJJSTZC5eq26DOlOy6RJ2YhCClv6S9o7ySqoaOvqG2tgsADI2aDbYwth4fulQ4CAAZgCGADbadNSQLAAmElTYOdip9cKWVXRFKsVyLADutbx4Yg51OZXJjVQogzZZA2JUEEWl5UiVNcNzKZPTre2Fnd0AsilpwkwZo7zQCL39zXezaw9+TbO7HV1JWzN+s5mSCwKJTKFVuG3ujVOUG8KGCKCQYAQLzEYRAAHVCgBrOg6dQxAwsIA)
