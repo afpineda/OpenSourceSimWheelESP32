@@ -70,10 +70,14 @@ static inputNumber_t amtxerNumbers[] = {
 #define TEST_SR_LOAD GPIO_NUM_32
 #define TEST_SR_NEXT GPIO_NUM_33
 
-static const inputNumber_t srNumbers[] = {
-    63, 62, 61, 2, 60, 59, 4, 58,
-    3, 57, 56, 55, 54, 5, 53, 52,
-    6};
+// static const inputNumber_t srNumbers[] = {
+//     63, 62, 61, 2, 60, 59, 4, 58,
+//     3, 57, 56, 55, 54, 5, 53, 52,
+//     6};
+
+#define TEST_SR_BUTTONS_COUNT 17
+
+void setDebugInputNumbers(ShiftRegisters8InputSpec &instance);
 
 // GPIO expander testing
 
@@ -82,12 +86,8 @@ static const inputNumber_t srNumbers[] = {
 #define MCP23017_I2C_ADDR3 0
 #define PCF8574_I2C_ADDR3 1
 
-static const inputNumber_t mcp23017Numbers[] = {
-    10, 11, 12, 13, 14, 15, 16, 17,
-    20, 21, 22, 23, 24, 25, 26, 27};
-
-static const inputNumber_t pcf8574Numbers[] = {
-    30, 31, 32, 33, 34, 35, 36, 37};
+void setDebugInputNumbers(MCP23017InputSpec &instance);
+void setDebugInputNumbers(PCF8574InputSpec &instance);
 
 // Deep sleep testing
 #ifndef CONFIG_IDF_TARGET_ESP32C3

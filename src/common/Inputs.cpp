@@ -342,26 +342,26 @@ void inputs::addAnalogMultiplexer(
     abortDueToCallAfterStart();
 }
 
-void inputs::addShiftRegisters(
+ShiftRegisters8InputSpec &inputs::addShiftRegisters(
     const gpio_num_t serialPin,
     const gpio_num_t loadPin,
     const gpio_num_t nextPin,
-    const inputNumber_t *buttonNumbersArray,
     const uint8_t switchCount)
 {
   if ((!pollingTask) && (!hubTask))
   {
-    checkInputNumbers(switchCount, buttonNumbersArray);
-    digitalInputChain = new ShiftRegistersInput(
-        serialPin,
-        loadPin,
-        nextPin,
-        buttonNumbersArray,
-        switchCount,
-        true,
-        false,
-        false,
-        digitalInputChain);
+    ShiftRegistersInput *sr =
+        new ShiftRegistersInput(
+            serialPin,
+            loadPin,
+            nextPin,
+            switchCount,
+            true,
+            false,
+            false,
+            digitalInputChain);
+    digitalInputChain = sr;
+    return *sr;
   }
   else
     abortDueToCallAfterStart();
@@ -390,59 +390,59 @@ void inputs::setAnalogClutchPaddles(
     abortDueToCallAfterStart();
 }
 
-void inputs::addPCF8574Digital(
-    const inputNumber_t *buttonNumbersArray,
+uint8_t getI2CFullAddress(uint8_t I2CAddress, bool isFullAddress)
+{
+  uint8_t fullAddress;
+  if (isFullAddress)
+    fullAddress = I2CAddress;
+  else
+  {
+    I2CInput::initializePrimaryBusWhenNeeded();
+    if (!I2CInput::hardwareAddr2FullAddress(
+            I2CAddress,
+            I2CInput::getBusDriver(),
+            fullAddress))
+    {
+      log_e("Unable to auto-detect full address of GPIO expander. Hardware address is %x (hex)", I2CAddress);
+      abort();
+    }
+  }
+  return fullAddress;
+}
+
+PCF8574InputSpec &inputs::addPCF8574Digital(
     uint8_t I2CAddress,
     bool isFullAddress)
 {
   if ((!pollingTask) && (!hubTask))
   {
-    checkInputNumbers(8, buttonNumbersArray);
-    uint8_t fullAddress;
-    if (isFullAddress)
-      fullAddress = I2CAddress;
-    else
-    {
-      I2CInput::initializePrimaryBusWhenNeeded();
-      if (!I2CInput::hardwareAddr2FullAddress(
-              I2CAddress,
-              I2CInput::getBusDriver(),
-              fullAddress))
-      {
-        log_e("Unable to auto-detect full address of PCF8574. Hardware address is %x (hex)", I2CAddress);
-        abort();
-      }
-    }
-    digitalInputChain = new PCF8574ButtonsInput(buttonNumbersArray, fullAddress, false, digitalInputChain);
+    uint8_t fullAddress = getI2CFullAddress(I2CAddress, isFullAddress);
+    PCF8574ButtonsInput *gpioExpander =
+        new PCF8574ButtonsInput(
+            fullAddress,
+            false,
+            digitalInputChain);
+    digitalInputChain = gpioExpander;
+    return *gpioExpander;
   }
   else
     abortDueToCallAfterStart();
 }
 
-void inputs::addMCP23017Digital(
-    const inputNumber_t *buttonNumbersArray,
+MCP23017InputSpec &inputs::addMCP23017Digital(
     uint8_t I2CAddress,
     bool isFullAddress)
 {
   if ((!pollingTask) && (!hubTask))
   {
-    checkInputNumbers(16, buttonNumbersArray);
-    uint8_t fullAddress;
-    if (isFullAddress)
-      fullAddress = I2CAddress;
-    else
-    {
-      I2CInput::initializePrimaryBusWhenNeeded();
-      if (!I2CInput::hardwareAddr2FullAddress(
-              I2CAddress,
-              I2CInput::getBusDriver(),
-              fullAddress))
-      {
-        log_e("Unable to auto-detect full address of MCP23017. Hardware address is %x (hex)", I2CAddress);
-        abort();
-      }
-    }
-    digitalInputChain = new MCP23017ButtonsInput(buttonNumbersArray, fullAddress, false, digitalInputChain);
+    uint8_t fullAddress = getI2CFullAddress(I2CAddress, isFullAddress);
+    MCP23017ButtonsInput *gpioExpander =
+        new MCP23017ButtonsInput(
+            fullAddress,
+            false,
+            digitalInputChain);
+    digitalInputChain = gpioExpander;
+    return *gpioExpander;
   }
   else
     abortDueToCallAfterStart();
@@ -450,7 +450,7 @@ void inputs::addMCP23017Digital(
 
 void inputs::initializeI2C(gpio_num_t sdaPin, gpio_num_t sclPin)
 {
-  I2CInput::initializePrimaryBus(sdaPin,sclPin);
+  I2CInput::initializePrimaryBus(sdaPin, sclPin);
 }
 
 // ----------------------------------------------------------------------------
@@ -510,6 +510,10 @@ void inputs::start()
       log_e("Unable to create event queue");
       abort();
     }
+
+    // Take note of used input numbers
+    inputBitmap_t usedInputs = ~DigitalPolledInput::getChainMask(digitalInputChain);
+    capabilities::availableInputs |= usedInputs;
 
     // Create and run hub task
     xTaskCreate(hubLoop, "hub", HUB_STACK_SIZE, (void *)nullptr, INPUT_TASK_PRIORITY, &hubTask);

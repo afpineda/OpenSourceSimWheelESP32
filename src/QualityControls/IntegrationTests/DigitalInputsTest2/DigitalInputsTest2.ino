@@ -50,14 +50,17 @@ void setup()
     Serial.begin(115200);
     Serial.println("-- READY (DigitalInputsTest2) --");
 
-    inputs::addPCF8574Digital(pcf8574Numbers, PCF8574_I2C_ADDR3);
-    inputs::addMCP23017Digital(mcp23017Numbers, MCP23017_I2C_ADDR3);
-    inputs::addShiftRegisters(
-        TEST_SR_SERIAL,
-        TEST_SR_LOAD,
-        TEST_SR_NEXT,
-        srNumbers,
-        sizeof(srNumbers)/sizeof(srNumbers[0]));
+    auto &inputSpec1 = inputs::addPCF8574Digital(PCF8574_I2C_ADDR3);
+    setDebugInputNumbers(inputSpec1);
+    auto &inputSpec2 = inputs::addMCP23017Digital(MCP23017_I2C_ADDR3);
+    setDebugInputNumbers(inputSpec2);
+    auto &inputSpec3 =
+        inputs::addShiftRegisters(
+            TEST_SR_SERIAL,
+            TEST_SR_LOAD,
+            TEST_SR_NEXT,
+            TEST_SR_BUTTONS_COUNT);
+    setDebugInputNumbers(inputSpec3);
 
     inputs::start();
     Serial.println("-- GO --");

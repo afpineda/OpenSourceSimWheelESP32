@@ -460,43 +460,45 @@ namespace inputs
         inputNumber_t *buttonNumbersArray);
 
     /**
-     * @brief Add PISO shift registers bound to specific button numbers.
+     * @brief Add (a chain of) PISO shift registers for switches.
      *        Must be called before `start()`. You can have more than one.
      *
      * @param serialPin GPIO number of the serial output pin
      * @param loadPin GPIO number of the load pin
      * @param nextPin GPIO number of the next/clock pin
-     * @param buttonNumbersArray Array of switch numbers in the range 0-63
-     * @param switchCount Count of switches or size of the previous array
+     * @param switchCount Count of switches
+     *
+     * @return ShiftRegisters8InputSpec& Input numbers specification
      */
-    void addShiftRegisters(
+    ShiftRegisters8InputSpec &addShiftRegisters(
         const gpio_num_t serialPin,
         const gpio_num_t loadPin,
         const gpio_num_t nextPin,
-        const inputNumber_t *buttonNumbersArray,
         const uint8_t switchCount);
 
     /**
-     * @brief Add a PCF8574 GPIO expander for switches
+     * @brief Add a PCF8574 GPIO expander for switches.
+     *        Must be called before `start()`. You can have more than one.
      *
-     * @param buttonNumbersArray Array of switch numbers in the range 0-63. Length is 8 (mandatory).
      * @param I2CAddress Either a hardware address (3 bits) or a full address (7 bits).
      * @param isFullAddress `true` if @p I2CAddress is a full address, `false` otherwise.
+     *
+     * @return PCF8574InputSpec& Input numbers specification
      */
-    void addPCF8574Digital(
-        const inputNumber_t *buttonNumbersArray,
+    PCF8574InputSpec &addPCF8574Digital(
         uint8_t I2CAddress,
         bool isFullAddress = false);
 
     /**
-     * @brief Add a MCP23017 GPIO expander for switches
+     * @brief Add a MCP23017 GPIO expander for switches.
+     *        Must be called before `start()`. You can have more than one.
      *
-     * @param buttonNumbersArray Array of switch numbers in the range 0-63. Length is 16 (mandatory).
      * @param I2CAddress Either a hardware address (3 bits) or a full address (7 bits).
      * @param isFullAddress `true` if @p I2CAddress is a full address, `false` otherwise.
+     *
+     * @return MCP23017InputSpec& Input numbers specification
      */
-    void addMCP23017Digital(
-        const inputNumber_t *buttonNumbersArray,
+    MCP23017InputSpec &addMCP23017Digital(
         uint8_t I2CAddress,
         bool isFullAddress = false);
 

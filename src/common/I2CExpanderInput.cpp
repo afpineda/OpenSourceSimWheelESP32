@@ -31,11 +31,10 @@
 // ============================================================================
 
 PCF8574ButtonsInput::PCF8574ButtonsInput(
-    const inputNumber_t *buttonNumbersArray,
     uint8_t address7Bits,
     bool useSecondaryBus,
     DigitalPolledInput *nextInChain)
-    : I2CButtonsInput(8, buttonNumbersArray, address7Bits, useSecondaryBus, nextInChain)
+    : I2CButtonsInput(8, address7Bits, useSecondaryBus, nextInChain)
 {
     // Nothing to do here, since the PCF8574 does not have internal registers
 }
@@ -54,16 +53,25 @@ bool PCF8574ButtonsInput::getGPIOstate(inputBitmap_t &state)
     return result;
 }
 
+PCF8574InputSpec &PCF8574ButtonsInput::inputNumber(PCF8574_pin_t pin, inputNumber_t number)
+{
+    abortOnInvalidInputNumber(number);
+    uint8_t index = static_cast<uint8_t>(pin);
+    mask |= gpioBitmap[index];
+    gpioBitmap[index] = BITMAP(number);
+    mask &= ~gpioBitmap[index];
+    return *this;
+}
+
 // ============================================================================
 // Implementation of class: MCP23017ButtonsInput
 // ============================================================================
 
 MCP23017ButtonsInput::MCP23017ButtonsInput(
-    const inputNumber_t *buttonNumbersArray,
     uint8_t address7Bits,
     bool useSecondaryBus,
     DigitalPolledInput *nextInChain)
-    : I2CButtonsInput(16, buttonNumbersArray, address7Bits, useSecondaryBus, nextInChain)
+    : I2CButtonsInput(16, address7Bits, useSecondaryBus, nextInChain)
 {
     i2c_cmd_handle_t cmd;
 
@@ -174,4 +182,14 @@ bool MCP23017ButtonsInput::getGPIOstate(inputBitmap_t &state)
         i2c_cmd_link_delete(cmd);
     }
     return result;
+}
+
+MCP23017InputSpec &MCP23017ButtonsInput::inputNumber(MCP23017_pin_t pin, inputNumber_t number)
+{
+    abortOnInvalidInputNumber(number);
+    uint8_t index = static_cast<uint8_t>(pin);
+    mask |= gpioBitmap[index];
+    gpioBitmap[index] = BITMAP(number);
+    mask &= ~gpioBitmap[index];
+    return *this;
 }

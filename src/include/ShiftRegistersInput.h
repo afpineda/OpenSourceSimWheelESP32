@@ -19,13 +19,12 @@
  * @brief State of switches connected to PISO shift registers
  *
  */
-class ShiftRegistersInput : public DigitalPolledInput
+class ShiftRegistersInput : public DigitalPolledInput, public ShiftRegisters8InputSpec
 {
 private:
     uint8_t switchCount;
     gpio_num_t loadPin, nextPin, serialPin;
-    BaseType_t *debounce = nullptr;
-    const inputNumber_t *buttonNumbersArray;
+    inputBitmap_t *bitmap;
     bool negativeLogic;
     bool loadHighOrLow;
     bool nextHighToLowOrLowToHigh;
@@ -37,8 +36,7 @@ public:
      * @param serialPin GPIO number of the serial output pin
      * @param loadPin GPIO number of the load pin
      * @param nextPin GPIO number of the next/clock pin
-     * @param buttonNumbersArray Array of switch numbers in the range 0-63
-     * @param switchCount Count of switches or size of the previous array
+     * @param switchCount Count of switches
      * @param negativeLogic If true, switches are ON when LOW voltage is detected.
      *                      If false, switches are OFF when LOW voltage is detected.
      * @param loadHighOrLow If true, parallel inputs are loaded when `loadPin`is HIGH.
@@ -52,7 +50,6 @@ public:
         const gpio_num_t serialPin,
         const gpio_num_t loadPin,
         const gpio_num_t nextPin,
-        const inputNumber_t *buttonNumbersArray,
         const uint8_t switchCount,
         const bool negativeLogic = true,
         const bool loadHighOrLow = false,
@@ -74,6 +71,11 @@ public:
      * @return inputBitmap_t Current state of all switches, one bit per button.
      */
     virtual inputBitmap_t read(inputBitmap_t lastState) override;
+
+    virtual ShiftRegisters8InputSpec &inputNumber(
+        uint8_t indexInChain,
+        sr8_pin_t pin,
+        inputNumber_t number) override;
 };
 
 #endif

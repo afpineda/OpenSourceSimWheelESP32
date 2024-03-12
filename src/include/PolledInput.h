@@ -67,24 +67,6 @@ public:
 
 protected:
     /**
-     * @brief Compute a proper mask for consecutive inputs. Will abort execution if the resulting mask
-     *        exceeds 64 bits
-     *
-     * @param inputsCount Number of inputs that will be reported by `read()`
-     * @param firstButtonNumber Assigned number to the first input. Inputs are assumed to be numbered
-     *                          in ascending order.
-     */
-    void updateMask(uint8_t inputsCount, inputNumber_t firstInputNumber);
-
-    /**
-     * @brief Compute a mask for an array of input numbers.
-     *
-     * @param inputNumbersArray A pointer to an array of input numbers.
-     * @param inputsCount Number of items (input numbers) in the previous array.
-     */
-    void updateMask(const inputNumber_t *inputNumbersArray, uint8_t inputsCount);
-
-    /**
      * @brief Check and initialize a GPIO pin for digital output
      *
      * @param aPin GPIO pin
@@ -99,6 +81,14 @@ protected:
      * @param enablePullUp True to enable internal pull-up resistor
      */
     void checkAndInitializeInputPin(gpio_num_t aPin, bool enablePullDown = true, bool enablePullUp = false);
+
+    /**
+     * @brief Compute a mask for an array of input numbers.
+     *
+     * @param inputNumbersArray Array of input numbers.
+     * @param inputsCount Number of items (input numbers) in the previous array.
+     */
+    static inputNumber_t computeMask(const inputNumber_t inputNumbersArray[], uint8_t inputsCount);
 
 public:
     /**
@@ -134,6 +124,13 @@ public:
      * @return inputBitmap_t Combined mask
      */
     static inputBitmap_t getChainMask(DigitalPolledInput *firstInChain);
+
+    /**
+     * @brief Abort execution if the given input number is not valid
+     *
+     * @param number Input number
+     */
+    static void abortOnInvalidInputNumber(inputNumber_t number);
 };
 
 /**
@@ -145,7 +142,6 @@ class DigitalButton : public DigitalPolledInput
 protected:
     gpio_num_t pinNumber;
     bool pullupOrPulldown;
-    bool debouncing;
     inputBitmap_t bitmap;
 
 public:
@@ -158,11 +154,11 @@ public:
      *                             FALSE if a pulldown resistor is used (HIGH signal when pressed).
      * @param[in] enableInternalPull TRUE if the internal pullup or pulldown resistor must be enabled.
      *                               Ignored if the GPIO pin does not provide a pull resistor.
-     * @param[in] nextInChain Another instance to build a chain or nullptr
+     * @param[in] nextInChain Another instance to build a chain or nullptr.
      */
     DigitalButton(
         gpio_num_t pinNumber,
-        inputNumber_t buttonNumber,
+        inputNumber_t buttonNumber = UNSPECIFIED_INPUT_NUMBER,
         bool pullupOrPulldown = true,
         bool enableInternalPull = true,
         DigitalPolledInput *nextInChain = nullptr);
@@ -352,14 +348,12 @@ public:
      * @brief Construct a new I2CButtonsInput object
      *
      * @param buttonsCount Count of attached buttons. Must not exceed the maximum allowed by the GPIO expander.
-     * @param buttonNumbersArray Array of input numbers for the attached buttons. Length is @p buttonsCount .
      * @param address7Bits I2C address in 7 bits format.
      * @param useSecondaryBus TRUE to use the secondary bus, FALSE to use the primary bus.
      * @param nextInChain Another instance to build a chain, or nullptr.
      */
     I2CButtonsInput(
         uint8_t buttonsCount,
-        const inputNumber_t *buttonNumbersArray,
         uint8_t address7Bits,
         bool useSecondaryBus = false,
         DigitalPolledInput *nextInChain = nullptr);

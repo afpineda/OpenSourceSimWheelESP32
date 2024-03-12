@@ -79,14 +79,13 @@ void setup()
     }
 
     I2CButtonsInput *pcf8574;
-    pcf8574 = new PCF8574ButtonsInput(
-        pcf8574Numbers,
-        pcf8574FullAddress);
+    pcf8574 = new PCF8574ButtonsInput(pcf8574FullAddress);
+    setDebugInputNumbers(*(PCF8574ButtonsInput *)pcf8574);
     chain = new MCP23017ButtonsInput(
-        mcp23017Numbers,
         mcp23017FullAddress,
         false,
         pcf8574);
+    setDebugInputNumbers(*(MCP23017ButtonsInput *)chain);
 
     inputBitmap_t mask = DigitalPolledInput::getChainMask(chain);
     Serial.println("MASK:");

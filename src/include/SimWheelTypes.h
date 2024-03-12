@@ -49,6 +49,138 @@ typedef uint8_t inputNumber_t;
 #define JOY_RTHUMBSTICK_CLICK 9
 
 /**
+ * @brief Specification of input numbers for a button matrix
+ *
+ */
+class ButtonMatrixInputSpec
+{
+public:
+    virtual ButtonMatrixInputSpec &inputNumber(
+        uint8_t selectorPinIndex,
+        uint8_t inputPinIndex,
+        inputNumber_t number) = 0;
+};
+
+/**
+ * @brief 74HC4051N pin tags for switches
+ *
+ */
+typedef enum class mux8_pin_t
+{
+    A0 = 0,
+    A1,
+    A2,
+    A3,
+    A4,
+    A5,
+    A6,
+    A7
+};
+
+/**
+ * @brief Specification of input numbers for multiplexed switches
+ *
+ */
+class Multiplexers8InputSpec
+{
+public:
+    virtual Multiplexers8InputSpec &inputNumber(
+        uint8_t inputPinIndex,
+        mux8_pin_t pin,
+        inputNumber_t number) = 0;
+};
+
+/**
+ * @brief  74HC165N pin tags for switches
+ *
+ */
+typedef enum class sr8_pin_t
+{
+    H = 0,
+    G,
+    F,
+    E,
+    D,
+    C,
+    B,
+    A,
+    SER
+};
+
+/**
+ * @brief Specification of input numbers for shift registers
+ *
+ */
+class ShiftRegisters8InputSpec
+{
+public:
+    virtual ShiftRegisters8InputSpec &inputNumber(
+        uint8_t indexInChain,
+        sr8_pin_t pin,
+        inputNumber_t number) = 0;
+};
+
+/**
+ * @brief MCP23017 pin tags for switches
+ *
+ */
+typedef enum class MCP23017_pin_t
+{
+    GPA0 = 0,
+    GPA1,
+    GPA2,
+    GPA3,
+    GPA4,
+    GPA5,
+    GPA6,
+    GPA7,
+    GPB0,
+    GPB1,
+    GPB2,
+    GPB3,
+    GPB4,
+    GPB5,
+    GPB6,
+    GPB7
+};
+
+/**
+ * @brief Specification of input numbers for MCP23017 GPIO expanders
+ *
+ */
+class MCP23017InputSpec
+{
+public:
+    virtual MCP23017InputSpec &inputNumber(MCP23017_pin_t pin, inputNumber_t number) = 0;
+};
+
+/**
+ * @brief MCP23017 pin tags for switches
+ *
+ */
+typedef enum class PCF8574_pin_t
+{
+    P0 = 0,
+    P1,
+    P2,
+    P3,
+    P4,
+    P5,
+    P6,
+    P7
+};
+
+/**
+ * @brief Specification of input numbers for PCF8574 GPIO expanders
+ *
+ */
+class PCF8574InputSpec
+{
+public:
+    virtual PCF8574InputSpec &inputNumber(PCF8574_pin_t pin, inputNumber_t number) = 0;
+};
+
+/**
  * @brief The value of a joystick's axis
  *
  * @note DO NOT CHANGE. hidImplementation and userSettings depends on it.

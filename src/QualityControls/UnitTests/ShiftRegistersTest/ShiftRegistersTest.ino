@@ -17,7 +17,7 @@
 // Globals
 //------------------------------------------------------------------
 
-ShiftRegistersInput *btns;
+ShiftRegistersInput *buttons;
 inputBitmap_t state = 0ULL;
 
 //------------------------------------------------------------------
@@ -34,23 +34,22 @@ void setup()
     Serial.begin(115200);
     Serial.println("-- READY --");
 
-    btns = new ShiftRegistersInput(
+    buttons = new ShiftRegistersInput(
         TEST_SR_SERIAL,
         TEST_SR_LOAD,
         TEST_SR_NEXT,
-        srNumbers,
-        sizeof(srNumbers)/sizeof(srNumbers[0])
-      );
+        TEST_SR_BUTTONS_COUNT);
+    setDebugInputNumbers(*buttons);
 
     Serial.println("MASK:");
-    debugPrintBool(btns->mask);
+    debugPrintBool(buttons->mask);
     Serial.println("");
     Serial.println("-- GO --");
 }
 
 void loop()
 {
-    inputBitmap_t newState = btns->read(state);
+    inputBitmap_t newState = buttons->read(state);
     if (state != newState)
     {
         state = newState;

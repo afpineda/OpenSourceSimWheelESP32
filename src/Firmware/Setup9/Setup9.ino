@@ -47,42 +47,6 @@ std::string DEVICE_MANUFACTURER = "Mamandurrio";
 #define ALT1 JOY_LTHUMBSTICK_CLICK
 #define ALT2 JOY_RTHUMBSTICK_CLICK
 
-static const inputNumber_t mcpNumbers_addr7[] = {
-    JOY_LSHIFT_PADDLE, // Index 0
-    JOY_RSHIFT_PADDLE,
-    ALT1,
-    ALT2,
-    JOY_LTHUMBSTICK_CLICK,
-    JOY_RTHUMBSTICK_CLICK,
-    10,
-    11,
-    12, // Index 8
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19};
-
-static const inputNumber_t mcpNumbers_addr0[] = {
-    20, // Index 0
-    21,
-    22,
-    23,
-    24,
-    25,
-    26,
-    27,
-    28, // Index 8
-    29,
-    30,
-    JOY_Y, // Index 11
-    JOY_X,
-    JOY_B,
-    JOY_BACK,
-    JOY_START};
-
 //------------------------------------------------------------------
 // Setup
 //------------------------------------------------------------------
@@ -103,8 +67,40 @@ void simWheelSetup()
     inputs::addDigital(GPIO_NUM_38, true, true, NAV_UP);
     inputs::addDigital(GPIO_NUM_18, true, true, NAV_DOWN);
     inputs::setAnalogClutchPaddles(GPIO_NUM_14, GPIO_NUM_15);
-    inputs::addMCP23017Digital(mcpNumbers_addr7, 7, false);
-    inputs::addMCP23017Digital(mcpNumbers_addr0, 0, false);
+    inputs::addMCP23017Digital(7, false)
+        .inputNumber(MCP23017_pin_t::GPA0, JOY_LSHIFT_PADDLE)
+        .inputNumber(MCP23017_pin_t::GPA1, JOY_RSHIFT_PADDLE)
+        .inputNumber(MCP23017_pin_t::GPA2, ALT1)
+        .inputNumber(MCP23017_pin_t::GPA3, ALT2)
+        .inputNumber(MCP23017_pin_t::GPA4, JOY_LTHUMBSTICK_CLICK)
+        .inputNumber(MCP23017_pin_t::GPA5, JOY_RTHUMBSTICK_CLICK)
+        .inputNumber(MCP23017_pin_t::GPA6, 10)
+        .inputNumber(MCP23017_pin_t::GPA7, 11)
+        .inputNumber(MCP23017_pin_t::GPB0, 12)
+        .inputNumber(MCP23017_pin_t::GPB1, 13)
+        .inputNumber(MCP23017_pin_t::GPB2, 14)
+        .inputNumber(MCP23017_pin_t::GPB3, 15)
+        .inputNumber(MCP23017_pin_t::GPB4, 16)
+        .inputNumber(MCP23017_pin_t::GPB5, 17)
+        .inputNumber(MCP23017_pin_t::GPB6, 18)
+        .inputNumber(MCP23017_pin_t::GPB7, 19);
+    inputs::addMCP23017Digital(0, false)
+        .inputNumber(MCP23017_pin_t::GPA0, 20)
+        .inputNumber(MCP23017_pin_t::GPA1, 21)
+        .inputNumber(MCP23017_pin_t::GPA2, 22)
+        .inputNumber(MCP23017_pin_t::GPA3, 23)
+        .inputNumber(MCP23017_pin_t::GPA4, 24)
+        .inputNumber(MCP23017_pin_t::GPA5, 25)
+        .inputNumber(MCP23017_pin_t::GPA6, 26)
+        .inputNumber(MCP23017_pin_t::GPA7, 27)
+        .inputNumber(MCP23017_pin_t::GPB0, 28)
+        .inputNumber(MCP23017_pin_t::GPB1, 29)
+        .inputNumber(MCP23017_pin_t::GPB2, 30)
+        .inputNumber(MCP23017_pin_t::GPB3, JOY_Y)
+        .inputNumber(MCP23017_pin_t::GPB4, JOY_X)
+        .inputNumber(MCP23017_pin_t::GPB5, JOY_B)
+        .inputNumber(MCP23017_pin_t::GPB6, JOY_BACK)
+        .inputNumber(MCP23017_pin_t::GPB7, JOY_START);
 
     inputHub::setClutchInputNumbers(CLUTCH1, CLUTCH2);
     inputHub::setDPADControls(NAV_UP, NAV_DOWN, NAV_LEFT, NAV_RIGHT);

@@ -71,42 +71,6 @@ DigitalPolledInput::DigitalPolledInput(
 }
 
 // ----------------------------------------------------------------------------
-// Setters
-// ----------------------------------------------------------------------------
-
-void DigitalPolledInput::updateMask(uint8_t inputsCount, inputNumber_t firstInputNumber)
-{
-    if (inputsCount > (64 - firstInputNumber))
-    {
-        log_e("Last button number is too high at DigitalPolledInput instance");
-        abort();
-    }
-    mask = BITMASK(inputsCount, firstInputNumber);
-}
-
-void DigitalPolledInput::updateMask(const inputNumber_t *inputNumbersArray, uint8_t inputsCount)
-{
-    if (inputNumbersArray == nullptr)
-    {
-        mask = ~0ULL;
-        return;
-    }
-
-    mask = 0ULL;
-    for (uint8_t i = 0; i < inputsCount; i++)
-    {
-        if (inputNumbersArray[i] > MAX_INPUT_NUMBER)
-        {
-            log_e("Invalid input number at DigitalPolledInput::updateMask()");
-            abort();
-        }
-        inputBitmap_t currentBitmap = BITMAP(inputNumbersArray[i]);
-        mask = mask | currentBitmap;
-    }
-    mask = ~mask;
-}
-
-// ----------------------------------------------------------------------------
 // Pin setup
 // ----------------------------------------------------------------------------
 
@@ -185,6 +149,31 @@ inputBitmap_t DigitalPolledInput::getChainMask(DigitalPolledInput *firstInChain)
     return mask;
 }
 
+void DigitalPolledInput::abortOnInvalidInputNumber(inputNumber_t number)
+{
+    if (number > MAX_INPUT_NUMBER)
+    {
+        log_e("Invalid input number %d (not in range 0-63)", number);
+        abort();
+    }
+}
+
+inputNumber_t DigitalPolledInput::computeMask(
+    const inputNumber_t inputNumbersArray[],
+    uint8_t inputsCount)
+{
+    inputNumber_t mask;
+    mask = 0ULL;
+    for (uint8_t i = 0; i < inputsCount; i++)
+    {
+        abortOnInvalidInputNumber(inputNumbersArray[i]);
+        inputBitmap_t currentBitmap = BITMAP(inputNumbersArray[i]);
+        mask = mask | currentBitmap;
+    }
+    mask = ~mask;
+    return mask;
+}
+
 // ============================================================================
 // Implementation of class: DigitalButton
 // ============================================================================
@@ -201,11 +190,11 @@ DigitalButton::DigitalButton(
     DigitalPolledInput *nextInChain) : DigitalPolledInput(nextInChain)
 {
     // initialize
-    updateMask(1, buttonNumber);
     this->pinNumber = pinNumber;
     this->pullupOrPulldown = pullupOrPulldown;
+    abortOnInvalidInputNumber(buttonNumber);
     this->bitmap = BITMAP(buttonNumber);
-    debouncing = false;
+    this->mask = ~(this->bitmap);
 
     // Pin setup
     ESP_ERROR_CHECK(gpio_set_direction(pinNumber, GPIO_MODE_INPUT));
@@ -222,7 +211,7 @@ DigitalButton::DigitalButton(
     }
     else
         ESP_ERROR_CHECK(gpio_set_pull_mode(pinNumber, GPIO_FLOATING));
-};
+}
 
 // ----------------------------------------------------------------------------
 // Virtual methods
@@ -231,21 +220,11 @@ DigitalButton::DigitalButton(
 inputBitmap_t DigitalButton::read(inputBitmap_t lastState)
 {
     inputBitmap_t state;
-    if (debouncing)
-    {
-        debouncing = false;
-        state = lastState & bitmap;
-    }
+    int reading = gpio_get_level(pinNumber);
+    if (reading ^ pullupOrPulldown)
+        state = bitmap;
     else
-    {
-        debouncing = true;
-        int reading = gpio_get_level(pinNumber);
-        if ((reading && !pullupOrPulldown) || (!reading && pullupOrPulldown))
-            state = bitmap;
-        else
-            state = 0;
-    }
-    return state;
+        state = 0ULL;
 }
 
 // ============================================================================
@@ -453,7 +432,6 @@ I2CInput::I2CInput(
 
 I2CButtonsInput::I2CButtonsInput(
     uint8_t buttonsCount,
-    const inputNumber_t *buttonNumbersArray,
     uint8_t address7Bits,
     bool useSecondaryBus,
     DigitalPolledInput *nextInChain) : I2CInput(address7Bits, useSecondaryBus, nextInChain)
@@ -463,12 +441,9 @@ I2CButtonsInput::I2CButtonsInput(
         log_e("Too many buttons at GPIO expander. Address=%x, bus=%d", address7Bits, busDriver);
         abort();
     }
-    updateMask(buttonNumbersArray, buttonsCount);
     gpioCount = buttonsCount;
-    for (uint8_t i = 0; i < buttonsCount; i++)
-    {
-        gpioBitmap[i] = BITMAP(buttonNumbersArray[i]);
-    }
+    for (uint8_t i = 0; i < MAX_EXPANDED_GPIO_COUNT; i++)
+        gpioBitmap[i] = 0ULL;
 }
 
 // ----------------------------------------------------------------------------
