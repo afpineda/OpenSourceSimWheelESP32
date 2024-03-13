@@ -40,7 +40,6 @@ Arduino's sketch named [**CustomSetup**](../../../src/Firmware/CustomSetup/Custo
    You must also assign a unique "input number" to each input, **in the range from 0 to 63**.
    Each input number corresponds to a certain position in a pin header in your hardware design.
    Some input numbers have a certain meaning in the hosting PC.
-   You are **not** allowed to assign the same input number to two different inputs.
    If you fail to provide valid input numbers, the firmware will not boot up.
 
 3. Map certain input numbers to specific functions, as explained below. Edit the body of `simWheelSetup()` and place the required calls at the end of it.
@@ -80,7 +79,7 @@ Each time this function is activated, the working mode of the DPAD will move to 
 There is no point on this if there is no DPAD.
 
 Assign a combination of input numbers to activate this function by placing a call to
-`inputHub::cycleDPADWorkingMode_setBitmap()`. There is one parameter: a sequence of calls to `BITMAP(<input number>)` separated by `|`.
+`inputHub::cycleDPADWorkingMode_setInputNumbers()`. There is one parameter: a sequence of input numbers between brackets.
 All the inputs have to be active at the same time, and none of the others.
 
 For example:
@@ -89,9 +88,7 @@ For example:
 void simWheelSetup()
 {
    ...
-   inputs::addButtonMatrix(...)
-   ...
-   inputHub::cycleDPADWorkingMode_setBitmap(BITMAP(60)|BITMAP(71));
+   inputHub::cycleDPADWorkingMode_setInputNumbers({60,61});
    ...
 }
 ```
@@ -108,6 +105,9 @@ void simWheelSetup()
 {
    ...
    inputs::addButtonMatrix(...)
+      .inputNumber(...,45)
+      .inputNumber(...,46)
+      ...
    ...
    inputHub::setClutchInputNumbers(45, 46);
    ...
@@ -132,7 +132,7 @@ Now, the analog clutch paddles may work as input numbers 45 and 46 depending on 
 
 ### Clutch's bite point calibration
 
-Place a call to `inputHub::setClutchCalibrationButtons()`:
+Place a call to `inputHub::setClutchCalibrationInputNumbers()`:
 
 - 1st parameter is an input number to increase the bite point.
 - 2nd parameter is an input number to decrease the bite point.
@@ -142,10 +142,9 @@ For example, let's say this function is mapped to a rotary encoder (input number
 ```c
 void simWheelSetup()
 {
+   inputs::addRotaryEncoder(...,34,35);
    ...
-   inputs::addRotaryEncoder(..., 34, 35, false);
-   ...
-   inputHub::setClutchCalibrationButtons(34, 35);
+   inputHub::setClutchCalibrationInputNumbers(34, 35);
    ...
 }
 ```
@@ -154,8 +153,8 @@ There is no point on this if there are no clutch paddles.
 
 ### ALT buttons
 
-You may assign this function to any number of buttons (or none). Place a call to `inputHub::setALTBitmap()`.
-There is one parameter: a sequence of calls to `BITMAP(<input number>)` separated by `|`.
+You may assign this function to any number of buttons (or none). Place a call to `inputHub::setALTInputNumbers()`.
+There is one parameter: a sequence of input numbers between brackets.
 
 For example, let's say this function is mapped to two certain inputs at the button matrix:
 
@@ -164,22 +163,24 @@ void simWheelSetup()
 {
    ...
    inputs::addButtonMatrix(...)
+      .inputNumber(...,45)
+      .inputNumber(...,46)
+      ...
    ...
-   inputHub::setALTBitmap(
-      BITMAP(45) | BITMAP(46)
-   );
+   inputHub::setALTInputNumbers({45,46});
    ...
 }
 ```
 
-Any of the given input numbers will enter the "ALT" mode when activated, except if they are set to work as "regular buttons" by the user.
+Any of the given input numbers will engage "ALT" mode when activated, except if they are set to work as "regular buttons" by the user.
 
 ### Cycle working mode for clutch paddles
 
 Each time this function is activated, the working mode of the clutch paddles will move to the next one : F1-style clutch, autonomous axes, "ALT" mode, regular buttons and back to the first mode. There is no point on this if there are no clutch paddles.
 
 Assign a combination of input numbers to activate this function by placing a call to
-`inputHub::cycleCPWorkingMode_setBitmap()`. There is one parameter: a sequence of calls to `BITMAP(<input number>)` separated by `|`. All the inputs have to be active at the same time, and none of the others.
+`inputHub::cycleCPWorkingMode_setInputNumbers()`. There is one parameter: a sequence of input numbers between brackets.
+All the inputs have to be active at the same time, and none of the others.
 For example:
 
 ```c
@@ -187,15 +188,21 @@ void simWheelSetup()
 {
    ...
    inputs::addButtonMatrix(...)
+      .inputNumber(...,60)
+      .inputNumber(...,61)
+      .inputNumber(...,62)
+      ...
    ...
-   inputHub::cycleCPWorkingMode_setBitmap(BITMAP(60)|BITMAP(61));
+   inputHub::cycleCPWorkingMode_setInputNumbers({60,61,62});
    ...
 }
 ```
 
 #### Select a specific working mode for clutch paddles
 
-As an alternative, you may assign specific button combinations to specific working modes. Place a call to `inputHub::cpWorkingMode_setBitmaps()`. There are four parameters. Each one should contain a sequence of calls to `BITMAP(<input number>)` as seen in the previous calls:
+As an alternative, you may assign specific button combinations to specific working modes.
+Place a call to `inputHub::cpWorkingMode_setInputNumbers()`.
+There are four parameters. Each one must contain a sequence of input numbers between brackets as seen in the previous calls:
 
 - First parameter: button combination to select F1-Style clutch mode.
 - Second parameter: button combination to select autonomous axes mode.
@@ -208,25 +215,28 @@ For example:
 void simWheelSetup()
 {
    ...
-   inputs::addButtonMatrix(...);
+   inputs::addButtonMatrix(...)
+      .inputNumber(...,59)
+      .inputNumber(...,60)
+      .inputNumber(...,61)
+      .inputNumber(...,62)
+      .inputNumber(...,63)
+      ...
    ...
-   inputHub::cpWorkingMode_setBitmaps(
-      BITMAP(59)|BITMAP(60),
-      BITMAP(59)|BITMAP(61),
-      BITMAP(59)|BITMAP(62),
-      BITMAP(59)|BITMAP(63) );
+   inputHub::cpWorkingMode_setInputNumbers({59,60}, {59,61}, {59,62}, {59,63});
    ...
 }
 ```
 
 ### Cycle working mode of "ALT" buttons
 
-Each time this function is activated, the working mode of the "ALT" buttons will move to the next one : "ALT" mode, regular buttons and back to the first mode. There is no point on this if there are no "ALT" buttons.
+Each time this function is activated, the working mode of the "ALT" buttons will move to the next one : "ALT" mode, regular buttons and back to the first mode.
+There is no point on this if there are no "ALT" buttons.
 
 Assign a combination of input numbers to activate this function by placing a call to
-`inputHub::cycleALTButtonsWorkingMode_setBitmap()`.
-There is one parameter: a sequence of calls to `BITMAP(<input number>)` separated by
-`|`. All the inputs have to be active at the same time, and none of the others.
+`inputHub::cycleALTButtonsWorkingMode_setInputNumbers()`.
+There is one parameter: a sequence of input numbers between brackets.
+All the inputs have to be active at the same time, and none of the others.
 
 ### Other game pad controls
 

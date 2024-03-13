@@ -426,6 +426,27 @@ void inputHub::onRawInput(
 // Setup
 // ----------------------------------------------------------------------------
 
+/**
+ * @brief Transform a combination of input numbers into a bitmap
+ */
+inputBitmap_t combination2bitmap(const inputNumberCombination_t inc)
+{
+    inputBitmap_t result = 0ULL;
+    for (int i = 0; i < inc.size(); i++)
+    {
+        if (inc[i] <= MAX_INPUT_NUMBER)
+            result |= BITMAP(inc[i]);
+        else
+        {
+            log_e("Invalid input number %d in a call to the inputHub namespace", inc[i]);
+            abort();
+        }
+    }
+    return result;
+}
+
+// ----------------------------------------------------------------------------
+
 void inputHub::setClutchInputNumbers(
     const inputNumber_t leftClutchInputNumber,
     const inputNumber_t rightClutchInputNumber)
@@ -441,42 +462,42 @@ void inputHub::setClutchInputNumbers(
         capabilities::addInputNumber(leftClutchInputNumber);
         capabilities::addInputNumber(rightClutchInputNumber);
     }
+    else
+    {
+        log_e("Invalid input numbers at inputHub::setClutchInputNumbers(%d,%d)",
+              leftClutchInputNumber,
+              rightClutchInputNumber);
+        abort();
+    }
 }
 
 // ----------------------------------------------------------------------------
 
-void inputHub::setClutchCalibrationButtons(
-    const inputNumber_t upButtonNumber,
-    const inputNumber_t downButtonNumber)
+void inputHub::setClutchCalibrationInputNumbers(
+    const inputNumber_t incInputNumber,
+    const inputNumber_t decInputNumber)
 {
-    if (upButtonNumber != UNSPECIFIED_INPUT_NUMBER)
-        calibrateUpBitmap = BITMAP(upButtonNumber);
+    if ((incInputNumber <= MAX_INPUT_NUMBER) &&
+        (decInputNumber <= MAX_INPUT_NUMBER) && (incInputNumber != decInputNumber))
+    {
+        calibrateUpBitmap = BITMAP(incInputNumber);
+        calibrateUpBitmap = BITMAP(decInputNumber);
+    }
     else
-        calibrateUpBitmap = 0;
-
-    if (downButtonNumber != UNSPECIFIED_INPUT_NUMBER)
-        calibrateDownBitmap = BITMAP(downButtonNumber);
-    else
-        calibrateDownBitmap = 0;
+    {
+        log_e("Invalid input numbers at inputHub::setClutchCalibrationInputNumbers(%d,%d)",
+              incInputNumber,
+              decInputNumber);
+        abort();
+    }
 }
 
 // ----------------------------------------------------------------------------
 
-void inputHub::setALTBitmap(const inputBitmap_t altBmp)
+void inputHub::setALTInputNumbers(const inputNumberCombination_t inputNumbers)
 {
-    altBitmap = altBmp;
-    capabilities::setFlag(deviceCapability_t::CAP_ALT, (altBitmap != 0));
-}
-
-// ----------------------------------------------------------------------------
-
-void inputHub::setALTButton(const inputNumber_t altNumber)
-{
-    if (altNumber == UNSPECIFIED_INPUT_NUMBER)
-        altBitmap = 0;
-    else
-        altBitmap = BITMAP(altNumber);
-    capabilities::setFlag(deviceCapability_t::CAP_ALT, (altBitmap != 0));
+    altBitmap = combination2bitmap(inputNumbers);
+    capabilities::setFlag(deviceCapability_t::CAP_ALT, (altBitmap != 0ULL));
 }
 
 // ----------------------------------------------------------------------------
@@ -542,52 +563,52 @@ void inputHub::setDPADControls(
 
 // ----------------------------------------------------------------------------
 
-void inputHub::cycleALTButtonsWorkingMode_setBitmap(const inputBitmap_t bitmap)
+void inputHub::cycleALTButtonsWorkingMode_setInputNumbers(const inputNumberCombination_t inputNumbers)
 {
-    cycleALTWorkingModeBitmap = bitmap;
+    cycleALTWorkingModeBitmap = combination2bitmap(inputNumbers);
 }
 
 // ----------------------------------------------------------------------------
 
-void inputHub::cycleCPWorkingMode_setBitmap(const inputBitmap_t bitmap)
+void inputHub::cycleCPWorkingMode_setInputNumbers(const inputNumberCombination_t inputNumbers)
 {
-    cycleClutchWorkingModeBitmap = bitmap;
+    cycleClutchWorkingModeBitmap = combination2bitmap(inputNumbers);
 }
 
 // ----------------------------------------------------------------------------
 
-void inputHub::cycleDPADWorkingMode_setBitmap(const inputBitmap_t bitmap)
+void inputHub::cycleDPADWorkingMode_setInputNumbers(const inputNumberCombination_t inputNumbers)
 {
-    cycleDPADWorkingModeBitmap = bitmap;
+    cycleDPADWorkingModeBitmap = combination2bitmap(inputNumbers);
 }
 
 // ----------------------------------------------------------------------------
 
-void inputHub::cpWorkingMode_setBitmaps(
-    const inputBitmap_t clutchModeBitmap,
-    const inputBitmap_t axisModeBitmap,
-    const inputBitmap_t altModeBitmap,
-    const inputBitmap_t buttonModeBitmap)
+void inputHub::cpWorkingMode_setInputNumbers(
+    const inputNumberCombination_t clutchModeCombination,
+    const inputNumberCombination_t axisModeCombination,
+    const inputNumberCombination_t altModeCombination,
+    const inputNumberCombination_t buttonModeCombination)
 {
-    cmdCPWorkingModeBitmap_clutch = clutchModeBitmap;
-    cmdCPWorkingModeBitmap_axis = axisModeBitmap;
-    cmdCPWorkingModeBitmap_alt = altModeBitmap;
-    cmdCPWorkingModeBitmap_button = buttonModeBitmap;
+    cmdCPWorkingModeBitmap_clutch = combination2bitmap(clutchModeCombination);
+    cmdCPWorkingModeBitmap_axis = combination2bitmap(axisModeCombination);
+    cmdCPWorkingModeBitmap_alt = combination2bitmap(altModeCombination);
+    cmdCPWorkingModeBitmap_button = combination2bitmap(buttonModeCombination);
 }
 
 // ----------------------------------------------------------------------------
 
-void inputHub::cmdRecalibrateAnalogAxis_setBitmap(const inputBitmap_t recalibrateAxisBitmap)
+void inputHub::cmdRecalibrateAnalogAxis_setInputNumbers(const inputNumberCombination_t inputNumbers)
 {
-    cmdAxisAutocalibrationBitmap = recalibrateAxisBitmap;
+    cmdAxisAutocalibrationBitmap = combination2bitmap(inputNumbers);
 }
 
 // ----------------------------------------------------------------------------
 
-void inputHub::cmdRecalibrateBattery_setBitmap(const inputBitmap_t recalibrateBatteryBitmap)
+void inputHub::cmdRecalibrateBattery_setInputNumbers(const inputNumberCombination_t inputNumbers)
 {
 
-    cmdBatteryRecalibrationBitmap = recalibrateBatteryBitmap;
+    cmdBatteryRecalibrationBitmap = combination2bitmap(inputNumbers);
 }
 
 // ----------------------------------------------------------------------------

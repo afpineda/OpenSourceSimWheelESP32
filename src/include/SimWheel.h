@@ -551,20 +551,12 @@ namespace inputHub
         bool axesAvailable);
 
     /**
-     * @brief Set the bitmap for all ALT buttons. For example:
-     *        `setALTBitmap(BITMAP(3)|BITMAP(4))`.
+     * @brief Set a list of input numbers for the "ALT" function.
+     *        Any of them may engage "ALT" mode.
      *
-     * @param altBmp Bitmap of ALT buttons.
+     * @param inputNumbers Array of input numbers
      */
-    void setALTBitmap(const inputBitmap_t altBmp);
-
-    /**
-     * @brief Set up a single button for the alternate mode.
-     *        May be used instead of `setALTBitmap()`
-     *
-     * @param altNumber Number assigned to the ALT button
-     */
-    void setALTButton(const inputNumber_t altNumber);
+    void setALTInputNumbers(const inputNumberCombination_t inputNumbers);
 
     /**
      * @brief Assign two input numbers to work as clutch paddles and vice-versa
@@ -585,15 +577,13 @@ namespace inputHub
         const inputNumber_t leftClutchInputNumber,
         const inputNumber_t rightClutchInputNumber);
 
-    /**
-     * @brief Set up buttons for clutch calibration while one and only one clutch paddle is pressed
+     /**
+     * @brief Set inputs for clutch calibration while one and only one clutch paddle is pressed
      *
-     * @param upButtonNumber Button number to increase bite point
-     * @param downButtonNumber Button number to decrease bite point
+     * @param upButtonNumber Input number to increase bite point
+     * @param downButtonNumber Input number to decrease bite point
      */
-    void setClutchCalibrationButtons(
-        const inputNumber_t upButtonNumber,
-        const inputNumber_t downButtonNumber);
+    void setClutchCalibrationInputNumbers(const inputNumber_t incInputNumber, const inputNumber_t decInputNumber);
 
     /**
      * @brief Configure directional pad buttons
@@ -622,86 +612,72 @@ namespace inputHub
         inputNumber_t padDownRightNumber = UNSPECIFIED_INPUT_NUMBER);
 
     /**
-     * @brief Set up a bitmap of buttons to cycle the function of "ALT" buttons (if any).
-     *        All buttons in the bitmap must be pressed at the same time and none of the others.
+     * @brief Set a combination of inputs to cycle the working mode of "ALT" buttons (if any).
+     *        All inputs must be activated at the same time and none of the others.
      *
-     * @param bitmap A bitmap of button numbers, for example `BITMAP(JOY_BACK) | BITMAP(JOY_A)`.
+     * @note Make sure all inputs can be activated at the same time.
      *
-     * @note Make sure all buttons in the bitmap are able to be pressed at the same time.
+     * @param inputNumbers Array of input numbers
      */
-    void cycleALTButtonsWorkingMode_setBitmap(const inputBitmap_t bitmap);
+    void cycleALTButtonsWorkingMode_setInputNumbers(const inputNumberCombination_t inputNumbers);
 
     /**
-     * @brief Set up a bitmap of buttons to cycle the function of clutch paddles (if any).
-     *        All buttons in the bitmap must be pressed at the same time and none of the others.
+     * @brief Set a combination of inputs to cycle the working mode of clutch paddles (if any).
+     *        All inputs must be activated at the same time and none of the others.
      *
-     * @param bitmap A bitmap of button numbers, for example `BITMAP(JOY_BACK) | BITMAP(JOY_B)`.
+     * @note Make sure all inputs can be activated at the same time.
      *
-     * @note Make sure all buttons in the bitmap are able to be pressed at the same time.
+     * @param inputNumbers Array of input numbers
      */
-    void cycleCPWorkingMode_setBitmap(const inputBitmap_t bitmap);
+    void cycleCPWorkingMode_setInputNumbers(const inputNumberCombination_t inputNumbers);
 
     /**
-     * @brief Set up a bitmap of buttons to cycle the function of DPAD inputs (if any).
-     *        All buttons in the bitmap must be pressed at the same time and none of the others.
+     * @brief Set a combination of inputs to cycle the working mode of DPAD controls (if any).
+     *        All inputs must be activated at the same time and none of the others.
      *
-     * @param bitmap A bitmap of button numbers, for example `BITMAP(JOY_BACK) | BITMAP(JOY_X)`.
+     * @note Make sure all inputs can be activated at the same time.
+     *
+     * @param inputNumbers Array of input numbers
      */
-    void cycleDPADWorkingMode_setBitmap(const inputBitmap_t bitmap);
+    void cycleDPADWorkingMode_setInputNumbers(const inputNumberCombination_t inputNumbers);
 
     /**
-     * @brief Set up a bitmap of buttons to enable each specific clutch function for clutch paddles.
-     *        All buttons in the bitmap must be pressed at the same time and none of the others.
-     *        This is compatible with `cycleCPWorkingMode_setBitmap`.
+     * @brief Set several combinations of input numbers to engage each specific working mode of clutch paddles.
+     *        All inputs (at each combination) must be activated at the same time and none of the others.
      *
-     * @param clutchModeBitmap A bitmap of button numbers to enable the F1-style clutch function
-     * @param axisModeBitmap A bitmap of button numbers to enable the analog axes function
-     * @param altModeBitmap A bitmap of button numbers to enable the "ALT" function
-     * @param buttonModeBitmap A bitmap of button numbers to enable the "regular buttons" function
+     * @note Make sure all inputs can be activated at the same time.
      *
-     * @note Set the bitmap to `0` if a particular function must not be mapped to any input.
-     *       Make sure all buttons in a bitmap are able to be pressed at the same time.
+     * @param clutchModeCombination Array of input numbers for clutch mode
+     * @param axisModeCombination Array of input numbers for axis mode
+     * @param altModeCombination Array of input numbers for "ALT" mode
+     * @param buttonModeCombination Array of input numbers for regular buttons mode
      */
-    void cpWorkingMode_setBitmaps(
-        const inputBitmap_t clutchModeBitmap,
-        const inputBitmap_t axisModeBitmap,
-        const inputBitmap_t altModeBitmap,
-        const inputBitmap_t buttonModeBitmap);
+    void cpWorkingMode_setInputNumbers(
+        const inputNumberCombination_t clutchModeCombination,
+        const inputNumberCombination_t axisModeCombination,
+        const inputNumberCombination_t altModeCombination,
+        const inputNumberCombination_t buttonModeCombination);
 
     /**
-     * @brief Set up a bitmap of buttons for the axis calibration command
+     * @brief Set a combination of inputs for analog axis calibration (at clutch paddles).
+     *        All inputs must be activated at the same time and none of the others.
      *
-     * @param recalibrateAxisBitmap A bitmap of button numbers to ask for autocalibration of analog axes.
-     *                              Set to zero if not required (default).
+     * @note Make sure all inputs can be activated at the same time.
+     *
+     * @param inputNumbers Array of input numbers
      */
-    void cmdRecalibrateAnalogAxis_setBitmap(const inputBitmap_t recalibrateAxisBitmap = 0ULL);
+    void cmdRecalibrateAnalogAxis_setInputNumbers(const inputNumberCombination_t inputNumbers);
 
     /**
-     * @brief Set up a bitmap of buttons for the battery calibration command
+     * @brief Set a combination of inputs for battery SoC calibration (if available).
+     *        All inputs must be activated at the same time and none of the others.
      *
-     * @param recalibrateAxisBitmap A bitmap of button numbers to ask for recalibration of battery levels.
-     *                              Set to zero if not required (default).
+     * @note Make sure all inputs can be activated at the same time.
+     *
+     * @param inputNumbers Array of input numbers
      */
-    void cmdRecalibrateBattery_setBitmap(const inputBitmap_t recalibrateBatteryBitmap = 0ULL);
+    void cmdRecalibrateBattery_setInputNumbers(const inputNumberCombination_t inputNumbers);
 
-    /**
-     * @brief Set up a bitmap of buttons for two recalibration commands.
-     *        All buttons in the bitmap must be pressed at the same time and none of the others.
-     *
-     * @deprecated Use cmdRecalibrateAnalogAxis_setBitmap() or cmdRecalibrateBattery_setBitmap()
-     *
-     * @param recalibrateAxisBitmap A bitmap of button numbers to ask for autocalibration of analog axes.
-     * @param recalibrateBatteryBitmap A bitmap of button numbers to ask for recalibration of battery levels.
-     *
-     * @note Set to zero if a command is not required (e.g. there is no battery)
-     */
-    inline void setCalibrationCommandBitmaps(
-        const inputBitmap_t recalibrateAxisBitmap,
-        const inputBitmap_t recalibrateBatteryBitmap = 0ULL)
-    {
-        inputHub::cmdRecalibrateAnalogAxis_setBitmap(recalibrateAxisBitmap);
-        inputHub::cmdRecalibrateBattery_setBitmap(recalibrateBatteryBitmap);
-    };
 }
 
 /**

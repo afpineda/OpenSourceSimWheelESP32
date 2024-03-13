@@ -209,6 +209,12 @@ typedef uint8_t clutchValue_t;
 typedef uint16_t analogReading_t;
 
 /**
+ * @brief A combination of input numbers
+ *
+ */
+typedef std::vector<inputNumber_t> inputNumberCombination_t;
+
+/**
  * @brief Transform a button number to an input bitmap.
  *        For example, BITMAP(2) returns 0b00000100
  *
