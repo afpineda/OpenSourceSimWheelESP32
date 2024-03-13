@@ -18,7 +18,7 @@
 #define __SIM_WHEEL_H__
 
 #include "SimWheelTypes.h"
-#include "esp32-hal.h" // declares gpio_num_t
+// #include "esp32-hal.h" // declares gpio_num_t
 #include <string>
 
 /**
@@ -387,18 +387,12 @@ namespace inputs
     /**
      * @brief Add a digital button bound to a specific input number. Must be called before `start()`
      *
+     * @note Low voltage is expected when active.
+     *
      * @param[in] pinNumber Pin where the digital button is attached to
-     * @param[in] pullupOrPulldown TRUE if a pullup resistor is used (LOW signal when pressed).
-     *                             FALSE if a pulldown resistor is used (HIGH signal when pressed)
-     * @param[in] enableInternalPull TRUE if the internal pullup or pulldown resistor must be enabled.
-     *                               Ignored if the GPIO pin does not provide a pull resistor.
      * @param[in] inputNumber Requested input number for this button
      */
-    void addDigital(
-        gpio_num_t pinNumber,
-        inputNumber_t inputNumber,
-        bool pullupOrPulldown = true,
-        bool enableInternalPull = true);
+    void addDigital(gpio_num_t pinNumber, inputNumber_t inputNumber);
 
     /**
      * @brief Add incremental rotary encoder inputs bound to specific input numbers.
@@ -441,23 +435,17 @@ namespace inputs
         inputNumber_t *buttonNumbersArray);
 
     /**
-     * @brief Add analog multiplexers bound to specific button numbers.
+     * @brief Add analog multiplexers for switches.
      *        Must be called before `start()`. You can have more than one.
      *
      * @param selectorPins Array of GPIO numbers for selector pins.
-     * @param selectorPinCount Length of `selectorPins` array.
-     * @param inputPins Array of GPIO numbers for input pins
-     * @param inputPinCount Length of `inputPins`array.
-     * @param buttonNumbersArray Array of input numbers to be assigned to every button.
-     *                           The length of this array is expected to match
-     *                           (2^selectorPinCount)*inputPinCount.
+     * @param inputPins Array of GPIO numbers for input pins.
+     *
+     * @return Multiplexers8InputSpec& Input numbers specification
      */
-    void addAnalogMultiplexer(
-        const gpio_num_t selectorPins[],
-        const uint8_t selectorPinCount,
-        const gpio_num_t inputPins[],
-        const uint8_t inputPinCount,
-        inputNumber_t *buttonNumbersArray);
+    Multiplexers8InputSpec &addAnalogMultiplexer(
+        const gpio_num_array_t &selectorPins,
+        const gpio_num_array_t &inputPins);
 
     /**
      * @brief Add (a chain of) PISO shift registers for switches.

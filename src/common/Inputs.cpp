@@ -253,18 +253,15 @@ void checkInputNumbers(int count, const inputNumber_t numbers[])
 
 void inputs::addDigital(
     gpio_num_t pinNumber,
-    inputNumber_t inputNumber,
-    bool pullupOrPulldown,
-    bool enableInternalPull)
+    inputNumber_t inputNumber)
 {
   if ((!pollingTask) && (!hubTask))
   {
-    checkInputNumber(inputNumber);
     digitalInputChain = new DigitalButton(
         pinNumber,
         inputNumber,
-        pullupOrPulldown,
-        enableInternalPull,
+        true,
+        true,
         digitalInputChain);
   }
   else
@@ -282,8 +279,6 @@ void inputs::addRotaryEncoder(
 {
   if ((!pollingTask) && (!hubTask))
   {
-    checkInputNumber(cwInputNumber);
-    checkInputNumber(ccwInputNumber);
     esp_err_t err = gpio_install_isr_service(0);
     if (err != ESP_ERR_INVALID_STATE)
       ESP_ERROR_CHECK(err);
@@ -320,23 +315,18 @@ void inputs::addButtonMatrix(
 }
 
 void inputs::addAnalogMultiplexer(
-    const gpio_num_t selectorPins[],
-    const uint8_t selectorPinCount,
-    const gpio_num_t inputPins[],
-    const uint8_t inputPinCount,
-    inputNumber_t *buttonNumbersArray)
+    const gpio_num_array_t &selectorPins,
+    const gpio_num_array_t &inputPins)
 {
   if ((!pollingTask) && (!hubTask))
   {
-    checkInputNumbers((1 << selectorPinCount) * inputPinCount, buttonNumbersArray);
-    digitalInputChain = new AnalogMultiplexerInput(
+    AnalogMultiplexerInput *mux = new AnalogMultiplexerInput(
         selectorPins,
         selectorPinCount,
-        inputPins,
-        inputPinCount,
-        buttonNumbersArray,
         true,
         digitalInputChain);
+    digitalInputChain = mux;
+    return *mux;
   }
   else
     abortDueToCallAfterStart();

@@ -143,13 +143,8 @@ RotaryEncoderInput::RotaryEncoderInput(
         log_e("clkPin and dtPin must not match in RotaryEncoderInput::RotaryEncoderInput()");
         abort();
     }
-    if (ccwButtonNumber == UNSPECIFIED_INPUT_NUMBER)
-        ccwButtonNumber = cwButtonNumber + 1;
-    if ((cwButtonNumber > MAX_INPUT_NUMBER) or (ccwButtonNumber > MAX_INPUT_NUMBER))
-    {
-        log_e("Invalid button number(s) in RotaryEncoderInput::RotaryEncoderInput()");
-        abort();
-    }
+    abortOnInvalidInputNumber(cwButtonNumber);
+    abortOnInvalidInputNumber(ccwButtonNumber);
 
     // Initialize properties
     this->clkPin = clkPin;

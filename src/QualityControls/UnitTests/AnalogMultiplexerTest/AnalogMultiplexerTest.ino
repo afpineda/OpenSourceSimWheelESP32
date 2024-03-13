@@ -9,8 +9,8 @@
  *
  */
 
-#include <Arduino.h>
-#include "SimWheel.h"
+#include <HardwareSerial.h>
+#include "SimWheelTypes.h"
 #include "debugUtils.h"
 #include "AnalogMultiplexerInput.h"
 
@@ -18,7 +18,7 @@
 // Globals
 //------------------------------------------------------------------
 
-AnalogMultiplexerInput *btns;
+AnalogMultiplexerInput *buttons;
 inputBitmap_t state = 0;
 
 //------------------------------------------------------------------
@@ -35,22 +35,20 @@ void setup()
     Serial.begin(115200);
     Serial.println("-- READY --");
 
-    btns = new AnalogMultiplexerInput(
+    buttons = new AnalogMultiplexerInput(
         amtxerSelectors,
-        sizeof(amtxerSelectors) / sizeof(amtxerSelectors[0]),
-        amtxerInputs,
-        sizeof(amtxerInputs) / sizeof(amtxerInputs[0]),
-        amtxerNumbers);
+        amtxerInputs);
+    setDebugInputNumbers(*buttons);
 
     Serial.println("MASK:");
-    debugPrintBool(btns->mask);
+    debugPrintBool(buttons->mask);
     Serial.println("");
     Serial.println("-- GO --");
 }
 
 void loop()
 {
-    inputBitmap_t newState = btns->read(state);
+    inputBitmap_t newState = buttons->read(state);
     if (state != newState)
     {
         state = newState;

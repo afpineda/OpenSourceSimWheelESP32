@@ -44,13 +44,10 @@ static inputNumber_t mtxNumbers[] = {6, 7, 5, 4, 2, 3};
 #define TEST_AMTXER_IN1 GPIO_NUM_4
 #define TEST_AMTXER_IN2 GPIO_NUM_16
 
-static const gpio_num_t amtxerSelectors[] = {TEST_AMTXER_SEL1, TEST_AMTXER_SEL2, TEST_AMTXER_SEL3};
-static const gpio_num_t amtxerInputs[] = {TEST_AMTXER_IN1, TEST_AMTXER_IN2};
-static inputNumber_t amtxerNumbers[] = {
-    20, 63, 63, 63,
-    63, 63, 63, 21,
-    63, 63, 63, 22,
-    63, 23, 63, 63};
+static const gpio_num_array_t amtxerSelectors = {TEST_AMTXER_SEL1, TEST_AMTXER_SEL2, TEST_AMTXER_SEL3};
+static const gpio_num_array_t amtxerInputs = {TEST_AMTXER_IN1, TEST_AMTXER_IN2};
+
+void setDebugInputNumbers(Multiplexers8InputSpec &instance);
 
 // Other pins for testing
 #define TEST_ANALOG_PIN1 GPIO_NUM_36

@@ -21,52 +21,50 @@
 // ----------------------------------------------------------------------------
 
 AnalogMultiplexerInput::AnalogMultiplexerInput(
-    const gpio_num_t selectorPins[],
-    const uint8_t selectorPinCount,
-    const gpio_num_t inputPins[],
-    const uint8_t inputPinCount,
-    inputNumber_t *buttonNumbersArray,
+    const gpio_num_array_t &selectorPins,
+    const gpio_num_array_t &inputPins,
     const bool negativeLogic,
     DigitalPolledInput *nextInChain) : DigitalPolledInput(nextInChain)
 {
-    this->switchCount = (1 << selectorPinCount) * inputPinCount;
-    this->selectorPinCount = selectorPinCount;
-    this->inputPinCount = inputPinCount;
-    this->selectorPins = selectorPins;
-    this->inputPins = inputPins;
-    this->buttonNumbersArray = buttonNumbersArray;
-    this->negativeLogic = negativeLogic;
-
-    if ((switchCount > 64) || (switchCount == 0))
-    {
-        log_e("Too few/many input or selector pins at AnalogMultiplexerInput::AnalogMultiplexerInput()");
-        abort();
-    }
-
-    if (buttonNumbersArray != nullptr)
-        updateMask(buttonNumbersArray, switchCount);
-    else
-    {
-        log_e("Unknown input numbers in call to AnalogMultiplexerInput::AnalogMultiplexerInput()");
-        abort();
-    }
-
-    // Initialize debouncing state
-    debounce = (BaseType_t *)malloc(sizeof(BaseType_t) * switchCount);
-    for (int i = 0; i < switchCount; i++)
-        debounce[i] = 0;
-
     // Check and initialize pins
+    selectorPinCount = selectorPins.size();
+    inputPinCount = inputPins.size();
+    if ((selectorPinCount == 0) || (inputPinCount == 0))
+    {
+        log_e("No input/selector pins at AnalogMultiplexerInput::AnalogMultiplexerInput()");
+        abort();
+    }
+    switchCount = (1 << selectorPinCount) * inputPinCount;
+    this->selectorPins = (gpio_num_t *)malloc(sizeof(gpio_num_t) * selectorPinCount);
+    this->inputPins = (gpio_num_t *)malloc(sizeof(gpio_num_t) * inputPinCount);
+    bitmap = (inputBitmap_t *)malloc(sizeof(inputBitmap_t) * switchCount);
+    if (!(this->selectorPins) || !(this->inputPins) || !bitmap)
+    {
+        log_e("Not enough memory at AnalogMultiplexerInput::AnalogMultiplexerInput()");
+        abort();
+    }
     for (int i = 0; i < selectorPinCount; i++)
-        checkAndInitializeSelectorPin(selectorPins[i]);
+    {
+        this->selectorPins[i] = selectorPins[i];
+        checkAndInitializeSelectorPin(this->selectorPins[i]);
+    }
     for (int i = 0; i < inputPinCount; i++)
+    {
+        this->inputPins[i] = inputPins[i];
         checkAndInitializeInputPin(inputPins[i], !negativeLogic, negativeLogic);
+    }
+
+    // Other initialization
+    this->negativeLogic = negativeLogic;
+    for (int i = 0; i < switchCount; i++)
+        bitmap[i] = 0ULL;
 }
 
 AnalogMultiplexerInput::~AnalogMultiplexerInput()
 {
-    if (debounce)
-        free(debounce);
+    free(selectorPins);
+    free(inputPins);
+    free(bitmap);
 }
 
 // ----------------------------------------------------------------------------
@@ -75,30 +73,52 @@ AnalogMultiplexerInput::~AnalogMultiplexerInput()
 
 inputBitmap_t AnalogMultiplexerInput::read(inputBitmap_t lastState)
 {
-    inputBitmap_t state = 0;
+    inputBitmap_t state = 0ULL;
 
     for (uint8_t switchIndex = 0; switchIndex < switchCount; switchIndex++)
-        if (debounce[switchIndex])
-        {
-            BaseType_t now = xTaskGetTickCount();
-            if ((now - debounce[switchIndex]) >= DEBOUNCE_TICKS)
-                debounce[switchIndex] = 0;
-            state = state | (lastState & BITMAP(switchIndex));
-        }
-        else
-        {
-            // Choose selector pins
-            for (uint8_t selPinIndex = 0; selPinIndex < selectorPinCount; selPinIndex++)
-                gpio_set_level(selectorPins[selPinIndex], switchIndex & (1 << selPinIndex));
+    {
+        // Choose selector pins
+        for (uint8_t selPinIndex = 0; selPinIndex < selectorPinCount; selPinIndex++)
+            gpio_set_level(selectorPins[selPinIndex], switchIndex & (1 << selPinIndex));
 
-            // Wait for the signal to propagate
-            vTaskDelay(SIGNAL_CHANGE_DELAY_TICKS);
+        // Wait for the signal to propagate
+        vTaskDelay(SIGNAL_CHANGE_DELAY_TICKS);
 
-            uint8_t inputPinIndex = switchIndex >> selectorPinCount;
-            int level = gpio_get_level(inputPins[inputPinIndex]);
-            if (level ^ negativeLogic)
-                state = state | BITMAP(buttonNumbersArray[switchIndex]);
-        };
+        uint8_t inputPinIndex = switchIndex >> selectorPinCount;
+        int level = gpio_get_level(inputPins[inputPinIndex]);
+        if (level ^ negativeLogic)
+            state = state | bitmap[switchIndex];
+    };
 
     return state;
+}
+
+// ----------------------------------------------------------------------------
+// Input numbers
+// ----------------------------------------------------------------------------
+
+Multiplexers8InputSpec &AnalogMultiplexerInput::inputNumber(
+    gpio_num_t inputPin,
+    mux8_pin_t pin,
+    inputNumber_t number)
+{
+    uint8_t muxPinIndex = static_cast<uint8_t>(pin);
+
+    // locate index of input pin
+    uint8_t inputPinIndex = 0;
+    while ((inputPinIndex < inputPinCount) && (inputPins[inputPinIndex] != inputPin))
+        inputPinIndex++;
+    if (inputPinIndex >= inputPinCount)
+    {
+        // Not found
+        log_e("Invalid input pin at AnalogMultiplexerInput::inputNumber(%d,%d,%d)", inputPin, muxPinIndex, number);
+        abort();
+    }
+
+    // Set bitmap
+    uint8_t index = ((1 << selectorPinCount) * inputPinIndex) + muxPinIndex;
+    mask |= bitmap[index];
+    bitmap[index] = BITMAP(number);
+    mask &= ~bitmap[index];
+    return *this;
 }

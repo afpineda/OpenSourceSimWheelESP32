@@ -15,6 +15,8 @@
 #define __SIM_WHEEL_TYPES_H__
 
 #include <stdint.h>
+#include <vector>
+#include "esp32-hal.h" // declares gpio_num_t
 
 /**
  * @brief A bit array which assembles the state of every button, being the least significant bit
@@ -47,6 +49,12 @@ typedef uint8_t inputNumber_t;
 #define JOY_START 7
 #define JOY_LTHUMBSTICK_CLICK 8
 #define JOY_RTHUMBSTICK_CLICK 9
+
+/**
+ * @brief Array of GPIO pins
+ *
+ */
+typedef std::vector<gpio_num_t> gpio_num_array_t;
 
 /**
  * @brief Specification of input numbers for a button matrix
@@ -85,7 +93,7 @@ class Multiplexers8InputSpec
 {
 public:
     virtual Multiplexers8InputSpec &inputNumber(
-        uint8_t inputPinIndex,
+        gpio_num_t inputPin,
         mux8_pin_t pin,
         inputNumber_t number) = 0;
 };

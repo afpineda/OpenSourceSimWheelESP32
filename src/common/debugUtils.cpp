@@ -83,3 +83,11 @@ void setDebugInputNumbers(PCF8574InputSpec &instance)
     instance.inputNumber(PCF8574_pin_t::P6,36);
     instance.inputNumber(PCF8574_pin_t::P7,37);
 }
+
+void setDebugInputNumbers(Multiplexers8InputSpec &instance)
+{
+    instance.inputNumber(TEST_AMTXER_IN1,mux8_pin_t::A0,20);
+    instance.inputNumber(TEST_AMTXER_IN1,mux8_pin_t::A7,21);
+    instance.inputNumber(TEST_AMTXER_IN2,mux8_pin_t::A3,22);
+    instance.inputNumber(TEST_AMTXER_IN2,mux8_pin_t::A5,23);
+}
