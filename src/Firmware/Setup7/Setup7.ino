@@ -9,7 +9,7 @@
  *
  */
 
-//#include <Arduino.h>
+// #include <Arduino.h>
 #include "SimWheel.h"
 
 //------------------------------------------------------------------
@@ -45,21 +45,14 @@ std::string DEVICE_MANUFACTURER = "Mamandurrio";
  >>>> [ES] MODO DE SUEÑO PROFUNDO
 ------------------------------------------------------------------ */
 
-// [EN] Wake up source: put a list of GPIO numbers between curly brackets.
-//      If empty, only a RESET will wake up the system.
-// [ES] Señales para despertar: indicar una lista de  numeros de GPIO entre llaves.
-//      Si lo deja vacío, solamente un RESET despertará al sistema.
 
-const gpio_num_t WAKEUP_PINS[] = {GPIO_NUM_33};
+// [EN] Set an output-capable GPIO number for the "wake up" pin.
+//      Comment out if not required, or set an RTC-capable GPIO number for wake up.
+// [ES] Indique el número de GPIO para la señal "despertar"
+//      Comente la línea si no hay necesidad de entrar en sueño profundo, o bien,
+//      indique un número de GPIO con capacidad RTC para despertar del sueño.
 
-// [EN] Set to "true" or "false".
-//      If "true", wake up happens when any given pin is set to high voltage.
-//      If "false", wake up happens when all given pins are set to low voltage.
-// [ES] Seleccione "true" o "false"
-//      Con "true", se despierta con voltaje alto en cualquiera de los pines.
-//      Con "false", se despierta con voltaje bajo en todos los pines.
-
-#define WAKEUP_ANYorALL false
+#define WAKE_UP_PIN GPIO_NUM_33
 
 /* -----------------------------------------------------------------
  >>>> [EN] BATTERY MONITOR SUBSYSTEM
@@ -76,41 +69,51 @@ const gpio_num_t WAKEUP_PINS[] = {GPIO_NUM_33};
 
 #define BATTERY_READ_GPIO -1
 
-/* -----------------------------------------------------------------
- >>>> [EN] SHIFT REGISTERS
- >>>> [ES] REGISTROS DE DESPLAZAMIENTO
------------------------------------------------------------------- */
-
-// [EN] Set all input numbers. The order of those numbers depends on the wiring
-// [ES] Indique los números de entrada. Su orden depende del cableado.
-static inputNumber_t srNumbers[] = {
-    JOY_LB, JOY_A, 8, JOY_RB, 16, 15, 10, 9,
-    JOY_B, JOY_X, JOY_Y, JOY_BACK, 14, 13, 12, 11,
-    19, 20, 21, 22, JOY_START, 24, 18, 17,
-    23 };
-
 //------------------------------------------------------------------
 // Setup
 //------------------------------------------------------------------
 
 void simWheelSetup()
 {
-    inputs::addShiftRegisters(
-        GPIO_NUM_34,
-        GPIO_NUM_48,
-        GPIO_NUM_18,
-        srNumbers,
-        sizeof(srNumbers) / sizeof(srNumbers[0]));
+    inputs::addShiftRegisters(GPIO_NUM_34, GPIO_NUM_48, GPIO_NUM_18, 25)
+        //
+        .inputNumber(0, sr8_pin_t::A, 9)
+        .inputNumber(0, sr8_pin_t::B, 10)
+        .inputNumber(0, sr8_pin_t::C, 15)
+        .inputNumber(0, sr8_pin_t::D, 16)
+        .inputNumber(0, sr8_pin_t::E, JOY_RB)
+        .inputNumber(0, sr8_pin_t::F, 8)
+        .inputNumber(0, sr8_pin_t::G, JOY_A)
+        .inputNumber(0, sr8_pin_t::H, JOY_LB)
+        //
+        .inputNumber(1, sr8_pin_t::A, 11)
+        .inputNumber(1, sr8_pin_t::B, 12)
+        .inputNumber(1, sr8_pin_t::C, 13)
+        .inputNumber(1, sr8_pin_t::D, 14)
+        .inputNumber(1, sr8_pin_t::E, JOY_BACK)
+        .inputNumber(1, sr8_pin_t::F, JOY_Y)
+        .inputNumber(1, sr8_pin_t::G, JOY_X)
+        .inputNumber(1, sr8_pin_t::H, JOY_B)
+        //
+        .inputNumber(2, sr8_pin_t::A, 17)
+        .inputNumber(2, sr8_pin_t::B, 18)
+        .inputNumber(2, sr8_pin_t::C, 24)
+        .inputNumber(2, sr8_pin_t::D, JOY_START)
+        .inputNumber(2, sr8_pin_t::E, 22)
+        .inputNumber(2, sr8_pin_t::F, 21)
+        .inputNumber(2, sr8_pin_t::G, 20)
+        .inputNumber(2, sr8_pin_t::H, 19)
+        .inputNumber(2, sr8_pin_t::SER, 23);
+
     inputs::addRotaryEncoder(GPIO_NUM_33, GPIO_NUM_39, ROT1_CW, ROT1_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_38, GPIO_NUM_37, ROT2_CW, ROT2_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_35, ROT3_CW, ROT3_CCW);
 
     inputs::setAnalogClutchPaddles(GPIO_NUM_16, GPIO_NUM_17);
     inputHub::setClutchInputNumbers(LCLUTCH, RCLUTCH);
-    inputHub::setClutchCalibrationButtons(ROT1_CW, ROT1_CCW);
-    inputHub::cycleCPWorkingMode_setBitmap(BITMAP(JOY_START) | BITMAP(JOY_LB));
-    inputHub::setCalibrationCommandBitmaps(
-        BITMAP(JOY_START) | BITMAP(JOY_LB) | BITMAP(JOY_RB));
+    inputHub::setClutchCalibrationInputNumbers(ROT1_CW, ROT1_CCW);
+    inputHub::cycleCPWorkingMode_setInputNumbers({JOY_START, JOY_LB});
+    inputHub::cmdRecalibrateAnalogAxis_setInputNumbers({(JOY_START), (JOY_LB), (JOY_RB)});
 }
 
 //------------------------------------------------------------------
@@ -120,27 +123,29 @@ void simWheelSetup()
 void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
-    power::begin(
-        WAKEUP_PINS,
-        sizeof(WAKEUP_PINS) / sizeof(gpio_num_t),
-        WAKEUP_ANYorALL);
+
+#ifdef WAKE_UP_PIN
+    power::begin((gpio_num_t)WAKE_UP_PIN);
+#endif
+
+#ifdef POWER_LATCH
+    power::setPowerLatch(
+        (gpio_num_t)POWER_LATCH,
+        LATCH_MODE,
+        LATCH_POWEROFF_DELAY);
+#endif
+
     userSettings::begin();
     simWheelSetup();
+    hidImplementation::begin(
+        DEVICE_NAME,
+        DEVICE_MANUFACTURER);
 
-#ifdef BATTERY_ENABLE_READ_GPIO
+#ifdef ENABLE_BATTERY_MONITOR
     batteryCalibration::begin();
     power::startBatteryMonitor(
         (gpio_num_t)BATTERY_ENABLE_READ_GPIO,
         (gpio_num_t)BATTERY_READ_GPIO);
-    hidImplementation::begin(
-        DEVICE_NAME,
-        DEVICE_MANUFACTURER,
-        true);
-#else
-    hidImplementation::begin(
-        DEVICE_NAME,
-        DEVICE_MANUFACTURER,
-        false);
 #endif
 
     inputs::start();

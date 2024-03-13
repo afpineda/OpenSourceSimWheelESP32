@@ -29,7 +29,7 @@ std::string DEVICE_MANUFACTURER = "Mamandurrio";
  >>>> [ES] MATRIZ DE BOTONES
 ------------------------------------------------------------------ */
 
-static const gpio_num_t mtxSelectors[] = {
+static const gpio_num_array_t mtxSelectors = {
     GPIO_NUM_15,
     GPIO_NUM_2,
     GPIO_NUM_0,
@@ -38,7 +38,7 @@ static const gpio_num_t mtxSelectors[] = {
     GPIO_NUM_17,
     GPIO_NUM_5};
 
-static const gpio_num_t mtxInputs[] = {
+static const gpio_num_array_t mtxInputs = {
     GPIO_NUM_36,
     GPIO_NUM_39,
     GPIO_NUM_34,
@@ -48,23 +48,12 @@ static const gpio_num_t mtxInputs[] = {
     GPIO_NUM_25,
     GPIO_NUM_26};
 
-static inputNumber_t mtxNumbers[] = {
-    0, 1, 2, 3, 4, 5, 6,
-    7, 8, 9, 10, 11, 12, 13,
-    14, 15, 16, 17, 18, 19, 20,
-    21, 22, 23, 24, 25, 26, 27,
-    28, 29, 30, 31, 32, 33, 34,
-    35, 36, 37, 38, 39, 40, 41,
-    42, 43, 44, 45, 46, 47, 48,
-    49, 50, 51, 52, 53, 54, 55};
-
 //------------------------------------------------------------------
 // Mocks
 //------------------------------------------------------------------
 
 void batteryCalibration::restartAutoCalibration()
 {
-
 }
 
 //------------------------------------------------------------------
@@ -73,12 +62,12 @@ void batteryCalibration::restartAutoCalibration()
 
 void simWheelSetup()
 {
-    inputs::addButtonMatrix(
-        mtxSelectors,
-        sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
-        mtxInputs,
-        sizeof(mtxInputs) / sizeof(mtxInputs[0]),
-        mtxNumbers);
+    auto &assignments = inputs::addButtonMatrix(mtxSelectors, mtxInputs);
+    inputNumber_t inputNumber = 0;
+    for (int inputIndex = 0; inputIndex < mtxInputs.size(); inputIndex++)
+        for (int selectorIndex = 0; selectorIndex < mtxSelectors.size(); selectorIndex++)
+            assignments.inputNumber(mtxSelectors[selectorIndex], mtxInputs[inputIndex], inputNumber++);
+
     inputs::addRotaryEncoder(GPIO_NUM_26, GPIO_NUM_27, 56, 57);
     inputs::addRotaryEncoder(GPIO_NUM_12, GPIO_NUM_13, 58, 59);
     inputs::addRotaryEncoder(GPIO_NUM_18, GPIO_NUM_19, 60, 61);
@@ -92,11 +81,11 @@ void simWheelSetup()
 void setup()
 {
     simWheelSetup();
+    userSettings::begin();
     hidImplementation::begin(
         DEVICE_NAME,
         DEVICE_MANUFACTURER,
         false);
-
     inputs::start();
 }
 

@@ -40,32 +40,42 @@ std::string DEVICE_NAME = "ButtonBox-8";
 
 std::string DEVICE_MANUFACTURER = "Mamandurrio";
 
-/* -----------------------------------------------------------------
- >>>> [EN] SHIFT REGISTERS
- >>>> [ES] REGISTROS DE DESPLAZAMIENTO
------------------------------------------------------------------- */
-
-// [EN] Set all input numbers. The order of those numbers depends on the wiring
-// [ES] Indique los números de entrada. Su orden depende del cableado.
-
-static inputNumber_t srNumbers[] = {
-    JOY_LB, JOY_A, 8, JOY_RB, 16, 15, 10, 9,
-    JOY_B, JOY_X, JOY_Y, JOY_BACK, 14, 13, 12, 11,
-    19, 20, 21, 22, JOY_START, 24, 18, 17,
-    23 };
-
 //------------------------------------------------------------------
 // Setup
 //------------------------------------------------------------------
 
 void simWheelSetup()
 {
-    inputs::addShiftRegisters(
-        GPIO_NUM_39,
-        GPIO_NUM_33,
-        GPIO_NUM_34,
-        srNumbers,
-        sizeof(srNumbers) / sizeof(srNumbers[0]));
+    inputs::addShiftRegisters(GPIO_NUM_39, GPIO_NUM_33, GPIO_NUM_34, 25)
+        //
+        .inputNumber(0, sr8_pin_t::A, 9)
+        .inputNumber(0, sr8_pin_t::B, 10)
+        .inputNumber(0, sr8_pin_t::C, 15)
+        .inputNumber(0, sr8_pin_t::D, 16)
+        .inputNumber(0, sr8_pin_t::E, JOY_RB)
+        .inputNumber(0, sr8_pin_t::F, 8)
+        .inputNumber(0, sr8_pin_t::G, JOY_A)
+        .inputNumber(0, sr8_pin_t::H, JOY_LB)
+        //
+        .inputNumber(1, sr8_pin_t::A, 11)
+        .inputNumber(1, sr8_pin_t::B, 12)
+        .inputNumber(1, sr8_pin_t::C, 13)
+        .inputNumber(1, sr8_pin_t::D, 14)
+        .inputNumber(1, sr8_pin_t::E, JOY_BACK)
+        .inputNumber(1, sr8_pin_t::F, JOY_Y)
+        .inputNumber(1, sr8_pin_t::G, JOY_X)
+        .inputNumber(1, sr8_pin_t::H, JOY_B)
+        //
+        .inputNumber(2, sr8_pin_t::A, 17)
+        .inputNumber(2, sr8_pin_t::B, 18)
+        .inputNumber(2, sr8_pin_t::C, 24)
+        .inputNumber(2, sr8_pin_t::D, JOY_START)
+        .inputNumber(2, sr8_pin_t::E, 22)
+        .inputNumber(2, sr8_pin_t::F, 21)
+        .inputNumber(2, sr8_pin_t::G, 20)
+        .inputNumber(2, sr8_pin_t::H, 19)
+        .inputNumber(2, sr8_pin_t::SER, 23);
+
     inputs::addRotaryEncoder(GPIO_NUM_38, GPIO_NUM_37, ROT1_CW, ROT1_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_35, ROT2_CW, ROT2_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_48, GPIO_NUM_18, ROT3_CW, ROT3_CCW);

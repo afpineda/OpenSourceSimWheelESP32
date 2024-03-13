@@ -61,11 +61,11 @@ void simWheelSetup()
     inputs::addRotaryEncoder(GPIO_NUM_10, GPIO_NUM_9, ROT1_CW + 10, ROT1_CCW + 10);             // ROT6
     inputs::addRotaryEncoder(GPIO_NUM_37, GPIO_NUM_33, ROT1_CW + 12, ROT1_CCW + 12);            // ROT7
     inputs::addRotaryEncoder(GPIO_NUM_21, GPIO_NUM_16, ROT1_CW + 14, ROT1_CCW + 14, USE_FUNKY); // ROT8 or funky switch
-    inputs::addDigital(GPIO_NUM_33, true, true, JOY_A);
-    inputs::addDigital(GPIO_NUM_34, true, true, NAV_LEFT);
-    inputs::addDigital(GPIO_NUM_17, true, true, NAV_RIGHT);
-    inputs::addDigital(GPIO_NUM_38, true, true, NAV_UP);
-    inputs::addDigital(GPIO_NUM_18, true, true, NAV_DOWN);
+    inputs::addDigital(GPIO_NUM_33, JOY_A);
+    inputs::addDigital(GPIO_NUM_34, NAV_LEFT);
+    inputs::addDigital(GPIO_NUM_17, NAV_RIGHT);
+    inputs::addDigital(GPIO_NUM_38, NAV_UP);
+    inputs::addDigital(GPIO_NUM_18, NAV_DOWN);
     inputs::setAnalogClutchPaddles(GPIO_NUM_14, GPIO_NUM_15);
     inputs::addMCP23017Digital(7, false)
         .inputNumber(MCP23017_pin_t::GPA0, JOY_LSHIFT_PADDLE)
@@ -104,11 +104,41 @@ void simWheelSetup()
 
     inputHub::setClutchInputNumbers(CLUTCH1, CLUTCH2);
     inputHub::setDPADControls(NAV_UP, NAV_DOWN, NAV_LEFT, NAV_RIGHT);
-    inputHub::setALTBitmap(BITMAP(ALT1) | BITMAP(ALT2));
-    inputHub::setClutchCalibrationButtons(ROT1_CW, ROT1_CCW); // Rotary 1
-    inputHub::cmdRecalibrateAnalogAxis_setBitmap(BITMAP(JOY_LSHIFT_PADDLE) | BITMAP(JOY_RSHIFT_PADDLE) | BITMAP(JOY_START));
-    inputHub::cycleCPWorkingMode_setBitmap(BITMAP(JOY_START) | BITMAP(JOY_LSHIFT_PADDLE));
-    inputHub::cycleALTButtonsWorkingMode_setBitmap(BITMAP(JOY_START) | BITMAP(JOY_RSHIFT_PADDLE));
+    inputHub::setALTInputNumbers({(ALT1), (ALT2)});
+    inputHub::setClutchCalibrationInputNumbers(ROT1_CW, ROT1_CCW); // Rotary 1
+    inputHub::cmdRecalibrateAnalogAxis_setInputNumbers({(JOY_LSHIFT_PADDLE), (JOY_RSHIFT_PADDLE), (JOY_START)});
+    inputHub::cycleCPWorkingMode_setInputNumbers({(JOY_START), (JOY_LSHIFT_PADDLE)});
+    inputHub::cycleALTButtonsWorkingMode_setInputNumbers({(JOY_START), (JOY_RSHIFT_PADDLE)});
+}
+void setup()
+{
+    esp_log_level_set("*", ESP_LOG_ERROR);
+
+#ifdef WAKE_UP_PIN
+    power::begin((gpio_num_t)WAKE_UP_PIN);
+#endif
+
+#ifdef POWER_LATCH
+    power::setPowerLatch(
+        (gpio_num_t)POWER_LATCH,
+        LATCH_MODE,
+        LATCH_POWEROFF_DELAY);
+#endif
+
+    userSettings::begin();
+    simWheelSetup();
+    hidImplementation::begin(
+        DEVICE_NAME,
+        DEVICE_MANUFACTURER);
+
+#ifdef ENABLE_BATTERY_MONITOR
+    batteryCalibration::begin();
+    power::startBatteryMonitor(
+        (gpio_num_t)BATTERY_ENABLE_READ_GPIO,
+        (gpio_num_t)BATTERY_READ_GPIO);
+#endif
+
+    inputs::start();
 }
 
 //------------------------------------------------------------------

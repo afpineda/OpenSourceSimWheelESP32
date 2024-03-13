@@ -130,22 +130,22 @@ Notes and build tips:
 
 - Certain inputs have a particular function as shown in the following table, so **attach them properly**.
 
-  | Location          | Tag                          | Particular function       |
-  | ----------------- | ---------------------------- | ------------------------- |
-  | DevKit            | Push                         | "A" button in Windows     |
-  | DevKit            | A (Up)                       | Navigation                |
-  | DevKit            | B (Left)                     | Navigation                |
-  | DevKit            | C (Down)                     | Navigation                |
-  | DevKit            | D (Right)                    | Navigation                |
-  | Satellite circuit | Address = 7, switch index 0  | Left SHIFT paddle         |
-  | Satellite circuit | Address = 7, switch index 1  | Right SHIFT paddle        |
-  | Satellite circuit | Address = 7, switch index 15 | "ALT" button              |
-  | Satellite circuit | Address = 7, switch index 14 | "ALT" button              |
-  | Satellite circuit | Address = 0, switch index 15 | "Start" button in Windows |
-  | Satellite circuit | Address = 0, switch index 14 | "Back" button in Windows  |
-  | Satellite circuit | Address = 0, switch index 13 | "B" button in Windows     |
-  | Satellite circuit | Address = 0, switch index 12 | "X" button in Windows     |
-  | Satellite circuit | Address = 0, switch index 11 | "Y" button in Windows     |
+  | Location          | Tag               | Particular function       |
+  | ----------------- | ----------------- | ------------------------- |
+  | DevKit            | Push              | "A" button in Windows     |
+  | DevKit            | A (Up)            | Navigation                |
+  | DevKit            | B (Left)          | Navigation                |
+  | DevKit            | C (Down)          | Navigation                |
+  | DevKit            | D (Right)         | Navigation                |
+  | Satellite circuit | Address = 7, GPA0 | Left SHIFT paddle         |
+  | Satellite circuit | Address = 7, GPA1 | Right SHIFT paddle        |
+  | Satellite circuit | Address = 7, GPA2 | "ALT" button              |
+  | Satellite circuit | Address = 7, GPA3 | "ALT" button              |
+  | Satellite circuit | Address = 0, GPB7 | "Start" button in Windows |
+  | Satellite circuit | Address = 0, GPB6 | "Back" button in Windows  |
+  | Satellite circuit | Address = 0, GPB5 | "B" button in Windows     |
+  | Satellite circuit | Address = 0, GPB4 | "X" button in Windows     |
+  | Satellite circuit | Address = 0, GPB3 | "Y" button in Windows     |
 
 - The `GND` and `3V3` terminals of each potentiometer are interchangeable. If the clutch (or axis) goes to 100% when idle, swap those terminals.
   They are attached to the satellite circuit (same tags).

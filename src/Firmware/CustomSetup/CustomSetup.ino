@@ -101,23 +101,6 @@ const powerLatchMode_t LATCH_MODE = POWER_OPEN_DRAIN;
 
 #endif // ENABLE_BATTERY_MONITOR
 
-/* -----------------------------------------------------------------
- >>>> [EN] BUTTON MATRIX
- >>>> [ES] MATRIZ DE BOTONES
------------------------------------------------------------------- */
-
-// [EN] Set all GPIO numbers for selector pins between curly brackets
-// [ES] Indique los números de GPIO de todos los pines selectores entre las llaves
-static const gpio_num_t mtxSelectors[] = {GPIO_NUM_4, GPIO_NUM_16, GPIO_NUM_17, GPIO_NUM_5, GPIO_NUM_12};
-
-// [EN] Set all GPIO numbers for input pins between curly brackets
-// [ES] Indique los números de GPIO de todos los pines de entrada entre las llaves
-static const gpio_num_t mtxInputs[] = {GPIO_NUM_15, GPIO_NUM_19, GPIO_NUM_3, GPIO_NUM_23};
-
-// [EN] Set all input numbers. The order of those numbers depends on the wiring
-// [ES] Indique los números de entrada. Su orden depende del cableado.
-static inputNumber_t mtxNumbers[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
-
 //------------------------------------------------------------------
 // Globals
 //------------------------------------------------------------------
@@ -131,24 +114,18 @@ void simWheelSetup()
     // [EN] Example code. Fill with your own code.
     // [ES] Código de ejemplo. Ponga el suyo.
 
-    inputs::addButtonMatrix(
-        mtxSelectors,
-        sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
-        mtxInputs,
-        sizeof(mtxInputs) / sizeof(mtxInputs[0]),
-        mtxNumbers);
     inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_39,25,26);
     inputs::addRotaryEncoder(GPIO_NUM_35, GPIO_NUM_32,27,28);
     inputs::addRotaryEncoder(GPIO_NUM_25, GPIO_NUM_26,29,30);
     inputs::addRotaryEncoder(GPIO_NUM_14, GPIO_NUM_18,31,32);
-    inputs::addDigital(GPIO_NUM_34, true, false,33);
-    inputs::addDigital(GPIO_NUM_33, true, false,34);
-    inputs::addDigital(GPIO_NUM_27, true, false,35);
+    inputs::addDigital(GPIO_NUM_34,33);
+    inputs::addDigital(GPIO_NUM_33,34);
+    inputs::addDigital(GPIO_NUM_27,35);
 
-    inputHub::setClutchInputNumbers(4, 12);
-    inputHub::setDPADControls(19, 15, 11, 7);
-    inputHub::setALTBitmap(BITMAP(0) | BITMAP(8));
-    inputHub::setClutchCalibrationButtons(25, 26); // Rotary 1
+    inputHub::setClutchInputNumbers(33, 34);
+    inputHub::setClutchCalibrationInputNumbers(31, 32); // Rotary 4
+    inputHub::setDPADControls(25, 26, 27, 28);
+    inputHub::setALTInputNumbers({35});
 }
 
 //------------------------------------------------------------------

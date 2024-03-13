@@ -9,7 +9,7 @@
  *
  */
 
-//#include <Arduino.h>
+// #include <Arduino.h>
 #include "SimWheel.h"
 
 //------------------------------------------------------------------
@@ -53,21 +53,13 @@ std::string DEVICE_MANUFACTURER = "Mamandurrio";
  >>>> [ES] MODO DE SUEÑO PROFUNDO
 ------------------------------------------------------------------ */
 
-// [EN] Wake up source: put a list of GPIO numbers between curly brackets.
-//      If empty, only a RESET will wake up the system.
-// [ES] Señales para despertar: indicar una lista de  numeros de GPIO entre llaves.
-//      Si lo deja vacío, solamente un RESET despertará al sistema.
+// [EN] Set an output-capable GPIO number for the "wake up" pin.
+//      Comment out if not required, or set an RTC-capable GPIO number for wake up.
+// [ES] Indique el número de GPIO para la señal "despertar"
+//      Comente la línea si no hay necesidad de entrar en sueño profundo, o bien,
+//      indique un número de GPIO con capacidad RTC para despertar del sueño.
 
-const gpio_num_t WAKEUP_PINS[] = {GPIO_NUM_32};
-
-// [EN] Set to "true" or "false".
-//      If "true", wake up happens when any given pin is set to high voltage.
-//      If "false", wake up happens when all given pins are set to low voltage.
-// [ES] Seleccione "true" o "false"
-//      Con "true", se despierta con voltaje alto en cualquiera de los pines.
-//      Con "false", se despierta con voltaje bajo en todos los pines.
-
-#define WAKEUP_ANYorALL false
+#define WAKE_UP_PIN GPIO_NUM_32
 
 /* -----------------------------------------------------------------
  >>>> [EN] MULTIPLEXED BUTTONS
@@ -76,19 +68,11 @@ const gpio_num_t WAKEUP_PINS[] = {GPIO_NUM_32};
 
 // [EN] Set all GPIO numbers for selector pins between curly brackets
 // [ES] Indique los números de GPIO de todos los pines selectores entre las llaves
-static const gpio_num_t mpxSelectors[] = {GPIO_NUM_16, GPIO_NUM_17, GPIO_NUM_5};
+static const gpio_num_array_t mpxSelectors = {GPIO_NUM_16, GPIO_NUM_17, GPIO_NUM_5};
 
 // [EN] Set all GPIO numbers for input pins between curly brackets
 // [ES] Indique los números de GPIO de todos los pines de entrada entre las llaves
-static const gpio_num_t mpxInputs[] = {GPIO_NUM_14, GPIO_NUM_22};
-
-// [EN] Set all input numbers. The order of those numbers depends on the wiring
-// [ES] Indique los números de entrada. Su orden depende del cableado.
-static inputNumber_t mpxNumbers[] = {
-    10, JOY_BACK, JOY_A, 14,
-    ALT2, 11, 15, 13,
-    JOY_Y, JOY_START, 9, JOY_B,
-    ALT1, JOY_X, 12, 8};
+static const gpio_num_array_t mpxInputs = {GPIO_NUM_14, GPIO_NUM_22};
 
 //------------------------------------------------------------------
 // Setup
@@ -96,32 +80,45 @@ static inputNumber_t mpxNumbers[] = {
 
 void simWheelSetup()
 {
-    inputs::addAnalogMultiplexer(
-        mpxSelectors,
-        sizeof(mpxSelectors) / sizeof(mpxSelectors[0]),
-        mpxInputs,
-        sizeof(mpxInputs) / sizeof(mpxInputs[0]),
-        mpxNumbers);
+    inputs::addAnalogMultiplexer(mpxSelectors, mpxInputs)
+        //
+        .inputNumber(mpxInputs[0], mux8_pin_t::A0, 10)
+        .inputNumber(mpxInputs[0], mux8_pin_t::A1, JOY_BACK)
+        .inputNumber(mpxInputs[0], mux8_pin_t::A2, JOY_A)
+        .inputNumber(mpxInputs[0], mux8_pin_t::A3, 14)
+        .inputNumber(mpxInputs[0], mux8_pin_t::A4, ALT2)
+        .inputNumber(mpxInputs[0], mux8_pin_t::A5, 11)
+        .inputNumber(mpxInputs[0], mux8_pin_t::A6, 15)
+        .inputNumber(mpxInputs[0], mux8_pin_t::A7, 13)
+        //
+        .inputNumber(mpxInputs[1], mux8_pin_t::A0, JOY_Y)
+        .inputNumber(mpxInputs[1], mux8_pin_t::A1, JOY_START)
+        .inputNumber(mpxInputs[1], mux8_pin_t::A2, 9)
+        .inputNumber(mpxInputs[1], mux8_pin_t::A3, JOY_B)
+        .inputNumber(mpxInputs[1], mux8_pin_t::A4, ALT1)
+        .inputNumber(mpxInputs[1], mux8_pin_t::A5, JOY_X)
+        .inputNumber(mpxInputs[1], mux8_pin_t::A6, 12)
+        .inputNumber(mpxInputs[1], mux8_pin_t::A7, 8);
+
     inputs::addRotaryEncoder(GPIO_NUM_32, GPIO_NUM_33, ROT1_CW, ROT1_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_25, GPIO_NUM_26, ROT2_CW, ROT2_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_27, GPIO_NUM_12, ROT3_CW, ROT3_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_13, GPIO_NUM_15, ROT4_CW, ROT4_CCW);
+
     inputs::addDigital(GPIO_NUM_2, ROT1_SW);
     inputs::addDigital(GPIO_NUM_0, ROT2_SW);
     inputs::addDigital(GPIO_NUM_4, ROT3_SW);
     inputs::addDigital(GPIO_NUM_18, ROT4_SW);
     inputs::addDigital(GPIO_NUM_23, JOY_LSHIFT_PADDLE);
     inputs::addDigital(GPIO_NUM_19, JOY_RSHIFT_PADDLE);
+
     inputs::setAnalogClutchPaddles(GPIO_NUM_36, GPIO_NUM_39);
     inputHub::setClutchInputNumbers(LCLUTCH, RCLUTCH);
-    inputHub::setALTBitmap(BITMAP(ALT1) | BITMAP(ALT2));
-    inputHub::setClutchCalibrationButtons(ROT1_CW, ROT1_CCW);
-    inputHub::cycleCPWorkingMode_setBitmap(BITMAP(ROT1_SW) | BITMAP(JOY_LB));
-    inputHub::cycleALTButtonsWorkingMode_setBitmap(BITMAP(ROT1_SW) | BITMAP(JOY_RB));
-    inputHub::setCalibrationCommandBitmaps(
-        BITMAP(ROT1_SW) |
-        BITMAP(JOY_RB) |
-        BITMAP(JOY_LB));
+    inputHub::setALTInputNumbers({ALT1, ALT2});
+    inputHub::setClutchCalibrationInputNumbers(ROT1_CW, ROT1_CCW);
+    inputHub::cycleCPWorkingMode_setInputNumbers({ROT1_SW, JOY_LB});
+    inputHub::cycleALTButtonsWorkingMode_setInputNumbers({ROT1_SW, JOY_RB});
+    inputHub::cmdRecalibrateAnalogAxis_setInputNumbers({ROT1_SW, JOY_RB, JOY_LB});
 }
 
 //------------------------------------------------------------------
@@ -131,17 +128,31 @@ void simWheelSetup()
 void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
-    power::begin(
-        WAKEUP_PINS,
-        sizeof(WAKEUP_PINS) / sizeof(gpio_num_t),
-        WAKEUP_ANYorALL);
+
+#ifdef WAKE_UP_PIN
+    power::begin((gpio_num_t)WAKE_UP_PIN);
+#endif
+
+#ifdef POWER_LATCH
+    power::setPowerLatch(
+        (gpio_num_t)POWER_LATCH,
+        LATCH_MODE,
+        LATCH_POWEROFF_DELAY);
+#endif
 
     userSettings::begin();
     simWheelSetup();
     hidImplementation::begin(
         DEVICE_NAME,
-        DEVICE_MANUFACTURER,
-        false);
+        DEVICE_MANUFACTURER);
+
+#ifdef ENABLE_BATTERY_MONITOR
+    batteryCalibration::begin();
+    power::startBatteryMonitor(
+        (gpio_num_t)BATTERY_ENABLE_READ_GPIO,
+        (gpio_num_t)BATTERY_READ_GPIO);
+#endif
+
     inputs::start();
 }
 

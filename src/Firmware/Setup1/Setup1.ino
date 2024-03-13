@@ -36,26 +36,19 @@ std::string DEVICE_MANUFACTURER = "Mamandurrio";
  >>>> [ES] MATRIZ DE BOTONES
 ------------------------------------------------------------------ */
 
-static const gpio_num_t mtxSelectors[] = {
+static const gpio_num_array_t mtxSelectors = {
     GPIO_NUM_4,
     GPIO_NUM_16,
     GPIO_NUM_17,
     GPIO_NUM_1,
     GPIO_NUM_23};
 
-static const gpio_num_t mtxInputs[] = {
+static const gpio_num_array_t mtxInputs = {
     GPIO_NUM_15,
     GPIO_NUM_5,
     GPIO_NUM_21,
     GPIO_NUM_22,
     GPIO_NUM_13};
-
-static inputNumber_t mtxNumbers[] = {
-    JOY_A, JOY_B, JOY_X, JOY_Y, JOY_BACK,
-    JOY_START, 8, 9, 10, 11,
-    12, 13, 14, 15, 16,
-    17, IN_UP, IN_DOWN, IN_LEFT, IN_RIGHT,
-    IN_ALT2, IN_ALT1, JOY_RTHUMBSTICK_CLICK, JOY_LTHUMBSTICK_CLICK, 63};
 
 //------------------------------------------------------------------
 // Setup
@@ -63,12 +56,33 @@ static inputNumber_t mtxNumbers[] = {
 
 void simWheelSetup()
 {
-    inputs::addButtonMatrix(
-        mtxSelectors,
-        sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
-        mtxInputs,
-        sizeof(mtxInputs) / sizeof(mtxInputs[0]),
-        mtxNumbers);
+    inputs::addButtonMatrix(mtxSelectors, mtxInputs)
+        .inputNumber(GPIO_NUM_4, GPIO_NUM_15, JOY_A)
+        .inputNumber(GPIO_NUM_16, GPIO_NUM_15, JOY_B)
+        .inputNumber(GPIO_NUM_17, GPIO_NUM_15, JOY_X)
+        .inputNumber(GPIO_NUM_1, GPIO_NUM_15, JOY_Y)
+        .inputNumber(GPIO_NUM_23, GPIO_NUM_15, JOY_BACK)
+        .inputNumber(GPIO_NUM_4, GPIO_NUM_5, JOY_START)
+        .inputNumber(GPIO_NUM_16, GPIO_NUM_5, 8)
+        .inputNumber(GPIO_NUM_17, GPIO_NUM_5, 9)
+        .inputNumber(GPIO_NUM_1, GPIO_NUM_5, 10)
+        .inputNumber(GPIO_NUM_23, GPIO_NUM_5, 11)
+        .inputNumber(GPIO_NUM_4, GPIO_NUM_21, 12)
+        .inputNumber(GPIO_NUM_16, GPIO_NUM_21, 13)
+        .inputNumber(GPIO_NUM_17, GPIO_NUM_21, 14)
+        .inputNumber(GPIO_NUM_1, GPIO_NUM_21, 15)
+        .inputNumber(GPIO_NUM_23, GPIO_NUM_21, 16)
+        .inputNumber(GPIO_NUM_4, GPIO_NUM_22, 17)
+        .inputNumber(GPIO_NUM_16, GPIO_NUM_22, IN_UP)
+        .inputNumber(GPIO_NUM_17, GPIO_NUM_22, IN_DOWN)
+        .inputNumber(GPIO_NUM_1, GPIO_NUM_22, IN_LEFT)
+        .inputNumber(GPIO_NUM_23, GPIO_NUM_22, IN_RIGHT)
+        .inputNumber(GPIO_NUM_4, GPIO_NUM_13, IN_ALT2)
+        .inputNumber(GPIO_NUM_16, GPIO_NUM_13, IN_ALT1)
+        .inputNumber(GPIO_NUM_17, GPIO_NUM_13, JOY_RTHUMBSTICK_CLICK)
+        .inputNumber(GPIO_NUM_1, GPIO_NUM_13, JOY_LTHUMBSTICK_CLICK)
+        .inputNumber(GPIO_NUM_23, GPIO_NUM_13, 63);
+
     inputs::setAnalogClutchPaddles(GPIO_NUM_36, GPIO_NUM_39); // 18 and 19
     inputs::addRotaryEncoder(GPIO_NUM_34, GPIO_NUM_35, 40, 41);
     inputs::addRotaryEncoder(GPIO_NUM_32, GPIO_NUM_33, 42, 43);
@@ -77,12 +91,12 @@ void simWheelSetup()
     inputs::addRotaryEncoder(GPIO_NUM_19, GPIO_NUM_18, 48, 49, true); // ALPS
 
     inputHub::setDPADControls(IN_UP, IN_DOWN, IN_LEFT, IN_RIGHT);
-    inputHub::setALTBitmap(BITMAP(IN_ALT1) | BITMAP(IN_ALT2));
-    inputHub::setClutchInputNumbers(18,19);
-    inputHub::setClutchCalibrationButtons(40, 41); // Rotary 1
-    inputHub::cycleCPWorkingMode_setBitmap(BITMAP(JOY_START) | BITMAP(JOY_LB));
-    inputHub::cycleALTButtonsWorkingMode_setBitmap(BITMAP(JOY_START) | BITMAP(JOY_RB));
-    inputHub::setCalibrationCommandBitmaps(BITMAP(JOY_START) | BITMAP(JOY_LB) | BITMAP(JOY_RB), 0);
+    inputHub::setALTInputNumbers({IN_ALT1,IN_ALT2});
+    inputHub::setClutchInputNumbers(18, 19);
+    inputHub::setClutchCalibrationInputNumbers(40, 41); // Rotary 1
+    inputHub::cycleCPWorkingMode_setInputNumbers({JOY_START,JOY_LB});
+    inputHub::cycleALTButtonsWorkingMode_setInputNumbers({JOY_START,JOY_RB});
+    inputHub::cmdRecalibrateAnalogAxis_setInputNumbers({JOY_START,JOY_LB,JOY_RB});
 }
 
 //------------------------------------------------------------------
