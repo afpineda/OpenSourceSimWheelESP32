@@ -220,35 +220,6 @@ void abortDueToCallAfterStart()
   abort();
 }
 
-// void abortDueToInvalidInputNumber()
-// {
-//   log_e("invalid input or pin numbers at inputs::add*() or inputs::set*()");
-//   abort();
-// }
-
-// ----------------------------------------------------------------------------
-
-void checkInputNumber(inputNumber_t number)
-{
-  if (number > MAX_INPUT_NUMBER)
-  {
-    log_e("Input number out of range: %d", number);
-    abort();
-  }
-  else if (BITMAP(number) & capabilities::availableInputs)
-  {
-    log_e("Input number already in use: %d", number);
-    abort();
-  }
-  capabilities::addInputNumber(number);
-}
-
-void checkInputNumbers(int count, const inputNumber_t numbers[])
-{
-  for (int i = 0; i < count; i++)
-    checkInputNumber(numbers[i]);
-}
-
 // ----------------------------------------------------------------------------
 
 void inputs::addDigital(
@@ -291,30 +262,24 @@ void inputs::addRotaryEncoder(
 
 // ----------------------------------------------------------------------------
 
-void inputs::addButtonMatrix(
-    const gpio_num_t selectorPins[],
-    const uint8_t selectorPinCount,
-    const gpio_num_t inputPins[],
-    const uint8_t inputPinCount,
-    inputNumber_t *buttonNumbersArray)
+ButtonMatrixInputSpec &inputs::addButtonMatrix(
+    const gpio_num_array_t selectorPins,
+    const gpio_num_array_t inputPins)
 {
   if ((!pollingTask) && (!hubTask))
   {
-    checkInputNumbers(selectorPinCount * inputPinCount, buttonNumbersArray);
-    digitalInputChain = new ButtonMatrixInput(
+    ButtonMatrixInput *matrix = new ButtonMatrixInput(
         selectorPins,
-        selectorPinCount,
         inputPins,
-        inputPinCount,
-        buttonNumbersArray,
-        UNSPECIFIED_INPUT_NUMBER,
         digitalInputChain);
+    digitalInputChain = matrix;
+    return *matrix;
   }
   else
     abortDueToCallAfterStart();
 }
 
-void inputs::addAnalogMultiplexer(
+Multiplexers8InputSpec &inputs::addAnalogMultiplexer(
     const gpio_num_array_t &selectorPins,
     const gpio_num_array_t &inputPins)
 {
@@ -322,7 +287,7 @@ void inputs::addAnalogMultiplexer(
   {
     AnalogMultiplexerInput *mux = new AnalogMultiplexerInput(
         selectorPins,
-        selectorPinCount,
+        inputPins,
         true,
         digitalInputChain);
     digitalInputChain = mux;

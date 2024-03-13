@@ -49,13 +49,12 @@ void setup()
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
     Serial.println("-- READY --");
-    inputs::addButtonMatrix(
-        mtxSelectors,
-        sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
-        mtxInputs,
-        sizeof(mtxInputs) / sizeof(mtxInputs[0]),
-        mtxNumbers);
-    inputs::addDigital(TEST_ROTARY_SW, ROTARY_PUSH_BN, true, true);
+    auto &matrix = inputs::addButtonMatrix(mtxSelectors, mtxInputs);
+    setDebugInputNumbers(matrix);
+    auto &mux = inputs::addAnalogMultiplexer(amtxerSelectors, amtxerInputs);
+    setDebugInputNumbers(mux);
+
+    inputs::addDigital(TEST_ROTARY_SW, ROTARY_PUSH_BN);
     inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, ROTARY_CW_BN, ROTARY_CCW_BN, false);
 
     inputs::start();

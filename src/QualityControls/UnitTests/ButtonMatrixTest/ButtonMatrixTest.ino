@@ -10,7 +10,7 @@
  */
 
 #include <HardwareSerial.h>
-#include "SimWheel.h"
+#include "SimWheelTypes.h"
 #include "debugUtils.h"
 #include "ButtonMatrixInput.h"
 
@@ -18,10 +18,8 @@
 // Globals
 //------------------------------------------------------------------
 
-ButtonMatrixInput *btns;
-inputBitmap_t state = 0;
-
-inputNumber_t btnNumbers[] = {3, 4, 5, 6, 7, 8, 9};
+ButtonMatrixInput *buttons;
+inputBitmap_t state = 0ULL;
 
 //------------------------------------------------------------------
 // Mocks
@@ -37,22 +35,20 @@ void setup()
     Serial.begin(115200);
     Serial.println("-- READY --");
 
-    btns = new ButtonMatrixInput(
+    buttons = new ButtonMatrixInput(
         mtxSelectors,
-        sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
-        mtxInputs,
-        sizeof(mtxInputs) / sizeof(mtxInputs[0]),
-        mtxNumbers);
+        mtxInputs);
+    setDebugInputNumbers(*buttons);
 
     Serial.println("MASK:");
-    debugPrintBool(btns->mask);
+    debugPrintBool(buttons->mask);
     Serial.println("");
     Serial.println("-- GO --");
 }
 
 void loop()
 {
-    inputBitmap_t newState = btns->read(state);
+    inputBitmap_t newState = buttons->read(state);
     if (state != newState)
     {
         state = newState;

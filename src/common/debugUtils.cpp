@@ -91,3 +91,14 @@ void setDebugInputNumbers(Multiplexers8InputSpec &instance)
     instance.inputNumber(TEST_AMTXER_IN2,mux8_pin_t::A3,22);
     instance.inputNumber(TEST_AMTXER_IN2,mux8_pin_t::A5,23);
 }
+
+
+void setDebugInputNumbers(ButtonMatrixInputSpec &instance)
+{
+    instance.inputNumber(TEST_BTNMTX_ROW1,TEST_BTNMTX_COL3,2);
+    instance.inputNumber(TEST_BTNMTX_ROW2,TEST_BTNMTX_COL3,3);
+    instance.inputNumber(TEST_BTNMTX_ROW2,TEST_BTNMTX_COL2,4);
+    instance.inputNumber(TEST_BTNMTX_ROW1,TEST_BTNMTX_COL2,5);
+    instance.inputNumber(TEST_BTNMTX_ROW1,TEST_BTNMTX_COL1,6);
+    instance.inputNumber(TEST_BTNMTX_ROW2,TEST_BTNMTX_COL1,7);
+}

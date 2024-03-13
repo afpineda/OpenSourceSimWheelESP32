@@ -416,23 +416,17 @@ namespace inputs
         bool useAlternateEncoding = false);
 
     /**
-     * @brief Add a button matrix bound to specific button numbers.
+     * @brief Add a button matrix.
      *        Must be called before `start()`. You can have more than one.
      *
      * @param selectorPins Array of GPIO numbers for selector pins.
-     * @param selectorPinCount Length of `selectorPins` array.
      * @param inputPins Array of GPIO numbers for input pins
-     * @param inputPinCount Length of `inputPins`array.
-     * @param buttonNumbersArray Array of input numbers to be assigned to every button.
-     *                           The length of this array is expected to match the
-     *                           product of `selectorPinCount` and `inputPinCount`.
+     *
+     * @return ButtonMatrixInputSpec& Input numbers specification
      */
-    void addButtonMatrix(
-        const gpio_num_t selectorPins[],
-        const uint8_t selectorPinCount,
-        const gpio_num_t inputPins[],
-        const uint8_t inputPinCount,
-        inputNumber_t *buttonNumbersArray);
+    ButtonMatrixInputSpec &addButtonMatrix(
+        const gpio_num_array_t selectorPins,
+        const gpio_num_array_t inputPins);
 
     /**
      * @brief Add analog multiplexers for switches.

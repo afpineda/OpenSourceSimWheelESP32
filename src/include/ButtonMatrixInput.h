@@ -32,15 +32,13 @@
  * @brief Setup and read the state of a button matrix
  *
  */
-class ButtonMatrixInput : public DigitalPolledInput
+class ButtonMatrixInput : public DigitalPolledInput, public ButtonMatrixInputSpec
 {
 private:
     uint8_t selectorPinCount, inputPinCount;
-    const gpio_num_t *selectorPins;
-    const gpio_num_t *inputPins;
-    BaseType_t debounce[MAX_MATRIX_SELECTOR_COUNT][MAX_MATRIX_INPUT_COUNT];
-    inputNumber_t *buttonNumbersArray;
-    inputNumber_t alternateFirstInputNumber;
+    gpio_num_t selectorPins[MAX_MATRIX_SELECTOR_COUNT];
+    gpio_num_t inputPins[MAX_MATRIX_INPUT_COUNT];
+    inputBitmap_t *bitmap;
 
 public:
 
@@ -48,26 +46,20 @@ public:
      * @brief Construct a new Button Matrix Input object
      *
      * @param selectorPins Array of GPIO numbers for selector pins.
-     * @param selectorPinCount Length of `selectorPins` array.
      * @param inputPins Array of GPIO numbers for input pins
-     * @param inputPinCount Length of `inputPins`array.
-     * @param buttonNumbersArray Array of input numbers to be assigned to every button.
-     *                           The length of this array is expected to match the
-     *                           product of `selectorPinCount` and `inputPinCount`. If NULL,
-     *                           `alternateFirstInputNumber` is used instead.
-     * @param alternateFirstInputNumber Assign a number to every button starting from this
-     *                                  parameter, in ascending order. Ignored if `buttonNumbersArray`
-     *                                  is not null.
      * @param nextInChain Another instance to build a chain, or nullptr.
      */
     ButtonMatrixInput(
-        const gpio_num_t selectorPins[],
-        const uint8_t selectorPinCount,
-        const gpio_num_t inputPins[],
-        const uint8_t inputPinCount,
-        inputNumber_t *buttonNumbersArray = nullptr,
-        inputNumber_t alternateFirstInputNumber = UNSPECIFIED_INPUT_NUMBER,
+        const gpio_num_array_t selectorPins,
+        const gpio_num_array_t inputPins,
         DigitalPolledInput *nextInChain = nullptr);
+
+    /**
+     * @brief Destroy the Button Matrix Input object
+     *
+     * @note Should not be called.
+     */
+    ~ButtonMatrixInput();
 
     /**
      * @brief Read the current state of the matrix
@@ -77,6 +69,11 @@ public:
      * @return inputBitmap_t Current state of the matrix, one bit per button.
      */
     virtual inputBitmap_t read(inputBitmap_t lastState) override;
+
+    virtual ButtonMatrixInputSpec &inputNumber(
+        gpio_num_t selectorPin,
+        gpio_num_t inputPin,
+        inputNumber_t number) override;
 };
 
 #endif

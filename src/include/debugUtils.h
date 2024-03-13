@@ -33,9 +33,10 @@ void serialPrintf(const char *fmt, ...);
 #define TEST_BTNMTX_COL2 GPIO_NUM_27
 #define TEST_BTNMTX_COL3 GPIO_NUM_14
 
-static const gpio_num_t mtxSelectors[] = {TEST_BTNMTX_ROW1, TEST_BTNMTX_ROW2};
-static const gpio_num_t mtxInputs[] = {TEST_BTNMTX_COL1, TEST_BTNMTX_COL2, TEST_BTNMTX_COL3};
-static inputNumber_t mtxNumbers[] = {6, 7, 5, 4, 2, 3};
+static const gpio_num_array_t mtxSelectors = {TEST_BTNMTX_ROW1, TEST_BTNMTX_ROW2};
+static const gpio_num_array_t mtxInputs= {TEST_BTNMTX_COL1, TEST_BTNMTX_COL2, TEST_BTNMTX_COL3};
+
+void setDebugInputNumbers(ButtonMatrixInputSpec &instance);
 
 // Analog multiplexer pins for testing
 #define TEST_AMTXER_SEL1 GPIO_NUM_5

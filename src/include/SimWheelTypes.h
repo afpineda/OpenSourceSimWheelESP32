@@ -64,8 +64,8 @@ class ButtonMatrixInputSpec
 {
 public:
     virtual ButtonMatrixInputSpec &inputNumber(
-        uint8_t selectorPinIndex,
-        uint8_t inputPinIndex,
+        gpio_num_t selectorPin,
+        gpio_num_t inputPin,
         inputNumber_t number) = 0;
 };
 
