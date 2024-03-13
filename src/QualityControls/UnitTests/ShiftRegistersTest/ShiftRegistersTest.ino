@@ -56,5 +56,5 @@ void loop()
         debugPrintBool(state);
         Serial.println("");
     }
-    vTaskDelay(DEBOUNCE_TICKS);
+    vTaskDelay(DEBOUNCE_TICKS*2);
 }

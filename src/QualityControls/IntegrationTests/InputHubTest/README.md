@@ -10,8 +10,8 @@ To test that:
 - In clutch mode, clutch paddles are combined into a single axis.
 - In clutch mode, bite point calibration works properly.
 - Configured button combinations works properly when selecting wheel functions.
-- In "ALT" mode, "ALT" buttons activate the "ALT" function when pushed.
-- In button" mode, "ALT" buttons are mapped to their button numbers when pushed.
+- In "ALT" mode, "ALT" buttons engage the "ALT" function when pushed.
+- In button mode, "ALT" buttons are mapped to their button numbers when pushed.
 
 ## Hardware setup
 

@@ -9,6 +9,7 @@ I2CExpanderInput.h
 RotaryEncoderInput.h
 PolledInput.h
 HID_definitions.h
+debugUtils.cpp
 adcTools.cpp
 notify.cpp
 userSettings.cpp

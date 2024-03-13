@@ -6,6 +6,23 @@ Ensure that all unit test have failed before proceeding to integration testing (
 - The `capabilities` module is always integrated but not explicitly shown below.
 - Just the modules being integrated are shown.
 
+Run order:
+
+```mermaid
+flowchart TD
+    subgraph Path 1
+        DigitalInputsTest --> InputHubTest --> Proto1 --> Proto2
+        BatteryAutocal --> Proto2
+    end
+    subgraph Path 2
+        DigitalInputsTest2
+        I2CExpanderDeepSleepTest
+    end
+    TQTSystemTest
+```
+
+Render this graph at [mermaid.live](https://mermaid.live/view#pako:eNp9UMuKwkAQ_JWhz3owxxwENcJ6U5LjXNpMawbmxaQHDeK_O1HwtcvWoemuKoqiL9B6RVDCwfhT22Fk0VTSiYw-7Y8RQye2yJ2YPcgRlT5qRrNxIXHfUM9iOp2L-_mT9k9iGz372WstXglLZKY4LBL7Fs0vCzn1V4Xinwpv2qZYrc8BnaJYEYXa5DFavrKbXVMPPZMdNZiApWhRq_yKy2iQwB1ZklDmVdEBk2EJ0l2zFXPvenAtlBwTTSAFhUyVxlzWfpJrpdnHB3e9ATDidfA)
+
 ## *Test name*: [DigitalInputsTest](./DigitalInputsTest/README.md)
 
 - DigitalPolledInput

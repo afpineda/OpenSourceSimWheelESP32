@@ -52,22 +52,18 @@ void setup()
 
     notify::begin(new SerialNotificationImpl());
 
-    inputs::addButtonMatrix(
-        mtxSelectors,
-        sizeof(mtxSelectors) / sizeof(mtxSelectors[0]),
-        mtxInputs,
-        sizeof(mtxInputs) / sizeof(mtxInputs[0]),
-        mtxNumbers);
-    inputs::addDigital(TEST_ROTARY_SW, ALT_IN, true, true);
+    setDebugInputNumbers(
+        inputs::addButtonMatrix(mtxSelectors, mtxInputs));
+    inputs::addDigital(TEST_ROTARY_SW, ALT_IN);
     inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, CW_IN, CCW_IN, false);
     inputs::setAnalogClutchPaddles(TEST_ANALOG_PIN1, TEST_ANALOG_PIN2);
 
-    inputHub::setALTButton(ALT_IN);
-    inputHub::cycleALTButtonsWorkingMode_setBitmap(BITMAP(COMMAND_IN) | BITMAP(CYCLE_ALT_IN));
-    inputHub::cycleCPWorkingMode_setBitmap(BITMAP(COMMAND_IN) | BITMAP(CYCLE_CLUTCH_IN));
-    inputHub::cycleDPADWorkingMode_setBitmap(BITMAP(COMMAND_IN) | BITMAP(CYCLE_DPAD_IN));
+    inputHub::setALTInputNumbers({ALT_IN});
+    inputHub::cycleALTButtonsWorkingMode_setInputNumbers({(COMMAND_IN) , (CYCLE_ALT_IN)});
+    inputHub::cycleCPWorkingMode_setInputNumbers({(COMMAND_IN) , (CYCLE_CLUTCH_IN)});
+    inputHub::cycleDPADWorkingMode_setInputNumbers({(COMMAND_IN) , (CYCLE_DPAD_IN)});
     inputHub::setClutchInputNumbers(LEFT_CLUTCH_IN, RIGHT_CLUTCH_IN);
-    inputHub::setClutchCalibrationButtons(CW_IN, CCW_IN);
+    inputHub::setClutchCalibrationInputNumbers(CW_IN, CCW_IN);
     inputHub::setDPADControls(UP, DOWN, LEFT, RIGHT);
 
     userSettings::cpWorkingMode = CF_CLUTCH;
