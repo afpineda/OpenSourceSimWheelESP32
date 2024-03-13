@@ -249,11 +249,19 @@ Otherwise, you have to manually provide a full I2C address to the firmware (see 
 
 There is no circuit involved here, just wiring. Attach one terminal to an input-capable GPIO pin. Attach the other terminal to `GND`. An internal pull-up resistor is required since we are using negative logic. If not available, add an external pull-up resistor.
 
-This implementation is best suited for the built-in push button of a *KY-040* rotary encoder. Just wire `SW` to the input-capable GPIO pin.
-
 ## Firmware customization
 
 Customization takes place at the body of `simWheelSetup()` inside [CustomSetup.ino](../../../../src/Firmware/CustomSetup/CustomSetup.ino).
+
+**Important notes:**
+
+- You should assign an "**input number**" to each switch.
+- Valid input numbers are in the range of 0 to 63 (inclusive).
+  The **firmware will not boot** if an invalid input number is detected.
+- Any switch with no assigned input number **will be ignored** by the firmware without notice.
+- Input numbers should be unique for each switch.
+  You are allowed to assign the same input number to two or more different switches,
+  but **there is no point in that**. By default, the firmware does not enforce unique input numbers.
 
 ### Button matrix
 
@@ -261,110 +269,121 @@ Input pins must be wired to valid input-capable GPIO pins with internal pull-dow
 
 1. Create a constant static array for all the selector's GPIO numbers, let's say `mtxSelectors`.
 2. Create another constant static array for all the input's GPIO numbers, let's say `mtxInputs`.
-3. Create another constant static array for the assigned input numbers, let's say `mtxNumbers`. All of them in the range from 0 to 63.
-4. Call `inputs::addButtonMatrix()`.
+3. Call `inputs::addButtonMatrix()`.
    - The first parameter is `mtxSelectors`.
-   - The second parameter is the count of GPIOs in `mtxSelectors`.
    - The third parameter is `mtxInputs`.
-   - The fourth parameter is the count of GPIOs in `mtxInputs`.
-   - The fifth parameter is `mtxNumbers`. The count of items in this array must match the product of the second and fourth parameters.
+4. In the return value, chain calls to `.inputNumber()` (one for each switch) with three parameters:
+   - The first parameter is the selector pin where the switch is attached.
+     This selector pin must be included in `mtxSelectors`. Otherwise, the firmware won`t boot.
+   - The second parameter is the input pin where the switch is attached.
+     This selector pin must be included in `mtxInputs`. Otherwise, the firmware won`t boot.
+   - The third parameter is the assigned input number for that switch.
+5. End that sequence with a semicolon (`;`).
 
 For example:
 
-```c
+```c++
 void simWheelSetup()
 {
-    static const gpio_num_t mtxSelectors[] = {GPIO_NUM_24,GPIO_NUM_33,GPIO_NUM_32};
-    static const gpio_num_t mtxInputs[] = {GPIO_NUM_15, GPIO_NUM_2, GPIO_NUM_19};
-    static const inputNumber_t mtxNumbers[] = {0,1,2,3,4,5,6,20,21};
+    static const gpio_num_array_t mtxSelectors = {GPIO_NUM_24,GPIO_NUM_33,GPIO_NUM_32};
+    static const gpio_num_array_t mtxInputs = {GPIO_NUM_15, GPIO_NUM_2};
     ...
-    inputs::addButtonMatrix(
-      mtxSelectors,
-      sizeof(mtxSelectors)/sizeof(mtxSelectors[0]),
-      mtxInputs,
-      sizeof(mtxInputs)/sizeof(mtxInputs[0]),
-      mtxNumbers
-      );
+    inputs::addButtonMatrix(mtxSelectors, mtxInputs)
+      .inputNumber(GPIO_NUM_24,GPIO_NUM_15,1)
+      .inputNumber(GPIO_NUM_24,GPIO_NUM_2,2)
+      .inputNumber(GPIO_NUM_33,GPIO_NUM_15,4)
+      .inputNumber(GPIO_NUM_33,GPIO_NUM_2,5)
+      .inputNumber(GPIO_NUM_32,GPIO_NUM_15,6)
+      .inputNumber(GPIO_NUM_32,GPIO_NUM_2,7);
     ...
 }
 ```
 
-The index of a switch at `mtxNumbers` is as follows: $IndexAt(mtxNumbers) = IndexAt(mtxInputs) * SizeOf(mtxSelectors) + IndexAt(mtxSelectors)$. All indices are zero-based.
-
 ### Analog multiplexers
 
-Input pins must be wired to valid input-capable GPIO pins with internal pull-up resistors.  Otherwise, external pull-up resistors must be added to the circuit design. Selector pins must be wired to valid output-capable GPIO pins.
+Input pins must be wired to valid input-capable GPIO pins with internal pull-up resistors.
+Otherwise, external pull-up resistors must be added to the circuit design.
+Selector pins must be wired to valid output-capable GPIO pins.
 
-Place a call to `inputs::addAnalogMultiplexer()`. Parameters are just the same as shown for `inputs::addButtonMatrix()`. However, the count of items in `mtxNumbers` (fifth parameter) must match $2^{SecondParameter}*{FourthParameter}$.
+Place a call to `inputs::addAnalogMultiplexer()`. Parameters are just the same as shown for `inputs::addButtonMatrix()`.
+However, the parameters to `.inputNumber()` are slightly different:
+
+- The first parameter is the input pin coming from the multiplexer where the switch is attached.
+  This pin must be included in `mtxInputs`. Otherwise, the firmware won`t boot.
+- The second parameter is a pin tag at the multiplexer where the switch is attached, prefixed with `mux8_pin_t::`.
+  So, this parameter goes from `mux8_pin_t::A0` to `mux8_pin_t::A7`.
+- The third parameter is the assigned input number for that switch.
 
 For example:
 
-```c
+```c++
 void simWheelSetup()
 {
     static const gpio_num_t mtxSelectors[] = {GPIO_NUM_24,GPIO_NUM_33,GPIO_NUM_32};
     static const gpio_num_t mtxInputs[] = {GPIO_NUM_15, GPIO_NUM_2 };
-    static const inputNumber_t mtxNumbers[] = {8,9,10,11,12,13,14,15,0,1,2,3,4,5,6,7};
     ...
-    inputs::addAnalogMultiplexer(
-      mtxSelectors,
-      sizeof(mtxSelectors)/sizeof(mtxSelectors[0]),
-      mtxInputs,
-      sizeof(mtxInputs)/sizeof(mtxInputs[0]),
-      mtxNumbers
-      );
+    inputs::addAnalogMultiplexer(mtxSelectors,mtxInputs)
+      .inputNumber(GPIO_NUM_15,mux8_pin_t::A0,10)
+      .inputNumber(GPIO_NUM_15,mux8_pin_t::A1,11)
+      .inputNumber(GPIO_NUM_15,mux8_pin_t::A2,12)
+      .inputNumber(GPIO_NUM_15,mux8_pin_t::A3,13)
+      .inputNumber(GPIO_NUM_15,mux8_pin_t::A4,14)
+      .inputNumber(GPIO_NUM_15,mux8_pin_t::A5,15)
+      .inputNumber(GPIO_NUM_15,mux8_pin_t::A6,16)
+      .inputNumber(GPIO_NUM_15,mux8_pin_t::A7,17)
+      .inputNumber(GPIO_NUM_2,mux8_pin_t::A0,18)
+      .inputNumber(GPIO_NUM_2,mux8_pin_t::A1,19)
+      .inputNumber(GPIO_NUM_2,mux8_pin_t::A2,20)
+      .inputNumber(GPIO_NUM_2,mux8_pin_t::A3,21)
+      .inputNumber(GPIO_NUM_2,mux8_pin_t::A4,22)
+      .inputNumber(GPIO_NUM_2,mux8_pin_t::A5,23)
+      .inputNumber(GPIO_NUM_2,mux8_pin_t::A6,24)
+      .inputNumber(GPIO_NUM_2,mux8_pin_t::A7,25);
     ...
 }
 ```
 
-The index of a switch at `mtxNumbers` is as follows: $IndexAt(mtxNumbers) = 2^{BITMAP(mtxSelectors)} * IndexAt(mtxInputs)$. All indices are zero-based.
-
 ### Shift registers
 
-`SERIAL` must be wired to a valid input-capable GPIO, but it does not require any pull resistor. `LOAD` and `NEXT` must be wired to valid output-capable GPIOs.
+`SERIAL` must be wired to a valid input-capable GPIO, but it does not require any pull resistor.
+`LOAD` and `NEXT` must be wired to valid output-capable GPIOs.
 
 Place a call to `inputs::addShiftRegisters()`. Parameters are as follows:
 
 - The first parameter is the `SERIAL` GPIO pin number.
 - The second parameter is the `LOAD` GPIO pin number.
 - The third parameter is the `NEXT` GPIO pin number.
-- The fourth parameter is a constant static array of input numbers for each switch (in the range from 0 to 63).
-  The size of this array must match the fifth parameter.
-- The fifth parameter is the count of switches attached to the circuit, in the range from 1 to 64.
-  Let's say `srNumbers`.
+- The fourth parameter is the count of switches attached to the circuit, in the range from 1 to 64.
 
-For example:
+In the return value, chain calls to `.inputNumber()` (one for each button) with three parameters:
 
-```c
+- The first parameter is the (0-based) index of the shift register where the switch is attached in the chain of shift registers.
+  The chip that exposes `SERIAL` is the first one.
+- The second parameter is a pin tag at the shift register where the switch is attached, prefixed with `sr8_pin_t::`.
+  So, this parameter goes from `sr8_pin_t::A` to `sr8_pin_t::H`.
+  An additional switch may be attached to the `SER` pin at the last shift register. In that case, and only in that case, use `sr8_pin_t::SER`.
+  Otherwise, the firmware won`t boot.
+- The third parameter is the assigned input number for that switch.
+
+For example (just one shift register):
+
+```c++
 void simWheelSetup()
 {
-    static const inputNumber_t srNumbers[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14};
     ...
-    inputs::addShiftRegisters(
-      GPIO_NUM_36,
-      GPIO_NUM_32,
-      GPIO_NUM_33,
-      srNumbers,
-      sizeof(srNumbers)/sizeof(srNumbers[0])
-      );
+    inputs::addShiftRegisters(GPIO_NUM_36, GPIO_NUM_32, GPIO_NUM_33, 9)
+      .inputNumber(0,sr8_pin_t::A,30)
+      .inputNumber(0,sr8_pin_t::B,31)
+      .inputNumber(0,sr8_pin_t::C,32)
+      .inputNumber(0,sr8_pin_t::D,33)
+      .inputNumber(0,sr8_pin_t::E,34)
+      .inputNumber(0,sr8_pin_t::F,35)
+      .inputNumber(0,sr8_pin_t::G,36)
+      .inputNumber(0,sr8_pin_t::H,37)
+      .inputNumber(0,sr8_pin_t::SER,38);
     ...
 }
 ```
-
-The index of a switch at `srNumbers` is as follows: $IndexAt(srNumbers) = IndexAt(ShiftRegistersChain) * IndexAt(PinTable)$, where $PinTable$ is:
-
-| Index | Pin tag at 74HC165N |
-| :---: | :-----------------: |
-|   0   |          H          |
-|   1   |          G          |
-|   2   |          F          |
-|   3   |          E          |
-|   4   |          D          |
-|   5   |          C          |
-|   6   |          B          |
-|   7   |          A          |
-
-And $IndexAt(ShiftRegistersChain)$ is the (zero-based) position of the 74HC165N chip in the chain of `Qh` to `SER` joints, being the chip that exposes `SERIAL` the first one ($IndexAt(ShiftRegistersChain) = 0$).
 
 ### GPIO expanders
 
@@ -373,35 +392,47 @@ And $IndexAt(ShiftRegistersChain)$ is the (zero-based) position of the 74HC165N 
 Place a call to `inputs::addPCF8574Digital()` or `inputs::addMCP23017Digital()` depending on which chip is in place.
 Parameters are as follows:
 
-- The first parameter is a constant static array of input numbers for each switch (in the range from 0 to 63).
-  The size of this array is fixed:
-  - Eight numbers for the PCF8574 chip.
-  - Sixteen numbers for the MCP23017 chip.
-- The second parameter is the I2C address: either a *hardware address* or a *full address*.
+- The first parameter is the I2C address: either a *hardware address* or a *full address*.
   By default, a hardware address is expected.
-- The third parameter must be set to `true` if the second parameter is a full address. Ignore otherwise.
+- The second parameter must be set to `true` if the second parameter is a full address. Ignore otherwise.
+
+In the return value, chain calls to `.inputNumber()` (one for each button) with two parameters:
+
+- The first parameter is a pin tag at the GPIO expander where the switch is attached:
+  - *PCF8574*: prefixed with `PCF8574_pin_t::`. So, this parameter goes from `PCF8574_pin_t::P0` to `PCF8574_pin_t::P7`.
+  - *MCP23017*: prefixed with `MCP23017_pin_t::`. So, this parameter goes from `MCP23017_pin_t::GPA0` to `MCP23017_pin_t::GPA7`,
+    or `MCP23017_pin_t::GPB0` to `MCP23017_pin_t::GPB7`.
+- The second parameter is the assigned input number for that switch.
 
 The following code will enable the example circuit above:
 
 ```c
 void simWheelSetup()
 {
-    static const inputNumber_t mcp1Numbers[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
-    static const inputNumber_t mcp2Numbers[] = {16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31};
     ...
     // Note: hardware addresses are used
-    inputs::addMCP23017Digital(mcp1Numbers,0);
-    inputs::addMCP23017Digital(mcp2Numbers,7);
+    inputs::addMCP23017Digital(0)
+      .inputNumber(MCP23017_pin_t::GPA0,0)
+      .inputNumber(MCP23017_pin_t::GPA1,1)
+      ...
+      .inputNumber(MCP23017_pin_t::GPA7,7)
+      .inputNumber(MCP23017_pin_t::GPB0,8)
+      .inputNumber(MCP23017_pin_t::GPB1,9)
+      ...
+      .inputNumber(MCP23017_pin_t::GPB7,17);
+
+    inputs::addMCP23017Digital(7);
+      .inputNumber(MCP23017_pin_t::GPA0,10)
+      .inputNumber(MCP23017_pin_t::GPA1,11)
+      ...
+      .inputNumber(MCP23017_pin_t::GPA7,17)
+      .inputNumber(MCP23017_pin_t::GPB0,18)
+      .inputNumber(MCP23017_pin_t::GPB1,19)
+      ...
+      .inputNumber(MCP23017_pin_t::GPB7,27);
     ...
 }
 ```
-
-The index of a switch in the first parameter is as follows:
-
-- In the PCF8574 chip, `P0` is indexed as 0 and so on, in ascending order.
-- In the MCP23017 chip, `GPA0` is indexed as 0, then in ascending order up to `GPA7`,
-  which is indexed as 7. `GPB0` is indexed as 8, then in ascending order up to `GPB7`,
-  which is indexed as 15.
 
 Be aware that **the firmware won't boot up** in the following cases:
 
@@ -433,8 +464,6 @@ Place a call to `inputs::addDigital()`:
 
 - The first parameter is the GPIO where the switch is attached to.
 - Second parameter: assigned input number for this button.
-- Third parameter: always set to `true`.
-- Fourth parameter: always set to `true`.
 
 For example:
 
@@ -442,7 +471,7 @@ For example:
 void simWheelSetup()
 {
    ...
-   inputs::addDigital(GPIO_NUM_26, 1, true, true);
+   inputs::addDigital(GPIO_NUM_26, 1);
    ...
 }
 ```

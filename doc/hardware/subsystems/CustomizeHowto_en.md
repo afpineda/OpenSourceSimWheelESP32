@@ -67,7 +67,7 @@ For example, let's say the button matrix contains input numbers 20, 22, 25 and 2
 void simWheelSetup()
 {
    ...
-   inputs::addButtonMatrix(...);
+   inputs::addButtonMatrix(...)
    ...
    inputHub::setDPADControls(20, 22, 25, 28);
    ...
@@ -88,9 +88,8 @@ For example:
 ```c
 void simWheelSetup()
 {
-   inputNumber_t btnMatrixNumbers = [ ..., 60, 71, ...];
    ...
-   inputs::addButtonMatrix(... , btnMatrixNumbers);
+   inputs::addButtonMatrix(...)
    ...
    inputHub::cycleDPADWorkingMode_setBitmap(BITMAP(60)|BITMAP(71));
    ...
@@ -107,9 +106,8 @@ For example, let's say the button matrix contains input numbers 45 and 46:
 ```c
 void simWheelSetup()
 {
-   inputNumber_t btnMatrixNumbers = [ ..., 45, 46, ...];
    ...
-   inputs::addButtonMatrix(... , btnMatrixNumbers);
+   inputs::addButtonMatrix(...)
    ...
    inputHub::setClutchInputNumbers(45, 46);
    ...
@@ -164,9 +162,8 @@ For example, let's say this function is mapped to two certain inputs at the butt
 ```c
 void simWheelSetup()
 {
-   inputNumber_t btnMatrixNumbers = [ ..., 45, 46, ...];
    ...
-   inputs::addButtonMatrix(..., btnMatrixNumbers);
+   inputs::addButtonMatrix(...)
    ...
    inputHub::setALTBitmap(
       BITMAP(45) | BITMAP(46)
@@ -188,9 +185,8 @@ For example:
 ```c
 void simWheelSetup()
 {
-   inputNumber_t btnMatrixNumbers = [ ..., 60, 61, ...];
    ...
-   inputs::addButtonMatrix(... , btnMatrixNumbers);
+   inputs::addButtonMatrix(...)
    ...
    inputHub::cycleCPWorkingMode_setBitmap(BITMAP(60)|BITMAP(61));
    ...
@@ -211,9 +207,8 @@ For example:
 ```c
 void simWheelSetup()
 {
-   inputNumber_t btnMatrixNumbers = [ ..., 59, 60, 61, 62, 63];
    ...
-   inputs::addButtonMatrix(... , btnMatrixNumbers);
+   inputs::addButtonMatrix(...);
    ...
    inputHub::cpWorkingMode_setBitmaps(
       BITMAP(59)|BITMAP(60),
