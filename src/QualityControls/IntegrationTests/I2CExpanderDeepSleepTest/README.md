@@ -26,7 +26,7 @@ Output through USB serial port at 115200 bauds.
    ```text
    Wake up was not caused by deep sleep: 0
 
-   Using GPIO 14 as wake up source. Wake up when LOW
+   Using GPIO 34 as wake up source. Wake up when LOW
    Please, wait...
    Entering deep sleep mode
    ```
@@ -37,33 +37,23 @@ Output through USB serial port at 115200 bauds.
 6. Output must match:
 
    ```text
-   Wake up was not caused by deep sleep: 0
-
-   Using GPIO 14 as wake up source. Wake up when LOW
-   Please, wait...
-   Entering deep sleep mode
-   ```
-
-7. Output must match the following, which differs from the previous one:
-
-   ```text
    Wake up caused by external signal using RTC_CNTL
 
-   Using GPIO 14 as wake up source. Wake up when LOW
+   Using GPIO 34 as wake up source. Wake up when LOW
    Please, wait...
    Entering deep sleep mode
    ```
 
-8. The previous output could be repeated twice. This is OK.
-9. Wire "probe2" to #33 and unwire immediately.
-10. Output must match the following, which does **not** differ from the previous one:
+7. The previous output could be repeated twice. This is OK.
+8. Wire "probe2" to #33 and unwire immediately.
+9. Output must match the following, which does **not** differ from the previous one:
 
     ```text
     Wake up caused by external signal using RTC_CNTL
 
-    Using GPIO 14 as wake up source. Wake up when LOW
+    Using GPIO 34 as wake up source. Wake up when LOW
     Please, wait...
     Entering deep sleep mode
     ```
 
-11. The previous output could be repeated twice. This is OK.
+10. The previous output could be repeated twice. This is OK.

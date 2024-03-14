@@ -87,6 +87,8 @@ Sorry. Those implementations are unable to wake up the system from deep sleep.
 The "interrupt pin" of a GPIO expander is able to wake up the system from deep sleep:
 
 - *PCF8574*: the "interrupt pin" is tagged as `~INT`.
+  Requires an external pull-up resistor.
+  Note that an internal pull-up resistor at the DevKit board works as an external pull-up resistor for the PCF8574.
 - *MCP23017*: there are two "interrupt pins" tagged as `INTA` and `INTB`.
   Any of them will work.
   You don't need to use both.

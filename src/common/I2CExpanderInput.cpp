@@ -36,7 +36,10 @@ PCF8574ButtonsInput::PCF8574ButtonsInput(
     DigitalPolledInput *nextInChain)
     : I2CButtonsInput(8, address7Bits, useSecondaryBus, nextInChain)
 {
-    // Nothing to do here, since the PCF8574 does not have internal registers
+    // The PCF8574 does not have internal registers
+    // Read GPIO registers in order to clear all interrupts
+    inputBitmap_t dummy;
+    getGPIOstate(dummy);
 }
 
 bool PCF8574ButtonsInput::getGPIOstate(inputBitmap_t &state)

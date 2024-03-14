@@ -73,15 +73,15 @@ void setup()
 
   print_wakeup_reason();
 
-  inputs::addPCF8574Digital(pcf8574Numbers, PCF8574_I2C_ADDR3);
-  inputs::addMCP23017Digital(mcp23017Numbers, MCP23017_I2C_ADDR3);
+  inputs::addPCF8574Digital(PCF8574_I2C_ADDR3);
+  inputs::addMCP23017Digital(MCP23017_I2C_ADDR3);
 
   Serial.println("");
   Serial.printf("Using GPIO %d as wake up source. Wake up when LOW",TEST_POWER_PIN);
   Serial.println("");
 
   Serial.println("Please, wait...");
-  delay(5000);
+  delay(2000);
   Serial.println("Entering deep sleep mode");
   power::begin(TEST_POWER_PIN);
   power::powerOff();
