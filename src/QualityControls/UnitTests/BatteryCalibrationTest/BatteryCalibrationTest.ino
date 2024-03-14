@@ -136,7 +136,7 @@ void batteryCalibrationAssertEquals(int expectedBatteryLevel, int actualBatteryL
     if ((actualBatteryLevel < expectedBatteryLevel - 1) || (actualBatteryLevel > expectedBatteryLevel + 1))
     {
         // NOTE: rounding errors are tolerated
-        serialPrintf("Battery level mismatch: expected %d, got %d.\n", expectedBatteryLevel, actualBatteryLevel);
+        Serial.printf("Battery level mismatch: expected %d, got %d.\n", expectedBatteryLevel, actualBatteryLevel);
     }
 }
 
@@ -147,7 +147,7 @@ void checkCalibrationData()
         int l = batteryCalibration::getBatteryLevel(testReadings[i]);
         if (l < 0)
         {
-            serialPrintf("Unexpected result from getBatteryLevel() when testing testReadings[%d]\n", i);
+            Serial.printf("Unexpected result from getBatteryLevel() when testing testReadings[%d]\n", i);
         }
         else
         {
@@ -163,7 +163,7 @@ void checkCalibrationDataIsClear()
         int l = batteryCalibration::getBatteryLevel(i);
         if (l >= 0)
         {
-            serialPrintf("Unexpected result %d from getBatteryLevel(%u) with no calibration data\n", l, i);
+            Serial.printf("Unexpected result %d from getBatteryLevel(%u) with no calibration data\n", l, i);
             return;
         }
     }
@@ -173,7 +173,7 @@ void checkAutoCalibration(int expected)
 {
     if (batteryCalibration::maxBatteryReadingEver != expected)
     {
-        serialPrintf(
+        Serial.printf(
             "Auto-calibration mismatch. Expected %d - got %d\n",
             expected,
             batteryCalibration::maxBatteryReadingEver);
@@ -278,7 +278,7 @@ void setup()
     checkAutoCalibration(2551);
     if (l2 >= 100)
     {
-        serialPrintf("Unexpected l2: %d\n", l2);
+        Serial.printf("Unexpected l2: %d\n", l2);
     }
 
     printTestHeader(testnumber++);                                    // #10
@@ -291,15 +291,15 @@ void setup()
     checkAutoCalibration(3000);
     if (l4 >= 100)
     {
-        serialPrintf("Unexpected l4: %d\n", l4);
+        Serial.printf("Unexpected l4: %d\n", l4);
     }
     else if (l4 <= l5)
     {
-        serialPrintf("ERROR: l4<=l5: %d<=%d\n", l4, l5);
+        Serial.printf("ERROR: l4<=l5: %d<=%d\n", l4, l5);
     }
     if (l2 <= l5)
     {
-        serialPrintf(
+        Serial.printf(
             "ERROR: level(2371) calibrated to 2551 is lesser than level(2371) calibrated to 3000: %d<=%d\n",
             l2, l5);
     }

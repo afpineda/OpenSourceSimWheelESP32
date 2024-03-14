@@ -17,7 +17,6 @@
 
 void debugPrintBool(inputBitmap_t state, uint8_t bitsCount = 0);
 void printTestHeader(int index);
-void serialPrintf(const char *fmt, ...);
 
 // Relative rotary enconder pins for testing
 #define TEST_ROTARY_SW GPIO_NUM_34

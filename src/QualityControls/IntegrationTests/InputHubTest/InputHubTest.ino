@@ -110,12 +110,12 @@ void loop()
     if (newCP != oldCP)
     {
         oldCP = newCP;
-        serialPrintf("Clutch Mode: %d\n", oldCP);
+        Serial.printf("Clutch Mode: %d\n", oldCP);
     }
     if (newAltF != oldAltF)
     {
         oldAltF = newAltF;
-        serialPrintf("ALT Mode: %d\n", oldAltF);
+        Serial.printf("ALT Mode: %d\n", oldAltF);
     }
     delay(500);
 }

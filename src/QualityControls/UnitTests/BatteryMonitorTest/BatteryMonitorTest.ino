@@ -31,7 +31,7 @@ int batteryCalibration::getBatteryLevel(int reading)
 
 int batteryCalibration::getBatteryLevelAutoCalibrated(int reading)
 {
-    serialPrintf("Reading: %d\n", reading);
+    Serial.printf("Reading: %d\n", reading);
     if (gtl!=reading) {
         Serial.println("ERROR: ADC reading at getBatteryLevelAutoCalibrated() differs from reading at getBatteryLevel()");
     }

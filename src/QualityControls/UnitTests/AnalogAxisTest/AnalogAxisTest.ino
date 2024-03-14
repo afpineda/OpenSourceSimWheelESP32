@@ -44,7 +44,7 @@ void loop()
     input->read(value, autocalibrated);
     if ((oldValue != value) || autocalibrated)
     {
-        serialPrintf("Axis: %d ", value);
+        Serial.printf("Axis: %d ", value);
         if (autocalibrated)
             Serial.println("(autocalibrated)");
         else

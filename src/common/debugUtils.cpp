@@ -32,17 +32,6 @@ void printTestHeader(int index)
     Serial.println(index);
 }
 
-void serialPrintf(const char *fmt, ...)
-{
-    char buff[257];
-    va_list pargs;
-    va_start(pargs, fmt);
-    vsnprintf(buff, 256, fmt, pargs);
-    va_end(pargs);
-    buff[256] = 0;
-    Serial.print(buff);
-}
-
 void setDebugInputNumbers(ShiftRegisters8InputSpec &instance)
 {
     instance.inputNumber(0,sr8_pin_t::E,2);

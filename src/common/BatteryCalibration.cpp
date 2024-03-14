@@ -167,7 +167,7 @@ int batteryCalibration::getBatteryLevel(int reading)
     else
     {
         // Interpolate
-        // serialPrintf("reading = %d | QUANTUM_SIZE = %d \n",reading,QUANTUM_SIZE);
+        // Serial.printf("reading = %d | QUANTUM_SIZE = %d \n",reading,QUANTUM_SIZE);
         int quantumIndex = reading >> (12 - QUANTUM_BITS);
         if (quantumIndex < QUANTUM_COUNT)
         {
@@ -175,7 +175,7 @@ int batteryCalibration::getBatteryLevel(int reading)
             for (int q = 0; q < quantumIndex; q++)
                 accumulatedSampleCount += batteryCalibrationQuantum[q];
 
-            // serialPrintf("quantumIndex = %d | batteryCalibrationQuantum = %u | accumulatedSampleCount = %d\n",
+            // Serial.printf("quantumIndex = %d | batteryCalibrationQuantum = %u | accumulatedSampleCount = %d\n",
             //              quantumIndex, batteryCalibrationQuantum[quantumIndex], accumulatedSampleCount);
 
             int relativeReading = reading - (QUANTUM_SIZE * quantumIndex);
@@ -183,7 +183,7 @@ int batteryCalibration::getBatteryLevel(int reading)
             int interpolatedSamplesCount = ((relativeReading * samples1000perUnit) / 1000) + accumulatedSampleCount;
             int batteryLevel = (interpolatedSamplesCount * 100) / totalBatterySamplesCount;
 
-            // serialPrintf("relativeReading = %d | samples1000perUnit = %d | interpolatedSamplesCount = %d | batteryLevel = %d\n",
+            // Serial.printf("relativeReading = %d | samples1000perUnit = %d | interpolatedSamplesCount = %d | batteryLevel = %d\n",
             //              relativeReading, samples1000perUnit, interpolatedSamplesCount, batteryLevel);
             // Serial.println("");
 

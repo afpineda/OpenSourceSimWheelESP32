@@ -31,12 +31,20 @@
 #define OTHER_MAP 126
 #define OTHER_MAP_ALT 21
 
+#define COMBINATION_CYCLE_CLUTCH {CMD,CYCLE_CLUTCH}
+#define COMBINATION_CYCLE_ALT {CMD,CYCLE_ALT}
+#define COMBINATION_SELECT_CLUTCH_F {CMD,UP}
+#define COMBINATION_SELECT_ALT_F {(CMD) ,(DOWN)}
+#define COMBINATION_SELECT_AXIS_F {(CMD) , (LEFT)}
+#define COMBINATION_SELECT_BUTTON_F {(CMD) , (RIGHT)}
+
 #define BMP_CYCLE_CLUTCH BITMAP(CMD) | BITMAP(CYCLE_CLUTCH)
 #define BMP_CYCLE_ALT BITMAP(CMD) | BITMAP(CYCLE_ALT)
 #define BMP_SELECT_CLUTCH_F BITMAP(CMD) | BITMAP(UP)
 #define BMP_SELECT_ALT_F BITMAP(CMD) | BITMAP(DOWN)
 #define BMP_SELECT_AXIS_F BITMAP(CMD) | BITMAP(LEFT)
 #define BMP_SELECT_BUTTON_F BITMAP(CMD) | BITMAP(RIGHT)
+
 #define BMP_OTHER_MAP_LOW 0ULL
 #define BMP_OTHER_MAP_HIGH BITMAP(OTHER_MAP - 64)
 #define BMP_OTHER_MAP_ALT_LOW BITMAP(OTHER_MAP_ALT)
@@ -177,9 +185,9 @@ void assertEquals(const char *text, T expected, T found)
     if (expected != found)
     {
         if (sizeof(T) <= 4)
-            serialPrintf("[assertEquals] (%s). Expected: %d, found: %d\n", text, expected, found);
+            Serial.printf("[assertEquals] (%s). Expected: %d, found: %d\n", text, expected, found);
         else
-            serialPrintf("[assertEquals] (%s). Expected: %lld, found: %lld\n", text, expected, found);
+            Serial.printf("[assertEquals] (%s). Expected: %lld, found: %lld\n", text, expected, found);
     }
 }
 
@@ -191,9 +199,9 @@ void assertAlmostEquals(const char *text, T expected, T found, T tolerance)
     if ((found < lowerLimit) || (found > upperLimit))
     {
         if (sizeof(T) <= 4)
-            serialPrintf("[assertAlmostEquals] (%s). Expected: %d, found: %d\n", text, expected, found);
+            Serial.printf("[assertAlmostEquals] (%s). Expected: %d, found: %d\n", text, expected, found);
         else
-            serialPrintf("[assertAlmostEquals] (%s). Expected: %lld, found: %lld\n", text, expected, found);
+            Serial.printf("[assertAlmostEquals] (%s). Expected: %lld, found: %lld\n", text, expected, found);
     }
 }
 
@@ -430,14 +438,14 @@ void TG_bitePointCalibration()
     input.push(UP);
     input.release(UP);
     if (userSettings::bitePoint <= biteP)
-        serialPrintf("Invalid bite point. Expected > %d, Found: %d\n", biteP, userSettings::bitePoint);
+        Serial.printf("Invalid bite point. Expected > %d, Found: %d\n", biteP, userSettings::bitePoint);
     biteP = userSettings::bitePoint;
     input.push(DOWN);
     input.release(DOWN);
     input.push(DOWN);
     input.release(DOWN);
     if (userSettings::bitePoint >= biteP)
-        serialPrintf("Invalid bite point. Expected < %d, Found: %d\n", biteP, userSettings::bitePoint);
+        Serial.printf("Invalid bite point. Expected < %d, Found: %d\n", biteP, userSettings::bitePoint);
 }
 
 void TG_dualClutch()
@@ -618,16 +626,16 @@ void setup()
     Serial.begin(115200);
     Serial.println("-- READY --");
 
-    inputHub::setALTButton(ALT);
+    inputHub::setALTInputNumbers({ALT});
     inputHub::setDPADControls(UP, DOWN, LEFT, RIGHT);
-    inputHub::cycleALTButtonsWorkingMode_setBitmap(BMP_CYCLE_ALT);
-    inputHub::cycleCPWorkingMode_setBitmap(BMP_CYCLE_CLUTCH);
-    inputHub::cpWorkingMode_setBitmaps(
-        BMP_SELECT_CLUTCH_F,
-        BMP_SELECT_AXIS_F,
-        BMP_SELECT_ALT_F,
-        BMP_SELECT_BUTTON_F);
-    inputHub::setClutchCalibrationButtons(UP, DOWN);
+    inputHub::cycleALTButtonsWorkingMode_setInputNumbers(COMBINATION_CYCLE_ALT);
+    inputHub::cycleCPWorkingMode_setInputNumbers(COMBINATION_CYCLE_CLUTCH);
+    inputHub::cpWorkingMode_setInputNumbers(
+        COMBINATION_SELECT_CLUTCH_F,
+        COMBINATION_SELECT_AXIS_F,
+        COMBINATION_SELECT_ALT_F,
+        COMBINATION_SELECT_BUTTON_F);
+    inputHub::setClutchCalibrationInputNumbers(UP, DOWN);
     inputHub::setClutchInputNumbers(LCLUTCH, RCLUTCH);
 
     // Start
