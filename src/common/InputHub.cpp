@@ -481,7 +481,7 @@ void inputHub::setClutchCalibrationInputNumbers(
         (decInputNumber <= MAX_INPUT_NUMBER) && (incInputNumber != decInputNumber))
     {
         calibrateUpBitmap = BITMAP(incInputNumber);
-        calibrateUpBitmap = BITMAP(decInputNumber);
+        calibrateDownBitmap = BITMAP(decInputNumber);
     }
     else
     {

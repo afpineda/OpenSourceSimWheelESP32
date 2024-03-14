@@ -66,12 +66,6 @@ void setDebugInputNumbers(Multiplexers8InputSpec &instance);
 #define TEST_SR_SERIAL GPIO_NUM_36
 #define TEST_SR_LOAD GPIO_NUM_32
 #define TEST_SR_NEXT GPIO_NUM_33
-
-// static const inputNumber_t srNumbers[] = {
-//     63, 62, 61, 2, 60, 59, 4, 58,
-//     3, 57, 56, 55, 54, 5, 53, 52,
-//     6};
-
 #define TEST_SR_BUTTONS_COUNT 17
 
 void setDebugInputNumbers(ShiftRegisters8InputSpec &instance);
