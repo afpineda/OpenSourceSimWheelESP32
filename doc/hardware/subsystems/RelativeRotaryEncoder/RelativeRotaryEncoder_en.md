@@ -35,6 +35,11 @@ The firmware is ready to use both.
 ## Firmware customization
 
 Customization takes place at file [CustomSetup.ino](../../../../src/Firmware/CustomSetup/CustomSetup.ino).
+
+You must assign two **different** "input numbers" to each rotary encoder, one for clockwise rotation and another for counter-clockwise rotation.
+Valid input numbers are in the range of 0 to 63 (inclusive).
+The **firmware will not boot** if an invalid input number is detected.
+
 Edit the body of `simWheelSetup()` and place a call to `inputs::addRotaryEncoder()` for each rotary encoder as shown below.
 
 - First parameter is the GPIO assigned to `CLK` or `A`.
