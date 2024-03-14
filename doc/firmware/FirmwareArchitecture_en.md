@@ -7,6 +7,7 @@ The *system* have been broken into several *modules* that have been implemented 
 - **batteryCalibration**: Everything related to the estimation of battery charge.
 - **capabilities**: Everything related to the capabilities of the hardware and firmware.
 - **hidImplementation**: Everything related to the HID protocol.
+- **hidImplementation::common**: Common behaviour for all HID implementations (USB and BLE).
 - **inputs**: Everything related to hardware inputs and their events.
 - **inputHub**: Everything related to the combined state of all inputs and their treatment. Translates input events into a HID report.
 - **notify**: Everything related to the notification of some events to the user if an user interface is available.
@@ -60,7 +61,6 @@ Only most relevant information is shown below:
 
 ```mermaid
 classDiagram
-    class RotaryEncoderInput
     class inputs {
       +start()
     }
@@ -98,7 +98,7 @@ classDiagram
     power <-- batteryCalibration: computed battery level
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNVMtu2zAQ_BWCpxaNf4AICjhNgAZo0SA59KLLWlzJRCmuQC7jGqn_vSvJNiTTKaqLqOXMzj4GetM1WdRG1x5SunfQRuiqoOQZI-qZGOL-IQyw-Bj6zPNbNwSSeptiSn1KguYPH6fvQwH9mjczMIVn2I05rzJywviCzC60c4mNY3wiF_gcqfufFH8J7LsUeY6C57vMTCEVtwuZrbOPXe-xw8DAjsJMK2JPkd8vsacdxhl-_P7RNFfBG2DGuP8C3m3ipVKLfDfdf8NX9KcE5c06M51SoL0qdO9ax-CfyHu0Y_GLluCSdV7N7Wp1XKmZ3koUA6cZLI2gdQBP7fq3S2N6o0COMo3khrYK-KwSo8QijIqao8IWot1BPG5mXvPtH6GWvZQ1f15YxaiaQuPaPM34Aj6gi40b1UeqMSW0i45La_yfWskbaKM5ZFSywOm8oqb5h9CJUOcYJX7yj_KDDSbe5L8heWkucya8kmdocU4Z0l-j1NTJoGQMCzF9ozuMHTgrf4rRSpXmrVRbaSNHiw1kz5WuwkGgQ4Mv-1Br04BPeKNzb2Xlx5_LRfTBOqaoDceMh79PVIqW)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNVMtu2zAQ_BWCpxaNf4AICjhNgQRo0SA59KLLWlzJRCmuQC7jBKn_vSvJNiTTKaKLqOXMzj4GetM1WdRG1x5SunXQRuiqoOQZI8qFPnNSb1NMqS-JIfKnz9P3voDe5c0MTOERdvdD_CIjJ4xPyOxCO5fYOMYHcoFPkbr_TfGPwH5KtacoeL7JzBRScbuQ2Tp73_UeOwwM7CjMtCL2FPn9EnvaYZzhx-9fTXMRvAFmjK_fwLtNPFdqkW-m-x_4jP6YoLxZZ6ZjCrQXhW5d6xj8A3mPdix-0RKcs06ruV6tDis101uJYuA0g6URtA7gqV2_uDSmNwrkKNNIbmirgM8qMUoswqioOShsIdodxMNm5jVf_xVq2UtZ89eFVYyqKTSuzdOMz-ADuti4UX2kGlNCu-i4tMbH1EreQBvNIaOSBU7nFTXNf4SOhDrHKPGjf5QfbDDxJv8NyUtzmRPhmTxDi3PKkP4SpaZOBiVjWIjpK91h7MBZ-ReMVqo0b6XaShs5Wmwge650FfYCHRp8eg21Ng34hFc691ZWfvh9nEW_W8cUteGYcf8PtcN_xQ)
 
 ```mermaid
 classDiagram
