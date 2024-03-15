@@ -219,12 +219,11 @@ DigitalButton::DigitalButton(
 
 inputBitmap_t DigitalButton::read(inputBitmap_t lastState)
 {
-    inputBitmap_t state;
     int reading = gpio_get_level(pinNumber);
     if (reading ^ pullupOrPulldown)
-        state = bitmap;
+        return bitmap;
     else
-        state = 0ULL;
+        return 0ULL;
 }
 
 // ============================================================================
