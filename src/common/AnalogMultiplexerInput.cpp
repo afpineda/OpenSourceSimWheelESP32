@@ -8,7 +8,6 @@
  */
 
 #include "AnalogMultiplexerInput.h"
-// #include <Arduino.h>
 
 // ----------------------------------------------------------------------------
 // Globals
@@ -51,7 +50,7 @@ AnalogMultiplexerInput::AnalogMultiplexerInput(
     for (int i = 0; i < inputPinCount; i++)
     {
         this->inputPins[i] = inputPins[i];
-        checkAndInitializeInputPin(inputPins[i], !negativeLogic, negativeLogic);
+        checkAndInitializeInputPin(this->inputPins[i], !negativeLogic, negativeLogic);
     }
 
     // Other initialization
@@ -116,9 +115,9 @@ Multiplexers8InputSpec &AnalogMultiplexerInput::inputNumber(
     }
 
     // Set bitmap
-    uint8_t index = ((1 << selectorPinCount) * inputPinIndex) + muxPinIndex;
-    mask |= bitmap[index];
-    bitmap[index] = BITMAP(number);
-    mask &= ~bitmap[index];
+    uint8_t switchIndex = (inputPinIndex << selectorPinCount) + muxPinIndex;
+    mask |= bitmap[switchIndex];
+    bitmap[switchIndex] = BITMAP(number);
+    mask &= ~bitmap[switchIndex];
     return *this;
 }
