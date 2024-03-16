@@ -34,7 +34,7 @@ void setup()
     esp_log_level_set("*", ESP_LOG_ERROR);
 
     userSettings::begin();
-    power::begin(TEST_ROTARY_SW,false);
+    power::begin(TEST_ROTARY_SW);
 
    setDebugInputNumbers(
         inputs::addButtonMatrix(mtxSelectors, mtxInputs));

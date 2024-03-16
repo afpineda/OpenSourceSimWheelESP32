@@ -141,3 +141,13 @@ First release.
 - The firmware now enables GPIO expanders to be used as wake-up sources through the interrupt pin(s).
   Another integration test is in place for this use case.
 - Fixed some documentation errata.
+
+## 4.0.0
+
+- In order to improve the "customization experience", the API now hides implementation details like switch *indices*.
+  There is no need to deal with pointers, arrays, sizes, and lengths.
+  Now, input numbers are directly assigned to their position in the hardware design.
+  On the other side, you have to write more code.
+- This is a "quality of life" improvement, but firmware functionality stays the same.
+  A small [migration guide](./migrate_to_v4.md) has been added.
+- All "ready to deploy" designs are updated to the new API, as well as the quality controls.
