@@ -17,11 +17,15 @@ May be needed:
 Recommended:
 
 - [DIY layout creator](https://bancika.github.io/diy-layout-creator/). [Alternate link](https://github.com/bancika/diy-layout-creator/releases).
-- [Planet pointy's joystick test application](http://www.planetpointy.co.uk/joystick-test-application/) (for Windows).
-- [Visual Studio Code](https://code.visualstudio.com/), as an alternative to Arduino IDE. Requires other tools:
-  - [Arduino CLI](https://blog.arduino.cc/2020/03/13/arduino-cli-an-introduction/)
-  - [Arduino extension for VSCode](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.vscode-arduino). Installable from VSCode itself.
-- SimpleHIDWrite.exe: available at [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm). There is a modern clone at [https://github.com/Robmaister/SimplerHidWrite](https://github.com/Robmaister/SimplerHidWrite).
+- Any joystick test application able to display 128 buttons:
+  - [Planet pointy's joystick test application](http://www.planetpointy.co.uk/joystick-test-application/) (for Windows 10).
+    **Does not work in Windows 11**.
+  - [pygame-joystick-test](https://github.com/denilsonsa/pygame-joystick-test). Requires Python.
+  - [Multi-joystick tester](https://github.com/EDDiscovery/MultiJoyStickTest/releases/tag/Release_1_2_0).
+    Works in Windows 11. Best choice for now.
+- [Visual Studio Code](https://code.visualstudio.com/), as an alternative to Arduino IDE.
+  Requires [Arduino extension for VSCode](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.vscode-arduino). Installable from VSCode itself.
+- SimpleHIDWrite.exe: available at [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm).
 
 ## Hardware tools
 
