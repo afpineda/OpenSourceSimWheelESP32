@@ -394,7 +394,7 @@ Parameters are as follows:
 
 - The first parameter is the I2C address: either a *hardware address* or a *full address*.
   By default, a hardware address is expected.
-- The second parameter must be set to `true` if the second parameter is a full address. Ignore otherwise.
+- The second parameter must be set to `true` if the first parameter is a full address. Ignore otherwise.
 
 In the return value, chain calls to `.inputNumber()` (one for each button) with two parameters:
 
@@ -419,17 +419,17 @@ void simWheelSetup()
       .inputNumber(MCP23017_pin_t::GPB0,8)
       .inputNumber(MCP23017_pin_t::GPB1,9)
       ...
-      .inputNumber(MCP23017_pin_t::GPB7,17);
+      .inputNumber(MCP23017_pin_t::GPB7,15);
 
     inputs::addMCP23017Digital(7);
-      .inputNumber(MCP23017_pin_t::GPA0,10)
-      .inputNumber(MCP23017_pin_t::GPA1,11)
+      .inputNumber(MCP23017_pin_t::GPA0,16)
+      .inputNumber(MCP23017_pin_t::GPA1,17)
       ...
-      .inputNumber(MCP23017_pin_t::GPA7,17)
-      .inputNumber(MCP23017_pin_t::GPB0,18)
-      .inputNumber(MCP23017_pin_t::GPB1,19)
+      .inputNumber(MCP23017_pin_t::GPA7,23)
+      .inputNumber(MCP23017_pin_t::GPB0,24)
+      .inputNumber(MCP23017_pin_t::GPB1,25)
       ...
-      .inputNumber(MCP23017_pin_t::GPB7,27);
+      .inputNumber(MCP23017_pin_t::GPB7,31);
     ...
 }
 ```

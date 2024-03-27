@@ -12,6 +12,8 @@
 
 - Ready to deploy designs:
 
+  *(These designs work as an example of several implementation choices. Setup9 is the recommended way to go.)*
+
   |                      Name                       |     Usage      |       DevKit       |                                       Inputs summary                                        |  Main power source  |
   | :---------------------------------------------: | :------------: | :----------------: | :-----------------------------------------------------------------------------------------: | :-----------------: |
   | [Setup1](./hardware/setups/setup1/Setup1_en.md) | Steering wheel | ESP32-WROOM-32E/UE | Rotary encoders x4, DPAD or funky switch (optional), analog clutch paddles, 12 push buttons |      External       |
