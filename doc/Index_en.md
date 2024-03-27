@@ -55,6 +55,7 @@
 - [Overview of Quality Controls](./firmware/FirmwareTesting_en.md)
 - [Notes on HID device implementation](./firmware/HID_notes.md).
   If you plan to develop an application that interfaces this firmware, you should read this.
+- [Firmware-defined error messages](./firmware/ErrorMessages_en.md).
 - [Change log](./changelog.md)
 
 ## Other
