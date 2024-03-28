@@ -421,7 +421,7 @@ void simWheelSetup()
       ...
       .inputNumber(MCP23017_pin_t::GPB7,15);
 
-    inputs::addMCP23017Digital(7);
+    inputs::addMCP23017Digital(7)
       .inputNumber(MCP23017_pin_t::GPA0,16)
       .inputNumber(MCP23017_pin_t::GPA1,17)
       ...
