@@ -26,7 +26,7 @@ void setup()
     Serial.println("=================================");
 
     I2CInput::initializePrimaryBus();
-    for (int addr = 0; addr < 127; addr++)
+    for (int addr = 0; addr < 128; addr++)
     {
         if (I2CInput::probe(addr, 0))
         {
