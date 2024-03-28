@@ -151,3 +151,9 @@ First release.
 - This is a "quality of life" improvement, but firmware functionality stays the same.
   A small [migration guide](./migrate_to_v4.md) has been added.
 - All "ready to deploy" designs are updated to the new API, as well as the quality controls.
+
+## 4.0.1
+
+- Duplicated code has been removed from Setup9.ino
+- Minor errata fixes.
+- Help of error messages.

@@ -110,36 +110,6 @@ void simWheelSetup()
     inputHub::cycleCPWorkingMode_setInputNumbers({(JOY_START), (JOY_LSHIFT_PADDLE)});
     inputHub::cycleALTButtonsWorkingMode_setInputNumbers({(JOY_START), (JOY_RSHIFT_PADDLE)});
 }
-void setup()
-{
-    esp_log_level_set("*", ESP_LOG_ERROR);
-
-#ifdef WAKE_UP_PIN
-    power::begin((gpio_num_t)WAKE_UP_PIN);
-#endif
-
-#ifdef POWER_LATCH
-    power::setPowerLatch(
-        (gpio_num_t)POWER_LATCH,
-        LATCH_MODE,
-        LATCH_POWEROFF_DELAY);
-#endif
-
-    userSettings::begin();
-    simWheelSetup();
-    hidImplementation::begin(
-        DEVICE_NAME,
-        DEVICE_MANUFACTURER);
-
-#ifdef ENABLE_BATTERY_MONITOR
-    batteryCalibration::begin();
-    power::startBatteryMonitor(
-        (gpio_num_t)BATTERY_ENABLE_READ_GPIO,
-        (gpio_num_t)BATTERY_READ_GPIO);
-#endif
-
-    inputs::start();
-}
 
 //------------------------------------------------------------------
 // Arduino entry point
