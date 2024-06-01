@@ -155,7 +155,7 @@ The main disadvantage of button matrices is wiring: a lot of wiring is required 
 
 There are multiple correct variations of button matrices. The one proposed here is this:
 
-- Input pins are pulled down (internally). On *ESP32* boards, pins GPIO36, GPIO39, GPIO34, and GPIO35 cannot be used unless an external pull-down resistor is provided.
+- Input pins are pulled down (internally). On *ESP32-WROOM-32* boards, pins GPIO36, GPIO39, GPIO34, and GPIO35 cannot be used unless an external pull-down resistor is provided.
 - Selector pins are set to HIGH for reading, and LOW otherwise. Note that certain pins may not be suitable for output.
 - Diodes are faced toward the input pins.
 
