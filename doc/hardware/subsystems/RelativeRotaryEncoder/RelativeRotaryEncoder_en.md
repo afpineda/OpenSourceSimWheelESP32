@@ -62,7 +62,7 @@ void simWheelSetup()
 }
 ```
 
-For example, let's say that an ALPS funky switch encoder has `A` attached to GPIO 33 and `B` attached to GPIO 25:
+For example, let's say that an ALPS funky switch encoder has `ENCODER_A` attached to GPIO 33 and `ENCODER_B` attached to GPIO 25:
 
 ```c
 void simWheelSetup()
