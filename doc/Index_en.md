@@ -33,12 +33,16 @@
 
 ## Contributing
 
+**You may still contribute even if you don't have software development skills or in-depth knowledge of this project.**
+
 - Ways to contribute:
 
-  - Report bugs.
+  - Report [bugs or documentation errata](https://github.com/afpineda/OpenSourceSimWheelESP32/issues).
   - Contribute with an open design for a steering wheel housing.
-  - Contribute a ready-to-deploy circuit layout for other ESP32-based boards.
+  - Contribute another ready-to-deploy design.
   - Share your experience and contribute with a tutorial.
+  - Help other people or make proposals in the
+    [discussion](https://github.com/afpineda/OpenSourceSimWheelESP32/discussions) forum.
 
 - Pull request policy (contributing with new code):
 
