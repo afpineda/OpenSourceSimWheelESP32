@@ -2,7 +2,7 @@
 
 This article discuss different options to provide enough inputs to a sim wheel or button box, taking into account the limitations of a DevKit board:
 
-- Limited number of input pins. Not all pins are suitable.
+- Limited number of input pins.
 - Noise in analog readings.
 - Battery drainage.
 
@@ -58,6 +58,15 @@ As a result, rotary potentiometers are discouraged. However, some wheel cases ar
 
 - As an analog axis for each clutch paddle, attached to an ADC pin.
 - As a replacement for switch buttons, in case you are short of ADC pins.
+
+### Substitutes for potentiometers
+
+Please, note that rotary potentiometers may be replaced by any other device which behalves just the same:
+
+- Some kinds of (so called) *digital potentiometers*
+- Some kinds of Hall-Effect sensors
+
+This project will will work with them, but still refer to them as "potentiometers".
 
 ## Directional pads (DPADs) and 4-way joysticks
 
@@ -146,8 +155,8 @@ The main disadvantage of button matrices is wiring: a lot of wiring is required 
 
 There are multiple correct variations of button matrices. The one proposed here is this:
 
-- Input pins are pulled down (internally). As a result, pins GPIO36, GPIO39, GPIO34 and GPIO35 can not be used unless an external pull-down resistor is provided.
-- Selector pins are set to HIGH for reading, and LOW otherwise. Note that certain pins are not suitable for output.
+- Input pins are pulled down (internally). On *ESP32* boards, pins GPIO36, GPIO39, GPIO34, and GPIO35 cannot be used unless an external pull-down resistor is provided.
+- Selector pins are set to HIGH for reading, and LOW otherwise. Note that certain pins may not be suitable for output.
 - Diodes are faced toward the input pins.
 
 This is a button matrix with 5 selector pins and 5 input pins, giving 25 inputs, enough for most setups:
