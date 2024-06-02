@@ -83,7 +83,7 @@ It is highly recommended, but not mandatory, for the powerboost module to come e
 You now there is a power latch circuit if there is a power on/off momentary push button, but not a (non-momentary) switch.
 
 Check which kind of battery is suitable for the chosen powerboost module and buy one.
-Keep in mind how much space is available inside the wheel case to fit all the components, so don't buy an oversize powerboost module.
+Keep in mind how much space is available inside the wheel case to fit all the components, so don't buy an oversized powerboost module.
 
 Some ESP32-based DevKits already integrate a powerboost module, such as the [Adafruit HUZZAH32 – ESP32 Feather Board](https://www.adafruit.com/product/3405).
 Adafruit also offers two stand-alone powerboost modules (a bit overpriced, in my opinion), but not 3.3V-capable.
