@@ -62,7 +62,7 @@ you may still use batteries by purchasing a powerboost module (see below).
 
 ## Power from a powerboost module
 
-A a powerboost module/shield (also known as a "power bank") combines a battery pack with a battery charger and a voltage regulator.
+A powerboost module/shield (also known as a "power bank") combines a battery pack with a battery charger and a voltage regulator.
 This device will act as a power source for the DevKit board, either by attaching it to the 5V plug or the 3V plug.
 
 ### Buying guide
