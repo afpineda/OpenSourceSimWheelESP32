@@ -157,3 +157,8 @@ First release.
 - Duplicated code has been removed from Setup9.ino
 - Minor errata fixes.
 - Help on error messages.
+
+## 4.0.2
+
+- Improved documentation and errata fixes.
+- No changes in the source code.
