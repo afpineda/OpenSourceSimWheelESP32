@@ -1,6 +1,6 @@
 # Battery monitor subsystem
 
-This subsystem is for a **battery-operated** setup.
+This subsystem is for **battery-operated** systems, only.
 
 ## Purpose
 
@@ -50,13 +50,10 @@ The circuit is switched on and off by the means of an NPN-PNP pair. It will not 
 
 ### Design (1)
 
-The circuit has the following inputs:
+The circuit uses the following pins:
 
 - **Battery (+)** pin (battery positive terminal): a wire has to be soldered to that terminal at the powerboost module.
 - **battEN** pin: enables or disables the circuit. Attached to an output-capable GPIO pin at the DevKit board.
-
-And one output:
-
 - **battREAD** pin: provides the current battery level. Attached to an ADC-capable GPIO pin at the DevKit board.
 
 `GND` pin is shared with the main circuit, wired to `GND` at the powerboost module.
@@ -73,7 +70,7 @@ Needed parts:
 - A bipolar junction transistor (x1), NPN type: any kind should work (for example: [BC637](https://www.onsemi.com/pdf/datasheet/bc637-d.pdf)).
 - A bipolar junction transistor (x1), PNP type: any kind should work (for example: [BC640](https://www.onsemi.com/pdf/datasheet/bc640-d.pdf)).
 
-In fact, any impedance will work as long as `battEN` is below 3.3 volts at all times (assuming `battery(+)` is always below 5 volts). However, the higher the voltage drop, the less the accuracy in battery levels (state of charge).
+In fact, any impedance will work as long as `battREAD` is below 3.3 volts at all times (assuming `battery(+)` is always below 5 volts). However, the higher the voltage drop, the less the accuracy in battery levels (state of charge).
 
 Pay attention to the pin-out of your transistors. It *may not match* the one shown here.
 
@@ -93,10 +90,12 @@ In such a case, there is no need to build this subsystem. However, we also provi
 
 ### Design (2)
 
-The circuit has the same inputs and outputs as the previous alternative, except for `BattEN`, which is not needed.
+The circuit uses the same pins as the previous alternative, except for `BattEN`, which is not needed.
 
 - **Battery (+)** pin (battery positive terminal). Not exposed and not needed in the alluded boards.
-- **battREAD** pin: provides the current battery level. May be exposed or not in the alluded boards. If not exposed, it will be wired internally to a certain GPIO. If exposed (with another name, for sure), you must wire it externally to an ADC-capable GPIO. Check the datasheet.
+- **battREAD** pin: provides the current battery level. May be exposed or not in the alluded boards.
+  If not exposed, it will be wired internally to a certain GPIO.
+  If exposed (with another tag, for sure), you must wire it externally to an ADC-capable GPIO. Check the datasheet.
 
 ![Voltage divider for the battery monitor](./BatteryDivider_falstad.png)
 
