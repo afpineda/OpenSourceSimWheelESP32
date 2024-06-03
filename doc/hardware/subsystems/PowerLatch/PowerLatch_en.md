@@ -76,7 +76,7 @@ There are some alternatives:
 
 With this choice, a single switch will wake up the system from deep sleep.
 Any other pulled-up input may be used, too, for example, a rotary encoder.
-`GPIO_NUM_3` (in the ESP32 board) is perfect for this since it is always pulled up.
+`GPIO_NUM_3` (in the ESP32-WROOM-32 board) is perfect for this since it is always pulled up.
 
 #### Button Matrix, shift registers or analog multiplexers
 

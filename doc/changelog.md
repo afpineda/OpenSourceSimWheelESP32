@@ -156,4 +156,4 @@ First release.
 
 - Duplicated code has been removed from Setup9.ino
 - Minor errata fixes.
-- Help of error messages.
+- Help on error messages.
