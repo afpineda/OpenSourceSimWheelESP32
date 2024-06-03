@@ -17,8 +17,21 @@ Follow the links to get a detailed description of each subsystem:
 - [Power latch subsystem](./PowerLatch/PowerLatch_en.md): provides power on/off functionality.
 - [Battery monitor subsystem](./BatteryMonitor/BatteryMonitor_en.md): provides an estimation of battery charge.
 - [Relative rotary encoder subsystem](./RelativeRotaryEncoder/RelativeRotaryEncoder_en.md): provides input from rotation of rotary encoders.
-- [Switches subsystem](./Switches/Switches_en.md): provides input from NO momentary switches (push buttons, paddles, etc.) and potentiometers (some kinds of clutch paddles).
-- [Analog clutch subsystem](./AnalogClutchPaddles/AnalogClutchPaddles_en.md): provides input from two potentiometers attached to clutch paddles as analog axes. Digital clutches are supported in the switches subsystem.
+- [Switches subsystem](./Switches/Switches_en.md): provides input from normally-open momentary switches (push buttons, paddles, etc.) and potentiometers (as on/off inputs, only).
+- [Analog clutch subsystem](./AnalogClutchPaddles/AnalogClutchPaddles_en.md): provides input from two potentiometers attached to clutch paddles as analog axes.
+
+### About clutch paddles
+
+This project support two kinds of clutch paddles:
+
+- **"Analog" clutch paddles**.
+  Take input from potentiometers exclusively, as described in the *analog clutch subsystem*.
+  This is the best choice. Two ADC-capable pins are required.
+
+- **"Digital" clutch paddles**.
+  Take input from the *switches subsystem*, including any push button or roller lever (not just "paddles").
+  If no ADC-capable pins are available, you may still use potentiometers as "digital" clutch paddles by attaching them
+  to the *switches subsystems* instead of the *analog clutch subsystem*.
 
 ## Design your custom hardware
 
