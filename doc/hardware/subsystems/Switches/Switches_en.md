@@ -5,7 +5,7 @@
 To provide a number of **normally-open momentary switches** to the system, including (when required):
 
 - Push buttons.
-- Push levers and roller levers (suitable for shift paddles and clutch paddles).
+- Push levers and roller levers (suitable for shift paddles and "digital" clutch paddles).
 - Built in push buttons of rotary encoders (both KY-040 and bare bone).
 - Directional pads, directional joysticks and funky switches (except for rotation, which behaves like any other [rotary encoder](../RelativeRotaryEncoder/RelativeRotaryEncoder_en.md)).
 
@@ -24,37 +24,10 @@ Take a look at the article on [input hardware](../../InputHW_en.md) for an intro
 
 ## Button Matrix implementation
 
-### External wiring of inputs
+Two hardware designs are given below. You should be able to extrapolate those designs to your needs.
+Button matrices in this project work in *positive logic* (inputs are internally pulled down).
 
-Before going into design details, take note on how to wire (externally) all inputs to this subsystem:
-
-- **Push buttons, push levers or roller levers**. They have two interchangeable terminals. If there are three terminals, choose the two terminals for the NO (normally open) switch.
-
-  - One terminal wired to a selector pin header at the button matrix.
-  - Other terminal wired to an input pin header at the button matrix.
-
-- **Built in push button of rotary encoders**:
-
-  - **Barebone**: They are wired to the button matrix as any other push button, being `SW` and `SW GND` the involved terminals.
-  - **KY-040**. There are two options:
-    - *Single pin*: wire `SW` to any input-capable GPIO.
-    - *Wired to the button matrix*, using a satellite circuit (see below). Terminals are **not** interchangeable.
-
-- **Directional pads (DPADs) and funky switches (except for rotation)**. Terminals are **not** interchangeable:
-
-  - The common terminal (`COM`) must be wired to a single input pin header at the button matrix.
-  - Each other terminal (`A`, `B`, `C`, `D` and `Push`) wired to a different selector pin header at the button matrix.
-  - **Warning**: it has been reported that some ALPS funky switches shows erroneusly swapped `Push` and `COM` tags, at least, in their data sheet. You can check this with the help of a basic polimeter/multimeter.
-
-    ![Misleading ALPS data sheet](./ALPS_sheet_mistake.png)
-
-- **Potentiometers**: a satellite circuit is required (see below) for each potentiometer. Terminals are **not** interchangeable.
-
-### Circuit designs for a button matrix
-
-You should be able to extrapolate those designs to your needs.
-
-#### Button Matrix (25 inputs)
+### Button Matrix (25 inputs)
 
 Needed parts (not counting input hardware like push buttons nor a perfboard):
 
@@ -69,7 +42,7 @@ Open the [circuit design](./BtnMatrix25Inputs.diy) using [DIY Layout Creator](ht
 
 ![Circuit design 25 inputs](./BtnMatrix25Inputs.png)
 
-#### Button Matrix (16 inputs)
+### Button Matrix (16 inputs)
 
 Needed parts (not counting input hardware like push buttons nor a perfboard):
 
@@ -80,9 +53,11 @@ This [circuit design](./BtnMatrix16Inputs.diy) requires no wiring but takes more
 
 ![Circuit design 16 inputs](./BtnMatrix16Inputs.png)
 
-#### Satellite circuit for potentiometers (at clutch paddles)
+### Satellite circuit for potentiometers attached to a button matrix
 
-The purpose of this circuit is to transform two analog potentiometers into an "on/off" switch that can be wired to a button matrix. Another soldered potentiometer (called "trimmer") will calibrate the position where on/off switching happens. Please, **follow this calibration procedure in order to minimize battery drainage**:
+The purpose of this circuit is to transform analog potentiometers into "on/off" switches that can be wired to a button matrix.
+Usefull for clutch paddles if no ADC-capable pins are available.
+Another soldered potentiometer (called "trimmer") will calibrate the position where on/off switching happens. Please, **follow this calibration procedure in order to minimize battery drainage**:
 
 1. Move the trimmer to an end where the switch is always on, no matter which position the clutch paddle is.
 2. Move and hold the clutch paddle to the desired position where it should switch on/off.
@@ -112,7 +87,7 @@ Note that, in case of need, a momentary switch can substitute the potentiometer 
 
 This hack is an alternative to this circuit: [https://www.instructables.com/Super-simple-potentiometer-switch-hack/](https://www.instructables.com/Super-simple-potentiometer-switch-hack/)
 
-#### Satellite circuit for a KY-040 (rotary encoder) built in push button
+### Satellite circuit for a KY-040 (rotary encoder) built in push button
 
 The purpose of this circuit is to avoid the expenditure of a single GPIO pin for a single rotary encoder. Such an input is connected to the button matrix instead. This is the [electrical circuit at falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKACdxiUQUUAWTtzB8BteJBYBnQT34zco8CAAubAK50WAc3mQBYLiGzZCUKCwBKM4QMxCRZqnyrZo2R1GgIWAdxm8BQls5FHYzAJAg2UUwcW0QBj48IxMEpKM8RQkAI3A+CGZTbBRk7BxzAA9wAxA8CGwEAUyQfWSLAHtlAEM2AE8AHUk6ADsAY3aAEzo2Qey1AEsAG2VB+eHZtWVlduGWKoxbBHcwYp4EU1aQAGUAdUGABzWWABk05LAShOYhT6oIADMuoshkY3OYALJfBz8KgMNDJGHhLx7BLYMDvNFfU4nAT6JBXOiLOijbYzSSPdaSLorSRzLY7QYAW2pbHmFRRDDRxHAlASdR57jxIAACmtBkMiST2mSRoNFl0mSz5gAvQZTWadHZ0SQc4rckpIBgYbglZJC0WU9VDYaqLoTBXWuUO5mqFVquga7bDbUclBkHhRJiQchEchCgCSw3umweYqpNOUAAsPbTNl7Fa72X5EgjnG8eHh3iiPgVIEVCH9INzLgAhToAZ8thMG4wm83+81GdulgzYnWp0vm7V8UNseZzPDzoQ4E9N+eMpkr8BYynCclnIS+oL9pFIxrw4hQ7jhsGwu7I-AwkGYfAwjHIsRAU0BamWI4nH2Ss-w4BYQA), which is a simple logic inverter, not counting the rectangle at the right side.
 
@@ -129,9 +104,30 @@ Open this [circuit layout](./LogicInverter.diy) using [DIY Layout Creator](https
 
 Please, note that a bare bone rotary encoder is a better option since no satellite circuit is required.
 
+### External wiring for the button matrix
+
+- **Push buttons, push levers or roller levers**. They have two interchangeable terminals. If there are three terminals, choose the two terminals for the NO (normally open) switch. There is no common pole.
+
+  - One terminal wired to a selector pin header at the button matrix.
+  - Other terminal wired to an input pin header at the button matrix.
+
+- **Built-in push button of a rotary encoder**:
+  - **Barebone**: They are wired to the button matrix as any other push button, being `SW` and `SW GND` the involved terminals.
+  - **KY-040**. Use the satellite circuit shown above.
+
+- **Directional pads (DPADs) and funky switches (except for rotation)**. Terminals are **not** interchangeable:
+
+  - The common terminal (`COM`) must be wired to a single input pin header at the button matrix.
+  - Each other terminal (`A`, `B`, `C`, `D` and `Push`) wired to a different selector pin header at the button matrix.
+  - **Warning**: it has been reported that some ALPS funky switches shows erroneusly swapped `Push` and `COM` tags, at least, in their data sheet. You can check this with the help of a basic polimeter/multimeter.
+
+    ![Misleading ALPS data sheet](./ALPS_sheet_mistake.png)
+
+- **Potentiometers**: Use the satellite circuit shown above. Terminals are **not** interchangeable.
+
 ## Analog multiplexer implementation
 
-This implementation is based on the widely available [74HC4051N](../../esp32reference/75HC4051_datasheet.pdf) analog multiplexer: an *8 to 1* multiplexer. If you want another kind of analog multiplexer (for example, a *16 to 1*), the firmware will work "as-is", but some changes may be needed in the circuit design. In any case, all switches must work in *negative logic*, so their common pole must be attached to `GND`. See below.
+This implementation is based on the widely available [74HC4051N](../../esp32reference/75HC4051_datasheet.pdf) analog multiplexer: an *8 to 1* multiplexer. All switches work in *negative logic*, so their common pole must be attached to `GND`. See below.
 
 The following circuit design provides 24 inputs using 6 pins, which should be enough for most steering wheels. However, this design can be extended easily:
 
