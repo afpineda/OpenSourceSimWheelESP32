@@ -169,7 +169,7 @@ void hidImplementation::begin(
         }
 
         // Stack initialization
-        BLEDevice::init(deviceName);
+        BLEDevice::init(String(deviceName.c_str()));
         // NOTE: this library lacks BLEDevice::setSecurityAuth(BLE_SM_PAIR_AUTHREQ_BOND);
         pServer = BLEDevice::createServer();
         pServer->setCallbacks(&connectionStatus);
@@ -181,7 +181,7 @@ void hidImplementation::begin(
             log_e("Unable to create HID device");
             abort();
         }
-        hid->manufacturer()->setValue(deviceManufacturer); // Workaround for bug in `hid->manufacturer(deviceManufacturer)`
+        hid->manufacturer()->setValue(String(deviceManufacturer.c_str())); // Workaround for bug in `hid->manufacturer(deviceManufacturer)`
         hid->pnp(BLE_VENDOR_SOURCE, BLE_VENDOR_ID, BLE_PRODUCT_ID, PRODUCT_REVISION);
         hid->hidInfo(0x00, 0x01);
         hid->reportMap((uint8_t *)hid_descriptor, sizeof(hid_descriptor));
