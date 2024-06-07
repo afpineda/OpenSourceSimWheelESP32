@@ -13,6 +13,7 @@
 #include "SimWheel.h"
 #include "SimWheelTypes.h"
 #include "HID_definitions.h"
+#include "esp_mac.h"
 
 // ----------------------------------------------------------------------------
 // Globals

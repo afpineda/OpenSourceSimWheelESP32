@@ -28,7 +28,7 @@ Computer:
 
 - Windows 10 or later
 - Bluetooth 4.2 or later (not required in USB implementation)
-- Joystick testing software from Planet's Pointy ( [http://www.planetpointy.co.uk/joystick-test-application/](http://www.planetpointy.co.uk/joystick-test-application/) ) or any other able to display 128 buttons. Note that Window's device property page is not suitable for this.
+- Joystick testing software able to display 128 buttons. Note that Window's device property page is not suitable for this.
 - SimpleHIDWrite.exe: available at [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm). There is a modern clone at [https://github.com/Robmaister/SimplerHidWrite](https://github.com/Robmaister/SimplerHidWrite).
 
 ## Specific notes for USB implementation
