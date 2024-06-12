@@ -11,7 +11,7 @@ Use this [test circuit](../../Protoboards/ESP32-WROOM-DevKitC-1.diy):
 
 ![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.png)
 
-We are not using the potentiometers. For later reference (this differs from previous tests):
+**We are not using the potentiometers**. For later reference (this differs from previous tests):
 
 - "CLUTCH1" is the button numbered #2 in the protoboard.
 - "CLUTCH2" is the button numbered #3 in the protoboard.
@@ -27,7 +27,7 @@ Wire `battery(+)` and `POWERBOOST_GND`, at least.
 
 - Windows 10 or later
 - Bluetooth 4.2 or later
-- Joystick testing software from Planet's Pointy ( [http://www.planetpointy.co.uk/joystick-test-application/](http://www.planetpointy.co.uk/joystick-test-application/) ) or any other able to display 128 buttons. Note that Window's device property page is not suitable for this.
+- Joystick testing software able to display 128 buttons. Note that Window's device property page is not suitable for this.
 
 ## Before start
 
@@ -52,7 +52,7 @@ Wire `battery(+)` and `POWERBOOST_GND`, at least.
 
 1. Open the joystick test app.
 2. At this point, the working mode of clutch paddles could be set to anything due to previous test. This is ok.
-3. Hit "Cycle CF" 4 times and test "CLUTCH1" and "CLUTCH" each time, in no particular order. In clutch mode, test "RCW" and "RCCW" for bite point calibration.
+3. Hit "Cycle CF" 4 times and test "CLUTCH1" and "CLUTCH2" each time, in no particular order. In clutch mode, test "RCW" and "RCCW" for bite point calibration.
 4. Hit "Cycle CF" until analog axis mode is selected (check using "CLUTCH1").
 5. Wait for 30 seconds or so.
 6. Reset. Close the joystick test app. Wait for the device to connect again.
@@ -68,7 +68,7 @@ Wire `battery(+)` and `POWERBOOST_GND`, at least.
 1. Leave `battery(+)` unwired. Wait for 1 minute.
 2. In the control panel, battery level must show "66%" for "Proto 2".
 3. Wire `Battery(+)` to the battery positive pole.
-4. Wait for 1 minute. Battery level must show anything byt "66%", depending on your battery charge.
+4. Wait for 1 minute. Battery level must show anything but "66%", depending on your battery charge.
 5. Wait for 5 to 30 minutes (depending on battery capacity). Whatever the battery level was, it must decrease at least 1%.
 6. Wire `Battery(+)` to `3V3` in the protoboard.
 7. The device may go to deep sleep. Check if the device is disconnected at the control panel. However, if this does not happen, the battery level must show a very low percentage after a minute or so.

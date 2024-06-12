@@ -15,8 +15,7 @@ flowchart TD
         BatteryAutocal --> Proto2
     end
     subgraph Path 2
-        DigitalInputsTest2
-        I2CExpanderDeepSleepTest
+        DigitalInputsTest2 --> I2CExpanderDeepSleepTest
     end
     TQTSystemTest
 ```

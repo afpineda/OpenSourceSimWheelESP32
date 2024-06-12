@@ -23,7 +23,7 @@ For later reference:
 
 - Windows 10 or later
 - Bluetooth 4.2 or later
-- Joystick testing software from Planet's Pointy ( [http://www.planetpointy.co.uk/joystick-test-application/](http://www.planetpointy.co.uk/joystick-test-application/) ) or any other able to display 128 buttons. Note that Window's device property page is not suitable for this.
+- Joystick testing software able to display 128 buttons. Note that Window's device property page is not suitable for this.
 - SimpleHIDWrite.exe: available at [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm). There is a modern clone at [https://github.com/Robmaister/SimplerHidWrite](https://github.com/Robmaister/SimplerHidWrite).
 
 ## Procedure and expected output
@@ -39,11 +39,11 @@ For later reference:
    5. "BTN3": should be registered as D-PAD up.
    6. "BTN4": should be registered as D-PAD down.
    7. "BTN5": should be registered as D-PAD left.
-   8. "BTN6": should be registered as D-PAD left.
+   8. "BTN6": should be registered as D-PAD right.
    9. "BTN7": should be registered as #8.
 3. Press and hold "ALT", then press and release "BTN2", then release "ALT". Button #67 should be registered.
-4. Rotate "RCW". Button #13 should be registered.
-5. Rotate "RCCW". Button #14 should be registered.
+4. Rotate "RCCW". Button #13 should be registered.
+5. Rotate "RCW". Button #14 should be registered.
 6. Press and hold "BTN2", then press and hold "BTN7", then release both. Buttons #3 and #8 should be registered at the same time.
 7. Press and hold "BTN2", then press and hold "BTN3", then release both.
 8. Press and release "ALT". Button #11 should be registered.
