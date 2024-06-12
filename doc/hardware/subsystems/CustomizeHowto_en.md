@@ -270,7 +270,7 @@ This project provides three (exclusive) connectivity choices:
 
 - Bluetooth Low Energy (BLE) using the [NimBLE stack](https://mynewt.apache.org/latest/network/). This is the default. If you are happy with this, ignore this section.
 
-- Bluetooth Low Energy using the ESP32-Arduino stack. Currently not used (except for a test unit), but available. This stack requires more flash memory compared to *NimBLE* (about 500 KB). If you have issues with *NimBLE*, this is a workaround. As of ESP-Arduino core version 2.0.14, this implementation does not work.
+- Bluetooth Low Energy using the ESP32-Arduino stack. Currently not used (except for a test unit), but available. This stack requires more flash memory compared to *NimBLE* (about 500 KB). If you have issues with *NimBLE*, this is a workaround. As of ESP-Arduino core version 3.0.1, this implementation does not work.
 
 - Universal Serial Bus (USB).
 
