@@ -162,3 +162,9 @@ First release.
 
 - Improved documentation and errata fixes.
 - No changes in the source code.
+
+## 4.1.0
+
+- Code updated to work with [ESP-Arduino core v3.0.1](https://github.com/espressif/arduino-esp32/releases/tag/3.0.1).
+  Integration tests passed.
+- Minor errata fixes.
