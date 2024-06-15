@@ -168,3 +168,7 @@ First release.
 - Code updated to work with [ESP-Arduino core v3.0.1](https://github.com/espressif/arduino-esp32/releases/tag/3.0.1).
   Integration tests passed.
 - Minor errata fixes.
+
+## 4.1.1
+
+- Bug fix in [Setup9.ino](../src/Firmware/Setup9/Setup9.ino) due to wrong input numbers.
