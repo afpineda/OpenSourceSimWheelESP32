@@ -169,6 +169,6 @@ First release.
   Integration tests passed.
 - Minor errata fixes.
 
-## 4.1.1 and 4.1.2
+## 4.1.1
 
 - Bug fix in [Setup9.ino](../src/Firmware/Setup9/Setup9.ino) due to wrong input numbers.
