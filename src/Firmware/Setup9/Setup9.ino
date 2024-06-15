@@ -36,7 +36,7 @@ std::string DEVICE_MANUFACTURER = "Mamandurrio";
 
 #define USE_FUNKY true
 
-#define ROT1_CW 31
+#define ROT1_CW 33
 #define ROT1_CCW ROT1_CW + 1
 #define NAV_LEFT 50
 #define NAV_RIGHT 51
