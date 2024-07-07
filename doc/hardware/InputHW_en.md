@@ -45,6 +45,8 @@ They are similar in shape to rotary encoders, but they work in a complete differ
 
 We could alleviate the situation by instructing the firmware to report a button press only if there is a change in the position of the rotary switch. However, the simulator will never know what such position is at first.
 
+Absolute rotary switches are *not* supported by this project.
+
 ## Rotary Potentiometers
 
 They are similar in shape to rotary encoders and absolute rotary switches, but they are a completely different thing:
@@ -70,11 +72,16 @@ This project will will work with them, but still refer to them as "potentiometer
 
 ## Directional pads (DPADs) and 4-way joysticks
 
-They are just 4 (sometimes 8) push buttons arranged as a cross. Note that one and only one of them can be closed at a time, or none of them. Do not confuse 4-way joysticks with 2-axis joysticks, the later are just two potentiometers that drain current at all times. Not suitable for this project.
+They are just 4 (sometimes 8) push buttons arranged as a cross. Note that one and only one of them can be closed at a time, or none of them.
+Do not confuse 4-way joysticks with 2-axis joysticks, the later are just two potentiometers that drain current at all times (not suitable for this project).
+DPADs are supported by this project.
 
 ## Funky switches
 
-A funky switch is just the physical combination of a rotary encoder, a 4-way joystick and a push button into a single device. A note of caution here: funky switches are priced around 4 dollars at AliExpress, but 30 dollars at some other retailers. The main disadvantage of funky switches is that can't be mounted into a panel (they lack a nut).
+A funky switch is just the physical combination of a rotary encoder, a 4-way joystick and a push button into a single device.
+A note of caution here: funky switches are priced around 4 dollars at AliExpress, but 30 dollars at some other retailers.
+The main disadvantage of funky switches is that can't be mounted into a panel (they lack a nut).
+Funky switches are supported by this project.
 
 **Warning**: misleading terminal tags have been reported at some ALPS funky switches (more information later).
 
@@ -169,7 +176,7 @@ Almost any kind of diode is suitable for this circuit, but the fast switching [S
 
 ### Multiplexed switches
 
-This circuit is quite similar to a button matrix, but it requires a number of multiplexers, an extra cost. However, it requires less wiring. Two groups of pins are required:
+This circuit is quite similar to a button matrix, but it requires a number of multiplexers. However, it requires less wiring. Two groups of pins are required:
 
 - Selector pins: they choose a single switch from each multiplexer.
 - Input pins: they provide the state of the selected switch at each multiplexer.
@@ -242,16 +249,16 @@ This project does not support *slave* DevKit boards right now.
 
 ## Summary of input circuitry for switches
 
-|      Circuitry       |        Required pins         | Number of switches |              Best suited for              |                     Advantages                      | Disadvantages                    |         Supported by this project          |
-| :------------------: | :--------------------------: | :----------------: | :---------------------------------------: | :-------------------------------------------------: | :------------------------------- | :----------------------------------------: |
-|         None         |              1               |         1          |              Rotary encoders              |                 Easy and error-free                 | Not enough pins for many buttons |                    yes                     |
-|    Button Matrix     |             $N$              |    $(N/2)^{2}$     |          Push buttons and DPADS           |             Many buttons and error-free             | Complex wiring                   |                    yes                     |
-|     Multiplexers     | $S$ selectors and $I$ inputs |     $2^{S}*I$      |          Push buttons and DPADS           |      Many buttons and error-free. Less wiring.      | Cost                             |                analog only                 |
-|    Voltage ladder    |              1               |       enough       | DPADS, rotary switches and funky switches |             Single pin for many inputs              | Prone to error                   |                     no                     |
-|   Voltage divider    |              1               |         2          |               Push buttons                |                        None                         | Prone to error                   |                     no                     |
-| PISO shift registers |              3               |  almost unlimited  |          Push buttons and DPADS           | Many buttons and error-free. Less pin expenditure.  | Cost and size                    |                    yes                     |
-|    GPIO expanders    |   SPI: 4 or more, I2C:  2    |  almost unlimited  |               Push buttons                | The best switch-to-pin ratio and overall simplicity | Cost and size                    | yes (only for switches and I2C interfaces) |
-|     Slave boards     |           2 (I2C)            | Depends on DevKit  |                 Anything                  |              "Infinite possibilities"               | Complex firmware and size        |                     no                     |
+|      Circuitry       |        Required pins         | Number of switches |                     Advantages                      | Disadvantages                            |         Supported by this project          |
+| :------------------: | :--------------------------: | :----------------: | :-------------------------------------------------: | :--------------------------------------- | :----------------------------------------: |
+|         None         |              1               |         1          |           Very easy and straight-forward            | Not enough pins for many buttons         |                    yes                     |
+|    Button Matrix     |             $N$              |    $(N/2)^{2}$     |     Well-known and no additional chip required      | Complex wiring. Low switch-to-pin ratio. |                    yes                     |
+|     Multiplexers     | $S$ selectors and $I$ inputs |     $2^{S}*I$      |               Low circuit complexity                | Still low switch-to-pin ratio.           |                analog only                 |
+|    Voltage ladder    |              1               |       enough       |             Single pin for many inputs              | Prone to error                           |                     no                     |
+|   Voltage divider    |              1               |         2          |                        None                         | Prone to error                           |                     no                     |
+| PISO shift registers |              3               |  almost unlimited  |              High switch-to-pin ratio               | Excessive circuit complexity and size    |                    yes                     |
+|    GPIO expanders    |   SPI: 4 or more, I2C:  2    |  almost unlimited  | The best switch-to-pin ratio and overall simplicity | None                                     | yes (only for switches and I2C interfaces) |
+|     Slave boards     |           2 (I2C)            | Depends on DevKit  |              "Infinite possibilities"               | Complex firmware and excessive size      |                     no                     |
 
 Input circuitry takes some space inside the housing. Their physical layout must be carefully designed to fit into the steering wheel (or button box).
 
@@ -270,15 +277,13 @@ There are several choices:
 
 - **I2C rotary encoders**. Already described above. The main disadvantage of this approach is vendor dependence.
   If you have two I2C encoders from different vendors, it is guaranteed that they can be wired together,
-  but there is no guarantee that they will accept the same set of commands.
-  Size is another concern due to the additional circuitry in each rotary encoder.
-  They are expensive, too.
+  but there is no guarantee that they will accept the same set of commands. They are expensive, too.
   The great advantage of this approach is pin expenditure: just two pins for all rotary encoders.
   Another advantage is no need for extra circuitry, just wiring.
 
 - **GPIO expanders**. Already described above. Very close in nature to *I2C rotary encoders* and the same advantage.
-  Can hold switches along with rotary encoders.
-  The main disadvantage is size. For example, the *MCP23017* exposes 28 pins. It can hold up to eight rotary encoders.
+  Could hold switches along with rotary encoders.
+  Unlike switches, rotary encoders require hardware interrupts from the GPIO expanders in order to work properly.
 
 - **Rotary encoder matrix**. All encoders share `DT/A` and `CLK/B` input pins. Other input pins, called *witnesses*, tell which one is being operated.
   Unfortunately, this circuit is **unable to detect input from two or more rotary encoders at the same time**.
@@ -310,7 +315,7 @@ For $N$ rotary encoders:
 |       Circuitry       | Required pins |                  Advantages                  |             Disadvantages             | Supported by this project |
 | :-------------------: | :-----------: | :------------------------------------------: | :-----------------------------------: | :-----------------------: |
 |         None          |     $N*2$     |          Easy and straight-forward           | Must free up some pins by other means |            yes            |
-|     I2C encoders      |       2       |                  Effortless                  |   Cost, size and vendor dependence    |            No             |
-|    GPIO expanders     |       2       | Could hold both switches and rotary encoders |          Size and extra cost          |            No             |
+|     I2C encoders      |       2       |                  Effortless                  |      Cost and vendor dependence       |            No             |
+|    GPIO expanders     |       2       | Could hold both switches and rotary encoders |      Require hardware interrupts      |            No             |
 | Rotary encoder matrix |     $N+2$     |                     None                     |  Unable to detect simultaneous input  |            No             |
 |     Slave boards      |    2 (I2C)    |          Easy and straight-forward           |       Complex firmware and size       |            No             |
