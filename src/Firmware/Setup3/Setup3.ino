@@ -45,21 +45,13 @@ std::string DEVICE_MANUFACTURER = "Mamandurrio";
  >>>> [ES] MODO DE SUEÑO PROFUNDO
 ------------------------------------------------------------------ */
 
-// [EN] Wake up source: put a list of GPIO numbers between curly brackets.
-//      If empty, only a RESET will wake up the system.
-// [ES] Señales para despertar: indicar una lista de  numeros de GPIO entre llaves.
-//      Si lo deja vacío, solamente un RESET despertará al sistema.
+// [EN] Set an output-capable GPIO number for the "wake up" pin.
+//      Comment out if not required, or set an RTC-capable GPIO number for wake up.
+// [ES] Indique el número de GPIO para la señal "despertar"
+//      Comente la línea si no hay necesidad de entrar en sueño profundo, o bien,
+//      indique un número de GPIO con capacidad RTC para despertar del sueño.
 
-const gpio_num_t WAKEUP_PINS[] = {GPIO_NUM_27};
-
-// [EN] Set to "true" or "false".
-//      If "true", wake up happens when any given pin is set to high voltage.
-//      If "false", wake up happens when all given pins are set to low voltage.
-// [ES] Seleccione "true" o "false"
-//      Con "true", se despierta con voltaje alto en cualquiera de los pines.
-//      Con "false", se despierta con voltaje bajo en todos los pines.
-
-#define WAKEUP_ANYorALL false
+#define WAKE_UP_PIN GPIO_NUM_27
 
 /* -----------------------------------------------------------------
  >>>> [EN] BATTERY MONITOR SUBSYSTEM
@@ -69,12 +61,12 @@ const gpio_num_t WAKEUP_PINS[] = {GPIO_NUM_27};
 // [EN] Set an output-capable GPIO number for the "battEN" pin.
 // [ES] Indique el número de GPIO para el pin "battEN".
 
-#define BATTERY_ENABLE_READ_GPIO GPIO_NUM_35
+#define BATTERY_ENABLE_READ_GPIO -1
 
 // [EN] Set an ADC-capable GPIO number for the "battREAD" pin.
 // [ES] Indique el número de GPIO para el pin ADC de "battREAD".
 
-#define BATTERY_READ_GPIO -1
+#define BATTERY_READ_GPIO GPIO_NUM_35
 
 /* -----------------------------------------------------------------
  >>>> [EN] BUTTON MATRIX
@@ -135,11 +127,7 @@ void simWheelSetup()
 void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
-    power::begin(
-        WAKEUP_PINS,
-        sizeof(WAKEUP_PINS) / sizeof(gpio_num_t),
-        WAKEUP_ANYorALL);
-
+    power::begin(WAKE_UP_PIN);
     userSettings::begin();
     simWheelSetup();
     hidImplementation::begin(
