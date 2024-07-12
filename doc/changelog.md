@@ -172,3 +172,8 @@ First release.
 ## 4.1.1
 
 - Bug fix in [Setup9.ino](../src/Firmware/Setup9/Setup9.ino) due to wrong input numbers.
+
+## 4.1.2
+
+- Bug fix in [Setup3.ino](../src/Firmware/Setup9/Setup3.ino) due to wrong pin number at `BATTERY_READ_GPIO`.
+- Minor documentation changes due to outdated content.
