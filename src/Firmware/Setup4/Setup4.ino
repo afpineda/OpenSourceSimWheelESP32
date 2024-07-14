@@ -60,15 +60,19 @@ std::string DEVICE_MANUFACTURER = "Mamandurrio";
  >>>> [ES] SUBSISTEMA DE MONITORIZACIÓN DE BATERÍA
 ------------------------------------------------------------------ */
 
+// [EN] Comment out the following line if the battery monitor subsystem is NOT in place
+// [ES] Comentar la siguiente linea si NO hay subsistema de monitorización de batería
+#define ENABLE_BATTERY_MONITOR
+
 // [EN] Set an output-capable GPIO number for the "battEN" pin.
 // [ES] Indique el número de GPIO para el pin "battEN".
 
-#define BATTERY_ENABLE_READ_GPIO GPIO_NUM_35
+#define BATTERY_ENABLE_READ_GPIO -1
 
 // [EN] Set an ADC-capable GPIO number for the "battREAD" pin.
 // [ES] Indique el número de GPIO para el pin ADC de "battREAD".
 
-#define BATTERY_READ_GPIO -1
+#define BATTERY_READ_GPIO GPIO_NUM_35
 
 /* -----------------------------------------------------------------
  >>>> [EN] MULTIPLEXED BUTTONS

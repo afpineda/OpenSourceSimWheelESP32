@@ -67,7 +67,7 @@ std::string DEVICE_MANUFACTURER = "Mamandurrio";
 // [EN] Set an ADC-capable GPIO number for the "battREAD" pin.
 // [ES] Indique el número de GPIO para el pin ADC de "battREAD".
 
-#define BATTERY_READ_GPIO -1
+// #define BATTERY_READ_GPIO -1
 
 //------------------------------------------------------------------
 // Setup
