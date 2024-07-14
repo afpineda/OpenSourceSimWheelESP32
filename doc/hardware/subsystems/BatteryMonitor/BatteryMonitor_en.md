@@ -106,7 +106,7 @@ Needed parts:
 - 110K-ohms resistor (x1), 1% tolerance.
 - 200K-ohms resistor (x1), 1% tolerance.
 
-In fact, any impedance above 100K-ohms will work as long as `battEN` is below 3.3 volts at all times. Do not use lower impedance or this circuit will drain your battery quicker than the DevKit board itself.
+In fact, any impedance above 100K-ohms will work as long as `battREAD` is below 3.3 volts at all times. Do not use lower impedance or this circuit will drain your battery quicker than the DevKit board itself.
 
 ## Firmware customization
 
