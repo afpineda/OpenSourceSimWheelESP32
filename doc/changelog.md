@@ -181,3 +181,10 @@ First release.
 ## 4.1.3
 
 - More bug fixes at "Setup4.ino", "Setup5.ino" and "Setup7.ino".
+
+## 4.1.4
+
+- No code changes.
+  [NimBLEImplTest](../src/QualityControls/UnitTests/NimBLEimplTest/README.md) passed with
+  [NimBLE-Arduino v1.4.2](https://github.com/h2zero/NimBLE-Arduino/releases/tag/1.4.2).
+- Minor errata fixes and documentation updates.
