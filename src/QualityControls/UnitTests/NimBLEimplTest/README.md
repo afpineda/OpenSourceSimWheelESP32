@@ -82,7 +82,7 @@ Not applicable to USB implementation.
    --GO--
    ```
 
-3. Before a minute elapses, pair and connect with the device using the bluetooth controls in your computer.
+3. Before a minute elapses, pair and connect with the device using the Bluetooth controls in your computer.
 4. Output must match:
 
    ```text
@@ -96,20 +96,21 @@ Not applicable to USB implementation.
 
 Not applicable to USB implementation.
 
-1. Go to the bluetooth page of the control panel. Look for the device.
+1. Go to the Bluetooth page of the control panel. Look for the device.
 2. Check battery level. Must show a decreasing number from 100% down to 50%, then up to 100% again.
 
 ### Buttons
 
-1. Buttons should be pressed and released every second. Pressed buttons must follow this timed pattern:
-   - Buttons #1 and #64 are pressed at the same time.
-   - Previous buttons are released and buttons #2 and #65 are pressed at the same time.
-   - Previous buttons are released and buttons #3 and #66 are pressed at the same time.
-   - The pattern continues until buttons #32 and #128 are pressed.
+1. Buttons should be pressed and released every second.
+   If buttons are numbered starting with #1, pressed buttons must follow this timed pattern :
+   - Buttons #1 and #65 are pressed at the same time.
+   - Previous buttons are released and buttons #2 and #66 are pressed at the same time.
+   - Previous buttons are released and buttons #3 and #67 are pressed at the same time.
+   - The pattern continues until buttons #64 and #128 are pressed.
    - Then, the pattern starts again.
 2. Restart this test if something is missed.
 3. Point-of-view control (aka "Hat switch" or "POV") must follow this pattern in a loop:
-   - None pressed
+   - Not pressed
    - Up
    - Up-right
    - Right
@@ -121,7 +122,7 @@ Not applicable to USB implementation.
 
 ### Device configuration (HID report)
 
-1. Open "SimpleHidWriter.exe". Locate `Device VID=501D` in the top area, and click on it.
+1. Open "SimpleHidWriter.exe". Locate `Device VID=1D50` in the top area, and click on it.
 2. You should see continuous report lines starting with `RD 01`. Ignore them. Click on `Clear` from time to time.
 3. Enter `03` at field `ReportID`.
 4. Enter `FF FF FF FF FF` at fields below `ReportID`.
