@@ -1,23 +1,42 @@
 # Know your ESP32 DevKit board
 
-You may choose any devkit board you want as long as it is based on Expressif's "ESP32" architecture and features BLE support. To be more precise, "ESP32" or "ESP32S3" boards, since they are supported by [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino). However, Expressif's "ESP32C3" boards are not recommended since they have a single CPU core. They work, but this project takes advantage of dual core architectures.
+You may choose any devkit board you want as long as it is based on Expressif's "ESP32" architecture and features BLE support.
+To be more precise, "ESP32" or "ESP32S3" boards, since they are supported by [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino).
+Expressif's "ESP32C3" boards are not recommended since they have a single CPU core.
+They work, but this project takes advantage of dual core architectures.
 
-Alternatively, you may use any ESP32 *USB-capable* board for a purely wired implementation, for example, "ESP32S3" boards. "USB-capable" means your devkit is able to work as a fully-featured USB device. Note that most USB ports found in devkit boards are just serial port devices, not fully featured ones, so check a data sheet before purchasing. Right now, this project does not support both USB and BLE connectivity at the same time in the same device.
+Alternatively, you may use any "ESP32S3" board for a purely wired implementation, since those are *USB-capable*.
+"USB-capable" means your devkit is able to work as a fully-featured USB device.
+Note that most USB ports found in devkit boards are just serial port devices, not fully featured ones, so check a data sheet before purchasing.
+Right now, this project does not support both USB and BLE connectivity at the same time in the same device.
 
-Some interesting ESP32 boards for this project are:
+Pure "ESP32" boards are widely available and 100% functional, however, they are a bit outdated and may drop support soon.
+My advice is to go with the latest boards. Some interesting DevKit boards for this project are:
 
-- [Tinypico](https://www.tinypico.com/) and [the alike](https://unexpectedmaker.com/shop?category=Development+Boards).
+- Those designed and sold by [Unexpected Maker](https://unexpectedmaker.com/shop?category=Development+Boards),
+  like "Feather S3", "Tiny S3" or "TinyPico". Those are open hardware, as well.
 - [Adafruit Feather 32u4 Bluefruit LE](https://www.adafruit.com/product/2829).
-- [Wemos D32 boards](https://www.wemos.cc/en/latest/d32/d32.html), aka "Lolin32".
-  - *Note*: Wemos "Lolin32 Lite" is an outdated and deprecated board. However, very cheap clones are still sold at some retailers. This board features battery support, but lacks a built-in "state of charge" monitoring circuit.
+- [Wemos boards](https://www.wemos.cc/). *Note*:
+  - The "D32" series are also known as "Lolin32" and found by that name at many retailers.
+  - Wemos "Lolin32 Lite" is an outdated and deprecated board. However, very cheap clones are still sold at some retailers.
+  - "S3 mini" is a very interesting board if you don't need built-in battery support.
 - [Sparkfun Thing Plus](https://www.sparkfun.com/products/17381).
 - [Some LilyGO boards](http://www.lilygo.cc/) even if their built-in display is not used.
+  - "T7 S3" is a very interesting board, close to "Wemos S3 mini", but features built-in battery support
+    (credits to user [@WallK](https://github.com/WallK) for pointing this out).
 
 You need to balance two key aspects: **size and pin availability**. The larger the board, the higher the count of available pins, so you can fit more buttons, paddles, etc, but the greater is the space required inside the sim wheel's housing.
 
 In order to reduce size and circuit complexity, it is recommended to use GPIO expanders (will be explained later) and small devkit boards like Unexpected Maker's "TinyPico" or LilyGO's "T-QT".
 
 This project makes extensive use of the official "ESP-WROOM-32" board (aka "ESP32-DevKit-C") for testing and development purposes, but this is not the best choice due to its excessive size.
+
+## Flash memory requirements
+
+At the time of writing, this project uses 85%-90% of the storage capacity of a "standard" ESP32 DevKit, which is **4 MB** of flash memory.
+This is very close to the limit and firmware size may continue to grow.
+In case of extreme need, you may still reconfigure the partition table to make more room for the code.
+However, my advice is to go for a 8 MB DevKit board, just in case.
 
 ## The two lies
 
