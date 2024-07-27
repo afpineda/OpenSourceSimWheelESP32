@@ -23,7 +23,17 @@ Depending on how the circuit is closed, momentary switches may be classified as:
 Switches are prone to [bouncing](https://circuitdigest.com/electronic-circuits/what-is-switch-bouncing-and-how-to-prevent-it-using-debounce-circuit) due to its mechanical nature.
 This project provides debouncing by software means.
 
+### A note on backlit switches
+
+You may use them, but they are not recommended for battery-based systems.
+
+- Single-color backlit switches: there is no need for specific firmware support. All you need is wiring.
+- Programable RGB backlit switches: this project does not provide specific support for them.
+
 ## Incremental Rotary Encoders
+
+Most rotary encoders feature a *built-in* push button. Those are the ones described here.
+However, you may choose a rotary encoder without a push button.
 
 They come in three flavors:
 
@@ -43,9 +53,24 @@ Rotary encoders can be very noisy. Despite debouncing techniques, some rotations
 
 They are similar in shape to rotary encoders, but they work in a complete different way. A N-position rotary switch is just the same as N **non-momentary** switches where one and only one of them is closed at all times. **This makes them unpractical**, since the PC side will detect a button as "always on". When trying to configure another button in the simulator, that one will get in the way.
 
-We could alleviate the situation by instructing the firmware to report a button press only if there is a change in the position of the rotary switch. However, the simulator will never know what such position is at first.
+We could alleviate the situation by instructing the firmware to report a button press only if there is a change in the position of the rotary switch. However, the simulator will never know what such a position is at first.
+In this sense, there is **no specific support** to absolute rotary switches in this project.
+However, they work, but not recommended.
 
-Absolute rotary switches are *not* supported by this project.
+### A note about *"mode selectors"*
+
+You may find absolute rotary switches in some commercial SIM wheels that do not report input to the host computer. Instead, they allow the user to choose a behavior for other inputs (typically, a pair of rotary encoders). This project features *mode selectors*, but in another way:
+
+- Assigned to simple on/off switches only, which are called **"ALT" buttons**.
+- There are just two modes: *regular* and *"alternate"*.
+- The selected mode affects all other inputs.
+- You can have as many "ALT" buttons as you want (or none), but they all work just the same.
+  Typically, you place an "ALT" button on each end of the SIM wheel (left and right).
+
+Depending on user preferences:
+
+- "ALT buttons" may work as independent regular buttons as well.
+- Clutch paddles may work as "ALT buttons" as well.
 
 ## Rotary Potentiometers
 
