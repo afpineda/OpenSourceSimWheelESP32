@@ -93,7 +93,7 @@ Please, note that rotary potentiometers may be replaced by any other device whic
 - Some kinds of (so called) *digital potentiometers*
 - Some kinds of Hall-Effect sensors
 
-This project will will work with them, but still refer to them as "potentiometers".
+This project will work with them, but still refer to them as "potentiometers".
 
 ## Directional pads (DPADs) and 4-way joysticks
 
