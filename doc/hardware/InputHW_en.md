@@ -199,6 +199,23 @@ This is a button matrix with 5 selector pins and 5 input pins, giving 25 inputs,
 
 Almost any kind of diode is suitable for this circuit, but the fast switching [Schottky diodes](https://en.wikipedia.org/wiki/Schottky_diode) with low forward voltage are perfect. For example: 1N4148.
 
+#### Encoded button matrix
+
+This alternative further reduces the number of required pins by adding a *line decoder* chip to the circuit design.
+Selector pins first indicate a particular switch in a binary-encoded format.
+The specified switch will then be enabled in each group by the line decoder.
+Input pins finally indicate whether the chosen switch is closed in each group.
+
+The following example uses a 4-bits line decoder, requires 6 pins instead of 8, and gives 16 inputs:
+
+![Encoded button matrix circuit for 16 inputs](./pictures/EncodedBtnMatrix16Inputs.png)
+
+[Test this circuit at falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKAEIQAROgYwHsAJnQBOAHQDOAFgkAjAJYAXcVBABBADQAhEAEVI6nWAMoD2Lr0EiJ08fKVRIE0QEcJYeKIB2kME9fifOC93Pwk4EM9mUIDwrxY0PApiFBBCSVTJKjSQPDBkkGxoM25+ITEpWUVlQrMqOpYAGSSU7MlJROy6kAAzAEMAG3E6AqKoRuaQYkIQNsSplSo+weGasYB3cBR2mbhN7YRCeo33PETMqhPEhBREyBYN5LPdx5n5u42MQieqT7PO+-AYDQ4EOmzwF1B70moLAMKBEKOOV2sKoUwR61SpxBVHB6KhlzBe0SQNuAJeJOQWIpUN+hPJNwxX2JDNp1IB7gO0M2sK5ULw83mHOmbwBOGF0354sZWPmYt57MgWwygLw6X+Gzw2Wy7iV6pAGEgavSmqN0o66QNpvxYFVyqBPK2iPtUqB20dGNdzK9VHd+Ju6LA2CBIF9Ct16SFIcyHsgnMF+ESoeOCcJzGBScBwJRgOuUcRJuVkrzGKLAoZGfpc1BFZhoNIKQzuOxOWwDejNK+hKbGblss7GZJVHO4CDKWHfu2w8HOydKB5U623w98JnObHu3xKanK-HCs5U63G7JoOH9dXUJep5PR4181PDN3Gt2w7wrfPos7L+fN-12Gmw9pR99UNZU5VDAQR2DbA-0g9cfRAIQ+gAV36BQWAg6doOmadhxSRDehQtCMMXAoYM9Vc8LoZDUPQ7lpiwuiKIQqiCJojCwFzBjmFzXDmOoojMyoLid12Sj+NogkuMPeD8MIiTY3osiFKY2S2MmfIGLPXjVIEtFSPFIdRL41jdIZTSHyMnTaKLBii20li5Ig18Ulst97PEpzdls78ZIctTaQYwDLL8gS5UCmD3JMlhlHI91yIYi4egGIZorBH1o0wmDEqWFKYtHYtAygrLwCS5ZUrPd0zwSkqcroVLIzi5TqogWr6pTRqsWa0rcsYuK50U6ZsuSuqYo4tsLjG-SVBa4b6pXOKV2qxZZuUIt3Rs4qZrK5QXkqsziuW7boXS1FQS61rVrfda3yW7qRqRE6Hqmoajtpd0As2u7UrA6MwoOr6AA9UhAlBiExISx02GYGDscQJCEUoRA-P50gQNoZn+GQKAwMHCDnApJCQBh0juIH2jHCAEAQCB0YjFIAGU6H6XgFD4coAAc5E8cQWDJhkmDBygICYf8QyQbgADcAGlFDJB95jR9JJBFZMsWuK50fVj0SIOWhNchFgAFkKFp1pJ06ENoAQI2TaVu9JzeS3reNxWKAffYGR9K2bdd3WZn2SEnd5mYsH9sxrjBtpReDABJTx2aQhQJE57mWCAA)
+
+The market's typical line decoders use addresses that are 8 bits long. One of these would allow you to use just six pins to achieve 24 inputs.
+
+This alternative is not supported by this project since *multiplexed switches* (see below) are quite similar and simpler.
+
 ### Multiplexed switches
 
 This circuit is quite similar to a button matrix, but it requires a number of multiplexers. However, it requires less wiring. Two groups of pins are required:
