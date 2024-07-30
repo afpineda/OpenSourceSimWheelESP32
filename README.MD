@@ -11,7 +11,7 @@ This project provides open hardware and software for a sim-racing wheel or butto
 - **Wireless connectivity** through **Bluetooth Low Energy**, with zero configuration effort
 - **Wired connectivity** is also available through **USB**.
 - There are **several hardware setups** to choose from and detailed instructions about how to **customize** them with **minimum effort**.
-- Power through rechargeable **batteries** or through the wheel's base
+- Power through rechargeable **batteries**, wheel's base or USB cable.
 - **Alternate mode**. While engaged, any input is reported as an alternate one, thus duplicating the number of effective inputs. Much like the SHIFT key on your keyboard.
 - **Clutch paddles** that can be mapped to one of four functions through user preferences:
   - **F1-style clutch** with bite-point calibration
@@ -45,7 +45,7 @@ Este proyecto proporciona hardware y software abierto para un volante de simulac
 - **Conectividad inalámbrica** a través de **Bluetooth de baja energía** y sin esfuerzo de configuración.
 - **Conectividad por cable** también disponible mediante **USB**
 - **Varias configuraciones hardware** para elegir e instrucciones detalladas para **personalizarlas** con el **mínimo esfuerzo**
-- Alimentación mediante **baterías** recargables, o bien, mediante la base del volante
+- Alimentación mediante **baterías** recargables, base del volante o cable USB.
 - **Modo alternativo**. Mientras está activado, cualquier entrada se reporta como una entrada alternativa, duplicando su número en consecuencia. Similar a la tecla SHIFT de un teclado.
 - **Levas de embrague** que pueden ser configuradas en una de cuatro funciones:
   - **Embrague tipo F1** con calibración del punto de mordida
