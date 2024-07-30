@@ -82,3 +82,21 @@ there is no way to send telemetry data to the firmware:
   - Which display hardware to use?
 
 And there is a better way: buy a display supported by *SimHub* and put it into your steering wheel along with this ESP32 hardware, as a separate device. This way you can display anything you like, even a TV show.
+
+## Why ESP32 ?
+
+My first attempt at this project was based on [Arduino Nano 33](https://docs.arduino.cc/hardware/nano-33-ble/)
+and the [Mbed operating system](https://os.mbed.com/).
+Soon, this turned out to be a wrong decision, even when I achieved a working prototype based on USB connectivity.
+The hardware capabilities of such a DevKit were below my expectations (especially the built-in ADC), but, worst of all,
+developer support was very defective (as you can still see [here](https://github.com/arduino/ArduinoCore-mbed/issues/376)). I ended up stuck in a third-party software bug.
+
+For the following reasons, I now focus on the ESP32 architecture:
+
+- Way better hardware capabilities.
+- Active support is available from both the [ESP32 forums](https://esp32.com/) and the
+  [Arduino-ESP32 project](https://github.com/espressif/arduino-esp32/issues).
+- Cheaper hardware.
+- [Wide community acceptance](https://github.com/topics/esp32).
+- There is a lot of information available on the [Internet](https://randomnerdtutorials.com/).
+- More manufacturers to choose from.
