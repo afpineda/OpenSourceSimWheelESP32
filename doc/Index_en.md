@@ -12,7 +12,7 @@
 
 - Ready to deploy designs:
 
-  *(These designs work as an example of several implementation choices. Setup9 is the recommended way to go.)*
+  *These designs work as an example of several implementation choices. Setup9 is the recommended way to go.*
 
   |                      Name                       |     Usage      |       DevKit       |                                       Inputs summary                                        |  Main power source  |
   | :---------------------------------------------: | :------------: | :----------------: | :-----------------------------------------------------------------------------------------: | :-----------------: |
@@ -26,6 +26,8 @@
   | [Setup7](./hardware/setups/setup7/Setup7_en.md) | Steering wheel |  LilyGO T-QT PRO   |                 Rotary encoders x3, analog clutch paddles, 20 push buttons                  | Battery or external |
   | [Setup8](./hardware/setups/setup8/Setup8_en.md) |   Button box   |  LilyGO T-QT PRO   |                             Rotary encoders x4, 21 push buttons                             |         USB         |
   | [Setup9](./hardware/setups/setup9/Setup9_en.md) | Steering wheel |   Wemos S3 mini    |      Rotary encoders x7, funky switch or DPAD, analog clutch paddles, 32 push buttons       |      External       |
+
+- [Changing your device's display name (Windows and BLE connectivity only)](./RenameDeviceWin_en.md)
 
 ## Known issues
 
