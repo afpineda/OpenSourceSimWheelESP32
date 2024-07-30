@@ -188,3 +188,11 @@ First release.
   [NimBLEImplTest](../src/QualityControls/UnitTests/NimBLEimplTest/README.md) passed with
   [NimBLE-Arduino v1.4.2](https://github.com/h2zero/NimBLE-Arduino/releases/tag/1.4.2).
 - Minor errata fixes and documentation updates.
+
+## 4.1.5
+
+- No code changes.
+- A new section has been added about how to rename the HID display name,
+  addressing a [question](https://github.com/afpineda/OpenSourceSimWheelESP32/discussions/10)
+  from user [@WallK](https://github.com/WallK).
+- Major documentation changes due to errata and outdated content.
