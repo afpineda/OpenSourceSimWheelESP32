@@ -153,7 +153,8 @@ void autoPowerOffCallback(void *unused)
 void hidImplementation::begin(
     std::string deviceName,
     std::string deviceManufacturer,
-    bool enableAutoPowerOff)
+    bool enableAutoPowerOff,
+    uint16_t productID)
 {
     if (hid == nullptr)
     {
@@ -182,7 +183,7 @@ void hidImplementation::begin(
             abort();
         }
         hid->manufacturer()->setValue(String(deviceManufacturer.c_str())); // Workaround for bug in `hid->manufacturer(deviceManufacturer)`
-        hid->pnp(BLE_VENDOR_SOURCE, BLE_VENDOR_ID, BLE_PRODUCT_ID, PRODUCT_REVISION);
+        hid->pnp(BLE_VENDOR_SOURCE, BLE_VENDOR_ID, (productID==0) ? BLE_PRODUCT_ID: productID, PRODUCT_REVISION);
         hid->hidInfo(0x00, 0x01);
         hid->reportMap((uint8_t *)hid_descriptor, sizeof(hid_descriptor));
 

@@ -27,10 +27,12 @@
     ],
     "ignoreWords": [
         "Abhishek",
+        "Descomente",
         "ESPBLE",
         "Fanatec",
         "Ghosh",
         "Mamandurrio",
+        "Mbed",
         "Proto",
         "RCCW",
         "WROOM",
@@ -47,10 +49,9 @@
         "powerboost",
         "protoboard",
         "protoboards",
-        "simracer",
-        "simracing",
         "regedit",
-        "Mbed"
+        "simracer",
+        "simracing"
     ],
     "import": []
 }

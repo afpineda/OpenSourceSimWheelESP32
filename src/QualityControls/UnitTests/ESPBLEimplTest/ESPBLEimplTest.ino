@@ -21,6 +21,8 @@
 
 bool powerSim = true;
 
+// Custom PID for testing
+#define BLE_TEST_PRODUCT_ID 0xfffe
 //------------------------------------------------------------------
 // mocks
 //------------------------------------------------------------------
@@ -78,7 +80,7 @@ void setup()
     esp_log_level_set("*", ESP_LOG_VERBOSE);
     Serial.begin(115200);
     Serial.println("--START--");
-    hidImplementation::begin("ESPBLEimplTest", "Mamandurrio", true);
+    hidImplementation::begin("ESPBLEimplTest", "Mamandurrio", true, BLE_TEST_PRODUCT_ID);
     Serial.println("--GO--");
 }
 

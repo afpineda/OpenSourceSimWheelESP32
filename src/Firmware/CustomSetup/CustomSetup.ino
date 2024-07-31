@@ -42,7 +42,7 @@ std::string DEVICE_MANUFACTURER = "Me";
 //      Comente la línea si no hay necesidad de entrar en sueño profundo, o bien,
 //      indique un número de GPIO con capacidad RTC para despertar del sueño.
 
-//#define WAKE_UP_PIN
+// #define WAKE_UP_PIN
 
 /* -----------------------------------------------------------------
  >>>> [EN] POWER LATCH SUBSYSTEM
@@ -54,7 +54,7 @@ std::string DEVICE_MANUFACTURER = "Me";
 // [ES] Indique el número de GPIO para la señal "POWER_LATCH"
 //      Comente la línea si no hay circuito externo de power latch.
 
-//#define POWER_LATCH
+// #define POWER_LATCH
 
 #ifdef POWER_LATCH
 // [EN] Set an the activation mode for the "POWER_LATCH" pin.
@@ -101,6 +101,21 @@ const powerLatchMode_t LATCH_MODE = POWER_OPEN_DRAIN;
 
 #endif // ENABLE_BATTERY_MONITOR
 
+/* -----------------------------------------------------------------
+ >>>> [EN] DEVICE IDENTIFICATION
+ >>>> [ES] IDENTIFICATION DEL DISPOSITIVO
+------------------------------------------------------------------ */
+
+// [EN] Uncomment the following line to set a custom PID
+// [ES] Descomente la siguiente linea para ajustar el PID a medida
+
+// #define BLE_CUSTOM_PID <here>
+
+// [EN] Substitute <here> with a non-zero 16-bits number as
+//      a custom product ID
+// [ES] Sustituya <here> con un número de 16 bits distinto de cero
+//      como identificador de producto a medida
+
 //------------------------------------------------------------------
 // Globals
 //------------------------------------------------------------------
@@ -111,16 +126,16 @@ const powerLatchMode_t LATCH_MODE = POWER_OPEN_DRAIN;
 
 void simWheelSetup()
 {
-    // [EN] Example code. Fill with your own code.
-    // [ES] Código de ejemplo. Ponga el suyo.
+    // [EN] Example code. Delete and fill with your own code.
+    // [ES] Código de ejemplo. Bórrelo y ponga el suyo.
 
-    inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_39,25,26);
-    inputs::addRotaryEncoder(GPIO_NUM_35, GPIO_NUM_32,27,28);
-    inputs::addRotaryEncoder(GPIO_NUM_25, GPIO_NUM_26,29,30);
-    inputs::addRotaryEncoder(GPIO_NUM_14, GPIO_NUM_18,31,32);
-    inputs::addDigital(GPIO_NUM_34,33);
-    inputs::addDigital(GPIO_NUM_33,34);
-    inputs::addDigital(GPIO_NUM_27,35);
+    inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_39, 25, 26);
+    inputs::addRotaryEncoder(GPIO_NUM_35, GPIO_NUM_32, 27, 28);
+    inputs::addRotaryEncoder(GPIO_NUM_25, GPIO_NUM_26, 29, 30);
+    inputs::addRotaryEncoder(GPIO_NUM_14, GPIO_NUM_18, 31, 32);
+    inputs::addDigital(GPIO_NUM_34, 33);
+    inputs::addDigital(GPIO_NUM_33, 34);
+    inputs::addDigital(GPIO_NUM_27, 35);
 
     inputHub::setClutchInputNumbers(33, 34);
     inputHub::setClutchCalibrationInputNumbers(31, 32); // Rotary 4
@@ -151,7 +166,12 @@ void setup()
     simWheelSetup();
     hidImplementation::begin(
         DEVICE_NAME,
-        DEVICE_MANUFACTURER);
+        DEVICE_MANUFACTURER
+#if BLE_CUSTOM_PID != 0
+        ,
+        BLE_CUSTOM_PID
+#endif
+    );
 
 #ifdef ENABLE_BATTERY_MONITOR
     batteryCalibration::begin();

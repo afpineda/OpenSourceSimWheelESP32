@@ -743,11 +743,14 @@ namespace hidImplementation
      * @param deviceManufacturer Name of the manufacturer of this device
      * @param enableAutoPowerOff True to power off when not connected within a certain time lapse.
      *        Set to FALSE if there is no battery or for testing.
+     * @param productID Custom PID for BLE devices. Ignored in USB implementation.
+     *                  Set to zero to use a default product ID.
      */
     void begin(
         std::string deviceName,
         std::string deviceManufacturer,
-        bool enableAutoPowerOff = true);
+        bool enableAutoPowerOff = true,
+        uint16_t productID = 0);
 
     /**
      * @brief Tell if there is a Bluetooth connection

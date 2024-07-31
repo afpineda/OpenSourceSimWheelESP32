@@ -21,23 +21,72 @@ In order to change that display name, follow this procedure.
 4. Double-click (edit) the value "**OEMName**".
 5. Set a custom display name and hit "enter".
 
-## Additional notes
+This works for a single computer and user account.
+If you need to propagate your custom display name to another user or computer:
 
-- If your device uses USB connectivity, the display name will match your device name,
-  which can be set in your custom firmware using the API call `hidImplementation::begin()`.
+- Right-click on the alluded registry key.
+- Select "Export" to create a ".reg" file.
+- Move the ".reg" file to another computer or account and double-click.
 
-- If you have two or more BLE devices using firmware from this project,
-  all of them will show the same display name, because they share the same hardware ID.
-  If you want to set a different hardware ID for any of your devices, first, you must modify
-  the source code:
+This works as a backup measure, too.
 
-  - Edit file ["HID_definitions.h"](../src/include/HID_definitions.h).
-  - Locate the following line:
+## Custom display name for two or more open-source sim-wheels or button boxes
 
-    ```c++
-    #define BLE_PRODUCT_ID 0xffff
-    ```
+If you have two or more BLE devices using firmware from this project,
+**all of them will show the same display name, because they share the same hardware ID**.
+However, you may set a different hardware ID for each device by modifying the source code:
 
-  - Set any other 16-bits hexadecimal value, right to "BLE_PRODUCT_ID". That is the new PID.
-  - You may have to run the [sources setup procedure](./firmware/sourcesSetup_en.md) again.
-  - Compile and upload your custom firmware [again](./hardware/DevKits_en.md).
+- Locate the following API call (not to be taken literally):
+
+  ```c++
+  hidImplementation::begin(
+        DEVICE_NAME,
+        DEVICE_MANUFACTURER,
+        ...);
+  ```
+
+- Add a new parameter to the right: a non-zero 16 bits number as a custom PID.
+
+For example, [Setup1.ino](../src/Firmware/Setup1/Setup1.ino) shows:
+
+```c++
+hidImplementation::begin(
+   DEVICE_NAME,
+   DEVICE_MANUFACTURER,
+   false);
+```
+
+In order to set the custom PID number 16, substitute with:
+
+```c++
+hidImplementation::begin(
+   DEVICE_NAME,
+   DEVICE_MANUFACTURER,
+   false,
+   16);
+```
+
+## USB connectivity
+
+If your device uses USB connectivity, the display name will match your device name,
+which can be set in your custom firmware using the API call `hidImplementation::begin()`.
+Any custom PID will be ignored since USB uses the hardware ID
+licensed to your DevKit's manufacturer.
+
+## Why all this mess?
+
+Believe it or not, the HID specification does not include a "display name".
+Windows figures out what to show in this manner:
+
+- *USB*: the display name is taken from the "product string",
+  which is a certain [USB string descriptor](https://beyondlogic.org/usbnutshell/usb5.shtml#StringDescriptors).
+
+- *Bluetooth classic*: the display name is taken from the value of the SDP attribute called "Service Name".
+  See table 5.3 (section 5.3.3) from the
+  [Bluetooth HID specification](https://www.bluetooth.com/specifications/specs/human-interface-device-profile-1-1-1/).
+
+- *BLE*: according to the
+  [HID over GATT specification](https://www.bluetooth.com/specifications/specs/hid-over-gatt-profile-1-0/)
+  there is nowhere to get a display name.
+  When a device is advertised, Windows ought to take note of the device name, but it doesn't.
+  The open-source community is still in the dark about how commercial products display a custom display name.

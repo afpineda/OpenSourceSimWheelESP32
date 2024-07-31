@@ -21,6 +21,9 @@
 
 bool powerSim = true;
 
+// Custom PID for testing
+#define BLE_TEST_PRODUCT_ID 0xfffe
+
 //------------------------------------------------------------------
 // mocks
 //------------------------------------------------------------------
@@ -82,7 +85,7 @@ void setup()
     userSettings::cpWorkingMode = CF_CLUTCH;
     userSettings::dpadWorkingMode = true;
     userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
-    hidImplementation::begin("NimBLEimplTest", "Mamandurrio", true);
+    hidImplementation::begin("NimBLEimplTest", "Mamandurrio", true, BLE_TEST_PRODUCT_ID);
     Serial.println("--GO--");
 }
 

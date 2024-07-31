@@ -60,7 +60,8 @@ SimWheelHIDImpl simWheelHID;
 void hidImplementation::begin(
     std::string deviceName,
     std::string deviceManufacturer,
-    bool enableAutoPowerOff)
+    bool enableAutoPowerOff,
+    uint16_t productID)
 {
     if (!hid.ready())
     {
