@@ -35,7 +35,11 @@ This project makes extensive use of the official "ESP-WROOM-32" board (aka "ESP3
 
 At the time of writing, this project uses 85%-90% of the storage capacity of a "standard" ESP32 DevKit, which is **4 MB** of flash memory.
 This is very close to the limit and firmware size may continue to grow.
-In case of extreme need, you may still reconfigure the partition table to make more room for the code.
+In case of extreme need, you may still reconfigure the partition table to make more room for the firmware:
+
+- In Arduino IDE, go to "tools" ("Arduino: board configuration" in VSCode), then "partition scheme".
+- Select "Huge APP (3MB No OTA/1MB SPIFFS)".
+
 However, my advice is to go for a 8 MB DevKit board, just in case.
 
 ## The two lies
