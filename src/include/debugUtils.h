@@ -18,7 +18,7 @@
 void debugPrintBool(inputBitmap_t state, uint8_t bitsCount = 0);
 void printTestHeader(int index);
 
-// Relative rotary enconder pins for testing
+// Relative rotary encoder pins for testing
 #define TEST_ROTARY_SW GPIO_NUM_34
 #define TEST_ROTARY_CLK GPIO_NUM_35
 #define TEST_ROTARY_DT GPIO_NUM_32

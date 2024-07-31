@@ -196,3 +196,9 @@ First release.
   addressing a [question](https://github.com/afpineda/OpenSourceSimWheelESP32/discussions/10)
   from user [@WallK](https://github.com/WallK).
 - Major documentation changes due to errata and outdated content.
+
+## 4.2.0
+
+- A parameter was added to `hidImplementation::begin()` which allows to set a custom PID
+  (BLE implementation only) on a device-by-device basis.
+- Documentation updates.
