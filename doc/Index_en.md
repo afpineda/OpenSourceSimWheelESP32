@@ -27,7 +27,7 @@
   | [Setup8](./hardware/setups/setup8/Setup8_en.md) |   Button box   |  LilyGO T-QT PRO   |                             Rotary encoders x4, 21 push buttons                             |         USB         |
   | [Setup9](./hardware/setups/setup9/Setup9_en.md) | Steering wheel |   Wemos S3 mini    |      Rotary encoders x7, funky switch or DPAD, analog clutch paddles, 32 push buttons       |      External       |
 
-- [Changing your device's display name (Windows and BLE connectivity only)](./RenameDeviceWin_en.md)
+- [Changing your device's display name (Windows and BLE connectivity only) or Product ID](./RenameDeviceWin_en.md)
 
 ## Known issues
 

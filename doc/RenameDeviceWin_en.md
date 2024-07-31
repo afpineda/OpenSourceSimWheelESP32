@@ -1,4 +1,4 @@
-# Changing your device's display name (Windows and BLE connectivity only)
+# Changing your device's display name (Windows and BLE connectivity only) or Product ID
 
 Once your BLE simwheel/button box is paired and connected to your host computer,
 It will be available in the "Game Controllers" control panel.
@@ -89,4 +89,4 @@ Windows figures out what to show in this manner:
   [HID over GATT specification](https://www.bluetooth.com/specifications/specs/hid-over-gatt-profile-1-0/)
   there is nowhere to get a display name.
   When a device is advertised, Windows ought to take note of the device name, but it doesn't.
-  The open-source community is still in the dark about how commercial products display a custom display name.
+  The open-source community is still in the dark about how commercial products show a custom display name.
