@@ -202,3 +202,11 @@ First release.
 - A parameter was added to `hidImplementation::begin()` which allows to set a custom PID
   (BLE implementation only) on a device-by-device basis.
 - Documentation updates.
+
+## 4.3.0
+
+- For security concerns, the API enables the user to lock or unlock configuration changes
+  coming from any PC application (including the companion app).
+- A custom VID and PID can be set using HID reports without the need to modify the source code
+  (BLE only). The companion app supports this feature.
+- Documentation updates.
