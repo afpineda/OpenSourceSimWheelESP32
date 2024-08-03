@@ -59,9 +59,10 @@ void setup()
     inputs::setAnalogClutchPaddles(TEST_ANALOG_PIN1, TEST_ANALOG_PIN2);
 
     inputHub::setALTInputNumbers({ALT_IN});
-    inputHub::cycleALTButtonsWorkingMode_setInputNumbers({(COMMAND_IN) , (CYCLE_ALT_IN)});
-    inputHub::cycleCPWorkingMode_setInputNumbers({(COMMAND_IN) , (CYCLE_CLUTCH_IN)});
-    inputHub::cycleDPADWorkingMode_setInputNumbers({(COMMAND_IN) , (CYCLE_DPAD_IN)});
+    inputHub::cycleSecurityLock_setInputNumbers({(COMMAND_IN), 7});
+    inputHub::cycleALTButtonsWorkingMode_setInputNumbers({(COMMAND_IN), (CYCLE_ALT_IN)});
+    inputHub::cycleCPWorkingMode_setInputNumbers({(COMMAND_IN), (CYCLE_CLUTCH_IN)});
+    inputHub::cycleDPADWorkingMode_setInputNumbers({(COMMAND_IN), (CYCLE_DPAD_IN)});
     inputHub::setClutchInputNumbers(LEFT_CLUTCH_IN, RIGHT_CLUTCH_IN);
     inputHub::setClutchCalibrationInputNumbers(CW_IN, CCW_IN);
     inputHub::setDPADControls(UP, DOWN, LEFT, RIGHT);
@@ -70,6 +71,7 @@ void setup()
     userSettings::altButtonsWorkingMode = true;
     userSettings::dpadWorkingMode = true;
     userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
+    userSettings::securityLock = false;
 
     hidImplementation::begin("Proto1", "Mamandurrio", false);
 

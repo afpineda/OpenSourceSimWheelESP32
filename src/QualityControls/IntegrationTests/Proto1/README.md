@@ -54,7 +54,7 @@ For later reference:
 13. Press and hold "BTN2", then press and hold "BTN5", then release both.
 14. Press and release "BTN3". Button #4 should be registered.
 
-### Part 2
+### Part 2 (buttons map)
 
 1. Open "SimpleHidWriter.exe". Locate `Device VID=501D` in the top area, and click on it.
 2. You should see continuous report lines starting with `RD 01`. Ignore them. Click on `Clear` from time to time.
@@ -66,3 +66,13 @@ For later reference:
 8. Press and release "BTN7". Should be registered as button #10.
 9. Press and hold "ALT", then press and release "BTN7", then release "ALT". Button #11 should be registered.
 10. Press and release "BTN3". Should be registered as as D-PAD up.
+
+### Part 3 (security lock)
+
+1. Press and hold "BTN2", then press "BTN7", then release both.
+2. Enter `04` at field `ReportID`.
+3. Enter `07 20 20` at fields below `ReportID`. Click on `Set Feature`.
+4. Press and release "BTN7". Should be registered as button #10.
+5. Press and hold "BTN2", then press "BTN7", then release both.
+6. Enter `07 13 13` at fields below `ReportID`. Click on `Set Feature`.
+7. Press and release "BTN7". Should be registered as button #20.
