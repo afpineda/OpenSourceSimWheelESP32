@@ -70,9 +70,15 @@ For later reference:
 ### Part 3 (security lock)
 
 1. Press and hold "BTN2", then press "BTN7", then release both.
-2. Enter `04` at field `ReportID`.
-3. Enter `07 20 20` at fields below `ReportID`. Click on `Set Feature`.
-4. Press and release "BTN7". Should be registered as button #10.
-5. Press and hold "BTN2", then press "BTN7", then release both.
-6. Enter `07 13 13` at fields below `ReportID`. Click on `Set Feature`.
-7. Press and release "BTN7". Should be registered as button #20.
+2. Enter `02` at field `ReportID`.
+3. Click on `Get Feature`.
+4. Byte in 17th position (after `RD 02`) must show `01`.
+5. Enter `04` at field `ReportID`.
+6. Enter `07 20 20` at fields below `ReportID`. Click on `Set Feature`.
+7. Press and release "BTN7". Should be registered as button #10.
+8. Press and hold "BTN2", then press "BTN7", then release both.
+9. Enter `07 13 13` at fields below `ReportID`. Click on `Set Feature`.
+10. Press and release "BTN7". Should be registered as button #20.
+11. Enter `02` at field `ReportID`.
+12. Click on `Get Feature`.
+13. Byte in 17th position (after `RD 02`) must show `00`.
