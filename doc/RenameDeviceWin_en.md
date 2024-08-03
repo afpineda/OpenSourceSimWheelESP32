@@ -30,11 +30,18 @@ If you need to propagate your custom display name to another user or computer:
 
 This works as a backup measure, too.
 
-## Custom display name for two or more open-source sim-wheels or button boxes
+## Custom display name for each individual device
 
 If you have two or more BLE devices using firmware from this project,
 **all of them will show the same display name, because they share the same hardware ID**.
-However, you may set a different hardware ID for each device by modifying the source code:
+However, there are two (non-exclusive) ways to assign a different hardware ID to each device.
+
+### By means of the companion app
+
+A custom VID or PID can be stored by the firmware in flash memory to be used on the subsequent boot.
+Use the [companion app](https://github.com/afpineda/SimWheelESP32Config).
+
+### In source code
 
 - Locate the following API call (not to be taken literally):
 
@@ -46,6 +53,7 @@ However, you may set a different hardware ID for each device by modifying the so
   ```
 
 - Add a new parameter to the right: a non-zero 16 bits number as a custom PID.
+  Numbers 0 and FFFF (hexadecimal) are reserved and must not be used.
 
 For example, [Setup1.ino](../src/Firmware/Setup1/Setup1.ino) shows:
 

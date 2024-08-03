@@ -293,6 +293,34 @@ If you go for a purely wired USB implementation:
 - There is no sense in using a battery-operated design if you have USB power available. For this reason, automatic power-off is not available within this implementation.
 - Note that you can not have both Bluetooth and USB at the same time in the same device.
 
+### Security lock
+
+For security concerns, the user can lock or unlock configuration changes coming from any PC application (including the companion app).
+This is a security precaution to stop unauthorized configuration modifications caused by rogue programs.
+
+Assign a combination of input numbers to activate this function by placing a call to
+`inputHub::cycleSecurityLock_setInputNumbers()`.
+There is one parameter: a sequence of input numbers between brackets.
+All the inputs have to be active at the same time, and none of the others.
+For example:
+
+```c
+void simWheelSetup()
+{
+   ...
+   inputs::addButtonMatrix(...)
+      .inputNumber(...,50)
+      .inputNumber(...,51)
+      ...
+   ...
+   inputHub::cycleSecurityLock_setInputNumbers({50,51});
+   ...
+}
+```
+
+The state of the security lock is changed on each activation,
+then saved to flash memory after a short delay.
+
 ## Build your design into a perfboard
 
 Some of the circuit designs may show very small resistors and diodes which does not fit the real ones. This is not a mistake. They must be placed in "vertical" layout, so they lie in a minimal surface of the perfboard.
