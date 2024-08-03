@@ -19,6 +19,7 @@ To test that:
   - Digital clutch state is properly translated into an axis position.
   - Analog clutch position is properly reported as an axis position.
 - User-defined button map is applied.
+- Security lock is engaged in response to the proper input events.
 
 ## Hardware setup
 
@@ -52,5 +53,6 @@ Output through USB serial port at 115200 bauds. Connect before reset.
 - simulate analog clutch operation in axis mode -
 - simulate repeated input without real change in inputs state -
 - simulate input in user-defined buttons map -
+- simulate security lock -
 -- END --
 ```

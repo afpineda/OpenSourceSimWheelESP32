@@ -11,18 +11,17 @@
 
 #include <HardwareSerial.h>
 #include "Simwheel.h"
-
-// Use this app for testing:
-// http://www.planetpointy.co.uk/joystick-test-application/
+#include "HID_definitions.h"
 
 //------------------------------------------------------------------
 // Globals
 //------------------------------------------------------------------
 
 bool powerSim = true;
-
-// Custom PID for testing
-#define BLE_TEST_PRODUCT_ID 0xfffe
+extern uint16_t customVID;
+extern uint16_t customPID;
+extern uint16_t factoryVID;
+extern uint16_t factoryPID;
 
 //------------------------------------------------------------------
 // mocks
@@ -43,7 +42,6 @@ void notify::BLEdiscovering()
 
 void notify::bitePoint(clutchValue_t a)
 {
-
 }
 
 void inputs::recalibrateAxes()
@@ -53,7 +51,6 @@ void inputs::recalibrateAxes()
 
 void inputs::update()
 {
-
 }
 
 void batteryCalibration::restartAutoCalibration()
@@ -85,7 +82,9 @@ void setup()
     userSettings::cpWorkingMode = CF_CLUTCH;
     userSettings::dpadWorkingMode = true;
     userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
-    hidImplementation::begin("NimBLEimplTest", "Mamandurrio", true, BLE_TEST_PRODUCT_ID);
+    hidImplementation::begin("NimBLEimplTest", "Mamandurrio", true);
+    Serial.printf("Factory default VID / PID: %04x / %04x\n", factoryVID, factoryPID);
+    Serial.printf("Actual VID / PID: %04x / %04x\n", customVID, customPID);
     Serial.println("--GO--");
 }
 

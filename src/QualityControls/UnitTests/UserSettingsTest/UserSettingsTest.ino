@@ -40,6 +40,7 @@ void printUserSettings(bool printMap = true)
     Serial.printf("   Clutch working mode: %u\n", userSettings::cpWorkingMode);
     Serial.printf("   ALT buttons working mode: %u\n", userSettings::altButtonsWorkingMode);
     Serial.printf("   DPAD working mode: %u\n", userSettings::dpadWorkingMode);
+    Serial.printf("   Security lock: %d\n", userSettings::securityLock);
     if (printMap)
     {
         Serial.printf("   Button 0 map: %hhu %hhu\n", userSettings::buttonsMap[0][0], userSettings::buttonsMap[1][0]);
@@ -74,6 +75,7 @@ void setTestCase1()
     userSettings::setALTButtonsWorkingMode(true);
     userSettings::setDPADWorkingMode(true);
     userSettings::resetButtonsMap();
+    userSettings::setSecurityLock(false);
     userSettings::saveNow();
     printTestCase();
 }
@@ -87,6 +89,7 @@ void setTestCase2()
     userSettings::resetButtonsMap();
     userSettings::setButtonMap(0, 120, 121);
     userSettings::setButtonMap(63, 121, 120);
+    userSettings::setSecurityLock(true);
     userSettings::saveNow();
     printTestCase();
 }
@@ -100,6 +103,7 @@ void setTestCase3()
     userSettings::resetButtonsMap();
     userSettings::setButtonMap(0, 15, 25);
     userSettings::setButtonMap(63, 25, 15);
+    userSettings::setSecurityLock(false);
     userSettings::saveNow();
     printTestCase();
 }
@@ -111,6 +115,7 @@ void setTestCase4()
     userSettings::setALTButtonsWorkingMode(true);
     userSettings::setDPADWorkingMode(false);
     userSettings::resetButtonsMap();
+    userSettings::setSecurityLock(true);
     printTestCaseAutoSave();
 }
 
@@ -120,7 +125,6 @@ void cleanMrProper()
     Serial.println("** The NVS flash partition has been erased **");
     Serial.println("");
 }
-
 
 //------------------------------------------------------------------
 // Arduino entry point
@@ -147,8 +151,8 @@ void loop()
     Serial.println("1 = factory defaults");
     Serial.println("2 = test case");
     Serial.println("3 = another test case");
-    Serial.println("4 = AUTOSAVE test case");
-    Serial.println("X = ERASE FLASH MEMORY (CAUTION: will erase everything)");
+    Serial.println("4 = autosave test case");
+    Serial.println("X = ERASE NVS flash partition (CAUTION: will erase everything)");
     Serial.println("Type test number and press ENTER...");
     while (!Serial.available())
         ;
@@ -169,7 +173,7 @@ void loop()
     {
         setTestCase4();
     }
-    else if (c == 'X')
+    else if ((c == 'X') || (c == 'x'))
     {
         cleanMrProper();
     }

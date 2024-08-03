@@ -1,24 +1,35 @@
 # Notes on Human Interface Device (HID) implementation
 
-This project implements a HID device (sorry for the redundancy) which may be used both through the USB and Bluetooth GATT protocol stacks. Most relevant implementation details can be found at file [HID_definitions.h](../../src/include/HID_definitions.h)
+This project implements a HID device (sorry for the redundancy)
+which may be used both through the USB and Bluetooth GATT protocol stacks.
+Most relevant implementation details can be found at file
+[HID_definitions.h](../../src/include/HID_definitions.h)
 
-This document does not intent to explain HID devices. A good source is [Jan Axelson's Lakeview Research](http://www.janaxelson.com/hidpage.htm).
+This document does not intent to explain HID devices.
+A good source is [Jan Axelson's Lakeview Research](http://www.janaxelson.com/hidpage.htm).
 
 ## License and copyright concerns
 
 ### USB
 
-Any HID device requires a vendor identifier ("VID" from now on) in order to work. Those identifiers are assigned to individual vendors through a license managed by ["The USB Implementers Forum"](https://www.usb.org/about), aka "USB-IF". That license is not open-source-friendly and the $6000 fee discourages any home-made project attempt.
+Any HID device requires a vendor identifier ("VID" from now on) in order to work.
+Those identifiers are assigned to individual vendors through a license managed by
+["The USB Implementers Forum"](https://www.usb.org/about), aka "USB-IF".
+That license is not open-source-friendly and the $6000 fee discourages any home-made project attempt.
 
 More information at [Open source Hardware Association](https://www.oshwa.org/faq/#usb-vendor-id).
 
-**This project features an USB implementation** using the existing PID (product identifier) and VID from your DevKit manufacturer, which you should not change in the source code.
+This project features an USB implementation using the existing PID (product identifier)
+and VID from your DevKit manufacturer, which you should not change.
 
-As a result, you are not allowed to use this project outside of your personal sphere. You are not allowed to exhibit the USB logo nor any other licensed material from the USB-IF.
+As a result, you are not allowed to use this project outside of your personal sphere.
+You are not allowed to exhibit the USB logo nor any other licensed material from the USB-IF.
 
 ### Bluetooth
 
-When using the Bluetooth stack, HID devices may use VIDs from different "sources". As seen at the [Device Information Service Specification](https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=244369):
+When using the Bluetooth stack, HID devices may use VIDs from different "sources".
+As seen at the
+[Device Information Service Specification](https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=244369):
 
 | Vendor ID source | Description                                                                         |
 | :--------------: | ----------------------------------------------------------------------------------- |
@@ -26,7 +37,8 @@ When using the Bluetooth stack, HID devices may use VIDs from different "sources
 |       0x02       | USB Implementer’s Forum assigned Vendor ID value                                    |
 |      other       | Reserved for future use                                                             |
 
-I don't know what is the legal situation when a reserved VID source is used. At least, there is a way to avoid the USB-IF's licenses.
+I don't know what is the legal situation when a reserved VID source is used.
+At least, there is a way to avoid the USB-IF's licenses.
 
 ## HID reports
 
@@ -41,7 +53,7 @@ This project make use of a number of HID reports:
 
 Note that feature reports are both read and write.
 
-## Data format of report ID 1
+## Data format of report ID 1 (input)
 
 | Field                | Bits size | Byte index |
 | -------------------- | :-------: | :--------: |
@@ -52,17 +64,19 @@ Note that feature reports are both read and write.
 | POV (D-PAD)          |     4     |     19     |
 | Feature notification |     4     |     19     |
 
-- Buttons state: one bit per button (1=pressed, 0=non-pressed). The least significant bit is the first button.
+- Buttons state: one bit per button (1=pressed, 0=non-pressed).
+  The least significant bit is the first button.
 - Axes: an unsigned byte in the range 0 to 254.
   - Rz: F1-Style clutch (combined input from left and right clutch paddles)
   - Ry: Left clutch paddle
   - Rx: Right clutch paddle
 - POV (D-PAD): 4 least significant bits of byte index 19. Range: 0 to 8.
-- Feature notification: 4 most significant bits of byte index 19. Valid values: 0 (nothing to notify) or 3 (wheel configuration has changed).
+- Feature notification: 4 most significant bits of byte index 19.
+  Valid values: 0 (nothing to notify) or 3 (wheel configuration has changed).
 
-## Data format of report ID 2
+## Data format of report ID 2 (wheel capabilities)
 
-Write attempts will be ignored, so this report is read only.
+Write attempts will be ignored, so this report is read-only.
 
 | Byte index | Size (Bytes) | Purpose (field) | Note                             | Since data version |
 | :--------: | :----------: | --------------- | -------------------------------- | ------------------ |
@@ -71,17 +85,21 @@ Write attempts will be ignored, so this report is read only.
 |     4      |      2       | Minor Version   | Version of this specification    | 1.0                |
 |     6      |      2       | Flags           | Device capabilities              | 1.0                |
 |     8      |      8       | ID              | Chip identifier                  | 1.1                |
+|     16     |      1       | Security lock   | User-operated write-lock         | 1.2                |
 
 Report ID 1 (input) is not affected by versioning.
 
 ### Magic number
 
-The purpose of such a field is to enable device detection and recognition, without the need to rely on a particular VID or product ID.
+The purpose of such a field is to enable device detection and recognition,
+without the need to rely on a particular VID or product ID.
 
 ### Major and minor version
 
-Two different major versions means incompatible data formats. A greater minor version means a backwards-compatible data format.
-Host-side software should check for version compatibility. Some examples:
+Two different major versions means incompatible data formats.
+A greater minor version means a backwards-compatible data format.
+Host-side software should check for version compatibility.
+Some examples:
 
 | Data version | Supported version at host |    Result    |
 | :----------: | :-----------------------: | :----------: |
@@ -90,19 +108,32 @@ Host-side software should check for version compatibility. Some examples:
 |     1.1      |            1.6            | Incompatible |
 |     2.7      |            2.3            |  Compatible  |
 
-Current data version is 1.1.
+Current data version is 1.2.
 
 ### Flags
 
-The "flags" field is a set of 1-bit flags. Flags are indexed starting from the least significant bit. Non indexed bits are reserved for future use. Current flags are enumerated in `deviceCapability_t` at file [SimWheelTypes.h][def]
+The "flags" field is a set of 1-bit flags.
+Flags are indexed starting from the least significant bit.
+Non indexed bits are reserved for future use.
+Current flags are enumerated in `deviceCapability_t` at file [SimWheelTypes.h][def]
 
 ### ID
 
-This is the internal chip identifier as reported by [esp_efuse_mac_get_default()](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/misc_system_api.html). Useful to distinguish one device from another.
+This is the internal chip identifier as reported by
+[esp_efuse_mac_get_default()](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/misc_system_api.html).
+Useful to distinguish one device from another.
 
-## Data format of report ID 3
+### Security lock
 
-While writing, any value outside of the valid range will be ignored, so they me be used to mask which fields to modify or not.
+When zero, write is allowed. Otherwise, write is forbidden.
+
+For security concerns, the user can lock or unlock all writing attempts to HID reports by using just hardware inputs.
+This is a security precaution to stop unauthorized configuration modifications caused by rogue programs.
+
+## Data format of report ID 3 (wheel configuration)
+
+While writing, any value outside of the valid range will be ignored,
+so they me be used to mask which fields to modify or not.
 
 | Byte index | Size (bytes) | Purpose (field)                        | Since data version |
 | :--------: | :----------: | -------------------------------------- | ------------------ |
@@ -111,22 +142,24 @@ While writing, any value outside of the valid range will be ignored, so they me 
 |     2      |      1       | Current bite point                     | 1.0                |
 |     3      |      1       | Simple command / Current battery level | 1.0                |
 |     4      |      1       | Working mode of DPAD inputs            | 1.1                |
+|     5      |      2       | Custom vendor ID                       | 1.2                |
+|     7      |      2       | Custom product ID                      | 1.2                |
 
 ### Working mode of clutch paddles
 
-Read/write.
+Read/write (unless locked).
 Valid values are enumerated in `clutchFunction_t` at file [SimWheelTypes.h][def].
 Write FF (hexadecimal) to ignore this field.
 
 ### Working mode of ALT buttons
 
-Read/write.
+Read/write (unless locked).
 Non zero means "ALT mode". Zero means "regular buttons".
 Write FF (hexadecimal) to ignore this field.
 
 ### Current bite point
 
-Read/write.
+Read/write (unless locked).
 Write FF (hexadecimal) to ignore this field.
 
 ### Simple command / Current battery level
@@ -135,18 +168,36 @@ At read:
 
 - Retrieve current battery level. Non meaningful if there is no battery. Check capabilities.
 
-At write:
+At write (unless locked):
 
 - Send a simple command. Valid commands are enumerated in `simpleCommands_t` at file [SimWheelTypes.h][def].
 - Write FF (hexadecimal) to ignore this field.
 
 ### Working mode of DPAD inputs
 
-Read/write.
+Read/write (unless locked).
 Non zero means "navigation controls". Zero means "regular buttons".
 Write FF (hexadecimal) to ignore this field.
 
-## Data format of report ID 4
+### VID and PID
+
+Those fields enable the user to set a custom VID and PID for BLE devices only.
+Changes will be available after a reset or power-off.
+
+At read:
+
+- *USB devices*: FFFF (hexadecimal) is read at both fields.
+- *BLE devices*: The PID and VID configured for the subsequent reboot will be retrieved.
+
+At write (unless locked):
+
+- *USB devices*: both fields are ignored.
+- *BLE devices*:
+  - If VID is FFFF (hexadecimal), both fields are ignored.
+  - If both VID and PID are set to 0000, the hardware ID will return to factory defaults after the next reboot.
+  - Otherwise, the device will save the given VID and PID in flash memory and use them after the next reboot.
+
+## Data format of report ID 4 (user-defined buttons map)
 
 | Byte index | Size (bytes) | Purpose (field)                                        | Since data version |
 | :--------: | :----------: | ------------------------------------------------------ | ------------------ |
@@ -165,7 +216,8 @@ At read:
 - Any value outside of the previous range may be read, which means no button number is selected.
 
 In order to select another button number, write to this field first.
-At write:
+
+At write (unless locked):
 
 - Select a firmware-defined button number. Any value outside the valid range will be ignored.
 - You should read after a write in order to known the user-defined map for the selected button number.
@@ -178,7 +230,7 @@ At read:
 - The current user-defined button number for the selected firmware-defined button number.
 - A value of FF (hexadecimal) means the selected button is not available.
 
-At write:
+At write (unless locked):
 
 - Any value in the range from 0 to 127: set a user-defined button number for the selected firmware-defined button number.
 - Any value outside of the previous range: just select another firmware-defined button number, but do not overwrite current map.

@@ -12,7 +12,7 @@ Nothing required. Serial output at 115200 bauds.
 
 1. Reset. Ignore output from the operating system itself.
 2. Follow on-screen instructions at all times.
-3. Select a test case (type number and press enter).
+3. Select a test case (type a digit and press enter).
 4. Take note of the user settings that were saved to flash memory.
 5. Reset.
 6. Take note of the stored user settings.

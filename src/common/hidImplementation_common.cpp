@@ -14,12 +14,73 @@
 #include "SimWheelTypes.h"
 #include "HID_definitions.h"
 #include "esp_mac.h"
+#include <Preferences.h>
 
 // ----------------------------------------------------------------------------
 // Globals
 // ----------------------------------------------------------------------------
 
 inputNumber_t selectedInput = UNSPECIFIED_INPUT_NUMBER;
+#define UNDEFINED_ID 0xFFFF
+uint16_t factoryVID = UNDEFINED_ID;
+uint16_t factoryPID = UNDEFINED_ID;
+uint16_t customVID = UNDEFINED_ID;
+uint16_t customPID = UNDEFINED_ID;
+
+#define PREFS_NAMESPACE "hid"
+#define KEY_VID "vid"
+#define KEY_PID "pid"
+
+// ----------------------------------------------------------------------------
+// Custom hardware ID
+// ----------------------------------------------------------------------------
+
+void hidImplementation::common::setFactoryHardwareID(uint16_t vid, uint16_t pid)
+{
+    factoryVID = vid;
+    factoryPID = pid;
+    customVID = vid;
+    customPID = pid;
+}
+
+void hidImplementation::common::loadHardwareID(uint16_t &vid, uint16_t &pid)
+{
+    Preferences prefs;
+    if (prefs.begin(PREFS_NAMESPACE, true))
+    {
+        customVID = prefs.getUShort(KEY_VID, factoryVID);
+        customPID = prefs.getUShort(KEY_PID, factoryPID);
+        prefs.end();
+    }
+    vid = customVID;
+    pid = customPID;
+}
+
+void hidImplementation::common::storeHardwareID(uint16_t vid, uint16_t pid)
+{
+    Preferences prefs;
+    if (prefs.begin(PREFS_NAMESPACE, false))
+    {
+        customVID = vid;
+        customPID = pid;
+        prefs.putUShort(KEY_VID, vid);
+        prefs.putUShort(KEY_PID, pid);
+        prefs.end();
+    }
+}
+
+void hidImplementation::common::clearStoredHardwareID()
+{
+    Preferences prefs;
+    if (prefs.begin(PREFS_NAMESPACE, false))
+    {
+        customVID = factoryVID;
+        customPID = factoryPID;
+        prefs.remove(KEY_VID);
+        prefs.remove(KEY_PID);
+        prefs.end();
+    }
+}
 
 // ----------------------------------------------------------------------------
 // Feature reports
@@ -37,6 +98,7 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
         *(uint16_t *)(buffer + 6) = capabilities::flags;
         *(uint64_t *)(buffer + 8) = 0ULL;
         esp_efuse_mac_get_default(buffer + 8);
+        buffer[16] = (userSettings::securityLock) ? 0x01 : 0x00;
         return CAPABILITIES_REPORT_SIZE;
     }
     if ((report_id == RID_FEATURE_CONFIG) && (len >= CONFIG_REPORT_SIZE))
@@ -47,6 +109,8 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
         buffer[2] = (uint8_t)userSettings::bitePoint;
         buffer[3] = (uint8_t)power::getLastBatteryLevel();
         buffer[4] = (uint8_t)userSettings::dpadWorkingMode;
+        *(uint16_t *)(buffer + 5) = customVID;
+        *(uint16_t *)(buffer + 7) = customPID;
         return CONFIG_REPORT_SIZE;
     }
     if ((report_id == RID_FEATURE_BUTTONS_MAP) && (len >= BUTTONS_MAP_REPORT_SIZE))
@@ -70,6 +134,8 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
 
 void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *buffer, uint16_t len)
 {
+    if (userSettings::securityLock)
+        return;
     if (report_id == RID_FEATURE_CONFIG)
     {
         if ((len > 0) && (buffer[0] >= CF_CLUTCH) && (buffer[0] <= CF_BUTTON))
@@ -111,6 +177,19 @@ void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *b
         {
             // Set working mode of DPAD
             userSettings::setDPADWorkingMode((bool)buffer[4]);
+        }
+        if ((len > 5) && ((buffer[5] != 0xff) || (buffer[6] != 0xff)))
+        {
+            if ((factoryVID != UNDEFINED_ID) || (factoryPID != UNDEFINED_ID))
+            {
+                // Store PNP hardware ID
+                uint16_t vid = *(uint16_t *)(buffer + 5);
+                uint16_t pid = *(uint16_t *)(buffer + 7);
+                if ((vid == 0) && (pid == 0))
+                    hidImplementation::common::clearStoredHardwareID();
+                else
+                    hidImplementation::common::storeHardwareID(vid, pid);
+            }
         }
     }
     else if ((report_id == RID_FEATURE_BUTTONS_MAP) && (len >= BUTTONS_MAP_REPORT_SIZE))

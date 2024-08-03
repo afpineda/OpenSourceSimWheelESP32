@@ -96,6 +96,12 @@ namespace userSettings
     extern volatile inputNumber_t buttonsMap[2][64];
 
     /**
+     * @brief Security lock on HID reports
+     * @note For read only. Do not overwrite.
+     */
+    extern volatile bool securityLock;
+
+    /**
      * @brief Must be called before anything else in this namespace. Will
      *        load user settings from flash memory.
      *
@@ -177,6 +183,20 @@ namespace userSettings
     bool getEffectiveButtonMap(inputNumber_t rawInputNumber,
                                inputNumber_t &userInputNumberNoAlt,
                                inputNumber_t &userInputNumberAlt);
+
+    /**
+     * @brief Lock or unlock all writing attempts to HID reports
+     *
+     * @details For security concerns, the user can lock or unlock all writing
+     *          attempts to HID reports by using just hardware inputs.
+     *          This is a security precaution to stop unauthorized configuration
+     *          modifications caused by rogue programs.
+     *
+     * @note By default, unlocked.
+     *
+     * @param yesOrNo true to lock, false to unlock.
+     */
+    void setSecurityLock(bool yesOrNo);
 }
 
 /**
@@ -185,7 +205,7 @@ namespace userSettings
  * @note This namespace provides two algorithms to map a battery reading into a
  *       battery level percentage:
  *       - Calibrated: a calibration procedure is required
- *       - Auto-calibrated: fallback arlogorithm based on LiPo characterization data.
+ *       - Auto-calibrated: fallback algorithm based on LiPo characterization data.
  *         Requires a fully charged battery for auto-calibration.
  */
 namespace batteryCalibration
@@ -251,7 +271,7 @@ namespace batteryCalibration
     int getBatteryLevel(int reading);
 
     /**
-     * @brief Maximun battery reading ever. Exposed for testing. DO NOT TOUCH.
+     * @brief Maximum battery reading ever. Exposed for testing. DO NOT TOUCH.
      *
      */
     extern volatile int maxBatteryReadingEver;
@@ -326,11 +346,11 @@ namespace power
     void setPowerLatch(gpio_num_t latchPin, powerLatchMode_t mode, uint32_t waitMs);
 
     /**
-     * @brief Enable monitorization of battery charge. Do not call if there is no battery.
+     * @brief Enable monitoring of battery charge. Do not call if there is no battery.
      *
      * @param battENPin Output pin to enable/disable the battery monitor circuit.
      *                  Set to `GPIO_NUM_NC` (-1) if `battREADPin` is attached to
-     *                  a simple voltage divider. This is the case for most battery-enabled devkits.
+     *                  a simple voltage divider. This is the case for most battery-enabled DevKits.
      * @param battREADPin ADC pin used to read battery voltage
      * @param testing Set to TRUE for unit testing: will get a battery sample every 5 seconds,
      *                will not power off the device.
@@ -341,7 +361,7 @@ namespace power
         bool testing = false);
 
     /**
-     * @brief Get ADC reading of the battery pin for testing porpouses. Must **not** be called while
+     * @brief Get ADC reading of the battery pin for testing purposes. Must **not** be called while
      *        the battery monitor is running
      *
      * @param battENPin Output-capable GPIO pin to enable battery readings. Must have been properly initialized.
@@ -577,7 +597,7 @@ namespace inputHub
         const inputNumber_t leftClutchInputNumber,
         const inputNumber_t rightClutchInputNumber);
 
-     /**
+    /**
      * @brief Set inputs for clutch calibration while one and only one clutch paddle is pressed
      *
      * @param upButtonNumber Input number to increase bite point
@@ -678,6 +698,13 @@ namespace inputHub
      */
     void cmdRecalibrateBattery_setInputNumbers(const inputNumberCombination_t inputNumbers);
 
+    /**
+     * @brief Set a combination of inputs to cycle the state of the security lock.
+     *        All inputs must be activated at the same time and none of the others.
+     *
+     * @param inputNumbers Array of input numbers
+     */
+    void cycleSecurityLock_setInputNumbers(const inputNumberCombination_t inputNumbers);
 }
 
 /**
@@ -712,7 +739,7 @@ namespace notify
     void connected();
 
     /**
-     * @brief Notify bluetooth radio is in discovery mode
+     * @brief Notify Bluetooth radio is in discovery mode
      *
      */
     void BLEdiscovering();
@@ -737,14 +764,15 @@ namespace notify
 namespace hidImplementation
 {
     /**
-     * @brief Initialize bluetooth/USB device
+     * @brief Initialize Bluetooth/USB device
      *
      * @param deviceName Name of this device shown to the host computer
      * @param deviceManufacturer Name of the manufacturer of this device
      * @param enableAutoPowerOff True to power off when not connected within a certain time lapse.
      *        Set to FALSE if there is no battery or for testing.
-     * @param productID Custom PID for BLE devices. Ignored in USB implementation.
-     *                  Set to zero to use a default product ID.
+     * @param productID Factory PID. Set to zero to use a default product ID.
+     *                  Value 0xFFFF is reserved for testing.
+     *                  Ignored in the USB implementation.
      */
     void begin(
         std::string deviceName,
@@ -806,6 +834,43 @@ namespace hidImplementation
      */
     namespace common
     {
+
+        /**
+         * @brief Set a default hardware ID for this device
+         *
+         * @note If not called, default hardware ID is 0xFFFF/0xFFFF.
+         *
+         * @param vid Default vendor ID.
+         * @param pid Default product ID.
+         */
+        void setFactoryHardwareID(uint16_t vid, uint16_t pid);
+
+        /**
+         * @brief Get the stored custom hardware ID
+         *
+         * @note Stored in flash memory.
+         *
+         * @param[out] vid Custom vendor ID or factory VID if not stored.
+         * @param[out] pid Custom product ID or factory PID if not stored.
+         */
+        void loadHardwareID(uint16_t &vid, uint16_t &pid);
+
+        /**
+         * @brief Store a custom hardware ID for BLE devices
+         *
+         * @note Changes will be effective after the next reboot
+         *
+         * @param[in] vid Custom vendor ID
+         * @param[in] pid Custom product ID
+         */
+        void storeHardwareID(uint16_t vid, uint16_t pid);
+
+        /**
+         * @brief Clear stored PID and VID (restore factory defaults)
+         *
+         */
+        void clearStoredHardwareID();
+
         /**
          * @brief Send feature report
          *

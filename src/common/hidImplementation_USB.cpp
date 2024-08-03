@@ -36,12 +36,12 @@ class SimWheelHIDImpl : public USBHIDDevice
 
     virtual uint16_t _onGetFeature(uint8_t report_id, uint8_t *buffer, uint16_t len) override
     {
-        return hidImplementation::common::onGetFeature(report_id,buffer,len);
+        return hidImplementation::common::onGetFeature(report_id, buffer, len);
     }
 
     virtual void _onSetFeature(uint8_t report_id, const uint8_t *buffer, uint16_t len) override
     {
-        hidImplementation::common::onSetFeature(report_id,buffer,len);
+        hidImplementation::common::onSetFeature(report_id, buffer, len);
     }
 };
 
@@ -63,8 +63,10 @@ void hidImplementation::begin(
     bool enableAutoPowerOff,
     uint16_t productID)
 {
+
     if (!hid.ready())
     {
+        // Initialization
         USB.productName(deviceName.c_str());
         USB.manufacturerName(deviceManufacturer.c_str());
         USB.usbClass(0x03); // HID device class

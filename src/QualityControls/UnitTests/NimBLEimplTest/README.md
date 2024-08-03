@@ -29,7 +29,8 @@ Computer:
 - Windows 10 or later
 - Bluetooth 4.2 or later (not required in USB implementation)
 - Joystick testing software able to display 128 buttons. Note that Window's device property page is not suitable for this.
-- SimpleHIDWrite.exe: available at [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm). There is a modern clone at [https://github.com/Robmaister/SimplerHidWrite](https://github.com/Robmaister/SimplerHidWrite).
+- SimpleHIDWrite.exe: available at [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm).
+  There is a modern clone at [https://github.com/Robmaister/SimplerHidWrite](https://github.com/Robmaister/SimplerHidWrite).
 
 ## Specific notes for USB implementation
 
@@ -39,15 +40,19 @@ Use this board configuration in Arduino IDE:
 
 - Board: "ESP32S3 Dev Module (esp32)" (or your actual board brand).
 - USB-Mode: "USB-OTG (TinyUSB)".
+- USB CDC On Boot: Disabled.
 
 ## Specific notes for BLE implementation
 
-- If the device is paired because of a previous test, unpair it first (delete from the bluetooth control panel).
+- If the device is paired because of a previous test, unpair it first (delete from the Bluetooth control panel).
 - Before pairing, wait for the "Device ready" notification at the serial monitor.
-- Will show as "NimBLEimplTest", "ESPBLEimplTest" (depending on which implementation is being tested).
+- Will show as "NimBLEimplTest" or "ESPBLEimplTest" (depending on which implementation is being tested).
 
 ## Procedure and expected output
 
+- There is no serial output in USB devices. Ignore that part.
+- The expected factory VID in USB devices is 0x303A
+  ([Espressif](https://docs.espressif.com/projects/esp-iot-solution/en/latest/usb/usb_overview/usb_vid_pid.html)).
 - Ignore this output message while running this test: `(Waiting for connection)`.
 
 ### Auto power off
@@ -60,7 +65,6 @@ Not applicable to USB implementation.
    ```text
    --START--
    *** DISCOVERING ***
-   --GO--
    ```
 
 3. Wait for a minute or so.
@@ -79,7 +83,6 @@ Not applicable to USB implementation.
    ```text
    --START--
    *** DISCOVERING ***
-   --GO--
    ```
 
 3. Before a minute elapses, pair and connect with the device using the Bluetooth controls in your computer.
@@ -122,13 +125,15 @@ Not applicable to USB implementation.
 
 ### Device configuration (HID report)
 
-1. Open "SimpleHidWriter.exe". Locate `Device VID=1D50` in the top area, and click on it.
+1. Open "SimpleHidWriter.exe". Locate this test device in the top area, and click on it.
+   Look for `Device VID= ... PID= ...`. The proper values where printed at boot `(Actual VID / PID)`.
 2. You should see continuous report lines starting with `RD 01`. Ignore them. Click on `Clear` from time to time.
 3. Enter `03` at field `ReportID`.
-4. Enter `FF FF FF FF FF` at fields below `ReportID`.
+4. Enter `FF FF FF FF FF FF FF 99 99` (7 times `FF`, then `99 99`) at fields below `ReportID`.
 5. Click on `Set Feature` , then on `Get Feature`.
-6. Must show a line starting with: `RD 03  00 01 7F 42 01`.
-7. Enter `01 FF 40 01 FF` at fields below `ReportID`.
+6. Must show a line starting with `RD 03  00 01 7F 42 01 xx xx xx xx`,
+   where `xx xx xx xx` is anything but `FF FF 99 99`.
+7. Enter `01 FF 40 01 FF FF FF FF FF` at fields below `ReportID`.
 8. Click on `Set Feature` , then on `Get Feature`.
 9. Must show a line starting with: `RD 03  01 01 40 42 01`.
 10. Serial output must show: `CMD: recalibrate axes`.
@@ -136,9 +141,9 @@ Not applicable to USB implementation.
 ### Capabilities (HID report)
 
 1. Enter `02` at field `ReportID`.
-2. Enter `00 00 00 00 00 00 00 00` at fields below `ReportID`.
+2. Enter `00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00` (17 times `00`) at fields below `ReportID`.
 3. Click on `Set Feature` , then on `Get Feature`.
-4. Must show the following line: `RD 02  51 BF xx xx xx xx 07 00 xx xx xx xx xx xx xx xx`. Ignore `xx`.
+4. Must show the following line: `RD 02  51 BF 01 00 02 00 07 00 xx xx xx xx xx xx xx xx 00`. Ignore `xx`.
 
 ### Buttons map (HID report)
 
@@ -155,6 +160,47 @@ Not applicable to USB implementation.
 11. Enter `AA 00 00` at fields below `ReportID`.
 12. Click on `Set Feature` , then on `Get Feature`.
 13. Must show a line again starting with: `RD 04  02 00 40`.
+
+### Custom Hardware ID
+
+Not applicable to USB implementation.
+
+**Note**:
+
+- You must complete this sub-test from start to end.
+- In case of failure, use [UserSettingsTest](../UserSettingsTest/README.md) to
+  issue a "clear NVS flash memory" command.
+- If Windows refuses to unpair the test device, restart your computer first.
+- Take care not to type wrong numbers!
+
+Procedure:
+
+1. Enter `03` at field `ReportID`.
+2. Enter `FF FF FF FF FF 5E 04 8E 02` at fields below `ReportID`.
+3. Click on `Set Feature` , then on `Get Feature`.
+4. Must show a line starting with `RD 03  xx xx xx xx xx 5E 04 8E 02`.
+   Ignore `xx`.
+5. Close "SimpleHidWriter.exe".
+6. Unpair the test device using the Bluetooth control panel.
+7. Reset. Take note of the contents of the message `Factory default VID / PID: ...`.
+8. At some point, serial output must show `Actual VID / PID: 045e / 028e`.
+9. Pair and connect the test device to the host computer.
+10. Open the "Game controllers" control panel (Windows only).
+    Must show a device called "Controller (XBOX 360 for Windows)".
+11. Open "SimpleHidWriter.exe". Locate this test device in the top area, and click on it.
+    This time, look for `Device VID=045E PID=028E`.
+12. Enter `03` at field `ReportID`.
+13. Enter `FF FF FF FF FF 00 00 00 00` at fields below `ReportID`.
+14. Click on `Set Feature` , then on `Get Feature`.
+15. Must show a line starting with `RD 03  xx xx xx xx xx yy yy zz zz`.
+    Ignore `xx`.
+    `yy yy` must match the factory default VID **in reverse order** of bytes.
+    `zz zz` must match the factory default PID in reverse order of bytes.
+16. Close "SimpleHidWriter.exe".
+17. Unpair the test device using the Bluetooth control panel.
+18. Reset.
+19. The message `Actual VID / PID: ...` must show the same numbers as `Factory default VID / PID: ...`.
+20. Pair and connect the test device to the host computer.
 
 ## Reconnect
 

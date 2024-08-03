@@ -112,7 +112,7 @@ Note: **Ignore** repeated output lines along this procedure.
 23. Move "CLUTCH2" at random. Output must show a changing value at `<R>` and `<C>` set to 0.
 24. Move both "CLUTCH1" and "CLUTCH2" to idle.
 25. Push "COMMAND" and "CYCLE_PADDLES" at the same time, then release. Output must show `Clutch mode: 2`.
-26. Move "CLUTCH1" to full extent, then back to iddle. Last line of output must show:
+26. Move "CLUTCH1" to full extent, then back to idle. Last line of output must show:
 
     ```text
     ...0000000000000000 ...0000000000000000 | 000 | 000 | 000 || 254

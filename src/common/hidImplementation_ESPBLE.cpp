@@ -26,6 +26,7 @@
 #include "SimWheel.h"
 #include "HID_definitions.h"
 #include <arduino.h>
+#include <bit>
 
 // ----------------------------------------------------------------------------
 // Globals
@@ -175,6 +176,13 @@ void hidImplementation::begin(
         pServer = BLEDevice::createServer();
         pServer->setCallbacks(&connectionStatus);
 
+       // PNP hardware ID
+        uint16_t custom_vid = BLE_VENDOR_ID;
+        uint16_t custom_pid = (productID == 0) ? BLE_PRODUCT_ID : productID;
+        hidImplementation::common::setFactoryHardwareID(custom_vid,custom_pid);
+        if (productID != TEST_PRODUCT_ID)
+            hidImplementation::common::loadHardwareID(custom_vid, custom_pid);
+
         // HID initialization
         hid = new BLEHIDDevice(pServer);
         if (!hid)
@@ -183,7 +191,12 @@ void hidImplementation::begin(
             abort();
         }
         hid->manufacturer()->setValue(String(deviceManufacturer.c_str())); // Workaround for bug in `hid->manufacturer(deviceManufacturer)`
-        hid->pnp(BLE_VENDOR_SOURCE, BLE_VENDOR_ID, (productID==0) ? BLE_PRODUCT_ID: productID, PRODUCT_REVISION);
+
+        // Note: Workaround for bug in ESP-Arduino as of version 3.0.3
+        uint16_t debugged_vid = std::byteswap(custom_vid);
+        uint16_t debugged_pid = std::byteswap(custom_pid);
+
+        hid->pnp(BLE_VENDOR_SOURCE, debugged_vid, debugged_pid, PRODUCT_REVISION);
         hid->hidInfo(0x00, 0x01);
         hid->reportMap((uint8_t *)hid_descriptor, sizeof(hid_descriptor));
 

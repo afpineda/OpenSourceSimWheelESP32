@@ -31,12 +31,13 @@
 #define OTHER_MAP 126
 #define OTHER_MAP_ALT 21
 
-#define COMBINATION_CYCLE_CLUTCH {CMD,CYCLE_CLUTCH}
-#define COMBINATION_CYCLE_ALT {CMD,CYCLE_ALT}
-#define COMBINATION_SELECT_CLUTCH_F {CMD,UP}
-#define COMBINATION_SELECT_ALT_F {(CMD) ,(DOWN)}
-#define COMBINATION_SELECT_AXIS_F {(CMD) , (LEFT)}
-#define COMBINATION_SELECT_BUTTON_F {(CMD) , (RIGHT)}
+#define COMBINATION_CYCLE_CLUTCH {CMD, CYCLE_CLUTCH}
+#define COMBINATION_CYCLE_ALT {CMD, CYCLE_ALT}
+#define COMBINATION_SELECT_CLUTCH_F {CMD, UP}
+#define COMBINATION_SELECT_ALT_F {(CMD), (DOWN)}
+#define COMBINATION_SELECT_AXIS_F {(CMD), (LEFT)}
+#define COMBINATION_SELECT_BUTTON_F {(CMD), (RIGHT)}
+#define COMBINATION_SECURITY_LOCK {(CMD), (OTHER), (UP)}
 
 #define BMP_CYCLE_CLUTCH BITMAP(CMD) | BITMAP(CYCLE_CLUTCH)
 #define BMP_CYCLE_ALT BITMAP(CMD) | BITMAP(CYCLE_ALT)
@@ -615,6 +616,28 @@ void TG_userMappedInput()
     assertEquals<inputNumber_t>("reset map 2", UNSPECIFIED_INPUT_NUMBER, userSettings::buttonsMap[1][OTHER]);
 }
 
+void TG_securityLock()
+{
+    // initialize
+    userSettings::setSecurityLock(false);
+    assertEquals<bool>("lock 1-1", false, userSettings::securityLock);
+
+    // send input and check
+    input.release();
+    input.push(CMD);
+    assertEquals<bool>("lock 1-2", false, userSettings::securityLock);
+    input.push(OTHER);
+    assertEquals<bool>("lock 1-3", false, userSettings::securityLock);
+    input.push(UP);
+    assertEquals<bool>("lock 2", true, userSettings::securityLock);
+    input.release();
+    input.push(CMD);
+    input.push(OTHER);
+    input.push(UP);
+    input.release();
+    assertEquals<bool>("lock 2", false, userSettings::securityLock);
+}
+
 //------------------------------------------------------------------
 // Arduino entry point
 //------------------------------------------------------------------
@@ -637,6 +660,7 @@ void setup()
         COMBINATION_SELECT_BUTTON_F);
     inputHub::setClutchCalibrationInputNumbers(UP, DOWN);
     inputHub::setClutchInputNumbers(LCLUTCH, RCLUTCH);
+    inputHub::cycleSecurityLock_setInputNumbers(COMBINATION_SECURITY_LOCK);
 
     // Start
     Serial.println("-- GO --");
@@ -699,6 +723,9 @@ void setup()
 
     Serial.println("- simulate input in user-defined buttons map -");
     TG_userMappedInput();
+
+     Serial.println("- simulate security lock -");
+    TG_securityLock();
 
     Serial.println("-- END --");
     for (;;)

@@ -38,7 +38,6 @@ void notify::connected()
 
 void notify::bitePoint(clutchValue_t a)
 {
-
 }
 
 void inputs::recalibrateAxes()
@@ -48,7 +47,6 @@ void inputs::recalibrateAxes()
 
 void inputs::update()
 {
-
 }
 
 void batteryCalibration::restartAutoCalibration()
@@ -73,9 +71,12 @@ int power::getLastBatteryLevel()
 void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
+    userSettings::altButtonsWorkingMode = true;
+    userSettings::cpWorkingMode = CF_CLUTCH;
+    userSettings::dpadWorkingMode = true;
+    userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
     hidImplementation::begin("USBimplTest", "Mamandurrio", false);
 }
-
 
 //------------------------------------------------------------------
 

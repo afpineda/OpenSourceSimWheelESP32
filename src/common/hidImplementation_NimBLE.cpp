@@ -53,7 +53,7 @@ static bool notifyConfigChanges = false;
 class BleConnectionStatus : public NimBLEServerCallbacks
 {
 public:
-    BleConnectionStatus(void){};
+    BleConnectionStatus(void) {};
     bool connected = false;
     void onConnect(NimBLEServer *pServer)
     {
@@ -159,7 +159,7 @@ void hidImplementation::begin(
 {
     if (hid == nullptr)
     {
-        // Auto power-off initialization
+        // Auto-power-off initialization
         if (enableAutoPowerOff)
         {
             esp_timer_create_args_t args;
@@ -176,6 +176,13 @@ void hidImplementation::begin(
         pServer = NimBLEDevice::createServer();
         pServer->setCallbacks(&connectionStatus);
 
+        // PNP hardware ID
+        uint16_t custom_vid = BLE_VENDOR_ID;
+        uint16_t custom_pid = (productID == 0) ? BLE_PRODUCT_ID : productID;
+        hidImplementation::common::setFactoryHardwareID(custom_vid,custom_pid);
+        if (productID != TEST_PRODUCT_ID)
+            hidImplementation::common::loadHardwareID(custom_vid, custom_pid);
+
         // HID initialization
         hid = new NimBLEHIDDevice(pServer);
         if (!hid)
@@ -184,7 +191,7 @@ void hidImplementation::begin(
             abort();
         }
         hid->manufacturer()->setValue(deviceManufacturer); // Workaround for bug in `hid->manufacturer(deviceManufacturer)`
-        hid->pnp(BLE_VENDOR_SOURCE, BLE_VENDOR_ID, (productID==0) ? BLE_PRODUCT_ID: productID, PRODUCT_REVISION);
+        hid->pnp(BLE_VENDOR_SOURCE, custom_vid, custom_pid, PRODUCT_REVISION);
         hid->hidInfo(0x00, 0x01);
         hid->reportMap((uint8_t *)hid_descriptor, sizeof(hid_descriptor));
 

@@ -39,6 +39,7 @@ static inputBitmap_t cmdCPWorkingModeBitmap_button = 0ULL;
 static inputBitmap_t cmdAxisAutocalibrationBitmap = 0ULL;
 static inputBitmap_t cmdBatteryRecalibrationBitmap = 0ULL;
 static inputBitmap_t cycleDPADWorkingModeBitmap = 0ULL;
+static inputBitmap_t cycleSecurityLockBitmap = 0ULL;
 
 // Related to POV buttons
 
@@ -117,6 +118,11 @@ bool inputHub_commands_filter(
     if ((changes & cmdBatteryRecalibrationBitmap) && (globalState == cmdBatteryRecalibrationBitmap))
     {
         batteryCalibration::restartAutoCalibration();
+        return true;
+    }
+    if ((changes & cycleSecurityLockBitmap) && (globalState == cycleSecurityLockBitmap))
+    {
+        userSettings::setSecurityLock(!userSettings::securityLock);
         return true;
     }
     return false;
@@ -609,6 +615,13 @@ void inputHub::cmdRecalibrateBattery_setInputNumbers(const inputNumberCombinatio
 {
 
     cmdBatteryRecalibrationBitmap = combination2bitmap(inputNumbers);
+}
+
+// ----------------------------------------------------------------------------
+
+void  inputHub::cycleSecurityLock_setInputNumbers(const inputNumberCombination_t inputNumbers)
+{
+    cycleSecurityLockBitmap = combination2bitmap(inputNumbers);
 }
 
 // ----------------------------------------------------------------------------

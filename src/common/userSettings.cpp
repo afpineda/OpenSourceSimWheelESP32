@@ -23,6 +23,7 @@ volatile clutchValue_t userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
 volatile clutchFunction_t userSettings::cpWorkingMode = clutchFunction_t::CF_CLUTCH;
 volatile bool userSettings::altButtonsWorkingMode = true;
 volatile bool userSettings::dpadWorkingMode = true;
+volatile bool userSettings::securityLock = false;
 #define FF_x_4 UNSPECIFIED_INPUT_NUMBER, UNSPECIFIED_INPUT_NUMBER, UNSPECIFIED_INPUT_NUMBER, UNSPECIFIED_INPUT_NUMBER
 #define FF_x_16 FF_x_4, FF_x_4, FF_x_4, FF_x_4
 #define FF_x_64 FF_x_16, FF_x_16, FF_x_16, FF_x_16
@@ -37,6 +38,7 @@ static esp_timer_handle_t autoSaveTimer = nullptr;
 #define KEY_CLUTCH_CALIBRATION "ccal"
 #define KEY_DPAD_FUNCTION "dpad"
 #define KEY_USER_MAP "map"
+#define KEY_SECURITY_LOCK "slock"
 
 // ----------------------------------------------------------------------------
 // (Auto)save current settings
@@ -51,6 +53,7 @@ void autoSaveCallback(void *param)
         prefs.putUChar(KEY_CLUTCH_FUNCTION, (uint8_t)userSettings::cpWorkingMode);
         prefs.putUChar(KEY_CLUTCH_CALIBRATION, (uint8_t)userSettings::bitePoint);
         prefs.putBool(KEY_DPAD_FUNCTION, userSettings::dpadWorkingMode);
+        prefs.putBool(KEY_SECURITY_LOCK, userSettings::securityLock);
         prefs.end();
     }
 }
@@ -96,6 +99,7 @@ void userSettings::begin()
         Preferences prefs;
         if (prefs.begin(PREFS_NAMESPACE, true))
         {
+            userSettings::securityLock = prefs.getBool(KEY_SECURITY_LOCK, userSettings::securityLock);
             userSettings::altButtonsWorkingMode = prefs.getBool(KEY_ALT_FUNCTION, userSettings::altButtonsWorkingMode);
 
             uint8_t value1 = prefs.getUChar(KEY_CLUTCH_FUNCTION, (uint8_t)userSettings::cpWorkingMode);
@@ -120,6 +124,17 @@ void userSettings::begin()
 // ----------------------------------------------------------------------------
 // Setters
 // ----------------------------------------------------------------------------
+
+void userSettings::setSecurityLock(bool yesOrNo)
+{
+     if (userSettings::securityLock != yesOrNo)
+    {
+        userSettings::securityLock = yesOrNo;
+        requestSave();
+        hidImplementation::reportChangeInConfig();
+        inputs::update();
+    }
+}
 
 void userSettings::setALTButtonsWorkingMode(bool newMode)
 {

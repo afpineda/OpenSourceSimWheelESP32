@@ -23,8 +23,8 @@
 
 // Report sizes (bytes)
 #define GAMEPAD_REPORT_SIZE 20
-#define CAPABILITIES_REPORT_SIZE 16
-#define CONFIG_REPORT_SIZE 5
+#define CAPABILITIES_REPORT_SIZE 17
+#define CONFIG_REPORT_SIZE 9
 #define BUTTONS_MAP_REPORT_SIZE 3
 
 // GAME CONTROLLER APPEARANCES
@@ -36,15 +36,16 @@
 
 //   BLE
 #define BLE_VENDOR_SOURCE 0x00
-#define BLE_VENDOR_ID 0x1d50
-#define BLE_PRODUCT_ID 0xffff
+#define BLE_VENDOR_ID 0x1d50 // default VID
+#define BLE_PRODUCT_ID 0xffff // default PID
+#define TEST_PRODUCT_ID 0xffff // Flag not to load stored hardware ID
 
 // Hardware revision
 #define PRODUCT_REVISION 0x0100
 
 // Data specification version
 #define DATA_MAJOR_VERSION 1
-#define DATA_MINOR_VERSION 1
+#define DATA_MINOR_VERSION 2
 
 // Magic number, do not change
 #define MAGIC_NUMBER_LOW 0x51

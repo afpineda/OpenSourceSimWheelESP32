@@ -20,9 +20,11 @@
 //------------------------------------------------------------------
 
 bool powerSim = true;
+extern uint16_t customVID;
+extern uint16_t customPID;
+extern uint16_t factoryVID;
+extern uint16_t factoryPID;
 
-// Custom PID for testing
-#define BLE_TEST_PRODUCT_ID 0xfffe
 //------------------------------------------------------------------
 // mocks
 //------------------------------------------------------------------
@@ -42,7 +44,6 @@ void notify::BLEdiscovering()
 
 void notify::bitePoint(clutchValue_t a)
 {
-
 }
 
 void inputs::recalibrateAxes()
@@ -52,7 +53,6 @@ void inputs::recalibrateAxes()
 
 void inputs::update()
 {
-
 }
 
 void batteryCalibration::restartAutoCalibration()
@@ -80,7 +80,9 @@ void setup()
     esp_log_level_set("*", ESP_LOG_VERBOSE);
     Serial.begin(115200);
     Serial.println("--START--");
-    hidImplementation::begin("ESPBLEimplTest", "Mamandurrio", true, BLE_TEST_PRODUCT_ID);
+    hidImplementation::begin("ESPBLEimplTest", "Mamandurrio", true);
+    Serial.printf("Factory default VID / PID: %04x / %04x\n", factoryVID, factoryPID);
+    Serial.printf("Actual VID / PID: %04x / %04x\n", customVID, customPID);
     Serial.println("--GO--");
 }
 
