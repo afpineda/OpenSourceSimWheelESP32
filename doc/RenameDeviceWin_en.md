@@ -1,9 +1,17 @@
-# Changing your device's display name (Windows and BLE connectivity only) or Product ID
+# Changing your device's display name or Hardware ID (BLE only)
 
 Once your BLE simwheel/button box is paired and connected to your host computer,
 It will be available in the "Game Controllers" control panel.
 However, it will show a generic display name like "4 axis 128 button device with hat switch".
-In order to change that display name, follow this procedure.
+
+## Custom display name by means of the companion app (Windows only)
+
+On Windows computers, the
+[companion app](https://github.com/afpineda/SimWheelESP32Config)
+will do the work for you. See the
+[usage notes](https://github.com/afpineda/SimWheelESP32Config/blob/main/doc/UsageNotes_en.md).
+
+## Custom display name by means of the Windows registry editor (Windows only)
 
 1. Open the **"registry editor"** (regedit.exe) **with user privileges** (not administrator).
 2. Navigate to the following folder (registry key):
@@ -30,7 +38,7 @@ If you need to propagate your custom display name to another user or computer:
 
 This works as a backup measure, too.
 
-## Custom display name for each individual device
+## Custom hardware ID (BLE only)
 
 If you have two or more BLE devices using firmware from this project,
 **all of them will show the same display name, because they share the same hardware ID**.
