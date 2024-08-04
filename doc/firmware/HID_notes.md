@@ -300,7 +300,7 @@ At write:
 - Otherwise, this field must match $(VID*PID)\mod{65536}$.
 
   For example, if $VID=7504$ and $PID=303$, then this control code must match
-  $(7404*303)\mod{65536}=22898700\mod{65536}=26636$
+  $(7504*303)\mod{65536}=2273712\mod{65536}=45488$
 
 No changes are made if there is no match.
 
