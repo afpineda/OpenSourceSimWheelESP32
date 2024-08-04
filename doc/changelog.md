@@ -209,4 +209,5 @@ First release.
   coming from any PC application (including the companion app).
 - A custom VID and PID can be set using HID reports without the need to modify the source code
   (BLE only). The companion app supports this feature.
+  In Windows, the companion app is able to change your device's display name, too.
 - Documentation updates.
