@@ -126,24 +126,26 @@ Not applicable to USB implementation.
 ### Device configuration (HID report)
 
 1. Open "SimpleHidWriter.exe". Locate this test device in the top area, and click on it.
-   Look for `Device VID= ... PID= ...`. The proper values where printed at boot `(Actual VID / PID)`.
+   - *BLE implementation*: look for `Device VID= ... PID= ...`.
+      The proper values where printed at boot `(Actual VID / PID)`.
+   - *USB implementation*: look for the device name.
 2. You should see continuous report lines starting with `RD 01`. Ignore them. Click on `Clear` from time to time.
 3. Enter `03` at field `ReportID`.
-4. Enter `FF FF FF FF FF FF FF 99 99` (7 times `FF`, then `99 99`) at fields below `ReportID`.
+4. Enter `FF FF FF FF FF FF` (6 times `FF`) at fields below `ReportID`.
 5. Click on `Set Feature` , then on `Get Feature`.
-6. Must show a line starting with `RD 03  00 01 7F 42 01 xx xx xx xx`,
-   where `xx xx xx xx` is anything but `FF FF 99 99`.
-7. Enter `01 FF 40 01 FF FF FF FF FF` at fields below `ReportID`.
+6. Must show a line starting with `RD 03  00 01 7F 42 01 00`.
+7. Enter `01 FF 40 01 FF 01` at fields below `ReportID`.
 8. Click on `Set Feature` , then on `Get Feature`.
-9. Must show a line starting with: `RD 03  01 01 40 42 01`.
+9. Must show a line starting with: `RD 03  01 01 40 42 01 00`.
 10. Serial output must show: `CMD: recalibrate axes`.
 
 ### Capabilities (HID report)
 
 1. Enter `02` at field `ReportID`.
-2. Enter `00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00` (17 times `00`) at fields below `ReportID`.
+2. Enter `00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00` (16 times `00`) at fields below `ReportID`.
 3. Click on `Set Feature` , then on `Get Feature`.
-4. Must show the following line: `RD 02  51 BF 01 00 02 00 07 00 xx xx xx xx xx xx xx xx 00`. Ignore `xx`.
+4. Must show the following line: `RD 02  51 BF xx xx xx xx 07 00 xx xx xx xx xx xx xx xx`.
+   Ignore `xx`.
 
 ### Buttons map (HID report)
 
@@ -161,7 +163,7 @@ Not applicable to USB implementation.
 12. Click on `Set Feature` , then on `Get Feature`.
 13. Must show a line again starting with: `RD 04  02 00 40`.
 
-### Custom Hardware ID
+### Custom Hardware ID (HID report)
 
 Not applicable to USB implementation.
 
@@ -175,10 +177,10 @@ Not applicable to USB implementation.
 
 Procedure:
 
-1. Enter `03` at field `ReportID`.
-2. Enter `FF FF FF FF FF 5E 04 8E 02` at fields below `ReportID`.
+1. Enter `05` at field `ReportID`.
+2. Enter `5E 04 8E 02 24 28` at fields below `ReportID`.
 3. Click on `Set Feature` , then on `Get Feature`.
-4. Must show a line starting with `RD 03  xx xx xx xx xx 5E 04 8E 02`.
+4. Must show a line starting with `RD 05  5E 04 8E 02 00 00`.
    Ignore `xx`.
 5. Close "SimpleHidWriter.exe".
 6. Unpair the test device using the Bluetooth control panel.
@@ -189,18 +191,19 @@ Procedure:
     Must show a device called "Controller (XBOX 360 for Windows)".
 11. Open "SimpleHidWriter.exe". Locate this test device in the top area, and click on it.
     This time, look for `Device VID=045E PID=028E`.
-12. Enter `03` at field `ReportID`.
-13. Enter `FF FF FF FF FF 00 00 00 00` at fields below `ReportID`.
+12. Enter `05` at field `ReportID`.
+13. Enter `00 00 00 00 96 AA` at fields below `ReportID`.
 14. Click on `Set Feature` , then on `Get Feature`.
-15. Must show a line starting with `RD 03  xx xx xx xx xx yy yy zz zz`.
-    Ignore `xx`.
+15. Must show a line starting with `RD 05  yy yy zz zz 00 00`.
     `yy yy` must match the factory default VID **in reverse order** of bytes.
     `zz zz` must match the factory default PID in reverse order of bytes.
-16. Close "SimpleHidWriter.exe".
-17. Unpair the test device using the Bluetooth control panel.
-18. Reset.
-19. The message `Actual VID / PID: ...` must show the same numbers as `Factory default VID / PID: ...`.
-20. Pair and connect the test device to the host computer.
+16. Enter `00 00 00 00 00 00` at fields below `ReportID`.
+17. Must show the **same line** as before, starting with `RD 05`.
+18. Close "SimpleHidWriter.exe".
+19. Unpair the test device using the Bluetooth control panel.
+20. Reset.
+21. The message `Actual VID / PID: ...` must show the same numbers as `Factory default VID / PID: ...`.
+22. Pair and connect the test device to the host computer.
 
 ## Reconnect
 

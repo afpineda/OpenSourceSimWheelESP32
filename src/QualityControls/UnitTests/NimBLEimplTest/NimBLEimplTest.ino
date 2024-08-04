@@ -82,6 +82,7 @@ void setup()
     userSettings::cpWorkingMode = CF_CLUTCH;
     userSettings::dpadWorkingMode = true;
     userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
+    userSettings::securityLock = false;
     hidImplementation::begin("NimBLEimplTest", "Mamandurrio", true);
     Serial.printf("Factory default VID / PID: %04x / %04x\n", factoryVID, factoryPID);
     Serial.printf("Actual VID / PID: %04x / %04x\n", customVID, customPID);

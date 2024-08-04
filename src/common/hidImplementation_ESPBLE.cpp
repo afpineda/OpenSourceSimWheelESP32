@@ -41,6 +41,7 @@ static BLECharacteristic *inputGamepad = nullptr;
 static BLECharacteristic *configReport = nullptr;
 static BLECharacteristic *capabilitiesReport = nullptr;
 static BLECharacteristic *buttonsMapReport = nullptr;
+static BLECharacteristic *hardwareIdReport = nullptr;
 static BLEServer *pServer = nullptr;
 static bool notifyConfigChanges = false;
 
@@ -51,7 +52,7 @@ static bool notifyConfigChanges = false;
 class BleConnectionStatus : public BLEServerCallbacks
 {
 public:
-    BleConnectionStatus(void){};
+    BleConnectionStatus(void) {};
     bool connected = false;
     void onConnect(BLEServer *pServer) override
     {
@@ -139,6 +140,28 @@ class ButtonsMapFRCallbacks : public BLECharacteristicCallbacks
 } buttonsMapFRCallbacks;
 
 // ----------------------------------------------------------------------------
+
+class HardwareID_FRCallbacks : public BLECharacteristicCallbacks
+{
+    // RECEIVE DATA
+    void onWrite(BLECharacteristic *pCharacteristic)
+    {
+        size_t size = pCharacteristic->getValue().length();
+        const uint8_t *data = pCharacteristic->getData();
+        hidImplementation::common::onSetFeature(RID_FEATURE_HARDWARE_ID, data, size);
+    }
+
+    // SEND REQUESTED DATA
+    void onRead(BLECharacteristic *pCharacteristic)
+    {
+        uint8_t data[HARDWARE_ID_REPORT_SIZE];
+        hidImplementation::common::onGetFeature(RID_FEATURE_HARDWARE_ID, data, HARDWARE_ID_REPORT_SIZE);
+        pCharacteristic->setValue(data, HARDWARE_ID_REPORT_SIZE);
+    }
+
+} hardwareID_FRCallbacks;
+
+// ----------------------------------------------------------------------------
 // Auto power-off
 // ----------------------------------------------------------------------------
 
@@ -176,10 +199,10 @@ void hidImplementation::begin(
         pServer = BLEDevice::createServer();
         pServer->setCallbacks(&connectionStatus);
 
-       // PNP hardware ID
+        // PNP hardware ID
         uint16_t custom_vid = BLE_VENDOR_ID;
         uint16_t custom_pid = (productID == 0) ? BLE_PRODUCT_ID : productID;
-        hidImplementation::common::setFactoryHardwareID(custom_vid,custom_pid);
+        hidImplementation::common::setFactoryHardwareID(custom_vid, custom_pid);
         if (productID != TEST_PRODUCT_ID)
             hidImplementation::common::loadHardwareID(custom_vid, custom_pid);
 
@@ -202,16 +225,20 @@ void hidImplementation::begin(
 
         // Create HID reports
         inputGamepad = hid->inputReport(RID_INPUT_GAMEPAD);
-        configReport = hid->featureReport(RID_FEATURE_CONFIG);
         capabilitiesReport = hid->featureReport(RID_FEATURE_CAPABILITIES);
+        configReport = hid->featureReport(RID_FEATURE_CONFIG);
         buttonsMapReport = hid->featureReport(RID_FEATURE_BUTTONS_MAP);
-        if (!inputGamepad || !configReport || !capabilitiesReport | !buttonsMapReport)
+        hardwareIdReport = hid->featureReport(RID_FEATURE_HARDWARE_ID);
+
+        if (!inputGamepad || !configReport || !capabilitiesReport || !buttonsMapReport || !hardwareIdReport)
         {
             log_e("Unable to create HID report characteristics");
             abort();
         }
         configReport->setCallbacks(&configFRCallbacks);
         capabilitiesReport->setCallbacks(&capabilitiesFRCallbacks);
+        buttonsMapReport->setCallbacks(&buttonsMapFRCallbacks);
+        hardwareIdReport->setCallbacks(&hardwareID_FRCallbacks);
 
         // Configure BLE advertising
         BLEAdvertising *pAdvertising = pServer->getAdvertising();

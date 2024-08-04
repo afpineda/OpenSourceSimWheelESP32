@@ -75,6 +75,7 @@ void setup()
     userSettings::cpWorkingMode = CF_CLUTCH;
     userSettings::dpadWorkingMode = true;
     userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
+    userSettings::securityLock = false;
     hidImplementation::begin("USBimplTest", "Mamandurrio", false);
 }
 

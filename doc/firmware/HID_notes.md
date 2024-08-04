@@ -50,6 +50,7 @@ This project make use of a number of HID reports:
 |     2     | Feature | Wheel capabilities                |
 |     3     | Feature | Wheel configuration               |
 |     4     | Feature | User-defined buttons map          |
+|     5     | Feature | Custom hardware ID                |
 
 Note that feature reports are both read and write.
 
@@ -85,7 +86,6 @@ Write attempts will be ignored, so this report is read-only.
 |     4      |      2       | Minor Version   | Version of this specification    | 1.0                |
 |     6      |      2       | Flags           | Device capabilities              | 1.0                |
 |     8      |      8       | ID              | Chip identifier                  | 1.1                |
-|     16     |      1       | Security lock   | User-operated write-lock         | 1.2                |
 
 Report ID 1 (input) is not affected by versioning.
 
@@ -123,13 +123,6 @@ This is the internal chip identifier as reported by
 [esp_efuse_mac_get_default()](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/misc_system_api.html).
 Useful to distinguish one device from another.
 
-### Security lock
-
-When zero, write is allowed. Otherwise, write is forbidden.
-
-For security concerns, the user can lock or unlock all writing attempts to HID reports by using just hardware inputs.
-This is a security precaution to stop unauthorized configuration modifications caused by rogue programs.
-
 ## Data format of report ID 3 (wheel configuration)
 
 While writing, any value outside of the valid range will be ignored,
@@ -142,8 +135,7 @@ so they me be used to mask which fields to modify or not.
 |     2      |      1       | Current bite point                     | 1.0                |
 |     3      |      1       | Simple command / Current battery level | 1.0                |
 |     4      |      1       | Working mode of DPAD inputs            | 1.1                |
-|     5      |      2       | Custom vendor ID                       | 1.2                |
-|     7      |      2       | Custom product ID                      | 1.2                |
+|     8      |      1       | Security lock                          | 1.2                |
 
 ### Working mode of clutch paddles
 
@@ -179,23 +171,14 @@ Read/write (unless locked).
 Non zero means "navigation controls". Zero means "regular buttons".
 Write FF (hexadecimal) to ignore this field.
 
-### VID and PID
+### Security lock
 
-Those fields enable the user to set a custom VID and PID for BLE devices only.
-Changes will be available after a reset or power-off.
+**Read-only**.
 
-At read:
+When zero, write is allowed. Otherwise, write is forbidden.
 
-- *USB devices*: FFFF (hexadecimal) is read at both fields.
-- *BLE devices*: The PID and VID configured for the subsequent reboot will be retrieved.
-
-At write (unless locked):
-
-- *USB devices*: both fields are ignored.
-- *BLE devices*:
-  - If VID is FFFF (hexadecimal), both fields are ignored.
-  - If both VID and PID are set to 0000, the hardware ID will return to factory defaults after the next reboot.
-  - Otherwise, the device will save the given VID and PID in flash memory and use them after the next reboot.
+For security concerns, the user can lock or unlock all writing attempts to HID reports by using just hardware inputs.
+This is a security precaution to stop unauthorized configuration modifications caused by rogue programs.
 
 ## Data format of report ID 4 (user-defined buttons map)
 
@@ -276,5 +259,49 @@ Examples (pseudo-code):
   report3.write(0xFF,0xFF,0xFF,3);
   report3.write(0xFF,0xFF,0xFF,4);
   ```
+
+## Data format of report ID 5 (custom hardware ID)
+
+| Byte index | Size (bytes) | Purpose (field)   | Since data version |
+| :--------: | :----------: | ----------------- | ------------------ |
+|     0      |      2       | Custom vendor ID  | 1.2                |
+|     2      |      2       | Custom product ID | 1.2                |
+|     4      |      2       | Control code      | 1.2                |
+
+### Custom vendor ID (VID) and product ID (PID)
+
+Those fields enable the user to set a custom VID and PID for BLE devices only.
+Changes will be available after a reset or power-off.
+
+At read:
+
+- *USB devices*: zero is read at both fields.
+- *BLE devices*: The PID and VID configured for the subsequent reboot will be retrieved.
+
+At write (unless locked):
+
+- *USB devices*: both fields are ignored.
+- *BLE devices*:
+  - If both VID and PID are set to 0000, the hardware ID will return to factory defaults after the next reboot.
+  - Otherwise, the device will save the given VID and PID in flash memory and use them after the next reboot.
+
+### Control code
+
+This field prevents accidental changes.
+Ignored in USB devices.
+
+At read:
+
+- No meaning
+
+At write:
+
+- If both VID and PID are set to 0000, this field must match AA96 (hexadecimal).
+- Otherwise, this field must match $(VID*PID)\mod{65536}$.
+
+  For example, if $VID=7504$ and $PID=303$, then this control code must match
+  $(7404*303)\mod{65536}=22898700\mod{65536}=26636$
+
+No changes are made if there is no match.
 
 [def]: ../../src/include/SimWheelTypes.h

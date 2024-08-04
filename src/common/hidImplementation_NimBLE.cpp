@@ -43,6 +43,7 @@ static NimBLECharacteristic *inputGamepad = nullptr;
 static NimBLECharacteristic *configReport = nullptr;
 static NimBLECharacteristic *capabilitiesReport = nullptr;
 static NimBLECharacteristic *buttonsMapReport = nullptr;
+static NimBLECharacteristic *hardwareIdReport = nullptr;
 static NimBLEServer *pServer = nullptr;
 static bool notifyConfigChanges = false;
 
@@ -139,6 +140,28 @@ class ButtonsMapFRCallbacks : public NimBLECharacteristicCallbacks
 } buttonsMapFRCallbacks;
 
 // ----------------------------------------------------------------------------
+
+class HardwareID_FRCallbacks : public NimBLECharacteristicCallbacks
+{
+    // RECEIVE DATA
+    void onWrite(NimBLECharacteristic *pCharacteristic)
+    {
+        size_t size = pCharacteristic->getValue().length();
+        const uint8_t *data = pCharacteristic->getValue().data();
+        hidImplementation::common::onSetFeature(RID_FEATURE_HARDWARE_ID, data, size);
+    }
+
+    // SEND REQUESTED DATA
+    void onRead(NimBLECharacteristic *pCharacteristic)
+    {
+        uint8_t data[HARDWARE_ID_REPORT_SIZE];
+        hidImplementation::common::onGetFeature(RID_FEATURE_HARDWARE_ID, data, HARDWARE_ID_REPORT_SIZE);
+        pCharacteristic->setValue(data, HARDWARE_ID_REPORT_SIZE);
+    }
+
+} hardwareID_FRCallbacks;
+
+// ----------------------------------------------------------------------------
 // Auto power-off
 // ----------------------------------------------------------------------------
 
@@ -179,7 +202,7 @@ void hidImplementation::begin(
         // PNP hardware ID
         uint16_t custom_vid = BLE_VENDOR_ID;
         uint16_t custom_pid = (productID == 0) ? BLE_PRODUCT_ID : productID;
-        hidImplementation::common::setFactoryHardwareID(custom_vid,custom_pid);
+        hidImplementation::common::setFactoryHardwareID(custom_vid, custom_pid);
         if (productID != TEST_PRODUCT_ID)
             hidImplementation::common::loadHardwareID(custom_vid, custom_pid);
 
@@ -197,10 +220,11 @@ void hidImplementation::begin(
 
         // Create HID reports
         inputGamepad = hid->inputReport(RID_INPUT_GAMEPAD);
-        configReport = hid->featureReport(RID_FEATURE_CONFIG);
         capabilitiesReport = hid->featureReport(RID_FEATURE_CAPABILITIES);
+        configReport = hid->featureReport(RID_FEATURE_CONFIG);
         buttonsMapReport = hid->featureReport(RID_FEATURE_BUTTONS_MAP);
-        if (!inputGamepad || !configReport || !capabilitiesReport || !buttonsMapReport)
+        hardwareIdReport = hid->featureReport(RID_FEATURE_HARDWARE_ID);
+        if (!inputGamepad || !configReport || !capabilitiesReport || !buttonsMapReport || !hardwareIdReport)
         {
             log_e("Unable to create HID report characteristics");
             abort();
@@ -208,6 +232,7 @@ void hidImplementation::begin(
         configReport->setCallbacks(&configFRCallbacks);
         capabilitiesReport->setCallbacks(&capabilitiesFRCallbacks);
         buttonsMapReport->setCallbacks(&buttonsMapFRCallbacks);
+        hardwareIdReport->setCallbacks(&hardwareID_FRCallbacks);
 
         // Configure BLE advertising
         NimBLEAdvertising *pAdvertising = pServer->getAdvertising();

@@ -20,12 +20,14 @@
 #define RID_FEATURE_CAPABILITIES 0x02
 #define RID_FEATURE_CONFIG 0x03
 #define RID_FEATURE_BUTTONS_MAP 0x04
+#define RID_FEATURE_HARDWARE_ID 0x05
 
 // Report sizes (bytes)
 #define GAMEPAD_REPORT_SIZE 20
-#define CAPABILITIES_REPORT_SIZE 17
-#define CONFIG_REPORT_SIZE 9
+#define CAPABILITIES_REPORT_SIZE 16
+#define CONFIG_REPORT_SIZE 6
 #define BUTTONS_MAP_REPORT_SIZE 3
+#define HARDWARE_ID_REPORT_SIZE 6
 
 // GAME CONTROLLER APPEARANCES
 #define CONTROLLER_TYPE_GAMEPAD 0x05
@@ -125,6 +127,13 @@ static const uint8_t hid_descriptor[] = {
     0x85, RID_FEATURE_BUTTONS_MAP, // REPORT ID
     0x75, 0x08,            // Report Size (8)
     0x95, BUTTONS_MAP_REPORT_SIZE, // Report count
+    0xb1, 0xa2,            // FEATURE (Data,var,abs,Nprf,Vol)
+
+    // ___ HARDWARE ID (FEATURE) REPORT ___
+    0x09, 0x00,            // USAGE (undefined)
+    0x85, RID_FEATURE_HARDWARE_ID, // REPORT ID
+    0x75, 0x08,            // Report Size (8)
+    0x95, HARDWARE_ID_REPORT_SIZE, // Report count
     0xb1, 0xa2,            // FEATURE (Data,var,abs,Nprf,Vol)
 
     // END APPLICATION
