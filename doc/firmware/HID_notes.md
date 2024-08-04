@@ -135,7 +135,7 @@ so they me be used to mask which fields to modify or not.
 |     2      |      1       | Current bite point                     | 1.0                |
 |     3      |      1       | Simple command / Current battery level | 1.0                |
 |     4      |      1       | Working mode of DPAD inputs            | 1.1                |
-|     8      |      1       | Security lock                          | 1.2                |
+|     5      |      1       | Security lock                          | 1.2                |
 
 ### Working mode of clutch paddles
 
@@ -300,7 +300,7 @@ At write:
 - Otherwise, this field must match $(VID*PID)\mod{65536}$.
 
   For example, if $VID=7504$ and $PID=303$, then this control code must match
-  $(7404*303)\mod{65536}=22898700\mod{65536}=26636$
+  $(7504*303)\mod{65536}=2273712\mod{65536}=45488$
 
 No changes are made if there is no match.
 
