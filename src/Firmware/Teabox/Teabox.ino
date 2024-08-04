@@ -57,6 +57,11 @@ void simWheelSetup()
     // By default, DPAD inputs will behave as regular buttons.
     // Use the companion app to change that behaviour.
     inputHub::setDPADControls(BTN_UP,BTN_DOWN,ROT1_CCW,ROT1_CW);
+
+    // Security lock
+    inputHub::cycleSecurityLock_setInputNumbers({BTN1,BTN2,BTN3});
+
+    // Change defaults
     userSettings::dpadWorkingMode = false;
 }
 
