@@ -135,7 +135,7 @@ so they me be used to mask which fields to modify or not.
 |     2      |      1       | Current bite point                     | 1.0                |
 |     3      |      1       | Simple command / Current battery level | 1.0                |
 |     4      |      1       | Working mode of DPAD inputs            | 1.1                |
-|     8      |      1       | Security lock                          | 1.2                |
+|     5      |      1       | Security lock                          | 1.2                |
 
 ### Working mode of clutch paddles
 
