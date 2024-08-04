@@ -283,7 +283,9 @@ void AnalogAxisInput::read(clutchValue_t &value, bool &autocalibrated)
     }
 
     // map ADC reading to axis value
-    if (reversed)
+    if (minADCReading == maxADCReading)
+        value = CLUTCH_NONE_VALUE;
+    else if (reversed)
         value = map(currentReading, minADCReading, maxADCReading, CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
     else
         value = map(currentReading, minADCReading, maxADCReading, CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
