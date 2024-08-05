@@ -1,4 +1,4 @@
-# Integration test: combined input from several buttons and a rotary encoder
+# Integration test: combined input from several buttons (shift registers and GPIO expanders)
 
 ## Purpose and summary
 
