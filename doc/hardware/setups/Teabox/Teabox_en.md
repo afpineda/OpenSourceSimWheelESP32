@@ -27,6 +27,10 @@ This setup has been tested.
 
 *Note*: previous firmware versions up to 2.3.5 showed a different button mapping.
 
+## Security lock
+
+Press buttons "B", "X" and "Y" at the same time and none of the others.
+
 ## Needed parts
 
 |                     **Item**                     | **Quantity** | Notes                            |
