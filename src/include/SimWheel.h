@@ -838,7 +838,7 @@ namespace hidImplementation
         /**
          * @brief Set a default hardware ID for this device
          *
-         * @note If not called, default hardware ID is 0xFFFF/0xFFFF.
+         * @note If not called, default hardware ID is zero.
          *
          * @param vid Default vendor ID.
          * @param pid Default product ID.
