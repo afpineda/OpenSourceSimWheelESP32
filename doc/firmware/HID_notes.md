@@ -288,7 +288,6 @@ At write (unless locked):
 ### Control code
 
 This field prevents accidental changes.
-Ignored in USB devices.
 
 At read:
 
@@ -296,12 +295,13 @@ At read:
 
 At write:
 
-- If both VID and PID are set to 0000, this field must match AA96 (hexadecimal).
+- Ignored in USB devices.
+- If either VID or PID (or both) is set to 0000, this field must match AA96 (hexadecimal).
 - Otherwise, this field must match $(VID*PID)\mod{65536}$.
 
   For example, if $VID=7504$ and $PID=303$, then this control code must match
   $(7504*303)\mod{65536}=2273712\mod{65536}=45488$
 
-No changes are made if there is no match.
+**No changes are made if there is no match.**
 
 [def]: ../../src/include/SimWheelTypes.h

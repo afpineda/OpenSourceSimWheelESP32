@@ -204,19 +204,20 @@ void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *b
             uint16_t vid = *(uint16_t *)(buffer);
             uint16_t pid = *(uint16_t *)(buffer + 2);
             uint16_t control_code = *(uint16_t *)(buffer + 4);
-            if ((vid == 0) && (pid == 0))
-            {
-                if (control_code == 0xAA96)
-                    hidImplementation::common::clearStoredHardwareID();
-                // else ignore
-            }
+            uint16_t expected_code;
+
+            if ((vid == 0) || (pid == 0))
+                expected_code = 0xAA96;
             else
+                expected_code = (vid * pid) % 65536;
+
+            if (control_code == expected_code)
             {
-                uint16_t check = (vid * pid) % 65536;
-                if (check == control_code)
+                if ((vid == 0) && (pid == 0))
+                    hidImplementation::common::clearStoredHardwareID();
+                else
                     hidImplementation::common::storeHardwareID(vid, pid);
-                // else ignore
-            }
+            } // else ignore
         } // else ignore
     }
 }
