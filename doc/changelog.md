@@ -211,3 +211,9 @@ First release.
   (BLE only). The companion app supports this feature.
   In Windows, the companion app is able to change your device's display name, too.
 - Documentation updates.
+
+## 4.3.1
+
+- The [Teabox](./hardware/setups/Teabox/Teabox_en.md) design now includes security lock functionality.
+- There is a new specification for the "control code" field in HID Report 5.
+- Errata fixes.
