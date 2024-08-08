@@ -93,7 +93,10 @@ Notes and build tips:
 ### External wiring
 
 - Each input has an assigned number in the circuit layout. Certain inputs have a particular function, so attach them properly.
-- The `POTn_GND` and `POTn_VCC` terminals of each potentiometer are interchangeable. If the clutch (or axis) goes to 100% when idle, swap those terminals.
+- The `POTn_GND` and `POTn_VCC` terminals of each potentiometer are interchangeable.
+  If the clutch (or axis) goes to 100% when idle, swap those terminals.
+  If you don't have the chance to swap those terminals,
+  the companion app has the ability to swap axis polarity by user request.
 - Note that the pin headers on the left and right clutch paddles are symmetrical, not identical.
 - `Battery(+)` is the positive pole of the battery.
 - `Battery(-)` is the negative pole of the battery.

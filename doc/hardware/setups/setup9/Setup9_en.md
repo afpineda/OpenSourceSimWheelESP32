@@ -147,7 +147,10 @@ Notes and build tips:
   | Satellite circuit | Address = 0, GPB4 | "X" button in Windows     |
   | Satellite circuit | Address = 0, GPB3 | "Y" button in Windows     |
 
-- The `GND` and `3V3` terminals of each potentiometer are interchangeable. If the clutch (or axis) goes to 100% when idle, swap those terminals.
+- The `GND` and `3V3` terminals of each potentiometer are interchangeable.
+  If the clutch (or axis) goes to 100% when idle, swap those terminals.
+  If you don't have the chance to swap those terminals,
+  the companion app has the ability to swap axis polarity by user request.
   They are attached to the satellite circuit (same tags).
 - `EXT_5V` is the positive pole of your power source.`EXT_GND` is the negative pole of your power source.
   Attach them properly. **Take care not to swap those terminals**.
