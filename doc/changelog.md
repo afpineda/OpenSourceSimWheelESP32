@@ -217,3 +217,8 @@ First release.
 - The [Teabox](./hardware/setups/Teabox/Teabox_en.md) design now includes security lock functionality.
 - There is a new specification for the "control code" field in HID Report 5.
 - Errata fixes.
+
+## 4.4.0
+
+- New simple commands allow to change the polarity of any clutch paddle thanks to the companion app.
+  Changes are saved to flash memory.
