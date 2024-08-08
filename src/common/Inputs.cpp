@@ -56,12 +56,13 @@ static QueueHandle_t decouplingQueue = nullptr;
 #define HUB_STACK_SIZE 4 * 1024
 static TaskHandle_t hubTask = nullptr;
 
-// Related to axis calibration data
+// Related to axis calibration data and polarity
 
 static esp_timer_handle_t autoSaveTimer = nullptr;
 #define AXIS_NAMESPACE "axis"
 #define KEY_MIN_CAL_DATA "a"
 #define KEY_MAX_CAL_DATA "z"
+#define KEY_POLARITY "!"
 #define LEFT_CLUTCH_INDEX 0
 #define RIGHT_CLUTCH_INDEX 1
 
@@ -69,26 +70,26 @@ static esp_timer_handle_t autoSaveTimer = nullptr;
 // Calibration data of analog axes
 // ----------------------------------------------------------------------------
 
-void saveAxisCalibration(Preferences *prefs, uint8_t index, int min, int max)
+void saveAxisCalibration(Preferences &prefs, uint8_t index, int min, int max)
 {
   char aux[6];
   snprintf(aux, 6, "%s%d", KEY_MIN_CAL_DATA, index);
-  prefs->putInt(aux, min);
+  prefs.putInt(aux, min);
   snprintf(aux, 6, "%s%d", KEY_MAX_CAL_DATA, index);
-  prefs->putInt(aux, max);
+  prefs.putInt(aux, max);
 }
 
-bool loadAxisCalibration(Preferences *prefs, uint8_t index, int *min, int *max)
+bool loadAxisCalibration(Preferences &prefs, uint8_t index, int &min, int &max)
 {
   char aux[6];
   snprintf(aux, 6, "%s%d", KEY_MIN_CAL_DATA, index);
-  if (prefs->isKey(aux))
+  if (prefs.isKey(aux))
   {
-    *min = prefs->getInt(aux);
+    min = prefs.getInt(aux);
     snprintf(aux, 6, "%s%d", KEY_MAX_CAL_DATA, index);
-    if (prefs->isKey(aux))
+    if (prefs.isKey(aux))
     {
-      *max = prefs->getInt(aux);
+      max = prefs.getInt(aux);
       return true;
     }
   }
@@ -103,9 +104,10 @@ void axisCalibrationAutoSaveCallback(void *param)
   if (prefs.begin(AXIS_NAMESPACE, false))
   {
     leftClutchAxis->getCalibrationData(&min, &max);
-    saveAxisCalibration(&prefs, LEFT_CLUTCH_INDEX, min, max);
+    saveAxisCalibration(prefs, LEFT_CLUTCH_INDEX, min, max);
     rightClutchAxis->getCalibrationData(&min, &max);
-    saveAxisCalibration(&prefs, RIGHT_CLUTCH_INDEX, min, max);
+    saveAxisCalibration(prefs, RIGHT_CLUTCH_INDEX, min, max);
+
     prefs.end();
   }
 }
@@ -123,6 +125,57 @@ void inputs::recalibrateAxes()
     leftClutchAxis->resetCalibrationData();
     rightClutchAxis->resetCalibrationData();
   }
+}
+
+// ----------------------------------------------------------------------------
+// Axis polarity
+// ----------------------------------------------------------------------------
+
+void loadAxisPolarity(Preferences &prefs, uint8_t index, bool &currentPolarity)
+{
+  char aux[6];
+  snprintf(aux, 6, "%s%d", KEY_POLARITY, index);
+  currentPolarity = prefs.getBool(aux, currentPolarity);
+}
+
+void saveAxisPolarity(uint8_t index, bool currentPolarity)
+{
+  Preferences prefs;
+  if (prefs.begin(AXIS_NAMESPACE, false))
+  {
+    char aux[6];
+    snprintf(aux, 6, "%s%d", KEY_POLARITY, index);
+    prefs.putBool(aux, currentPolarity);
+    prefs.end();
+  }
+}
+
+void inputs::reverseLeftAxis()
+{
+  if (leftClutchAxis)
+  {
+    leftClutchAxis->reversed = !leftClutchAxis->reversed;
+    saveAxisPolarity(LEFT_CLUTCH_INDEX, leftClutchAxis->reversed);
+    inputs::update();
+  }
+}
+
+void inputs::reverseRightAxis()
+{
+  if (rightClutchAxis)
+  {
+    rightClutchAxis->reversed = !rightClutchAxis->reversed;
+    saveAxisPolarity(RIGHT_CLUTCH_INDEX, rightClutchAxis->reversed);
+    inputs::update();
+  }
+}
+
+void resetAxesPolarityForTesting()
+{
+  if (rightClutchAxis)
+    rightClutchAxis->reversed = true;
+  if (leftClutchAxis)
+    leftClutchAxis->reversed = true;
 }
 
 // ----------------------------------------------------------------------------
@@ -443,10 +496,12 @@ void inputs::start()
     if ((leftClutchAxis) && (rightClutchAxis) && prefs.begin(AXIS_NAMESPACE, true))
     {
       int min, max;
-      if (loadAxisCalibration(&prefs, LEFT_CLUTCH_INDEX, &min, &max))
+      if (loadAxisCalibration(prefs, LEFT_CLUTCH_INDEX, min, max))
         leftClutchAxis->setCalibrationData(min, max);
-      if (loadAxisCalibration(&prefs, RIGHT_CLUTCH_INDEX, &min, &max))
+      if (loadAxisCalibration(prefs, RIGHT_CLUTCH_INDEX, min, max))
         rightClutchAxis->setCalibrationData(min, max);
+      loadAxisPolarity(prefs, LEFT_CLUTCH_INDEX, leftClutchAxis->reversed);
+      loadAxisPolarity(prefs, RIGHT_CLUTCH_INDEX, rightClutchAxis->reversed);
       prefs.end();
     }
 

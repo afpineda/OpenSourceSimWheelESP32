@@ -536,8 +536,22 @@ namespace inputs
     void recalibrateAxes();
 
     /**
+     * @brief Change polarity of left axis (if any)
+     *
+     * @note Saved to flash memory without delay
+     */
+    void reverseLeftAxis();
+
+    /**
+     * @brief Change polarity of right axis (if any)
+     *
+     */
+    void reverseRightAxis();
+
+    /**
      * @brief Exposed for testing. Do not call.
      *
+     * @note Saved to flash memory without delay
      */
     void notifyInputEventForTesting(
         inputBitmap_t state,

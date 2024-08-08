@@ -178,9 +178,16 @@ protected:
     int maxADCReading;
     int lastADCReading;
     clutchValue_t lastValue;
-    bool reversed;
 
 public:
+
+    /**
+     * @brief When true, lowest voltage means highest axis value.
+     *        When false, lowest voltage means lowest axis value.
+     *
+     */
+    bool reversed;
+
     /**
      * @brief Construct a new Analog Axis Input object
      *

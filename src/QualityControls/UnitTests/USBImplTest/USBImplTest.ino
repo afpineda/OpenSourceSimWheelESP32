@@ -49,6 +49,16 @@ void inputs::update()
 {
 }
 
+void inputs::reverseLeftAxis()
+{
+    Serial.println("CMD: reverse left axis");
+}
+
+void inputs::reverseRightAxis()
+{
+    Serial.println("CMD: reverse right axis");
+}
+
 void batteryCalibration::restartAutoCalibration()
 {
     Serial.println("CMD: recalibrate battery");

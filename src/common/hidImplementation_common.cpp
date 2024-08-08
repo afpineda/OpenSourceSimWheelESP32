@@ -178,6 +178,16 @@ void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *b
             // save settings now
             userSettings::saveNow();
         }
+        if ((len > 3) && (buffer[3] == (uint8_t)simpleCommands_t::CMD_REVERSE_LEFT_AXIS))
+        {
+            // change left axis polarity
+            inputs::reverseLeftAxis();
+        }
+        if ((len > 3) && (buffer[3] == (uint8_t)simpleCommands_t::CMD_REVERSE_RIGHT_AXIS))
+        {
+            // change left axis polarity
+            inputs::reverseRightAxis();
+        }
         if ((len > 4) && (buffer[4] != 0xff))
         {
             // Set working mode of DPAD

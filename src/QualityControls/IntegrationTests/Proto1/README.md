@@ -82,3 +82,16 @@ For later reference:
 11. Enter `03` at field `ReportID`.
 12. Click on `Get Feature`.
 13. Byte in 6th position (after `RD 03`) must show `00`.
+
+## Part 4 (axis polarity)
+
+1. Enter `03` at field `ReportID`.
+2. Enter `01 FF FF FF FF FF` at fields below `ReportID`. Click on `Set Feature`.
+3. Move "CLUTCH1" or "CLUTCH2" from left to right.
+   Note if axis "RX" or "RY" goes up or down.
+4. Enter `FF FF FF 05 FF FF` at fields below `ReportID`. Click on `Set Feature`.
+5. Enter `FF FF FF 06 FF FF` at fields below `ReportID`. Click on `Set Feature`.
+6. Move "CLUTCH1" or "CLUTCH2" from left to right, again.
+   Axis "RX" or "RY" must go in the opposite way it did before.
+7. Enter `FF FF FF 05 FF FF` at fields below `ReportID`. Click on `Set Feature`.
+8. Enter `FF FF FF 06 FF FF` at fields below `ReportID`. Click on `Set Feature`.

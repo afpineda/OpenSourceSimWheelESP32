@@ -138,6 +138,9 @@ Not applicable to USB implementation.
 8. Click on `Set Feature` , then on `Get Feature`.
 9. Must show a line starting with: `RD 03  01 01 40 42 01 00`.
 10. Serial output must show: `CMD: recalibrate axes`.
+11. Enter `FF FF FF 06 FF FF` at fields below `ReportID`.
+12. Click on `Set Feature`.
+13. Serial output must show: `CMD: reverse right axis`.
 
 ### Capabilities (HID report)
 

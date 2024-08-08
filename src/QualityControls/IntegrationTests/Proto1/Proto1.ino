@@ -40,6 +40,8 @@ void batteryCalibration::restartAutoCalibration()
 {
 }
 
+extern void resetAxesPolarityForTesting();
+
 //------------------------------------------------------------------
 // Arduino entry point
 //------------------------------------------------------------------
@@ -77,6 +79,7 @@ void setup()
 
     Serial.println("-- GO --");
     inputs::start();
+    resetAxesPolarityForTesting();
 }
 
 void loop()
