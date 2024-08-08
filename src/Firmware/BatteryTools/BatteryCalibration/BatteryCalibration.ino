@@ -63,6 +63,14 @@ void inputs::recalibrateAxes()
 {
 }
 
+void inputs::reverseLeftAxis()
+{
+}
+
+void inputs::reverseRightAxis()
+{
+}
+
 // ----------------------------------------------------------------------------
 // Arduino entry point
 // ----------------------------------------------------------------------------
