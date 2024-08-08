@@ -222,3 +222,8 @@ First release.
 
 - New simple commands allow to change the polarity of any clutch paddle thanks to the companion app.
   Changes are saved to flash memory.
+
+## 4.4.1
+
+- Fix compilation bug in
+  [BatteryCalibration.ino](../src/Firmware/BatteryTools/BatteryCalibration/BatteryCalibration.ino)
