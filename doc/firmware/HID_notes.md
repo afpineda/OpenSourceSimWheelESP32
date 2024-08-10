@@ -163,6 +163,17 @@ At read:
 At write (unless locked):
 
 - Send a simple command. Valid commands are enumerated in `simpleCommands_t` at file [SimWheelTypes.h][def].
+  This is a summary:
+
+  | Simple command (decimal) | Description                                                                        |
+  | ------------------------ | ---------------------------------------------------------------------------------- |
+  | 1                        | Recalibrate analog clutch paddles (if any).                                        |
+  | 2                        | Restart battery auto-calibration. Ignored if the battery was "factory-calibrated". |
+  | 3                        | Reset user-defined button mapping to factory defaults.                             |
+  | 4                        | Save all user settings at once (including button mapping).                         |
+  | 5                        | Reverse left clutch paddle polarity (analog only if any).                          |
+  | 6                        | Reverse right clutch paddle polarity (analog only if any).                         |
+
 - Write FF (hexadecimal) to ignore this field.
 
 ### Working mode of DPAD inputs
