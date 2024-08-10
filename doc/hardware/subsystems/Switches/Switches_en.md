@@ -226,6 +226,9 @@ Needed parts (not counting input hardware like push buttons):
     potentiometers (right or left terminal).
   - Redundant `3V3` pins may be attached to potentiomers (right or left terminal, the opposite to `GND`).
 - For components (switches, funky switches, etc.), follow the same rules as for analog multiplexers (see above).
+- The `wake-up` pin is related to the [power latch subsystem](../PowerLatch/PowerLatch_en.md).
+  For simplification, just the buttons attached to the left GPIO expander will wake up the system from deep sleep.
+  This pin can be left unwired.
 
 #### I2C Addressing
 
