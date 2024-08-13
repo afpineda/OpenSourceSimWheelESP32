@@ -116,6 +116,14 @@ The "flags" field is a set of 1-bit flags.
 Flags are indexed starting from the least significant bit.
 Non indexed bits are reserved for future use.
 Current flags are enumerated in `deviceCapability_t` at file [SimWheelTypes.h][def]
+This is a summary:
+
+- Digital clutch paddles
+- Analog clutch paddles
+- "ALT" buttons
+- DPAD
+- Battery
+- Calibration data for the battery
 
 ### ID
 

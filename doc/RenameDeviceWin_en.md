@@ -4,6 +4,9 @@ Once your BLE simwheel/button box is paired and connected to your host computer,
 It will be available in the "Game Controllers" control panel.
 However, it will show a generic display name like "4 axis 128 button device with hat switch".
 
+**Warning**: The following workaround will rename all devices sharing the same hardware ID,
+not just your device.
+
 ## Custom display name by means of the companion app (Windows only)
 
 On Windows computers, the
