@@ -25,11 +25,15 @@ My advice is to go with the latest boards. Some interesting DevKit boards for th
   - "T7 S3" is a very interesting board, close to "Wemos S3 mini", but features built-in battery support
     (credits to user [@WallK](https://github.com/WallK) for pointing this out).
 
-You need to balance two key aspects: **size and pin availability**. The larger the board, the higher the count of available pins, so you can fit more buttons, paddles, etc, but the greater is the space required inside the sim wheel's housing.
+You need to balance two key aspects: **size and pin availability**.
+The larger the board, the higher the count of available pins, so you can fit more buttons, paddles, etc,
+but the greater is the space required inside the sim wheel's housing.
 
-In order to reduce size and circuit complexity, it is recommended to use GPIO expanders (will be explained later) and small devkit boards like Unexpected Maker's "TinyPico" or LilyGO's "T-QT".
+In order to reduce size and circuit complexity, it is recommended to use GPIO expanders (will be explained later)
+and small devkit boards like Unexpected Maker's "TinyPico" or LilyGO's "T-QT".
 
-This project makes extensive use of the official "ESP-WROOM-32" board (aka "ESP32-DevKit-C") for testing and development purposes, but this is not the best choice due to its excessive size.
+This project makes extensive use of the official "ESP-WROOM-32" board (aka "ESP32-DevKit-C")
+for testing and development purposes, but this is not the best choice due to its excessive size.
 
 ## Flash memory requirements
 
