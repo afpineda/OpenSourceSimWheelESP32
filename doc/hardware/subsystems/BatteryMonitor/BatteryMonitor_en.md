@@ -2,20 +2,28 @@
 
 This subsystem is for **battery-operated** systems, only.
 
+**Warning**:
+this subsystem is designed to work with batteries below 5 volts ("1S" Lithium-Polymer or LiPo batteries).
+Higher voltages may damage your DevKit board.
+
 ## Purpose
 
-The purpose of this subsystem is to provide an estimation of how much battery charge is left, so the user knows when to plug the charging cable in.
+The purpose of this subsystem is to provide an estimation of how much battery charge is left,
+so the user knows when to plug the charging cable in.
 The battery level is a percentage of charge left in the range 0% to 100% (also known as "state of charge" or "SoC").
 Battery level is known to the hosting PC through Bluetooth Low Energy.
 
-There are two alternative implementations to choose from:
+There are some **alternate implementations** to choose from:
 
-- Battery monitor: recommended since it avoids excessive battery drainage.
-- Simple voltage divider: can be found in some ESP32 DevKit boards as a built-in feature. It drains current at all times.
+- *Simple voltage divider*: can be found in some ESP32 DevKit boards as a built-in feature.
+  Because it constantly drains current, it is not advised.
+- *Battery monitor*: avoids battery drainage thanks to additional on/off circuitry.
+- *External "fuel gauge" chip*: provides state-of-the-art SoC.
 
-## Limitations
+## Limitations of a simple voltage divider or a battery monitor
 
-Please, be aware that **accurate battery SoC can not be achieved** in this project (nor in most home-made electronics).
+**Accurate battery SoC cannot be achieved** in this project
+(or in most home-made electronics) using these implementations.
 SoC estimation is harder than you may think.
 For SoC, consumer electronics use a combination of complex circuitry, factory measurements and software (even Artificial Intelligence).
 This is out of scope for a home-made project.
@@ -23,7 +31,7 @@ This is out of scope for a home-made project.
 For further reading, look at this article:
 [Battery Management System (BMS): Effective Ways to Measure State-of-Charge and State-of-Health](https://www.integrasources.com/blog/battery-management-system-bms-state-charge-and-state-health/)
 
-## Working principles
+## Working principles (simple voltage divider and battery monitor)
 
 A battery monitor needs to read the output voltage of the battery (*not* the powerboost output voltage), this is,
 the voltage at the positive terminal (the negative terminal is wired to ground - `GND`).
@@ -31,7 +39,8 @@ As the battery gets discharged, that voltage will go down. The output voltage of
 
 - 4.0V to 5.0V when the powerboost module is charging the battery.
 - 3.7V when the battery is fully charged.
-- Over 2.4V or less when the battery is discharged. The powerboost module will cut power to avoid over discharge.
+- Over 2.4V or less when the battery is discharged.
+  The powerboost module will cut power to avoid over discharge.
 
 In some way, this output voltage should be read through an ADC pin, however, there are two restrictions:
 
@@ -40,15 +49,10 @@ In some way, this output voltage should be read through an ADC pin, however, the
 
 The firmware will read the battery level every few minutes and it takes only a few milliseconds long.
 
-**Warning**: this subsystem is designed to work with batteries below 5 volts ("1S" Lithium-Polymer or LiPo batteries).
-Higher voltages may damage your DevKit board.
-Some adjustments are required for other kind of batteries.
+## Battery monitor
 
-## Circuit: battery monitor
-
-The circuit is switched on and off by the means of an NPN-PNP pair. It will not draw any relevant current except for a few milliseconds every few minutes.
-
-### Design (1)
+The circuit is switched on and off by the means of an NPN-PNP pair.
+It will not draw any relevant current except for a few milliseconds every few minutes.
 
 The circuit uses the following pins:
 
@@ -70,7 +74,8 @@ Needed parts:
 - A bipolar junction transistor (x1), NPN type: any kind should work (for example: [BC637](https://www.onsemi.com/pdf/datasheet/bc637-d.pdf)).
 - A bipolar junction transistor (x1), PNP type: any kind should work (for example: [BC640](https://www.onsemi.com/pdf/datasheet/bc640-d.pdf)).
 
-In fact, any impedance will work as long as `battREAD` is below 3.3 volts at all times (assuming `battery(+)` is always below 5 volts). However, the higher the voltage drop, the less the accuracy in battery levels (state of charge).
+In fact, any impedance will work as long as `battREAD` is below 3.3 volts at all times (assuming `battery(+)` is always below 5 volts).
+However, the higher the voltage drop, the less the accuracy in battery levels (state of charge).
 
 Pay attention to the pin-out of your transistors. It *may not match* the one shown here.
 
@@ -78,7 +83,7 @@ Look at this [layout design](./BatteryMonitor.diy) using [DIY Layout Creator](ht
 
 ![Board design](./BatteryMonitor_diy.png)
 
-## Circuit: simple voltage divider
+## Simple voltage divider
 
 This kind of circuit is built into some ESP32 boards. For example:
 
@@ -86,14 +91,13 @@ This kind of circuit is built into some ESP32 boards. For example:
 - [Adafruit Feather 32u4 Bluefruit LE](https://www.adafruit.com/product/2829)
 - [Wemos D32 boards](https://www.wemos.cc/en/latest/d32/d32.html)
 
-In such a case, there is no need to build this subsystem. However, we also provide the design in case you are short of available GPIO pins for the previous alternative.
-
-### Design (2)
+In such a case, there is no need to build this subsystem.
+However, we also provide the design in case you are short of available GPIO pins for the previous alternative.
 
 The circuit uses the same pins as the previous alternative, except for `BattEN`, which is not needed.
 
 - **Battery (+)** pin (battery positive terminal). Not exposed and not needed in the alluded boards.
-- **battREAD** pin: provides the current battery level. May be exposed or not in the alluded boards.
+- **battREAD** pin: provides the current battery voltage. May be exposed or not in the alluded boards.
   If not exposed, it will be wired internally to a certain GPIO.
   If exposed (with another tag, for sure), you must wire it externally to an ADC-capable GPIO. Check the datasheet.
 
@@ -106,13 +110,27 @@ Needed parts:
 - 110K-ohms resistor (x1), 1% tolerance.
 - 200K-ohms resistor (x1), 1% tolerance.
 
-In fact, any impedance above 100K-ohms will work as long as `battREAD` is below 3.3 volts at all times. Do not use lower impedance or this circuit will drain your battery quicker than the DevKit board itself.
+In fact, any impedance above 100K-ohms will work as long as `battREAD` is below 3.3 volts at all times.
+Do not use lower impedance or this circuit will drain your battery quicker than the DevKit board itself.
 
-## Firmware customization
+This alternative will deplete your battery very slowly, even when the system is in a deep sleep state or not powered.
+An [external power latch circuit](../PowerLatch/PowerLatch_en.md) will **not prevent** this.
 
-Only a rough estimation of battery charge can be provided out of the box. Battery level will be unreliable until the battery is fully charged for the first time.
+## External "fuel gauge"
 
-For better battery levels, a battery calibration procedure must be followed, which is extensively documented [here](../../../../src/Firmware/BatteryTools/BatteryCalibration/README.md) along with the required Arduino sketch. **This is not mandatory but highly recommended**.
+An external "fuel gauge" (not to be taken literally) is a specialized chip for accurate state of charge measurement.
+
+This project will provide support for the popular [MAX17043](https://www.analog.com/media/en/technical-documentation/data-sheets/MAX17043-MAX17044.pdf)
+soon.
+
+## Firmware customization (simple voltage divider or battery monitor)
+
+Only a rough estimation of battery charge can be provided out of the box.
+Battery level will be unreliable until the battery is fully charged for the first time.
+
+For better battery levels, a battery calibration procedure must be followed,
+which is extensively documented [here](../../../../src/Firmware/BatteryTools/BatteryCalibration/README.md) along with the required Arduino sketch.
+**This is not mandatory but highly recommended**.
 
 Customization takes place at file [CustomSetup.ino](../../../../src/Firmware/CustomSetup/CustomSetup.ino).
 Ensure the following line of code is in place:
