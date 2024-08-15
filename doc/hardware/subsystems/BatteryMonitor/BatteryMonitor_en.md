@@ -18,9 +18,13 @@ There are some **alternate implementations** to choose from:
 - *Simple voltage divider*: can be found in some ESP32 DevKit boards as a built-in feature.
   Because it constantly drains current, it is not advised.
 - *Battery monitor*: avoids battery drainage thanks to additional on/off circuitry.
-- *External "fuel gauge" chip*: provides state-of-the-art SoC.
+- *External "fuel gauge" chip*: provides state-of-the-art SoC estimation.
 
-## Limitations of a simple voltage divider or a battery monitor
+The firmware will read the battery level every few minutes and it takes only a few milliseconds long.
+
+## Simple voltage divider or battery monitor
+
+### Limitations
 
 **Accurate battery SoC cannot be achieved** in this project
 (or in most home-made electronics) using these implementations.
@@ -31,7 +35,7 @@ This is out of scope for a home-made project.
 For further reading, look at this article:
 [Battery Management System (BMS): Effective Ways to Measure State-of-Charge and State-of-Health](https://www.integrasources.com/blog/battery-management-system-bms-state-charge-and-state-health/)
 
-## Working principles (simple voltage divider and battery monitor)
+### Working principles
 
 A battery monitor needs to read the output voltage of the battery (*not* the powerboost output voltage), this is,
 the voltage at the positive terminal (the negative terminal is wired to ground - `GND`).
@@ -47,16 +51,14 @@ In some way, this output voltage should be read through an ADC pin, however, the
 - The output voltage of the battery exceeds 3.3V and would damage the DevKit board, so that voltage has to drop down to a suitable range.
 - Reading the output voltage could discharge the battery itself, so the battery monitor should not draw any relevant current.
 
-The firmware will read the battery level every few minutes and it takes only a few milliseconds long.
+### Battery monitor
 
-## Battery monitor
-
-The circuit is switched on and off by the means of an NPN-PNP pair.
+This circuit is switched on and off by the means of an NPN-PNP pair.
 It will not draw any relevant current except for a few milliseconds every few minutes.
 
-The circuit uses the following pins:
+This circuit uses the following terminals:
 
-- **Battery (+)** pin (battery positive terminal): a wire has to be soldered to that terminal at the powerboost module.
+- **Battery (+)** (battery positive terminal): a wire has to be soldered to that terminal at the powerboost module.
 - **battEN** pin: enables or disables the circuit. Attached to an output-capable GPIO pin at the DevKit board.
 - **battREAD** pin: provides the current battery level. Attached to an ADC-capable GPIO pin at the DevKit board.
 
@@ -83,7 +85,7 @@ Look at this [layout design](./BatteryMonitor.diy) using [DIY Layout Creator](ht
 
 ![Board design](./BatteryMonitor_diy.png)
 
-## Simple voltage divider
+### Simple voltage divider
 
 This kind of circuit is built into some ESP32 boards. For example:
 
@@ -94,7 +96,7 @@ This kind of circuit is built into some ESP32 boards. For example:
 In such a case, there is no need to build this subsystem.
 However, we also provide the design in case you are short of available GPIO pins for the previous alternative.
 
-The circuit uses the same pins as the previous alternative, except for `BattEN`, which is not needed.
+The circuit uses the same terminals as the previous alternative, except for `BattEN`, which is not needed.
 
 - **Battery (+)** pin (battery positive terminal). Not exposed and not needed in the alluded boards.
 - **battREAD** pin: provides the current battery voltage. May be exposed or not in the alluded boards.
@@ -112,6 +114,7 @@ Needed parts:
 
 In fact, any impedance above 100K-ohms will work as long as `battREAD` is below 3.3 volts at all times.
 Do not use lower impedance or this circuit will drain your battery quicker than the DevKit board itself.
+The higher the voltage drop, the less the accuracy in battery levels (state of charge).
 
 This alternative will deplete your battery very slowly, even when the system is in a deep sleep state or not powered.
 An [external power latch circuit](../PowerLatch/PowerLatch_en.md) will **not prevent** this.
@@ -128,7 +131,7 @@ soon.
 Only a rough estimation of battery charge can be provided out of the box.
 Battery level will be unreliable until the battery is fully charged for the first time.
 
-For better battery levels, a battery calibration procedure must be followed,
+For better results, a battery calibration procedure must be followed,
 which is extensively documented [here](../../../../src/Firmware/BatteryTools/BatteryCalibration/README.md) along with the required Arduino sketch.
 **This is not mandatory but highly recommended**.
 
@@ -156,3 +159,7 @@ Locate the line `#define BATTERY_READ_GPIO` and write a GPIO number to the right
 #define BATTERY_ENABLE_READ_GPIO -1
 #define BATTERY_READ_GPIO 36
 ```
+
+### Fuel guge (design 3)
+
+*Work in progress.*
