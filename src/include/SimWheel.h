@@ -200,7 +200,7 @@ namespace userSettings
 }
 
 /**
- * @brief Calibrate and measure battery charge
+ * @brief Battery profiling algorithm
  *
  * @note This namespace provides two algorithms to map a battery reading into a
  *       battery level percentage:
@@ -296,9 +296,82 @@ namespace batteryCalibration
      * @note Based on https://blog.ampow.com/lipo-voltage-chart/
      */
     int getBatteryLevelAutoCalibrated(int reading);
-
 }
 
+/**
+ * @brief Measurement of State of Charge
+ *
+ * @note Do not call if there is no battery.
+ */
+namespace batteryMonitor
+{
+    /**
+     * @brief Monitor battery charge using a voltage divider or a battery monitor circuit
+     *
+     * @param battENPin Output pin to enable/disable the battery monitor circuit.
+     *                  Set to `GPIO_NUM_NC` (-1) if `battREADPin` is attached to
+     *                  a simple voltage divider. This is the case for most battery-enabled DevKits.
+     * @param battREADPin ADC pin used to read battery voltage
+     */
+    void begin(gpio_num_t battENPin, gpio_num_t battREADPin);
+
+    /**
+     * @brief Monitor battery charge using a "fuel gauge"
+     *
+     * @note For MAX17043 chips or compatible
+     *
+     * @param i2c_address Full I2C address of the fuel gauge chip (7 bits).
+     *                    Set to 0xFF to use a default address.
+     */
+    void begin(uint8_t i2c_address = 0xFF);
+
+    int getBatteryReadingForTesting(gpio_num_t battENPin, gpio_num_t battREADPin);
+
+    /**
+     * @brief Get last known battery level
+     *
+     * @return int Percentage of battery charge (0% to 100%)
+     */
+    int getLastBatteryLevel();
+
+    /**
+     * @brief Set time interval between measurements
+     *
+     * @param[in] seconds Time to wait from one measurement to the next (in seconds).
+     *                    Set to zero for a default interval.
+     */
+    void setPeriod(uint32_t seconds);
+
+    /**
+     * @brief Set a battery level to warn to the user
+     *
+     * @note No effect if there is no user interface.
+     *
+     * @param[in] percentage. Value in the range from 0% (disable) to 100%.
+     *                        Invalid values are ignored.
+     */
+    void setWarningSoC(uint8_t percentage);
+
+    /**
+     * @brief Set a battery level to shutdown the system
+     *
+     * @param[in] percentage. Value in the range from 0% (disable) to 100%.
+     *                        Invalid values are ignored.
+     */
+    void setPowerOffSoC(uint8_t percentage);
+
+    /**
+     * @brief Configure period, warning and power-off limits for testing.
+     *
+     * @note No need to call in user code.
+     */
+    void configureForTesting();
+}
+
+/**
+ * @brief Power management
+ *
+ */
 namespace power
 {
     /**
@@ -310,33 +383,6 @@ namespace power
     void begin(const gpio_num_t wakeUpPin);
 
     /**
-     * @brief Initialize power management
-     *
-     * @deprecated Use begin() with just one parameter.
-     *
-     * @param wakeUpPins Array of RTC-capable GPIO pins to wake up the system after deep sleep.
-     * @param wakeUpPinCount Number of pins in `wakeUpPins`. If no pins are provided, a system
-     *                       reset is required for wakeup.
-     * @param AnyHighOrAllLow If *true*, wakeup happens when *any* given pin are set to high voltage.
-     *                        If *false*, wakeup happens when *all* given pins are set to low voltage.
-     */
-    void begin(
-        const gpio_num_t wakeUpPins[],
-        const uint8_t wakeUpPinCount,
-        bool AnyHighOrAllLow = true);
-
-    /**
-     * @brief Initialize power management for single button wake up
-     *
-     * @deprecated Use begin() with just one parameter.
-     *
-     * @param wakeUpPin RTC-capable GPIO pin to wake up the system after deep sleep.
-     * @param wakeUpHighOrLow If *true*, wakeup happens when `wakeUpPin` is set to high voltage.
-     *                        If *false*, wakeup happens when `wakeUpPin` is set to low voltage.
-     */
-    void begin(const gpio_num_t wakeUpPin, bool wakeUpHighOrLow);
-
-    /**
      * @brief Configure an external latch circuit for power on and off
      *
      * @param latchPin Output-capable GPIO that drives power on/off.
@@ -344,38 +390,6 @@ namespace power
      * @param waitTicks A delay to wait for power off to happen, in milliseconds.
      */
     void setPowerLatch(gpio_num_t latchPin, powerLatchMode_t mode, uint32_t waitMs);
-
-    /**
-     * @brief Enable monitoring of battery charge. Do not call if there is no battery.
-     *
-     * @param battENPin Output pin to enable/disable the battery monitor circuit.
-     *                  Set to `GPIO_NUM_NC` (-1) if `battREADPin` is attached to
-     *                  a simple voltage divider. This is the case for most battery-enabled DevKits.
-     * @param battREADPin ADC pin used to read battery voltage
-     * @param testing Set to TRUE for unit testing: will get a battery sample every 5 seconds,
-     *                will not power off the device.
-     */
-    void startBatteryMonitor(
-        gpio_num_t battENPin,
-        gpio_num_t battREADPin,
-        bool testing = false);
-
-    /**
-     * @brief Get ADC reading of the battery pin for testing purposes. Must **not** be called while
-     *        the battery monitor is running
-     *
-     * @param battENPin Output-capable GPIO pin to enable battery readings. Must have been properly initialized.
-     * @param battREADPin ADC pin for reading. Must have been properly initialized.
-     * @return int ADC reading
-     */
-    int getBatteryReadingForTesting(gpio_num_t battENPin, gpio_num_t battREADPin);
-
-    /**
-     * @brief Get last known battery level
-     *
-     * @return int Percentage of battery charge (0% to 100%)
-     */
-    int getLastBatteryLevel();
 
     /**
      * @brief If an external power latch circuit is in place, the system will be powered off.
