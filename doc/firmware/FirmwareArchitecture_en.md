@@ -4,7 +4,8 @@
 
 The *system* have been broken into several *modules* that have been implemented as C++ namespaces. All of them are defined at *SimWheel.h*:
 
-- **batteryCalibration**: Everything related to the estimation of battery charge.
+- **batteryCalibration**: Everything related to battery profiling.
+- **batteryMonitor**: Everything related to the measurement of available battery charge.
 - **capabilities**: Everything related to the capabilities of the hardware and firmware.
 - **hidImplementation**: Everything related to the HID protocol.
 - **hidImplementation::common**: Common behaviour for all HID implementations (USB and BLE).
@@ -33,7 +34,8 @@ Some namespaces are implemented with the help of auxiliary modules which are not
 - *RotaryEncoderInput*: Everything related to rotary encoders.
 - *SerialNotification*: For the testing of user notifications through the USB serial interface.
 - *ShiftRegistersInput*: Everything related to serialized buttons/switches.
-- *I2CExpanderInputs*: Everything related to GPIO expanders on the I2C bus.
+- *i2c*: I2C bus initialization and common utilities.
+- *I2CExpanderInput*: Everything related to GPIO expanders on the I2C bus.
 
 ### Principle of single responsibility
 
@@ -41,6 +43,7 @@ Some namespaces are implemented with the help of auxiliary modules which are not
 | ---------------------- | ------------------------------------------------------- |
 | adcTools               | Requirements to ADC readings (for example, attenuation) |
 | batteryCalibration     | SoC algorithm                                           |
+| batteryMonitor         | Hardware for SoC measurement                            |
 | capabilities           | Hardware and firmware features relevant to the user     |
 | hidImplementation      | Device-computer intercommunication                      |
 | inputs                 | Input hardware                                          |
@@ -53,7 +56,7 @@ Some namespaces are implemented with the help of auxiliary modules which are not
 | ButtonMatrixInput      | Hardware design                                         |
 | ShiftRegistersInput    | Hardware design                                         |
 | RotaryEncoderInput     | Hardware design                                         |
-| I2CExpanderInputs      | Hardware design                                         |
+| I2CExpanderInput       | Hardware design                                         |
 
 ### Module dependencies
 
@@ -64,13 +67,9 @@ classDiagram
     class inputs {
       +start()
     }
+    class AnalogAxisInput
     class inputHub {
       +onRawInput()
-    }
-    class userSettings {
-      +bitePoint
-      +cpWorkingMode
-      +altButtonsWorkingMode
     }
     class hidImplementation {
       +reportInput()
@@ -85,20 +84,29 @@ classDiagram
     class DigitalPolledInput {
       +read()
     }
+    class batteryMonitor {
+        + getLastBatteryLevel()
+    }
+    class userSettings {
+      +bitePoint
+      +cpWorkingMode
+      +altButtonsWorkingMode
+    }
     inputHub <-- inputs: input events
-    inputs <-- AnalogAxisInput: axis position
     inputs <-- PolledInput: state of input hardware
+    inputs <-- AnalogAxisInput: axis position
     PolledInput <|-- DigitalPolledInput
-    inputHub <--> userSettings: configuration
     inputHub --> hidImplementation: processed events
+    inputHub <--> userSettings: configuration
     hidImplementation <--> userSettings: configuration
     hidImplementation --> power: auto power-off
-    hidImplementation <-- power: current battery level
-    power --> batteryCalibration: battery voltage
-    power <-- batteryCalibration: computed battery level
+    hidImplementation <-- batteryMonitor: current battery level
+    batteryMonitor --> batteryCalibration: battery voltage
+    batteryMonitor <-- batteryCalibration: computed battery level
+    batteryMonitor --> power: power-off on critical battery level
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNVMtu2zAQ_BWCpxaNf4AICjhNgQRo0SA59KLLWlzJRCmuQC7jBKn_vSvJNiTTKaKLqOXMzj4GetM1WdRG1x5SunXQRuiqoOQZI8qFPnNSb1NMqS-JIfKnz9P3voDe5c0MTOERdvdD_CIjJ4xPyOxCO5fYOMYHcoFPkbr_TfGPwH5KtacoeL7JzBRScbuQ2Tp73_UeOwwM7CjMtCL2FPn9EnvaYZzhx-9fTXMRvAFmjK_fwLtNPFdqkW-m-x_4jP6YoLxZZ6ZjCrQXhW5d6xj8A3mPdix-0RKcs06ruV6tDis101uJYuA0g6URtA7gqV2_uDSmNwrkKNNIbmirgM8qMUoswqioOShsIdodxMNm5jVf_xVq2UtZ89eFVYyqKTSuzdOMz-ADuti4UX2kGlNCu-i4tMbH1EreQBvNIaOSBU7nFTXNf4SOhDrHKPGjf5QfbDDxJv8NyUtzmRPhmTxDi3PKkP4SpaZOBiVjWIjpK91h7MBZ-ReMVqo0b6XaShs5Wmwge650FfYCHRp8eg21Ng34hFc691ZWfvh9nEW_W8cUteGYcf8PtcN_xQ)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqdVMtu2zAQ_BWCpxaNf0AIAjhNgQZI0KA59KLLWlzJRClSIJdxg9T_3tXDAiWqQVFfTC1nZl8jvcnKKZSFrAyEcKeh8dCWVvBviAhtu0hBvI0xIT4FAk8fPo7P5xS6t2Bcs_-lw31PylS-xkOi4-x3OA3ATbGjVvdtZ7BFS0Da2YTqsXOe_s7t3Al9gh-ev9X1JvgAROhfP4PRB7_O1CDdjvcP-ILmIpDf7CO5iwSqzUR3utEE5skZg2ooftESqPfKe3RWk0uaYo7gGh4gbFa40IgB_TMSadukmzxowienLc2Rqvvh_E-GPbIp5igYuo1Ezobsdkozr_d6t5scU4z_gouyFBJYGEDJFArBliIUrp4oR_DqBB4z0spghQA-8raD7tc2wtPxXv9mUj72Vc273U3utkJ03lUYAqq8hanTm8VgC1E5W-smjiYa4bmL_5fX0wYfc9fstfG8c3X9TqKVeThT9J4Bl7gwvWVGgZXP-nT5m1HMzBdnCBrc5CaZF9zKtTw8Hui_pZ-6nRsV3FTledUVmExCXskWfQta8bdssHgp6cjjKGXBR4U1REOlLO2Zof0En19tJQvyEa9k7BQ7cPr6LYNfVF_QGDv_Abn-wmA)
 
 ```mermaid
 classDiagram
@@ -120,13 +128,14 @@ classDiagram
 ```mermaid
 classDiagram
     hidImplementation --> inputs: command to calibrate analog axes
-    hidImplementation --> power: command to recalibrate battery
+    hidImplementation --> batteryCalibration: command to recalibrate battery
     hidImplementation --> notify: connected, discovering
-    power --> notify: powerOff, low battery
+    power --> notify: powerOff
+    batteryMonitor --> notify: low battery level
     userSettings --> notify: bite point
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9kD1uwzAMha8iaHYu4KFTO3TqkFULLdEOAYkUJKqpEeTuVX6AQEs4EQ98Hx95sV4C2tn6CLV-EmwFkmPT60ThO-WICVlBSdgcDh-GODets_GSEnAwKsZDpKWAogGGKJuBP6zvGFnOWAZEwRdkAVUs-zsAi9K63wjM6BXDZAJVL79YiLeH875kmL4rP-s6mSjncU2rWI6o2t118CzUE2UhVjvZhCUBhf6ty83mrJ56MGfn3gZcoUV11vG1j0JTOe7s7ayl4WRbDv22539H8SuQSnlo13_g14wh)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9UTFuwzAM_Iqg2fmAhy5thw5Fh6xeaIl2CEikIVFJjSB_r1y7KLSEE3G8Ox7Iu3Xi0fbWBcj5jWBOEAc2tS7kP-ISMCIrKAmb0-nFEC9Fc2-cxAjsjYpxEGhMoGiAIchs4BvzM48RVDGtr4euwo1fwn_Hg_rMjUVpWjcHZnSKvjOespMrJuJ5Vy5yw9Swf5Gvadrnx5pPYVJpiUFuf2MT8IphV5SM6YyqdUVu-CPV2IsQq-1sxBSBfL3vfZMNVi81_WD72nqcoAQd7MCPSoWicl7Z2V5Twc6WxdcDHB9pwXe_pdyxxw_Tm547)
 
 Some modules have a `begin()` method that must be called at system startup (`main()`or `setup()`). The calling order is defined by the previous diagram, where bottom modules must be called first.
 
