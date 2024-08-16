@@ -71,10 +71,10 @@ void setup()
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
     Serial.println("--GO--");
-    power::startBatteryMonitor(
+    batteryMonitor::configureForTesting();
+    batteryMonitor::begin(
         TEST_BATTERY_READ_ENABLE,
-        TEST_BATTERY_READ,
-        true);
+        TEST_BATTERY_READ);
 }
 
 void loop()

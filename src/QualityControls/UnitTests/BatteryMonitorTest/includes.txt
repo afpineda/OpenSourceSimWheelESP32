@@ -2,7 +2,10 @@ SimWheelTypes.h
 SimWheel.h
 debugUtils.h
 adcTools.h
-power.cpp
+i2c.h
 debugUtils.cpp
 capabilities.cpp
 adcTools.cpp
+batteryMonitor.cpp
+i2c.cpp
+power_mock.cpp
