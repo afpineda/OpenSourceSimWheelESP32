@@ -11,6 +11,7 @@
 
 #include <HardwareSerial.h>
 #include "debugUtils.h"
+#include "i2c.h"
 #include "I2CExpanderInput.h"
 #include "PolledInput.h"
 
@@ -20,27 +21,6 @@
 
 I2CButtonsInput *chain;
 inputBitmap_t state = 0ULL;
-
-// bool hardwareAddr2FullAddress(
-//     uint8_t address3bits,
-//     i2c_port_t bus,
-//     uint8_t &address7bits)
-// {
-//     address3bits = address3bits & 0b00000111;
-//     Serial.printf("Hardware address: %x\n",address3bits);
-//     uint8_t count = 0;
-//     for (uint8_t other4bits = 0; other4bits < 16; other4bits++)
-//     {
-//         uint8_t tryAddress = (other4bits << 3) | address3bits;
-//         Serial.printf("Trying: %x\n",tryAddress);
-//         if (I2CInput::probe(tryAddress, bus)) {
-//             Serial.println("*Match*");
-//             address7bits = tryAddress;
-//             count++;
-//         }
-//     }
-//     return (count==1);
-// }
 
 //------------------------------------------------------------------
 // Arduino entry point
@@ -53,11 +33,11 @@ void setup()
     Serial.println("-- READY --");
 
     uint8_t pcf8574FullAddress, mcp23017FullAddress;
-    I2CInput::initializePrimaryBus();
+    i2c::require(1);
     Serial.println("Auto-detecting PCF8574 address");
     bool auto_detect_success = I2CInput::hardwareAddr2FullAddress(
         PCF8574_I2C_ADDR3,
-        I2CInput::getBusDriver(),
+        false,
         pcf8574FullAddress);
     if (auto_detect_success)
     {
@@ -65,7 +45,7 @@ void setup()
         Serial.println("Auto-detecting MCP23017 address");
         auto_detect_success = I2CInput::hardwareAddr2FullAddress(
             MCP23017_I2C_ADDR3,
-            I2CInput::getBusDriver(),
+            false,
             mcp23017FullAddress);
     }
     if (auto_detect_success)

@@ -180,7 +180,6 @@ protected:
     clutchValue_t lastValue;
 
 public:
-
     /**
      * @brief When true, lowest voltage means highest axis value.
      *        When false, lowest voltage means lowest axis value.
@@ -239,72 +238,19 @@ public:
 class I2CInput : public DigitalPolledInput
 {
 public:
-    static i2c_port_t getBusDriver(bool secondaryOrPrimary = false)
-    {
-        if (secondaryOrPrimary)
-            return I2C_NUM_1;
-        else
-            return I2C_NUM_0;
-    };
-
-    /**
-     * @brief Initialize the primary (and default) I2C bus.
-     *
-     * @note If not called, the primary I2C bus is automatically initialized with default parameters.
-     *
-     * @param useFastClock TRUE to use a 400Mhz clock, otherwise a 100Mhz clock is used.
-     */
-    static void initializePrimaryBus(bool useFastClock = false);
-
-    /**
-     * @brief Initialize the primary (and default) I2C bus with specific SDA and SCL pins.
-     *
-     * @note If not called, the primary I2C bus is automatically initialized with default parameters.
-     *
-     * @param useFastClock TRUE to use a 400Mhz clock, otherwise a 100Mhz clock is used.
-     */
-    static void initializePrimaryBus(gpio_num_t sdaPin, gpio_num_t sclPin, bool useFastClock = false);
-
-    /**
-     * @brief Initialize the primary (and default) I2C bus if not done yet.
-     *
-     * @note Default parameters are used.
-     */
-    static void initializePrimaryBusWhenNeeded();
-
-    /**
-     * @brief Initialize a secondary I2C bus.
-     *
-     * @note Must be called before using the secondary bus.
-     *
-     * @param sdaPin SDA pin of the secondary bus.
-     * @param sclPin SCL pin of the secondary bus.
-     * @param useFastClock TRUE to use a 400Mhz clock, otherwise a 100Mhz clock is used.
-     */
-    static void initializeSecondaryBus(gpio_num_t sdaPin, gpio_num_t sclPin, bool useFastClock = false);
-
-    /**
-     * @brief Check slave device availability on an I2C bus.
-     *
-     * @param address7bits I2C address of a slave device in 7 bits format.
-     * @param bus Bus driver to use.
-     * @return true If the slave device is available and ready.
-     * @return false If the slave device is not responding.
-     */
-    static bool probe(uint8_t address7bits, i2c_port_t bus);
-
     /**
      * @brief Auto-detect a full 7-bits address given a hardware 3-bits address in an I2C bus.
      *
      * @param[in] address3bits A 3-bits address in the least significant bits of this parameter.
-     * @param[in] bus Bus driver to use.
+     * @param[in] useSecondaryBus TRUE if connected to the secondary bus,
+     *                            FALSE if connected to the primary bus.
      * @param[out] address7bits The corresponding 7-bits address.
      * @return true On success.
      * @return false On failure.
      */
     static bool hardwareAddr2FullAddress(
         uint8_t address3bits,
-        i2c_port_t bus,
+        bool useSecondaryBus,
         uint8_t &address7bits);
 
 protected:
@@ -319,11 +265,13 @@ public:
      *
      * @param[in] address7bits Address of a slave device.
      * @param[in] useSecondaryBus TRUE if connected to the secondary bus, FALSE if connected to the primary bus.
+     * @param[in] max_speed_mult Bus speed multiplier in the range from 1 to 4.
      * @param[in] nextInChain Another instance to build a chain, or nullptr.
      */
     I2CInput(
         uint8_t address7bits,
         bool useSecondaryBus = false,
+        uint8_t max_speed_mult = 1,
         DigitalPolledInput *nextInChain = nullptr);
 };
 
@@ -357,12 +305,14 @@ public:
      * @param buttonsCount Count of attached buttons. Must not exceed the maximum allowed by the GPIO expander.
      * @param address7Bits I2C address in 7 bits format.
      * @param useSecondaryBus TRUE to use the secondary bus, FALSE to use the primary bus.
+     * @param[in] max_speed_mult Bus speed multiplier in the range from 1 to 4.
      * @param nextInChain Another instance to build a chain, or nullptr.
      */
     I2CButtonsInput(
         uint8_t buttonsCount,
         uint8_t address7Bits,
         bool useSecondaryBus = false,
+        uint8_t max_speed_mult = 1,
         DigitalPolledInput *nextInChain = nullptr);
 
     virtual inputBitmap_t read(inputBitmap_t lastState) override;

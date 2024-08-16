@@ -16,6 +16,7 @@
 #include "ShiftRegistersInput.h"
 #include "I2CExpanderInput.h"
 #include <Preferences.h>
+#include "i2c.h"
 
 // #include "debugUtils.h"
 
@@ -458,7 +459,7 @@ MCP23017InputSpec &inputs::addMCP23017Digital(
 
 void inputs::initializeI2C(gpio_num_t sdaPin, gpio_num_t sclPin)
 {
-  I2CInput::initializePrimaryBus(sdaPin, sclPin);
+  i2c::begin(sdaPin, sclPin);
 }
 
 // ----------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+i2c.h
 SimWheelTypes.h
 debugUtils.h
 PolledInput.h
@@ -6,3 +7,4 @@ I2CExpanderInput.h
 I2CExpanderInput.cpp
 debugUtils.cpp
 PolledInput.cpp
+i2c.cpp

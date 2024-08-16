@@ -34,7 +34,7 @@ PCF8574ButtonsInput::PCF8574ButtonsInput(
     uint8_t address7Bits,
     bool useSecondaryBus,
     DigitalPolledInput *nextInChain)
-    : I2CButtonsInput(8, address7Bits, useSecondaryBus, nextInChain)
+    : I2CButtonsInput(8, address7Bits, useSecondaryBus, 1, nextInChain)
 {
     // The PCF8574 does not have internal registers
     // Read GPIO registers in order to clear all interrupts
@@ -74,7 +74,7 @@ MCP23017ButtonsInput::MCP23017ButtonsInput(
     uint8_t address7Bits,
     bool useSecondaryBus,
     DigitalPolledInput *nextInChain)
-    : I2CButtonsInput(16, address7Bits, useSecondaryBus, nextInChain)
+    : I2CButtonsInput(16, address7Bits, useSecondaryBus, 4, nextInChain)
 {
     i2c_cmd_handle_t cmd;
 

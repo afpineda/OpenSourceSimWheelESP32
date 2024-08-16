@@ -10,7 +10,7 @@
  */
 
 #include <HardwareSerial.h>
-#include "PolledInput.h"
+#include "i2c.h"
 
 //------------------------------------------------------------------
 // Arduino entry point
@@ -25,10 +25,10 @@ void setup()
     Serial.println(" I2C slave device auto-discovery");
     Serial.println("=================================");
 
-    I2CInput::initializePrimaryBus();
+    i2c::require(1);
     for (int addr = 0; addr < 128; addr++)
     {
-        if (I2CInput::probe(addr, 0))
+        if (i2c::probe(addr))
         {
             count++;
             Serial.printf("Device found at address %x (hexadecimal), %d (decimal))\n", addr, addr);

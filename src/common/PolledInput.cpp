@@ -15,6 +15,7 @@
 #include <Arduino.h> // function map()
 // #include <limits.h>
 #include "pins_arduino.h"
+#include "i2c.h"
 
 // ============================================================================
 // Implementation of class: PolledInput
@@ -314,78 +315,13 @@ void AnalogAxisInput::setCalibrationData(int minReading, int maxReading)
 // Implementation of class: I2CInput
 // ============================================================================
 
-static bool isPrimaryBusInitialized = false;
-
 // ----------------------------------------------------------------------------
-// Driver initialization
+// Addresses
 // ----------------------------------------------------------------------------
-
-void I2CInput::initializePrimaryBus(gpio_num_t sdaPin, gpio_num_t sclPin, bool useFastClock)
-{
-    // if (isPrimaryBusInitialized)
-    // {
-    //     ESP_ERROR_CHECK(i2c_driver_delete(I2C_NUM_0));
-    // }
-    i2c_config_t conf;
-    memset(&conf, 0, sizeof(i2c_config_t));
-    conf.mode = I2C_MODE_MASTER;
-    conf.sda_io_num = sdaPin;
-    conf.scl_io_num = sclPin;
-    conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
-    conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
-    conf.master.clk_speed = 100000;
-    if (useFastClock)
-        conf.master.clk_speed *= 4;
-    ESP_ERROR_CHECK(i2c_param_config(I2C_NUM_0, &conf));
-    ESP_ERROR_CHECK(i2c_driver_install(I2C_NUM_0, I2C_MODE_MASTER, 0, 0, 0));
-    isPrimaryBusInitialized = true;
-}
-
-void I2CInput::initializePrimaryBus(bool useFastClock)
-{
-    I2CInput::initializePrimaryBus((gpio_num_t)SDA, (gpio_num_t)SCL, useFastClock);
-}
-
-void I2CInput::initializePrimaryBusWhenNeeded()
-{
-    if (!isPrimaryBusInitialized)
-        initializePrimaryBus();
-}
-
-void I2CInput::initializeSecondaryBus(gpio_num_t sdaPin, gpio_num_t sclPin, bool useFastClock)
-{
-    i2c_config_t conf;
-    memset(&conf, 0, sizeof(i2c_config_t));
-    conf.mode = I2C_MODE_MASTER;
-    conf.sda_io_num = sdaPin;
-    conf.scl_io_num = sclPin;
-    conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
-    conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
-    conf.master.clk_speed = 100000;
-    if (useFastClock)
-        conf.master.clk_speed *= 4;
-    ESP_ERROR_CHECK(i2c_param_config(I2C_NUM_1, &conf));
-    ESP_ERROR_CHECK(i2c_driver_install(I2C_NUM_1, I2C_MODE_MASTER, 0, 0, 0));
-}
-
-// ----------------------------------------------------------------------------
-// I2C probe
-// ----------------------------------------------------------------------------
-
-bool I2CInput::probe(uint8_t address7bits, i2c_port_t bus)
-{
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, (address7bits << 1) | I2C_MASTER_WRITE, true);
-    i2c_master_stop(cmd);
-    bool result = (i2c_master_cmd_begin(bus, cmd, 500 / portTICK_RATE_MS) == ESP_OK);
-    i2c_cmd_link_delete(cmd);
-    return result;
-}
 
 bool I2CInput::hardwareAddr2FullAddress(
     uint8_t address3bits,
-    i2c_port_t bus,
+    bool useSecondaryBus,
     uint8_t &address7bits)
 {
     address3bits = address3bits & 0b00000111;
@@ -393,7 +329,7 @@ bool I2CInput::hardwareAddr2FullAddress(
     for (uint8_t other4bits = 0; other4bits < 16; other4bits++)
     {
         uint8_t tryAddress = (other4bits << 3) | address3bits;
-        if (probe(tryAddress, bus))
+        if (i2c::probe(tryAddress, useSecondaryBus))
         {
             address7bits = tryAddress;
             count++;
@@ -409,14 +345,13 @@ bool I2CInput::hardwareAddr2FullAddress(
 I2CInput::I2CInput(
     uint8_t address7bits,
     bool useSecondaryBus,
+    uint8_t max_speed_mult,
     DigitalPolledInput *nextInChain) : DigitalPolledInput(nextInChain)
 {
     deviceAddress = (address7bits << 1);
-    busDriver = I2CInput::getBusDriver(useSecondaryBus);
-    if (!useSecondaryBus && !isPrimaryBusInitialized)
-        initializePrimaryBus();
-
-    if (!probe(address7bits, busDriver))
+    busDriver = useSecondaryBus ? I2C_NUM_1 : I2C_NUM_0;
+    i2c::require(max_speed_mult, useSecondaryBus);
+    if (!i2c::probe(address7bits, useSecondaryBus))
     {
         log_e("I2C device not found at address %x, bus=%d", address7bits, busDriver);
         abort();
@@ -435,7 +370,8 @@ I2CButtonsInput::I2CButtonsInput(
     uint8_t buttonsCount,
     uint8_t address7Bits,
     bool useSecondaryBus,
-    DigitalPolledInput *nextInChain) : I2CInput(address7Bits, useSecondaryBus, nextInChain)
+    uint8_t max_speed_mult,
+    DigitalPolledInput *nextInChain) : I2CInput(address7Bits, useSecondaryBus, max_speed_mult, nextInChain)
 {
     if (buttonsCount > MAX_EXPANDED_GPIO_COUNT)
     {
