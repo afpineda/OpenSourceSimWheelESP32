@@ -120,12 +120,11 @@ bool max17043_isPresent()
 bool max17043_quickStart()
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    // Command QUICK START = 0x4000. No wait for ACK, since
-    // the chip will reset itself.
+    // Command QUICK START = 0x4000.
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, fg_i2c_address | I2C_MASTER_READ, true);
     i2c_master_write_byte(cmd, 0x40, true);
-    i2c_master_write_byte(cmd, 0x00, false);
+    i2c_master_write_byte(cmd, 0x00, true);
     i2c_master_stop(cmd);
     bool result = (i2c_master_cmd_begin(I2C_NUM_0, cmd, DEBOUNCE_TICKS) == ESP_OK);
     i2c_cmd_link_delete(cmd);
@@ -297,6 +296,7 @@ void batteryMonitor::begin(gpio_num_t battENPin, gpio_num_t battREADPin)
     if (batteryMonitorDaemon == nullptr)
     {
         configureBatteryMonitor(battENPin, battREADPin);
+        batteryCalibration::begin()
         xTaskCreate(
             batteryMonitorDaemonLoop,
             "BattMon",
