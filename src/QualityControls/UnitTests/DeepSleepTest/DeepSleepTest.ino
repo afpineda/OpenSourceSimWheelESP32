@@ -12,6 +12,7 @@
 #include <HardwareSerial.h>
 #include "SimWheel.h"
 #include "debugUtils.h"
+#include "driver/gpio.h"
 
 //-------------------------------------------------------
 // Globals
