@@ -15,6 +15,8 @@ My advice is to go with the latest boards. Some interesting DevKit boards for th
 
 - Those designed and sold by [Unexpected Maker](https://unexpectedmaker.com/shop?category=Development+Boards),
   like "Feather S3", "Tiny S3" or "TinyPico". Those are open hardware, as well.
+  - The [OMGS3](https://esp32s3.com/omgs3.html) DevKit board features a built-in "fuel gauge",
+    which is supported by this project. Unfortunately, that board is for surface-mounting only.
 - [Adafruit Feather 32u4 Bluefruit LE](https://www.adafruit.com/product/2829).
 - [Wemos boards](https://www.wemos.cc/). *Note*:
   - The "D32" series are also known as "Lolin32" and found by that name at many retailers.

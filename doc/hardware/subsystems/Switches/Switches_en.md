@@ -182,7 +182,7 @@ Needed parts (not counting input hardware like push buttons):
 
 Just the same as for analog multiplexers. See above.
 
-### GPIO expanders implementation
+## GPIO expanders implementation
 
 This implementation is based on any of the following widely available GPIO expanders (*I2C* interface):
 
@@ -217,7 +217,7 @@ Needed parts (not counting input hardware like push buttons):
 - Dupond pin headers (male or female): x50.
 - Thin wire.
 
-#### External wiring for the GPIO expanders
+### External wiring for the GPIO expanders
 
 - Attach `SCL` and `SCA` to the corresponding pins at the DevKit board (same tag).
 - There are many redundant `GND` (ground) and `3V3` pin headers. Attach one of each to the DevKit board (same tag).
@@ -230,7 +230,7 @@ Needed parts (not counting input hardware like push buttons):
   For simplification, just the buttons attached to the left GPIO expander will wake up the system from deep sleep.
   This pin can be left unwired.
 
-#### I2C Addressing
+### I2C Addressing
 
 Each chip must have a 7-bit-long **unique** address for the *I2C* interface. Those bits are called a "**full** address".
 

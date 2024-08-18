@@ -13,12 +13,11 @@ so the user knows when to plug the charging cable in.
 The battery level is a percentage of charge left in the range 0% to 100% (also known as "state of charge" or "SoC").
 Battery level is known to the hosting PC through Bluetooth Low Energy.
 
-There are some **alternate implementations** to choose from:
+There are several (exclusive) **alternate implementations** to choose from:
 
 - *Simple voltage divider*: can be found in some ESP32 DevKit boards as a built-in feature.
-  Because it constantly drains current, it is not advised.
 - *Battery monitor*: avoids battery drainage thanks to additional on/off circuitry.
-- *External "fuel gauge" chip*: provides state-of-the-art SoC estimation.
+- *"Fuel gauge" chip*: provides state-of-the-art SoC estimation.
 
 The firmware will read the battery level every few minutes and it takes only a few milliseconds long.
 
@@ -87,18 +86,12 @@ Look at this [layout design](./BatteryMonitor.diy) using [DIY Layout Creator](ht
 
 ### Simple voltage divider
 
-This kind of circuit is built into some ESP32 boards. For example:
-
-- [Tinypico](https://www.tinypico.com/)
-- [Adafruit Feather 32u4 Bluefruit LE](https://www.adafruit.com/product/2829)
-- [Wemos D32 boards](https://www.wemos.cc/en/latest/d32/d32.html)
-
+This kind of circuit is built into some ESP32 boards.
 In such a case, there is no need to build this subsystem.
 However, we also provide the design in case you are short of available GPIO pins for the previous alternative.
+The circuit uses the same terminals, except for `BattEN`, which is not needed.
 
-The circuit uses the same terminals as the previous alternative, except for `BattEN`, which is not needed.
-
-- **Battery (+)** pin (battery positive terminal). Not exposed and not needed in the alluded boards.
+- **Battery (+)** pin (battery positive terminal). Usually not exposed in the alluded boards.
 - **battREAD** pin: provides the current battery voltage. May be exposed or not in the alluded boards.
   If not exposed, it will be wired internally to a certain GPIO.
   If exposed (with another tag, for sure), you must wire it externally to an ADC-capable GPIO. Check the datasheet.
@@ -119,12 +112,58 @@ The higher the voltage drop, the less the accuracy in battery levels (state of c
 This alternative will deplete your battery very slowly, even when the system is in a deep sleep state or not powered.
 An [external power latch circuit](../PowerLatch/PowerLatch_en.md) will **not prevent** this.
 
-## External "fuel gauge"
+An incomplete list of DevKits featuring a built-in voltage divider follows, along with their internal wiring:
 
-An external "fuel gauge" (not to be taken literally) is a specialized chip for accurate state of charge measurement.
+| DevKit                                                                      | battREAD |
+| --------------------------------------------------------------------------- | -------- |
+| [Tinypico](https://www.tinypico.com/)                                       | GPIO #35 |
+| [TinyS3](https://esp32s3.com/tinys3.html)                                   | GPIO #10 |
+| [Adafruit Feather 32u4 Bluefruit LE](https://www.adafruit.com/product/2829) | GPIO #9  |
+| [Wemos D32](https://www.wemos.cc/en/latest/d32/d32.html)                    | GPIO #35 |
+| [LilyGo T7S3](https://www.lilygo.cc/products/t7-s3)                         | GPIO #2  |
 
-This project will provide support for the popular [MAX17043](https://www.analog.com/media/en/technical-documentation/data-sheets/MAX17043-MAX17044.pdf)
-soon.
+## Fuel gauge
+
+A "fuel gauge" (not to be taken literally) is a specialized chip for accurate state of charge measurement.
+
+This project supports the popular [MAX17043](https://www.analog.com/media/en/technical-documentation/data-sheets/MAX17043-MAX17044.pdf)
+and other [compatible fuel gauges](https://www.analog.com/en/parametricsearch/12979#/p0=max1704)
+made by Maxim/Analog Devices.
+As long as those chips accept the same set of commands over the I2C connection,
+the firmware will work with them.
+
+Note that those chips are not sold in through-hole packaging,
+so you should buy a pre-made module instead,
+or a DevKit featuring a compatible built-in fuel gauge.
+
+This is the pre-made module used for testing in this project:
+
+![MAX17043 module](./max17043_module.jpg)
+
+There is no circuit involved here, just wiring:
+
+| Pin tag in the MAX1704x module | Wired to                           |
+| ------------------------------ | ---------------------------------- |
+| `SDA`                          | `SDA` (DevKit)                     |
+| `SCL`                          | `SCL` (DevKit)                     |
+| `GND`                          | `GND`(DevKit or satellite circuit) |
+| `Vdd`                          | `3V3`(DevKit or satellite circuit) |
+| `(-)`                          | Negative pole of the battery       |
+| `(+)`                          | Positive pole of the battery       |
+
+If you are wiring a chip with no pre-made module:
+
+| Pin tag in the MAX1704x chip | Wired to                           |
+| ---------------------------- | ---------------------------------- |
+| `SDA`                        | `SDA` (DevKit)                     |
+| `SCL`                        | `SCL` (DevKit)                     |
+| `GND`                        | Negative pole of the battery       |
+| `Vdd`                        | `3V3`(DevKit or satellite circuit) |
+| `CTG`                        | `GND`(DevKit or satellite circuit) |
+| `CELL`                       | Positive pole of the battery       |
+| `~ALERT`                     | Nothing (not needed)               |
+| `QSTRT`                      | `GND`(DevKit or satellite circuit) |
+| Exposed pad                  | `GND`(DevKit or satellite circuit) |
 
 ## Firmware customization (simple voltage divider or battery monitor)
 
@@ -144,7 +183,9 @@ Ensure the following line of code is in place:
 
 ### Battery monitor (design 1)
 
-Locate the line `#define BATTERY_ENABLE_READ_GPIO` and write a GPIO number to the right, where `battEN` is attached to. Locate the line `#define BATTERY_READ_GPIO` and write a GPIO number to the right, where `battREAD` is attached to. For example:
+Locate the line `#define BATTERY_ENABLE_READ_GPIO` and write a GPIO number to the right,
+where `battEN` is attached to. Locate the line `#define BATTERY_READ_GPIO` and
+write a GPIO number to the right, where `battREAD` is attached to. For example:
 
 ```c
 #define BATTERY_ENABLE_READ_GPIO 0
@@ -153,13 +194,22 @@ Locate the line `#define BATTERY_ENABLE_READ_GPIO` and write a GPIO number to th
 
 ### Simple voltage divider (design 2)
 
-Locate the line `#define BATTERY_READ_GPIO` and write a GPIO number to the right, where `battREAD` is attached to. Set `BATTERY_ENABLE_READ_GPIO` as shown below:
+Locate the line `#define BATTERY_READ_GPIO` and write a GPIO number to the right,
+where `battREAD` is attached to. Set `BATTERY_ENABLE_READ_GPIO` as shown below:
 
 ```c
 #define BATTERY_ENABLE_READ_GPIO -1
 #define BATTERY_READ_GPIO 36
 ```
 
-### Fuel guge (design 3)
+## Firmware customization (fuel gauge)
 
-*Work in progress.*
+Just call `batteryMonitor::begin()` with no parameters.
+However, if your chip uses a non-standard I2C address,
+you must provide the proper 7-bit address as the first parameter.
+The expected (standard) 7-bit address is 36 (hexadecimal).
+
+Your chip/module will share the I2C bus with [GPIO expanders](../Switches/Switches_en.md#gpio-expanders), if any.
+
+**Note**: If the chip/module is not powered or not found in the I2C bus, the system will boot normally.
+You will get just a warning: "Fuel gauge not found in the I2C bus".
