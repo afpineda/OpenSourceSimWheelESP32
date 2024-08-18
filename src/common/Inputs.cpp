@@ -406,10 +406,10 @@ uint8_t getI2CFullAddress(uint8_t I2CAddress, bool isFullAddress)
     fullAddress = I2CAddress;
   else
   {
-    I2CInput::initializePrimaryBusWhenNeeded();
+    i2c::require();
     if (!I2CInput::hardwareAddr2FullAddress(
             I2CAddress,
-            I2CInput::getBusDriver(),
+            false,
             fullAddress))
     {
       log_e("Unable to auto-detect full address of GPIO expander. Hardware address is %x (hex)", I2CAddress);
