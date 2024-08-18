@@ -135,7 +135,7 @@ void setup()
         DEVICE_MANUFACTURER);
 
     batteryCalibration::begin();
-    power::startBatteryMonitor(
+    batteryMonitor::begin(
         (gpio_num_t)BATTERY_ENABLE_READ_GPIO,
         (gpio_num_t)BATTERY_READ_GPIO);
 

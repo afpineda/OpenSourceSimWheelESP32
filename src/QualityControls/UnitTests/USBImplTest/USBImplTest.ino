@@ -69,7 +69,7 @@ void batteryCalibration::restartAutoCalibration()
 
 // }
 
-int power::getLastBatteryLevel()
+int batteryMonitor::getLastBatteryLevel()
 {
     return UNKNOWN_BATTERY_LEVEL;
 }

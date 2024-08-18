@@ -76,7 +76,7 @@ void power::powerOff()
     powerSim = false;
 }
 
-int power::getLastBatteryLevel()
+int batteryMonitor::getLastBatteryLevel()
 {
     return UNKNOWN_BATTERY_LEVEL;
 }

@@ -3,7 +3,9 @@ SimWheel.h
 debugUtils.h
 PolledInput.h
 adcTools.h
+i2c.h
 ButtonMatrixInput.h
 ButtonMatrixInput.cpp
 debugUtils.cpp
 PolledInput.cpp
+i2c.cpp

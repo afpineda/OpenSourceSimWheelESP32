@@ -27,6 +27,8 @@
 
 #define SAMPLING_MILLIS (60 * 1000) // 1 minute
 
+extern int getBatteryReadingForTesting(gpio_num_t battENPin, gpio_num_t battREADPin);
+
 // ----------------------------------------------------------------------------
 // Auxiliary
 // ----------------------------------------------------------------------------
@@ -119,7 +121,7 @@ void setup()
 
 void loop()
 {
-    int reading = power::getBatteryReadingForTesting(BATT_EN_PIN, BATT_READ_PIN);
+    int reading = getBatteryReadingForTesting(BATT_EN_PIN, BATT_READ_PIN);
     if (reading >= 150)
         batteryCalibration::addSample(reading, true);
     // else BATT_READ_PIN is not connected

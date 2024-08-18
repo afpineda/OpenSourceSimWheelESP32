@@ -1,12 +1,15 @@
 SimWheelTypes.h
 SimWheel.h
+i2c.h
 HID_definitions.h
 adcTools.h
 adcTools.cpp
 BatteryCalibration.cpp
+BatteryMonitor.cpp
 power.cpp
 hidImplementation_NimBLE.cpp
 hidImplementation_common.cpp
 capabilities.cpp
 userSettings.cpp
 notify.cpp
+i2c.cpp

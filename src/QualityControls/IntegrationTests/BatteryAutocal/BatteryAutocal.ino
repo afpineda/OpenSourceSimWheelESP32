@@ -49,7 +49,8 @@ void setup()
         ;
     Serial.println("-- READY --");
     batteryCalibration::clear();
-    power::startBatteryMonitor(TEST_BATTERY_READ_ENABLE, TEST_BATTERY_READ, true);
+    batteryMonitor::configureForTesting();
+    batteryMonitor::begin(TEST_BATTERY_READ_ENABLE, TEST_BATTERY_READ);
     Serial.println("-- GO --");
 }
 

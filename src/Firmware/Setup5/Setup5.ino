@@ -142,7 +142,7 @@ void setup()
 
 #ifdef ENABLE_BATTERY_MONITOR
     batteryCalibration::begin();
-    power::startBatteryMonitor(
+    batteryMonitor::begin(
         (gpio_num_t)BATTERY_ENABLE_READ_GPIO,
         (gpio_num_t)BATTERY_READ_GPIO);
 #endif

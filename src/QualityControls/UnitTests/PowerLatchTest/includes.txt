@@ -3,5 +3,4 @@ SimWheel.h
 debugUtils.h
 adcTools.h
 power.cpp
-batteryCalibration_mock.cpp
 adcTools.cpp

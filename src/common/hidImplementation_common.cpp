@@ -106,7 +106,7 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
         buffer[0] = (uint8_t)userSettings::cpWorkingMode;
         buffer[1] = (uint8_t)userSettings::altButtonsWorkingMode;
         buffer[2] = (uint8_t)userSettings::bitePoint;
-        buffer[3] = (uint8_t)power::getLastBatteryLevel();
+        buffer[3] = (uint8_t)batteryMonitor::getLastBatteryLevel();
         buffer[4] = (uint8_t)userSettings::dpadWorkingMode;
         buffer[5] = (userSettings::securityLock) ? 0xFF : 0x00;
         return CONFIG_REPORT_SIZE;

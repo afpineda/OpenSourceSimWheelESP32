@@ -42,6 +42,11 @@ void batteryCalibration::restartAutoCalibration()
 
 extern void resetAxesPolarityForTesting();
 
+int batteryMonitor::getLastBatteryLevel()
+{
+    return 100;
+}
+
 //------------------------------------------------------------------
 // Arduino entry point
 //------------------------------------------------------------------

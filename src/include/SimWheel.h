@@ -325,8 +325,6 @@ namespace batteryMonitor
      */
     void begin(uint8_t i2c_address = 0xFF);
 
-    int getBatteryReadingForTesting(gpio_num_t battENPin, gpio_num_t battREADPin);
-
     /**
      * @brief Get last known battery level
      *

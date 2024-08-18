@@ -3,7 +3,9 @@ SimWheel.h
 debugUtils.h
 PolledInput.h
 adcTools.h
+i2c.h
 AnalogMultiplexerInput.h
 AnalogMultiplexerInput.cpp
 debugUtils.cpp
 PolledInput.cpp
+i2c.cpp

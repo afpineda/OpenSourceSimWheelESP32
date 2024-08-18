@@ -38,7 +38,7 @@ Wire `battery(+)` and `POWERBOOST_GND`, at least.
 
 ### Power off/on
 
-1. Keep the bluetooth control panel visible.
+1. Keep the Bluetooth control panel visible.
 2. Reset.
 3. Go to "Add devices" for device discovery.
 4. Make sure "Proto 2" shows up, but **do not connect**.

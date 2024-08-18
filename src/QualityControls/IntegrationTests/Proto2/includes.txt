@@ -9,6 +9,7 @@ I2CExpanderInput.h
 RotaryEncoderInput.h
 PolledInput.h
 HID_definitions.h
+i2c.h
 debugUtils.cpp
 adcTools.cpp
 notify.cpp
@@ -24,5 +25,7 @@ InputHub.cpp
 power.cpp
 hidImplementation_NimBLE.cpp
 hidImplementation_common.cpp
-batteryCalibration.cpp
+BatteryCalibration.cpp
+BatteryMonitor.cpp
 capabilities.cpp
+i2c.cpp
