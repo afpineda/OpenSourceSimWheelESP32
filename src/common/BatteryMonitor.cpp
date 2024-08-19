@@ -142,7 +142,7 @@ bool max17043_getSoC(int &batteryLevel)
     i2c_master_write_byte(cmd, fg_i2c_address | I2C_MASTER_READ, true);
     i2c_master_write_byte(cmd, 0x00, true);
     i2c_master_write_byte(cmd, 0x04, true);
-    i2c_master_read(cmd, (uint8_t *) &soc, sizeof(soc), I2C_MASTER_LAST_NACK);
+    i2c_master_read(cmd, (uint8_t *)&soc, sizeof(soc), I2C_MASTER_LAST_NACK);
     i2c_master_stop(cmd);
     bool result = (i2c_master_cmd_begin(I2C_NUM_0, cmd, DEBOUNCE_TICKS) == ESP_OK);
     i2c_cmd_link_delete(cmd);
@@ -315,7 +315,8 @@ void batteryMonitor::begin(gpio_num_t battENPin, gpio_num_t battREADPin)
 
 void batteryMonitor::begin(uint8_t i2c_address)
 {
-    i2c::abortOnInvalidAddress(i2c_address,0,0xFE);
+    if (i2c_address != 0xFF)
+        i2c::abortOnInvalidAddress(i2c_address);
     if (batteryMonitorDaemon == nullptr)
     {
         capabilities::setFlag(deviceCapability_t::CAP_BATTERY);
