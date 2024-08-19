@@ -315,6 +315,7 @@ void batteryMonitor::begin(gpio_num_t battENPin, gpio_num_t battREADPin)
 
 void batteryMonitor::begin(uint8_t i2c_address)
 {
+    i2c::abortOnInvalidAddress(i2c_address,0,0xFE);
     if (batteryMonitorDaemon == nullptr)
     {
         capabilities::setFlag(deviceCapability_t::CAP_BATTERY);
@@ -322,7 +323,7 @@ void batteryMonitor::begin(uint8_t i2c_address)
         i2c::require();
         if (!max17043_isPresent())
         {
-            log_e("Fuel gauge not found in the I2C bus");
+            log_w("Fuel gauge not found in the I2C bus");
             // note: no abort()
         }
         else
