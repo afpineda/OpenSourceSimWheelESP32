@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project>
+  <fileVersion>
+    <major>4</major>
+    <minor>37</minor>
+    <build>0</build>
+  </fileVersion>
+  <title>MAX17043 module</title>
+  <author>Ángel Fernández Pineda. Madrid. Spain. 2024.</author>
+  <description>Open hardware MAX17043 module</description>
+  <width value="4.0" unit="cm"/>
+  <height value="4.0" unit="cm"/>
+  <gridSpacing value="0.1" unit="in"/>
+  <dotSpacing>1</dotSpacing>
+  <components>
+    <diylc.boards.BlankBoard>
+      <name>Board1</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="0.2" y="0.2"/>
+        <point x="0.7" y="1.1"/>
+      </controlPoints>
+      <firstPoint x="0.2" y="0.2"/>
+      <secondPoint x="0.7" y="1.1"/>
+      <boardColor hex="ff6666"/>
+      <borderColor hex="ada47d"/>
+      <coordinateColor hex="b6b6b6"/>
+      <xType>Numbers</xType>
+      <coordinateOrigin>Top_Left</coordinateOrigin>
+      <coordinateDisplay>One_Side</coordinateDisplay>
+      <yType>Letters</yType>
+      <length value="0.5" unit="in"/>
+      <width value="0.9" unit="in"/>
+      <mode>TwoPoints</mode>
+      <type>SQUARE</type>
+    </diylc.boards.BlankBoard>
+    <diylc.boards.BlankBoard>
+      <name>Board2</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="0.9" y="0.2"/>
+        <point x="1.4" y="1.1"/>
+      </controlPoints>
+      <firstPoint x="0.9" y="0.2"/>
+      <secondPoint x="1.4" y="1.1"/>
+      <boardColor hex="ff6666"/>
+      <borderColor hex="ada47d"/>
+      <coordinateColor hex="b6b6b6"/>
+      <xType>Numbers</xType>
+      <coordinateOrigin>Top_Left</coordinateOrigin>
+      <coordinateDisplay>One_Side</coordinateDisplay>
+      <yType>Letters</yType>
+      <length value="0.5" unit="in"/>
+      <width value="0.9" unit="in"/>
+      <mode>TwoPoints</mode>
+      <type>SQUARE</type>
+    </diylc.boards.BlankBoard>
+    <diylc.electromechanical.PinHeader>
+      <name>PH2</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="0.4" y="0.5"/>
+        <point x="0.5" y="0.5"/>
+      </controlPoints>
+      <rowCount>2</rowCount>
+      <columnCount>1</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ffffff"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.electromechanical.PinHeader>
+      <name>PH3</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="0.3" y="0.6"/>
+        <point x="0.3" y="0.7"/>
+        <point x="0.3" y="0.8"/>
+      </controlPoints>
+      <rowCount>1</rowCount>
+      <columnCount>3</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ccffcc"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.electromechanical.PinHeader>
+      <name>PH4</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="0.6" y="0.6"/>
+        <point x="0.6" y="0.7"/>
+        <point x="0.6" y="0.8"/>
+      </controlPoints>
+      <rowCount>1</rowCount>
+      <columnCount>3</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ccffcc"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.shapes.Rectangle>
+      <name>RECT1</name>
+      <alpha>127</alpha>
+      <value></value>
+      <controlPoints>
+        <point x="0.3" y="0.2"/>
+        <point x="0.6" y="0.4"/>
+      </controlPoints>
+      <firstPoint x="0.3" y="0.2"/>
+      <secondPoint x="0.6" y="0.4"/>
+      <color hex="ffffff"/>
+      <borderColor hex="000000"/>
+      <borderThickness value="0.2" unit="mm"/>
+      <edgeRadius value="3.0" unit="mm"/>
+    </diylc.shapes.Rectangle>
+    <diylc.electromechanical.PinHeader>
+      <name>PH1</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="1.1" y="0.5"/>
+        <point x="1.2" y="0.5"/>
+      </controlPoints>
+      <rowCount>2</rowCount>
+      <columnCount>1</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ffffff"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.electromechanical.PinHeader>
+      <name>PH5</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="1.0" y="0.6"/>
+        <point x="1.0" y="0.7"/>
+        <point x="1.0" y="0.8"/>
+      </controlPoints>
+      <rowCount>1</rowCount>
+      <columnCount>3</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ccffcc"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.electromechanical.PinHeader>
+      <name>PH6</name>
+      <alpha>127</alpha>
+      <orientation>DEFAULT</orientation>
+      <controlPoints>
+        <point x="1.3" y="0.6"/>
+        <point x="1.3" y="0.7"/>
+        <point x="1.3" y="0.8"/>
+      </controlPoints>
+      <rowCount>1</rowCount>
+      <columnCount>3</columnCount>
+      <spacing value="0.1" unit="in"/>
+      <shrouded>false</shrouded>
+      <bodyColor hex="ccffcc"/>
+      <shroudColor hex="595959"/>
+    </diylc.electromechanical.PinHeader>
+    <diylc.misc.Label>
+      <name>LAB1</name>
+      <point x="0.3" y="0.5"/>
+      <text>(-)</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.WrapLabel>
+      <name>L1</name>
+      <controlPoints>
+        <point x="0.2" y="1.0"/>
+        <point x="0.7" y="1.1"/>
+      </controlPoints>
+      <firstPoint x="0.2" y="1.0"/>
+      <secondPoint x="0.7" y="1.1"/>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <value>(front)</value>
+    </diylc.misc.WrapLabel>
+    <diylc.misc.Label>
+      <name>LAB2</name>
+      <point x="0.6" y="0.5"/>
+      <text>(+)</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB3</name>
+      <point x="0.4" y="0.3"/>
+      <text>(-)</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB4</name>
+      <point x="0.5" y="0.3"/>
+      <text>(+)</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.WrapLabel>
+      <name>L3</name>
+      <controlPoints>
+        <point x="0.3" y="0.6"/>
+        <point x="0.6" y="0.6"/>
+      </controlPoints>
+      <firstPoint x="0.3" y="0.6"/>
+      <secondPoint x="0.6" y="0.6"/>
+      <font name="Dialog.bold" size="8" style="1"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <value>Vcc / SDA</value>
+    </diylc.misc.WrapLabel>
+    <diylc.misc.WrapLabel>
+      <name>L4</name>
+      <controlPoints>
+        <point x="0.3" y="0.7"/>
+        <point x="0.6" y="0.7"/>
+      </controlPoints>
+      <firstPoint x="0.3" y="0.7"/>
+      <secondPoint x="0.6" y="0.7"/>
+      <font name="Dialog.bold" size="8" style="1"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <value>GND / SCL</value>
+    </diylc.misc.WrapLabel>
+    <diylc.misc.WrapLabel>
+      <name>L5</name>
+      <controlPoints>
+        <point x="0.3" y="0.8"/>
+        <point x="0.6" y="0.8"/>
+      </controlPoints>
+      <firstPoint x="0.3" y="0.8"/>
+      <secondPoint x="0.6" y="0.8"/>
+      <font name="Dialog.bold" size="8" style="1"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <value>ALT / QST</value>
+    </diylc.misc.WrapLabel>
+    <diylc.misc.Label>
+      <name>LAB5</name>
+      <point x="1.3" y="0.5"/>
+      <text>(-)</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.WrapLabel>
+      <name>L2</name>
+      <controlPoints>
+        <point x="0.9" y="1.0"/>
+        <point x="1.4" y="1.1"/>
+      </controlPoints>
+      <firstPoint x="0.9" y="1.0"/>
+      <secondPoint x="1.4" y="1.1"/>
+      <font name="Dialog.bold" size="14" style="1"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <value>(back)</value>
+    </diylc.misc.WrapLabel>
+    <diylc.misc.Label>
+      <name>LAB6</name>
+      <point x="1.0" y="0.5"/>
+      <text>(+)</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.WrapLabel>
+      <name>L6</name>
+      <controlPoints>
+        <point x="1.0" y="0.6"/>
+        <point x="1.3" y="0.6"/>
+      </controlPoints>
+      <firstPoint x="1.0" y="0.6"/>
+      <secondPoint x="1.3" y="0.6"/>
+      <font name="Dialog.bold" size="8" style="1"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <value>SDA / Vcc</value>
+    </diylc.misc.WrapLabel>
+    <diylc.misc.WrapLabel>
+      <name>L7</name>
+      <controlPoints>
+        <point x="1.0" y="0.7"/>
+        <point x="1.3" y="0.7"/>
+      </controlPoints>
+      <firstPoint x="1.0" y="0.7"/>
+      <secondPoint x="1.3" y="0.7"/>
+      <font name="Dialog.bold" size="8" style="1"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <value>SCL / GND</value>
+    </diylc.misc.WrapLabel>
+    <diylc.misc.WrapLabel>
+      <name>L8</name>
+      <controlPoints>
+        <point x="1.0" y="0.8"/>
+        <point x="1.3" y="0.8"/>
+      </controlPoints>
+      <firstPoint x="1.0" y="0.8"/>
+      <secondPoint x="1.3" y="0.8"/>
+      <font name="Dialog.bold" size="8" style="1"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <value>QST / ALT</value>
+    </diylc.misc.WrapLabel>
+    <diylc.misc.WrapLabel>
+      <name>L9</name>
+      <controlPoints>
+        <point x="0.9" y="0.2"/>
+        <point x="1.4" y="0.4"/>
+      </controlPoints>
+      <firstPoint x="0.9" y="0.2"/>
+      <secondPoint x="1.4" y="0.4"/>
+      <font name="Source Code Pro Black" size="14" style="1"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <value>Fuel&lt;br&gt;Gauge</value>
+    </diylc.misc.WrapLabel>
+  </components>
+  <groups>
+    <set/>
+    <set/>
+    <set/>
+    <set/>
+    <set/>
+    <set/>
+    <set>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[6]"/>
+      <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel[9]"/>
+      <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel[8]"/>
+      <diylc.electromechanical.PinHeader reference="../../../components/diylc.electromechanical.PinHeader[4]"/>
+      <diylc.boards.BlankBoard reference="../../../components/diylc.boards.BlankBoard[2]"/>
+      <diylc.electromechanical.PinHeader reference="../../../components/diylc.electromechanical.PinHeader[5]"/>
+      <diylc.electromechanical.PinHeader reference="../../../components/diylc.electromechanical.PinHeader[6]"/>
+      <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel[5]"/>
+      <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel[7]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[5]"/>
+      <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel[6]"/>
+    </set>
+    <set/>
+    <set>
+      <diylc.electromechanical.PinHeader reference="../../../components/diylc.electromechanical.PinHeader"/>
+      <diylc.electromechanical.PinHeader reference="../../../components/diylc.electromechanical.PinHeader[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[2]"/>
+      <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel[2]"/>
+      <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel[3]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label"/>
+      <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel[4]"/>
+      <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel"/>
+      <diylc.electromechanical.PinHeader reference="../../../components/diylc.electromechanical.PinHeader[3]"/>
+      <diylc.boards.BlankBoard reference="../../../components/diylc.boards.BlankBoard"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[4]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[3]"/>
+    </set>
+  </groups>
+  <lockedLayers/>
+  <lockedComponents/>
+  <hiddenLayers/>
+  <font name="Dialog.plain" size="14" style="0"/>
+</project>
