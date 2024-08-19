@@ -15,7 +15,7 @@
 #include <Arduino.h> // function map()
 // #include <limits.h>
 #include "pins_arduino.h"
-#include "i2c.h"
+#include "i2cTools.h"
 
 // ============================================================================
 // Implementation of class: PolledInput

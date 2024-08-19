@@ -7,5 +7,5 @@ adcTools.h
 adcTools.cpp
 PolledInput.h
 PolledInput.cpp
-i2c.h
-i2c.cpp
+i2cTools.h
+i2cTools.cpp

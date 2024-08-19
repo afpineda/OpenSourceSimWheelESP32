@@ -3,9 +3,9 @@ SimWheel.h
 debugUtils.h
 PolledInput.h
 adcTools.h
-i2c.h
+i2cTools.h
 ShiftRegistersInput.h
 ShiftRegistersInput.cpp
 debugUtils.cpp
 PolledInput.cpp
-i2c.cpp
+i2cTools.cpp

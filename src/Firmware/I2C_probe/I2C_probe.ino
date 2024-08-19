@@ -10,7 +10,7 @@
  */
 
 #include <HardwareSerial.h>
-#include "i2c.h"
+#include "i2cTools.h"
 
 //------------------------------------------------------------------
 // Arduino entry point

@@ -11,7 +11,7 @@
 
 #include <HardwareSerial.h>
 #include "debugUtils.h"
-#include "i2c.h"
+#include "i2cTools.h"
 #include "I2CExpanderInput.h"
 #include "PolledInput.h"
 

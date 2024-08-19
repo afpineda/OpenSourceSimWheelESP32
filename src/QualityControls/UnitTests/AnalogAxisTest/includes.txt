@@ -3,8 +3,8 @@ SimWheel.h
 debugUtils.h
 PolledInput.h
 adcTools.h
-i2c.h
+i2cTools.h
 PolledInput.cpp
 adcTools.cpp
 debugUtils.cpp
-i2c.cpp
+i2cTools.cpp

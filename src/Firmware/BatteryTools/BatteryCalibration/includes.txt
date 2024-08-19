@@ -1,6 +1,6 @@
 SimWheelTypes.h
 SimWheel.h
-i2c.h
+i2cTools.h
 HID_definitions.h
 adcTools.h
 adcTools.cpp
@@ -12,4 +12,4 @@ hidImplementation_common.cpp
 capabilities.cpp
 userSettings.cpp
 notify.cpp
-i2c.cpp
+i2cTools.cpp

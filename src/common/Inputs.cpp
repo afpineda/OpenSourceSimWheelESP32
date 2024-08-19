@@ -16,7 +16,7 @@
 #include "ShiftRegistersInput.h"
 #include "I2CExpanderInput.h"
 #include <Preferences.h>
-#include "i2c.h"
+#include "i2cTools.h"
 
 // #include "debugUtils.h"
 

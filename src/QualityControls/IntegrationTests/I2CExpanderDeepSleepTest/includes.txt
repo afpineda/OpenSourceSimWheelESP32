@@ -8,7 +8,7 @@ ButtonMatrixInput.h
 I2CExpanderInput.h
 RotaryEncoderInput.h
 ShiftRegistersInput.h
-i2c.h
+i2cTools.h
 power.cpp
 BatteryCalibration_mock.cpp
 adcTools.cpp
@@ -16,4 +16,4 @@ inputs.cpp
 PolledInput.cpp
 I2CExpanderInput.cpp
 capabilities.cpp
-i2c.cpp
+i2cTools.cpp

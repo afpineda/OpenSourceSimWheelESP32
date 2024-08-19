@@ -8,7 +8,7 @@ RotaryEncoderInput.h
 ShiftRegistersInput.h
 SimWheel.h
 SimWheelTypes.h
-i2c.h
+i2cTools.h
 adcTools.cpp
 AnalogMultiplexerInput.cpp
 BatteryCalibration.cpp
@@ -26,4 +26,4 @@ power.cpp
 RotaryEncoderInput.cpp
 ShiftRegistersInput.cpp
 userSettings.cpp
-i2c.cpp
+i2cTools.cpp

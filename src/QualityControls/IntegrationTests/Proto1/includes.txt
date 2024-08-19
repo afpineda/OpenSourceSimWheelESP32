@@ -11,7 +11,7 @@ Inputs.cpp
 HID_definitions.h
 SerialNotification.h
 adcTools.h
-i2c.h
+i2cTools.h
 adcTools.cpp
 capabilities.cpp
 userSettings.cpp
@@ -28,4 +28,4 @@ hidImplementation_common.cpp
 notify.cpp
 SerialNotification.cpp
 power_mock.cpp
-i2c.cpp
+i2cTools.cpp

@@ -12,7 +12,7 @@
 #include "SimWheel.h"
 #include "adcTools.h"
 #include "esp32-hal-gpio.h"
-#include "i2c.h"
+#include "i2cTools.h"
 #include "driver/i2c.h"
 
 // ----------------------------------------------------------------------------
@@ -296,7 +296,7 @@ void batteryMonitor::begin(gpio_num_t battENPin, gpio_num_t battREADPin)
     if (batteryMonitorDaemon == nullptr)
     {
         configureBatteryMonitor(battENPin, battREADPin);
-        batteryCalibration::begin()
+        batteryCalibration::begin();
         xTaskCreate(
             batteryMonitorDaemonLoop,
             "BattMon",

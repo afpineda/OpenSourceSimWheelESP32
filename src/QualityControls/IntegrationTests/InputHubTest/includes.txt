@@ -8,7 +8,7 @@ ShiftRegistersInput.h
 I2CExpanderInput.h
 debugUtils.h
 adcTools.h
-i2c.h
+i2cTools.h
 adcTools.cpp
 Inputs.cpp
 PolledInput.cpp
@@ -21,4 +21,4 @@ debugUtils.cpp
 InputHub.cpp
 userSettings.cpp
 capabilities.cpp
-i2c.cpp
+i2cTools.cpp

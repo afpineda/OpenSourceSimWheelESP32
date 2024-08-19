@@ -9,7 +9,7 @@ ShiftRegistersInput.h
 I2CExpanderInput.h
 PolledInput.h
 adcTools.h
-i2c.h
+i2cTools.h
 debugUtils.cpp
 PolledInput.cpp
 ShiftRegistersInput.cpp
@@ -18,4 +18,4 @@ power_mock.cpp
 adcTools.cpp
 userSettings.cpp
 capabilities.cpp
-i2c.cpp
+i2cTools.cpp
