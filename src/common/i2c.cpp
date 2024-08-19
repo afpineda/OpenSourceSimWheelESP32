@@ -67,6 +67,7 @@ void i2cError(gpio_num_t sda, gpio_num_t scl, uint8_t clock_multiplier, i2c_port
 
 bool i2c::probe(uint8_t address7bits, bool secondaryBus)
 {
+    i2c::abortOnInvalidAddress(address7bits);
     i2c_port_t bus = secondaryBus ? I2C_NUM_1 : I2C_NUM_0;
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
@@ -75,6 +76,36 @@ bool i2c::probe(uint8_t address7bits, bool secondaryBus)
     bool result = (i2c_master_cmd_begin(bus, cmd, 500 / portTICK_RATE_MS) == ESP_OK);
     i2c_cmd_link_delete(cmd);
     return result;
+}
+
+// ----------------------------------------------------------------------------
+
+void i2c::probe(std::vector<uint8_t> &result, bool secondaryBus)
+{
+    result.clear();
+    i2c_port_t bus = secondaryBus ? I2C_NUM_1 : I2C_NUM_0;
+    if (isInitialized[bus])
+        // Deinitialize
+        ESP_ERROR_CHECK(i2c_driver_delete(bus));
+
+    // Initialize to minimum speed
+    if (!doInitializeI2C(sdaPin[bus], sclPin[bus], 1, bus))
+        i2cError(sdaPin[bus], sclPin[bus], 1, bus);
+
+    // Probe
+    for (uint8_t address = 0; address < 128; address++)
+    {
+        if (i2c::probe(address, bus))
+            result.push_back(address);
+    }
+
+    // Deinitialize
+    ESP_ERROR_CHECK(i2c_driver_delete(bus));
+
+    if (isInitialized[bus])
+        // Reinitialize
+        if (!doInitializeI2C(sdaPin[bus], sclPin[bus], max_speed_x[bus], bus))
+            i2cError(sdaPin[bus], sclPin[bus], max_speed_x[bus], bus);
 }
 
 // ----------------------------------------------------------------------------
@@ -125,4 +156,56 @@ void i2c::begin(gpio_num_t sda, gpio_num_t scl, bool secondaryBus)
         if (!isInitialized[bus])
             i2cError(sdaPin[bus], sclPin[bus], max_speed_x[bus], bus);
     }
+}
+
+// ----------------------------------------------------------------------------
+// Checks
+// ----------------------------------------------------------------------------
+
+void i2c::abortOnInvalidAddress(
+    uint8_t address7bits,
+    uint8_t minAddress,
+    uint8_t maxAddress)
+{
+    if (minAddress > maxAddress)
+    {
+        i2c::abortOnInvalidAddress(address7bits, maxAddress, minAddress);
+        return;
+    }
+    if ((address7bits < minAddress) || (address7bits > maxAddress))
+    {
+        log_e("Not a valid I2C address: %x (hex)", address7bits);
+        abort();
+    }
+}
+
+// ----------------------------------------------------------------------------
+// Hardware addresses
+// ----------------------------------------------------------------------------
+
+uint8_t i2c::findFullAddress(
+    std::vector<uint8_t> &fullAddressList,
+    uint8_t hardwareAddress,
+    uint8_t hardwareAddressMask)
+{
+    uint8_t fullAddress = 0xFF;
+    int count = 0;
+
+    // Find full addresses matching the given hardware address
+    for (int idx = 0; idx < fullAddressList.size(); idx++)
+    {
+        uint8_t candidate = fullAddressList.at(idx) & hardwareAddressMask;
+        if (candidate == hardwareAddress)
+        {
+            count++;
+            fullAddress = fullAddressList.at(idx);
+        }
+    }
+
+    if (count == 0)
+        return 0xFF;
+    else if (count > 1)
+        return 0xFE;
+    else
+        return fullAddress;
 }

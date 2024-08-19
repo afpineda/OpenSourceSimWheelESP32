@@ -67,6 +67,9 @@ static esp_timer_handle_t autoSaveTimer = nullptr;
 #define LEFT_CLUTCH_INDEX 0
 #define RIGHT_CLUTCH_INDEX 1
 
+// Related to I2C bus
+static std::vector<uint8_t> *i2cAddressesFromProbe = nullptr;
+
 // ----------------------------------------------------------------------------
 // Calibration data of analog axes
 // ----------------------------------------------------------------------------
@@ -401,20 +404,27 @@ void inputs::setAnalogClutchPaddles(
 
 uint8_t getI2CFullAddress(uint8_t I2CAddress, bool isFullAddress)
 {
-  uint8_t fullAddress;
   if (isFullAddress)
-    fullAddress = I2CAddress;
-  else
+    return I2CAddress;
+
+  // Retrieve all 7-bit addresses found in the bus (only once)
+  if (i2cAddressesFromProbe == nullptr)
   {
-    i2c::require();
-    if (!I2CInput::hardwareAddr2FullAddress(
-            I2CAddress,
-            false,
-            fullAddress))
-    {
-      log_e("Unable to auto-detect full address of GPIO expander. Hardware address is %x (hex)", I2CAddress);
-      abort();
-    }
+    i2cAddressesFromProbe = new std::vector<uint8_t>;
+    i2c::probe(*i2cAddressesFromProbe);
+  }
+  uint8_t fullAddress = i2c::findFullAddress(*i2cAddressesFromProbe, I2CAddress);
+
+  if (fullAddress == 0xFF)
+  {
+
+    log_e("No GPIO expander found with hardware address %x (hex)", I2CAddress);
+    abort();
+  }
+  else if (fullAddress == 0xFE)
+  {
+    log_e("Unable to auto-detect full address of GPIO expander. Hardware address is %x (hex)", I2CAddress);
+    abort();
   }
   return fullAddress;
 }

@@ -33,14 +33,14 @@ This article is focused on **firmware-defined** error messages.
 - *Not enough memory at AnalogMultiplexerInput::AnalogMultiplexerInput()*
 - *Not enough memory at ButtonMatrixInput::ButtonMatrixInput()*
 
-  Should not happen. Please, open an [issue](https://github.com/afpineda/OpenSourceSimWheelESP32/issues)
+  Should not happen. Please, open an issue
   and provide details on your DevKit board.
 
 - *parameter out of range: batteryCalibration::addSample()*
 - *Logic error at batteryCalibration::addSample()*
 - *Logic error at batteryCalibration::getBatteryLevel()*
 
-  Should not happen. Please, open an [issue](https://github.com/afpineda/OpenSourceSimWheelESP32/issues).
+  Should not happen. Please, open an issue.
 
 - *Too few/many input or selector pins at ButtonMatrixInput::ButtonMatrixInput()*
 
@@ -55,7 +55,7 @@ This article is focused on **firmware-defined** error messages.
 - *Unable to create HID device*
 - *Unable to create HID report characteristics*
 
-  Should not happen. Please, open an [issue](https://github.com/afpineda/OpenSourceSimWheelESP32/issues).
+  Should not happen. Please, open an issue.
 
 - *Invalid input number N in a call to the inputHub namespace*
 
@@ -82,9 +82,14 @@ This article is focused on **firmware-defined** error messages.
   You must not call `inputs::setAnalogClutchPaddles()` twice.
   Check your custom firmware.
 
+- *No GPIO expander found with hardware address X (hex)*
+
+  A GPIO expander is not powered or the given *hardware address* is wrong.
+  Check your wiring, then your custom firmware.
+
 - *Unable to auto-detect full address of GPIO expander. Hardware address is N (hex)*
 
-  Hardware addresses are not unique for all GPIO expanders. You must specify *full addresses* instead.
+  The printed hardware address in not unique. You must specify a *full address* instead.
   In case you have no clue about what the full address could be,
   upload and run the [I2C probe](../../../../src/Firmware/I2C_probe/I2C_probe.ino) firmware
   provided in this project.
@@ -93,7 +98,7 @@ This article is focused on **firmware-defined** error messages.
 - *Unable to create inputHub task*
 - *Unable to create polling task*
 
-  Should not happen. Please, open an [issue](https://github.com/afpineda/OpenSourceSimWheelESP32/issues).
+  Should not happen. Please, open an issue.
 
 - *getTargetFPS() is zero at frameServerLoop()*
 
@@ -103,7 +108,7 @@ This article is focused on **firmware-defined** error messages.
 - *Unable to create notifications queue*
 - *Unable to create notifications task*
 
-  Should not happen. Please, open an [issue](https://github.com/afpineda/OpenSourceSimWheelESP32/issues).
+  Should not happen. Please, open an issue.
 
 - *Requested GPIO N can't be used as output*
 
@@ -134,7 +139,7 @@ This article is focused on **firmware-defined** error messages.
 
 - *Too many buttons at GPIO expander. Address=N, bus=M*
 
-  Should not happen. Please, open an [issue](https://github.com/afpineda/OpenSourceSimWheelESP32/issues).
+  Should not happen. Please, open an issue.
 
 - *power::begin(): Invalid rtc pin for wake-up (N)*
 
@@ -148,7 +153,7 @@ This article is focused on **firmware-defined** error messages.
 
 - *power::powerOff(): Deep sleep not working*
 
-  Should not happen. Please, open an [issue](https://github.com/afpineda/OpenSourceSimWheelESP32/issues).
+  Should not happen. Please, open an issue.
 
 - *power::startBatteryMonitor(): given pins are not usable*
 
@@ -158,7 +163,7 @@ This article is focused on **firmware-defined** error messages.
 
 - *power::startBatteryMonitor(): unable to start daemon*
 
-  Should not happen. Please, open an [issue](https://github.com/afpineda/OpenSourceSimWheelESP32/issues).
+  Should not happen. Please, open an issue.
 
 - *clkPin and dtPin must not match in RotaryEncoderInput::RotaryEncoderInput()*
 
@@ -172,10 +177,28 @@ This article is focused on **firmware-defined** error messages.
 
 - *Unable to allocate memory for input bitmaps at ShiftRegistersInput::ShiftRegistersInput()*
 
-  Should not happen. Please, open an [issue](https://github.com/afpineda/OpenSourceSimWheelESP32/issues).
+  Should not happen. Please, open an issue.
 
 - *Invalid position of input number X at shift register index N and pin M*.
 
   You are trying to assign an input number to a switch which does not exist in the shift registers chain.
   Check both the `switchCount` parameter to `inputs::addShiftRegisters()`
   and the following `.inputNumber()` calls.
+
+- *Not a valid I2C address: X (hex)*.
+
+  You are trying to use an invalid full I2C address in 7-bit format.
+  Valid I2C addresses are in the range from 0 to 127, inclusive.
+  Check calls to `inputs::addMCP23017Digital()`, `inputs::addPCF8574Digital()` and
+  `batteryMonitor::begin()`.
+  Note that some data sheets specify the I2C address in 8-bit format.
+  In such a case, displace all bits one position to the right in order to obtain the address in 7-bit format.
+
+- *Unable to initialize I2C bus N, SDA=A, SCL=B, clock multiplier=C*
+
+  The given pins to `inputs::initializeI2C()` are unable to work as an I2C bus.
+  Try other pins.
+  Ensure they have an internal or external pull resistor.
+  Ensure they are both input-capable and output-capable.
+  If such a call was not placed in your custom firmware,
+  open an issue.

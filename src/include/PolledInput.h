@@ -237,22 +237,6 @@ public:
  */
 class I2CInput : public DigitalPolledInput
 {
-public:
-    /**
-     * @brief Auto-detect a full 7-bits address given a hardware 3-bits address in an I2C bus.
-     *
-     * @param[in] address3bits A 3-bits address in the least significant bits of this parameter.
-     * @param[in] useSecondaryBus TRUE if connected to the secondary bus,
-     *                            FALSE if connected to the primary bus.
-     * @param[out] address7bits The corresponding 7-bits address.
-     * @return true On success.
-     * @return false On failure.
-     */
-    static bool hardwareAddr2FullAddress(
-        uint8_t address3bits,
-        bool useSecondaryBus,
-        uint8_t &address7bits);
-
 protected:
     /// @brief I2C address in 8 bits format (no need to shift left),
     /// ready to overlap the R/W bit. By default, the R/W bit is set to "write".

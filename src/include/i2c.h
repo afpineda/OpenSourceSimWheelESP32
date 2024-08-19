@@ -13,6 +13,7 @@
 #define __I2C_H__
 
 #include "esp32-hal.h" // declares gpio_num_t
+#include <vector>
 
 namespace i2c
 {
@@ -24,7 +25,8 @@ namespace i2c
      *       Otherwise, there is no need to call, since the bus will be
      *       automatically initialized.
      *
-     * @note If required, must be called before addPCF8574Digital(), addMCP23017Digital()
+     * @note If required, must be called before
+     *       inputs::addPCF8574Digital(), inputs::addMCP23017Digital()
      *       or batteryMonitor::begin()
      *
      * @param sda SDA pin for the I2C bus.
@@ -35,7 +37,7 @@ namespace i2c
     void begin(gpio_num_t sda, gpio_num_t scl, bool secondaryBus = false);
 
     /**
-     * @brief Initialize an I2C bus when required
+     * @brief Ensure the I2C bus is initialized
      *
      * @note Called from other namespaces. No need to call in user code.
      *
@@ -48,13 +50,53 @@ namespace i2c
     /**
      * @brief Check slave device availability on an I2C bus.
      *
+     * @note require() must be called first.
+     *
      * @param address7bits I2C address of a slave device in 7 bits format.
-     * @param bus True to use the secondary bus, false to use the primary bus.
+     * @param secondaryBus True to use the secondary bus, false to use the primary bus.
      * @return true If the slave device is available and ready.
      * @return false If the slave device is not responding or
      *         the bus was not initialized.
      */
     bool probe(uint8_t address7bits, bool secondaryBus = false);
+
+    /**
+     * @brief Retrieve all devices available on an I2C bus.
+     *
+     * @note No need to call require().
+     *       The bus will be initialized to minimum speed temporarily,
+     *       then reinitialized to previous parameters (if any).
+     *
+     * @param[out] result List of addresses found, in 7-bit format.
+     * @param[in] secondaryBus True to use the secondary bus, false to use the primary bus.
+     */
+    void probe(std::vector<uint8_t> &result, bool secondaryBus = false);
+
+    /**
+     * @brief Abort and reboot on an invalid I2C address
+     *
+     * @param address7bits I2C address to check in 7 bits format.
+     * @param minAddress Start of custom valid address range, inclusive.
+     * @param maxAddress End of custom valid address range, inclusive.
+     */
+    void abortOnInvalidAddress(uint8_t address7bits, uint8_t minAddress = 0, uint8_t maxAddress = 127);
+
+    /**
+     * @brief Find the full address of a device
+     *
+     * @param[in] fullAddressList A list of full addresses obtained from i2c::probe()
+     * @param[in] hardwareAddress A partial 7-bit address
+     * @param[in] hardwareAddressMask A mask. Bits set to 1 will be taken from @p hardwareAddress.
+     *                            Bits set to 0 have to be found.
+     *
+     * @return 0xFF If no device was found matching the partial @p hardwareAddress
+     * @return 0xFE If two or more devices where found matching the partial @p hardwareAddress
+     * @return Otherwise, a full address in 7-bit format.
+     */
+    uint8_t findFullAddress(
+        std::vector<uint8_t> &fullAddressList,
+        uint8_t hardwareAddress,
+        uint8_t hardwareAddressMask = 0b00000111);
 }
 
 #endif

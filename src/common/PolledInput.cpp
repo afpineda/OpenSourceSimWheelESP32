@@ -319,24 +319,6 @@ void AnalogAxisInput::setCalibrationData(int minReading, int maxReading)
 // Addresses
 // ----------------------------------------------------------------------------
 
-bool I2CInput::hardwareAddr2FullAddress(
-    uint8_t address3bits,
-    bool useSecondaryBus,
-    uint8_t &address7bits)
-{
-    address3bits = address3bits & 0b00000111;
-    uint8_t count = 0;
-    for (uint8_t other4bits = 0; other4bits < 16; other4bits++)
-    {
-        uint8_t tryAddress = (other4bits << 3) | address3bits;
-        if (i2c::probe(tryAddress, useSecondaryBus))
-        {
-            address7bits = tryAddress;
-            count++;
-        }
-    }
-    return (count == 1);
-}
 
 // ----------------------------------------------------------------------------
 // Constructor
@@ -348,6 +330,7 @@ I2CInput::I2CInput(
     uint8_t max_speed_mult,
     DigitalPolledInput *nextInChain) : DigitalPolledInput(nextInChain)
 {
+    i2c::abortOnInvalidAddress(address7bits);
     deviceAddress = (address7bits << 1);
     busDriver = useSecondaryBus ? I2C_NUM_1 : I2C_NUM_0;
     i2c::require(max_speed_mult, useSecondaryBus);
