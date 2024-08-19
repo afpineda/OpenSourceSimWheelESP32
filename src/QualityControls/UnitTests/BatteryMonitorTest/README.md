@@ -2,7 +2,7 @@
 
 ## Purpose and summary
 
-To test that the battery monitor runs in the background taking ADC readings of battery voltage.
+To test that the battery monitor daemon runs in the background taking ADC readings of battery voltage.
 
 ## Hardware setup
 
