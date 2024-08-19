@@ -150,6 +150,10 @@ There is no circuit involved here, just wiring:
 | `Vdd`                          | `3V3`(DevKit or satellite circuit) |
 | `(-)`                          | Negative pole of the battery       |
 | `(+)`                          | Positive pole of the battery       |
+| `ALT`                          | Nothing (not needed)               |
+| `QST`                          | Nothing (not needed)               |
+
+![MAX17043 module pinout](./MAX17043_module_pinout.png)
 
 If you are wiring a chip with no pre-made module:
 
@@ -212,4 +216,18 @@ The expected (standard) 7-bit address is 36 (hexadecimal).
 Your chip/module will share the I2C bus with [GPIO expanders](../Switches/Switches_en.md#gpio-expanders), if any.
 
 **Note**: If the chip/module is not powered or not found in the I2C bus, the system will boot normally.
-You will get just a warning: "Fuel gauge not found in the I2C bus".
+You will get just a warning: "Fuel gauge not found in the I2C bus"
+(only if Arduino IDE is configured to core debug level "warning" or higher).
+
+## Unknown state of charge
+
+The firmware will be unable to compute a proper state of charge in the following situations:
+
+- The battery is not linked to the battery monitor/voltage divider/fuel gauge,
+  and the system is powered by a different source.
+- The battery monitor/voltage divider/fuel gauge is not properly wired to the DevKit board.
+- The fuel gauge is not powered.
+- The actual I2C address of the fuel gauge is not what this firmware expects.
+- The fuel gauge is not compatible with this firmware.
+
+In those cases, you will get a constant state of charge of 66% at the host computer.
