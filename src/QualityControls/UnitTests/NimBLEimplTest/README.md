@@ -39,7 +39,9 @@ Reset while holding `GPIO #0` to low voltage. In LillyGo T-QT, press `reset` but
 Use this board configuration in Arduino IDE:
 
 - Board: "ESP32S3 Dev Module (esp32)" (or your actual board brand).
-- USB-Mode: "USB-OTG (TinyUSB)".
+- USB-Mode:
+  - DevKit with just one USB port: "USB-OTG (TinyUSB)".
+  - DevKit with two USB ports: "Hardware CDC and JTAG".
 - USB CDC On Boot: Disabled.
 
 ## Specific notes for BLE implementation

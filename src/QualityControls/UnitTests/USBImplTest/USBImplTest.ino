@@ -19,6 +19,11 @@
 // Globals
 //------------------------------------------------------------------
 
+extern uint16_t customVID;
+extern uint16_t customPID;
+extern uint16_t factoryVID;
+extern uint16_t factoryPID;
+
 //------------------------------------------------------------------
 // mocks
 //------------------------------------------------------------------
@@ -28,7 +33,9 @@ volatile inputBitmap_t capabilities::availableInputs = 0b0111ULL;
 
 void notify::connected()
 {
+#if ARDUINO_USB_MODE == 1
     Serial.println("*** CONNECTED ***");
+#endif
 }
 
 // void notify::BLEdiscovering()
@@ -42,7 +49,9 @@ void notify::bitePoint(clutchValue_t a)
 
 void inputs::recalibrateAxes()
 {
+#if ARDUINO_USB_MODE == 1
     Serial.println("CMD: recalibrate axes");
+#endif
 }
 
 void inputs::update()
@@ -51,17 +60,23 @@ void inputs::update()
 
 void inputs::reverseLeftAxis()
 {
+#if ARDUINO_USB_MODE == 1
     Serial.println("CMD: reverse left axis");
+#endif
 }
 
 void inputs::reverseRightAxis()
 {
+#if ARDUINO_USB_MODE == 1
     Serial.println("CMD: reverse right axis");
+#endif
 }
 
 void batteryCalibration::restartAutoCalibration()
 {
+#if ARDUINO_USB_MODE == 1
     Serial.println("CMD: recalibrate battery");
+#endif
 }
 
 // void power::powerOff()
@@ -81,12 +96,23 @@ int batteryMonitor::getLastBatteryLevel()
 void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
+#ifndef ARDUINO_USB_MODE
+#error USB interface required
+#elif ARDUINO_USB_MODE == 1
+    Serial.begin(115200);
+    Serial.println("--START--");
+#endif
     userSettings::altButtonsWorkingMode = true;
     userSettings::cpWorkingMode = CF_CLUTCH;
     userSettings::dpadWorkingMode = true;
     userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
     userSettings::securityLock = false;
     hidImplementation::begin("USBimplTest", "Mamandurrio", false);
+#if ARDUINO_USB_MODE == 1
+    Serial.printf("Factory default VID / PID: %04x / %04x\n", factoryVID, factoryPID);
+    Serial.printf("Actual VID / PID: %04x / %04x\n", customVID, customPID);
+    Serial.println("--GO--");
+#endif
 }
 
 //------------------------------------------------------------------
@@ -100,7 +126,9 @@ void loop()
 {
     if (!hidImplementation::isConnected())
     {
+#if ARDUINO_USB_MODE == 1
         Serial.println("(Waiting for connection)");
+#endif
     }
     else
     {
