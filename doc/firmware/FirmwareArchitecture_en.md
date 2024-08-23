@@ -263,6 +263,12 @@ If calibration data is not available, a rough estimation is provided based on Li
 
 (See [LiPoBatteryCharacterization.ods](./LiPoBatteryCharacterization.ods))
 
+#### Fuel gauges
+
+Fuel gauges from Maxim/Analog Devices are powered from the battery itself.
+As a result, they don't respond to I2C commands if the battery is not attached.
+This way, we know there is no battery.
+
 ### HidImplementation
 
 All data interchange between the device and the host computer is conducted through the HID protocol. This involves:

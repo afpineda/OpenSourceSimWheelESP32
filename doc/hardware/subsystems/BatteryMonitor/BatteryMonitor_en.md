@@ -126,48 +126,99 @@ An incomplete list of DevKits featuring a built-in voltage divider follows, alon
 
 A "fuel gauge" (not to be taken literally) is a specialized chip for accurate state of charge measurement.
 
-This project supports the popular [MAX17043](https://www.analog.com/media/en/technical-documentation/data-sheets/MAX17043-MAX17044.pdf)
-and other [compatible fuel gauges](https://www.analog.com/en/parametricsearch/12979#/p0=max1704)
-made by Maxim/Analog Devices.
+This project supports the popular
+[MAX1704x](https://www.analog.com/en/parametricsearch/12979#/p0=max1704)
+family of fuel gauges made by Maxim/Analog Devices.
 As long as those chips accept the same set of commands over the I2C connection,
 the firmware will work with them.
 
 Note that those chips are not sold in through-hole packaging,
-so you should buy a pre-made module instead,
+so **you should buy a pre-made module** instead,
 or a DevKit featuring a compatible built-in fuel gauge.
+Make sure the choosen module is **compatible with 3.3V boards**,
+otherwise it will damage your board.
 
-This is the pre-made module used for testing in this project:
+**There is no reverse polarity protection**.
+Make sure the battery is properly wired.
+Otherwise, the chip may get damaged.
 
-![MAX17043 module](./max17043_module.jpg)
+There are, at least, two modules in the market and plenty of cheap clones.
+
+### Sparkfun TOL-20680 and clones
+
+Don`t get fooled by the scale of the picture. This module is very small.
+
+![TOL-20680 front side](./TOL-20680_front.jpg)
+
+There are two hardware revisions of this module: V1.1 and V1.2 (or later).
+They share the same pinout:
+
+![TOL-20680 pinout](./TOL-20680_pinout.png)
+
+#### TOL-20680 V1.1
+
+This version of the module is inappropriate and **will harm your board**.
+There is a workaround to utilize them, though:
+take out the pull-up resistors shown in the image above.
+
+Use a low-cost multimeter in short-circuit detection mode to determine whether your module is V1.1.
+You have version 1.1 if there is an electrical connection
+between pins `(+)` and `Vcc`. Most low-cost copies are V1.1.
 
 There is no circuit involved here, just wiring:
 
-| Pin tag in the MAX1704x module | Wired to                           |
-| ------------------------------ | ---------------------------------- |
-| `SDA`                          | `SDA` (DevKit)                     |
-| `SCL`                          | `SCL` (DevKit)                     |
-| `GND`                          | `GND`(DevKit or satellite circuit) |
-| `Vdd`                          | `3V3`(DevKit or satellite circuit) |
-| `(-)`                          | Negative pole of the battery       |
-| `(+)`                          | Positive pole of the battery       |
-| `ALT`                          | Nothing (not needed)               |
-| `QST`                          | Nothing (not needed)               |
+| Pin tag in hacked TOL-20680 V1.1 | Wired to                           |
+| -------------------------------- | ---------------------------------- |
+| `SDA`                            | `SDA` (DevKit)                     |
+| `SCL`                            | `SCL` (DevKit)                     |
+| `GND`                            | `GND`(DevKit or satellite circuit) |
+| `Vcc`                            | (**Not connected**)                |
+| `(-)`                            | Negative pole of the battery       |
+| `(+)`                            | Positive pole of the battery       |
+| `ALT`                            | (Not connected)                    |
+| `QST`                            | (Not connected)                    |
 
-![MAX17043 module pinout](./MAX17043_module_pinout.png)
+#### TOL-20680 V1.2
 
-If you are wiring a chip with no pre-made module:
+This version is safe. There is no circuit involved here, just wiring:
 
-| Pin tag in the MAX1704x chip | Wired to                           |
-| ---------------------------- | ---------------------------------- |
-| `SDA`                        | `SDA` (DevKit)                     |
-| `SCL`                        | `SCL` (DevKit)                     |
-| `GND`                        | Negative pole of the battery       |
-| `Vdd`                        | `3V3`(DevKit or satellite circuit) |
-| `CTG`                        | `GND`(DevKit or satellite circuit) |
-| `CELL`                       | Positive pole of the battery       |
-| `~ALERT`                     | Nothing (not needed)               |
-| `QSTRT`                      | `GND`(DevKit or satellite circuit) |
-| Exposed pad                  | `GND`(DevKit or satellite circuit) |
+| Pin tag in TOL-20680 V1.2 | Wired to                            |
+| ------------------------- | ----------------------------------- |
+| `SDA`                     | `SDA` (DevKit)                      |
+| `SCL`                     | `SCL` (DevKit)                      |
+| `GND`                     | `GND` (DevKit or satellite circuit) |
+| `Vcc`                     | `3V3` (DevKit or satellite circuit) |
+| `(-)`                     | Negative pole of the battery        |
+| `(+)`                     | Positive pole of the battery        |
+| `ALT`                     | (Not connected)                     |
+| `QST`                     | (Not connected)                     |
+
+### Adafruit MAX17048 LiPoly / LiIon Fuel Gauge and Battery Monitor by Liz Clark (and clones)
+
+Don`t get fooled by the scale of the picture. This module is small.
+
+![Sparkfun MAX17048](./Adafruit_MAX17048_module.jpg)
+
+You can see the pinout in the picture. There is no circuit involved here, just wiring:
+
+| Pin tag in Adafruit MAX17048 | Wired to                            |
+| ---------------------------- | ----------------------------------- |
+| `SDA`                        | `SDA` (DevKit)                      |
+| `SCL`                        | `SCL` (DevKit)                      |
+| `GND`                        | `GND` (DevKit or satellite circuit) |
+| `VIN`                        | `3V3` (DevKit or satellite circuit) |
+| `(-)` or `GND`               | Negative pole of the battery        |
+| `(+)` or `Bat`               | Positive pole of the battery        |
+| `INT`                        | (Not connected)                     |
+| `QStart`                     | (Not connected)                     |
+
+You may use the StemmaQT and JST connectors instead.
+
+### Other wiring
+
+Wiring to a powerboost or DevKit board with built-in battery support:
+
+![Fuel gauge wiring](FuelGauge_wiring.png)
 
 ## Firmware customization (simple voltage divider or battery monitor)
 
@@ -250,7 +301,6 @@ The firmware will be unable to compute a proper state of charge in the following
 - The battery is not linked to the battery monitor/voltage divider/fuel gauge,
   and the system is powered by a different source.
 - The battery monitor/voltage divider/fuel gauge is not properly wired to the DevKit board.
-- The fuel gauge is not powered.
 - The actual I2C address of the fuel gauge is not what this firmware expects.
 - The fuel gauge is not compatible with this firmware.
 
