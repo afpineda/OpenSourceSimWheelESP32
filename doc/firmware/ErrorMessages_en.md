@@ -161,7 +161,7 @@ This article is focused on **firmware-defined** error messages.
   or parameter `battREADPin` is not a valid ADC-capable pin at `power::startBatteryMonitor()`.
   Check your custom firmware.
 
-- *power::startBatteryMonitor(): unable to start daemon*
+- *batteryMonitor::begin(): unable to start daemon*
 
   Should not happen. Please, open an issue.
 
