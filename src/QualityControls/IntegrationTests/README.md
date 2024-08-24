@@ -76,7 +76,7 @@ Render this graph at [mermaid.live](https://mermaid.live/view#pako:eNp9UMuKwkAQ_
 - power
 - batteryCalibration
 
-*Note*: Only autocalibrated algorithm is tested.
+*Note*: Only autocalibration algorithm is tested.
 
 ## *Test name*: [Proto2](./Proto2/README.md)
 

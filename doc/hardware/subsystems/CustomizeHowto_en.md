@@ -325,6 +325,6 @@ then saved to flash memory after a short delay.
 
 Some of the circuit designs may show very small resistors and diodes which does not fit the real ones. This is not a mistake. They must be placed in "vertical" layout, so they lie in a minimal surface of the perfboard.
 
-<img src="../pictures/VerticalLayout.png" alt="Vertical layout" width="40%" margin-left="auto" />
+![Vertical layout](../pictures/VerticalLayout.png)
 
 Note that some components may be placed on top of others to save more space.

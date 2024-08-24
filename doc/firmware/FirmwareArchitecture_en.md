@@ -8,7 +8,7 @@ The *system* have been broken into several *modules* that have been implemented 
 - **batteryMonitor**: Everything related to the measurement of available battery charge.
 - **capabilities**: Everything related to the capabilities of the hardware and firmware.
 - **hidImplementation**: Everything related to the HID protocol.
-- **hidImplementation::common**: Common behaviour for all HID implementations (USB and BLE).
+- **hidImplementation::common**: Common behavior for all HID implementations (USB and BLE).
 - **inputs**: Everything related to hardware inputs and their events.
 - **inputHub**: Everything related to the combined state of all inputs and their treatment. Translates input events into a HID report.
 - **notify**: Everything related to the notification of some events to the user if an user interface is available.
@@ -34,7 +34,7 @@ Some namespaces are implemented with the help of auxiliary modules which are not
 - *RotaryEncoderInput*: Everything related to rotary encoders.
 - *SerialNotification*: For the testing of user notifications through the USB serial interface.
 - *ShiftRegistersInput*: Everything related to serialized buttons/switches.
-- *i2c*: I2C bus initialization and common utilities.
+- *i2cTools*: I2C bus initialization and common utilities.
 - *I2CExpanderInput*: Everything related to GPIO expanders on the I2C bus.
 
 ### Principle of single responsibility
@@ -57,6 +57,7 @@ Some namespaces are implemented with the help of auxiliary modules which are not
 | ShiftRegistersInput    | Hardware design                                         |
 | RotaryEncoderInput     | Hardware design                                         |
 | I2CExpanderInput       | Hardware design                                         |
+| i2cTools               | I2C API                                                 |
 
 ### Module dependencies
 
@@ -150,7 +151,7 @@ Most relevant are:
 
 ## Brief description of most relevant modules
 
-For detailed description, see the doxigen's documentation at [SimWheel.h](../../src/include/SimWheel.h).
+For detailed description, see the Doxigen's documentation at [SimWheel.h](../../src/include/SimWheel.h).
 
 ### DigitalPolledInput and descendant classes
 
@@ -347,11 +348,11 @@ The bit-oriented queue shows the following properties:
 
 ## About auto power off
 
-In a battery-operated system, when there is no bluetooth connection, the systems goes to advertising. If no connection is made in a certain time lapse, the system goes to deep sleep or power off.
+In a battery-operated system, when there is no Bluetooth connection, the systems goes to advertising. If no connection is made in a certain time lapse, the system goes to deep sleep or power off.
 
 ## About connectivity
 
-The firmware relies in the [HID](https://en.wikipedia.org/wiki/Human_interface_device) standard to provide connectivy.
+The firmware relies in the [HID](https://en.wikipedia.org/wiki/Human_interface_device) standard to provide connectivity.
 The device will appear as a [Gamepad](https://en.wikipedia.org/wiki/Gamepad) to the hosting computer.
 The *hidImplementation* namespace is in charge of that. However, this project provides several alternate implementations:
 

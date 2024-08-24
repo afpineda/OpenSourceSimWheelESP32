@@ -19,7 +19,7 @@ We are using the KY-040 rotary encoder and the button matrix. The involved pins 
 - `TEST_ROTARY_SW`
 - `TEST_BTNMTX_ROW1`
 - `TEST_BTNMTX_ROW2`
-- `TEST_BTNMTX_COBM1`
+- `TEST_BTNMTX_COL1`
 - `TEST_BTNMTX_COL2`
 - `TEST_BTNMTX_COL3`
 
