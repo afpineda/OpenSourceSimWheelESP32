@@ -34,8 +34,8 @@ but the greater is the space required inside the sim wheel's housing.
 In order to reduce size and circuit complexity, it is recommended to use GPIO expanders (will be explained later)
 and small devkit boards like Unexpected Maker's "TinyPico" or LilyGO's "T-QT".
 
-This project makes extensive use of the official "ESP-WROOM-32" board (aka "ESP32-DevKit-C")
-for testing and development purposes, but this is not the best choice due to its excessive size.
+This project makes extensive use of the official "ESP32-DevKit-C" and "ESP32S3-DevKit-C" boards
+for testing and development purposes, but that is not the best choice due to its excessive size.
 
 ## Flash memory requirements
 
@@ -65,10 +65,11 @@ This is not the only annoyance:
 
 As a result, some devices can not be connected to any arbitrary pin, so a **pin-out plan** is needed. To develop such a plan, you need to know which constraints apply to your DevKit board. Look for a data sheet.
 
-### ESP-WROOM-32 DevKit
+### Pure "ESP32" boards
 
 The following article explains which pins can be used and how:
-[https://randomnerdtutorials.com/esp32-pinout-reference-gpios/](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/). However, we can get more specific:
+[https://randomnerdtutorials.com/esp32-pinout-reference-gpios/](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/).
+However, we can get more specific:
 
 - **GPIO #36, #39, #34 and #35**:
 
@@ -100,6 +101,26 @@ The following article explains which pins can be used and how:
 - **GPIO #1**:
 
   - Output only.
+
+### ESP32-S3 boards
+
+- **GPIO #0**
+
+  - The board will enter "bootloader mode" if this pin is set to low voltage at startup.
+    Connected to the on-board "boot" button. Avoid other uses.
+
+- **GPIO #45 and #46**
+
+  - Bootstrap pins better to avoid.
+  - GPIO #46 is input-only.
+
+- **GPIO #35, #36 and #37**
+
+  - Connected to PSRAM, thus **NOT USABLE**.
+
+More information [here](https://www.luisllamas.es/en/esp32-s3-hardware-details-pinout/)
+and
+[here](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/hw-reference/esp32s3/user-guide-devkitc-1.html).
 
 ## Uploading firmware to your DevKit board
 
