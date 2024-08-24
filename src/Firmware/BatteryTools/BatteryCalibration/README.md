@@ -2,7 +2,14 @@
 
 ## Hardware setup
 
-Those procedures are suitable for any circuit board as long as the [Battery monitor subsystem](../../../../doc/hardware/subsystems/BatteryMonitor/BatteryMonitor_en.md) is implemented. Obviously, the [power](../../../../doc/hardware/subsystems/Power/Power_en.md) subsystem must be based on batteries.  Actual GPIO numbers are defined inside the [sketch](./BatteryCalibration.ino). You must edit them to fit your setup. They are: `BATT_EN_PIN` and `BATT_READ_PIN`. For example:
+Those procedures are suitable for any circuit board as long as the
+[Battery monitor subsystem](../../../../doc/hardware/subsystems/BatteryMonitor/BatteryMonitor_en.md)
+is implemented.
+Obviously, the
+[power](../../../../doc/hardware/subsystems/Power/Power_en.md)
+subsystem must be based on batteries.
+Actual GPIO numbers are defined inside the [sketch](./BatteryCalibration.ino).
+You must edit them to fit your setup. They are: `BATT_EN_PIN` and `BATT_READ_PIN`. For example:
 
 ```c
 #define BATT_EN_PIN GPIO_NUM_17
@@ -15,25 +22,36 @@ If a simple voltage divider is used as a battery monitor, the first "define" mus
 #define BATT_EN_PIN -1
 ```
 
-Some DevKit boards feature a built-in voltage divider internally wired to a certain GPIO. Look for a data sheet to know which one and set `BATT_READ_PIN` properly.
+Some DevKit boards feature a built-in voltage divider internally wired to a certain GPIO.
+Look for a data sheet to know which one and set `BATT_READ_PIN` properly.
 
-**Warning**: If your DevKit does not feature a built-in powerboost, **never plug the USB cable and the external powerboost at the same time**.
+**Warning**: If your DevKit does not feature a built-in powerboost,
+**never plug the USB cable and the external powerboost at the same time**.
 
 ## Battery calibration
 
-**Note**: completing this procedure may take hours or days, however, no human supervision is required. This procedure is **optional**, but highly recommended.
+**Note**: completing this procedure may take hours or days, however,
+no human supervision is required. This procedure is **optional**, but highly recommended.
 Please, read from start to end before proceeding.
 
-Due to non-linearity of battery charge versus battery voltage, only a rough and imprecise estimation can be achieved. This procedure collects calibration data in order to provide a better estimation of battery charge for your particular battery. Data is saved to flash memory, so it can be reused later at any other sketch. This procedure will go through a complete discharge cycle.
+Due to non-linearity of battery charge versus battery voltage,
+only a rough and imprecise estimation can be achieved.
+This procedure collects calibration data in order to provide
+a better estimation of battery charge for your particular battery.
+Data is saved to flash memory, so it can be reused later at any other sketch.
+This procedure will go through a complete discharge cycle.
 
-Use [Online calculator: Battery discharge time depending upon load](https://planetcalc.com/2283/) to estimate how long will it take to deplete the battery.
+Use [Online calculator: Battery discharge time depending upon load](https://planetcalc.com/2283/)
+to estimate how long will it take to deplete the battery.
 
-*Warning:* if `battery(+)` is not properly attached to the positive pole of the battery or `BATT_READ_PIN` is not properly set, calibration data will be cleared but not collected, thus this procedure will be useless.
+*Warning:* if `battery(+)` is not properly attached to the positive pole of the battery
+or `BATT_READ_PIN` is not properly set,
+calibration data will be cleared but not collected, thus this procedure will be useless.
 
 ### Calibration procedure
 
 - If your DevKit **does NOT feature a built-in powerboost module**, so you are using an external one:
-  
+
   1. **Ensure the battery is fully charged before continuing**.
   2. Unplug the battery (or the external powerboost module).
   3. Plug the USB cable.
@@ -44,7 +62,7 @@ Use [Online calculator: Battery discharge time depending upon load](https://plan
   8. Wait for the battery to deplete. The on-board LED will go off.
 
 - If your DevKit **has built-in battery support** with a built-in powerboost module:
-  
+
   1. **Ensure the battery is fully charged before continuing**.
   2. Plug the USB cable and the battery.
   3. Upload the sketch ([BatteryCalibration.ino](./BatteryCalibration.ino)) to the DevKit board (if not done yet).
@@ -53,14 +71,16 @@ Use [Online calculator: Battery discharge time depending upon load](https://plan
   6. Make sure the on-board LED is on, so the DevKit board has power.
   7. Wait for the battery to deplete. The on-board LED will go off.
 
-The calibration data is now saved to flash memory and ready to use. However, you should follow the *Backup procedure* below.
+The calibration data is now saved to flash memory and ready to use.
+However, you should follow the *Backup procedure* below.
 
-If the calibration procedure is interrupted, you should start again with a fully charged battery, otherwise wrong battery levels will be reported.
+If the calibration procedure is interrupted, you should start again with a fully charged battery,
+otherwise wrong battery levels will be reported.
 
 Since there is no serial connection, in order to check if the sketch is running properly:
 
 - Wait for three minutes after power on (or reset).
-- Open the bluetooth control panel at the host PC.
+- Open the Bluetooth control panel at the host PC.
 - Ensure the device is **not** paired due to a previous sketch.
 - Click on "Add device".
 - The device should get listed as "Battery calibration". Do not pair.
@@ -70,11 +90,17 @@ Since there is no serial connection, in order to check if the sketch is running 
 You **should not run the sketch again**, otherwise the acquired data will be cleared.
 You have **three minutes to cut power** before this happens.
 Take this into account if you plug another charged battery or the USB cable.
-Upload another sketch as soon as possible. Follow the backup procedure below to avoid any risk before uploading.
+Upload another sketch as soon as possible.
+Follow the backup procedure below to avoid any risk before uploading.
 
 ## Backup of calibration data
 
-As a backup measure, calibration data is dumped to the serial port, so you can copy-paste it into the [restoration sketch](../../BatteryTools/RestoreBatteryCalibration/README.md) in case of need. This way, the calibration procedure does not need to be run more than once. You may also contribute this data to the community, but take into account that it will not work with a different battery monitor circuit or another battery model.
+As a backup measure, calibration data is dumped to the serial port,
+so you can copy-paste it into the
+[restoration sketch](../../BatteryTools/RestoreBatteryCalibration/README.md) in case of need.
+This way, the calibration procedure does not need to be run more than once.
+You may also contribute this data to the community,
+but take into account that it will not work with a different battery monitor circuit or another battery model.
 
 You should also follow this procedure to avoid accidental overwrite of calibration data while the sketch is still in flash memory.
 
