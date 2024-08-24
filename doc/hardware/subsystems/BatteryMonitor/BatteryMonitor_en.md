@@ -142,6 +142,9 @@ otherwise it will damage your board.
 Make sure the battery is properly wired.
 Otherwise, the chip may get damaged.
 
+The chip requires some time to start reporting meaningful battery levels,
+especially if you plug a new battery.
+
 There are, at least, two modules in the market and plenty of cheap clones.
 
 ### Sparkfun TOL-20680 and clones
@@ -158,8 +161,9 @@ They share the same pinout:
 #### TOL-20680 V1.1
 
 This version of the module is inappropriate and **will harm your board**.
-There is a workaround to utilize them, though:
-take out the pull-up resistors shown in the image above.
+There is a **workaround** to utilize them, though:
+[take out](https://www.youtube.com/watch?v=8JM4oCpWnjU)
+ the pull-up resistors shown in the image above.
 
 Use a low-cost multimeter in short-circuit detection mode to determine whether your module is V1.1.
 You have version 1.1 if there is an electrical connection
@@ -167,16 +171,19 @@ between pins `(+)` and `Vcc`. Most low-cost copies are V1.1.
 
 There is no circuit involved here, just wiring:
 
-| Pin tag in hacked TOL-20680 V1.1 | Wired to                           |
-| -------------------------------- | ---------------------------------- |
-| `SDA`                            | `SDA` (DevKit)                     |
-| `SCL`                            | `SCL` (DevKit)                     |
-| `GND`                            | `GND`(DevKit or satellite circuit) |
-| `Vcc`                            | (**Not connected**)                |
-| `(-)`                            | Negative pole of the battery       |
-| `(+)`                            | Positive pole of the battery       |
-| `ALT`                            | (Not connected)                    |
-| `QST`                            | (Not connected)                    |
+| Pin tag in "hacked" TOL-20680 V1.1 | Wired to                           |
+| ---------------------------------- | ---------------------------------- |
+| `SDA`                              | `SDA` (DevKit)                     |
+| `SCL`                              | `SCL` (DevKit)                     |
+| `GND`                              | `GND`(DevKit or satellite circuit) |
+| `Vcc`                              | (**Not connected**)                |
+| `(-)`                              | Negative pole of the battery       |
+| `(+)`                              | Positive pole of the battery       |
+| `ALT`                              | (Not connected)                    |
+| `QST`                              | (Not connected)                    |
+
+Do not attach any other pin to your DevKit, or it will get damaged.
+The module gets power from the battery itself. No need to wire a power source.
 
 #### TOL-20680 V1.2
 
