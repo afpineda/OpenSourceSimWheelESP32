@@ -24,18 +24,20 @@ void setup()
     Serial.println("=================================");
     Serial.println(" I2C slave device auto-discovery");
     Serial.println("=================================");
+    Serial.println("");
 
+    Serial.printf("SDA = #%d. SCL = #%d. Please, wait ...\n\n", SDA, SCL);
     std::vector<uint8_t> addressList;
     i2c::probe(addressList);
     count = addressList.size();
+    Serial.printf("Auto-discovery finished. %d device(s) found:\n", count);
     for (int idx = 0; idx < count; idx++)
     {
         uint8_t addr = addressList.at(idx);
-        Serial.printf("Device found at address %x (hexadecimal), %d (decimal))\n", addr, addr);
+        Serial.printf("- Device found at address %x (hexadecimal), %d (decimal)\n", addr, addr);
 
     }
     Serial.println("");
-    Serial.printf("Auto-discovery finished. %d devices found.", count);
     Serial.println("");
     Serial.println("Done. Reset to repeat auto-discovery.");
 }

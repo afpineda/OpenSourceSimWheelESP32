@@ -95,7 +95,7 @@ void i2c::probe(std::vector<uint8_t> &result, bool secondaryBus)
     // Probe
     for (uint8_t address = 0; address < 128; address++)
     {
-        if (i2c::probe(address, bus))
+        if (i2c::probe(address, secondaryBus))
             result.push_back(address);
     }
 
