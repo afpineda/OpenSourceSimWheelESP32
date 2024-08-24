@@ -9,13 +9,15 @@
  *
  */
 
-#include <Arduino.h>
+#include <HardwareSerial.h>
 #include "SimWheel.h"
 #include "debugUtils.h"
 
 //-------------------------------------------------------
 // Globals
 //-------------------------------------------------------
+
+uint8_t compensation = 0;
 
 //-------------------------------------------------------
 // Mocks
@@ -40,9 +42,20 @@ void notify::powerOff()
 {
 }
 
+// extern bool max1704x_getCompensation(uint8_t &compensation);
+// extern bool max1704x_setCompensation(uint8_t compensation);
+
 //-------------------------------------------------------
 // Auxiliary
 //-------------------------------------------------------
+
+// void printCompensation()
+// {
+//     if (max1704x_getCompensation(compensation))
+//         Serial.printf("ModelGauge compensation: %d (dec).\n", compensation);
+//     else
+//         Serial.printf("ModelGauge compensation not available.\n");
+// }
 
 //-------------------------------------------------------
 // Entry point
@@ -59,5 +72,23 @@ void setup()
 
 void loop()
 {
-    delay(60 * 1000);
+    // if (Serial.available())
+    // {
+    //     char ch = Serial.read();
+    //     if (ch = 'c')
+    //         printCompensation();
+    //     else if ((ch = '+') && (compensation < 255))
+    //     {
+    //         compensation++;
+    //         if (max1704x_setCompensation(compensation))
+    //             printCompensation();
+    //     }
+    //     else if ((ch = '-') && (compensation > 0))
+    //     {
+    //         compensation--;
+    //         if (max1704x_setCompensation(compensation))
+    //             printCompensation();
+    //     }
+    // }
+    delay(250);
 }

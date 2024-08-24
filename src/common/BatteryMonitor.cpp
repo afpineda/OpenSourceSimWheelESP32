@@ -33,12 +33,15 @@ static TaskHandle_t batteryMonitorDaemon = nullptr;
 #define VOLTAGE_SAMPLES_COUNT 100
 
 // Fuel gauge
-#define MAX17043_I2C_ADDRESS_SHIFTED 0x6c
+#define MAX1704x_I2C_ADDRESS_SHIFTED 0x6c
+#define MAX1704x_REG_SoC 0x04
+#define MAX1704x_REG_MODE 0x06
+#define MAX1704x_REG_VERSION 0x08
+#define MAX1704x_REG_CONFIG 0x0C
 static uint8_t fg_i2c_address;
 
 // Other
 #define DAEMON_STACK_SIZE 2048
-static const char *MSG_INIT_ERROR = "batteryMonitor::begin(): unable to start daemon";
 
 // ----------------------------------------------------------------------------
 // Setters
@@ -80,7 +83,7 @@ void batteryMonitor::setPowerOffSoC(uint8_t percentage)
 
 void batteryMonitor::configureForTesting()
 {
-    setPeriod(5);
+    setPeriod(10);
     setPowerOffSoC(0);
     setWarningSoC(50);
 }
@@ -98,60 +101,100 @@ int batteryMonitor::getLastBatteryLevel()
 // Fuel gauge commands
 // ----------------------------------------------------------------------------
 
-bool max17043_isPresent()
+bool max1704x_read(uint8_t regAddress, uint16_t &value)
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    // Command VERSION = 0x0008. This command ensures the i2c slave
-    // is a MAX17043 chip or compatible.
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, fg_i2c_address | I2C_MASTER_WRITE, true);
+    i2c_master_write_byte(cmd, regAddress, true);
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, fg_i2c_address | I2C_MASTER_READ, true);
+    i2c_master_read_byte(cmd, ((uint8_t *)&value) + 1, I2C_MASTER_ACK);
+    i2c_master_read_byte(cmd, ((uint8_t *)&value), I2C_MASTER_LAST_NACK);
+    i2c_master_stop(cmd);
+    bool result = (i2c_master_cmd_begin(I2C_NUM_0, cmd, DEBOUNCE_TICKS) == ESP_OK);
+    i2c_cmd_link_delete(cmd);
+    return result;
+}
+
+// ----------------------------------------------------------------------------
+
+bool max1704x_write(uint8_t regAddress, uint16_t value)
+{
+    uint8_t *data = (uint8_t *)&value;
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, fg_i2c_address | I2C_MASTER_WRITE, true);
+    i2c_master_write_byte(cmd, regAddress, true);
+    i2c_master_write_byte(cmd, data[1], true);
+    i2c_master_write_byte(cmd, data[0], true);
+    i2c_master_stop(cmd);
+    bool result = (i2c_master_cmd_begin(I2C_NUM_0, cmd, DEBOUNCE_TICKS) == ESP_OK);
+    i2c_cmd_link_delete(cmd);
+    return result;
+}
+
+// ----------------------------------------------------------------------------
+
+bool max1704x_isPresent()
+{
+    // Command VERSION. This command ensures the i2c slave
+    // is a MAX1704x chip or compatible.
     uint16_t version;
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, fg_i2c_address | I2C_MASTER_READ, true);
-    i2c_master_write_byte(cmd, 0x00, true);
-    i2c_master_write_byte(cmd, 0x08, true);
-    i2c_master_read(cmd, (uint8_t *)&version, sizeof(version), I2C_MASTER_LAST_NACK);
-    i2c_master_stop(cmd);
-    bool result = (i2c_master_cmd_begin(I2C_NUM_0, cmd, DEBOUNCE_TICKS) == ESP_OK);
-    i2c_cmd_link_delete(cmd);
+    bool result = max1704x_read(MAX1704x_REG_VERSION, version);
+    if (result)
+        log_i("Fuel gauge version: %d", version);
     return result;
 }
 
 // ----------------------------------------------------------------------------
 
-bool max17043_quickStart()
+bool max1704x_quickStart()
 {
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    // Command QUICK START = 0x4000.
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, fg_i2c_address | I2C_MASTER_READ, true);
-    i2c_master_write_byte(cmd, 0x40, true);
-    i2c_master_write_byte(cmd, 0x00, true);
-    i2c_master_stop(cmd);
-    bool result = (i2c_master_cmd_begin(I2C_NUM_0, cmd, DEBOUNCE_TICKS) == ESP_OK);
-    i2c_cmd_link_delete(cmd);
-    return result;
+    return max1704x_write(MAX1704x_REG_MODE, 0x4000);
 }
 
 // ----------------------------------------------------------------------------
 
-bool max17043_getSoC(int &batteryLevel)
+bool max1704x_getSoC(int &batteryLevel)
 {
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    // Command SOC = 0x0004
-    uint16_t soc;
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, fg_i2c_address | I2C_MASTER_READ, true);
-    i2c_master_write_byte(cmd, 0x00, true);
-    i2c_master_write_byte(cmd, 0x04, true);
-    i2c_master_read(cmd, (uint8_t *)&soc, sizeof(soc), I2C_MASTER_LAST_NACK);
-    i2c_master_stop(cmd);
-    bool result = (i2c_master_cmd_begin(I2C_NUM_0, cmd, DEBOUNCE_TICKS) == ESP_OK);
-    i2c_cmd_link_delete(cmd);
+    uint16_t value;
+    bool result = max1704x_read(MAX1704x_REG_SoC, value);
     if (result)
     {
-        batteryLevel = (soc >> 8);
+        uint8_t *data = (uint8_t *)&value;
+        batteryLevel = data[1];
+        if (data[0] >= 127)
+            batteryLevel++;
     }
     return result;
 }
+
+// ----------------------------------------------------------------------------
+
+// bool max1704x_getCompensation(uint8_t &compensation)
+// {
+//     uint16_t currentConfig;
+//     bool result = max1704x_read(MAX1704x_REG_CONFIG, currentConfig);
+//     if (result)
+//         compensation = ((uint8_t *)&currentConfig)[1];
+//     return result;
+// }
+
+// // ----------------------------------------------------------------------------
+
+// bool max1704x_setCompensation(uint8_t compensation)
+// {
+//     uint16_t currentConfig;
+//     bool result = max1704x_read(MAX1704x_REG_CONFIG, currentConfig);
+//     if (result)
+//     {
+//         uint8_t *pCurrentConfig = ((uint8_t *)&currentConfig);
+//         pCurrentConfig[1] = compensation;
+//         result = max1704x_write(MAX1704x_REG_CONFIG, currentConfig);
+//     }
+//     return result;
+// }
 
 // ----------------------------------------------------------------------------
 // Battery monitor/voltage divider commands
@@ -243,11 +286,11 @@ bool batteryMonitor_getSoC(int &batteryLevel)
             batteryLevel = batteryCalibration::getBatteryLevelAutoCalibrated(lastBatteryReading);
         }
     }
-    else
-    {
-        // Battery(+) is not connected, so battery level is unknown
-        batteryLevel = UNKNOWN_BATTERY_LEVEL;
-    }
+    // else
+    // {
+    //     // Battery(+) is not connected, so battery level is unknown
+    //     batteryLevel = UNKNOWN_BATTERY_LEVEL;
+    // }
     return result;
 }
 
@@ -261,27 +304,36 @@ void batteryMonitorDaemonLoop(void *arg)
     {
         bool ok;
         if (batteryREADPin < 0)
+        {
             // Use fuel gauge
-            ok = max17043_getSoC(lastBatteryLevel);
+            ok = max1704x_getSoC(lastBatteryLevel);
+        }
         else
+        {
             // Use battery monitor
             ok = batteryMonitor_getSoC(lastBatteryLevel);
-
-        if (!ok)
-            lastBatteryLevel = UNKNOWN_BATTERY_LEVEL;
+        }
 
         // Report battery level
+        if (!ok)
+            lastBatteryLevel = UNKNOWN_BATTERY_LEVEL;
         hidImplementation::reportBatteryLevel(lastBatteryLevel);
-        if (ok && (lastBatteryLevel <= powerOff_soc))
+
+        // notifications and power-off
+        if (ok)
         {
-            // The DevKit must go to deep sleep before battery depletes, otherwise, it keeps
-            // draining current even if there is not enough voltage to turn it on.
-            power::powerOff();
+            if ((powerOff_soc > 0) && (lastBatteryLevel <= powerOff_soc))
+            {
+                // The DevKit must go to deep sleep before battery depletes, otherwise, it keeps
+                // draining current even if there is not enough voltage to turn it on.
+                power::powerOff();
+            }
+            else if (lastBatteryLevel <= low_battery_soc)
+                notify::lowBattery();
         }
-        else if (ok && (lastBatteryLevel <= low_battery_soc))
-            notify::lowBattery();
 
         // Delay to next sample
+        //        log_i("Sleep %lld",sampling_rate_ticks);
         vTaskDelay(sampling_rate_ticks);
 
     } // end while
@@ -291,23 +343,30 @@ void batteryMonitorDaemonLoop(void *arg)
 // Initialization
 // ----------------------------------------------------------------------------
 
+void batteryMonitor_startDaemon()
+{
+    xTaskCreate(
+        batteryMonitorDaemonLoop,
+        "BattMon",
+        DAEMON_STACK_SIZE,
+        nullptr,
+        tskIDLE_PRIORITY + 1, &batteryMonitorDaemon);
+    if (batteryMonitorDaemon == nullptr)
+    {
+        log_e("batteryMonitor::begin(): unable to start daemon");
+        abort();
+    }
+}
+
+// ----------------------------------------------------------------------------
+
 void batteryMonitor::begin(gpio_num_t battENPin, gpio_num_t battREADPin)
 {
     if (batteryMonitorDaemon == nullptr)
     {
         configureBatteryMonitor(battENPin, battREADPin);
         batteryCalibration::begin();
-        xTaskCreate(
-            batteryMonitorDaemonLoop,
-            "BattMon",
-            DAEMON_STACK_SIZE,
-            nullptr,
-            tskIDLE_PRIORITY + 1, &batteryMonitorDaemon);
-        if (batteryMonitorDaemon == nullptr)
-        {
-            // log_e(MSG_INIT_ERROR);
-            abort();
-        }
+        batteryMonitor_startDaemon();
     }
 }
 
@@ -320,26 +379,8 @@ void batteryMonitor::begin(uint8_t i2c_address)
     if (batteryMonitorDaemon == nullptr)
     {
         capabilities::setFlag(deviceCapability_t::CAP_BATTERY);
-        fg_i2c_address = (i2c_address > 127) ? MAX17043_I2C_ADDRESS_SHIFTED : (i2c_address << 1);
+        fg_i2c_address = (i2c_address > 127) ? MAX1704x_I2C_ADDRESS_SHIFTED : (i2c_address << 1);
         i2c::require();
-        if (!max17043_isPresent())
-        {
-            log_w("Fuel gauge not found in the I2C bus");
-            // note: no abort()
-        }
-        else
-            max17043_quickStart();
-
-        xTaskCreate(
-            batteryMonitorDaemonLoop,
-            "BattMonFG",
-            DAEMON_STACK_SIZE,
-            nullptr,
-            tskIDLE_PRIORITY + 1, &batteryMonitorDaemon);
-        if (batteryMonitorDaemon == nullptr)
-        {
-            // log_e(MSG_INIT_ERROR);
-            abort();
-        }
+        batteryMonitor_startDaemon();
     }
 }

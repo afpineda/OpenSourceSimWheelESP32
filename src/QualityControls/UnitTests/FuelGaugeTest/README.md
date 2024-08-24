@@ -13,9 +13,6 @@ Wire a MAX17043 module as described in the
 including the battery itself.
 However, this test will get power from the USB cable alone.
 
-Additionally, prepare a rather simple battery discharge circuit using
-just a 100 ohm resistor (or any other low impedance resistor).
-
 Output at 115200 bauds over the USB serial port.
 
 ## Procedure
@@ -28,26 +25,30 @@ Output at 115200 bauds over the USB serial port.
    --GO--
    ```
 
-3. Output must show (not to be taken literally):
+3. Wait for **ten minutes** or so. It takes time for the fuel gauge to profile the battery.
+4. Last output line show (not to be taken literally):
 
    ```text
-   SoC: 100%
+   SoC: 86%
    ```
 
-   or any other percentage close to 100%. Take note of that percentage.
+   or any other percentage. Take note of that percentage.
 
-4. Unplug the battery from the circuit.
-5. Output must show (literally):
+5. Unplug the battery from the circuit.
+6. Output must show (literally):
 
    ```text
    SoC: 66%
    ```
 
-6. Wire the battery to the discharge circuit. Wait for 5 to 10 minutes or so.
-7. Unwire the battery from the discharge circuit.
-8. Wire the battery to the test circuit again.
-9. Output must show another percentage **below** the first percentage. For example:
+7. Plug the battery to the circuit again.
+8. Last output line must show another percentage **very close** to the first percentage (above or below). For example:
 
    ```text
-   SoC: 99%
+   SoC: 89%
    ```
+
+9. Wait for two minutes.
+10. No further output must show.
+    However, a new percentage may appear, 1% lesser than the previous one.
+    That is OK, too.
