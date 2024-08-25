@@ -8,9 +8,9 @@ Individual events are combined into a global state bitmap (one bit for each inpu
 ## Hardware setup
 
 Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
-Use this [test circuit](../../Protoboards/ESP32-WROOM-DevKitC-1.diy):
+Use this [test circuit](../../Protoboards/TestBoard1.diy):
 
-![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.png)
+![Test circuit image](../../Protoboards/TestBoard1.png)
 
 We are using the KY-040 rotary encoder and the button matrix. The involved pins are:
 

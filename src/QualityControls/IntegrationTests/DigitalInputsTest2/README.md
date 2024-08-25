@@ -11,9 +11,9 @@ just in the involved hardware. For that reason, this test may seem trivial. Howe
 ## Hardware setup
 
 Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
-Use this [test circuit](../../Protoboards/ESP32-WROOM-DevKitC-2.diy):
+Use this [test circuit](../../Protoboards/TestBoard2.diy):
 
-![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-2.png)
+![Test circuit image](../../Protoboards/TestBoard2.png)
 
 This test circuit does not have micro-switches attached to the GPIO expanders due to its excessive number.
 Two wires will replace them. For future reference, those wires are called "probe1" and "probe2".

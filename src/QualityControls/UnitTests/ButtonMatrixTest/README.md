@@ -7,9 +7,9 @@ To test correct identification of events caused by a button matrix.
 ## Hardware setup
 
 Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
-Use this [test circuit](../../Protoboards/ESP32-WROOM-DevKitC-1.diy):
+Use this [test circuit](../../Protoboards/TestBoard1.diy):
 
-![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.png)
+![Test circuit image](../../Protoboards/TestBoard1.png)
 
 - We are using the button matrix only: `TEST_BTNMTX_ROW1`, `TEST_BTNMTX_ROW2`, `TEST_BTNMTX_COL1`, `TEST_BTNMTX_COL2` and `TEST_BTNMTX_COL3`.
 - Matrix wiring is prone to human mistake. If something goes weird, check the wiring first.

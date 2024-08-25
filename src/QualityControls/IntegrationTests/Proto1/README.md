@@ -2,14 +2,14 @@
 
 ## Purpose and summary
 
-To test that system events are propagated as joystick/gamepad input events at the PC side.
+To test that system events are propagated to the the PC side as joystick/gamepad input events.
 
 ## Hardware setup
 
 Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
-Use this [test circuit](../../Protoboards/ESP32-WROOM-DevKitC-1.diy):
+Use this [test circuit](../../Protoboards/TestBoard1.diy):
 
-![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.png)
+![Test circuit image](../../Protoboards/TestBoard1.png)
 
 For later reference:
 

@@ -6,10 +6,10 @@ To test correct identification of events caused by GPIO expanders.
 
 ## Hardware setup
 
-Use the following [test circuit](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-2.diy).
+Use the following [test circuit](../../Protoboards/TestBoard2.diy).
 Just the GPIO expanders are used.
 
-![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-2.png)
+![Test circuit image](../../Protoboards/TestBoard2.png)
 
 This test circuit does not have micro-switches attached to the GPIO expanders due to its excessive number.
 Two wires will replace them.

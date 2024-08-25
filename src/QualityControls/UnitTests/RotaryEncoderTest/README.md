@@ -7,9 +7,9 @@ To test correct identification of rotary encoder events: clockwise and counter-c
 ## Hardware setup
 
 Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
-Use this [test circuit](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.diy):
+Use this [test circuit](../../Protoboards/TestBoard1.diy):
 
-![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-1.png)
+![Test circuit image](../../Protoboards/TestBoard1.png)
 
 Two rotary encoders are tested:
 

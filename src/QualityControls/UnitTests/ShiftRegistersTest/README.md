@@ -7,10 +7,10 @@ To test correct identification of events caused by shift registers.
 ## Hardware setup
 
 Actual GPIO numbers are defined at [debugUtils.h](./debugUtils.h).
-Use the following [test circuit](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-2.diy).
+Use the following [test circuit](../../Protoboards/TestBoard2.diy).
 Just the PISO shift registers are used.
 
-![Test circuit image](../../Protoboards/ProtoBoard-ESP32-Dekvit-C-2.png)
+![Test circuit image](../../Protoboards/TestBoard2.png)
 
 For later reference, buttons are named "D1" to "D5", no matter which bitmap is assigned to them.
 

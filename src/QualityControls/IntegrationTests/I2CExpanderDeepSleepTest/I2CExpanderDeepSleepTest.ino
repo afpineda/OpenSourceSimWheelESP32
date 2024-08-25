@@ -59,8 +59,6 @@ bool print_wakeup_reason()
   return (wakeup_reason == ESP_SLEEP_WAKEUP_EXT0) || (wakeup_reason == ESP_SLEEP_WAKEUP_EXT1);
 }
 
-// #define TEST_POWER_PIN GPIO_NUM_14
-
 //-------------------------------------------------------
 // Entry point
 //-------------------------------------------------------

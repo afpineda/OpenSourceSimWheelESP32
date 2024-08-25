@@ -21,8 +21,8 @@
 #define LEFT_CLUTCH_IN 0
 #define RIGHT_CLUTCH_IN 1
 #define ALT_IN 10
-#define CW_IN 12
-#define CCW_IN 13
+#define CW_IN 13
+#define CCW_IN 12
 #define COMMAND_IN 2
 #define CYCLE_ALT_IN 3
 #define CYCLE_CLUTCH_IN 4
