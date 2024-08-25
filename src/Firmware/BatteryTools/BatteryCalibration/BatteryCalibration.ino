@@ -81,10 +81,14 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
 
-    int countdown = 3*60;
-    //int countdown = 10;
+    int countdown = 3 * 60;
+    // int countdown = 10;
 
     configureBatteryMonitor(BATT_EN_PIN, BATT_READ_PIN);
+    if (getBatteryReadingForTesting(BATT_EN_PIN, BATT_READ_PIN) < 150)
+    {
+        Serial.println("Note: No battery detected.");
+    }
 
     Serial.begin(115200);
     Serial.println("Waiting...");
@@ -94,7 +98,7 @@ void setup()
         delay(1000);
     }
 
-    if (countdown<=0)
+    if (countdown <= 0)
     {
         Serial.println("Running...");
         Serial.println("If you can see this message, unplug the USB cable,");
