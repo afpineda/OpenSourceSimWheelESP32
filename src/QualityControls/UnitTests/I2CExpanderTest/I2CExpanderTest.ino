@@ -32,27 +32,25 @@ void setup()
     Serial.begin(115200);
     Serial.println("-- READY --");
 
-    uint8_t pcf8574FullAddress, mcp23017FullAddress;
-    i2c::require(1);
-    Serial.println("Auto-detecting PCF8574 address");
-    bool auto_detect_success = I2CInput::hardwareAddr2FullAddress(
-        PCF8574_I2C_ADDR3,
-        false,
-        pcf8574FullAddress);
-    if (auto_detect_success)
-    {
-        Serial.printf("Address is %x (hexadecimal)\n", pcf8574FullAddress);
-        Serial.println("Auto-detecting MCP23017 address");
-        auto_detect_success = I2CInput::hardwareAddr2FullAddress(
-            MCP23017_I2C_ADDR3,
-            false,
-            mcp23017FullAddress);
-    }
-    if (auto_detect_success)
-        Serial.printf("Address is %x (hexadecimal)\n", mcp23017FullAddress);
+    Serial.println("Auto-detecting I2C devices...\n");
+    std::vector<uint8_t> fullAddressList;
+    i2c::probe(fullAddressList);
+    Serial.printf("%d device(s) found.\n", fullAddressList.size());
+
+    uint8_t pcf8574FullAddress = i2c::findFullAddress(fullAddressList, PCF8574_I2C_ADDR3);
+    if (pcf8574FullAddress < 128)
+        Serial.printf("PCF8574 address is %x (hexadecimal)\n", pcf8574FullAddress);
     else
+        Serial.printf("ERROR: PCF8574 address not found or not unique (%x)\n", pcf8574FullAddress);
+
+    uint8_t mcp23017FullAddress = i2c::findFullAddress(fullAddressList, MCP23017_I2C_ADDR3);
+    if (mcp23017FullAddress < 128)
+        Serial.printf("MCP23017 address is %x (hexadecimal)\n", mcp23017FullAddress);
+    else
+        Serial.printf("ERROR: MCP23017 address not found or not unique (%x)\n", mcp23017FullAddress);
+
+    if ((pcf8574FullAddress > 127) || (mcp23017FullAddress > 127))
     {
-        Serial.println("ERROR: unable to auto-detect hardware addresses of I2C devices");
         Serial.println("Test failed.");
         for (;;)
             ;
@@ -83,5 +81,5 @@ void loop()
         debugPrintBool(state);
         Serial.println("");
     }
-    vTaskDelay(DEBOUNCE_TICKS*2);
+    vTaskDelay(DEBOUNCE_TICKS * 2);
 }

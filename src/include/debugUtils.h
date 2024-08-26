@@ -183,8 +183,8 @@ static const gpio_num_array_t amtxerInputs = {TEST_AMTXER_IN1, TEST_AMTXER_IN2};
 #define TEST_SR_BUTTONS_COUNT 17
 
 // GPIO expanders
-#define MCP23017_I2C_ADDR3 0
-#define PCF8574_I2C_ADDR3 1
+#define MCP23017_I2C_ADDR3 7
+#define PCF8574_I2C_ADDR3 0
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------
