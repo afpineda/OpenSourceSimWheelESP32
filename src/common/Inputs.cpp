@@ -35,7 +35,7 @@ static AnalogAxisInput *rightClutchAxis = nullptr;
 static TaskHandle_t pollingTask = nullptr;
 static bool forceUpdate = false;
 #define SAMPLING_RATE_TICKS DEBOUNCE_TICKS * 2
-#define POLLING_TASK_STACK_SIZE 1 * 1024
+#define POLLING_TASK_STACK_SIZE 2 * 1024
 
 // Related to the decoupling queue
 
