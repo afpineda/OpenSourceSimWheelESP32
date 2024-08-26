@@ -49,6 +49,12 @@ See pin-out at [pinterest.com (thanks to Abhishek Ghosh)](https://in.pinterest.c
 
 Rotary encoders can be very noisy. Despite debouncing techniques, some rotations may be missed. This project has eradicated this problem, as far as I know.
 
+Tactile feedback is very relevant to sim-racing equipment.
+Bourns
+[claims](https://bourns.blog/2020/07/28/new-rotary-encoder-model-features-high-detent-force-with-smooth-tactile-feedback/)
+to have rotary encoders with high detent force
+([PEC11H-4020F-S0016](https://www.alldatasheet.com/datasheet-pdf/pdf/1423111/BOURNS/PEC11H-4020F-S0016.html)).
+
 ## Absolute rotary switches
 
 They are similar in shape to rotary encoders, but they work in a complete different way. A N-position rotary switch is just the same as N **non-momentary** switches where one and only one of them is closed at all times. **This makes them unpractical**, since the PC side will detect a button as "always on". When trying to configure another button in the simulator, that one will get in the way.
