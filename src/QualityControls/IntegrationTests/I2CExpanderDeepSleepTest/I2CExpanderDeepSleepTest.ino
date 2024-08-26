@@ -75,7 +75,7 @@ void setup()
   inputs::addMCP23017Digital(MCP23017_I2C_ADDR3);
 
   Serial.println("");
-  Serial.printf("Using GPIO %d as wake up source. Wake up when LOW",TEST_POWER_PIN);
+  Serial.printf("Using GPIO %d as wake up source. Wake up when LOW", TEST_POWER_PIN);
   Serial.println("");
 
   Serial.println("Please, wait...");
