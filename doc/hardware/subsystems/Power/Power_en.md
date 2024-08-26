@@ -95,6 +95,21 @@ This is the powerboost module used for testing in this project (note there is a 
 
 Nothing is required.
 
+## Brownout
+
+If you are using batteries to power the system during boot-up, you can have a critical brownout.
+The most likely culprits are **poor electrical connections or faulty welding**.
+
+Brownout causes a never-ending boot-up loop.
+Since there is no USB cable,
+you cannot check for error messages.
+
+However, you may look for the following symptoms thanks to on-board LED lights (if any):
+
+- Dimmed power light.
+- Flickering power light.
+- Never-ending flashing TX light (UART transmission at all times).
+
 ## Further reading
 
 For an explanation on how how to power the DevKit board, take a look at these articles:
