@@ -231,6 +231,7 @@ First release.
 ## 5.0
 
 - The `power` namespace has been split into two namespaces (`power` and `batteryMonitor`) for maintenance reasons.
+  Minor changes are required in your custom firmware when using batteries.
 - Added support for the "MAX1704x" family of "fuel gauges" in order to get better state of charge estimations (for batteries).
   They are connected to the I2C bus.
 - Now the I2C bus works at higher speeds, depending on the capabilities of all connected chips.
