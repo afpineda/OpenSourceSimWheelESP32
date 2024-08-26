@@ -332,7 +332,7 @@ I2CInput::I2CInput(
 {
     i2c::abortOnInvalidAddress(address7bits);
     deviceAddress = (address7bits << 1);
-    busDriver = useSecondaryBus ? I2C_NUM_1 : I2C_NUM_0;
+    busDriver = i2c::getBus(useSecondaryBus);
     i2c::require(max_speed_mult, useSecondaryBus);
     if (!i2c::probe(address7bits, useSecondaryBus))
     {

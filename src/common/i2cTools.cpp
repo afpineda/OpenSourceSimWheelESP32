@@ -10,7 +10,6 @@
  */
 
 #include "i2cTools.h"
-#include "driver/i2c.h"
 
 // ----------------------------------------------------------------------------
 // Globals
@@ -68,7 +67,7 @@ void i2cError(gpio_num_t sda, gpio_num_t scl, uint8_t clock_multiplier, i2c_port
 bool i2c::probe(uint8_t address7bits, bool secondaryBus)
 {
     i2c::abortOnInvalidAddress(address7bits);
-    i2c_port_t bus = secondaryBus ? I2C_NUM_1 : I2C_NUM_0;
+    i2c_port_t bus = i2c::getBus(secondaryBus);
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (address7bits << 1) | I2C_MASTER_WRITE, true);
@@ -83,7 +82,7 @@ bool i2c::probe(uint8_t address7bits, bool secondaryBus)
 void i2c::probe(std::vector<uint8_t> &result, bool secondaryBus)
 {
     result.clear();
-    i2c_port_t bus = secondaryBus ? I2C_NUM_1 : I2C_NUM_0;
+    i2c_port_t bus = i2c::getBus(secondaryBus);
     if (isInitialized[bus])
         // Deinitialize
         ESP_ERROR_CHECK(i2c_driver_delete(bus));
@@ -115,7 +114,7 @@ void i2c::probe(std::vector<uint8_t> &result, bool secondaryBus)
 void i2c::require(uint8_t max_speed_multiplier, bool secondaryBus)
 {
     checkSpeedMultiplier(max_speed_multiplier);
-    i2c_port_t bus = secondaryBus ? I2C_NUM_1 : I2C_NUM_0;
+    i2c_port_t bus = i2c::getBus(secondaryBus);
     if (isInitialized[bus])
     {
         // check clock compatibility
@@ -144,7 +143,7 @@ void i2c::require(uint8_t max_speed_multiplier, bool secondaryBus)
 
 void i2c::begin(gpio_num_t sda, gpio_num_t scl, bool secondaryBus)
 {
-    i2c_port_t bus = secondaryBus ? I2C_NUM_1 : I2C_NUM_0;
+    i2c_port_t bus = i2c::getBus(secondaryBus);
     sdaPin[bus] = sda;
     sclPin[bus] = scl;
     if (isInitialized[bus])

@@ -14,6 +14,8 @@
 
 #include "esp32-hal.h" // declares gpio_num_t
 #include <vector>
+#include "driver/i2c.h"
+
 
 namespace i2c
 {
@@ -97,6 +99,17 @@ namespace i2c
         std::vector<uint8_t> &fullAddressList,
         uint8_t hardwareAddress,
         uint8_t hardwareAddressMask = 0b00000111);
+
+    // ----------------------------------------------------------------------------
+
+    inline i2c_port_t getBus(bool secondaryBus)
+    {
+#ifndef CONFIG_IDF_TARGET_ESP32C3
+        return secondaryBus ? I2C_NUM_1 : I2C_NUM_0;
+#else
+        return I2C_NUM_0;
+#endif
+    }
 }
 
 #endif
