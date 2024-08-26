@@ -843,9 +843,9 @@
       <length value="0.3" unit="in"/>
       <width value="0.1" unit="in"/>
       <points>
-        <point x="7.3" y="4.1"/>
-        <point x="8.0" y="3.6"/>
-        <point x="7.65" y="3.85"/>
+        <point x="7.6" y="3.6"/>
+        <point x="8.0" y="3.7"/>
+        <point x="7.8" y="3.65"/>
       </points>
       <bodyColor hex="82cffd"/>
       <borderColor hex="5b90b1"/>
@@ -857,54 +857,6 @@
       <moveLabel>false</moveLabel>
       <hideShortLeads>false</hideShortLeads>
       <value value="1.0" unit="K"/>
-      <power>HALF</power>
-      <colorCode>_5_BAND</colorCode>
-      <shape>Standard</shape>
-    </diylc.passive.Resistor>
-    <diylc.passive.Resistor>
-      <name>R2</name>
-      <alpha>127</alpha>
-      <length value="0.3" unit="in"/>
-      <width value="0.1" unit="in"/>
-      <points>
-        <point x="7.3" y="4.0"/>
-        <point x="7.500000000000001" y="3.6"/>
-        <point x="7.399999999999999" y="3.8"/>
-      </points>
-      <bodyColor hex="82cffd"/>
-      <borderColor hex="5b90b1"/>
-      <labelColor hex="000000"/>
-      <leadColor hex="cccccc"/>
-      <display>VALUE</display>
-      <flipStanding>false</flipStanding>
-      <labelOriantation>Directional</labelOriantation>
-      <moveLabel>false</moveLabel>
-      <hideShortLeads>false</hideShortLeads>
-      <value value="1.0" unit="K"/>
-      <power>HALF</power>
-      <colorCode>_5_BAND</colorCode>
-      <shape>Standard</shape>
-    </diylc.passive.Resistor>
-    <diylc.passive.Resistor>
-      <name>R4</name>
-      <alpha>127</alpha>
-      <length value="0.3" unit="in"/>
-      <width value="0.1" unit="in"/>
-      <points>
-        <point x="7.2" y="4.0"/>
-        <point x="7.3" y="3.6"/>
-        <point x="7.25" y="3.8"/>
-      </points>
-      <bodyColor hex="82cffd"/>
-      <borderColor hex="5b90b1"/>
-      <labelColor hex="000000"/>
-      <leadColor hex="cccccc"/>
-      <display>VALUE</display>
-      <flipStanding>false</flipStanding>
-      <labelOriantation>Directional</labelOriantation>
-      <moveLabel>false</moveLabel>
-      <hideShortLeads>false</hideShortLeads>
-      <value value="100.0" unit="K"/>
       <power>HALF</power>
       <colorCode>_5_BAND</colorCode>
       <shape>Standard</shape>
@@ -951,7 +903,7 @@
     </diylc.misc.Label>
     <diylc.misc.Label>
       <name>LAB23</name>
-      <point x="7.3" y="3.2"/>
+      <point x="7.1" y="3.2"/>
       <text>B</text>
       <font name="Dialog.bold" size="14" style="1"/>
       <color hex="ff0033"/>
@@ -961,7 +913,7 @@
     </diylc.misc.Label>
     <diylc.misc.Label>
       <name>LAB24</name>
-      <point x="7.399999999999999" y="3.2"/>
+      <point x="7.2" y="3.2"/>
       <text>C</text>
       <font name="Dialog.bold" size="14" style="1"/>
       <color hex="ff0033"/>
@@ -971,7 +923,7 @@
     </diylc.misc.Label>
     <diylc.misc.Label>
       <name>LAB25</name>
-      <point x="7.500000000000001" y="3.2"/>
+      <point x="7.300000000000001" y="3.2"/>
       <text>E</text>
       <font name="Dialog.bold" size="14" style="1"/>
       <color hex="ff0033"/>
@@ -985,9 +937,9 @@
       <value></value>
       <orientation>_90</orientation>
       <controlPoints>
-        <point x="7.500000000000001" y="3.4"/>
-        <point x="7.399999999999999" y="3.4"/>
         <point x="7.3" y="3.4"/>
+        <point x="7.1999999999999975" y="3.4"/>
+        <point x="7.099999999999999" y="3.4"/>
       </controlPoints>
       <bodyColor hex="ff9933"/>
       <borderColor hex="595959"/>
@@ -996,30 +948,6 @@
       <folded>true</folded>
       <pinSpacing value="0.1" unit="in"/>
     </diylc.semiconductors.TransistorTO92>
-    <diylc.passive.Resistor>
-      <name>R3</name>
-      <alpha>126</alpha>
-      <length value="0.3" unit="in"/>
-      <width value="0.1" unit="in"/>
-      <points>
-        <point x="7.399999999999999" y="3.3"/>
-        <point x="7.9" y="3.3"/>
-        <point x="7.65" y="3.3"/>
-      </points>
-      <bodyColor hex="82cffd"/>
-      <borderColor hex="5b90b1"/>
-      <labelColor hex="000000"/>
-      <leadColor hex="cccccc"/>
-      <display>VALUE</display>
-      <flipStanding>false</flipStanding>
-      <labelOriantation>Directional</labelOriantation>
-      <moveLabel>false</moveLabel>
-      <hideShortLeads>false</hideShortLeads>
-      <value value="100.0" unit="K"/>
-      <power>HALF</power>
-      <colorCode>_5_BAND</colorCode>
-      <shape>Standard</shape>
-    </diylc.passive.Resistor>
     <diylc.electromechanical.TactileMicroSwitch>
       <name>SW7</name>
       <alpha>127</alpha>
@@ -1297,6 +1225,30 @@
       <bodyColor hex="808080"/>
       <shroudColor hex="595959"/>
     </diylc.electromechanical.PinHeader>
+    <diylc.passive.Resistor>
+      <name>R2</name>
+      <alpha>127</alpha>
+      <length value="0.3" unit="in"/>
+      <width value="0.1" unit="in"/>
+      <points>
+        <point x="7.3" y="3.7"/>
+        <point x="7.6" y="3.6"/>
+        <point x="7.45" y="3.65"/>
+      </points>
+      <bodyColor hex="82cffd"/>
+      <borderColor hex="5b90b1"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>VALUE</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <value value="1.0" unit="K"/>
+      <power>HALF</power>
+      <colorCode>_5_BAND</colorCode>
+      <shape>Standard</shape>
+    </diylc.passive.Resistor>
     <diylc.connectivity.HookupWire>
       <name>W29</name>
       <alpha>127</alpha>
@@ -2130,8 +2082,8 @@
       <name>W43</name>
       <alpha>127</alpha>
       <controlPoints2>
-        <point x="7.5" y="3.3"/>
-        <point x="7.5" y="3.0"/>
+        <point x="7.3" y="3.3"/>
+        <point x="7.4" y="3.0"/>
       </controlPoints2>
       <color hex="000000"/>
       <pointCount>TWO</pointCount>
@@ -2281,6 +2233,22 @@
       <controlPoints2>
         <point x="8.1" y="6.6"/>
         <point x="8.1" y="6.2"/>
+      </controlPoints2>
+      <color hex="000000"/>
+      <pointCount>TWO</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_28</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
+    <diylc.connectivity.HookupWire>
+      <name>W28</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="7.2" y="4.1"/>
+        <point x="7.6" y="3.7"/>
       </controlPoints2>
       <color hex="000000"/>
       <pointCount>TWO</pointCount>
@@ -3021,121 +2989,174 @@
       <verticalAlignment>CENTER</verticalAlignment>
       <orientation>DEFAULT</orientation>
     </diylc.misc.Label>
+    <diylc.passive.Resistor>
+      <name>R4</name>
+      <alpha>127</alpha>
+      <length value="0.3" unit="in"/>
+      <width value="0.1" unit="in"/>
+      <points>
+        <point x="7.3" y="4.1"/>
+        <point x="7.1" y="3.6"/>
+        <point x="7.2" y="3.85"/>
+      </points>
+      <bodyColor hex="82cffd"/>
+      <borderColor hex="5b90b1"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>VALUE</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <value value="100.0" unit="K"/>
+      <power>HALF</power>
+      <colorCode>_5_BAND</colorCode>
+      <shape>Standard</shape>
+    </diylc.passive.Resistor>
+    <diylc.passive.Resistor>
+      <name>R3</name>
+      <alpha>126</alpha>
+      <length value="0.3" unit="in"/>
+      <width value="0.1" unit="in"/>
+      <points>
+        <point x="7.2" y="3.3"/>
+        <point x="7.9" y="3.3"/>
+        <point x="7.55" y="3.3"/>
+      </points>
+      <bodyColor hex="82cffd"/>
+      <borderColor hex="5b90b1"/>
+      <labelColor hex="000000"/>
+      <leadColor hex="cccccc"/>
+      <display>VALUE</display>
+      <flipStanding>false</flipStanding>
+      <labelOriantation>Directional</labelOriantation>
+      <moveLabel>false</moveLabel>
+      <hideShortLeads>false</hideShortLeads>
+      <value value="100.0" unit="K"/>
+      <power>HALF</power>
+      <colorCode>_5_BAND</colorCode>
+      <shape>Standard</shape>
+    </diylc.passive.Resistor>
   </components>
   <groups>
     <set>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[13]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[12]"/>
       <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel[2]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[11]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[12]"/>
     </set>
     <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[95]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[87]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[66]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[69]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[97]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[75]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[71]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[81]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[88]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[78]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[83]"/>
-      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[3]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[63]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[65]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[109]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[99]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[101]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[104]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[90]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[73]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[96]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[62]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[17]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[19]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[18]"/>
+    </set>
+    <set>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[94]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[105]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[61]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[84]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[76]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[72]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[104]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[107]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[89]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[102]"/>
-      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[2]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[100]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[58]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[59]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[85]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[77]"/>
-      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[3]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[80]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[93]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[92]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[91]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[86]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[70]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[111]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[108]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[110]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[67]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[64]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[106]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[82]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[79]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[68]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[60]"/>
+      <diylc.connectivity.Line reference="../../../components/diylc.connectivity.Line[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[73]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[92]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[62]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[90]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[81]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[96]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[66]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[86]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[67]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[98]"/>
-      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[2]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[74]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[84]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[68]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[82]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[93]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[79]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[80]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[60]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[72]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[102]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[89]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[100]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[91]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[109]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[103]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[85]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[75]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[69]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[101]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[78]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[95]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[111]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[76]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[97]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[61]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[83]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[3]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[110]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[87]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[99]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[105]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[64]"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle[3]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[65]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[74]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[71]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[58]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[63]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[70]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[59]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[77]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[108]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[88]"/>
     </set>
     <set>
-      <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[112]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label"/>
-      <diylc.electromechanical.PinHeader reference="../../../components/diylc.electromechanical.PinHeader"/>
-      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[3]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[113]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[113]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[112]"/>
+      <diylc.electromechanical.PinHeader reference="../../../components/diylc.electromechanical.PinHeader"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[3]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label"/>
+      <diylc.misc.WrapLabel reference="../../../components/diylc.misc.WrapLabel"/>
+      <diylc.shapes.Rectangle reference="../../../components/diylc.shapes.Rectangle"/>
     </set>
     <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[29]"/>
-      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[32]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[31]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[36]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[26]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[30]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[24]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[22]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[33]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[37]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[27]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[23]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[34]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[35]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[25]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[28]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[31]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[24]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[26]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[29]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[30]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[25]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[32]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[36]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[35]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[33]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[34]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[23]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[22]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[37]"/>
     </set>
     <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[51]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[42]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[48]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[44]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[46]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[39]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[40]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[50]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[38]"/>
-      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[2]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[52]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[43]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[47]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[49]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[41]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[45]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[53]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[42]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[51]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[43]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[45]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[49]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[38]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[40]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[44]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[50]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[52]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[41]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[39]"/>
     </set>
   </groups>
   <lockedLayers/>
