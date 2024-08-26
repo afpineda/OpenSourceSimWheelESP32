@@ -234,4 +234,6 @@ First release.
 - Added support for the "MAX1704x" family of "fuel gauges" in order to get better state of charge estimations (for batteries).
   They are connected to the I2C bus.
 - Now the I2C bus works at higher speeds, depending on the capabilities of all connected chips.
+- Bug fixes.
+- ESP32S3-DevKit-C is the new default board for all quality controls.
 - Errata fixes and documentation updates.
