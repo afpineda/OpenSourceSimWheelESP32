@@ -79,6 +79,7 @@ void setup()
 
   print_wakeup_reason();
   power::begin(TEST_POWER_PIN);
+  pinMode(TEST_POWER_PIN, INPUT_PULLUP);
 
   ESP_ERROR_CHECK(gpio_set_direction(TEST_POWER_PIN, GPIO_MODE_INPUT));
   ESP_ERROR_CHECK(gpio_set_pull_mode(TEST_POWER_PIN, GPIO_PULLUP_ONLY));
