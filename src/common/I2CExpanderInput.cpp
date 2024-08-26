@@ -171,19 +171,12 @@ bool MCP23017ButtonsInput::getGPIOstate(inputBitmap_t &state)
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, deviceAddress, true);
     i2c_master_write_byte(cmd, MCP23017_GPIO, true);
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, deviceAddress | I2C_MASTER_READ, true);
+    i2c_master_read(cmd, (uint8_t *)&state, 2, I2C_MASTER_LAST_NACK);
     i2c_master_stop(cmd);
     bool result = (i2c_master_cmd_begin(busDriver, cmd, DEBOUNCE_TICKS) == ESP_OK);
     i2c_cmd_link_delete(cmd);
-    if (result)
-    {
-        cmd = i2c_cmd_link_create();
-        i2c_master_start(cmd);
-        i2c_master_write_byte(cmd, deviceAddress | I2C_MASTER_READ, true);
-        i2c_master_read(cmd, (uint8_t *)&state, 2, I2C_MASTER_LAST_NACK);
-        i2c_master_stop(cmd);
-        bool result = (i2c_master_cmd_begin(busDriver, cmd, DEBOUNCE_TICKS) == ESP_OK);
-        i2c_cmd_link_delete(cmd);
-    }
     return result;
 }
 
