@@ -18,8 +18,9 @@
 
 // [EN] Put your GPIO pin numbers here
 // [ES] Ponga aquí sus números de pin GPIO
-#define BATT_EN_PIN GPIO_NUM_17
-#define BATT_READ_PIN GPIO_NUM_15
+
+#define BATT_EN_PIN GPIO_NUM_42
+#define BATT_READ_PIN GPIO_NUM_2
 
 // ----------------------------------------------------------------------------
 // Globals
