@@ -1,0 +1,12 @@
+SimWheelTypes.h
+SimWheel.h
+debugUtils.h
+adcTools.h
+i2cTools.h
+debugUtils.cpp
+capabilities.cpp
+adcTools.cpp
+batteryMonitor.cpp
+i2cTools.cpp
+power_mock.cpp
+batteryCalibration.cpp
