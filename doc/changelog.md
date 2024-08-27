@@ -239,3 +239,4 @@ First release.
 - Bug fixes.
 - ESP32S3-DevKit-C is the new default board for all quality controls.
 - Errata fixes and documentation updates.
+- More test units.
