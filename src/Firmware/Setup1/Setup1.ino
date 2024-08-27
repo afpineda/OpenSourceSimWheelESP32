@@ -106,10 +106,6 @@ void simWheelSetup()
 void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
-    power::begin(
-        nullptr,
-        0,
-        false);
     userSettings::begin();
     simWheelSetup();
     hidImplementation::begin(

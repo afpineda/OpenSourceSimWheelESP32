@@ -36,13 +36,16 @@ std::string DEVICE_MANUFACTURER = "Me";
  >>>> [ES] MODO DE SUEÑO PROFUNDO
 ------------------------------------------------------------------ */
 
-// [EN] Set an output-capable GPIO number for the "wake up" pin.
+// [EN] Set a GPIO number for "wake up".
 //      Comment out if not required, or set an RTC-capable GPIO number for wake up.
 // [ES] Indique el número de GPIO para la señal "despertar"
 //      Comente la línea si no hay necesidad de entrar en sueño profundo, o bien,
 //      indique un número de GPIO con capacidad RTC para despertar del sueño.
 
-// #define WAKE_UP_PIN
+// #define WAKE_UP_PIN <here>
+
+// [EN] Substitute <here> with a GPIO number or alias
+// [ES] Sustituya <here> con un número de pin o su alias
 
 /* -----------------------------------------------------------------
  >>>> [EN] POWER LATCH SUBSYSTEM
@@ -54,35 +57,27 @@ std::string DEVICE_MANUFACTURER = "Me";
 // [ES] Indique el número de GPIO para la señal "POWER_LATCH"
 //      Comente la línea si no hay circuito externo de power latch.
 
-// #define POWER_LATCH
+// #define POWER_LATCH <here>
 
-#ifdef POWER_LATCH
-// [EN] Set an the activation mode for the "POWER_LATCH" pin.
-//      Ignore if there is no external power latch circuit
-//      POWER_OPEN_DRAIN --> Power on when open drain, power off when low voltage
-//      POWER_OFF_HIGH --> Power on when low voltage, power off when high voltage
-//      POWER_OFF_LOW --> Power on when high voltage, power off when low voltage
-// [ES] Elija el modo de activación del pin "POWER_LATCH".
-//      Ignóralo si no hay circuito externo de power latch
-//      POWER_OPEN_DRAIN --> Encendido mediante circuito abierto, apagado a bajo voltaje
-//      POWER_OFF_HIGH --> Encendido a bajo voltaje, apagado a alto voltaje
-//      POWER_OFF_LOW --> Encendido a alto voltaje, apagado a bajo voltaje
+// [EN] Substitute <here> with a GPIO number or alias
+// [ES] Sustituya <here> con un número de pin o su alias
 
-const powerLatchMode_t LATCH_MODE = POWER_OPEN_DRAIN;
-
-// [EN] Set a time delay, in milliseconds, to wait for the latch circuit to power
-//      the system off. Ignore if there is no external power latch circuit
-// [ES] Indicar un retardo, en milisegundos, a esperar para que el circuito apague
-//      el sistema. Ignóralo si no hay circuito externo de power latch.
+// [EN] Set a delay (in milliseconds) to wait for the latch circuit
+//      to do its magic (optional)
+// [ES] Ajuste un retardo (en milisegundos) a esperar para
+//      que el circuito haga su magia
 
 #define LATCH_POWEROFF_DELAY 3000
-
-#endif // POWER_LATCH
 
 /* -----------------------------------------------------------------
  >>>> [EN] BATTERY MONITOR SUBSYSTEM
  >>>> [ES] SUBSISTEMA DE MONITORIZACIÓN DE BATERÍA
 ------------------------------------------------------------------ */
+
+// [EN] Comment out the following line if a "fuel gauge" is NOT in place
+// [ES] Comentar la siguiente linea si NO existe un "fuel gauge"
+
+// #define ENABLE_FUEL_GAUGE
 
 // [EN] Comment out the following line if the battery monitor subsystem is NOT in place
 // [ES] Comentar la siguiente linea si NO hay subsistema de monitorización de batería
@@ -173,7 +168,9 @@ void setup()
 #endif
     );
 
-#ifdef ENABLE_BATTERY_MONITOR
+#if defined(ENABLE_FUEL_GAUGE)
+    batteryMonitor::begin();
+#elif defined(ENABLE_BATTERY_MONITOR)
     batteryMonitor::begin(
         (gpio_num_t)BATTERY_ENABLE_READ_GPIO,
         (gpio_num_t)BATTERY_READ_GPIO);
