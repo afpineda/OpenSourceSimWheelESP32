@@ -266,7 +266,14 @@ where `battREAD` is attached to. Set `BATTERY_ENABLE_READ_GPIO` as shown below:
 
 ## Firmware customization (fuel gauge)
 
-Just call `batteryMonitor::begin()` with no parameters.
+In file [CustomSetup.ino](../../../../src/Firmware/CustomSetup/CustomSetup.ino)
+just uncomment the following line:
+
+```c++
+#define ENABLE_FUEL_GAUGE
+```
+
+Or just call `batteryMonitor::begin()` with no parameters.
 However, if your chip uses a non-standard I2C address,
 you must provide the proper 7-bit address as the first parameter.
 The expected (standard) 7-bit address is 36 (hexadecimal).
