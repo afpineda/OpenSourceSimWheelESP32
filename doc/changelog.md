@@ -228,7 +228,7 @@ First release.
 - Fix compilation bug in
   [BatteryCalibration.ino](../src/Firmware/BatteryTools/BatteryCalibration/BatteryCalibration.ino)
 
-## 5.0
+## 5.0.0
 
 - The `power` namespace has been split into two namespaces (`power` and `batteryMonitor`) for maintenance reasons.
   Please, run the [source code setup procedure](./firmware/sourcesSetup_en.md) again.
