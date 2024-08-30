@@ -4,7 +4,7 @@
 
 Indispensable:
 
-- [Arduino IDE](https://www.arduino.cc/en/software). C
+- [Arduino IDE](https://www.arduino.cc/en/software).
   Choose a stable release and follow instructions.
 - Official [Arduino-ESP32 support package](https://docs.espressif.com/projects/arduino-esp32/en/latest/getting_started.html).
   Follow [this link](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html) for installation instructions.

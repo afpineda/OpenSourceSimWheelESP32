@@ -389,3 +389,4 @@ System concurrency comes from these OS task and daemons:
   - `inputs`
   - `batteryCalibration`
   - `notify`
+  - `batteryMonitor`
