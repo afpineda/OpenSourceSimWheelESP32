@@ -244,9 +244,35 @@ For user interfaces in need of a perpetual loop or for persistent notifications.
    }
 ```
 
+### BatteryMonitor
+
+This module is in charge of interfacing the underlying hardware for "state of charge" (SOC) estimation.
+A daemon computes SOC in timed intervals under this algorithm:
+
+1. Measure some battery property, depending on the underlying hardware:
+
+   - *Voltage divider* or *battery monitor*: indirect voltage.
+   - *Fuel gauge*: state of charge.
+
+2. Determine if the battery is attached or not.
+3. Compute state of charge:
+
+   - *Voltage divider* or *battery monitor*:
+     the *BatteryCalibration* module translates a voltage into a state of charge.
+   - *Fuel gauge*: computation is already done by the chip itself.
+
+4. Notify low battery levels.
+5. Power off on very low battery levels.
+
+#### Fuel gauges
+
+Fuel gauges from Maxim/Analog Devices are powered from the battery itself.
+As a result, they don't respond to I2C commands if the battery is not attached.
+This way, we know there is no battery.
+
 ### BatteryCalibration
 
-Provides an estimation of the "State of Charge" (SOC).
+Provides an estimation of the "state of charge" given an indirect battery voltage.
 
 #### Most accurate algorithm
 
@@ -263,12 +289,6 @@ Note that "most accurate" does not mean "accurate". Battery voltage is not enoug
 If calibration data is not available, a rough estimation is provided based on LiPo batteries characterization data taken from here: [https://blog.ampow.com/lipo-voltage-chart/](https://blog.ampow.com/lipo-voltage-chart/). However, actual battery voltages may not match the characterization data due to 1) inaccurate ADC readings, 2) voltage drop due to the involved transistors (if any) and 3) Unexpected impedances at the voltage divider. For this reason, the highest voltage ever read is taken as an auto-calibration parameter. The expected voltage reading is mapped linearly to the absolute maximum voltage ever read. The battery needs a full charge before this algorithm provides any meaningful result.
 
 (See [LiPoBatteryCharacterization.ods](./LiPoBatteryCharacterization.ods))
-
-#### Fuel gauges
-
-Fuel gauges from Maxim/Analog Devices are powered from the battery itself.
-As a result, they don't respond to I2C commands if the battery is not attached.
-This way, we know there is no battery.
 
 ### HidImplementation
 
