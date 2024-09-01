@@ -9,6 +9,7 @@
 - [Know your ESP32 DevKit board](./hardware/DevKits_en.md)
 - [How to customize in order to build your own hardware and firmware setup](./hardware/subsystems/CustomizeHowto_en.md)
   - [Migrating your custom firmware to version 4 from a previous version](./migrate_to_v4.md)
+  - [Migrating your custom firmware to version 5 from a previous version](./migrate_to_v5.md)
 
 - Ready to deploy designs:
 

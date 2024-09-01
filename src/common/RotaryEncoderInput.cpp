@@ -60,7 +60,7 @@ void IRAM_ATTR isrh(void *instance)
 //  0011 --10--> 1110 --00--> 1000 --CW--> 0000
 //  0000 --01--> 0001 --11--> 0111 --CW--> 0011
 //
-// trasition = aaaabbbb
+// transition = aaaabbbb
 // where aaaa=previous state, bbbb=current state
 //
 // Valid transitions:
