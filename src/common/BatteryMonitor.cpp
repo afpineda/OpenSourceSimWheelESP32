@@ -237,7 +237,7 @@ void configureBatteryMonitor(
         ((enableBatteryReadPin >= 0) && !GPIO_IS_VALID_OUTPUT_GPIO(enableBatteryReadPin)) ||
         (digitalPinToAnalogChannel(batteryLevelPin) < 0))
     {
-        log_e("power::startBatteryMonitor(): given pins are not usable");
+        log_e("batteryMonitor::begin(): given pins are not usable");
         abort();
     }
 

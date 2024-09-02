@@ -17,7 +17,7 @@ This article is focused on **firmware-defined** error messages.
 
 - *getADCreading: GPIO N is not ADC*
 
-  A GPIO pin given to `inputs:setAnalogClutchPaddles()` or `power::setPowerLatch()`
+  A GPIO pin given to `inputs:setAnalogClutchPaddles()` or `batteryMonitor::begin()`
   is not ADC-capable. Check your custom firmware.
 
 - *No input/selector pins at AnalogMultiplexerInput::AnalogMultiplexerInput()*.
@@ -155,7 +155,7 @@ This article is focused on **firmware-defined** error messages.
 
   Should not happen. Please, open an issue.
 
-- *power::startBatteryMonitor(): given pins are not usable*
+- *batteryMonitor::begin(): given pins are not usable*
 
   Either parameter `battENPin` is not a valid output-capable pin,
   or parameter `battREADPin` is not a valid ADC-capable pin at `power::startBatteryMonitor()`.
@@ -183,7 +183,7 @@ This article is focused on **firmware-defined** error messages.
 
   You are trying to assign an input number to a switch which does not exist in the shift registers chain.
   Check both the `switchCount` parameter to `inputs::addShiftRegisters()`
-  and the following `.inputNumber()` calls.
+  and the subsequent `.inputNumber()` calls.
 
 - *Not a valid I2C address: X (hex)*.
 
