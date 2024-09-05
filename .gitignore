@@ -51,5 +51,8 @@
 debug_custom.json
 debug.cfg
 
+# Doxygen output
+doc/API
+
 # other
 
