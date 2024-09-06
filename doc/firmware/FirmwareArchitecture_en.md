@@ -2,7 +2,8 @@
 
 ## Modules
 
-The *system* have been broken into several *modules* that have been implemented as C++ namespaces. All of them are defined at *SimWheel.h*:
+The *system* have been broken into several *modules* that have been implemented as C++ namespaces.
+All of them are defined at *SimWheel.h*:
 
 - **batteryCalibration**: Everything related to battery profiling.
 - **batteryMonitor**: Everything related to the measurement of available battery charge.
@@ -10,12 +11,16 @@ The *system* have been broken into several *modules* that have been implemented 
 - **hidImplementation**: Everything related to the HID protocol.
 - **hidImplementation::common**: Common behavior for all HID implementations (USB and BLE).
 - **inputs**: Everything related to hardware inputs and their events.
-- **inputHub**: Everything related to the combined state of all inputs and their treatment. Translates input events into a HID report.
+- **inputHub**: Everything related to the combined state of all inputs and their treatment.
+  Translates input events into a HID report.
 - **notify**: Everything related to the notification of some events to the user if an user interface is available.
 - **power**: Everything related to power management.
 - **userSettings**: Manages user settings and their long term storage.
 
-Each namespace is implemented in a single *cpp* file with its name, however, some of them have alternate implementations in order to enable unit and integration testing. Those files are named following this pattern: `<namespace>_<implementation>.cpp`. Some implementations are:
+Each namespace is implemented in a single *cpp* file with its name, however,
+some of them have alternate implementations in order to enable unit and integration testing.
+Those files are named following this pattern: `<namespace>_<implementation>.cpp`.
+Some implementations are:
 
 - *mock*: dummy implementation with no actual behavior.
 - *serial*: implementation providing output to the serial port.
@@ -30,7 +35,8 @@ Some namespaces are implemented with the help of auxiliary modules which are not
 - *AnalogMultiplexerInput*: Everything related to multiplexed buttons/switches.
 - *ButtonMatrixInput*: Everything related to button/switch matrices.
 - *debugUtils.cpp*: Minor utilities for debugging and testing.
-- *PolledInput*: Related to inputs that must be read in a polling (or sampling) loop. Defines two main c++ classes: `AnalogAxisInput` and `DigitalPolledInput`
+- *PolledInput*: Related to inputs that must be read in a polling (or sampling) loop.
+  Defines two main c++ classes: `AnalogAxisInput` and `DigitalPolledInput`.
 - *RotaryEncoderInput*: Everything related to rotary encoders.
 - *SerialNotification*: For the testing of user notifications through the USB serial interface.
 - *ShiftRegistersInput*: Everything related to serialized buttons/switches.
@@ -42,22 +48,22 @@ Some namespaces are implemented with the help of auxiliary modules which are not
 | Module                 | Reason to change                                        |
 | ---------------------- | ------------------------------------------------------- |
 | adcTools               | Requirements to ADC readings (for example, attenuation) |
-| batteryCalibration     | SoC algorithm                                           |
-| batteryMonitor         | Hardware for SoC measurement                            |
-| capabilities           | Hardware and firmware features relevant to the user     |
-| hidImplementation      | Device-computer intercommunication                      |
-| inputs                 | Input hardware                                          |
-| inputHub               | Device functionality                                    |
-| notify                 | User interface hardware (if any)                        |
-| power                  | Underlying power management capabilities                |
-| userSettings           | Long term storage of user settings                      |
 | AnalogAxisInput        | Hardware design                                         |
 | AnalogMultiplexerInput | Hardware design                                         |
+| batteryCalibration     | SoC algorithm                                           |
+| batteryMonitor         | Hardware for SoC measurement                            |
 | ButtonMatrixInput      | Hardware design                                         |
-| ShiftRegistersInput    | Hardware design                                         |
-| RotaryEncoderInput     | Hardware design                                         |
+| capabilities           | Hardware and firmware features relevant to the user     |
+| hidImplementation      | Device-computer intercommunication                      |
 | I2CExpanderInput       | Hardware design                                         |
 | i2cTools               | I2C API                                                 |
+| inputHub               | Device functionality                                    |
+| inputs                 | Input hardware                                          |
+| notify                 | User interface hardware (if any)                        |
+| power                  | Underlying power management capabilities                |
+| RotaryEncoderInput     | Hardware design                                         |
+| ShiftRegistersInput    | Hardware design                                         |
+| userSettings           | Long term storage of user settings                      |
 
 ### Module dependencies
 
@@ -138,7 +144,8 @@ classDiagram
 
 [Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9UTFuwzAM_Iqg2fmAhy5thw5Fh6xeaIl2CEikIVFJjSB_r1y7KLSEE3G8Ox7Iu3Xi0fbWBcj5jWBOEAc2tS7kP-ISMCIrKAmb0-nFEC9Fc2-cxAjsjYpxEGhMoGiAIchs4BvzM48RVDGtr4euwo1fwn_Hg_rMjUVpWjcHZnSKvjOespMrJuJ5Vy5yw9Swf5Gvadrnx5pPYVJpiUFuf2MT8IphV5SM6YyqdUVu-CPV2IsQq-1sxBSBfL3vfZMNVi81_WD72nqcoAQd7MCPSoWicl7Z2V5Twc6WxdcDHB9pwXe_pdyxxw_Tm547)
 
-Some modules have a `begin()` method that must be called at system startup (`main()`or `setup()`). The calling order is defined by the previous diagram, where bottom modules must be called first.
+Some modules have a `begin()` method that must be called at system startup (`main()`or `setup()`).
+The calling order is defined by the previous diagram, where bottom modules must be called first.
 
 ### Definitions (header files)
 
@@ -155,11 +162,14 @@ For detailed description, see the Doxigen's documentation at [SimWheel.h](../../
 
 ### DigitalPolledInput and descendant classes
 
-There is a dedicated daemon that read the state of those inputs in a loop, every few milliseconds. Since many inputs are read at the same time, the combined state of all of them is reported to `inputHub`. Nothing is reported if there are no input events, this is, a state change since the previous iteration.
+There is a dedicated daemon that read the state of those inputs in a loop, every few milliseconds.
+Since many inputs are read at the same time, the combined state of all of them is reported to `inputHub`.
+Nothing is reported if there are no input events, this is, a state change since the previous iteration.
 
 ### AnalogAxisInput
 
-It works in a similar way to `DigitalPolledInput`, but for analog inputs, which are limited to two clutch paddles with potentiometers.
+It works in a similar way to `DigitalPolledInput`, but for analog inputs,
+which are limited to two clutch paddles with potentiometers.
 
 ### Inputs
 
@@ -167,7 +177,9 @@ This is the place where inputs are set up and a number assigned to them.
 Use the `add*()` methods to set up any kind of inputs (button matrices, rotary encoders, etc) and their pins.
 Analog clutch paddles are set here, too.
 
-The assigned input number will be mapped to a user-defined HID button number, which will be reported to the hosting computer when needed. If there is no user-defined map, it defaults to the following rule:
+The assigned input number will be mapped to a user-defined HID button number,
+which will be reported to the hosting computer when needed.
+If there is no user-defined map, it defaults to the following rule:
 
 ```text
 if (alt mode engaged) then
@@ -183,16 +195,29 @@ Wheel's functions are mapped to input numbers at `InputHub`.
 
 ### Capabilities
 
-This module holds static data about device capabilities. For example, it tells if the device has clutch paddles or not.
-Such data is set from other modules at startup. This module is trivial, so it is not shown in the previous diagram. It may be called from any other module.
+This module holds static data about device capabilities.
+For example, it tells if the device has clutch paddles or not.
+Such data is set from other modules at startup.
+This module is trivial, so it is not shown in the previous diagram.
+It may be called from any other module.
 
 ### Notifications
 
-This module provides a generic way to notify events to the user, if a user interface is available. It does not depend on a particular hardware, so, anything could be implemented in the future: a single LED, sounds, an OLED, etc. By default, it does nothing. To provide a particular user-interface implementation, derive a new class from `AbstractNotificationInterface` then, provide an instance to `notify::begin()`.
+This module provides a generic way to notify events to the user, if a user interface is available.
+It does not depend on a particular hardware, so, anything could be implemented in the future:
+a single LED, sounds, an OLED, etc.
+By default, it does nothing.
+To provide a particular user-interface implementation,
+derive a new class from `AbstractNotificationInterface`,
+then provide an instance to `notify::begin()`.
 
-All notifications are queued, serialized and executed in a very low priority separate thread. The calling thread does not wait for them. For those reasons, some notifications may be missed.
+All notifications are queued, serialized and executed in a very low priority separate thread.
+The calling thread does not wait for them.
+For those reasons, some notifications may be missed.
 
-If there were two or more user interfaces (for example, display and sounds), they may be chained together not to mix their code. See `AbstractNotificationInterface::nextInChain`.
+If there were two or more user interfaces (for example, display and sounds),
+they may be chained together not to mix their code.
+See `AbstractNotificationInterface::nextInChain`.
 
 `AbstractNotificationInterface` may work in two, non-exclusive, modes:
 
@@ -221,28 +246,40 @@ For example:
 
 #### As a frame server
 
-For user interfaces in need of a perpetual loop or for persistent notifications. If there are no pending notifications, `AbstractFrameServerInterface::serveSingleFrame()` will be called at timed intervals. Override `AbstractFrameServerInterface::getTargetFPS()` to return a non-zero value. For example:
+For user interfaces in need of a perpetual loop or for persistent notifications.
+If there are no pending notifications,
+`AbstractFrameServerInterface::serveSingleFrame()` will be called at timed intervals.
+Override `AbstractFrameServerInterface::getTargetFPS()` to return a non-zero value.
+For example:
 
-```c
+```c++
    void MyImpl::begin() {
-     batteryIsLow = false;
-     turnLedOn();
+     discovering = false;
    }
 
    uint8_t MyImpl::getTargetFPS() {
-     return 1;
+     return 1; // One frame per second
    }
 
-   void MyImpl::lowBattery() {
-      batteryIsLow = true;
+   void MyImpl::BLEdiscovering() {
+      discovering = true;
+   }
+
+   void MyImpl::connected() {
+      discovering = false;
+      turnLedOn();
    }
 
    void MyImpl::serveSingleFrame() {
     // Called one time per second
-    if (batteryIsLow)
+    if (discovering)
       switchLed();
    }
 ```
+
+*Note*: `AbstractFrameServerInterface::lowBattery()` is already
+called at timed intervals by the `batteryMonitor` module
+as long as such a condition persists.
 
 ### BatteryMonitor
 
@@ -276,23 +313,46 @@ Provides an estimation of the "state of charge" given an indirect battery voltag
 
 #### Most accurate algorithm
 
-Battery calibration is required for accurate battery levels. Calibration goes from full charge to battery depletion, taking a sample of battery voltage every minute. All possible voltages are divided into 32 evenly distributed ranges, called *quantum*. Calibration data is just a set of counters of voltage samples for each quantum. The sum of all counters is equivalent to 100% battery charge. Calibration data is stored in flash memory.
+Battery calibration is required for accurate battery levels.
+Calibration goes from full charge to battery depletion,
+taking a sample of battery voltage every minute.
+All possible voltages are divided into 32 evenly distributed ranges, called *quantum*.
+Calibration data is just a set of counters of voltage samples for each quantum.
+The sum of all counters is equivalent to 100% battery charge.
+Calibration data is stored in flash memory.
 
-Let's be $V_{min}(i)$ the minimum voltage that falls into quantum $i$ (a natural number), $a < b \iff V_{min}(a)<V_{min}(b)$. Let's be $QSIZE = V_{min}(i+1)-V_{min}(i)+1$ (the same for every quantum). Let's be $S(i)$ the count of samples for quantum number $i$. Let's say we have a battery voltage $V_n$ that falls into the quantum number $n$ (0-index).
+Let's be $V_{min}(i)$ the minimum voltage that falls into quantum $i$ (a natural number),
+$a < b \iff V_{min}(a)<V_{min}(b)$.
+Let's be $QSIZE = V_{min}(i+1)-V_{min}(i)+1$ (the same for every quantum).
+Let's be $S(i)$ the count of samples for quantum number $i$.
+Let's say we have a battery voltage $V_n$ that falls into the quantum number $n$ (0-index).
 
 $BatteryLevel = \frac{ (\sum_{i=0}^{n-1}S(i)) + \frac{S(n)*(V_n-V_{min}(n))}{QSIZE} }{ \sum_{j=0}^{31}S(j) } * 100$
 
-Note that "most accurate" does not mean "accurate". Battery voltage is not enough for accurate SOC.
+Note that "most accurate" does not mean "accurate".
+Battery voltage is not enough for accurate SOC.
 
 #### Auto-calibrated algorithm
 
-If calibration data is not available, a rough estimation is provided based on LiPo batteries characterization data taken from here: [https://blog.ampow.com/lipo-voltage-chart/](https://blog.ampow.com/lipo-voltage-chart/). However, actual battery voltages may not match the characterization data due to 1) inaccurate ADC readings, 2) voltage drop due to the involved transistors (if any) and 3) Unexpected impedances at the voltage divider. For this reason, the highest voltage ever read is taken as an auto-calibration parameter. The expected voltage reading is mapped linearly to the absolute maximum voltage ever read. The battery needs a full charge before this algorithm provides any meaningful result.
+If calibration data is not available,
+a rough estimation is provided based on LiPo batteries characterization data taken from here:
+[https://blog.ampow.com/lipo-voltage-chart/](https://blog.ampow.com/lipo-voltage-chart/).
+However, actual battery voltages may not match the characterization data due to:
+
+1) inaccurate ADC readings,
+2) voltage drop due to the involved transistors (if any) and
+3) unexpected impedances at the voltage divider.
+
+For this reason, the highest voltage ever read is taken as an auto-calibration parameter.
+The expected voltage reading is mapped linearly to the absolute maximum voltage ever read.
+The battery needs a full charge before this algorithm provides any meaningful result.
 
 (See [LiPoBatteryCharacterization.ods](./LiPoBatteryCharacterization.ods))
 
 ### HidImplementation
 
-All data interchange between the device and the host computer is conducted through the HID protocol. This involves:
+All data interchange between the device and the host computer is conducted through the HID protocol.
+This involves:
 
 - State of buttons, axes and the alike.
 - Device capabilities.
@@ -304,14 +364,22 @@ See [HID notes](./HID_notes.md) for more details.
 
 Every hardware input is assigned a single number starting from 0 and up to 63.
 
-The state of an input is represented by a single bit, 1 meaning a pressed button, 0 meaning a released button. So, the combined state of all inputs is represented as a 64-bits word, where the n-th bit represents the n-th input number. This is called an *input bitmap*. Least significant bit is numbered as zero.
-For example, the word `00000000 ... 00000101` means that buttons 0 and 2 are pressed, and the others are released.
+The state of an input is represented by a single bit, 1 meaning a pressed button, 0 meaning a released button.
+So, the combined state of all inputs is represented as a 64-bits word,
+where the n-th bit represents the n-th input number.
+This is called an *input bitmap*.
+Least significant bit is numbered as zero.
+For example, the word `00000000 ... 00000101` means that buttons 0 and 2 are pressed,
+and the others are released.
 
 An input can also be identified by a bitmap. For example, the button number 3 can be expressed as `...01000`.
 
 ### Input masks
 
-A mask is a 64-bits word where each bit represent an input number (the same as input bitmaps), but a bit set to 1 means that an input is not set and *must be ignored* in the corresponding bitmap. Input masks are used in combination with bitmaps to build a combined state. For example:
+A mask is a 64-bits word where each bit represent an input number (the same as input bitmaps),
+but a bit set to 1 means that an input is not set and *must be ignored* in the corresponding bitmap.
+Input masks are used in combination with bitmaps to build a combined state.
+For example:
 
 | State              | Bitmap   | Bitmask  |
 | ------------------ | -------- | -------- |
@@ -323,9 +391,16 @@ where `bitmap(C) = bitmap(B) OR (bitmask(B) AND bitmap(A))` being AND/OR bitwise
 
 ### Event processing
 
-Input events are captured in the **Input poll daemon**: it checks the state of all inputs every 50 ms (more or less). This period is short enough not to miss any event, but long enough to prevent other threads from starvation.
+Input events are captured in the **Input poll daemon**:
+it checks the state of all inputs every 50 ms (more or less).
+This period is short enough not to miss any event,
+but long enough to prevent other threads from starvation.
+It also plays a critical role in debouncing
+(bouncing occurs during the subsequent 30 milliseconds, more or less,
+after a mechanical switch is activated).
 
-Event processing takes long, so later input events would be missed while processing sooner ones. To prevent this, input events are posted into a queue.
+Event processing takes long, so later input events would be missed while processing sooner ones.
+To prevent this, input events are posted into a queue.
 
 ```mermaid
 flowchart LR
@@ -338,11 +413,14 @@ flowchart LR
 
 [Render this graph at mermaid.live](https://mermaid.live/view#pako:eNpVjssOgjAQRX-lmRUk9AdYuNKEJi5Al9ZFpYM06QObqcYQ_l1AXbCbnHvuzYzQBo1QQmfDq-1VJHY8Sc-YqLNM-CERG4K1TCt0wef5EjUXswb4RE_skTDhda1U_0qfbpuGqBnnP5_zHWvWmS0TFRTgMDpl9PzPuCgSqEeHEsr51NipZEmC9NOsqkTh_PYtlBQTFpAGrQj3Rt2jclt40IZC_LLpAwzyT0k)
 
-Event capture is detached from event processing at the **input hub daemon**, which runs most of the code. Note that such a daemon is implemented inside `inputs.cpp`, not `inputHub.cpp`.
+Event capture is detached from event processing at the **input hub daemon**,
+which runs most of the code. Note that such a daemon is implemented inside `inputs.cpp`,
+not `inputHub.cpp`.
 
 Raw inputs are transformed into a HID input report in a sequence of "filters" or steps:
 
-1. Detect and execute user commands, if any. If a command is detected and executed, this sequence is interrupted.
+1. Detect and execute user commands, if any.
+   If a command is detected and executed, this sequence is interrupted.
 2. Depending on user settings, transform analog axis input into buttons input or vice-versa.
 3. Execute clutch bite point calibration when requested.
 4. Determine if ALT mode is engaged.
@@ -352,32 +430,50 @@ Raw inputs are transformed into a HID input report in a sequence of "filters" or
 
 #### A note on rotary encoders
 
-Each detent of a rotary encoder generates two input events in quick succession: a button press and then, release. Decoding is implemented by hardware interrupts, but input events are read in the *input poll daemon*. In summary:
+Each detent of a rotary encoder generates two input events in quick succession:
+a button press and then, release.
+Decoding is implemented by hardware interrupts,
+but input events are read in the *input poll daemon*.
+In summary:
 
-1. `DT` and `CLK` signals are decoded in an interrupt service routine. If a rotation event is detected (clockwise or counter-clockwise), that event is pushed into a simple bit-oriented queue.
-2. The *input poll daemon* extracts an event from the queue, then modifies the state of the corresponding button as pressed.
-3. At the next iteration, it will reset the state of that button as non-pressed, thus simulating a press-then-release sequence of events.
+1. `DT` and `CLK` signals are decoded in an interrupt service routine.
+   If a rotation event is detected (clockwise or counter-clockwise),
+   that event is pushed into a simple bit-oriented queue.
+2. The *input poll daemon* extracts an event from the queue,
+   then modifies the state of the corresponding button as pressed.
+3. At the next iteration, it will reset the state of that button as non-pressed,
+   thus simulating a press-then-release sequence of events.
 
 The bit-oriented queue shows the following properties:
 
 - Implemented as a [circular buffer](https://en.wikipedia.org/wiki/Circular_buffer).
 - Thread-safe.
 - Unnoticeable memory footprint.
-- Size for 64 rotation events. If the queue were full, latest events would be discarded.
-- Since each rotary is polled every 50 ms, it is unlikely for the queue to get full.
+- Size for 64 rotation events.
+  If the queue were full, latest events would be discarded.
+- Since each rotary is polled every 50 ms,
+  it is unlikely for the queue to get full.
 
 ## About auto power off
 
-In a battery-operated system, when there is no Bluetooth connection, the systems goes to advertising. If no connection is made in a certain time lapse, the system goes to deep sleep or power off.
+In a battery-operated system, when there is no Bluetooth connection,
+the systems goes to advertising.
+If no connection is made in a certain time lapse,
+the system goes to deep sleep or power off.
 
 ## About connectivity
 
 The firmware relies in the [HID](https://en.wikipedia.org/wiki/Human_interface_device) standard to provide connectivity.
 The device will appear as a [Gamepad](https://en.wikipedia.org/wiki/Gamepad) to the hosting computer.
-The *hidImplementation* namespace is in charge of that. However, this project provides several alternate implementations:
+The *hidImplementation* namespace is in charge of that.
+However, this project provides several alternate implementations:
 
-- *hidImplementation_NimBLE.cpp*: BLE using the [NimBLE stack](https://mynewt.apache.org/latest/network/). Requires an additional Arduino [library](https://www.arduino.cc/reference/en/libraries/nimble-arduino/).
-- *hidImplementation_ESPBLE.cpp*: BLE using the native ESP-Arduino stack. Does not require additional libraries, but it takes way more flash memory than *NimBLE*.
+- *hidImplementation_NimBLE.cpp*: BLE using the
+  [NimBLE stack](https://mynewt.apache.org/latest/network/).
+  Requires an additional Arduino
+  [library](https://www.arduino.cc/reference/en/libraries/nimble-arduino/).
+- *hidImplementation_ESPBLE.cpp*: BLE using the native ESP-Arduino stack.
+  Does not require additional libraries, but it takes way more flash memory than *NimBLE*.
 - *hidImplementation_USB.cpp*: wired USB implementation.
 
 ## Concurrency
