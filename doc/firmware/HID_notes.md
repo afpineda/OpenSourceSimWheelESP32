@@ -312,7 +312,7 @@ At read:
 
 - No meaning
 
-At write:
+At write (unless locked):
 
 - Ignored in USB devices.
 - If either VID or PID (or both) is set to 0000, this field must match AA96 (hexadecimal).
