@@ -1,4 +1,4 @@
-# Changing your device's display name (windows only) or Hardware ID (BLE only)
+# Changing your device's display name (Windows only) or Hardware ID (BLE only)
 
 Once your BLE simwheel/button box is paired and connected to your host computer,
 It will be available in the "Game Controllers" control panel.
