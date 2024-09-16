@@ -360,10 +360,10 @@ The dotted rectangles represent internal GPIO configuration at the DevKit board 
 
 For $N$ rotary encoders:
 
-|       Circuitry       | Required pins |                  Advantages                  |             Disadvantages             | Supported by this project |
-| :-------------------: | :-----------: | :------------------------------------------: | :-----------------------------------: | :-----------------------: |
-|         None          |     $N*2$     |          Easy and straight-forward           | Must free up some pins by other means |            yes            |
-|     I2C encoders      |       2       |                  Effortless                  |      Cost and vendor dependence       |            No             |
-|    GPIO expanders     |       2       | Could hold both switches and rotary encoders |      Require hardware interrupts      |            No             |
-| Rotary encoder matrix |     $N+2$     |                     None                     |  Unable to detect simultaneous input  |            No             |
-|     Slave boards      |    2 (I2C)    |          Easy and straight-forward           |       Complex firmware and size       |            No             |
+|       Circuitry       |   Required pins    |                  Advantages                  |             Disadvantages             | Supported by this project |
+| :-------------------: | :----------------: | :------------------------------------------: | :-----------------------------------: | :-----------------------: |
+|         None          |       $N*2$        |          Easy and straight-forward           | Must free up some pins by other means |            yes            |
+|     I2C encoders      |         2          |                  Effortless                  |      Cost and vendor dependence       |            No             |
+|    GPIO expanders     | 2 + 1 per expander | Could hold both switches and rotary encoders |      Require hardware interrupts      |            No             |
+| Rotary encoder matrix |       $N+2$        |                     None                     |  Unable to detect simultaneous input  |            No             |
+|     Slave boards      |      2 (I2C)       |          Easy and straight-forward           |       Complex firmware and size       |            No             |
