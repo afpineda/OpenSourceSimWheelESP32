@@ -24,7 +24,7 @@ Output through USB serial port at 115200 bauds.
 ## Other pre-requisites
 
 Run the [battery calibration procedure](../../../Firmware/BatteryTools/BatteryCalibration/README.md)
-(once) or the [restore](../../../Firmware/BatteryTools/RestoreBatteryCalibration/README.md)
+(once) or [restore](../../../Firmware/BatteryTools/RestoreBatteryCalibration/README.md)
 the battery calibration data.
 
 If there is no calibration data in flash memory, you will get a warning.
