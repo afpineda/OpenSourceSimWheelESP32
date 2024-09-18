@@ -753,6 +753,7 @@ namespace notify
      * @param stackSize Stack size in bytes for the notification daemon.
      *                  Set to zero to use a default value.
      *                  Increase stack size if you get "stack canary"
+     *                  or "dual exception" errors and reboots.
      *
      * @note @p implementors objects must remain valid forever.
      *       Do not destroy.
