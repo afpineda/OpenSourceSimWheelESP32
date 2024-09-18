@@ -752,15 +752,16 @@ namespace notify
      *
      * @param stackSize Stack size in bytes for the notification daemon.
      *                  Set to zero to use a default value.
+     *                  Increase stack size if you get "stack canary"
      *
-     * @note All objects must remain valid forever.
+     * @note @p implementors objects must remain valid forever.
      *       Do not destroy.
      */
 
     void begin(
         notificationImplementorsArray_t implementors,
         uint8_t framesPerSecond = 0,
-        uint16_t stackSize =0);
+        uint16_t stackSize = 0);
 
     /**
      * @brief Notify current clutch's bite point

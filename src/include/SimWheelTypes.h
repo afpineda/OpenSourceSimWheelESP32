@@ -335,8 +335,9 @@ public:
     /**
      * @brief Draw a single frame.
      *
-     * @note Called in a loop when no notifications are pending
+     * @note Called in a loop when no notifications are pending.
      *       Not called at all if frames per second is set to 0.
+     *
      * @note Must not enter a loop itself.
      * @note Called in a low priority thread.
      */
