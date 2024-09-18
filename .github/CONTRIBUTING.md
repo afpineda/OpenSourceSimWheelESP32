@@ -68,6 +68,7 @@ Use the [discussion forums][3].
 ## Contribute new code
 
 This is a **pull-request policy**.
+Target the `development` branch when submitting a pull-request.
 
 ### New features
 
