@@ -22,7 +22,7 @@ void inputs::update()
 {
 }
 
-void notify::bitePoint(clutchValue_t bp)
+void notify::bitePoint()
 {
 }
 

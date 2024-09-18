@@ -24,6 +24,7 @@ public:
     virtual void onConnected() override;
     virtual void onBLEdiscovering() override;
     virtual void onLowBattery() override;
+    virtual void serveSingleFrame() override;
 };
 
 #endif

@@ -17,10 +17,10 @@ This test runs in a never-ending loop.
 
    ```text
    -- READY --
-   begin
+   (DEVICE READY)
    ```
 
 3. The text line `(FRAME)` must appear at almost timed intervals.
-4. Between those lines, the text line `connected` must appear.
-5. A few lines after that, the text line `bite point` must appear.
+4. Between those lines, the text line `(BLE CONNECTED)` must appear.
+5. A few lines after that, the text line `(BITE POINT: 0)` must appear.
 6. Back to 3.

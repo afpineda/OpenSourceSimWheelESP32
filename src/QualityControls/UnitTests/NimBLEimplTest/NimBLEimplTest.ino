@@ -40,7 +40,7 @@ void notify::BLEdiscovering()
     Serial.println("*** DISCOVERING ***");
 }
 
-void notify::bitePoint(clutchValue_t a)
+void notify::bitePoint()
 {
 }
 

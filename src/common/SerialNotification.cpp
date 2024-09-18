@@ -37,3 +37,8 @@ void SerialNotificationImpl::onLowBattery()
 {
     Serial.println("(LOW BATTERY)");
 }
+
+void SerialNotificationImpl::serveSingleFrame()
+{
+    Serial.println("(FRAME)");
+}

@@ -158,10 +158,8 @@ void hidImplementation::reportInput(
     // Serial.println(".");
 }
 
-void notify::bitePoint(clutchValue_t value)
+void notify::bitePoint()
 {
-    // Serial.print("Bite point: ");
-    // Serial.println(value);
 }
 
 void hidImplementation::reportChangeInConfig()

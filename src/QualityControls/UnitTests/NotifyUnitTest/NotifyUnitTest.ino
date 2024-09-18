@@ -34,7 +34,10 @@ void setup()
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
 
+    Serial.println("-- READY --");
     notify::begin({new SerialNotificationImpl()});
+    Serial.println("-- GO --");
+
     notify::BLEdiscovering();
     notify::connected();
     notify::lowBattery();
@@ -42,9 +45,9 @@ void setup()
     {
         userSettings::bitePoint = i;
         notify::bitePoint();
+        delay(50);
     }
 
-    delay(8000);
     Serial.println("-- END --");
 }
 

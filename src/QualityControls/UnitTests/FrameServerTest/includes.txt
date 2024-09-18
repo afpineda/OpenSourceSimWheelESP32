@@ -1,3 +1,5 @@
 SimWheelTypes.h
 SimWheel.h
+SerialNotification.h
+SerialNotification.cpp
 notify.cpp
