@@ -168,7 +168,7 @@ void userSettings::setBitePoint(clutchValue_t newBitePoint)
             userSettings::bitePoint = newBitePoint;
             requestSave();
             hidImplementation::reportChangeInConfig();
-            notify::bitePoint(newBitePoint);
+            notify::bitePoint();
             inputs::update();
         }
     }

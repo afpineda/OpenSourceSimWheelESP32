@@ -8,35 +8,32 @@
  */
 
 #include "SerialNotification.h"
+#include "SimWheel.h"
+#include <HardwareSerial.h>
 
-void SerialNotificationImpl::begin()
+void SerialNotificationImpl::onStart()
 {
     Serial.println("(DEVICE READY)");
 }
 
-void SerialNotificationImpl::bitePoint(clutchValue_t bitePoint)
+void SerialNotificationImpl::onBitePoint()
 {
     Serial.print("(BITE POINT: ");
-    Serial.print((uint8_t)bitePoint);
+    Serial.print((uint8_t)userSettings::bitePoint);
     Serial.println(")");
 }
 
-void SerialNotificationImpl::connected()
+void SerialNotificationImpl::onConnected()
 {
     Serial.println("(BLE CONNECTED)");
 }
 
-void SerialNotificationImpl::BLEdiscovering()
+void SerialNotificationImpl::onBLEdiscovering()
 {
     Serial.println("(BLE DISCOVERING)");
 }
 
-void SerialNotificationImpl::powerOff()
-{
-    Serial.println("(POWER OFF)");
-}
-
-void SerialNotificationImpl::lowBattery()
+void SerialNotificationImpl::onLowBattery()
 {
     Serial.println("(LOW BATTERY)");
 }

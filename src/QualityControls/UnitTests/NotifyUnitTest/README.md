@@ -15,13 +15,10 @@ Output through USB serial port at 115200 bauds. Connect before reset.
 2. Output must show:
 
    ```text
-   -- READY --
    (DEVICE READY)
-   -- GO --
    (BLE DISCOVERING)
    (BLE CONNECTED)
    (LOW BATTERY)
-   (POWER OFF)
    (BITE POINT: 0)
    (BITE POINT: 1)
    (BITE POINT: 2)
@@ -279,6 +276,6 @@ Output through USB serial port at 115200 bauds. Connect before reset.
    -- END --
    ```
 
-3. Some "(BITE POINT: xxx)" messages may be missed but this is a **correct and expected behaviour**.
+3. Some "(BITE POINT: xxx)" messages may be missed but this is a **correct and expected behavior**.
 
 **NOTE:** Last line will take 10 seconds (more or less) to show up. Be patient.

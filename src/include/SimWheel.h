@@ -744,19 +744,29 @@ namespace notify
      * @brief Set up an UI-dependant implementation for user notifications.
      *        Do not call if there is no user interface.
      *
-     * @param implementation An object that actually implements user notifications.
-     *                       Must remain valid forever (do not destroy).
+     * @param implementors Array of pointers to objects implementing
+     *                     the abstract notification interface.
      *
+     * @param framesPerSecond Target FPS for the frameserver.
+     *                        Set to zero to disable.
+     *
+     * @param stackSize Stack size in bytes for the notification daemon.
+     *                  Set to zero to use a default value.
+     *
+     * @note All objects must remain valid forever.
+     *       Do not destroy.
      */
 
-    void begin(AbstractNotificationInterface *implementation);
+    void begin(
+        notificationImplementorsArray_t implementors,
+        uint8_t framesPerSecond = 0,
+        uint16_t stackSize =0);
 
     /**
      * @brief Notify current clutch's bite point
      *
-     * @param aBitePoint Current bite point
      */
-    void bitePoint(clutchValue_t aBitePoint);
+    void bitePoint();
 
     /**
      * @brief Notify the device is connected to a host computer
@@ -769,12 +779,6 @@ namespace notify
      *
      */
     void BLEdiscovering();
-
-    /**
-     * @brief Notify the device is about to power off or deep sleep
-     *
-     */
-    void powerOff();
 
     /**
      * @brief Notify a very low battery level

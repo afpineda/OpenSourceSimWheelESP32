@@ -24,17 +24,10 @@ void hidImplementation::reportBatteryLevel(int l)
 
 void notify::lowBattery()
 {
-
-}
-
-void notify::powerOff()
-{
-
 }
 
 void capabilities::setFlag(deviceCapability_t a, bool b)
 {
-
 }
 
 //------------------------------------------------------------------
@@ -56,5 +49,5 @@ void setup()
 
 void loop()
 {
-  delay(10000);
+    delay(10000);
 }

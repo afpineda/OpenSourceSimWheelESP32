@@ -309,12 +309,12 @@ typedef enum
  */
 typedef enum
 {
-    CMD_RESERVED = 0,           // Not a command, reserved to avoid mistakes
-    CMD_AXIS_RECALIBRATE = 1,   // Recalibrate analog axes (if any)
-    CMD_BATT_RECALIBRATE = 2,   // Restart battery auto-calibration
-    CMD_RESET_BUTTONS_MAP = 3,  // Reset buttons map to factory defaults
-    CMD_SAVE_NOW = 4,            // Save all user settings to flash memory immediately
-    CMD_REVERSE_LEFT_AXIS = 5,  // Reverse left axis (if any)
+    CMD_RESERVED = 0,          // Not a command, reserved to avoid mistakes
+    CMD_AXIS_RECALIBRATE = 1,  // Recalibrate analog axes (if any)
+    CMD_BATT_RECALIBRATE = 2,  // Restart battery auto-calibration
+    CMD_RESET_BUTTONS_MAP = 3, // Reset buttons map to factory defaults
+    CMD_SAVE_NOW = 4,          // Save all user settings to flash memory immediately
+    CMD_REVERSE_LEFT_AXIS = 5, // Reverse left axis (if any)
     CMD_REVERSE_RIGHT_AXIS = 6 // Reverse right axis (if any)
 } simpleCommands_t;
 
@@ -326,68 +326,58 @@ class AbstractNotificationInterface
 {
 public:
     /**
-     * @brief Used to chain two or more implementations with
-     *        different hardware.
+     * @brief Called just once at initialization.
      *
+     * @note Called in a low priority thread.
      */
-    AbstractNotificationInterface *nextInChain = nullptr;
-
-public:
-    /**
-     * @brief Called once at initialization, from the main thread.
-     *
-     */
-    virtual void begin() = 0;
-
-    /**
-     * @brief Specify a target FPS. Not guaranteed. If there are chained
-     *        instances, the first one will fix the target.
-     *
-     * @return uint8_t frames per second. If zero,
-     *         `serverSingleFrame()` will never be called.
-     */
-    virtual uint8_t getTargetFPS() { return 0; };
+    virtual void onStart() {};
 
     /**
      * @brief Draw a single frame.
-     *        Called in a loop when no notifications are pending
-     *        (from a separate thread).
-     *        Not called at all if `getTargetFPS()==0`.
-     *        Must not enter a loop itself.
+     *
+     * @note Called in a loop when no notifications are pending
+     *       Not called at all if frames per second is set to 0.
+     * @note Must not enter a loop itself.
+     * @note Called in a low priority thread.
      */
     virtual void serveSingleFrame() {};
 
     /**
-     * @brief Notify a change in current bite point. Called from a separate thread.
+     * @brief Notify a change in current bite point.
      *
-     * @param bitePoint A bite point value
+     * @note Read userSetting::bitePoint to know the last value
+     * @note Called in a low priority thread.
      */
-    virtual void bitePoint(clutchValue_t bitePoint) = 0;
+    virtual void onBitePoint() {};
 
     /**
-     * @brief Notify device is connected. Called from a separate thread.
+     * @brief Notify device is connected.
      *
+     * @note Called in a low priority thread.
      */
-    virtual void connected() = 0;
+    virtual void onConnected() {};
 
     /**
-     * @brief Notify device is in discovery mode. Called from a separate thread.
+     * @brief Notify device is in discovery mode.
      *
+     * @note Called in a low priority thread.
      */
-    virtual void BLEdiscovering() = 0;
+    virtual void onBLEdiscovering() {};
 
     /**
-     * @brief Notify device is about to power off/deep sleep.
-     *        Called from a separate thread.
+     * @brief Notify low battery.
      *
+     * @note Called in a low priority thread.
+     * @note Called at timed intervals while the low battery
+     *       condition persists.
      */
-    virtual void powerOff() = 0;
-
-    /**
-     * @brief Notify low battery. Called from a separate thread.
-     *
-     */
-    virtual void lowBattery() = 0;
+    virtual void onLowBattery() {};
 };
+
+/**
+ * @brief Array of implementations for the notification interface
+ *
+ */
+typedef std::vector<AbstractNotificationInterface *> notificationImplementorsArray_t;
 
 #endif

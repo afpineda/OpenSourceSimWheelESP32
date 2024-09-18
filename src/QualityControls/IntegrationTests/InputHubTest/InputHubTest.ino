@@ -62,7 +62,7 @@ void hidImplementation::reportChangeInConfig()
 {
 }
 
-void notify::bitePoint(inputNumber_t b)
+void notify::bitePoint()
 {
 }
 

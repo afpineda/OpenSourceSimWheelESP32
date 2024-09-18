@@ -137,12 +137,11 @@ classDiagram
     hidImplementation --> inputs: command to calibrate analog axes
     hidImplementation --> batteryCalibration: command to recalibrate battery
     hidImplementation --> notify: connected, discovering
-    power --> notify: powerOff
     batteryMonitor --> notify: low battery level
     userSettings --> notify: bite point
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9UTFuwzAM_Iqg2fmAhy5thw5Fh6xeaIl2CEikIVFJjSB_r1y7KLSEE3G8Ox7Iu3Xi0fbWBcj5jWBOEAc2tS7kP-ISMCIrKAmb0-nFEC9Fc2-cxAjsjYpxEGhMoGiAIchs4BvzM48RVDGtr4euwo1fwn_Hg_rMjUVpWjcHZnSKvjOespMrJuJ5Vy5yw9Swf5Gvadrnx5pPYVJpiUFuf2MT8IphV5SM6YyqdUVu-CPV2IsQq-1sxBSBfL3vfZMNVi81_WD72nqcoAQd7MCPSoWicl7Z2V5Twc6WxdcDHB9pwXe_pdyxxw_Tm547)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9kLFuwzAMRH-F0Oz8gIcubYcOnbJ6oSXGISCRhkQlNYL8e2XYReElnIjT3cOJD-c1kOudj1jKB-OUMQ0Cba4cvtIcKZEYGqvA6fQGLHO10oPXlFACmILHyGNGI0DBqBPgD5VXjBHNKC_ve67JB16mf-JufUUTNb4sK0GEvFHoIHDxeqPMMm3JHfOtwqb5EIt6_3uGSDeKW6IWymcya4hy8I_cas3KYq5ziXJCDu1-jzU2OLu2doPr2xrogjXa4AZ5NitW0_Mi3vWWK3WuzqF9cL_4UfwMa8tNe_4CJnyTsQ)
 
 Some modules have a `begin()` method that must be called at system startup (`main()`or `setup()`).
 The calling order is defined by the previous diagram, where bottom modules must be called first.
@@ -216,8 +215,7 @@ The calling thread does not wait for them.
 For those reasons, some notifications may be missed.
 
 If there were two or more user interfaces (for example, display and sounds),
-they may be chained together not to mix their code.
-See `AbstractNotificationInterface::nextInChain`.
+they should be implemented in separate classes, not to mix their code.
 
 `AbstractNotificationInterface` may work in two, non-exclusive, modes:
 
@@ -227,11 +225,11 @@ For user interfaces not needing a perpetual loop or for one-time notifications. 
 For example:
 
 ```c
-   void MyImpl::begin() {
+   void MyImpl::onStart() {
       turnLedOn();
    }
 
-   void MyImpl::connected() {
+   void MyImpl::onConnected() {
       // blink 2 times
       delay(250);
       turnLedOff();
@@ -249,23 +247,19 @@ For example:
 For user interfaces in need of a perpetual loop or for persistent notifications.
 If there are no pending notifications,
 `AbstractFrameServerInterface::serveSingleFrame()` will be called at timed intervals.
-Override `AbstractFrameServerInterface::getTargetFPS()` to return a non-zero value.
+A non-zero frames-per-second value must be given to `notify::begin()`.
 For example:
 
 ```c++
-   void MyImpl::begin() {
+   void MyImpl::onStart() {
      discovering = false;
    }
 
-   uint8_t MyImpl::getTargetFPS() {
-     return 1; // One frame per second
-   }
-
-   void MyImpl::BLEdiscovering() {
+   void MyImpl::onBLEdiscovering() {
       discovering = true;
    }
 
-   void MyImpl::connected() {
+   void MyImpl::onConnected() {
       discovering = false;
       turnLedOn();
    }
@@ -275,11 +269,18 @@ For example:
     if (discovering)
       switchLed();
    }
+
+   ...
+
+   void setup()
+   {
+      ...
+      notify::begin({new MyImpl(ledPin)}, 1); // FPS = 1
+   }
 ```
 
-*Note*: `AbstractFrameServerInterface::lowBattery()` is already
-called at timed intervals by the `batteryMonitor` module
-as long as such a condition persists.
+*Note*: `AbstractFrameServerInterface::onLowBattery()` is already
+called at timed intervals as long as such a condition persists.
 
 ### BatteryMonitor
 

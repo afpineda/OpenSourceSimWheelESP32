@@ -17,40 +17,38 @@
 // Globals
 //------------------------------------------------------------------
 
-class TestImpl: public AbstractNotificationInterface
+class TestImpl : public AbstractNotificationInterface
 {
 public:
-    virtual void begin() {
+    virtual void onStart() override
+    {
         Serial.println("begin");
     };
 
-    virtual void bitePoint(clutchValue_t bitePoint) {
+    virtual void onBitePoint() override
+    {
         Serial.println("bite point");
     };
 
-    virtual void connected() {
+    virtual void onConnected() override
+    {
         Serial.println("connected");
     };
 
-    virtual void BLEdiscovering() {
+    virtual void onBLEdiscovering() override
+    {
         Serial.println("BLE discovering");
     };
 
-    virtual void powerOff() {
-        Serial.println("powerOff");
-    }
-
-    virtual void lowBattery() {
+    virtual void onLowBattery() override
+    {
         Serial.println("Low battery");
-    }
-
-    virtual void serveSingleFrame() {
-        Serial.println("(FRAME)");
     };
 
-    virtual uint8_t getTargetFPS() {
-        return 3;
-    }
+    virtual void serveSingleFrame() override
+    {
+        Serial.println("(FRAME)");
+    };
 };
 
 //------------------------------------------------------------------
@@ -67,9 +65,7 @@ void setup()
     Serial.begin(115200);
     Serial.println("-- READY --");
 
-    notify::begin(new TestImpl());
-
-    Serial.println("-- GO --");
+    notify::begin({new TestImpl()}, 3);
 }
 
 void loop()
@@ -77,5 +73,5 @@ void loop()
     delay(1000);
     notify::connected();
     delay(2000);
-    notify::powerOff();
+    notify::bitePoint();
 }

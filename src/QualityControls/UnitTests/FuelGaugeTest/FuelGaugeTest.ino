@@ -38,13 +38,6 @@ void notify::lowBattery()
 {
 }
 
-void notify::powerOff()
-{
-}
-
-// extern bool max1704x_getCompensation(uint8_t &compensation);
-// extern bool max1704x_setCompensation(uint8_t compensation);
-
 //-------------------------------------------------------
 // Auxiliary
 //-------------------------------------------------------

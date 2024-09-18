@@ -105,8 +105,7 @@ This article is focused on **firmware-defined** error messages.
   Your custom class derived from `AbstractNotificationInterface` must return a non-zero value at
   `getTargetFPS()`. Check your custom firmware.
 
-- *Unable to create notifications queue*
-- *Unable to create notifications task*
+- *Unable to create notifications daemon*
 
   Should not happen. Please, open an issue.
 
@@ -202,3 +201,12 @@ This article is focused on **firmware-defined** error messages.
   Ensure they are both input-capable and output-capable.
   If such a call was not placed in your custom firmware,
   open an issue.
+
+- *notify::begin() called with an empty set of implementors*
+
+  You called `notify::begin( {}, ...)`.
+  You must provide a non-empty array of implementors for the abstract notification interface.
+
+- *notify::begin() called with a null pointer implementor*
+
+  A null pointer is not allowed in the array of implementors given to `notify::begin()`.

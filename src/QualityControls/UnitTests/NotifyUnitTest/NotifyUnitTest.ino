@@ -23,6 +23,8 @@
 // Mocks
 //------------------------------------------------------------------
 
+volatile clutchValue_t userSettings::bitePoint = (clutchValue_t)0;
+
 //------------------------------------------------------------------
 // Arduino entry point
 //------------------------------------------------------------------
@@ -31,19 +33,16 @@ void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
-    Serial.println("-- READY --");
 
-    notify::begin(new SerialNotificationImpl());
-
-    Serial.println("-- GO --");
-
+    notify::begin({new SerialNotificationImpl()});
     notify::BLEdiscovering();
     notify::connected();
     notify::lowBattery();
-    notify::powerOff();
-
     for (clutchValue_t i = CLUTCH_NONE_VALUE; i < CLUTCH_FULL_VALUE; i++)
-        notify::bitePoint(i);
+    {
+        userSettings::bitePoint = i;
+        notify::bitePoint();
+    }
 
     delay(8000);
     Serial.println("-- END --");

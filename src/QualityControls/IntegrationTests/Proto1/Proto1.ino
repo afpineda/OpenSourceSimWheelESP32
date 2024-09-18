@@ -57,7 +57,7 @@ void setup()
     Serial.begin(115200);
     Serial.println("-- READY --");
 
-    notify::begin(new SerialNotificationImpl());
+    notify::begin({new SerialNotificationImpl()});
 
     setDebugInputNumbers(
         inputs::addButtonMatrix(mtxSelectors, mtxInputs));

@@ -15,227 +15,168 @@
 // Globals
 // ----------------------------------------------------------------------------
 
-#define NOTIFICATION_TASK_STACK_SIZE 1 * 1024
-static TaskHandle_t notificationTask = nullptr;
-static QueueHandle_t queue = nullptr;
+// Notification daemon
+#define DEFAULT_STACK_SIZE 512
+static TaskHandle_t notificationDaemon = nullptr;
+static notificationImplementorsArray_t implementorArray;
 
-typedef struct
-{
-    uint8_t id;
-    uint8_t data[1];
-} notifyEvent_t;
+// Frame server
+static TickType_t frameServerPeriod = portMAX_DELAY;
 
-#define ID_BITEPOINT 1
-#define ID_CONNECTED 2
-#define ID_BLEDISCOVERING 3
-//#define ID_POWERON 4
-#define ID_POWEROFF 5
-#define ID_LOWBATTERY 6
-
-#define MAX_WAIT_TICKS DEBOUNCE_TICKS * 2
-#define FRAMESERVER_PERIOD_TICKS pdMS_TO_TICKS(20) // 50FPS
+// Events queue
+#define EVENT_QUEUE_SIZE 64
+#define EVENT_BITE_POINT 1
+#define EVENT_CONNECTED 2
+#define EVENT_BLE_DISCOVERING 3
+#define EVENT_LOW_BATTERY 4
+static uint8_t eventBuffer[EVENT_QUEUE_SIZE];
+static uint8_t queueHead = 0;
+static uint8_t queueTail = 0;
 
 // ----------------------------------------------------------------------------
-// Loops
+// Events queue
 // ----------------------------------------------------------------------------
 
-void notificationLoop(void *param)
+inline void incQueuePointer(uint8_t &pointer)
 {
-    AbstractNotificationInterface *impl = (AbstractNotificationInterface *)param;
-    AbstractNotificationInterface *chain;
-    notifyEvent_t event;
-
-    while (true)
-    {
-        if (xQueueReceive(queue, &event, portMAX_DELAY))
-        {
-            chain = impl;
-            while (chain)
-            {
-
-                switch (event.id)
-                {
-                case ID_BITEPOINT:
-                    chain->bitePoint((clutchValue_t)event.data[0]);
-                    break;
-
-                case ID_CONNECTED:
-                    chain->connected();
-                    break;
-
-                case ID_BLEDISCOVERING:
-                    chain->BLEdiscovering();
-                    break;
-
-                case ID_POWEROFF:
-                    chain->powerOff();
-                    break;
-
-                case ID_LOWBATTERY:
-                    chain->lowBattery();
-                    break;
-
-                default:
-                    break;
-                } // end switch
-                chain = chain->nextInChain;
-            } // end while(chain)
-        }     // end if
-    }         // end while(true)
+    pointer = (pointer + 1) % EVENT_QUEUE_SIZE;
 }
 
-void frameServerLoop(void *param)
+void eventPush(uint8_t eventID)
 {
-    AbstractNotificationInterface *impl = (AbstractNotificationInterface *)param;
-    AbstractNotificationInterface *chain;
-    notifyEvent_t event;
+    uint8_t queueTailNext = queueTail;
+    incQueuePointer(queueTailNext);
+    if (queueTailNext == queueHead)
+        // Queue is full, overwrite last event
+        queueTailNext = queueTail;
+    eventBuffer[queueTailNext] = eventID;
+    queueTail = queueTailNext;
+    xTaskNotifyGive(notificationDaemon);
+}
 
-    if (impl->getTargetFPS()==0) {
-        log_e("getTargetFPS() is zero at frameServerLoop()");
-        abort();
+bool eventPop(uint8_t &eventID)
+{
+    bool isNotEmpty = (queueHead != queueTail);
+    if (isNotEmpty)
+    {
+        eventID = eventBuffer[queueHead];
+        incQueuePointer(queueHead);
     }
-    TickType_t period = pdMS_TO_TICKS (1000 / impl->getTargetFPS());
-    if (period<FRAMESERVER_PERIOD_TICKS)
-        period = FRAMESERVER_PERIOD_TICKS;
-    auto xLastWakeTime = xTaskGetTickCount();
+    return isNotEmpty;
+}
+
+// ----------------------------------------------------------------------------
+// Notification daemon
+// ----------------------------------------------------------------------------
+
+void notificationDaemonLoop(void *param)
+{
+    uint8_t eventID;
+
+    for (AbstractNotificationInterface *impl : implementorArray)
+        impl->onStart();
 
     while (true)
     {
-        chain = impl;
-        if ((uxQueueMessagesWaiting(queue) > 0) && xQueueReceive(queue, &event, portMAX_DELAY))
+        if (ulTaskNotifyTake(pdTRUE, frameServerPeriod))
         {
-            while (chain)
-            {
-
-                switch (event.id)
-                {
-                case ID_BITEPOINT:
-                    chain->bitePoint((clutchValue_t)event.data[0]);
-                    break;
-
-                case ID_CONNECTED:
-                    chain->connected();
-                    break;
-
-                case ID_BLEDISCOVERING:
-                    chain->BLEdiscovering();
-                    break;
-
-                case ID_POWEROFF:
-                    chain->powerOff();
-                    break;
-
-                case ID_LOWBATTERY:
-                    chain->lowBattery();
-                    break;
-
-                default:
-                    break;
-                } // end switch
-                chain = chain->nextInChain;
-            } // end while(chain)
+            // One or more events should be available
+            while (eventPop(eventID))
+                for (AbstractNotificationInterface *impl : implementorArray)
+                    switch (eventID)
+                    {
+                    case EVENT_BITE_POINT:
+                        impl->onBitePoint();
+                        break;
+                    case EVENT_BLE_DISCOVERING:
+                        impl->onBLEdiscovering();
+                        break;
+                    case EVENT_CONNECTED:
+                        impl->onConnected();
+                        break;
+                    case EVENT_LOW_BATTERY:
+                        impl->onLowBattery();
+                    }
         }
-        else
-        {
-            while (chain)
-            {
-                chain->serveSingleFrame();
-                chain = chain->nextInChain;
-            }
-            vTaskDelayUntil(&xLastWakeTime, period);
-        } // end if-then-else
-    }     // end while(true)
+        if (frameServerPeriod != portMAX_DELAY)
+            for (AbstractNotificationInterface *impl : implementorArray)
+                impl->serveSingleFrame();
+    }
 }
 
 // ----------------------------------------------------------------------------
 // Initialization
 // ----------------------------------------------------------------------------
 
-void notify_init(TaskFunction_t loop, void *param)
+void notify::begin(
+    notificationImplementorsArray_t implementors,
+    uint8_t framesPerSecond,
+    uint16_t stackSize)
 {
-    queue = xQueueCreate(64, sizeof(notifyEvent_t));
-    if (queue == nullptr)
+    // Check parameters
+    if (implementors.size() == 0)
     {
-        log_e("Unable to create notifications queue");
+        log_e("notify::begin() called with an empty set of implementors");
         abort();
     }
-    xTaskCreate(
-        loop,
-        "notify",
-        NOTIFICATION_TASK_STACK_SIZE,
-        param,
-        tskIDLE_PRIORITY,
-        &notificationTask);
-    if (notificationTask == nullptr)
-    {
-        log_e("Unable to create notifications task");
-        abort();
-    }
-}
+    for (int i = 0; i < implementors.size(); i++)
+        if (implementors[i] == nullptr)
+        {
+            log_e("notify::begin() called with a null pointer implementor");
+            abort();
+        }
 
-void notify::begin(AbstractNotificationInterface *implementation)
-{
-    if (implementation && (notificationTask == nullptr) && (queue == nullptr))
+    // Initialize
+    if (notificationDaemon == nullptr)
     {
-        if (implementation->getTargetFPS()==0)
-            notify_init(notificationLoop, (void *)implementation);
+        if (stackSize == 0)
+            stackSize = DEFAULT_STACK_SIZE;
+        if (framesPerSecond > 0)
+            frameServerPeriod = pdMS_TO_TICKS(1000 / framesPerSecond);
         else
-            notify_init(frameServerLoop, (void *)implementation);
-        implementation->begin();
+            frameServerPeriod = portMAX_DELAY;
+        implementorArray = implementors;
+        xTaskCreate(
+            notificationDaemonLoop,
+            "notify",
+            stackSize,
+            nullptr,
+            tskIDLE_PRIORITY,
+            &notificationDaemon);
+        if (notificationDaemon == nullptr)
+        {
+            log_e("Unable to create notifications daemon");
+            abort();
+        }
     }
+    else
+        log_w("notify::begin() called twice");
 }
 
 // ----------------------------------------------------------------------------
 // Notifications
 // ----------------------------------------------------------------------------
 
-void notify::bitePoint(clutchValue_t aBitePoint)
+void notify::bitePoint()
 {
-    if (queue)
-    {
-        notifyEvent_t event;
-        event.id = ID_BITEPOINT;
-        event.data[0] = (uint8_t)aBitePoint;
-        xQueueSend(queue, &event, MAX_WAIT_TICKS);
-    }
+    if (notificationDaemon)
+        eventPush(EVENT_BITE_POINT);
 }
 
 void notify::connected()
 {
-    if (queue)
-    {
-        notifyEvent_t event;
-        event.id = ID_CONNECTED;
-        xQueueSend(queue, &event, MAX_WAIT_TICKS);
-    }
+    if (notificationDaemon)
+        eventPush(EVENT_CONNECTED);
 }
 
 void notify::BLEdiscovering()
 {
-    if (queue)
-    {
-        notifyEvent_t event;
-        event.id = ID_BLEDISCOVERING;
-        xQueueSend(queue, &event, MAX_WAIT_TICKS);
-    }
-}
-
-void notify::powerOff()
-{
-    if (queue)
-    {
-        notifyEvent_t event;
-        event.id = ID_POWEROFF;
-        xQueueSend(queue, &event, MAX_WAIT_TICKS);
-    }
+    if (notificationDaemon)
+        eventPush(EVENT_BLE_DISCOVERING);
 }
 
 void notify::lowBattery()
 {
-    if (queue)
-    {
-        notifyEvent_t event;
-        event.id = ID_LOWBATTERY;
-        xQueueSend(queue, &event, MAX_WAIT_TICKS);
-    }
+    if (notificationDaemon)
+        eventPush(EVENT_LOW_BATTERY);
 }

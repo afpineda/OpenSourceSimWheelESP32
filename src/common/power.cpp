@@ -165,7 +165,6 @@ void latchPowerOff()
 
 void power::powerOff()
 {
-  notify::powerOff();
   // try external latch circuit
   latchPowerOff();
   // if still up and running, enter deep sleep
