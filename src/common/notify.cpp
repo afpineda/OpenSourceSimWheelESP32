@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------------
 
 // Notification daemon
-#define DEFAULT_STACK_SIZE 1*1024 + 512
+#define DEFAULT_STACK_SIZE 1 * 1024 + 512
 static TaskHandle_t notificationDaemon = nullptr;
 static notificationImplementorsArray_t implementorArray;
 
@@ -148,6 +148,7 @@ void notify::begin(
             log_e("Unable to create notifications daemon");
             abort();
         }
+        capabilities::setFlag(deviceCapability_t::CAP_USER_INTERFACE);
     }
     else
         log_w("notify::begin() called twice");
@@ -179,4 +180,24 @@ void notify::lowBattery()
 {
     if (notificationDaemon)
         eventPush(EVENT_LOW_BATTERY);
+}
+
+void notify::selectNextPage(uint8_t deviceIndex)
+{
+    if (notificationDaemon && (deviceIndex < implementorArray.size()))
+        implementorArray[deviceIndex]->selectNextPage();
+}
+
+void notify::selectPreviousPage(uint8_t deviceIndex)
+{
+    if (notificationDaemon && (deviceIndex < implementorArray.size()))
+        implementorArray[deviceIndex]->selectPreviousPage();
+}
+
+uint8_t notify::getUICount()
+{
+    if (notificationDaemon)
+        return implementorArray.size();
+    else
+        return 0;
 }

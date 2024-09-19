@@ -46,6 +46,21 @@ void notify::bitePoint()
 {
 }
 
+void notify::selectNextPage(uint8_t index)
+{
+    Serial.println("UI control: next page");
+}
+
+void notify::selectPreviousPage(uint8_t index)
+{
+    Serial.println("UI control: previous page");
+}
+
+uint8_t notify::getUICount()
+{
+    return 1;
+}
+
 void inputs::recalibrateAxes()
 {
     Serial.println("CMD: recalibrate axes");

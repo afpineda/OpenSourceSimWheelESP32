@@ -43,6 +43,25 @@ void notify::connected()
 //     Serial.println("*** DISCOVERING ***");
 // }
 
+void notify::selectNextPage(uint8_t index)
+{
+#if ARDUINO_USB_MODE == 1
+    Serial.println("UI control: next page");
+#endif
+}
+
+void notify::selectPreviousPage(uint8_t index)
+{
+#if ARDUINO_USB_MODE == 1
+    Serial.println("UI control: previous page");
+#endif
+}
+
+uint8_t notify::getUICount()
+{
+    return 1;
+}
+
 void notify::bitePoint()
 {
 }

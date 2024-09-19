@@ -51,6 +51,7 @@ This project make use of a number of HID reports:
 |     3     | Feature | Wheel configuration               |
 |     4     | Feature | User-defined buttons map          |
 |     5     | Feature | Custom hardware ID                |
+|     6     | Feature | UI display control                |
 
 Note that feature reports are both read and write.
 
@@ -108,7 +109,9 @@ Some examples:
 |     1.1      |            1.6            | Incompatible |
 |     2.7      |            2.3            |  Compatible  |
 
-Current data version is 1.2.
+However, host-side software may support several data versions at the same time.
+
+Current data version is 1.3.
 
 ### Flags
 
@@ -124,6 +127,7 @@ This is a summary:
 - DPAD
 - Battery
 - Calibration data for the battery
+- User interface availability
 
 ### ID
 
@@ -324,3 +328,47 @@ At write (unless locked):
 **No changes are made if there is no match.**
 
 [def]: ../../src/include/SimWheelTypes.h
+
+## Data format of report ID 6 (UI display control)
+
+| Byte index | Size (bytes) | Purpose (field) | Since data version |
+| :--------: | :----------: | --------------- | ------------------ |
+|     0      |      1       | UI index        | 1.3                |
+|     2      |      1       | Page select     | 1.3                |
+
+This feature report is useless if there is no user interface.
+Check capabilities first.
+The actual behavior is implementation-dependant.
+
+### UI index
+
+At read:
+
+- Return the count of available user interfaces.
+
+At write (unless unlocked):
+
+- Select the index of a user interface to control.
+- This index is zero-based.
+- Invalid values are ignored.
+
+### Page select
+
+The term "page" should not be taken literally,
+since this is implementation-dependant.
+For example:
+
+- An OLED display could show different information pages.
+- A speaker could increase or decrease volume.
+
+At read:
+
+- No meaning.
+
+At write (unless locked):
+
+- 0x00 (hexadecimal): select the next display page when available.
+- 0x01 (hexadecimal): select the previous display page when available.
+- Other values: undefined behavior. Please, avoid.
+  Currently, other values are equivalent to 0x01,
+  but do not rely on this in future firmware versions.

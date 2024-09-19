@@ -787,6 +787,29 @@ namespace notify
      *
      */
     void lowBattery();
+
+    /**
+     * @brief Select the next page in the user interface when available.
+     *
+     * @param deviceIndex Index of an UI implementor in
+     *                    the array given to notify::begin().
+     */
+    void selectNextPage(uint8_t deviceIndex);
+
+    /**
+     * @brief Select the previous page in the user interface when available.
+     *
+     * @param deviceIndex Index of an UI implementor in
+     *                    the array given to notify::begin().
+     */
+    void selectPreviousPage(uint8_t deviceIndex);
+
+    /**
+     * @brief Get the count of available notification interfaces
+     *
+     * @return uint8_t Count of available notification interfaces
+     */
+    uint8_t getUICount();
 }
 
 /**

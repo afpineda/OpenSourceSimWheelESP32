@@ -44,6 +44,7 @@ static NimBLECharacteristic *configReport = nullptr;
 static NimBLECharacteristic *capabilitiesReport = nullptr;
 static NimBLECharacteristic *buttonsMapReport = nullptr;
 static NimBLECharacteristic *hardwareIdReport = nullptr;
+static NimBLECharacteristic *uiControlReport = nullptr;
 static NimBLEServer *pServer = nullptr;
 static bool notifyConfigChanges = false;
 
@@ -162,6 +163,28 @@ class HardwareID_FRCallbacks : public NimBLECharacteristicCallbacks
 } hardwareID_FRCallbacks;
 
 // ----------------------------------------------------------------------------
+
+class UIControl_FRCallbacks : public NimBLECharacteristicCallbacks
+{
+    // RECEIVE DATA
+    void onWrite(NimBLECharacteristic *pCharacteristic)
+    {
+        size_t size = pCharacteristic->getValue().length();
+        const uint8_t *data = pCharacteristic->getValue().data();
+        hidImplementation::common::onSetFeature(RID_FEATURE_UI_CONTROL, data, size);
+    }
+
+    // SEND REQUESTED DATA
+    void onRead(NimBLECharacteristic *pCharacteristic)
+    {
+        uint8_t data[HARDWARE_ID_REPORT_SIZE];
+        hidImplementation::common::onGetFeature(RID_FEATURE_UI_CONTROL, data, UI_CONTROL_REPORT_SIZE);
+        pCharacteristic->setValue(data, UI_CONTROL_REPORT_SIZE);
+    }
+
+} uiControl_FRCallbacks;
+
+// ----------------------------------------------------------------------------
 // Auto power-off
 // ----------------------------------------------------------------------------
 
@@ -224,7 +247,9 @@ void hidImplementation::begin(
         configReport = hid->featureReport(RID_FEATURE_CONFIG);
         buttonsMapReport = hid->featureReport(RID_FEATURE_BUTTONS_MAP);
         hardwareIdReport = hid->featureReport(RID_FEATURE_HARDWARE_ID);
-        if (!inputGamepad || !configReport || !capabilitiesReport || !buttonsMapReport || !hardwareIdReport)
+        uiControlReport = hid->featureReport(RID_FEATURE_UI_CONTROL);
+        if (!inputGamepad || !configReport || !capabilitiesReport ||
+            !buttonsMapReport || !hardwareIdReport || !uiControlReport)
         {
             log_e("Unable to create HID report characteristics");
             abort();
@@ -233,6 +258,7 @@ void hidImplementation::begin(
         capabilitiesReport->setCallbacks(&capabilitiesFRCallbacks);
         buttonsMapReport->setCallbacks(&buttonsMapFRCallbacks);
         hardwareIdReport->setCallbacks(&hardwareID_FRCallbacks);
+        uiControlReport->setCallbacks(&uiControl_FRCallbacks);
 
         // Configure BLE advertising
         NimBLEAdvertising *pAdvertising = pServer->getAdvertising();

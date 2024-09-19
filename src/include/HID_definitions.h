@@ -21,6 +21,7 @@
 #define RID_FEATURE_CONFIG 0x03
 #define RID_FEATURE_BUTTONS_MAP 0x04
 #define RID_FEATURE_HARDWARE_ID 0x05
+#define RID_FEATURE_UI_CONTROL 0x06
 
 // Report sizes (bytes)
 #define GAMEPAD_REPORT_SIZE 20
@@ -28,6 +29,7 @@
 #define CONFIG_REPORT_SIZE 6
 #define BUTTONS_MAP_REPORT_SIZE 3
 #define HARDWARE_ID_REPORT_SIZE 6
+#define UI_CONTROL_REPORT_SIZE 2
 
 // GAME CONTROLLER APPEARANCES
 #define CONTROLLER_TYPE_GAMEPAD 0x05
@@ -38,8 +40,8 @@
 
 //   BLE
 #define BLE_VENDOR_SOURCE 0x00
-#define BLE_VENDOR_ID 0x1d50 // default VID
-#define BLE_PRODUCT_ID 0xffff // default PID
+#define BLE_VENDOR_ID 0x1d50   // default VID
+#define BLE_PRODUCT_ID 0xffff  // default PID
 #define TEST_PRODUCT_ID 0xffff // Flag not to load stored hardware ID
 
 // Hardware revision
@@ -123,18 +125,25 @@ static const uint8_t hid_descriptor[] = {
     0xb1, 0xa2,               // FEATURE (Data,var,abs,Nprf,Vol)
 
     // ___ MAP (FEATURE) REPORT ___
-    0x09, 0x00,            // USAGE (undefined)
+    0x09, 0x00,                    // USAGE (undefined)
     0x85, RID_FEATURE_BUTTONS_MAP, // REPORT ID
-    0x75, 0x08,            // Report Size (8)
+    0x75, 0x08,                    // Report Size (8)
     0x95, BUTTONS_MAP_REPORT_SIZE, // Report count
-    0xb1, 0xa2,            // FEATURE (Data,var,abs,Nprf,Vol)
+    0xb1, 0xa2,                    // FEATURE (Data,var,abs,Nprf,Vol)
 
     // ___ HARDWARE ID (FEATURE) REPORT ___
-    0x09, 0x00,            // USAGE (undefined)
+    0x09, 0x00,                    // USAGE (undefined)
     0x85, RID_FEATURE_HARDWARE_ID, // REPORT ID
-    0x75, 0x08,            // Report Size (8)
+    0x75, 0x08,                    // Report Size (8)
     0x95, HARDWARE_ID_REPORT_SIZE, // Report count
-    0xb1, 0xa2,            // FEATURE (Data,var,abs,Nprf,Vol)
+    0xb1, 0xa2,                    // FEATURE (Data,var,abs,Nprf,Vol)
+
+    // ___ UI CONTROL (FEATURE) REPORT ___
+    0x09, 0x00,                   // USAGE (undefined)
+    0x85, RID_FEATURE_UI_CONTROL, // REPORT ID
+    0x75, 0x08,                   // Report Size (8)
+    0x95, UI_CONTROL_REPORT_SIZE, // Report count
+    0xb1, 0xa2,                   // FEATURE (Data,var,abs,Nprf,Vol)
 
     // END APPLICATION
     0xC0 // EndCollection()

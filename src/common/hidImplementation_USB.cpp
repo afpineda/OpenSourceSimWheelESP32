@@ -26,8 +26,6 @@
 
 class SimWheelHIDImpl : public USBHIDDevice
 {
-    inputNumber_t selectedInput = UNSPECIFIED_INPUT_NUMBER;
-
     virtual uint16_t _onGetDescriptor(uint8_t *buffer) override
     {
         memcpy(buffer, hid_descriptor, sizeof(hid_descriptor));

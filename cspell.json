@@ -57,6 +57,7 @@
         "RCLUTCH",
         "RKJX",
         "RSHIFT",
+        "USBHID",
         "WROOM",
         "bootloader",
         "ccal",

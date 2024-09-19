@@ -132,6 +132,12 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
         *(uint16_t *)(buffer + 4) = 0;
         return HARDWARE_ID_REPORT_SIZE;
     }
+    if ((report_id == RID_FEATURE_UI_CONTROL) && (len >= UI_CONTROL_REPORT_SIZE))
+    {
+        buffer[0] = notify::getUICount();
+        buffer[1] = 0;
+        return UI_CONTROL_REPORT_SIZE;
+    }
     return 0;
 }
 
@@ -229,6 +235,13 @@ void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *b
                     hidImplementation::common::storeHardwareID(vid, pid);
             } // else ignore
         } // else ignore
+    }
+    else if ((report_id == RID_FEATURE_UI_CONTROL) && (len >= UI_CONTROL_REPORT_SIZE))
+    {
+        if (buffer[1])
+            notify::selectPreviousPage(buffer[0]);
+        else
+            notify::selectNextPage(buffer[0]);
     }
 }
 

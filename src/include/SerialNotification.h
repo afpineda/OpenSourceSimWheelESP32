@@ -25,6 +25,9 @@ public:
     virtual void onBLEdiscovering() override;
     virtual void onLowBattery() override;
     virtual void serveSingleFrame() override;
+    virtual void selectNextPage() override;
+    virtual void selectPreviousPage() override;
+
 };
 
 #endif

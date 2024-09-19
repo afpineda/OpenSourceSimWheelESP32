@@ -42,3 +42,13 @@ void SerialNotificationImpl::serveSingleFrame()
 {
     Serial.println("(FRAME)");
 }
+
+void SerialNotificationImpl::selectNextPage()
+{
+    Serial.println("(Next page)");
+}
+
+void SerialNotificationImpl::selectPreviousPage()
+{
+    Serial.println("(Previous page)");
+}

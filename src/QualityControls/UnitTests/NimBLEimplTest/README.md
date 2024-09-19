@@ -168,6 +168,18 @@ Not applicable to USB implementation.
 12. Click on `Set Feature` , then on `Get Feature`.
 13. Must show a line again starting with: `RD 04  02 00 40`.
 
+### UI control (HID report)
+
+1. Enter `06` at field `ReportID`.
+2. Click on `Get Feature`.
+3. Must show a line starting with: `RD 06  01`.
+4. Enter `00 00` at fields below `ReportID`.
+5. Click on `Set Feature`.
+6. Serial output must show: `"UI control: next page`.
+7. Enter `00 01` at fields below `ReportID`.
+8. Click on `Set Feature`.
+9. Serial output must show: `"UI control: previous page`.
+
 ### Custom Hardware ID (HID report)
 
 Not applicable to USB implementation.

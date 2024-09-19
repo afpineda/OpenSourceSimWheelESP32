@@ -295,12 +295,13 @@ typedef enum
  */
 typedef enum
 {
-    CAP_CLUTCH_BUTTON = 0,                // has digital clutch paddles (switches)
-    CAP_CLUTCH_ANALOG = 1,                // has analog clutch paddles (potentiometers)
-    CAP_ALT = 2,                          // has "ALT" buttons
-    CAP_DPAD = 3,                         // has a directional pad
-    CAP_BATTERY = 4,                      // battery-operated
-    CAP_BATTERY_CALIBRATION_AVAILABLE = 5 // has battery calibration data
+    CAP_CLUTCH_BUTTON = 0,                 // has digital clutch paddles (switches)
+    CAP_CLUTCH_ANALOG = 1,                 // has analog clutch paddles (potentiometers)
+    CAP_ALT = 2,                           // has "ALT" buttons
+    CAP_DPAD = 3,                          // has a directional pad
+    CAP_BATTERY = 4,                       // battery-operated
+    CAP_BATTERY_CALIBRATION_AVAILABLE = 5, // has battery calibration data
+    CAP_USER_INTERFACE = 6                 // has an user interface
 } deviceCapability_t;
 
 /**
@@ -373,10 +374,26 @@ public:
      *       condition persists.
      */
     virtual void onLowBattery() {};
+
+    /**
+     * @brief Select the next page in the user interface when available.
+     *
+     * @note Not thread-safe. May be called while events are being processed
+     *       or serveSingleFrame() is running.
+     */
+    virtual void selectNextPage() {};
+
+    /**
+     * @brief Select the previous page in the user interface when available.
+     *
+     * @note Not thread-safe. May be called while events are being processed
+     *       or serveSingleFrame() is running.
+     */
+    virtual void selectPreviousPage() {};
 };
 
 /**
- * @brief Array of implementations for the notification interface
+ * @brief Array of implementations for the notification interface.
  *
  */
 typedef std::vector<AbstractNotificationInterface *> notificationImplementorsArray_t;
