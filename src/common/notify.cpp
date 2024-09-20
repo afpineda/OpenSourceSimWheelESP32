@@ -10,6 +10,7 @@
 
 #include "SimWheel.h"
 #include "SimWheelTypes.h"
+#include <string>
 
 // ----------------------------------------------------------------------------
 // Globals

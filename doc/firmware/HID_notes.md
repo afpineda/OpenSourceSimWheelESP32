@@ -383,10 +383,10 @@ At write (unless locked):
 | :--------: | :---: | ------------- | --------- | -------------- | ------------ | ---------------------------------------------------------------------------- |
 |     0      |   1   | Gear          | char      | ASCII          | 1.3          | DataCorePlugin.GameData.Gear                                                 |
 |     1      |   2   | RPM           | uint16    |                | 1.3          | DataCorePlugin.GameData.Rpms                                                 |
-|     1      |   2   | RPM percent   | uint8     | 0..100         | 1.3          | DataCorePlugin.GameData.CarSettings_CurrentDisplayedRPMPercent.GameData.Rpms |
-|     3      |   1   | Shift light 1 | boolean   |                | 1.3          | DataCorePlugin.GameData.CarSettings_RPMShiftLight1                           |
-|     4      |   1   | Shift light 2 | boolean   |                | 1.3          | DataCorePlugin.GameData.CarSettings_RPMShiftLight2                           |
-|     5      |   1   | Speed         | uint16    |                | 1.3          | DataCorePlugin.GameData.SpeedLocal                                           |
+|     3      |   1   | RPM percent   | uint8     | 0..100         | 1.3          | DataCorePlugin.GameData.CarSettings_CurrentDisplayedRPMPercent.GameData.Rpms |
+|     4      |   1   | Shift light 1 | boolean   |                | 1.3          | DataCorePlugin.GameData.CarSettings_RPMShiftLight1                           |
+|     5      |   1   | Shift light 2 | boolean   |                | 1.3          | DataCorePlugin.GameData.CarSettings_RPMShiftLight2                           |
+|     6      |   2   | Speed         | uint16    |                | 1.3          | DataCorePlugin.GameData.SpeedLocal                                           |
 
 - **Gear**: a single ASCII character, typically "R", "N", "1", "2", etc.
 - **RPM**: absolute revolutions per minute.
@@ -429,7 +429,7 @@ Do not write if the device does not use this data. Check capabilities first.
 |     5      |   1   | White flag             | boolean      |                | 1.3          | DataCorePlugin.GameData.Flag_White      |
 |     6      |   1   | Yellow flag            | boolean      |                | 1.3          | DataCorePlugin.GameData.Flag_Yellow     |
 |     7      |   2   | Remaining laps         | uint16       |                | 1.3          | DataCorePlugin.GameData.RemainingLaps   |
-|     9      |   8   | Remaining session time | ASCII string | HH:MM:SS       | 1.3          | DataCorePlugin.GameData.SessionTimeLeft |
+|     9      |   6   | Remaining session time | ASCII string | HHMMSS         | 1.3          | DataCorePlugin.GameData.SessionTimeLeft |
 
 - **Remaining laps**: laps to end of race or session. Should be set to zero if the session finish due to elapsed time.
 - **Remaining session time**: displayable string. Should be set to blank spaces if does not apply.
@@ -443,12 +443,12 @@ Do not write if the device does not use this data. Check capabilities first.
 |     0      |   1   | Relative turbo pressure      | uint8        | 0..100                        | 1.3          | DataCorePlugin.GameData.TurboPercent                 |
 |     1      |   2   | Absolute turbo pressure      | uint16       | fixed decimal point: 2 digits | 1.3          | DataCorePlugin.GameData.Turbo                        |
 |     3      |   2   | Water temperature            | uint16       | fixed decimal point: 2 digits | 1.3          | DataCorePlugin.GameData.WaterTemperature             |
-|     4      |   2   | Oil pressure                 | uint16       | fixed decimal point: 2 digits | 1.3          | DataCorePlugin.GameData.OilPressure                  |
-|     6      |   2   | Oil temperature              | uint16       | fixed decimal point: 2 digits | 1.3          | DataCorePlugin.GameData.OilTemperature               |
-|     8      |   1   | Relative remaining fuel      | uint8        | 0..100                        | 1.3          | DataCorePlugin.GameData.FuelPercent                  |
-|     9      |   2   | Absolute remaining fuel      | uint16       | fixed decimal point: 2 digits | 1.3          | DataCorePlugin.GameData.DataCorePlugin.GameData.Fuel |
-|     10     |   2   | Remaining fuel in laps       | uint16       | fixed decimal point: 2 digits | 1.3          | DataCorePlugin.Computed.Fuel_RemainingLaps           |
-|     11     |   8   | Remaining fuel in time units | ASCII string | HH:MM:SS                      | 1.3          | DataCorePlugin.GameData.Fuel_RemainingTime           |
+|     5      |   2   | Oil pressure                 | uint16       | fixed decimal point: 2 digits | 1.3          | DataCorePlugin.GameData.OilPressure                  |
+|     7      |   2   | Oil temperature              | uint16       | fixed decimal point: 2 digits | 1.3          | DataCorePlugin.GameData.OilTemperature               |
+|     9      |   1   | Relative remaining fuel      | uint8        | 0..100                        | 1.3          | DataCorePlugin.GameData.FuelPercent                  |
+|     10     |   2   | Absolute remaining fuel      | uint16       | fixed decimal point: 2 digits | 1.3          | DataCorePlugin.GameData.DataCorePlugin.GameData.Fuel |
+|     12     |   2   | Remaining fuel in laps       | uint16       | fixed decimal point: 2 digits | 1.3          | DataCorePlugin.Computed.Fuel_RemainingLaps           |
+|     14     |   6   | Remaining fuel in time units | ASCII string | HHMMSS                        | 1.3          | DataCorePlugin.GameData.Fuel_RemainingTime           |
 
 All absolute values are expressed in user-selected units.
 Values with fixed decimal point are multiplied by 100, then truncated.

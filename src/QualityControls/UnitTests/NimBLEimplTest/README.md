@@ -175,10 +175,31 @@ Not applicable to USB implementation.
 3. Must show a line starting with: `RD 06  01`.
 4. Enter `00 00` at fields below `ReportID`.
 5. Click on `Set Feature`.
-6. Serial output must show: `"UI control: next page`.
+6. Serial output must show: `UI control: next page`.
 7. Enter `00 01` at fields below `ReportID`.
 8. Click on `Set Feature`.
-9. Serial output must show: `"UI control: previous page`.
+9. Serial output must show: `UI control: previous page`.
+
+## Telemetry data
+
+1. Enter `14` at field `ReportID`.
+2. Enter `4b 5e 06 63 01 00 40 01` at fields below `ReportID`.
+3. Click on `Set Report`.
+4. Serial output must show this line among others:
+   `powertrain: K 1630 99 1 0 320`
+5. Enter `15` at field `ReportID`.
+6. Enter `00 02 ff 00 01 00 07 40 fe` at fields below `ReportID`.
+7. Click on `Set Report`.
+8. Serial output must show this line among others:
+   `ecu: 0 1 1 0 1 0 7 64 100`
+9. Enter `16` at field `ReportID`.
+10. Enter `01 00 02 00 03 00 04 e2 09 30 31 31 30 32 33` at fields below `ReportID`.
+11. Serial output must show this line among others:
+    `ecu: 1 0 1 0 1 0 1 0 2530 01:10:23`
+12. Enter `17` at field `ReportID`.
+13. Enter `57 85 00 1c 27 22 01 40 1f 01 90 19 b8 22 31 30 30 31 33 32` at fields below `ReportID`.
+14. Serial output must show this line among others:
+    `gauges: 87 1.33 100.12 2.90 80.0 1 65.44 8888 10:01:32`
 
 ### Custom Hardware ID (HID report)
 

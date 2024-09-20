@@ -952,6 +952,15 @@ namespace hidImplementation
         void onSetFeature(uint8_t report_id, const uint8_t *buffer, uint16_t len);
 
         /**
+         * @brief Receive an output report
+         *
+         * @param[in] report_id Report identification
+         * @param[in] buffer Pointer to buffer that contains received data
+         * @param[in] len Size of @p buffer
+         */
+        void onOutput(uint8_t report_id, const uint8_t *buffer, uint16_t len);
+
+        /**
          * @brief Resets data for the input report
          *
          * @param[out] report Pointer to report buffer.

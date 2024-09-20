@@ -34,8 +34,8 @@ void setup()
 
 void loop()
 {
-    notify::telemetryData.frameID++;;
+    notify::telemetryData.frameID++;
     delay(1100);
-    notify::telemetryData.frameID++;;
+    notify::telemetryData.frameID++;
     delay(3000);
- }
+}

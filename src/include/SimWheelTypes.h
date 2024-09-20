@@ -16,6 +16,7 @@
 
 #include <stdint.h>
 #include <vector>
+#include <string>
 #include "esp32-hal.h" // declares gpio_num_t
 
 /**
@@ -329,7 +330,52 @@ typedef enum
  */
 typedef struct
 {
-    uint64_t frameID;
+    uint64_t frameID; /// For internal use. Do not overwrite.
+    struct
+    {
+        char gear = ' ';          /// Display character for current gear
+        uint16_t rpm = 0;         /// Revolutions per minute
+        uint8_t rpmPercent = 0;   /// Percentage of RPM
+        bool shiftLight1 = false; /// True at maximum torque
+        bool shiftLight2 = false; /// True at maximum power
+        uint16_t speed = 0;       /// Speed in user-defined units (Kph or Mph)
+    } powertrain;
+    struct
+    {
+        bool absEngaged = false;   /// ABS is engaged
+        bool tcEngaged = false;    /// TC is engaged
+        bool drsEngaged = false;   /// DRS is engaged
+        bool pitLimiter = false;   /// The pit limiter is engaged
+        bool lowFuelAlert = false; /// True when fuel is low
+        uint8_t absLevel = 0;      /// Driver-selected ABS mode
+        uint8_t tcLevel = 0;       /// Driver-selected TC mode
+        uint8_t tcCut = 0;         /// Driver-selected TC Cut mode
+        uint8_t brakeBias = 0;     /// Percentage of brake bias towards front wheels
+    } ecu;
+    struct
+    {
+        bool blackFlag = false;
+        bool blueFlag = false;
+        bool checkeredFlag = false;
+        bool greenFlag = false;
+        bool orangeFlag = false;
+        bool whiteFlag = false;
+        bool yellowFlag = false;
+        uint16_t remainingLaps = 0;
+        char remainingTime[9] = "--:--:--"; /// Remaining session time in HH:MM:SS
+    } raceControl;
+    struct
+    {
+        uint8_t relativeTurboPressure = 0;      /// Percentage of turbo pressure
+        float absoluteTurboPressure = 0.0;      /// Turbo pressure in bars
+        float waterTemperature = 0.0;           /// Water temperature in user-defined units (Celsius or Kelvin)
+        float oilPressure = 0.0;                /// Oil pressure in bars
+        float oilTemperature = 0.0;             /// Oil temperature in user-defined units (Celsius or Kelvin)
+        uint8_t relativeRemainingFuel = 0;      /// Percentage of remaining fuel
+        float absoluteRemainingFuel = 0;        /// Remaining fuel in user-defined units (litres or gallons)
+        uint16_t remainingFuelLaps = 0;         /// Laps to run out of fuel
+        char remainingFuelTime[9] = "--:--:--"; /// Time to run out of fuel in HH:MM:SS
+    } gauges;
 } telemetryData_t;
 
 /**

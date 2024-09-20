@@ -23,6 +23,8 @@ extern uint16_t customPID;
 extern uint16_t factoryVID;
 extern uint16_t factoryPID;
 
+uint64_t lastFrameID = 0;
+
 //------------------------------------------------------------------
 // mocks
 //------------------------------------------------------------------
@@ -92,6 +94,57 @@ void power::powerOff()
 int batteryMonitor::getLastBatteryLevel()
 {
     return UNKNOWN_BATTERY_LEVEL;
+}
+
+volatile telemetryData_t notify::telemetryData = {};
+
+//------------------------------------------------------------------
+// Auxiliary
+//------------------------------------------------------------------
+
+void checkAndPrintTelemetryData()
+{
+    if (notify::telemetryData.frameID != lastFrameID)
+    {
+        lastFrameID = notify::telemetryData.frameID;
+        Serial.printf("powertrain: %c %u %u %u %u %u\n",
+                      notify::telemetryData.powertrain.gear,
+                      notify::telemetryData.powertrain.rpm,
+                      notify::telemetryData.powertrain.rpmPercent,
+                      notify::telemetryData.powertrain.shiftLight1,
+                      notify::telemetryData.powertrain.shiftLight2,
+                      notify::telemetryData.powertrain.speed);
+        Serial.printf("ecu: %u %u %u %u %u %u %u %u %u\n",
+                      notify::telemetryData.ecu.absEngaged,
+                      notify::telemetryData.ecu.tcEngaged,
+                      notify::telemetryData.ecu.drsEngaged,
+                      notify::telemetryData.ecu.pitLimiter,
+                      notify::telemetryData.ecu.lowFuelAlert,
+                      notify::telemetryData.ecu.absLevel,
+                      notify::telemetryData.ecu.tcLevel,
+                      notify::telemetryData.ecu.tcCut,
+                      notify::telemetryData.ecu.brakeBias);
+        Serial.printf("race control: %u %u %u %u %u %u %u %u %s\n",
+                      notify::telemetryData.raceControl.blackFlag,
+                      notify::telemetryData.raceControl.blueFlag,
+                      notify::telemetryData.raceControl.checkeredFlag,
+                      notify::telemetryData.raceControl.greenFlag,
+                      notify::telemetryData.raceControl.orangeFlag,
+                      notify::telemetryData.raceControl.whiteFlag,
+                      notify::telemetryData.raceControl.yellowFlag,
+                      notify::telemetryData.raceControl.remainingLaps,
+                      notify::telemetryData.raceControl.remainingTime);
+        Serial.printf("race control: %u %.2f %.2f %.2f %.2f %u %.2f %u %s\n",
+                      notify::telemetryData.gauges.relativeTurboPressure,
+                      notify::telemetryData.gauges.absoluteTurboPressure,
+                      notify::telemetryData.gauges.waterTemperature,
+                      notify::telemetryData.gauges.oilPressure,
+                      notify::telemetryData.gauges.oilTemperature,
+                      notify::telemetryData.gauges.relativeRemainingFuel,
+                      notify::telemetryData.gauges.absoluteRemainingFuel,
+                      notify::telemetryData.gauges.remainingFuelLaps,
+                      notify::telemetryData.gauges.remainingFuelTime);
+    }
 }
 
 //------------------------------------------------------------------
@@ -169,6 +222,11 @@ void loop()
         axis = axis + 5;
         if (axis >= CLUTCH_FULL_VALUE - 5)
             axis = CLUTCH_NONE_VALUE;
+
+        // Print telemetry data (if any)
+        checkAndPrintTelemetryData();
     }
+
+    // Wait a second
     delay(1000);
 }

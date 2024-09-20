@@ -22,6 +22,10 @@
 #define RID_FEATURE_BUTTONS_MAP 0x04
 #define RID_FEATURE_HARDWARE_ID 0x05
 #define RID_FEATURE_UI_CONTROL 0x06
+#define RID_OUTPUT_POWERTRAIN 0x14   // 20 dec
+#define RID_OUTPUT_ECU 0x15          // 21 dec
+#define RID_OUTPUT_RACE_CONTROL 0x16 // 22 dec
+#define RID_OUTPUT_GAUGES 0x17       // 23 dec
 
 // Report sizes (bytes)
 #define GAMEPAD_REPORT_SIZE 20
@@ -30,6 +34,10 @@
 #define BUTTONS_MAP_REPORT_SIZE 3
 #define HARDWARE_ID_REPORT_SIZE 6
 #define UI_CONTROL_REPORT_SIZE 2
+#define POWERTRAIN_REPORT_SIZE 8
+#define ECU_REPORT_SIZE 9
+#define RACE_CONTROL_REPORT_SIZE 15
+#define GAUGES_REPORT_SIZE 20
 
 // GAME CONTROLLER APPEARANCES
 #define CONTROLLER_TYPE_GAMEPAD 0x05
@@ -144,6 +152,34 @@ static const uint8_t hid_descriptor[] = {
     0x75, 0x08,                   // Report Size (8)
     0x95, UI_CONTROL_REPORT_SIZE, // Report count
     0xb1, 0xa2,                   // FEATURE (Data,var,abs,Nprf,Vol)
+
+    // ___ POWERTRAIN TELEMETRY (OUTPUT) REPORT ___
+    0x09, 0x00,                   // USAGE (undefined)
+    0x85, RID_OUTPUT_POWERTRAIN,  // REPORT ID
+    0x75, 0x08,                   // Report Size (8)
+    0x95, POWERTRAIN_REPORT_SIZE, // Report count
+    0x91, 0x22,                   // OUTPUT (Data,var,abs,Nprf)
+
+    // ___ ECU TELEMETRY (OUTPUT) REPORT ___
+    0x09, 0x00,            // USAGE (undefined)
+    0x85, RID_OUTPUT_ECU,  // REPORT ID
+    0x75, 0x08,            // Report Size (8)
+    0x95, ECU_REPORT_SIZE, // Report count
+    0x91, 0x22,            // OUTPUT (Data,var,abs,Nprf)
+
+    // ___ RACE CONTROL TELEMETRY (OUTPUT) REPORT ___
+    0x09, 0x00,                     // USAGE (undefined)
+    0x85, RID_OUTPUT_RACE_CONTROL,  // REPORT ID
+    0x75, 0x08,                     // Report Size (8)
+    0x95, RACE_CONTROL_REPORT_SIZE, // Report count
+    0x91, 0x22,                     // OUTPUT (Data,var,abs,Nprf)
+
+    // ___ GAUGES (OUTPUT) REPORT ___
+    0x09, 0x00,               // USAGE (undefined)
+    0x85, RID_OUTPUT_GAUGES,  // REPORT ID
+    0x75, 0x08,               // Report Size (8)
+    0x95, GAUGES_REPORT_SIZE, // Report count
+    0x91, 0x22,               // OUTPUT (Data,var,abs,Nprf)
 
     // END APPLICATION
     0xC0 // EndCollection()

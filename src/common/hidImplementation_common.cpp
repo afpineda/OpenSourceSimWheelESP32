@@ -246,7 +246,83 @@ void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *b
 }
 
 // ----------------------------------------------------------------------------
-// Input  reports
+// Output reports
+// ----------------------------------------------------------------------------
+
+void hidImplementation::common::onOutput(
+    uint8_t report_id,
+    const uint8_t *buffer,
+    uint16_t len)
+{
+    // TODO: security lock
+    if ((report_id == RID_OUTPUT_POWERTRAIN) && (len >= POWERTRAIN_REPORT_SIZE))
+    {
+        notify::telemetryData.powertrain.gear = (char)buffer[0];
+        notify::telemetryData.powertrain.rpm = *((uint16_t *)(buffer + 1));
+        notify::telemetryData.powertrain.rpmPercent = *((uint16_t *)(buffer + 3));
+        if (notify::telemetryData.powertrain.rpmPercent > 100)
+            notify::telemetryData.powertrain.rpmPercent = 100;
+        notify::telemetryData.powertrain.shiftLight1 = buffer[4];
+        notify::telemetryData.powertrain.shiftLight2 = buffer[5];
+        notify::telemetryData.powertrain.speed = *((uint16_t *)(buffer + 6));
+    }
+    else if ((report_id == RID_OUTPUT_ECU) && (len >= ECU_REPORT_SIZE))
+    {
+        notify::telemetryData.ecu.absEngaged = buffer[0];
+        notify::telemetryData.ecu.tcEngaged = buffer[1];
+        notify::telemetryData.ecu.drsEngaged = buffer[2];
+        notify::telemetryData.ecu.pitLimiter = buffer[3];
+        notify::telemetryData.ecu.lowFuelAlert = buffer[4];
+        notify::telemetryData.ecu.absLevel = buffer[5];
+        notify::telemetryData.ecu.tcLevel = buffer[6];
+        notify::telemetryData.ecu.tcCut = buffer[7];
+        notify::telemetryData.ecu.brakeBias = buffer[8];
+        if (notify::telemetryData.ecu.brakeBias > 100)
+            notify::telemetryData.ecu.brakeBias = 100;
+    }
+    else if ((report_id == RID_OUTPUT_RACE_CONTROL) && (len >= RACE_CONTROL_REPORT_SIZE))
+    {
+        notify::telemetryData.raceControl.blackFlag = buffer[0];
+        notify::telemetryData.raceControl.blueFlag = buffer[1];
+        notify::telemetryData.raceControl.checkeredFlag = buffer[2];
+        notify::telemetryData.raceControl.greenFlag = buffer[3];
+        notify::telemetryData.raceControl.orangeFlag = buffer[4];
+        notify::telemetryData.raceControl.whiteFlag = buffer[5];
+        notify::telemetryData.raceControl.yellowFlag = buffer[6];
+        notify::telemetryData.raceControl.remainingLaps = *((uint16_t *)(buffer + 7));
+        notify::telemetryData.raceControl.remainingTime[0] = buffer[9];
+        notify::telemetryData.raceControl.remainingTime[1] = buffer[10];
+        notify::telemetryData.raceControl.remainingTime[3] = buffer[11];
+        notify::telemetryData.raceControl.remainingTime[4] = buffer[12];
+        notify::telemetryData.raceControl.remainingTime[6] = buffer[13];
+        notify::telemetryData.raceControl.remainingTime[7] = buffer[14];
+    }
+    else if ((report_id == RID_OUTPUT_GAUGES) && (len >= GAUGES_REPORT_SIZE))
+    {
+        notify::telemetryData.gauges.relativeTurboPressure = buffer[0];
+        if (notify::telemetryData.gauges.relativeTurboPressure > 100)
+            notify::telemetryData.gauges.relativeTurboPressure = 100;
+        notify::telemetryData.gauges.absoluteTurboPressure = static_cast<float>(*((uint16_t *)(buffer + 1)) / 100.0);
+        notify::telemetryData.gauges.waterTemperature = static_cast<float>(*((uint16_t *)(buffer + 3)) / 100.0);
+        notify::telemetryData.gauges.oilPressure = static_cast<float>(*((uint16_t *)(buffer + 5)) / 100.0);
+        notify::telemetryData.gauges.oilTemperature = static_cast<float>(*((uint16_t *)(buffer + 7)) / 100.0);
+        notify::telemetryData.gauges.relativeRemainingFuel = buffer[9];
+        if (notify::telemetryData.gauges.relativeRemainingFuel > 100)
+            notify::telemetryData.gauges.relativeRemainingFuel = 100;
+        notify::telemetryData.gauges.absoluteRemainingFuel = static_cast<float>(*((uint16_t *)(buffer + 10)) / 100.0);
+        notify::telemetryData.gauges.remainingFuelLaps = *((uint16_t *)(buffer + 12));
+        notify::telemetryData.gauges.remainingFuelTime[0] = buffer[14];
+        notify::telemetryData.gauges.remainingFuelTime[1] = buffer[15];
+        notify::telemetryData.gauges.remainingFuelTime[3] = buffer[16];
+        notify::telemetryData.gauges.remainingFuelTime[4] = buffer[17];
+        notify::telemetryData.gauges.remainingFuelTime[6] = buffer[18];
+        notify::telemetryData.gauges.remainingFuelTime[7] = buffer[19];
+    }
+    notify::telemetryData.frameID++;
+}
+
+// ----------------------------------------------------------------------------
+// Input reports
 // ----------------------------------------------------------------------------
 
 void hidImplementation::common::onReset(uint8_t *report)
