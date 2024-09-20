@@ -80,7 +80,7 @@ void notificationDaemonLoop(void *param)
     TickType_t previousTelemetryTimestamp = 0;
     TickType_t currentTelemetryTimestamp = 0;
 
-    for (AbstractNotificationInterface *impl : implementorArray)
+    for (AbstractUserInterface *impl : implementorArray)
         impl->onStart();
 
     while (true)
@@ -89,7 +89,7 @@ void notificationDaemonLoop(void *param)
         {
             // One or more events should be available
             while (eventPop(eventID))
-                for (AbstractNotificationInterface *impl : implementorArray)
+                for (AbstractUserInterface *impl : implementorArray)
                     switch (eventID)
                     {
                     case EVENT_BITE_POINT:
@@ -118,18 +118,18 @@ void notificationDaemonLoop(void *param)
                         (void *)&privateTelemetryData,
                         (const void *)&notify::telemetryData,
                         sizeof(privateTelemetryData));
-                    for (AbstractNotificationInterface *impl : implementorArray)
+                    for (AbstractUserInterface *impl : implementorArray)
                         impl->onTelemetryData(&privateTelemetryData);
                 }
                 else if (telemetryReceived &&
                          ((currentTelemetryTimestamp - previousTelemetryTimestamp) >= NO_TELEMETRY_TICKS))
                 {
                     telemetryReceived = false;
-                    for (AbstractNotificationInterface *impl : implementorArray)
+                    for (AbstractUserInterface *impl : implementorArray)
                         impl->onTelemetryData(nullptr);
                 }
             }
-            for (AbstractNotificationInterface *impl : implementorArray)
+            for (AbstractUserInterface *impl : implementorArray)
                 impl->serveSingleFrame();
         }
     }

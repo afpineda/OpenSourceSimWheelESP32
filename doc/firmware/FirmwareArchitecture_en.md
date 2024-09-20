@@ -207,7 +207,7 @@ It does not depend on a particular hardware, so, anything could be implemented i
 a single LED, sounds, an OLED, etc.
 By default, it does nothing.
 To provide a particular user-interface implementation,
-derive a new class from `AbstractNotificationInterface`,
+derive a new class from `AbstractUserInterface`,
 then provide an instance to `notify::begin()`.
 
 All notifications are queued, serialized and executed in a very low priority separate thread.
@@ -217,7 +217,7 @@ For those reasons, some notifications may be missed.
 If there were two or more user interfaces (for example, display and sounds),
 they should be implemented in separate classes, not to mix their code.
 
-`AbstractNotificationInterface` may work in two, non-exclusive, modes:
+`AbstractUserInterface` may work in two, non-exclusive, modes:
 
 #### As a simple message queue
 

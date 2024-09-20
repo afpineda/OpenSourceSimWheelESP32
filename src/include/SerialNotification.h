@@ -16,7 +16,7 @@
 
 //-------------------------------------------------------------------
 
-class SerialNotificationImpl : public AbstractNotificationInterface
+class SerialNotificationImpl : public AbstractUserInterface
 {
 public:
     virtual void onStart() override;

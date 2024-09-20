@@ -100,11 +100,6 @@ This article is focused on **firmware-defined** error messages.
 
   Should not happen. Please, open an issue.
 
-- *getTargetFPS() is zero at frameServerLoop()*
-
-  Your custom class derived from `AbstractNotificationInterface` must return a non-zero value at
-  `getTargetFPS()`. Check your custom firmware.
-
 - *Unable to create notifications daemon*
 
   Should not happen. Please, open an issue.

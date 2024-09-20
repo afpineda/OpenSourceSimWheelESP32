@@ -336,7 +336,7 @@ typedef struct
  * @brief Abstract interface for notifications and telemetry display.
  *
  */
-class AbstractNotificationInterface
+class AbstractUserInterface
 {
 public:
     /// Index of this implementor. Do not overwrite.
@@ -451,6 +451,6 @@ public:
  * @brief Array of user interface implementations.
  *
  */
-typedef std::vector<AbstractNotificationInterface *> notificationImplementorsArray_t;
+typedef std::vector<AbstractUserInterface *> notificationImplementorsArray_t;
 
 #endif
