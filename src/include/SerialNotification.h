@@ -22,12 +22,20 @@ public:
     virtual void onStart() override;
     virtual void onBitePoint() override;
     virtual void onConnected() override;
+    virtual void onTelemetryData(const telemetryData_t *data) override;
     virtual void onBLEdiscovering() override;
     virtual void onLowBattery() override;
     virtual void serveSingleFrame() override;
     virtual void selectNextPage() override;
     virtual void selectPreviousPage() override;
+};
 
+class SerialTelemetryDisplay: public SerialNotificationImpl
+{
+public:
+    SerialTelemetryDisplay() {
+        requiresPowertrainTelemetry = true;
+    };
 };
 
 #endif

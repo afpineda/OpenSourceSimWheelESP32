@@ -52,3 +52,13 @@ void SerialNotificationImpl::selectPreviousPage()
 {
     Serial.println("(Previous page)");
 }
+
+void SerialNotificationImpl::onTelemetryData(const telemetryData_t *data)
+{
+    if (!data)
+        Serial.println("(TELEMETRY OFF)");
+    else
+    {
+        Serial.printf("(TELEMETRY ID %d)\n", data->frameID);
+    }
+}

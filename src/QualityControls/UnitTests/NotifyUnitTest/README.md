@@ -278,4 +278,4 @@ Output through USB serial port at 115200 bauds. Connect before reset.
    -- END --
    ```
 
-3. Some "(BITE POINT: xxx)" messages may be missed but this is a **correct and expected behavior**.
+3. Some "(BITE POINT: xxx)" messages may be missed or repeated but this is a **correct and expected behavior**.

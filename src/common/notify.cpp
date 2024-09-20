@@ -16,12 +16,16 @@
 // ----------------------------------------------------------------------------
 
 // Notification daemon
-#define DEFAULT_STACK_SIZE 1 * 1024 + 512
+#define DEFAULT_STACK_SIZE 2 * 1024
 static TaskHandle_t notificationDaemon = nullptr;
 static notificationImplementorsArray_t implementorArray;
 
-// Frame server
+// Frame server and telemetry
 static TickType_t frameServerPeriod = portMAX_DELAY;
+static bool telemetryRequired = false;
+volatile telemetryData_t notify::telemetryData;
+static telemetryData_t privateTelemetryData;
+#define NO_TELEMETRY_TICKS pdMS_TO_TICKS(2000)
 
 // Events queue
 #define EVENT_QUEUE_SIZE 64
@@ -47,7 +51,7 @@ void eventPush(uint8_t eventID)
     uint8_t queueTailNext = queueTail;
     incQueuePointer(queueTailNext);
     if (queueTailNext == queueHead)
-        // Queue is full, overwrite last event
+        // Queue is full
         queueTailNext = queueTail;
     eventBuffer[queueTailNext] = eventID;
     queueTail = queueTailNext;
@@ -72,6 +76,9 @@ bool eventPop(uint8_t &eventID)
 void notificationDaemonLoop(void *param)
 {
     uint8_t eventID;
+    bool telemetryReceived = false;
+    TickType_t previousTelemetryTimestamp = 0;
+    TickType_t currentTelemetryTimestamp = 0;
 
     for (AbstractNotificationInterface *impl : implementorArray)
         impl->onStart();
@@ -99,8 +106,32 @@ void notificationDaemonLoop(void *param)
                     }
         }
         if (frameServerPeriod != portMAX_DELAY)
+        {
+            if (telemetryRequired)
+            {
+                currentTelemetryTimestamp = xTaskGetTickCount();
+                if (privateTelemetryData.frameID != notify::telemetryData.frameID)
+                {
+                    telemetryReceived = true;
+                    previousTelemetryTimestamp = currentTelemetryTimestamp;
+                    memcpy(
+                        (void *)&privateTelemetryData,
+                        (const void *)&notify::telemetryData,
+                        sizeof(privateTelemetryData));
+                    for (AbstractNotificationInterface *impl : implementorArray)
+                        impl->onTelemetryData(&privateTelemetryData);
+                }
+                else if (telemetryReceived &&
+                         ((currentTelemetryTimestamp - previousTelemetryTimestamp) >= NO_TELEMETRY_TICKS))
+                {
+                    telemetryReceived = false;
+                    for (AbstractNotificationInterface *impl : implementorArray)
+                        impl->onTelemetryData(nullptr);
+                }
+            }
             for (AbstractNotificationInterface *impl : implementorArray)
                 impl->serveSingleFrame();
+        }
     }
 }
 
@@ -113,6 +144,11 @@ void notify::begin(
     uint8_t framesPerSecond,
     uint16_t stackSize)
 {
+    bool requiresPowertrainTelemetry = false;
+    bool requiresECUTelemetry = false;
+    bool requiresRaceControlTelemetry = false;
+    bool requiresGaugeTelemetry = false;
+
     // Check parameters
     if (implementors.size() == 0)
     {
@@ -120,11 +156,18 @@ void notify::begin(
         abort();
     }
     for (int i = 0; i < implementors.size(); i++)
+    {
         if (implementors[i] == nullptr)
         {
             log_e("notify::begin() called with a null pointer implementor");
             abort();
         }
+        implementors[i]->index = i;
+        requiresPowertrainTelemetry |= implementors[i]->requiresPowertrainTelemetry;
+        requiresECUTelemetry |= implementors[i]->requiresECUTelemetry;
+        requiresRaceControlTelemetry |= implementors[i]->requiresRaceControlTelemetry;
+        requiresGaugeTelemetry |= implementors[i]->requiresGaugeTelemetry;
+    }
 
     // Initialize
     if (notificationDaemon == nullptr)
@@ -136,6 +179,29 @@ void notify::begin(
         else
             frameServerPeriod = portMAX_DELAY;
         implementorArray = implementors;
+        telemetryRequired =
+            requiresPowertrainTelemetry |
+            requiresECUTelemetry |
+            requiresRaceControlTelemetry |
+            requiresGaugeTelemetry;
+        notify::telemetryData.frameID = 0;
+        privateTelemetryData.frameID = 0;
+
+        // Set new device capabilities
+        capabilities::setFlag(deviceCapability_t::CAP_USER_INTERFACE);
+        if (framesPerSecond > 0)
+        {
+            if (requiresPowertrainTelemetry)
+                capabilities::setFlag(deviceCapability_t::CAP_TELEMETRY_POWERTRAIN);
+            if (requiresECUTelemetry)
+                capabilities::setFlag(deviceCapability_t::CAP_TELEMETRY_ECU);
+            if (requiresRaceControlTelemetry)
+                capabilities::setFlag(deviceCapability_t::CAP_TELEMETRY_RACE_CONTROL);
+            if (requiresGaugeTelemetry)
+                capabilities::setFlag(deviceCapability_t::CAP_TELEMETRY_GAUGES);
+        }
+
+        // Create notifications daemon
         xTaskCreate(
             notificationDaemonLoop,
             "notify",
@@ -148,7 +214,6 @@ void notify::begin(
             log_e("Unable to create notifications daemon");
             abort();
         }
-        capabilities::setFlag(deviceCapability_t::CAP_USER_INTERFACE);
     }
     else
         log_w("notify::begin() called twice");

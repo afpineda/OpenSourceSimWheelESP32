@@ -741,6 +741,13 @@ namespace inputHub
 namespace notify
 {
     /**
+     * @brief Last received telemetry data. Not for user code.
+     *        Exposed for efficiency.
+     *
+     */
+    extern volatile telemetryData_t telemetryData;
+
+    /**
      * @brief Set up an UI-dependant implementation for user notifications.
      *        Do not call if there is no user interface.
      *
@@ -889,7 +896,6 @@ namespace hidImplementation
      */
     namespace common
     {
-
         /**
          * @brief Set a default hardware ID for this device
          *

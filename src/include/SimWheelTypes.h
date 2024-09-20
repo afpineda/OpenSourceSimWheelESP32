@@ -252,7 +252,7 @@ typedef std::vector<inputNumber_t> inputNumberCombination_t;
 /**
  * @brief User-selected function of the clutch paddles
  *        CF_CLUTCH = F1-style clutch
- *        CF_ALT = Alternate button numbers (like ALT key in PC keybards)
+ *        CF_ALT = Alternate button numbers (like ALT key in PC keyboards)
  *        CF_BUTTON = a button like any other
  */
 typedef enum
@@ -301,7 +301,11 @@ typedef enum
     CAP_DPAD = 3,                          // has a directional pad
     CAP_BATTERY = 4,                       // battery-operated
     CAP_BATTERY_CALIBRATION_AVAILABLE = 5, // has battery calibration data
-    CAP_USER_INTERFACE = 6                 // has an user interface
+    CAP_USER_INTERFACE = 6,                // has an user interface
+    CAP_TELEMETRY_POWERTRAIN = 7,          /// Able to display powertrain telemetry data
+    CAP_TELEMETRY_ECU = 8,                 /// Able to display ECU telemetry data
+    CAP_TELEMETRY_RACE_CONTROL = 9,        /// Able to display race control telemetry data
+    CAP_TELEMETRY_GAUGES = 10              /// Able to display telemetry data for gauges
 } deviceCapability_t;
 
 /**
@@ -320,11 +324,32 @@ typedef enum
 } simpleCommands_t;
 
 /**
- * @brief Abstract interface for notifications.
+ * @brief Telemetry data
+ *
+ */
+typedef struct
+{
+    uint64_t frameID;
+} telemetryData_t;
+
+/**
+ * @brief Abstract interface for notifications and telemetry display.
  *
  */
 class AbstractNotificationInterface
 {
+public:
+    /// Index of this implementor. Do not overwrite.
+    uint8_t index;
+    /// Set to true to receive and use powertrain telemetry data
+    bool requiresPowertrainTelemetry = false;
+    /// Set to true to receive and use ECU telemetry data
+    bool requiresECUTelemetry = false;
+    /// Set to true to receive and use race control telemetry data
+    bool requiresRaceControlTelemetry = false;
+    /// Set to true to receive and use telemetry data for gauges
+    bool requiresGaugeTelemetry = false;
+
 public:
     /**
      * @brief Called just once at initialization.
@@ -334,12 +359,40 @@ public:
     virtual void onStart() {};
 
     /**
+     * @brief Notify new telemetry data
+     *
+     * @param pTelemetryData Pointer to telemetry data. Can be null.
+     *                       Safe to store for later use.
+     *
+     * @note For this method to get called,
+     *       user code must meet the following requirements:
+     *       - Frames-per-second must be set to non-zero. See notify::begin().
+     *       - At instance creation, one of the requiresXXXTelemetry attributes
+     *         must be set to true.
+     *
+     * @note Always called just before serveSingleFrame().
+     *       This method may draw a display frame into a buffer,
+     *       while serveSingleFrame() just displays that frame buffer.
+     *
+     * @note @p pTelemetryData is null when no telemetry data has been
+     *       received in the previous two seconds. May be used
+     *       to turn the display off.
+     *
+     * @note Must not enter an infinite loop. Must return as soon as possible.
+     *
+     * @note Called in a low priority thread.
+     */
+    virtual void onTelemetryData(const telemetryData_t *pTelemetryData) {};
+
+    /**
      * @brief Draw a single frame.
      *
-     * @note Called in a loop when no notifications are pending.
+     * @note Called at timed intervals when no notifications are pending.
      *       Not called at all if frames per second is set to 0.
+     *       See notify::begin().
      *
-     * @note Must not enter a loop itself.
+     * @note Must not enter an infinite loop. Must return as soon as possible.
+     *
      * @note Called in a low priority thread.
      */
     virtual void serveSingleFrame() {};
@@ -363,6 +416,8 @@ public:
      * @brief Notify device is in discovery mode.
      *
      * @note Called in a low priority thread.
+     *
+     * @note Not called in the USB implementation.
      */
     virtual void onBLEdiscovering() {};
 
@@ -393,7 +448,7 @@ public:
 };
 
 /**
- * @brief Array of implementations for the notification interface.
+ * @brief Array of user interface implementations.
  *
  */
 typedef std::vector<AbstractNotificationInterface *> notificationImplementorsArray_t;
