@@ -200,7 +200,7 @@ Such data is set from other modules at startup.
 This module is trivial, so it is not shown in the previous diagram.
 It may be called from any other module.
 
-### Notifications
+### Notifications ("notify" module)
 
 This module provides a generic way to notify events to the user, if a user interface is available.
 It does not depend on a particular hardware, so, anything could be implemented in the future:
@@ -246,7 +246,7 @@ For example:
 
 For user interfaces in need of a perpetual loop or for persistent notifications.
 If there are no pending notifications,
-`AbstractFrameServerInterface::serveSingleFrame()` will be called at timed intervals.
+`AbstractUserInterface::serveSingleFrame()` will be called at timed intervals.
 A non-zero frames-per-second value must be given to `notify::begin()`.
 For example:
 
@@ -279,8 +279,30 @@ For example:
    }
 ```
 
-*Note*: `AbstractFrameServerInterface::onLowBattery()` is already
+*Note*: `AbstractUserInterface::onLowBattery()` is already
 called at timed intervals as long as such a condition persists.
+
+This frame server may be used to display telemetry data, too.
+There are two possible patterns to this end:
+
+- Buffered output:
+
+  `AbstractUserInterface::onTelemetryData()` gets called first.
+  This method draws telemetry data into a frame buffer for later display.
+  The double-buffer technique may be used.
+
+  `AbstractUserInterface::serveSingleFrame()` gets called then.
+  This method copies the frame buffer to the display hardware.
+
+- Non-buffered output
+
+  `AbstractUserInterface::onTelemetryData()` gets called
+  to do all the painting.
+  `AbstractUserInterface::serveSingleFrame()` does nothing.
+
+Note that `AbstractUserInterface::serveSingleFrame()` may get called
+several times in a row
+before `AbstractUserInterface::onTelemetryData()` gets called.
 
 ### BatteryMonitor
 
