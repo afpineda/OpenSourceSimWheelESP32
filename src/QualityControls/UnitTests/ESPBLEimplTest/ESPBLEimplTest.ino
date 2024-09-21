@@ -25,12 +25,16 @@ extern uint16_t customPID;
 extern uint16_t factoryVID;
 extern uint16_t factoryPID;
 
+uint64_t lastFrameID = 0;
+
 //------------------------------------------------------------------
 // mocks
 //------------------------------------------------------------------
 
 volatile uint32_t capabilities::flags = 0x07;
 volatile inputBitmap_t capabilities::availableInputs = 0b0111ULL;
+volatile telemetryData_t notify::telemetryData = {};
+uint8_t notify::maxFPS = 0;
 
 void notify::connected()
 {
@@ -94,6 +98,55 @@ void power::powerOff()
 int batteryMonitor::getLastBatteryLevel()
 {
     return UNKNOWN_BATTERY_LEVEL;
+}
+
+//------------------------------------------------------------------
+// Auxiliary
+//------------------------------------------------------------------
+
+void checkAndPrintTelemetryData()
+{
+    if (notify::telemetryData.frameID != lastFrameID)
+    {
+        lastFrameID = notify::telemetryData.frameID;
+        Serial.printf("powertrain: %c %u %u %u %u %u\n",
+                      notify::telemetryData.powertrain.gear,
+                      notify::telemetryData.powertrain.rpm,
+                      notify::telemetryData.powertrain.rpmPercent,
+                      notify::telemetryData.powertrain.shiftLight1,
+                      notify::telemetryData.powertrain.shiftLight2,
+                      notify::telemetryData.powertrain.speed);
+        Serial.printf("ecu: %u %u %u %u %u %u %u %u %u\n",
+                      notify::telemetryData.ecu.absEngaged,
+                      notify::telemetryData.ecu.tcEngaged,
+                      notify::telemetryData.ecu.drsEngaged,
+                      notify::telemetryData.ecu.pitLimiter,
+                      notify::telemetryData.ecu.lowFuelAlert,
+                      notify::telemetryData.ecu.absLevel,
+                      notify::telemetryData.ecu.tcLevel,
+                      notify::telemetryData.ecu.tcCut,
+                      notify::telemetryData.ecu.brakeBias);
+        Serial.printf("race control: %u %u %u %u %u %u %u %u %u\n",
+                      notify::telemetryData.raceControl.blackFlag,
+                      notify::telemetryData.raceControl.blueFlag,
+                      notify::telemetryData.raceControl.checkeredFlag,
+                      notify::telemetryData.raceControl.greenFlag,
+                      notify::telemetryData.raceControl.orangeFlag,
+                      notify::telemetryData.raceControl.whiteFlag,
+                      notify::telemetryData.raceControl.yellowFlag,
+                      notify::telemetryData.raceControl.remainingLaps,
+                      notify::telemetryData.raceControl.remainingMinutes);
+        Serial.printf("gauges: %u %.2f %u %.2f %u %u %u %u %u\n",
+                      notify::telemetryData.gauges.relativeTurboPressure,
+                      notify::telemetryData.gauges.absoluteTurboPressure,
+                      notify::telemetryData.gauges.waterTemperature,
+                      notify::telemetryData.gauges.oilPressure,
+                      notify::telemetryData.gauges.oilTemperature,
+                      notify::telemetryData.gauges.relativeRemainingFuel,
+                      notify::telemetryData.gauges.absoluteRemainingFuel,
+                      notify::telemetryData.gauges.remainingFuelLaps,
+                      notify::telemetryData.gauges.remainingFuelMinutes);
+    }
 }
 
 //------------------------------------------------------------------
