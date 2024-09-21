@@ -57,7 +57,7 @@
 
 // Data specification version
 #define DATA_MAJOR_VERSION 1
-#define DATA_MINOR_VERSION 2
+#define DATA_MINOR_VERSION 3
 
 // Magic number, do not change
 #define MAGIC_NUMBER_LOW 0x51
