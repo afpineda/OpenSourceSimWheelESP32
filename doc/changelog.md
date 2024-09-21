@@ -240,3 +240,18 @@ First release.
 - ESP32S3-DevKit-C is the new default board for all quality controls.
 - Errata fixes and documentation updates.
 - More test units.
+
+##
+
+- Huge rework in the `notify` namespace.
+  The new implementation reduces memory footprint and CPU usage.
+- Telemetry data is back thanks to HID reports.
+- The "abstract notifications interface" is now called the "abstract user interface".
+  It has been revamped to handle telemetry data.
+- Many user interfaces could be implemented at the same time, for example,
+  *rev lights*, an OLED, and a speaker.
+- "Display pages" are available to each user interface if required.
+  The user may change the active page using HID reports.
+- The new API is not intended to implement full telemetry displays since there
+  are better choices for that. Intended uses are
+  *rev lights*, real-car gauges, fixed-data displays, etc.
