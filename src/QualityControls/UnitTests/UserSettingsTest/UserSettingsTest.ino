@@ -34,7 +34,7 @@ void hidImplementation::reportChangeInConfig()
 // Auxiliary
 //------------------------------------------------------------------
 
-void printUserSettings(bool printMap = true)
+void printUserSettings(bool printMap = true, bool printUIPages = true)
 {
     Serial.printf("   Bite point: %u\n", userSettings::bitePoint);
     Serial.printf("   Clutch working mode: %u\n", userSettings::cpWorkingMode);
@@ -45,6 +45,16 @@ void printUserSettings(bool printMap = true)
     {
         Serial.printf("   Button 0 map: %hhu %hhu\n", userSettings::buttonsMap[0][0], userSettings::buttonsMap[1][0]);
         Serial.printf("   Button 63 map: %hhu %hhu\n", userSettings::buttonsMap[0][63], userSettings::buttonsMap[1][63]);
+    }
+    if (printUIPages)
+    {
+        Serial.printf("   UI Page Index: %u %u %u %u %u %u\n",
+                      userSettings::uiPage[0],
+                      userSettings::uiPage[1],
+                      userSettings::uiPage[2],
+                      userSettings::uiPage[3],
+                      userSettings::uiPage[4],
+                      userSettings::uiPage[5]);
     }
 }
 
@@ -104,6 +114,8 @@ void setTestCase3()
     userSettings::setButtonMap(0, 15, 25);
     userSettings::setButtonMap(63, 25, 15);
     userSettings::setSecurityLock(false);
+    for (int i = 0; i < MAX_UI_COUNT; i++)
+        userSettings::saveUIPageIndex(i, i);
     userSettings::saveNow();
     printTestCase();
 }
@@ -116,6 +128,8 @@ void setTestCase4()
     userSettings::setDPADWorkingMode(false);
     userSettings::resetButtonsMap();
     userSettings::setSecurityLock(true);
+    for (int i = 0; i < MAX_UI_COUNT; i++)
+        userSettings::saveUIPageIndex(i, MAX_UI_COUNT - i);
     printTestCaseAutoSave();
 }
 

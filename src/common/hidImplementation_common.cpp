@@ -21,6 +21,7 @@
 // ----------------------------------------------------------------------------
 
 inputNumber_t selectedInput = UNSPECIFIED_INPUT_NUMBER;
+uint8_t selected_ui = 0xFF;
 #define UNDEFINED_ID 0
 uint16_t factoryVID = UNDEFINED_ID;
 uint16_t factoryPID = UNDEFINED_ID;
@@ -98,7 +99,8 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
         *(uint16_t *)(buffer + 6) = capabilities::flags;
         *(uint64_t *)(buffer + 8) = 0ULL;
         esp_efuse_mac_get_default(buffer + 8);
-        buffer[16] = notify::maxFPS;
+        buffer[16] = notify::uiCount;
+        buffer[17] = notify::maxFPS;
         return CAPABILITIES_REPORT_SIZE;
     }
     if ((report_id == RID_FEATURE_CONFIG) && (len >= CONFIG_REPORT_SIZE))
@@ -135,8 +137,12 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
     }
     if ((report_id == RID_FEATURE_UI_CONTROL) && (len >= UI_CONTROL_REPORT_SIZE))
     {
-        buffer[0] = notify::getUICount();
-        buffer[1] = 0;
+        uint8_t pageCount = 0;
+        uint8_t pageIndex = 0;
+        notify::getPageInfo(selected_ui, pageCount, pageIndex);
+        buffer[0] = selected_ui;
+        buffer[1] = pageCount;
+        buffer[2] = pageIndex;
         return UI_CONTROL_REPORT_SIZE;
     }
     return 0;
@@ -239,11 +245,12 @@ void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *b
     }
     else if ((report_id == RID_FEATURE_UI_CONTROL) && (len >= UI_CONTROL_REPORT_SIZE))
     {
-        if (buffer[1])
-            notify::selectPreviousPage(buffer[0]);
-        else
-            notify::selectNextPage(buffer[0]);
+        selected_ui = buffer[0];
+        if (buffer[2] != 0xFF)
+            notify::setPageIndex(selected_ui, buffer[2]);
     }
+    else
+        log_e("Set feature report ID %u: ignored. Size: %u.", report_id, len);
 }
 
 // ----------------------------------------------------------------------------

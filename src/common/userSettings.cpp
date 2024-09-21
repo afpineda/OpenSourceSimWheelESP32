@@ -28,6 +28,7 @@ volatile bool userSettings::securityLock = false;
 #define FF_x_16 FF_x_4, FF_x_4, FF_x_4, FF_x_4
 #define FF_x_64 FF_x_16, FF_x_16, FF_x_16, FF_x_16
 volatile inputNumber_t userSettings::buttonsMap[2][64] = {FF_x_64, FF_x_64};
+volatile uint8_t userSettings::uiPage[MAX_UI_COUNT] = {0};
 
 // Related to the autosave feature and user preferences
 
@@ -39,6 +40,7 @@ static esp_timer_handle_t autoSaveTimer = nullptr;
 #define KEY_DPAD_FUNCTION "dpad"
 #define KEY_USER_MAP "map"
 #define KEY_SECURITY_LOCK "slock"
+#define KEY_UI_PAGE "uip"
 
 // ----------------------------------------------------------------------------
 // (Auto)save current settings
@@ -54,6 +56,7 @@ void autoSaveCallback(void *param)
         prefs.putUChar(KEY_CLUTCH_CALIBRATION, (uint8_t)userSettings::bitePoint);
         prefs.putBool(KEY_DPAD_FUNCTION, userSettings::dpadWorkingMode);
         prefs.putBool(KEY_SECURITY_LOCK, userSettings::securityLock);
+        prefs.putBytes(KEY_UI_PAGE, (void *)userSettings::uiPage, sizeof(userSettings::uiPage));
         prefs.end();
     }
 }
@@ -116,6 +119,10 @@ void userSettings::begin()
             if (actualSize == sizeof(userSettings::buttonsMap))
                 prefs.getBytes(KEY_USER_MAP, (void *)userSettings::buttonsMap, actualSize);
 
+            actualSize = prefs.getBytesLength(KEY_UI_PAGE);
+            if (actualSize == sizeof(userSettings::uiPage))
+                prefs.getBytes(KEY_UI_PAGE, (void *)userSettings::uiPage, actualSize);
+
             prefs.end();
         }
     }
@@ -127,7 +134,7 @@ void userSettings::begin()
 
 void userSettings::setSecurityLock(bool yesOrNo)
 {
-     if (userSettings::securityLock != yesOrNo)
+    if (userSettings::securityLock != yesOrNo)
     {
         userSettings::securityLock = yesOrNo;
         requestSave();
@@ -207,6 +214,15 @@ void userSettings::resetButtonsMap()
     {
         userSettings::buttonsMap[0][i] = UNSPECIFIED_INPUT_NUMBER;
         userSettings::buttonsMap[1][i] = UNSPECIFIED_INPUT_NUMBER;
+    }
+}
+
+void userSettings::saveUIPageIndex(uint8_t ui_index, uint8_t pageIndex)
+{
+    if (ui_index < MAX_UI_COUNT)
+    {
+        userSettings::uiPage[ui_index] = pageIndex;
+        requestSave();
     }
 }
 

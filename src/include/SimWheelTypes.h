@@ -302,11 +302,10 @@ typedef enum
     CAP_DPAD = 3,                          // has a directional pad
     CAP_BATTERY = 4,                       // battery-operated
     CAP_BATTERY_CALIBRATION_AVAILABLE = 5, // has battery calibration data
-    CAP_USER_INTERFACE = 6,                // has an user interface
-    CAP_TELEMETRY_POWERTRAIN = 7,          /// Able to display powertrain telemetry data
-    CAP_TELEMETRY_ECU = 8,                 /// Able to display ECU telemetry data
-    CAP_TELEMETRY_RACE_CONTROL = 9,        /// Able to display race control telemetry data
-    CAP_TELEMETRY_GAUGES = 10              /// Able to display telemetry data for gauges
+    CAP_TELEMETRY_POWERTRAIN = 6,          /// Able to display powertrain telemetry data
+    CAP_TELEMETRY_ECU = 7,                 /// Able to display ECU telemetry data
+    CAP_TELEMETRY_RACE_CONTROL = 8,        /// Able to display race control telemetry data
+    CAP_TELEMETRY_GAUGES = 9               /// Able to display telemetry data for gauges
 } deviceCapability_t;
 
 /**
@@ -379,6 +378,9 @@ typedef struct
         uint16_t remainingFuelMinutes = 0;  /// Time to run out of fuel in minutes
     } gauges;
 } telemetryData_t;
+
+/// Maximum count of user interfaces allowed
+#define MAX_UI_COUNT 6
 
 /**
  * @brief Abstract interface for notifications and telemetry display.
@@ -479,20 +481,30 @@ public:
     virtual void onLowBattery() {};
 
     /**
-     * @brief Select the next page in the user interface when available.
+     * @brief Get the count of available pages in this user interface.
      *
-     * @note Not thread-safe. May be called while events are being processed
-     *       or serveSingleFrame() is running.
+     * @note Must return the same value in every call.
+     *
+     * @return uint8_t Count of available pages.
      */
-    virtual void selectNextPage() {};
+    virtual uint8_t getPageCount() { return 0; };
 
     /**
-     * @brief Select the previous page in the user interface when available.
+     * @brief Select a page in this user interface
      *
-     * @note Not thread-safe. May be called while events are being processed
-     *       or serveSingleFrame() is running.
+     * @param pageIndex Index of the selected page.
      */
-    virtual void selectPreviousPage() {};
+    virtual void setPageIndex(uint8_t pageIndex) {};
+
+    /**
+     * @brief Get the index of the currently selected page
+     *
+     * @note If paging is not supported, any return value is allowed.
+     *
+     * @return uint8_t Index of current page.
+     *                 Must be coherent with getPageCount().
+     */
+    virtual uint8_t getCurrentPageIndex() { return 0; };
 };
 
 /**

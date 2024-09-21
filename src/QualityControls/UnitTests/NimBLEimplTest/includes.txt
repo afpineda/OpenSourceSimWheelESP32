@@ -4,3 +4,4 @@ HID_definitions.h
 hidImplementation_NimBLE.cpp
 hidImplementation_common.cpp
 userSettings.cpp
+hidTestHelper.cpp

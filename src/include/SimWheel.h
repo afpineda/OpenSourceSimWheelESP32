@@ -66,40 +66,46 @@ namespace capabilities
 namespace userSettings
 {
     /**
-     * @brief Current clutch's bite point
+     * @brief Current clutch's bite point.
      * @note For read only. Do not overwrite.
      */
     extern volatile clutchValue_t bitePoint;
 
     /**
-     * @brief Current working mode of clutch paddles
+     * @brief Current working mode of clutch paddles.
      * @note For read only. Do not overwrite.
      */
     extern volatile clutchFunction_t cpWorkingMode;
 
     /**
-     * @brief Current working mode of ALT buttons
+     * @brief Current working mode of ALT buttons.
      * @note For read only. Do not overwrite.
      */
     extern volatile bool altButtonsWorkingMode;
 
     /**
-     * @brief Current working mode of directional pad
+     * @brief Current working mode of directional pad.
      * @note For read only. Do not overwrite.
      */
     extern volatile bool dpadWorkingMode;
 
     /**
-     * @brief User-defined buttons map
+     * @brief User-defined buttons map.
      * @note For read only. Do not overwrite.
      */
     extern volatile inputNumber_t buttonsMap[2][64];
 
     /**
-     * @brief Security lock on HID reports
+     * @brief Security lock on HID reports.
      * @note For read only. Do not overwrite.
      */
     extern volatile bool securityLock;
+
+    /**
+     * @brief Selected pages for each user interface.
+     * @note For read only. Do not overwrite.
+     */
+    extern volatile uint8_t uiPage[MAX_UI_COUNT];
 
     /**
      * @brief Must be called before anything else in this namespace. Will
@@ -197,6 +203,16 @@ namespace userSettings
      * @param yesOrNo true to lock, false to unlock.
      */
     void setSecurityLock(bool yesOrNo);
+
+    /**
+     * @brief Save the selected page index of an user interface
+     *
+     * @note Limited to a certain number of devices. See constant MAX_UI_COUNT.
+     *
+     * @param ui_index Index of the user interface implementor.
+     * @param pageIndex Selected page index.
+     */
+    void saveUIPageIndex(uint8_t ui_index, uint8_t pageIndex);
 }
 
 /**
@@ -754,6 +770,12 @@ namespace notify
     extern uint8_t maxFPS;
 
     /**
+     * @brief Count of available user interfaces. Not for user code.
+     *        Exposed for efficiency. Do not overwrite.
+     */
+    extern uint8_t uiCount;
+
+    /**
      * @brief Set up an UI-dependant implementation for user notifications.
      *        Do not call if there is no user interface.
      *
@@ -778,55 +800,53 @@ namespace notify
         uint16_t stackSize = 0);
 
     /**
-     * @brief Notify current clutch's bite point
+     * @brief Notify current clutch's bite point.
      *
      */
     void bitePoint();
 
     /**
-     * @brief Notify the device is connected to a host computer
+     * @brief Notify the device is connected to a host computer.
      *
      */
     void connected();
 
     /**
-     * @brief Notify Bluetooth radio is in discovery mode
+     * @brief Notify Bluetooth radio is in discovery mode.
      *
      */
     void BLEdiscovering();
 
     /**
-     * @brief Notify a very low battery level
+     * @brief Notify a very low battery level.
      *
      */
     void lowBattery();
 
     /**
-     * @brief Select the next page in the user interface when available.
+     * @brief Get the count of available pages in a user interface.
      *
-     * @param deviceIndex Index of an UI implementor in
-     *                    the array given to notify::begin().
+     * @param ui_index Index of an user interface implementor. See notify::begin().
+     * @param[out] pageCount Count of available pages in the user interface.
+     * @param[out] pageIndex User-selected page index.
+     * @return true If @p pageIndex and @p pageIndex were retrieved.
+     * @return false If @ui_index denotes a non-existing user interface.
      */
-    void selectNextPage(uint8_t deviceIndex);
+    bool getPageInfo(uint8_t ui_index, uint8_t &pageCount, uint8_t &pageIndex);
 
     /**
-     * @brief Select the previous page in the user interface when available.
+     * @brief Select a page index in a user interface.
      *
-     * @param deviceIndex Index of an UI implementor in
-     *                    the array given to notify::begin().
-     */
-    void selectPreviousPage(uint8_t deviceIndex);
-
-    /**
-     * @brief Get the count of available notification interfaces
+     * @note Non-existing pages and implementors are ignored without notice.
      *
-     * @return uint8_t Count of available notification interfaces
+     * @param ui_index Index of an user interface implementor. See notify::begin().
+     * @param pageIndex Requested page index.
      */
-    uint8_t getUICount();
+    void setPageIndex(uint8_t ui_index, uint8_t pageIndex);
 }
 
 /**
- * @brief Implementation of the "Human Interface Device"
+ * @brief Implementation of the "Human Interface Device".
  *
  */
 namespace hidImplementation

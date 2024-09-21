@@ -11,9 +11,6 @@
 
 // Implementation inspired by
 // https://github.com/espressif/arduino-esp32/blob/master/libraries/USB/examples/CustomHIDDevice/CustomHIDDevice.ino
-//
-// Use this app for testing:
-// http://www.planetpointy.co.uk/joystick-test-application/
 
 #include "SimWheel.h"
 #include "HID_definitions.h"

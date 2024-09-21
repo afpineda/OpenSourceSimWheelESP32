@@ -84,14 +84,15 @@ Note that feature reports are both read and write.
 
 Write attempts will be ignored, so this report is read-only.
 
-| Byte index | Size (Bytes) | Purpose (field) | Note                             | Since data version |
-| :--------: | :----------: | --------------- | -------------------------------- | ------------------ |
-|     0      |      2       | Magic number    | Always set to BF51 (hexadecimal) | 1.0                |
-|     2      |      2       | Major Version   | Version of this specification    | 1.0                |
-|     4      |      2       | Minor Version   | Version of this specification    | 1.0                |
-|     6      |      2       | Flags           | Device capabilities              | 1.0                |
-|     8      |      8       | ID              | Chip identifier                  | 1.1                |
-|     16     |      1       | Max FPS         | Maximum frames per second        | 1.3                |
+| Byte index | Size (Bytes) | Purpose (field) | Note                               | Since data version |
+| :--------: | :----------: | --------------- | ---------------------------------- | ------------------ |
+|     0      |      2       | Magic number    | Always set to BF51 (hexadecimal)   | 1.0                |
+|     2      |      2       | Major Version   | Version of this specification      | 1.0                |
+|     4      |      2       | Minor Version   | Version of this specification      | 1.0                |
+|     6      |      2       | Flags           | Device capabilities                | 1.0                |
+|     8      |      8       | ID              | Chip identifier                    | 1.1                |
+|     16     |      1       | UI count        | Count of available user interfaces | 1.3                |
+|     17     |      1       | Max FPS         | Maximum frames per second          | 1.3                |
 
 Report ID 1 (input) is not affected by versioning.
 
@@ -143,6 +144,13 @@ This is a summary:
 This is the internal chip identifier as reported by
 [esp_efuse_mac_get_default()](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/misc_system_api.html).
 Useful to distinguish one device from another.
+
+### UI count
+
+The number of user interfaces implemented in the device.
+Zero or more user interfaces (UI) may be available, for example,
+"rev lights", an OLED and a speaker.
+This is relevant when using report ID 6.
 
 ### Max FPS
 
@@ -243,7 +251,8 @@ At write (unless locked):
 
 - Select a firmware-defined button number. Any value outside the valid range will be ignored.
 - You should read after a write in order to known the user-defined map for the selected button number.
-  Note that another application may also write this field, so don't assume the button you select is the button you will read next.
+  Note that another application may also write this field,
+  so don't assume the button you select is the button you will read next.
 
 ### User-defined map (bytes at index 1 and 2)
 
@@ -254,8 +263,10 @@ At read:
 
 At write (unless locked):
 
-- Any value in the range from 0 to 127: set a user-defined button number for the selected firmware-defined button number.
-- Any value outside of the previous range: just select another firmware-defined button number, but do not overwrite current map.
+- Any value in the range from 0 to 127:
+  set a user-defined button number for the selected firmware-defined button number.
+- Any value outside of the previous range: just select another firmware-defined button number,
+  but do not overwrite current map.
 
 Examples (pseudo-code):
 
@@ -347,47 +358,79 @@ At write (unless locked):
 
 ## Data format of report ID 6 (UI display control)
 
-| Byte index | Size (bytes) | Purpose (field) | Since data version |
-| :--------: | :----------: | --------------- | ------------------ |
-|     0      |      1       | UI index        | 1.3                |
-|     2      |      1       | Page select     | 1.3                |
+| Byte index | Size (bytes) | Purpose (field)    | Since data version |
+| :--------: | :----------: | ------------------ | ------------------ |
+|     0      |      1       | Selected UI index  | 1.3                |
+|     1      |      1       | Page count         | 1.3                |
+|     2      |      1       | Current page index | 1.3                |
 
 This feature report is useless if there is no user interface.
-Check capabilities first.
+Check capabilities first (report ID 2).
 The actual behavior is implementation-dependant.
 
-### UI index
+Each UI may have zero or more "pages" (not to be taken literally).
+A "page" is a user-select mode for the user interface. For example:
+
+- An OLED could display a different set of data in each page.
+- A speaker could set a different volume for each page.
+- "Rev lights" could go left-to-right or right-to-left depending on the selected page.
+
+This report is intended to control how telemetry data is shown to the user.
+The selected page is automatically saved to flash memory after a short delay,
+but only for user interfaces 0 to 5 (this is a firmware limitation).
+
+### Selected UI index
 
 At read:
 
-- Return the count of available user interfaces.
-
-At write (unless unlocked):
-
-- Select the index of a user interface to control.
-- This index is zero-based.
-- Invalid values are ignored.
-
-### Page select
-
-The term "page" should not be taken literally,
-since this is implementation-dependant.
-For example:
-
-- An OLED display could show different information pages.
-- A speaker could increase or decrease volume.
-
-At read:
-
-- No meaning.
+- Currently selected user interface index.
+- Do not assume the value you read is the same as a previous write.
+  Another application could write another value in between.
 
 At write (unless locked):
 
-- 0x00 (hexadecimal): select the next display page when available.
-- 0x01 (hexadecimal): select the previous display page when available.
-- Other values: undefined behavior. Please, avoid.
-  Currently, other values are equivalent to 0x01,
-  but do not rely on this in future firmware versions.
+- Index of a user interface to be selected for this query and subsequent ones.
+
+### Page count
+
+This field is read-only:
+
+- Count of available pages in the selected user interface.
+
+At write, any value will be ignored.
+
+### Current page index
+
+At read:
+
+- Index of the selected page in the selected user interface.
+
+At write:
+
+- Value `FF` (hexadecimal) will just select another user interface
+  without changing current settings.
+- A value greater or equal to "Page count" is invalid and will be ignored.
+- Other values will select another page index in the selected user interface.
+
+Examples (pseudo-code):
+
+- To know relevant user interfaces:
+
+  ```c++
+  for (uint8_t ui_index = 0; ui_index < 256; ui_index++) {
+     report6.write(ui_index,0xFF,0xFF);
+     report6.read(j,pageCount,currentPageIndex);
+     if (ui_index != j)
+        another_app_is_interfering();
+     else if (pageCount > 0)
+        show_ui_control(ui_index,pageCount,currentPageIndex);
+  ```
+
+- To select page 3 in device 1
+
+  ```c++
+     report6.write(1,0xFF,3);
+  ```
 
 ## Telemetry (output) reports
 

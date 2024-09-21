@@ -147,9 +147,10 @@ Not applicable to USB implementation.
 ### Capabilities (HID report)
 
 1. Enter `02` at field `ReportID`.
-2. Enter `00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00` (17 times `00`) at fields below `ReportID`.
-3. Click on `Set Feature` , then on `Get Feature`.
-4. Must show the following line: `RD 02  51 BF xx xx xx xx 07 00 xx xx xx xx xx xx xx xx 00`.
+2. Click on `Set Feature`.
+3. Serial output must show: `onSetFeature(): Set feature report ID 2: ignored. Size: 18.`
+4. Click on `Get Feature`.
+5. Must show the following line: `RD 02  51 BF xx xx xx xx 07 00 xx xx xx xx xx xx xx xx 03 00`.
    Ignore `xx`.
 
 ### Buttons map (HID report)
@@ -171,14 +172,11 @@ Not applicable to USB implementation.
 ### UI control (HID report)
 
 1. Enter `06` at field `ReportID`.
-2. Click on `Get Feature`.
-3. Must show a line starting with: `RD 06  01`.
-4. Enter `00 00` at fields below `ReportID`.
-5. Click on `Set Feature`.
-6. Serial output must show: `UI control: next page`.
-7. Enter `00 01` at fields below `ReportID`.
-8. Click on `Set Feature`.
-9. Serial output must show: `UI control: previous page`.
+2. Enter `01 FF FF` at fields below `ReportID`.
+3. Click on `Set Feature` , then on `Get Feature`.
+4. Must show a line starting with: `RD 06  01 02 01`.
+5. Enter `03 00 04` at fields below `ReportID`.
+6. Serial output must show: `Select page 4 in user interface 3`
 
 ## Telemetry data
 
