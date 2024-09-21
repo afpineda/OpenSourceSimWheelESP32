@@ -43,14 +43,14 @@ void SerialNotificationImpl::serveSingleFrame()
     Serial.println("(FRAME)");
 }
 
-void SerialNotificationImpl::selectNextPage()
+uint8_t SerialNotificationImpl::getPageCount()
 {
-    Serial.println("(Next page)");
+    return 4;
 }
 
-void SerialNotificationImpl::selectPreviousPage()
+void SerialNotificationImpl::setPageIndex(uint8_t pageIndex)
 {
-    Serial.println("(Previous page)");
+    Serial.printf("(SET PAGE %u)\n", pageIndex);
 }
 
 void SerialNotificationImpl::onTelemetryData(const telemetryData_t *data)

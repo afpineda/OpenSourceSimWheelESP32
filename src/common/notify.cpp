@@ -25,6 +25,7 @@ static notificationImplementorsArray_t implementorArray;
 static TickType_t frameServerPeriod = portMAX_DELAY;
 static bool telemetryRequired = false;
 uint8_t notify::maxFPS = 0;
+uint8_t notify::uiCount = 0;
 volatile telemetryData_t notify::telemetryData;
 static telemetryData_t privateTelemetryData;
 #define NO_TELEMETRY_TICKS pdMS_TO_TICKS(2000)
@@ -186,12 +187,12 @@ void notify::begin(
             requiresECUTelemetry |
             requiresRaceControlTelemetry |
             requiresGaugeTelemetry;
+        notify::uiCount = implementorArray.size();
         notify::maxFPS = framesPerSecond;
         notify::telemetryData.frameID = 0;
         privateTelemetryData.frameID = 0;
 
         // Set new device capabilities
-        capabilities::setFlag(deviceCapability_t::CAP_USER_INTERFACE);
         if (framesPerSecond > 0)
         {
             if (requiresPowertrainTelemetry)
@@ -250,22 +251,28 @@ void notify::lowBattery()
         eventPush(EVENT_LOW_BATTERY);
 }
 
-void notify::selectNextPage(uint8_t deviceIndex)
+// ----------------------------------------------------------------------------
+// UI control
+// ----------------------------------------------------------------------------
+
+bool notify::getPageInfo(uint8_t ui_index, uint8_t &pageCount, uint8_t &pageIndex)
 {
-    if (notificationDaemon && (deviceIndex < implementorArray.size()))
-        implementorArray[deviceIndex]->selectNextPage();
+    if (ui_index < implementorArray.size())
+    {
+        pageCount = implementorArray[ui_index]->getPageCount();
+        pageIndex = implementorArray[ui_index]->getCurrentPageIndex();
+        if ((pageCount == 0) || (pageIndex >= pageCount))
+            pageIndex = 0;
+        return true;
+    }
+    return false;
 }
 
-void notify::selectPreviousPage(uint8_t deviceIndex)
+void notify::setPageIndex(uint8_t ui_index, uint8_t pageIndex)
 {
-    if (notificationDaemon && (deviceIndex < implementorArray.size()))
-        implementorArray[deviceIndex]->selectPreviousPage();
-}
-
-uint8_t notify::getUICount()
-{
-    if (notificationDaemon)
-        return implementorArray.size();
-    else
-        return 0;
+    if (ui_index < implementorArray.size())
+        if (pageIndex < implementorArray[ui_index]->getPageCount())
+        {
+            implementorArray[ui_index]->setPageIndex(pageIndex);
+        }
 }

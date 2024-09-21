@@ -26,14 +26,15 @@ public:
     virtual void onBLEdiscovering() override;
     virtual void onLowBattery() override;
     virtual void serveSingleFrame() override;
-    virtual void selectNextPage() override;
-    virtual void selectPreviousPage() override;
+    virtual uint8_t getPageCount() override;
+    virtual void setPageIndex(uint8_t pageIndex) override;
 };
 
-class SerialTelemetryDisplay: public SerialNotificationImpl
+class SerialTelemetryDisplay : public SerialNotificationImpl
 {
 public:
-    SerialTelemetryDisplay() {
+    SerialTelemetryDisplay()
+    {
         requiresPowertrainTelemetry = true;
     };
 };

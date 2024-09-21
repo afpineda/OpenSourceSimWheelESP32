@@ -59,8 +59,7 @@ void setup()
 
     notify::begin({new SerialNotificationImpl()});
 
-    setDebugInputNumbers(
-        inputs::addButtonMatrix(mtxSelectors, mtxInputs));
+    setDebugInputNumbers(inputs::addButtonMatrix(mtxSelectors, mtxInputs));
     inputs::addDigital(TEST_ROTARY_SW, ALT_IN);
     inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, CW_IN, CCW_IN, false);
     inputs::setAnalogClutchPaddles(TEST_ANALOG_PIN1, TEST_ANALOG_PIN2);
