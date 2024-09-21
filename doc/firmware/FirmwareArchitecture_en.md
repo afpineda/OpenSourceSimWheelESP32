@@ -139,9 +139,10 @@ classDiagram
     hidImplementation --> notify: connected, discovering, page control
     batteryMonitor --> notify: low battery level
     userSettings --> notify: bite point
+    notify --> userSettings: active UI page
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9kLFuwzAMRH-F0Oz8gIcubYYOnbJ6oSXGISCRhkQlNYL8e2TEReElmoTj3cORd-c1kOudj1jKF-OUMQ0C7V04fKc5UiIxNFaBw-EDWOZqpQevKaEEMAWPkceMRoCCUSfAXyrvGCOaUV4-t1yTd7xM_8TN-o4manxeVoIIeaPQQeDi9UqZZepgxonWoWWNL84G_VFh07yDRL39jSHSlbZELZRPZNaAZecfuZWclcVc5xLlhBzaNe9rbHB2aV0H17dvoDPWaIMb5NGsWE1Pi3jXW67UuTqHtu52_714DGvLl_Z4AoBnmLs)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9kT1uwzAMha9CaHYu4KFL2yFDp6CbF1piHAISaUi02yDI3SvHLlov0SQ8vveBPzfnNZBrnY9YyhvjkDF1AvVdOBzTGCmRGBqrwOHwAizjZKUFrymhBDAFj5H7jEaAglEHwG8qzxg9mlG-vm65Ku94mf6Im_UZTdT4fF0IIuSNQgOBi9eZMsvQwIgDLUXLGlfOBv1QYdO8g0T9-i1DpJm2xFQon8isAsvO33NtclQWW42r_rD8z7SA3ngm-Dw--nGNS5QTcqirvy3RztmlDta5tn4DnXGK1rlO7tWKk-npKt61lidq3DSGupvtWHvxPSwjrdr9B32Ep9c)
 
 Some modules have a `begin()` method that must be called at system startup (`main()`or `setup()`).
 The calling order is defined by the previous diagram, where bottom modules must be called first.

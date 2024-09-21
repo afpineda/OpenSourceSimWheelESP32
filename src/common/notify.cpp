@@ -191,6 +191,9 @@ void notify::begin(
         notify::maxFPS = framesPerSecond;
         notify::telemetryData.frameID = 0;
         privateTelemetryData.frameID = 0;
+        for (int i = 0; (i < MAX_UI_COUNT) && (i < implementorArray.size()); i++)
+            if (userSettings::uiPage[i] < implementorArray[i]->getPageCount())
+                implementorArray[i]->setPageIndex(userSettings::uiPage[i]);
 
         // Set new device capabilities
         if (framesPerSecond > 0)
@@ -274,5 +277,6 @@ void notify::setPageIndex(uint8_t ui_index, uint8_t pageIndex)
         if (pageIndex < implementorArray[ui_index]->getPageCount())
         {
             implementorArray[ui_index]->setPageIndex(pageIndex);
+            userSettings::saveUIPageIndex(ui_index, pageIndex);
         }
 }
