@@ -361,20 +361,22 @@ typedef struct
         bool orangeFlag = false;
         bool whiteFlag = false;
         bool yellowFlag = false;
+        /// Remaining laps to the end of the session. Zero if does not apply.
         uint16_t remainingLaps = 0;
-        char remainingTime[9] = "--:--:--"; /// Remaining session time in HH:MM:SS
+        /// Remaining time to the end of the session, in minutes. Zero if does not apply.
+        uint16_t remainingMinutes = 0;
     } raceControl;
     struct
     {
-        uint8_t relativeTurboPressure = 0;      /// Percentage of turbo pressure
-        float absoluteTurboPressure = 0.0;      /// Turbo pressure in bars
-        float waterTemperature = 0.0;           /// Water temperature in user-defined units (Celsius or Kelvin)
-        float oilPressure = 0.0;                /// Oil pressure in bars
-        float oilTemperature = 0.0;             /// Oil temperature in user-defined units (Celsius or Kelvin)
-        uint8_t relativeRemainingFuel = 0;      /// Percentage of remaining fuel
-        float absoluteRemainingFuel = 0;        /// Remaining fuel in user-defined units (litres or gallons)
-        uint16_t remainingFuelLaps = 0;         /// Laps to run out of fuel
-        char remainingFuelTime[9] = "--:--:--"; /// Time to run out of fuel in HH:MM:SS
+        uint8_t relativeTurboPressure = 0;  /// Percentage of turbo pressure
+        float absoluteTurboPressure = 0.0;  /// Turbo pressure in bars
+        uint16_t waterTemperature = 0.0;    /// Water temperature in user-defined units (Celsius or Kelvin)
+        float oilPressure = 0.0;            /// Oil pressure in bars
+        uint16_t oilTemperature = 0.0;      /// Oil temperature in user-defined units (Celsius or Kelvin)
+        uint8_t relativeRemainingFuel = 0;  /// Percentage of remaining fuel
+        uint16_t absoluteRemainingFuel = 0; /// Remaining fuel in user-defined units (litres or gallons)
+        uint16_t remainingFuelLaps = 0;     /// Laps to run out of fuel
+        uint16_t remainingFuelMinutes = 0;  /// Time to run out of fuel in minutes
     } gauges;
 } telemetryData_t;
 

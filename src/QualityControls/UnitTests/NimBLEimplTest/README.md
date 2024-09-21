@@ -147,9 +147,9 @@ Not applicable to USB implementation.
 ### Capabilities (HID report)
 
 1. Enter `02` at field `ReportID`.
-2. Enter `00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00` (16 times `00`) at fields below `ReportID`.
+2. Enter `00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00` (17 times `00`) at fields below `ReportID`.
 3. Click on `Set Feature` , then on `Get Feature`.
-4. Must show the following line: `RD 02  51 BF xx xx xx xx 07 00 xx xx xx xx xx xx xx xx`.
+4. Must show the following line: `RD 02  51 BF xx xx xx xx 07 00 xx xx xx xx xx xx xx xx 00`.
    Ignore `xx`.
 
 ### Buttons map (HID report)
@@ -193,13 +193,13 @@ Not applicable to USB implementation.
 8. Serial output must show this line among others:
    `ecu: 0 1 1 0 1 0 7 64 100`
 9. Enter `16` at field `ReportID`.
-10. Enter `01 00 02 00 03 00 04 e2 09 30 31 31 30 32 33` at fields below `ReportID`.
+10. Enter `01 00 02 00 03 00 04 e2 09 6c 02` at fields below `ReportID`.
 11. Serial output must show this line among others:
-    `ecu: 1 0 1 0 1 0 1 0 2530 01:10:23`
+    `race control: 1 0 1 0 1 0 1 0 2530 620`
 12. Enter `17` at field `ReportID`.
-13. Enter `57 85 00 1c 27 22 01 40 1f 01 90 19 b8 22 31 30 30 31 33 32` at fields below `ReportID`.
+13. Enter `56 71 00 b0 04 5e 27 bf 04 01 74 00 98 08 11 27` at fields below `ReportID`.
 14. Serial output must show this line among others:
-    `gauges: 87 1.33 100.12 2.90 80.0 1 65.44 8888 10:01:32`
+    `gauges: 86 1.13 1200 100.78 1215 1 116 2200 10001`
 
 ### Custom Hardware ID (HID report)
 

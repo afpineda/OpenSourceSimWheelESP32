@@ -31,6 +31,8 @@ uint64_t lastFrameID = 0;
 
 volatile uint32_t capabilities::flags = 0x07;
 volatile inputBitmap_t capabilities::availableInputs = 0b0111ULL;
+volatile telemetryData_t notify::telemetryData = {};
+uint8_t notify::maxFPS = 0;
 
 void notify::connected()
 {
@@ -96,8 +98,6 @@ int batteryMonitor::getLastBatteryLevel()
     return UNKNOWN_BATTERY_LEVEL;
 }
 
-volatile telemetryData_t notify::telemetryData = {};
-
 //------------------------------------------------------------------
 // Auxiliary
 //------------------------------------------------------------------
@@ -124,7 +124,7 @@ void checkAndPrintTelemetryData()
                       notify::telemetryData.ecu.tcLevel,
                       notify::telemetryData.ecu.tcCut,
                       notify::telemetryData.ecu.brakeBias);
-        Serial.printf("race control: %u %u %u %u %u %u %u %u %s\n",
+        Serial.printf("race control: %u %u %u %u %u %u %u %u %u\n",
                       notify::telemetryData.raceControl.blackFlag,
                       notify::telemetryData.raceControl.blueFlag,
                       notify::telemetryData.raceControl.checkeredFlag,
@@ -133,8 +133,8 @@ void checkAndPrintTelemetryData()
                       notify::telemetryData.raceControl.whiteFlag,
                       notify::telemetryData.raceControl.yellowFlag,
                       notify::telemetryData.raceControl.remainingLaps,
-                      notify::telemetryData.raceControl.remainingTime);
-        Serial.printf("race control: %u %.2f %.2f %.2f %.2f %u %.2f %u %s\n",
+                      notify::telemetryData.raceControl.remainingMinutes);
+        Serial.printf("gauges: %u %.2f %u %.2f %u %u %u %u %u\n",
                       notify::telemetryData.gauges.relativeTurboPressure,
                       notify::telemetryData.gauges.absoluteTurboPressure,
                       notify::telemetryData.gauges.waterTemperature,
@@ -143,7 +143,7 @@ void checkAndPrintTelemetryData()
                       notify::telemetryData.gauges.relativeRemainingFuel,
                       notify::telemetryData.gauges.absoluteRemainingFuel,
                       notify::telemetryData.gauges.remainingFuelLaps,
-                      notify::telemetryData.gauges.remainingFuelTime);
+                      notify::telemetryData.gauges.remainingFuelMinutes);
     }
 }
 

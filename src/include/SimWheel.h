@@ -742,10 +742,16 @@ namespace notify
 {
     /**
      * @brief Last received telemetry data. Not for user code.
-     *        Exposed for efficiency.
+     *        Exposed for efficiency. Do not overwrite.
      *
      */
     extern volatile telemetryData_t telemetryData;
+
+    /**
+     * @brief Maximum supported FPS value. Not for user code.
+     *        Exposed for efficiency. Do not overwrite.
+     */
+    extern uint8_t maxFPS;
 
     /**
      * @brief Set up an UI-dependant implementation for user notifications.

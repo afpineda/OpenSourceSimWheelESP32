@@ -41,14 +41,18 @@ class SimWheelHIDImpl : public USBHIDDevice
 
     virtual void _onSetFeature(uint8_t report_id, const uint8_t *buffer, uint16_t len) override
     {
-        if (report_id >= 20)
-            Serial.println("OPS!!");
-        hidImplementation::common::onSetFeature(report_id, buffer, len);
+        // Note: for unknown reasons, output reports trigger this callback instead of _onOutput()
+        if (report_id >= RID_OUTPUT_POWERTRAIN)
+            // Output report
+            hidImplementation::common::onOutput(report_id, buffer, len);
+        else
+            // Feature report
+            hidImplementation::common::onSetFeature(report_id, buffer, len);
     }
 
     virtual void _onOutput(uint8_t report_id, const uint8_t *buffer, uint16_t len) override
     {
-        Serial.println("KK");
+        // Note: never gest called unless report_id is zero. Reason unknown.
         hidImplementation::common::onOutput(report_id, buffer, len);
     }
 };

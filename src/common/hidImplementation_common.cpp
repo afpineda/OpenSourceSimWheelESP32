@@ -98,6 +98,7 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
         *(uint16_t *)(buffer + 6) = capabilities::flags;
         *(uint64_t *)(buffer + 8) = 0ULL;
         esp_efuse_mac_get_default(buffer + 8);
+        buffer[16] = notify::maxFPS;
         return CAPABILITIES_REPORT_SIZE;
     }
     if ((report_id == RID_FEATURE_CONFIG) && (len >= CONFIG_REPORT_SIZE))
@@ -290,12 +291,7 @@ void hidImplementation::common::onOutput(
         notify::telemetryData.raceControl.whiteFlag = buffer[5];
         notify::telemetryData.raceControl.yellowFlag = buffer[6];
         notify::telemetryData.raceControl.remainingLaps = *((uint16_t *)(buffer + 7));
-        notify::telemetryData.raceControl.remainingTime[0] = buffer[9];
-        notify::telemetryData.raceControl.remainingTime[1] = buffer[10];
-        notify::telemetryData.raceControl.remainingTime[3] = buffer[11];
-        notify::telemetryData.raceControl.remainingTime[4] = buffer[12];
-        notify::telemetryData.raceControl.remainingTime[6] = buffer[13];
-        notify::telemetryData.raceControl.remainingTime[7] = buffer[14];
+        notify::telemetryData.raceControl.remainingMinutes = *((uint16_t *)(buffer + 9));
     }
     else if ((report_id == RID_OUTPUT_GAUGES) && (len >= GAUGES_REPORT_SIZE))
     {
@@ -303,20 +299,15 @@ void hidImplementation::common::onOutput(
         if (notify::telemetryData.gauges.relativeTurboPressure > 100)
             notify::telemetryData.gauges.relativeTurboPressure = 100;
         notify::telemetryData.gauges.absoluteTurboPressure = static_cast<float>(*((uint16_t *)(buffer + 1)) / 100.0);
-        notify::telemetryData.gauges.waterTemperature = static_cast<float>(*((uint16_t *)(buffer + 3)) / 100.0);
+        notify::telemetryData.gauges.waterTemperature = *((uint16_t *)(buffer + 3));
         notify::telemetryData.gauges.oilPressure = static_cast<float>(*((uint16_t *)(buffer + 5)) / 100.0);
-        notify::telemetryData.gauges.oilTemperature = static_cast<float>(*((uint16_t *)(buffer + 7)) / 100.0);
+        notify::telemetryData.gauges.oilTemperature = *((uint16_t *)(buffer + 7));
         notify::telemetryData.gauges.relativeRemainingFuel = buffer[9];
         if (notify::telemetryData.gauges.relativeRemainingFuel > 100)
             notify::telemetryData.gauges.relativeRemainingFuel = 100;
-        notify::telemetryData.gauges.absoluteRemainingFuel = static_cast<float>(*((uint16_t *)(buffer + 10)) / 100.0);
+        notify::telemetryData.gauges.absoluteRemainingFuel = *((uint16_t *)(buffer + 10));
         notify::telemetryData.gauges.remainingFuelLaps = *((uint16_t *)(buffer + 12));
-        notify::telemetryData.gauges.remainingFuelTime[0] = buffer[14];
-        notify::telemetryData.gauges.remainingFuelTime[1] = buffer[15];
-        notify::telemetryData.gauges.remainingFuelTime[3] = buffer[16];
-        notify::telemetryData.gauges.remainingFuelTime[4] = buffer[17];
-        notify::telemetryData.gauges.remainingFuelTime[6] = buffer[18];
-        notify::telemetryData.gauges.remainingFuelTime[7] = buffer[19];
+        notify::telemetryData.gauges.remainingFuelMinutes = *((uint16_t *)(buffer + 14));
     }
     notify::telemetryData.frameID++;
 }
