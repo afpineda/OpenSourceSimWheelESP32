@@ -20,7 +20,7 @@ This test runs in a never-ending loop.
    (DEVICE READY)
    ```
 
-3. From now on, ignore all `(FRAME)` text lines.
+3. From now on, ignore all `(FRAME n MS)` text lines.
 4. `(TELEMETRY ID n)` must show up, where "n" an integer number,
    different to previous ones.
 5. `(TELEMETRY ID m)` must follow, being $m = n+1$.

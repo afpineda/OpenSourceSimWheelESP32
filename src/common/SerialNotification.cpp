@@ -40,7 +40,7 @@ void SerialNotificationImpl::onLowBattery()
 
 void SerialNotificationImpl::serveSingleFrame(uint32_t elapsedMs)
 {
-    Serial.println("(FRAME)");
+    Serial.printf("(FRAME %u MS)\n",elapsedMs);
 }
 
 uint8_t SerialNotificationImpl::getPageCount()

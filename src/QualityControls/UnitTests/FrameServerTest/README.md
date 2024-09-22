@@ -20,7 +20,8 @@ This test runs in a never-ending loop.
    (DEVICE READY)
    ```
 
-3. The text line `(FRAME)` must appear at almost timed intervals.
+3. The text line `(FRAME n MS)` must appear at almost timed intervals,
+   where "n" is a number near to 333.
 4. Between those lines, the text line `(BLE CONNECTED)` must appear.
 5. A few lines after that, the text line `(BITE POINT: 0)` must appear.
 6. Back to 3.

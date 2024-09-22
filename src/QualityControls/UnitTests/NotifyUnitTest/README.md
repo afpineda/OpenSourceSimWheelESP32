@@ -21,7 +21,6 @@ Output through USB serial port at 115200 bauds. Connect before reset.
    (BLE DISCOVERING)
    (BLE CONNECTED)
    (LOW BATTERY)
-   (BITE POINT: 0)
    (BITE POINT: 1)
    (BITE POINT: 2)
    (BITE POINT: 3)
