@@ -780,12 +780,12 @@ namespace notify
      *        Do not call if there is no user interface.
      *
      * @param implementors Array of pointers to objects implementing
-     *                     the abstract notification interface.
+     *                     the abstract user interface.
      *
      * @param framesPerSecond Target FPS for the frameserver.
      *                        Set to zero to disable.
      *
-     * @param stackSize Stack size in bytes for the notification daemon.
+     * @param stackSize Stack size in bytes for the notification/frameserver daemon.
      *                  Set to zero to use a default value.
      *                  Increase stack size if you get "stack canary"
      *                  or "dual exception" errors and reboots.
@@ -829,7 +829,7 @@ namespace notify
      * @param ui_index Index of an user interface implementor. See notify::begin().
      * @param[out] pageCount Count of available pages in the user interface.
      * @param[out] pageIndex User-selected page index.
-     * @return true If @p pageIndex and @p pageIndex were retrieved.
+     * @return true If @p pageCount and @p pageIndex were retrieved.
      * @return false If @ui_index denotes a non-existing user interface.
      */
     bool getPageInfo(uint8_t ui_index, uint8_t &pageCount, uint8_t &pageIndex);
@@ -869,7 +869,7 @@ namespace hidImplementation
         uint16_t productID = 0);
 
     /**
-     * @brief Tell if there is a Bluetooth connection
+     * @brief Tell if there is a Bluetooth/USB connection
      *
      * @return true when connected to a computer
      * @return false when not connected
