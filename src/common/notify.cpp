@@ -86,6 +86,7 @@ void notificationDaemonLoop(void *param)
     for (AbstractUserInterface *impl : implementorArray)
         impl->onStart();
 
+    TickType_t frameTimestamp = xTaskGetTickCount();
     while (true)
     {
         if (ulTaskNotifyTake(pdTRUE, frameServerPeriod))
@@ -133,7 +134,11 @@ void notificationDaemonLoop(void *param)
                 }
             }
             for (AbstractUserInterface *impl : implementorArray)
-                impl->serveSingleFrame();
+            {
+                uint32_t elapsedMs = (xTaskGetTickCount() - frameTimestamp) / portTICK_RATE_MS;
+                impl->serveSingleFrame(elapsedMs);
+            }
+            frameTimestamp = xTaskGetTickCount();
         }
     }
 }

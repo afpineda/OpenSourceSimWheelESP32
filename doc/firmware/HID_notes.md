@@ -133,7 +133,6 @@ This is a summary:
 - DPAD
 - Battery
 - Calibration data for the battery
-- User interface availability
 - Display for powertrain telemetry
 - Display for ECU telemetry
 - Display for race control telemetry

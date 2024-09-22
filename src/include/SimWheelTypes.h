@@ -402,7 +402,7 @@ public:
 
 public:
     /**
-     * @brief Called just once at initialization.
+     * @brief Called just once after initialization.
      *
      * @note Called in a low priority thread.
      */
@@ -437,15 +437,17 @@ public:
     /**
      * @brief Draw a single frame.
      *
+     * @param elapsedMs Elapsed milliseconds since last call.
+     *
      * @note Called at timed intervals when no notifications are pending.
      *       Not called at all if frames per second is set to 0.
-     *       See notify::begin().
+     *       See notify::begin(). Do not assume perfect timing.
      *
      * @note Must not enter an infinite loop. Must return as soon as possible.
      *
      * @note Called in a low priority thread.
      */
-    virtual void serveSingleFrame() {};
+    virtual void serveSingleFrame(uint32_t elapsedMs) {};
 
     /**
      * @brief Notify a change in current bite point.
