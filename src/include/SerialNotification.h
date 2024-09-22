@@ -30,13 +30,20 @@ public:
     virtual void setPageIndex(uint8_t pageIndex) override;
 };
 
-class SerialTelemetryDisplay : public SerialNotificationImpl
+//-------------------------------------------------------------------
+
+#define SERIAL_DISPLAY_BUFFER_SIZE 64
+
+class SerialTelemetryDisplay : public AbstractUserInterface
 {
+private:
+    char displayBuffer[SERIAL_DISPLAY_BUFFER_SIZE];
+    bool displayOff = true;
+    uint32_t lastFrameID = 0;
 public:
-    SerialTelemetryDisplay()
-    {
-        requiresPowertrainTelemetry = true;
-    };
+    SerialTelemetryDisplay();
+    virtual void onTelemetryData(const telemetryData_t *data) override;
+    virtual void serveSingleFrame(uint32_t elapsedMs) override;
 };
 
 #endif

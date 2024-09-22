@@ -11,6 +11,10 @@
 #include "SimWheel.h"
 #include <HardwareSerial.h>
 
+//-------------------------------------------------------------------
+// SerialNotificationImpl
+//-------------------------------------------------------------------
+
 void SerialNotificationImpl::onStart()
 {
     Serial.println("(DEVICE READY)");
@@ -40,7 +44,7 @@ void SerialNotificationImpl::onLowBattery()
 
 void SerialNotificationImpl::serveSingleFrame(uint32_t elapsedMs)
 {
-    Serial.printf("(FRAME %u MS)\n",elapsedMs);
+    Serial.printf("(FRAME %u MS)\n", elapsedMs);
 }
 
 uint8_t SerialNotificationImpl::getPageCount()
@@ -60,5 +64,42 @@ void SerialNotificationImpl::onTelemetryData(const telemetryData_t *data)
     else
     {
         Serial.printf("(TELEMETRY ID %d)\n", data->frameID);
+    }
+}
+
+//-------------------------------------------------------------------
+// SerialTelemetryDisplay
+//-------------------------------------------------------------------
+
+SerialTelemetryDisplay::SerialTelemetryDisplay()
+{
+    requiresPowertrainTelemetry = true;
+    displayBuffer[0] = 0;
+}
+
+void SerialTelemetryDisplay::onTelemetryData(const telemetryData_t *data)
+{
+    if (data)
+    {
+        displayOff = false;
+        lastFrameID = data->frameID;
+        snprintf(
+            displayBuffer,
+            SERIAL_DISPLAY_BUFFER_SIZE,
+            "Frame= %u,RPM=%u,Speed=%u",
+            data->frameID,
+            data->powertrain.rpm,
+            data->powertrain.speed);
+    }
+    else
+        displayOff = true;
+}
+
+void SerialTelemetryDisplay::serveSingleFrame(uint32_t elapsedMs)
+{
+    if (!displayOff)
+    {
+        Serial.printf("Elapsed: %u. Telemetry: %s\n", elapsedMs, displayBuffer);
+        Serial.flush();
     }
 }

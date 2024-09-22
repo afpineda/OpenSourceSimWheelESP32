@@ -25,7 +25,7 @@ extern uint16_t customPID;
 extern uint16_t factoryVID;
 extern uint16_t factoryPID;
 
-uint64_t lastFrameID = 0;
+uint32_t lastFrameID = 0;
 
 //------------------------------------------------------------------
 // Mocks

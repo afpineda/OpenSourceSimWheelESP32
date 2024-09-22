@@ -329,7 +329,7 @@ typedef enum
  */
 typedef struct
 {
-    uint64_t frameID; /// For internal use. Do not overwrite.
+    uint32_t frameID; /// For internal use. Do not overwrite.
     struct
     {
         char gear = ' ';          /// Display character for current gear

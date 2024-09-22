@@ -13,16 +13,15 @@ Nothing required. Output through USB serial port at 115200 bauds. Connect before
 This test runs in a never-ending loop.
 
 1. Reset. Ignore output from the operating system itself.
-2. The following text must appear:
-
-   ```text
-   -- READY --
-   (DEVICE READY)
-   ```
-
-3. From now on, ignore all `(FRAME n MS)` text lines.
-4. `(TELEMETRY ID n)` must show up, where "n" an integer number,
-   different to previous ones.
-5. `(TELEMETRY ID m)` must follow, being $m = n+1$.
-6. `(TELEMETRY OFF)` must follow.
-7. Back to 4.
+2. Follow on-screen instructions to select a data rate.
+   You must run this test on every option.
+3. On each text line, look for `Elapsed: n`,
+   where "n" must be close to 1000.
+4. Look for `Frame= n` on two consecutive text lines.
+   - *Low data rate*:
+      "n" should be equal in two consecutive lines,
+     then increase by one in the third line.
+   - *Medium data rate*:
+     "n" should run in strict increasing order with no gaps.
+   - *High data rate*:
+     "n" should run in increasing order with a gap around 4 units.
