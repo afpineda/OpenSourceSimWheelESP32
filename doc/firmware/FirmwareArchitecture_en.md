@@ -136,13 +136,13 @@ classDiagram
 classDiagram
     hidImplementation --> inputs: command to calibrate analog axes
     hidImplementation --> batteryCalibration: command to recalibrate battery
-    hidImplementation --> notify: connected, discovering, page control
+    hidImplementation --> notify: connected, discovering, \n page control, telemetry data
     batteryMonitor --> notify: low battery level
     userSettings --> notify: bite point
     notify --> userSettings: active UI page
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9kT1uwzAMha9CaHYu4KFL2yFDp6CbF1piHAISaUi02yDI3SvHLlov0SQ8vveBPzfnNZBrnY9YyhvjkDF1AvVdOBzTGCmRGBqrwOHwAizjZKUFrymhBDAFj5H7jEaAglEHwG8qzxg9mlG-vm65Ku94mf6Im_UZTdT4fF0IIuSNQgOBi9eZMsvQwIgDLUXLGlfOBv1QYdO8g0T9-i1DpJm2xFQon8isAsvO33NtclQWW42r_rD8z7SA3ngm-Dw--nGNS5QTcqirvy3RztmlDta5tn4DnXGK1rlO7tWKk-npKt61lidq3DSGupvtWHvxPSwjrdr9B32Ep9c)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9kTFuwzAMRa9CaHYu4KFL2yFDp6CbF0ZiHAISaUi0WyPI3SvHLlov0SR8_v9IgjfnNZBrnY9YyhtjnzF1AvVdORzTECmRGBqrwOHwAizDaKUFrymhBDAFj5HPGY0ABaP2gN9UnjHOaEZ5ft1yVd7xMv0RN-szmqjxZV4IIuSNQgOBi9eJMkvfQFfDA_a0GCxrbMBoYVieIaDhyt4afaiwad6Bo379liHSRHFNjIXyicxqk7Lzn7kOPiiLrcZVf1j-Z1pAbzwRfB4f85FrXKKckEO9x23Jds6uddLOtfUb6IJjtM51cq9WHE1Ps3jXWh6pceNQl6HtgnvxPSw7rdr9B9Esr2M)
 
 Some modules have a `begin()` method that must be called at system startup (`main()`or `setup()`).
 The calling order is defined by the previous diagram, where bottom modules must be called first.
@@ -537,3 +537,12 @@ System concurrency comes from these OS task and daemons:
   - `notify`
   - `AbstractUserInterface`
 
+*Notes*:
+
+- There is no synchronization between the *frameserver* and the *Bluetooth/USB stack*,
+  except for the basic atomicity of 32-bit writes.
+  Performance takes precedence over consistency.
+  Only the *Bluetooth/USB stack* updates the `notify::telemetryData` variable.
+  `notify::telemetryData.frameID` is always written the last.
+  The frameserver looks for a change in that field.
+  Then, it makes a private copy of the telemetry data for processing.
