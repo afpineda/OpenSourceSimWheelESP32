@@ -205,3 +205,12 @@ This article is focused on **firmware-defined** error messages.
 - *notify::begin() called with a null pointer implementor*
 
   A null pointer is not allowed in the array of implementors given to `notify::begin()`.
+
+- *Set feature report ID x: ignored. Size: y.*
+
+  May appear after a firmware update.
+  However, the origin of this error message is in your PC:
+  - BLE implementation: remove your device from the Bluetooth control panel,
+    then pair again.
+  - USB implementation: remove your device from the device manager,
+    then reboot your computer.

@@ -209,7 +209,7 @@ a single LED, sounds, an OLED, etc.
 By default, it does nothing.
 To provide a particular user-interface implementation,
 derive a new class from `AbstractUserInterface`,
-then provide an instance to `notify::begin()`.
+then provide instances to `notify::begin()`.
 
 All notifications are queued, serialized and executed in a very low priority separate thread.
 The calling thread does not wait for them.
@@ -265,8 +265,9 @@ For example:
       turnLedOn();
    }
 
-   void MyImpl::serveSingleFrame() {
-    // Called one time per second
+   void MyImpl::serveSingleFrame(uint32_t elapsedMs) {
+    // Called one time per second (more or less)
+    // For perfect timing, use elapsedMs
     if (discovering)
       switchLed();
    }
@@ -276,7 +277,8 @@ For example:
    void setup()
    {
       ...
-      notify::begin({new MyImpl(ledPin)}, 1); // FPS = 1
+      notify::begin({new MyImpl(ledPin)}, 1); // one frame per second
+      ...
    }
 ```
 
@@ -530,3 +532,8 @@ System concurrency comes from these OS task and daemons:
   - `batteryCalibration`
   - `notify`
   - `batteryMonitor`
+- *Frameserver*. May call:
+  - `userSettings`
+  - `notify`
+  - `AbstractUserInterface`
+
