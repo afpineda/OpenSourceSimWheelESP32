@@ -211,7 +211,8 @@ To provide a particular user-interface implementation,
 derive a new class from `AbstractUserInterface`,
 then provide instances to `notify::begin()`.
 
-All notifications are queued, serialized and executed in a very low priority separate thread.
+All notifications are queued, serialized and executed
+in a very low priority separate thread: the *frameserver* daemon.
 The calling thread does not wait for them.
 For those reasons, some notifications may be missed.
 
@@ -544,5 +545,5 @@ System concurrency comes from these OS task and daemons:
   Performance takes precedence over consistency.
   Only the *Bluetooth/USB stack* updates the `notify::telemetryData` variable.
   `notify::telemetryData.frameID` is always written the last.
-  The frameserver looks for a change in that field.
-  Then, it makes a private copy of the telemetry data for processing.
+  The *frameserver* looks for a change in that field
+  in order to invoke `notify::onTelemetryData()`.

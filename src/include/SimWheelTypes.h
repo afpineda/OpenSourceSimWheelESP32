@@ -388,6 +388,33 @@ typedef struct
  */
 class AbstractUserInterface
 {
+protected:
+    /**
+     * @brief Simple timer.
+     *
+     * @note To be used in AbstractUserInterface::serveSingleFrame().
+     *       Initialize the timer variable to zero.
+     *
+     * @param timerVariable Timer variable.
+     * @param elapsedTimeMs Time elapsed since last call in miliseconds.
+     * @param timeLimitMs Timer limit in miliseconds.
+     * @return true If the timer has expired.
+     * @return false If the timer is still running.
+     */
+    bool frameTimer(
+        uint32_t &timerVariable,
+        uint32_t elapsedTimeMs,
+        uint32_t timeLimitMs)
+    {
+        timerVariable += elapsedTimeMs;
+        if (timerVariable >= timeLimitMs)
+        {
+            timerVariable = timerVariable - timeLimitMs;
+            return true;
+        }
+        return false;
+    };
+
 public:
     /// Index of this implementor. Do not overwrite.
     uint8_t index;

@@ -27,7 +27,7 @@ static bool telemetryRequired = false;
 uint8_t notify::maxFPS = 0;
 uint8_t notify::uiCount = 0;
 volatile telemetryData_t notify::telemetryData;
-static telemetryData_t privateTelemetryData;
+static uint8_t lastFrameID;
 #define NO_TELEMETRY_TICKS pdMS_TO_TICKS(2000)
 
 // Events queue
@@ -114,16 +114,13 @@ void notificationDaemonLoop(void *param)
             if (telemetryRequired)
             {
                 currentTelemetryTimestamp = xTaskGetTickCount();
-                if (privateTelemetryData.frameID != notify::telemetryData.frameID)
+                if (lastFrameID != notify::telemetryData.frameID)
                 {
                     telemetryReceived = true;
+                    lastFrameID = notify::telemetryData.frameID;
                     previousTelemetryTimestamp = currentTelemetryTimestamp;
-                    memcpy(
-                        (void *)&privateTelemetryData,
-                        (const void *)&notify::telemetryData,
-                        sizeof(privateTelemetryData));
                     for (AbstractUserInterface *impl : implementorArray)
-                        impl->onTelemetryData(&privateTelemetryData);
+                        impl->onTelemetryData((const telemetryData_t *)&notify::telemetryData);
                 }
                 else if (telemetryReceived &&
                          ((currentTelemetryTimestamp - previousTelemetryTimestamp) >= NO_TELEMETRY_TICKS))
@@ -195,7 +192,7 @@ void notify::begin(
         notify::uiCount = implementorArray.size();
         notify::maxFPS = framesPerSecond;
         notify::telemetryData.frameID = 0;
-        privateTelemetryData.frameID = 0;
+        lastFrameID = 0;
         for (int i = 0; (i < MAX_UI_COUNT) && (i < implementorArray.size()); i++)
             if (userSettings::uiPage[i] < implementorArray[i]->getPageCount())
                 implementorArray[i]->setPageIndex(userSettings::uiPage[i]);

@@ -86,7 +86,7 @@ void SerialTelemetryDisplay::onTelemetryData(const telemetryData_t *data)
         snprintf(
             displayBuffer,
             SERIAL_DISPLAY_BUFFER_SIZE,
-            "Frame= %u,RPM=%u,Speed=%u",
+            "Frame=%u,RPM=%u,Speed=%u",
             data->frameID,
             data->powertrain.rpm,
             data->powertrain.speed);

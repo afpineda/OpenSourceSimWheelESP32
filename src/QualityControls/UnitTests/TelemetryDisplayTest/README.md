@@ -17,11 +17,13 @@ This test runs in a never-ending loop.
    You must run this test on every option.
 3. On each text line, look for `Elapsed: n`,
    where "n" must be close to 1000.
-4. Look for `Frame= n` on two consecutive text lines.
+4. Look for `Frame=n` on two consecutive text lines.
    - *Low data rate*:
-      "n" should be equal in two consecutive lines,
+     "n" should be equal in just two consecutive lines,
      then increase by one in the third line.
    - *Medium data rate*:
      "n" should run in strict increasing order with no gaps.
    - *High data rate*:
-     "n" should run in increasing order with a gap around 4 units.
+     "n" should run in increasing order with a gap close to 4 units.
+5. The values "x" and "y" in `RPM=x` and `Speed=y` must match the
+   value "n" in `Frame=n`.
