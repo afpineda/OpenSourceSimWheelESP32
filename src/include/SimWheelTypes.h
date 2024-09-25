@@ -397,22 +397,18 @@ protected:
      *
      * @param timerVariable Timer variable.
      * @param elapsedTimeMs Time elapsed since last call in miliseconds.
-     * @param timeLimitMs Timer limit in miliseconds.
-     * @return true If the timer has expired.
-     * @return false If the timer is still running.
+     * @param timeLimitMs Expiration time in miliseconds.
+     * @return uint32_t The count of times the timer has expired in the elapsed time.
      */
-    bool frameTimer(
+    uint32_t frameTimer(
         uint32_t &timerVariable,
         uint32_t elapsedTimeMs,
         uint32_t timeLimitMs)
     {
         timerVariable += elapsedTimeMs;
-        if (timerVariable >= timeLimitMs)
-        {
-            timerVariable = timerVariable - timeLimitMs;
-            return true;
-        }
-        return false;
+        uint32_t result = timerVariable / timeLimitMs;
+        timerVariable %= timeLimitMs;
+        return result;
     };
 
 public:
