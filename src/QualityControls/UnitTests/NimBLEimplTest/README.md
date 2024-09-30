@@ -169,15 +169,6 @@ Not applicable to USB implementation.
 12. Click on `Set Feature` , then on `Get Feature`.
 13. Must show a line again starting with: `RD 04  02 00 40`.
 
-### UI control (HID report)
-
-1. Enter `06` at field `ReportID`.
-2. Enter `01 FF FF` at fields below `ReportID`.
-3. Click on `Set Feature` , then on `Get Feature`.
-4. Must show a line starting with: `RD 06  01 02 01`.
-5. Enter `03 00 04` at fields below `ReportID`.
-6. Serial output must show: `Select page 4 in user interface 3`
-
 ## Telemetry data
 
 1. Enter `14` at field `ReportID`.

@@ -47,16 +47,6 @@ void SerialNotificationImpl::serveSingleFrame(uint32_t elapsedMs)
     Serial.printf("(FRAME %u MS)\n", elapsedMs);
 }
 
-uint8_t SerialNotificationImpl::getPageCount()
-{
-    return 4;
-}
-
-void SerialNotificationImpl::setPageIndex(uint8_t pageIndex)
-{
-    Serial.printf("(SET PAGE %u)\n", pageIndex);
-}
-
 void SerialNotificationImpl::onTelemetryData(const telemetryData_t *data)
 {
     if (!data)

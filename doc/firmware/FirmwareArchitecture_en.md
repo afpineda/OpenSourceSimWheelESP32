@@ -136,13 +136,12 @@ classDiagram
 classDiagram
     hidImplementation --> inputs: command to calibrate analog axes
     hidImplementation --> batteryCalibration: command to recalibrate battery
-    hidImplementation --> notify: connected, discovering, \n page control, telemetry data
+    hidImplementation --> notify: connected, discovering, \n telemetry data
     batteryMonitor --> notify: low battery level
     userSettings --> notify: bite point
-    notify --> userSettings: active UI page
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9kTFuwzAMRa9CaHYu4KFL2yFDp6CbF0ZiHAISaUi0WyPI3SvHLlov0SR8_v9IgjfnNZBrnY9YyhtjnzF1AvVdORzTECmRGBqrwOHwAizDaKUFrymhBDAFj5HPGY0ABaP2gN9UnjHOaEZ5ft1yVd7xMv0RN-szmqjxZV4IIuSNQgOBi9eJMkvfQFfDA_a0GCxrbMBoYVieIaDhyt4afaiwad6Bo379liHSRHFNjIXyicxqk7Lzn7kOPiiLrcZVf1j-Z1pAbzwRfB4f85FrXKKckEO9x23Jds6uddLOtfUb6IJjtM51cq9WHE1Ps3jXWh6pceNQl6HtgnvxPSw7rdr9B9Esr2M)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9kbFuwzAMRH-F0Oz8gIcubYcOnbJqoSXGISCRhkQnNYL8e2XYReElmoTT3dOBfLigkVzvQsJaPxjHgtkLtHPl-JWnRJnE0FgFTqc3YJlmqz0EzRklgikETDwUNAIUTDoC_lB9xRjQjMryvueafOAV-ifu1lc0UePLshJEKBjFDiLXoDcqLGMHvoWN1pSVBSIabrQd_a3CpuWASnr_e4ZEN0pbYq5UzmTWsPXgH7hVnZTFXOcylYwc20wfa8w7u7a_vevbNdIF52TeeXk2K86m50WC663M1Ll5avVo38JR_Ixry017_gIhTprY)
 
 Some modules have a `begin()` method that must be called at system startup (`main()`or `setup()`).
 The calling order is defined by the previous diagram, where bottom modules must be called first.

@@ -95,14 +95,3 @@ For later reference:
    Axis "RX" or "RY" must go in the opposite way it did before.
 7. Enter `FF FF FF 05 FF FF` at fields below `ReportID`. Click on `Set Feature`.
 8. Enter `FF FF FF 06 FF FF` at fields below `ReportID`. Click on `Set Feature`.
-
-## Part 5 (UI control)
-
-1. Enter `06` at field `ReportID`.
-2. Enter `00 FF FF` at fields below `ReportID`.
-3. Click on `Set Feature`, then on `Get Feature`.
-4. SimpleHidWriter must show a line starting with: `RD 06  00 04 00`.
-5. Enter `00 00 03` at fields below `ReportID`. Click on `Set Feature`.
-6. Serial output must show `(SET PAGE 3)`.
-7. Enter `00 00 06` at fields below `ReportID`. Click on `Set Feature`.
-8. Check there is no further serial output.

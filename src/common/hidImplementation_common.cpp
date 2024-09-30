@@ -135,16 +135,6 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
         *(uint16_t *)(buffer + 4) = 0;
         return HARDWARE_ID_REPORT_SIZE;
     }
-    if ((report_id == RID_FEATURE_UI_CONTROL) && (len >= UI_CONTROL_REPORT_SIZE))
-    {
-        uint8_t pageCount = 0;
-        uint8_t pageIndex = 0;
-        notify::getPageInfo(selected_ui, pageCount, pageIndex);
-        buffer[0] = selected_ui;
-        buffer[1] = pageCount;
-        buffer[2] = pageIndex;
-        return UI_CONTROL_REPORT_SIZE;
-    }
     return 0;
 }
 
@@ -242,12 +232,6 @@ void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *b
                     hidImplementation::common::storeHardwareID(vid, pid);
             } // else ignore
         } // else ignore
-    }
-    else if ((report_id == RID_FEATURE_UI_CONTROL) && (len >= UI_CONTROL_REPORT_SIZE))
-    {
-        selected_ui = buffer[0];
-        if (buffer[2] != 0xFF)
-            notify::setPageIndex(selected_ui, buffer[2]);
     }
     else
         log_e("Set feature report ID %u: ignored. Size: %u.", report_id, len);

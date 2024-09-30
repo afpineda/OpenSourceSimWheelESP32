@@ -379,9 +379,6 @@ typedef struct
     } gauges;
 } telemetryData_t;
 
-/// Maximum count of user interfaces allowed
-#define MAX_UI_COUNT 6
-
 /**
  * @brief Abstract interface for notifications and telemetry display.
  *
@@ -504,32 +501,6 @@ public:
      *       condition persists.
      */
     virtual void onLowBattery() {};
-
-    /**
-     * @brief Get the count of available pages in this user interface.
-     *
-     * @note Must return the same value in every call.
-     *
-     * @return uint8_t Count of available pages.
-     */
-    virtual uint8_t getPageCount() { return 0; };
-
-    /**
-     * @brief Select a page in this user interface
-     *
-     * @param pageIndex Index of the selected page.
-     */
-    virtual void setPageIndex(uint8_t pageIndex) {};
-
-    /**
-     * @brief Get the index of the currently selected page
-     *
-     * @note If paging is not supported, any return value is allowed.
-     *
-     * @return uint8_t Index of current page.
-     *                 Must be coherent with getPageCount().
-     */
-    virtual uint8_t getCurrentPageIndex() { return 0; };
 };
 
 /**

@@ -57,20 +57,6 @@ void notify::bitePoint()
 {
 }
 
-bool notify::getPageInfo(uint8_t ui_index, uint8_t &pageCount, uint8_t &pageIndex)
-{
-    pageCount = ui_index+1;
-    pageIndex = ui_index;
-    return true;
-}
-
-void notify::setPageIndex(uint8_t ui_index, uint8_t pageIndex)
-{
-#if ARDUINO_USB_MODE == 1
-    Serial.printf("Select page %u in user interface %u\n", pageIndex, ui_index);
-#endif
-}
-
 //------------------------------------------------------------------
 
 void inputs::recalibrateAxes()

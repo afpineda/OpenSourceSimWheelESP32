@@ -24,7 +24,6 @@
 //------------------------------------------------------------------
 
 volatile clutchValue_t userSettings::bitePoint = (clutchValue_t)0;
-volatile uint8_t userSettings::uiPage[MAX_UI_COUNT];
 
 //------------------------------------------------------------------
 // Arduino entry point

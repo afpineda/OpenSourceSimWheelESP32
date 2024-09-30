@@ -21,7 +21,7 @@
 #define RID_FEATURE_CONFIG 0x03
 #define RID_FEATURE_BUTTONS_MAP 0x04
 #define RID_FEATURE_HARDWARE_ID 0x05
-#define RID_FEATURE_UI_CONTROL 0x06
+
 #define RID_OUTPUT_POWERTRAIN 0x14   // 20 dec
 #define RID_OUTPUT_ECU 0x15          // 21 dec
 #define RID_OUTPUT_RACE_CONTROL 0x16 // 22 dec
@@ -145,13 +145,6 @@ static const uint8_t hid_descriptor[] = {
     0x75, 0x08,                    // Report Size (8)
     0x95, HARDWARE_ID_REPORT_SIZE, // Report count
     0xb1, 0xa2,                    // FEATURE (Data,var,abs,Nprf,Vol)
-
-    // ___ UI CONTROL (FEATURE) REPORT ___
-    0x09, 0x00,                   // USAGE (undefined)
-    0x85, RID_FEATURE_UI_CONTROL, // REPORT ID
-    0x75, 0x08,                   // Report Size (8)
-    0x95, UI_CONTROL_REPORT_SIZE, // Report count
-    0xb1, 0xa2,                   // FEATURE (Data,var,abs,Nprf,Vol)
 
     // ___ POWERTRAIN TELEMETRY (OUTPUT) REPORT ___
     0x09, 0x00,                   // USAGE (undefined)

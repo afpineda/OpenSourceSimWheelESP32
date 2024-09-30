@@ -51,7 +51,6 @@ This project make use of a number of HID reports:
 |     3     | Feature | Wheel configuration               |
 |     4     | Feature | User-defined buttons map          |
 |     5     | Feature | Custom hardware ID                |
-|     6     | Feature | UI display control                |
 |    20     | Output  | Telemetry data / Powertrain       |
 |    21     | Output  | Telemetry data / ECU              |
 |    22     | Output  | Telemetry data / Race control     |
@@ -149,7 +148,6 @@ Useful to distinguish one device from another.
 The number of user interfaces implemented in the device.
 Zero or more user interfaces (UI) may be available, for example,
 "rev lights", an OLED and a speaker.
-This is relevant when using report ID 6.
 
 ### Max FPS
 
@@ -354,82 +352,6 @@ At write (unless locked):
 **No changes are made if there is no match.**
 
 [def]: ../../src/include/SimWheelTypes.h
-
-## Data format of report ID 6 (UI display control)
-
-| Byte index | Size (bytes) | Purpose (field)    | Since data version |
-| :--------: | :----------: | ------------------ | ------------------ |
-|     0      |      1       | Selected UI index  | 1.3                |
-|     1      |      1       | Page count         | 1.3                |
-|     2      |      1       | Current page index | 1.3                |
-
-This feature report is useless if there is no user interface.
-Check capabilities first (report ID 2).
-The actual behavior is implementation-dependant.
-
-Each UI may have zero or more "pages" (not to be taken literally).
-A "page" is a user-select mode for the user interface. For example:
-
-- An OLED could display a different set of data in each page.
-- A speaker could set a different volume for each page.
-- "Rev lights" could go left-to-right or right-to-left depending on the selected page.
-
-This report is intended to control how telemetry data is shown to the user.
-The selected page is automatically saved to flash memory after a short delay,
-but only for user interfaces 0 to 5 (this is a firmware limitation).
-
-### Selected UI index
-
-At read:
-
-- Currently selected user interface index.
-- Do not assume the value you read is the same as a previous write.
-  Another application could write another value in between.
-
-At write (unless locked):
-
-- Index of a user interface to be selected for this query and subsequent ones.
-
-### Page count
-
-This field is read-only:
-
-- Count of available pages in the selected user interface.
-
-At write, any value will be ignored.
-
-### Current page index
-
-At read:
-
-- Index of the selected page in the selected user interface.
-
-At write:
-
-- Value `FF` (hexadecimal) will just select another user interface
-  without changing current settings.
-- A value greater or equal to "Page count" is invalid and will be ignored.
-- Other values will select another page index in the selected user interface.
-
-Examples (pseudo-code):
-
-- To know relevant user interfaces:
-
-  ```c++
-  for (uint8_t ui_index = 0; ui_index < 256; ui_index++) {
-     report6.write(ui_index,0xFF,0xFF);
-     report6.read(j,pageCount,currentPageIndex);
-     if (ui_index != j)
-        another_app_is_interfering();
-     else if (pageCount > 0)
-        show_ui_control(ui_index,pageCount,currentPageIndex);
-  ```
-
-- To select page 3 in device 1
-
-  ```c++
-     report6.write(1,0xFF,3);
-  ```
 
 ## Telemetry (output) reports
 

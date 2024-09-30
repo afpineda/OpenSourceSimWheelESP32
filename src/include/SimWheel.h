@@ -102,12 +102,6 @@ namespace userSettings
     extern volatile bool securityLock;
 
     /**
-     * @brief Selected pages for each user interface.
-     * @note For read only. Do not overwrite.
-     */
-    extern volatile uint8_t uiPage[MAX_UI_COUNT];
-
-    /**
      * @brief Must be called before anything else in this namespace. Will
      *        load user settings from flash memory.
      *
@@ -203,16 +197,6 @@ namespace userSettings
      * @param yesOrNo true to lock, false to unlock.
      */
     void setSecurityLock(bool yesOrNo);
-
-    /**
-     * @brief Save the selected page index of an user interface
-     *
-     * @note Limited to a certain number of devices. See constant MAX_UI_COUNT.
-     *
-     * @param ui_index Index of the user interface implementor.
-     * @param pageIndex Selected page index.
-     */
-    void saveUIPageIndex(uint8_t ui_index, uint8_t pageIndex);
 }
 
 /**
@@ -822,27 +806,6 @@ namespace notify
      *
      */
     void lowBattery();
-
-    /**
-     * @brief Get the count of available pages in a user interface.
-     *
-     * @param ui_index Index of an user interface implementor. See notify::begin().
-     * @param[out] pageCount Count of available pages in the user interface.
-     * @param[out] pageIndex User-selected page index.
-     * @return true If @p pageCount and @p pageIndex were retrieved.
-     * @return false If @ui_index denotes a non-existing user interface.
-     */
-    bool getPageInfo(uint8_t ui_index, uint8_t &pageCount, uint8_t &pageIndex);
-
-    /**
-     * @brief Select a page index in a user interface.
-     *
-     * @note Non-existing pages and implementors are ignored without notice.
-     *
-     * @param ui_index Index of an user interface implementor. See notify::begin().
-     * @param pageIndex Requested page index.
-     */
-    void setPageIndex(uint8_t ui_index, uint8_t pageIndex);
 }
 
 /**

@@ -250,8 +250,6 @@ First release.
   It has been revamped to handle telemetry data.
 - Many user interfaces could be implemented at the same time, for example,
   *rev lights*, an OLED, and a speaker.
-- "Display pages" are available to each user interface if required.
-  The user may change the active page using HID reports.
 - The new API is not intended to implement full telemetry displays since there
   are better choices for that. Intended uses are
   *rev lights*, real-car gauges, fixed-data displays, etc.

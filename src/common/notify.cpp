@@ -193,9 +193,6 @@ void notify::begin(
         notify::maxFPS = framesPerSecond;
         notify::telemetryData.frameID = 0;
         lastFrameID = 0;
-        for (int i = 0; (i < MAX_UI_COUNT) && (i < implementorArray.size()); i++)
-            if (userSettings::uiPage[i] < implementorArray[i]->getPageCount())
-                implementorArray[i]->setPageIndex(userSettings::uiPage[i]);
 
         // Set new device capabilities
         if (framesPerSecond > 0)
@@ -254,31 +251,4 @@ void notify::lowBattery()
 {
     if (notificationDaemon)
         eventPush(EVENT_LOW_BATTERY);
-}
-
-// ----------------------------------------------------------------------------
-// UI control
-// ----------------------------------------------------------------------------
-
-bool notify::getPageInfo(uint8_t ui_index, uint8_t &pageCount, uint8_t &pageIndex)
-{
-    if (ui_index < implementorArray.size())
-    {
-        pageCount = implementorArray[ui_index]->getPageCount();
-        pageIndex = implementorArray[ui_index]->getCurrentPageIndex();
-        if ((pageCount == 0) || (pageIndex >= pageCount))
-            pageIndex = 0;
-        return true;
-    }
-    return false;
-}
-
-void notify::setPageIndex(uint8_t ui_index, uint8_t pageIndex)
-{
-    if (ui_index < implementorArray.size())
-        if (pageIndex < implementorArray[ui_index]->getPageCount())
-        {
-            implementorArray[ui_index]->setPageIndex(pageIndex);
-            userSettings::saveUIPageIndex(ui_index, pageIndex);
-        }
 }

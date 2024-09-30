@@ -26,8 +26,6 @@ public:
     virtual void onBLEdiscovering() override;
     virtual void onLowBattery() override;
     virtual void serveSingleFrame(uint32_t elapsedMs) override;
-    virtual uint8_t getPageCount() override;
-    virtual void setPageIndex(uint8_t pageIndex) override;
 };
 
 //-------------------------------------------------------------------

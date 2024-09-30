@@ -44,7 +44,6 @@ static NimBLECharacteristic *configReport = nullptr;
 static NimBLECharacteristic *capabilitiesReport = nullptr;
 static NimBLECharacteristic *buttonsMapReport = nullptr;
 static NimBLECharacteristic *hardwareIdReport = nullptr;
-static NimBLECharacteristic *uiControlReport = nullptr;
 static NimBLECharacteristic *powertrainReport = nullptr;
 static NimBLECharacteristic *ecuReport = nullptr;
 static NimBLECharacteristic *raceControlReport = nullptr;
@@ -109,7 +108,6 @@ FeatureReportCallbacks<RID_FEATURE_CONFIG, CONFIG_REPORT_SIZE> configFRCallbacks
 FeatureReportCallbacks<RID_FEATURE_CAPABILITIES, CAPABILITIES_REPORT_SIZE> capabilitiesFRCallbacks;
 FeatureReportCallbacks<RID_FEATURE_BUTTONS_MAP, BUTTONS_MAP_REPORT_SIZE> buttonsMapFRCallbacks;
 FeatureReportCallbacks<RID_FEATURE_HARDWARE_ID, HARDWARE_ID_REPORT_SIZE> hardwareID_FRCallbacks;
-FeatureReportCallbacks<RID_FEATURE_UI_CONTROL, UI_CONTROL_REPORT_SIZE> uiControl_FRCallbacks;
 
 // ----------------------------------------------------------------------------
 // HID OUTPUT REPORT callbacks
@@ -195,13 +193,12 @@ void hidImplementation::begin(
         configReport = hid->featureReport(RID_FEATURE_CONFIG);
         buttonsMapReport = hid->featureReport(RID_FEATURE_BUTTONS_MAP);
         hardwareIdReport = hid->featureReport(RID_FEATURE_HARDWARE_ID);
-        uiControlReport = hid->featureReport(RID_FEATURE_UI_CONTROL);
         powertrainReport = hid->outputReport(RID_OUTPUT_POWERTRAIN);
         ecuReport = hid->outputReport(RID_OUTPUT_ECU);
         raceControlReport = hid->outputReport(RID_OUTPUT_RACE_CONTROL);
         gaugesReport = hid->outputReport(RID_OUTPUT_GAUGES);
         if (!inputGamepad || !configReport || !capabilitiesReport ||
-            !buttonsMapReport || !hardwareIdReport || !uiControlReport ||
+            !buttonsMapReport || !hardwareIdReport ||
             !powertrainReport || !ecuReport || !raceControlReport || !gaugesReport)
         {
             log_e("Unable to create HID report characteristics");
@@ -211,7 +208,6 @@ void hidImplementation::begin(
         capabilitiesReport->setCallbacks(&capabilitiesFRCallbacks);
         buttonsMapReport->setCallbacks(&buttonsMapFRCallbacks);
         hardwareIdReport->setCallbacks(&hardwareID_FRCallbacks);
-        uiControlReport->setCallbacks(&uiControl_FRCallbacks);
         powertrainReport->setCallbacks(&powertrain_ORCallbacks);
         ecuReport->setCallbacks(&ecu_ORCallbacks);
         raceControlReport->setCallbacks(&raceControl_ORCallbacks);
