@@ -40,14 +40,6 @@ static esp_timer_handle_t autoPowerOffTimer = nullptr;
 // Related to HID device
 static NimBLEHIDDevice *hid = nullptr;
 static NimBLECharacteristic *inputGamepad = nullptr;
-static NimBLECharacteristic *configReport = nullptr;
-static NimBLECharacteristic *capabilitiesReport = nullptr;
-static NimBLECharacteristic *buttonsMapReport = nullptr;
-static NimBLECharacteristic *hardwareIdReport = nullptr;
-static NimBLECharacteristic *powertrainReport = nullptr;
-static NimBLECharacteristic *ecuReport = nullptr;
-static NimBLECharacteristic *raceControlReport = nullptr;
-static NimBLECharacteristic *gaugesReport = nullptr;
 static NimBLEServer *pServer = nullptr;
 static bool notifyConfigChanges = false;
 
@@ -84,51 +76,93 @@ public:
 // HID FEATURE REQUEST callbacks
 // ----------------------------------------------------------------------------
 
-template <uint8_t RID, uint16_t SIZE>
-class FeatureReportCallbacks : public NimBLECharacteristicCallbacks
+class FeatureReport : public NimBLECharacteristicCallbacks
 {
-    // RECEIVE DATA
-    void onWrite(NimBLECharacteristic *pCharacteristic)
-    {
-        size_t size = pCharacteristic->getValue().length();
-        const uint8_t *data = pCharacteristic->getValue().data();
-        hidImplementation::common::onSetFeature(RID, data, size);
-    }
+public:
+    void onWrite(NimBLECharacteristic *pCharacteristic) override;
+    void onRead(NimBLECharacteristic *pCharacteristic) override;
+    FeatureReport(uint8_t RID, uint16_t size);
+    static void attachTo(NimBLEHIDDevice *hid, uint8_t RID, uint16_t size);
 
-    // SEND REQUESTED DATA
-    void onRead(NimBLECharacteristic *pCharacteristic)
-    {
-        uint8_t data[SIZE];
-        hidImplementation::common::onGetFeature(RID, data, SIZE);
-        pCharacteristic->setValue(data, SIZE);
-    }
+private:
+    uint8_t _reportID;
+    uint16_t _reportSize;
 };
 
-FeatureReportCallbacks<RID_FEATURE_CONFIG, CONFIG_REPORT_SIZE> configFRCallbacks;
-FeatureReportCallbacks<RID_FEATURE_CAPABILITIES, CAPABILITIES_REPORT_SIZE> capabilitiesFRCallbacks;
-FeatureReportCallbacks<RID_FEATURE_BUTTONS_MAP, BUTTONS_MAP_REPORT_SIZE> buttonsMapFRCallbacks;
-FeatureReportCallbacks<RID_FEATURE_HARDWARE_ID, HARDWARE_ID_REPORT_SIZE> hardwareID_FRCallbacks;
+// RECEIVE DATA
+void FeatureReport::onWrite(NimBLECharacteristic *pCharacteristic)
+{
+    size_t size = pCharacteristic->getValue().length();
+    const uint8_t *data = pCharacteristic->getValue().data();
+    hidImplementation::common::onSetFeature(_reportID, data, size);
+}
+
+// SEND REQUESTED DATA
+void FeatureReport::onRead(NimBLECharacteristic *pCharacteristic)
+{
+    uint8_t data[_reportSize];
+    hidImplementation::common::onGetFeature(_reportID, data, _reportSize);
+    pCharacteristic->setValue(data, _reportSize);
+}
+
+// Constructor
+FeatureReport::FeatureReport(uint8_t RID, uint16_t size)
+{
+    _reportID = RID;
+    _reportSize = size;
+}
+
+// Attach to HID device
+void FeatureReport::attachTo(NimBLEHIDDevice *hid, uint8_t RID, uint16_t size)
+{
+    NimBLECharacteristic *reportCharacteristic = hid->featureReport(RID);
+    if (!reportCharacteristic)
+    {
+        log_e("Unable to create HID report characteristics");
+        abort();
+    }
+    reportCharacteristic->setCallbacks(new FeatureReport(RID, size));
+}
 
 // ----------------------------------------------------------------------------
 // HID OUTPUT REPORT callbacks
 // ----------------------------------------------------------------------------
 
-template <uint8_t RID>
 class OutputReport : public NimBLECharacteristicCallbacks
 {
-    // RECEIVE DATA
-    void onWrite(NimBLECharacteristic *pCharacteristic)
-    {
-        size_t size = pCharacteristic->getValue().length();
-        const uint8_t *data = pCharacteristic->getValue().data();
-        hidImplementation::common::onOutput(RID, data, size);
-    }
+public:
+    void onWrite(NimBLECharacteristic *pCharacteristic) override;
+    OutputReport(uint8_t RID);
+    static void attachTo(NimBLEHIDDevice *hid, uint8_t RID);
+
+private:
+    uint8_t _reportID;
 };
 
-OutputReport<RID_OUTPUT_POWERTRAIN> powertrain_ORCallbacks;
-OutputReport<RID_OUTPUT_ECU> ecu_ORCallbacks;
-OutputReport<RID_OUTPUT_RACE_CONTROL> raceControl_ORCallbacks;
-OutputReport<RID_OUTPUT_GAUGES> gauges_ORCallbacks;
+OutputReport::OutputReport(uint8_t RID)
+{
+    _reportID = RID;
+}
+
+// RECEIVE DATA
+void OutputReport::onWrite(NimBLECharacteristic *pCharacteristic)
+{
+    size_t size = pCharacteristic->getValue().length();
+    const uint8_t *data = pCharacteristic->getValue().data();
+    hidImplementation::common::onOutput(_reportID, data, size);
+}
+
+// Attach to HID device
+void OutputReport::attachTo(NimBLEHIDDevice *hid, uint8_t RID)
+{
+    NimBLECharacteristic *reportCharacteristic = hid->outputReport(RID);
+    if (!reportCharacteristic)
+    {
+        log_e("Unable to create HID report characteristics");
+        abort();
+    }
+    reportCharacteristic->setCallbacks(new OutputReport(RID));
+}
 
 // ----------------------------------------------------------------------------
 // Auto power-off
@@ -189,29 +223,14 @@ void hidImplementation::begin(
 
         // Create HID reports
         inputGamepad = hid->inputReport(RID_INPUT_GAMEPAD);
-        capabilitiesReport = hid->featureReport(RID_FEATURE_CAPABILITIES);
-        configReport = hid->featureReport(RID_FEATURE_CONFIG);
-        buttonsMapReport = hid->featureReport(RID_FEATURE_BUTTONS_MAP);
-        hardwareIdReport = hid->featureReport(RID_FEATURE_HARDWARE_ID);
-        powertrainReport = hid->outputReport(RID_OUTPUT_POWERTRAIN);
-        ecuReport = hid->outputReport(RID_OUTPUT_ECU);
-        raceControlReport = hid->outputReport(RID_OUTPUT_RACE_CONTROL);
-        gaugesReport = hid->outputReport(RID_OUTPUT_GAUGES);
-        if (!inputGamepad || !configReport || !capabilitiesReport ||
-            !buttonsMapReport || !hardwareIdReport ||
-            !powertrainReport || !ecuReport || !raceControlReport || !gaugesReport)
-        {
-            log_e("Unable to create HID report characteristics");
-            abort();
-        }
-        configReport->setCallbacks(&configFRCallbacks);
-        capabilitiesReport->setCallbacks(&capabilitiesFRCallbacks);
-        buttonsMapReport->setCallbacks(&buttonsMapFRCallbacks);
-        hardwareIdReport->setCallbacks(&hardwareID_FRCallbacks);
-        powertrainReport->setCallbacks(&powertrain_ORCallbacks);
-        ecuReport->setCallbacks(&ecu_ORCallbacks);
-        raceControlReport->setCallbacks(&raceControl_ORCallbacks);
-        gaugesReport->setCallbacks(&gauges_ORCallbacks);
+        FeatureReport::attachTo(hid, RID_FEATURE_CAPABILITIES, CAPABILITIES_REPORT_SIZE);
+        FeatureReport::attachTo(hid, RID_FEATURE_CONFIG, CONFIG_REPORT_SIZE);
+        FeatureReport::attachTo(hid, RID_FEATURE_BUTTONS_MAP, BUTTONS_MAP_REPORT_SIZE);
+        FeatureReport::attachTo(hid, RID_FEATURE_HARDWARE_ID, HARDWARE_ID_REPORT_SIZE);
+        OutputReport::attachTo(hid, RID_OUTPUT_POWERTRAIN);
+        OutputReport::attachTo(hid, RID_OUTPUT_ECU);
+        OutputReport::attachTo(hid, RID_OUTPUT_RACE_CONTROL);
+        OutputReport::attachTo(hid, RID_OUTPUT_GAUGES);
 
         // Configure BLE advertising
         NimBLEAdvertising *pAdvertising = pServer->getAdvertising();
