@@ -301,6 +301,7 @@ void hidImplementation::common::onOutput(
         notify::telemetryData.gauges.remainingFuelMinutes = *((uint16_t *)(buffer + 14));
     }
     notify::telemetryData.frameID++;
+    // log_d("frame id: %u", notify::telemetryData.frameID);
 }
 
 // ----------------------------------------------------------------------------

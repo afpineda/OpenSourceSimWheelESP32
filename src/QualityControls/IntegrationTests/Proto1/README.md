@@ -56,7 +56,7 @@ For later reference:
 
 ### Part 2 (buttons map)
 
-1. Open "SimpleHidWriter.exe". Locate `Device VID=501D` in the top area, and click on it.
+1. Open "SimpleHidWriter.exe". Locate `Device VID=1D50` in the top area, and click on it.
 2. You should see continuous report lines starting with `RD 01`. Ignore them. Click on `Clear` from time to time.
 3. Enter `04` at field `ReportID`.
 4. Enter `07 09 0A` at fields below `ReportID`. Click on `Set Feature`.
