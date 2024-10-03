@@ -66,8 +66,8 @@ bool eventPop(uint8_t &eventID)
     bool isNotEmpty = (queueHead != queueTail);
     if (isNotEmpty)
     {
-        eventID = eventBuffer[queueHead];
         incQueuePointer(queueHead);
+        eventID = eventBuffer[queueHead];
     }
     return isNotEmpty;
 }
@@ -107,6 +107,7 @@ void notificationDaemonLoop(void *param)
                         break;
                     case EVENT_LOW_BATTERY:
                         impl->onLowBattery();
+                        break;
                     }
         }
         if (frameServerPeriod != portMAX_DELAY)
