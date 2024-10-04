@@ -27,7 +27,7 @@ static bool telemetryRequired = false;
 uint8_t notify::maxFPS = 0;
 uint8_t notify::uiCount = 0;
 volatile telemetryData_t notify::telemetryData;
-static uint8_t lastFrameID;
+static uint32_t lastFrameID;
 #define NO_TELEMETRY_TICKS pdMS_TO_TICKS(2000)
 
 // Events queue
