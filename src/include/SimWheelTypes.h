@@ -374,8 +374,6 @@ typedef struct
         uint16_t oilTemperature = 0;      /// Oil temperature in user-defined units (Celsius or Kelvin)
         uint8_t relativeRemainingFuel = 0;  /// Percentage of remaining fuel
         uint16_t absoluteRemainingFuel = 0; /// Remaining fuel in user-defined units (litres or gallons)
-        uint16_t remainingFuelLaps = 0;     /// Laps to run out of fuel
-        uint16_t remainingFuelMinutes = 0;  /// Time to run out of fuel in minutes
     } gauges;
 } telemetryData_t;
 

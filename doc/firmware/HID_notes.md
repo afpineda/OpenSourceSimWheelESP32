@@ -369,14 +369,14 @@ Some data may go unnoticed.
 
 ### Data format of report ID 20 (Telemetry / Powertrain)
 
-| Byte index | Size  | Field         | Data type | Data version | Related SimHub property                                                      |
-| :--------: | :---: | ------------- | --------- | ------------ | ---------------------------------------------------------------------------- |
-|     0      |   1   | Gear          | char      | 1.3          | DataCorePlugin.GameData.Gear                                                 |
-|     1      |   2   | RPM           | uint16    | 1.3          | DataCorePlugin.GameData.Rpms                                                 |
-|     3      |   1   | RPM percent   | uint8     | 1.3          | DataCorePlugin.GameData.CarSettings_CurrentDisplayedRPMPercent.GameData.Rpms |
-|     4      |   1   | Shift light 1 | boolean   | 1.3          | DataCorePlugin.GameData.CarSettings_RPMShiftLight1                           |
-|     5      |   1   | Shift light 2 | boolean   | 1.3          | DataCorePlugin.GameData.CarSettings_RPMShiftLight2                           |
-|     6      |   2   | Speed         | uint16    | 1.3          | DataCorePlugin.GameData.SpeedLocal                                           |
+| Byte index | Size  | Field         | Data type | Data version | Related SimHub property (DataCorePlugin.GameData) |
+| :--------: | :---: | ------------- | --------- | ------------ | ------------------------------------------------- |
+|     0      |   1   | Gear          | char      | 1.3          | Gear                                              |
+|     1      |   2   | RPM           | uint16    | 1.3          | Rpms                                              |
+|     3      |   1   | RPM percent   | uint8     | 1.3          | CarSettings_CurrentDisplayedRPMPercent            |
+|     4      |   1   | Shift light 1 | boolean   | 1.3          | EngineTorque & MaxEngineTorque                    |
+|     5      |   1   | Shift light 2 | boolean   | 1.3          | Rpms & CarSettings_RedLineRPM                     |
+|     6      |   2   | Speed         | uint16    | 1.3          | SpeedLocal                                        |
 
 - **Gear**: a single ASCII character, typically "R", "N", "1", "2", etc.
 - **RPM**: absolute revolutions per minute.
@@ -387,17 +387,17 @@ Some data may go unnoticed.
 
 ### Data format of report ID 21 (Telemetry / ECU)
 
-| Byte index | Size  | Field              | Data type | Data version | Related SimHub property                             |
-| :--------: | :---: | ------------------ | --------- | ------------ | --------------------------------------------------- |
-|     0      |   1   | ABS engaged        | boolean   | 1.3          | DataCorePlugin.GameData.ABSActive                   |
-|     1      |   1   | TC engaged         | boolean   | 1.3          | DataCorePlugin.GameData.TCActive                    |
-|     2      |   1   | DRS engaged        | boolean   | 1.3          | DataCorePlugin.GameData.DRSEnabled                  |
-|     3      |   1   | Pit limiter        | boolean   | 1.3          | DataCorePlugin.GameData.PitLimiterOn                |
-|     4      |   1   | Low fuel alert     | boolean   | 1.3          | DataCorePlugin.GameData.CarSettings_FuelAlertActive |
-|     5      |   1   | ABS level          | uint8     | 1.3          | DataCorePlugin.GameData.ABSLevel                    |
-|     6      |   1   | TC Level           | uint8     | 1.3          | DataCorePlugin.GameData.TCLevel                     |
-|     7      |   1   | TC Cut             | uint8     | 1.3          |                                                     |
-|     8      |   1   | Brake bias percent | uint8     | 1.3          | DataCorePlugin.GameData.BrakeBias (uint)            |
+| Byte index | Size  | Field              | Data type | Data version | Related SimHub property (DataCorePlugin.GameData) |
+| :--------: | :---: | ------------------ | --------- | ------------ | ------------------------------------------------- |
+|     0      |   1   | ABS engaged        | boolean   | 1.3          | ABSActive                                         |
+|     1      |   1   | TC engaged         | boolean   | 1.3          | TCActive                                          |
+|     2      |   1   | DRS engaged        | boolean   | 1.3          | DRSEnabled                                        |
+|     3      |   1   | Pit limiter        | boolean   | 1.3          | PitLimiterOn                                      |
+|     4      |   1   | Low fuel alert     | boolean   | 1.3          | CarSettings_FuelAlertActive                       |
+|     5      |   1   | ABS level          | uint8     | 1.3          | ABSLevel                                          |
+|     6      |   1   | TC Level           | uint8     | 1.3          | TCLevel                                           |
+|     7      |   1   | TC Cut             | uint8     | 1.3          |                                                   |
+|     8      |   1   | Brake bias percent | uint8     | 1.3          | BrakeBias                                         |
 
 - **TC Level**: sometimes called "TC1".
 - **TC Cut**: sometimes called "TC2".
@@ -405,34 +405,32 @@ Some data may go unnoticed.
 
 ### Data format of report ID 22 (Telemetry / Race control)
 
-| Byte index | Size  | Field                            | Data type | Data version | Related SimHub property                 |
-| :--------: | :---: | -------------------------------- | --------- | ------------ | --------------------------------------- |
-|     0      |   1   | Black flag                       | boolean   | 1.3          | DataCorePlugin.GameData.Flag_Black      |
-|     1      |   1   | Blue flag                        | boolean   | 1.3          | DataCorePlugin.GameData.Flag_Blue       |
-|     2      |   1   | Checkered flag                   | boolean   | 1.3          | DataCorePlugin.GameData.Flag_Checkered  |
-|     3      |   1   | Green flag                       | boolean   | 1.3          | DataCorePlugin.GameData.Flag_Green      |
-|     4      |   1   | Orange flag                      | boolean   | 1.3          | DataCorePlugin.GameData.Flag_Orange     |
-|     5      |   1   | White flag                       | boolean   | 1.3          | DataCorePlugin.GameData.Flag_White      |
-|     6      |   1   | Yellow flag                      | boolean   | 1.3          | DataCorePlugin.GameData.Flag_Yellow     |
-|     7      |   2   | Remaining session laps           | uint16    | 1.3          | DataCorePlugin.GameData.RemainingLaps   |
-|     9      |   2   | Remaining session time (minutes) | uint16    | 1.3          | DataCorePlugin.GameData.SessionTimeLeft |
+| Byte index | Size  | Field                            | Data type | Data version | Related SimHub property (DataCorePlugin.GameData) |
+| :--------: | :---: | -------------------------------- | --------- | ------------ | ------------------------------------------------- |
+|     0      |   1   | Black flag                       | boolean   | 1.3          | Flag_Black                                        |
+|     1      |   1   | Blue flag                        | boolean   | 1.3          | Flag_Blue                                         |
+|     2      |   1   | Checkered flag                   | boolean   | 1.3          | Flag_Checkered                                    |
+|     3      |   1   | Green flag                       | boolean   | 1.3          | Flag_Green                                        |
+|     4      |   1   | Orange flag                      | boolean   | 1.3          | Flag_Orange                                       |
+|     5      |   1   | White flag                       | boolean   | 1.3          | Flag_White                                        |
+|     6      |   1   | Yellow flag                      | boolean   | 1.3          | Flag_Yellow                                       |
+|     7      |   2   | Remaining session laps           | uint16    | 1.3          | RemainingLaps                                     |
+|     9      |   2   | Remaining session time (minutes) | uint16    | 1.3          | SessionTimeLeft                                   |
 
 - *Remaining session laps* should be zero if the session is time-based.
 - *Remaining session time* should be zero if the session is laps-based.
 
 ## Data format of report ID 23 (Telemetry / Gauges )
 
-| Byte index | Size  | Field                         | Data type          | Data version | Related SimHub property                              |
-| :--------: | :---: | ----------------------------- | ------------------ | ------------ | ---------------------------------------------------- |
-|     0      |   1   | Relative turbo pressure       | uint8              | 1.3          | DataCorePlugin.GameData.TurboPercent                 |
-|     1      |   2   | Absolute turbo pressure       | uint16 fixed point | 1.3          | DataCorePlugin.GameData.Turbo                        |
-|     3      |   2   | Water temperature             | uint16             | 1.3          | DataCorePlugin.GameData.WaterTemperature             |
-|     5      |   2   | Oil pressure                  | uint16 fixed point | 1.3          | DataCorePlugin.GameData.OilPressure                  |
-|     7      |   2   | Oil temperature               | uint16             | 1.3          | DataCorePlugin.GameData.OilTemperature               |
-|     9      |   1   | Relative remaining fuel       | uint8              | 1.3          | DataCorePlugin.GameData.FuelPercent                  |
-|     10     |   2   | Absolute remaining fuel       | uint16             | 1.3          | DataCorePlugin.GameData.DataCorePlugin.GameData.Fuel |
-|     12     |   2   | Remaining fuel in laps        | uint16             | 1.3          | DataCorePlugin.Computed.Fuel_RemainingLaps           |
-|     14     |   2   | Remaining fuel time (minutes) | uint16             | 1.3          | DataCorePlugin.GameData.Fuel_RemainingTime           |
+| Byte index | Size  | Field                         | Data type          | Data version | Related SimHub property (DataCorePlugin.GameData) |
+| :--------: | :---: | ----------------------------- | ------------------ | ------------ | ------------------------------------------------- |
+|     0      |   1   | Relative turbo pressure       | uint8              | 1.3          | TurboPercent                                      |
+|     1      |   2   | Absolute turbo pressure       | uint16 fixed point | 1.3          | Turbo                                             |
+|     3      |   2   | Water temperature             | uint16             | 1.3          | WaterTemperature                                  |
+|     5      |   2   | Oil pressure                  | uint16 fixed point | 1.3          | OilPressure                                       |
+|     7      |   2   | Oil temperature               | uint16             | 1.3          | OilTemperature                                    |
+|     9      |   1   | Relative remaining fuel       | uint8              | 1.3          | FuelPercent                                       |
+|     10     |   2   | Absolute remaining fuel       | uint16             | 1.3          | Fuel                                              |
 
 All absolute values are expressed in user-selected units.
 

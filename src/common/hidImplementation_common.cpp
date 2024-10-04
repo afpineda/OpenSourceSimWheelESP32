@@ -297,8 +297,6 @@ void hidImplementation::common::onOutput(
         if (notify::telemetryData.gauges.relativeRemainingFuel > 100)
             notify::telemetryData.gauges.relativeRemainingFuel = 100;
         notify::telemetryData.gauges.absoluteRemainingFuel = *((uint16_t *)(buffer + 10));
-        notify::telemetryData.gauges.remainingFuelLaps = *((uint16_t *)(buffer + 12));
-        notify::telemetryData.gauges.remainingFuelMinutes = *((uint16_t *)(buffer + 14));
     }
     notify::telemetryData.frameID++;
     // log_d("frame id: %u", notify::telemetryData.frameID);
