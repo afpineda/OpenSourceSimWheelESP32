@@ -25,7 +25,6 @@ static notificationImplementorsArray_t implementorArray;
 static TickType_t frameServerPeriod = portMAX_DELAY;
 static bool telemetryRequired = false;
 uint8_t notify::maxFPS = 0;
-uint8_t notify::uiCount = 0;
 volatile telemetryData_t notify::telemetryData;
 static uint32_t lastFrameID;
 #define NO_TELEMETRY_TICKS pdMS_TO_TICKS(2000)
@@ -190,7 +189,6 @@ void notify::begin(
             requiresECUTelemetry |
             requiresRaceControlTelemetry |
             requiresGaugeTelemetry;
-        notify::uiCount = implementorArray.size();
         notify::maxFPS = framesPerSecond;
         notify::telemetryData.frameID = 0;
         lastFrameID = 0;

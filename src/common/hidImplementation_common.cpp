@@ -99,7 +99,7 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
         *(uint16_t *)(buffer + 6) = capabilities::flags;
         *(uint64_t *)(buffer + 8) = 0ULL;
         esp_efuse_mac_get_default(buffer + 8);
-        buffer[16] = notify::uiCount;
+        buffer[16] = 0;
         buffer[17] = notify::maxFPS;
         return CAPABILITIES_REPORT_SIZE;
     }

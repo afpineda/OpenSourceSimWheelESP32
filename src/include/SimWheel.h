@@ -754,12 +754,6 @@ namespace notify
     extern uint8_t maxFPS;
 
     /**
-     * @brief Count of available user interfaces. Not for user code.
-     *        Exposed for efficiency. Do not overwrite.
-     */
-    extern uint8_t uiCount;
-
-    /**
      * @brief Set up an UI-dependant implementation for user notifications.
      *        Do not call if there is no user interface.
      *
