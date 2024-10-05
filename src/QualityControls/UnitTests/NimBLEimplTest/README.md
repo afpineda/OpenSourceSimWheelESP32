@@ -52,7 +52,10 @@ Use this board configuration in Arduino IDE:
 
 ## Procedure and expected output
 
-- There is no serial output in USB devices. Ignore that part.
+- There is no serial output in USB devices.
+  Ignore that part unless you have dual USB ports in your DevKit.
+  In such a case, attach two USB cables: one for serial output
+  and another for the HID implementation.
 - The expected factory VID in USB devices is 0x303A
   ([Espressif](https://docs.espressif.com/projects/esp-iot-solution/en/latest/usb/usb_overview/usb_vid_pid.html)).
 - Ignore this output message while running this test: `(Waiting for connection)`.
@@ -147,10 +150,8 @@ Not applicable to USB implementation.
 ### Capabilities (HID report)
 
 1. Enter `02` at field `ReportID`.
-2. Click on `Set Feature`.
-3. Serial output must show: `onSetFeature(): Set feature report ID 2: ignored. Size: 18.`
-4. Click on `Get Feature`.
-5. Must show the following line: `RD 02  51 BF xx xx xx xx 07 00 xx xx xx xx xx xx xx xx 03 00`.
+2. Click on `Get Feature`.
+3. Must show the following line: `RD 02  51 BF xx xx xx xx 07 00 xx xx xx xx xx xx xx xx 32`.
    Ignore `xx`.
 
 ### Buttons map (HID report)
@@ -171,11 +172,13 @@ Not applicable to USB implementation.
 
 ## Telemetry data
 
+*Note*: do not confuse `Set Report` with `Set Feature`.
+
 1. Enter `14` at field `ReportID`.
-2. Enter `4b 5e 06 63 01 00 40 01` at fields below `ReportID`.
+2. Enter `4b 5e 06 63 01 00 01 00 40 01` at fields below `ReportID`.
 3. Click on `Set Report`.
 4. Serial output must show this line among others:
-   `powertrain: K 1630 99 1 0 320`
+   `powertrain: K 1630 99 1 0 1 0 320`
 5. Enter `15` at field `ReportID`.
 6. Enter `00 02 ff 00 01 00 07 40 fe` at fields below `ReportID`.
 7. Click on `Set Report`.
@@ -186,9 +189,9 @@ Not applicable to USB implementation.
 11. Serial output must show this line among others:
     `race control: 1 0 1 0 1 0 1 0 2530 620`
 12. Enter `17` at field `ReportID`.
-13. Enter `56 71 00 b0 04 5e 27 bf 04 01 74 00 98 08 11 27` at fields below `ReportID`.
+13. Enter `56 71 00 b0 04 5e 27 bf 04 01 74 00` at fields below `ReportID`.
 14. Serial output must show this line among others:
-    `gauges: 86 1.13 1200 100.78 1215 1 116 2200 10001`
+    `gauges: 86 1.13 1200 100.78 1215 1 116`
 
 ### Custom Hardware ID (HID report)
 

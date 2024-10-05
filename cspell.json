@@ -1,6 +1,9 @@
 {
     "version": "0.2",
-    "ignorePaths": [],
+    "ignorePaths": [
+        "doc/API",
+        "doc/Doxyfile"
+    ],
     "dictionaryDefinitions": [],
     "dictionaries": [],
     "words": [
@@ -8,6 +11,7 @@
         "autocalibration",
         "bitmask",
         "Bluefruit",
+        "Doxyfile",
         "dpad",
         "dpads",
         "Dupond",

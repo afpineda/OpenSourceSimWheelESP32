@@ -34,7 +34,7 @@ uint32_t lastFrameID = 0;
 volatile uint32_t capabilities::flags = 0x07;
 volatile inputBitmap_t capabilities::availableInputs = 0b0111ULL;
 volatile telemetryData_t notify::telemetryData = {};
-uint8_t notify::maxFPS = 0;
+uint8_t notify::maxFPS = 50;
 
 //------------------------------------------------------------------
 
@@ -119,12 +119,14 @@ void checkAndPrintTelemetryData()
     if (notify::telemetryData.frameID != lastFrameID)
     {
         lastFrameID = notify::telemetryData.frameID;
-        Serial.printf("powertrain: %c %u %u %u %u %u\n",
+        Serial.printf("powertrain: %c %u %u %u %u %u %u %u\n",
                       notify::telemetryData.powertrain.gear,
                       notify::telemetryData.powertrain.rpm,
                       notify::telemetryData.powertrain.rpmPercent,
                       notify::telemetryData.powertrain.shiftLight1,
                       notify::telemetryData.powertrain.shiftLight2,
+                      notify::telemetryData.powertrain.revLimiter,
+                      notify::telemetryData.powertrain.engineStarted,
                       notify::telemetryData.powertrain.speed);
         Serial.printf("ecu: %u %u %u %u %u %u %u %u %u\n",
                       notify::telemetryData.ecu.absEngaged,
@@ -146,16 +148,14 @@ void checkAndPrintTelemetryData()
                       notify::telemetryData.raceControl.yellowFlag,
                       notify::telemetryData.raceControl.remainingLaps,
                       notify::telemetryData.raceControl.remainingMinutes);
-        Serial.printf("gauges: %u %.2f %u %.2f %u %u %u %u %u\n",
+        Serial.printf("gauges: %u %.2f %u %.2f %u %u %u\n",
                       notify::telemetryData.gauges.relativeTurboPressure,
                       notify::telemetryData.gauges.absoluteTurboPressure,
                       notify::telemetryData.gauges.waterTemperature,
                       notify::telemetryData.gauges.oilPressure,
                       notify::telemetryData.gauges.oilTemperature,
                       notify::telemetryData.gauges.relativeRemainingFuel,
-                      notify::telemetryData.gauges.absoluteRemainingFuel,
-                      notify::telemetryData.gauges.remainingFuelLaps,
-                      notify::telemetryData.gauges.remainingFuelMinutes);
+                      notify::telemetryData.gauges.absoluteRemainingFuel);
     }
 #endif
 }
@@ -176,7 +176,7 @@ void setup()
     userSettings::dpadWorkingMode = true;
     userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
     userSettings::securityLock = false;
-    hidImplementation::begin(HID_TESTER, "Mamandurrio", false);
+    hidImplementation::begin(HID_TESTER, "Mamandurrio", true);
 #if ARDUINO_USB_MODE == 1
     Serial.printf("Factory default VID / PID: %04x / %04x\n", factoryVID, factoryPID);
     Serial.printf("Actual VID / PID: %04x / %04x\n", customVID, customPID);
