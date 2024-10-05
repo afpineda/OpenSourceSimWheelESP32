@@ -332,12 +332,14 @@ typedef struct
     uint32_t frameID; /// For internal use. Do not overwrite.
     struct
     {
-        char gear = ' ';          /// Display character for current gear
-        uint16_t rpm = 0;         /// Revolutions per minute
-        uint8_t rpmPercent = 0;   /// Percentage of RPM
-        bool shiftLight1 = false; /// True at maximum torque
-        bool shiftLight2 = false; /// True at maximum power
-        uint16_t speed = 0;       /// Speed in user-defined units (Kph or Mph)
+        char gear = ' ';            /// Display character for current gear
+        uint16_t rpm = 0;           /// Revolutions per minute
+        uint8_t rpmPercent = 0;     /// Percentage of RPM
+        uint8_t shiftLight1 = 0;    /// Non-zero at maximum torque
+        uint8_t shiftLight2 = 0;    /// Non-zero at maximum power
+        bool revLimiter = false;    /// True at maximum RPM
+        bool engineStarted = false; /// True if the engine is running
+        uint16_t speed = 0;         /// Speed in user-defined units (Kph or Mph)
     } powertrain;
     struct
     {
@@ -369,9 +371,9 @@ typedef struct
     {
         uint8_t relativeTurboPressure = 0;  /// Percentage of turbo pressure
         float absoluteTurboPressure = 0.0;  /// Turbo pressure in bars
-        uint16_t waterTemperature = 0;    /// Water temperature in user-defined units (Celsius or Kelvin)
+        uint16_t waterTemperature = 0;      /// Water temperature in user-defined units (Celsius or Kelvin)
         float oilPressure = 0.0;            /// Oil pressure in bars
-        uint16_t oilTemperature = 0;      /// Oil temperature in user-defined units (Celsius or Kelvin)
+        uint16_t oilTemperature = 0;        /// Oil temperature in user-defined units (Celsius or Kelvin)
         uint8_t relativeRemainingFuel = 0;  /// Percentage of remaining fuel
         uint16_t absoluteRemainingFuel = 0; /// Remaining fuel in user-defined units (litres or gallons)
     } gauges;

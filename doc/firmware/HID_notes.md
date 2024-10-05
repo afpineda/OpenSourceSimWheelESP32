@@ -83,15 +83,14 @@ Note that feature reports are both read and write.
 
 Write attempts will be ignored, so this report is read-only.
 
-| Byte index | Size (Bytes) | Purpose (field) | Note                               | Since data version |
-| :--------: | :----------: | --------------- | ---------------------------------- | ------------------ |
-|     0      |      2       | Magic number    | Always set to BF51 (hexadecimal)   | 1.0                |
-|     2      |      2       | Major Version   | Version of this specification      | 1.0                |
-|     4      |      2       | Minor Version   | Version of this specification      | 1.0                |
-|     6      |      2       | Flags           | Device capabilities                | 1.0                |
-|     8      |      8       | ID              | Chip identifier                    | 1.1                |
-|     16     |      1       | UI count        | Count of available user interfaces | 1.3                |
-|     17     |      1       | Max FPS         | Maximum frames per second          | 1.3                |
+| Byte index | Size (Bytes) | Purpose (field) | Note                             | Since data version |
+| :--------: | :----------: | --------------- | -------------------------------- | ------------------ |
+|     0      |      2       | Magic number    | Always set to BF51 (hexadecimal) | 1.0                |
+|     2      |      2       | Major Version   | Version of this specification    | 1.0                |
+|     4      |      2       | Minor Version   | Version of this specification    | 1.0                |
+|     6      |      2       | Flags           | Device capabilities              | 1.0                |
+|     8      |      8       | ID              | Chip identifier                  | 1.1                |
+|     16     |      1       | Max FPS         | Maximum frames per second        | 1.3                |
 
 Report ID 1 (input) is not affected by versioning.
 
@@ -107,12 +106,12 @@ A greater minor version means a backwards-compatible data format.
 Host-side software should check for version compatibility.
 Some examples:
 
-| Data version | Supported version at host |    Result    |
-| :----------: | :-----------------------: | :----------: |
-|     1.5      |            2.0            | Incompatible |
-|     2.0      |            1.1            | Incompatible |
-|     1.1      |            1.6            | Incompatible |
-|     2.7      |            2.3            |  Compatible  |
+| Device version | Supported version at host |    Result    |
+| :------------: | :-----------------------: | :----------: |
+|      1.5       |            2.0            | Incompatible |
+|      2.0       |            1.1            | Incompatible |
+|      1.6       |            1.1            | Incompatible |
+|      2.3       |            2.7            |  Compatible  |
 
 However, host-side software may support several data versions at the same time.
 
@@ -369,20 +368,24 @@ Some data may go unnoticed.
 
 ### Data format of report ID 20 (Telemetry / Powertrain)
 
-| Byte index | Size  | Field         | Data type | Data version | Related SimHub property (DataCorePlugin.GameData) |
-| :--------: | :---: | ------------- | --------- | ------------ | ------------------------------------------------- |
-|     0      |   1   | Gear          | char      | 1.3          | Gear                                              |
-|     1      |   2   | RPM           | uint16    | 1.3          | Rpms                                              |
-|     3      |   1   | RPM percent   | uint8     | 1.3          | CarSettings_CurrentDisplayedRPMPercent            |
-|     4      |   1   | Shift light 1 | boolean   | 1.3          | EngineTorque & MaxEngineTorque                    |
-|     5      |   1   | Shift light 2 | boolean   | 1.3          | Rpms & CarSettings_RedLineRPM                     |
-|     6      |   2   | Speed         | uint16    | 1.3          | SpeedLocal                                        |
+| Byte index | Size  | Field          | Data type | Data version | Related SimHub property (DataCorePlugin.GameData) |
+| :--------: | :---: | -------------- | --------- | ------------ | ------------------------------------------------- |
+|     0      |   1   | Gear           | char      | 1.3          | Gear                                              |
+|     1      |   2   | RPM            | uint16    | 1.3          | Rpms                                              |
+|     3      |   1   | RPM percent    | uint8     | 1.3          | CarSettings_CurrentDisplayedRPMPercent            |
+|     4      |   1   | Shift light 1  | uint8     | 1.3          | CarSettings_RPMShiftLight1                        |
+|     5      |   1   | Shift light 2  | uint8     | 1.3          | CarSettings_RPMShiftLight2                        |
+|     6      |   1   | Rev limiter    | boolean   | 1.3          | CarSettings_RedLineRPM                            |
+|     7      |   1   | Engine started | boolean   | 1.3          | EngineStarted                                     |
+|     8      |   2   | Speed          | uint16    | 1.3          | SpeedLocal                                        |
 
 - **Gear**: a single ASCII character, typically "R", "N", "1", "2", etc.
 - **RPM**: absolute revolutions per minute.
-- **RPM percent**: relative revolutions per minute as a percentage.
-- **Shift light 1**: true when the engine has reached maximum torque.
-- **Shift light 2**: true when the engine has reached maximum power.
+- **RPM percent**: relative revolutions per minute as a percentage for display.
+- **Shift light 1**: Non-zero when the engine has reached maximum torque.
+- **Shift light 2**: Non-zero when the engine has reached maximum power.
+- **Rev limiter**: true when the engine has reached maximum RPM.
+- **Engine started**: true if the engine is running.
 - **Speed**: car speed in user-selected units. Do not assume Kph nor Mph.
 
 ### Data format of report ID 21 (Telemetry / ECU)
@@ -422,15 +425,15 @@ Some data may go unnoticed.
 
 ## Data format of report ID 23 (Telemetry / Gauges )
 
-| Byte index | Size  | Field                         | Data type          | Data version | Related SimHub property (DataCorePlugin.GameData) |
-| :--------: | :---: | ----------------------------- | ------------------ | ------------ | ------------------------------------------------- |
-|     0      |   1   | Relative turbo pressure       | uint8              | 1.3          | TurboPercent                                      |
-|     1      |   2   | Absolute turbo pressure       | uint16 fixed point | 1.3          | Turbo                                             |
-|     3      |   2   | Water temperature             | uint16             | 1.3          | WaterTemperature                                  |
-|     5      |   2   | Oil pressure                  | uint16 fixed point | 1.3          | OilPressure                                       |
-|     7      |   2   | Oil temperature               | uint16             | 1.3          | OilTemperature                                    |
-|     9      |   1   | Relative remaining fuel       | uint8              | 1.3          | FuelPercent                                       |
-|     10     |   2   | Absolute remaining fuel       | uint16             | 1.3          | Fuel                                              |
+| Byte index | Size  | Field                   | Data type          | Data version | Related SimHub property (DataCorePlugin.GameData) |
+| :--------: | :---: | ----------------------- | ------------------ | ------------ | ------------------------------------------------- |
+|     0      |   1   | Relative turbo pressure | uint8              | 1.3          | TurboPercent                                      |
+|     1      |   2   | Absolute turbo pressure | uint16 fixed point | 1.3          | Turbo                                             |
+|     3      |   2   | Water temperature       | uint16             | 1.3          | WaterTemperature                                  |
+|     5      |   2   | Oil pressure            | uint16 fixed point | 1.3          | OilPressure                                       |
+|     7      |   2   | Oil temperature         | uint16             | 1.3          | OilTemperature                                    |
+|     9      |   1   | Relative remaining fuel | uint8              | 1.3          | FuelPercent                                       |
+|     10     |   2   | Absolute remaining fuel | uint16             | 1.3          | Fuel                                              |
 
 All absolute values are expressed in user-selected units.
 

@@ -99,8 +99,7 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
         *(uint16_t *)(buffer + 6) = capabilities::flags;
         *(uint64_t *)(buffer + 8) = 0ULL;
         esp_efuse_mac_get_default(buffer + 8);
-        buffer[16] = 0;
-        buffer[17] = notify::maxFPS;
+        buffer[16] = notify::maxFPS;
         return CAPABILITIES_REPORT_SIZE;
     }
     if ((report_id == RID_FEATURE_CONFIG) && (len >= CONFIG_REPORT_SIZE))
@@ -142,7 +141,7 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
 
 void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *buffer, uint16_t len)
 {
-    if (userSettings::securityLock)
+    if ((userSettings::securityLock) || (report_id==RID_FEATURE_CAPABILITIES))
         return;
     if (report_id == RID_FEATURE_CONFIG)
     {
@@ -251,12 +250,14 @@ void hidImplementation::common::onOutput(
     {
         notify::telemetryData.powertrain.gear = (char)buffer[0];
         notify::telemetryData.powertrain.rpm = *((uint16_t *)(buffer + 1));
-        notify::telemetryData.powertrain.rpmPercent = *((uint16_t *)(buffer + 3));
+        notify::telemetryData.powertrain.rpmPercent =  buffer[3];
         if (notify::telemetryData.powertrain.rpmPercent > 100)
             notify::telemetryData.powertrain.rpmPercent = 100;
         notify::telemetryData.powertrain.shiftLight1 = buffer[4];
         notify::telemetryData.powertrain.shiftLight2 = buffer[5];
-        notify::telemetryData.powertrain.speed = *((uint16_t *)(buffer + 6));
+        notify::telemetryData.powertrain.revLimiter = buffer[6];
+        notify::telemetryData.powertrain.engineStarted = buffer[7];
+        notify::telemetryData.powertrain.speed = *((uint16_t *)(buffer + 8));
     }
     else if ((report_id == RID_OUTPUT_ECU) && (len >= ECU_REPORT_SIZE))
     {

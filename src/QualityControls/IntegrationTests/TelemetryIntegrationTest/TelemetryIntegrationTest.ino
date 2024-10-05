@@ -43,13 +43,15 @@ void TelemetryDisplayMock::onTelemetryData(const telemetryData_t *data)
         Serial.printf("* Frame ID: %u\n", data->frameID);
         Serial.println("*******************");
         Serial.printf(
-            "  Gear: %c RPM: %u / %u%% SL1: %u SL2: %u Speed: %u.\n",
+            "  Gear: %c RPM: %u / %u%% SL1: %u SL2: %u RevLim: %u Speed: %u Running: %u\n",
             data->powertrain.gear,
             data->powertrain.rpm,
             data->powertrain.rpmPercent,
             data->powertrain.shiftLight1,
             data->powertrain.shiftLight2,
-            data->powertrain.speed);
+            data->powertrain.revLimiter,
+            data->powertrain.speed,
+            data->powertrain.engineStarted);
         Serial.printf(
             "  Abs: %u TC: %u DRS: %u PitLim: %u LowFuel: %u ABSLevel: %u TCLevel: %u, BrakeBias: %u%%\n",
             data->ecu.absEngaged,
@@ -104,7 +106,7 @@ void setup()
     Serial.begin(115200);
     Serial.println("-- READY --");
 
-    notify::begin({new TelemetryDisplayMock()}, 10, 3 * 1024);
+    notify::begin({new TelemetryDisplayMock()}, 3, 3 * 1024);
     userSettings::cpWorkingMode = CF_CLUTCH;
     userSettings::altButtonsWorkingMode = true;
     userSettings::dpadWorkingMode = true;
@@ -117,7 +119,6 @@ void setup()
 
 void loop()
 {
-    delay(1000);
-    Serial.println("(Alive)");
+    delay(5000);
     hidImplementation::reset();
 }
