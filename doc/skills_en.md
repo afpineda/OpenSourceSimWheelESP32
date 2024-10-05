@@ -35,10 +35,11 @@ Recommended:
     Works in Windows 11.
     Best choice for now.
 - [Visual Studio Code](https://code.visualstudio.com/), as an alternative to Arduino IDE.
-  Requires [Arduino extension for VSCode](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.vscode-arduino).
+  Requires [Arduino Community Edition for VSCode](https://marketplace.visualstudio.com/items?itemName=vscode-arduino.vscode-arduino-community).
   Installable from VSCode itself.
-  **Note**: That extension is officially deprecated, but it works.
+  **Note**: The official Arduino extension was deprecated.
 - SimpleHIDWrite.exe: available at [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm).
+  There is a modern clone here: [benbaker76/SimpleHIDWrite](https://github.com/benbaker76/SimpleHIDWrite/tree/master/BIN).
 
 ## Hardware tools
 
