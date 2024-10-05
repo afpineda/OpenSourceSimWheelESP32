@@ -142,12 +142,6 @@ This is the internal chip identifier as reported by
 [esp_efuse_mac_get_default()](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/misc_system_api.html).
 Useful to distinguish one device from another.
 
-### UI count
-
-The number of user interfaces implemented in the device.
-Zero or more user interfaces (UI) may be available, for example,
-"rev lights", an OLED and a speaker.
-
 ### Max FPS
 
 This is the maximum display rate (in frames per second) supported by the device's user interface.
