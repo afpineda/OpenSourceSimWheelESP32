@@ -66,23 +66,6 @@ Sure you get to the point.
 
 However, I can assure that electronics are not a significant part of the cost of a steering wheel.
 
-## Can I have a telemetry display in my steering wheel ?
-
-Of course you can, but not within this project (for now). Let me explain.
-
-This firmware was designed from the start with telemetry in mind, however,
-there is no way to send telemetry data to the firmware:
-
-- There is no standard way to send telemetry data to any device. It's a pity, because it's not hard to do.
-- I could develop a plugin for [SimHub](https://www.simhubdash.com/]), but I don't have the skills.
-- Even if the firmware receives telemetry data, there are other concerns:
-  - Is the ESP32 hardware powerful enough to display telemetry data in "real time"?
-  - How to display it? gear and speed? gear and revs? speed and revs? ...
-    The user would be constrained by the firmware itself.
-  - Which display hardware to use?
-
-And there is a better way: buy a display supported by *SimHub* and put it into your steering wheel along with this ESP32 hardware, as a separate device. This way you can display anything you like, even a TV show.
-
 ## Why ESP32 ?
 
 My first attempt at this project was based on [Arduino Nano 33](https://docs.arduino.cc/hardware/nano-33-ble/)
