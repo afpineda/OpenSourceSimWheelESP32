@@ -11,6 +11,13 @@
   - [Migrating your custom firmware to version 4 from a previous version](./migrate_to_v4.md)
   - [Migrating your custom firmware to version 5 from a previous version](./migrate_to_v5.md)
 
+- [Overview of telemetry data](./telemetry_en.md)
+
+- Telemetry displays:
+
+  There is currently no telemetry display hardware.
+  Planned for a future release.
+
 - Ready to deploy designs:
 
   *These designs work as an example of several implementation choices. Setup9 is the recommended way to go.*

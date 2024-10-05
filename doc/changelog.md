@@ -241,15 +241,18 @@ First release.
 - Errata fixes and documentation updates.
 - More test units.
 
-##
+## 6.0.0
 
 - Huge rework in the `notify` namespace.
   The new implementation reduces memory footprint and CPU usage.
 - Telemetry data is back thanks to HID reports.
+  A SimHub plugin has been developed.
+  However, there is no display hardware.
+  Wait for a future release or develop your own.
 - The "abstract notifications interface" is now called the "abstract user interface".
   It has been revamped to handle telemetry data.
 - Many user interfaces could be implemented at the same time, for example,
   *rev lights*, an OLED, and a speaker.
 - The new API is not intended to implement full telemetry displays since there
   are better choices for that. Intended uses are
-  *rev lights*, real-car gauges, fixed-data displays, etc.
+  "rev lights", real car gauges, fixed-data displays, etc.
