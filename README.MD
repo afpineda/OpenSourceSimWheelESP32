@@ -8,32 +8,49 @@
 
 This project provides open hardware and software for a sim-racing wheel or button box, featuring:
 
-- **Wireless connectivity** through **Bluetooth Low Energy**, with zero configuration effort
-- **Wired connectivity** is also available through **USB**.
-- There are **several hardware setups** to choose from and detailed instructions about how to **customize** them with **minimum effort**.
-- Power through rechargeable **batteries**, wheel's base or USB cable.
+- **Wireless connectivity** via **Bluetooth Low Energy**,
+  with no configuration effort.
+- **Wired connectivity** is also available via **USB**.
+- There are **several hardware setups** to choose from and
+  detailed instructions about how to **customize** them with **minimal effort**.
+- Powered by rechargeable **batteries**, wheel base or USB cable.
 - **State of charge** (for batteries).
-- **Alternate mode**. While engaged, any input is reported as an alternate one, thus duplicating the number of effective inputs. Much like the SHIFT key on your keyboard.
-- **Clutch paddles** that can be mapped to one of four functions through user preferences:
-  - **F1-style clutch** with bite-point calibration
-  - Alternate mode
-  - Regular button
-  - Individual analog axes.
-- **ALT buttons** that can be mapped to one of two functions through user preferences:
-  - Alternate mode
+- **Alternate mode**.
+  While engaged, any input is reported as an alternate,
+  doubling the number of effective inputs.
+  Much like your keyboard's SHIFT key.
+- **Clutch paddles** that can be mapped to one of four functions by user preference:
+  - **F1-style clutch** with bite-point calibration.
+  - Alternate mode.
   - Regular button.
-- One **directional pad or funky switch** can be mapped to one of two functions through user preferences:
-  - Navigation controls
-  - Regular buttons. Navigation controls cannot be assigned to car functions in some simulators. This solves that problem.
-- **User-defined button mapping**. The user may adjust the button numbering on this steering wheel to match any other steering wheel. In this way, the simulator does not force the user to reconfigure inputs each time those wheels are swapped.
-- **Automatic power-off** when not in use
-- **Quality controls** (you don't want your wheel to fail in the middle of a race)
+  - Individual analog axes.
+- **ALT buttons** that can be mapped to one of two functions by user preference:
+  - Alternate mode.
+  - Regular button.
+- A **directional pad or funky switch**
+  may be mapped to one of two functions by user preference:
+  - Navigation controls.
+  - Regular buttons.
+    Navigation controls cannot be assigned to car functions in some simulators.
+    This solves that problem.
+- **Custom button mapping**.
+  The user can customize the button numbering on this wheel to match other wheels.
+  This way, the simulator does not force the user to reconfigure
+  inputs every time these wheels are swapped.
+- **Telemetry data** using [SimHub](https://www.simhubdash.com/).
+  *Note*: There is no display hardware available at this time.
+- **Automatic power-off** when not in use.
+- **Quality control** (you don't want your wheel to fail in the middle of a race)
 - **Extensive documentation**
 - **Low budget**.
 
-Please start at the [documentation index](./doc/Index_en.md).
+Please start with the [documentation index](./doc/Index_en.md).
 
-There is a [companion app](https://github.com/afpineda/SimWheelESP32Config) for user preferences, not mandatory but required for user-defined button mapping.
+There is a [companion app](https://github.com/afpineda/SimWheelESP32Config) for user preferences,
+not mandatory but needed for some features.
+
+A [SimHub plugin](https://github.com/afpineda/SimWheelESP32-SimHub-Plugin/releases)
+is required for telemetry.
 
 This project is **fully operational**.
 
@@ -61,6 +78,8 @@ Este proyecto proporciona hardware y software abierto para un volante de simulac
   - Controles de navegación
   - Botones normales y corrientes. Los controles de navegación no se pueden asignar a funciones del coche en algunos simuladores. Esto solventa dicho problema.
 - **Mapa de botones definido por el usuario**. El usuario puede ajustar la numeración de los botones de manera que coincida con cualquier otro volante. De esta manera, el simulador no fuerza al usuario a configurar las entradas cada vez que intercambia los volantes.
+- **Datos de telemetría** mediante [SimHub](https://www.simhubdash.com/).
+  *Nota*: no hay disponible hardware de visualización en este momento.
 - **Apagado automático** cuando no se usa
 - **Controles de calidad** (no queremos que el volante falle en medio de una carrera)
 - **Documentación extensa**
@@ -70,5 +89,8 @@ Por favor, comience por el [índice de documentación (inglés)](./doc/Index_en.
 
 Existe una [aplicación auxiliar](https://github.com/afpineda/SimWheelESP32Config) para las preferencias de usuario, no obligatoria,
 pero necesaria para establecer el mapa de botones definido por el usuario.
+
+Un [plugin para SimHub](https://github.com/afpineda/SimWheelESP32-SimHub-Plugin/releases)
+es necesario para la telemetría.
 
 Este proyecto está **totalmente operativo**.
