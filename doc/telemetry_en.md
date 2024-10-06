@@ -29,6 +29,7 @@ There are certain limitations to what the ESP32 hardware can do to display telem
   which is limited to 1Mbps in the BLE technology.
   This firmware announces the maximum frames per second capability,
   and the SimHub plugin adjusts the transfer rate accordingly.
+  Unnecessary data will not be sent.
 - **I/O capabilities**: DevKit boards cannot achieve high throughput.
   For example, a 128x64 monochrome display, in the I2C bus,
   is unable to display more than 20 frames per second.
