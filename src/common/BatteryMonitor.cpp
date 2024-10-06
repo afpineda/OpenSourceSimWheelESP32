@@ -49,7 +49,7 @@ static uint8_t fg_i2c_address;
 
 void batteryMonitor::setPeriod(uint32_t seconds)
 {
-    if (seconds = 0)
+    if (seconds == 0)
         sampling_rate_ticks = DEFAULT_SAMPLING_RATE_TICKS;
     else
         sampling_rate_ticks = (seconds * 1000) / portTICK_RATE_MS;
