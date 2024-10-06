@@ -285,7 +285,13 @@ For example:
 *Note*: `AbstractUserInterface::onLowBattery()` is already
 called at timed intervals as long as such a condition persists.
 
-This frame server may be used to display telemetry data, too.
+#### Telemetry display
+
+The telemetry display is also implemented in the `AbstractUserInterface`.
+The *frameserver* daemon will call `onTelemetryData()`
+when new telemetry is detected or
+when no telemetry is received for 2 seconds.
+
 There are two possible patterns to this end:
 
 - Buffered output:
