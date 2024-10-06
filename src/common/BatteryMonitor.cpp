@@ -59,7 +59,7 @@ void batteryMonitor::setPeriod(uint32_t seconds)
 
 void batteryMonitor::setWarningSoC(uint8_t percentage)
 {
-    if ((percentage >= 0) && (percentage <= 100))
+    if (percentage <= 100)
     {
         low_battery_soc = percentage;
         // if (powerOff_soc > low_battery_soc)
@@ -71,7 +71,7 @@ void batteryMonitor::setWarningSoC(uint8_t percentage)
 
 void batteryMonitor::setPowerOffSoC(uint8_t percentage)
 {
-    if ((percentage >= 0) && (percentage <= 100))
+    if (percentage <= 100)
     {
         powerOff_soc = percentage;
         // if (powerOff_soc > low_battery_soc)
