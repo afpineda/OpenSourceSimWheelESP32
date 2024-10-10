@@ -11,13 +11,6 @@
   - [Migrating your custom firmware to version 4 from a previous version](./migrate_to_v4.md)
   - [Migrating your custom firmware to version 5 from a previous version](./migrate_to_v5.md)
 
-- [Overview of telemetry data](./telemetry_en.md)
-
-- Telemetry displays:
-
-  There is currently no telemetry display hardware.
-  Planned for a future release.
-
 - Ready to deploy designs:
 
   *These designs work as an example of several implementation choices. Setup9 is the recommended way to go.*
@@ -36,6 +29,13 @@
   | [Setup9](./hardware/setups/setup9/Setup9_en.md) | Steering wheel |   Wemos S3 mini    |      Rotary encoders x7, funky switch or DPAD, analog clutch paddles, 32 push buttons       |      External       |
 
 - [Changing your device's display name (Windows only) or Hardware ID (BLE only)](./RenameDeviceWin_en.md)
+
+- [Firmware customization to display telemetry](./telemetry_en.md)
+
+- Telemetry displays:
+
+  There is currently no telemetry display hardware.
+  Planned for a future release.
 
 ## Known issues
 
