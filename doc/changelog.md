@@ -257,3 +257,7 @@ First release.
   Intended uses are "rev lights", real car gauges, LED segments, etc.
 - Many user interfaces can coexist, for example,
   *rev lights*, and a speaker.
+
+## 6.1.0
+
+- A simple shift light is available as a telemetry indicator.
