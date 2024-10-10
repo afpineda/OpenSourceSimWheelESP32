@@ -58,14 +58,20 @@ This project is **fully operational**.
 
 # Volante inalámbrico de simulador o caja de botones, de fuentes abiertas, para placas ESP32
 
-Este proyecto proporciona hardware y software abierto para un volante de simulación o una caja de botones con las siguientes características:
+Este proyecto proporciona hardware y software abierto para un volante de simulación
+o una caja de botones con las siguientes características:
 
-- **Conectividad inalámbrica** a través de **Bluetooth de baja energía** y sin esfuerzo de configuración.
+- **Conectividad inalámbrica** a través de **Bluetooth de baja energía**
+  y sin esfuerzo de configuración.
 - **Conectividad por cable** también disponible mediante **USB**
-- **Varias configuraciones hardware** para elegir e instrucciones detalladas para **personalizarlas** con el **mínimo esfuerzo**
+- **Varias configuraciones hardware** para elegir e instrucciones detalladas
+  para **personalizarlas** con el **mínimo esfuerzo**
 - Alimentación mediante **baterías** recargables, base del volante o cable USB.
 - **Estado de la carga** (para baterías).
-- **Modo alternativo**. Mientras está activado, cualquier entrada se reporta como una entrada alternativa, duplicando su número en consecuencia. Similar a la tecla SHIFT de un teclado.
+- **Modo alternativo**.
+  Mientras está activado, cualquier entrada se reporta como una entrada alternativa,
+  duplicando su número en consecuencia.
+  Similar a la tecla SHIFT de un teclado.
 - **Levas de embrague** que pueden ser configuradas en una de cuatro funciones:
   - **Embrague tipo F1** con calibración del punto de mordida
   - Modo alternativo
@@ -74,21 +80,29 @@ Este proyecto proporciona hardware y software abierto para un volante de simulac
 - **Botones "ALT"** que pueden ser configurados en una de dos funciones:
   - Modo alternativo
   - Botón normal y corriente.
-- Una **cruceta direccional o funky switch** puede ser configurada en una de dos funciones:
+- Una **cruceta direccional o funky switch**
+  puede ser configurada en una de dos funciones:
   - Controles de navegación
-  - Botones normales y corrientes. Los controles de navegación no se pueden asignar a funciones del coche en algunos simuladores. Esto solventa dicho problema.
-- **Mapa de botones definido por el usuario**. El usuario puede ajustar la numeración de los botones de manera que coincida con cualquier otro volante. De esta manera, el simulador no fuerza al usuario a configurar las entradas cada vez que intercambia los volantes.
+  - Botones normales y corrientes.
+    Los controles de navegación no se pueden asignar a funciones del coche en algunos simuladores.
+    Esto solventa dicho problema.
+- **Mapa de botones definido por el usuario**.
+  El usuario puede ajustar la numeración de los botones de manera que
+  coincida con cualquier otro volante.
+  De esta manera, el simulador no fuerza al usuario a configurar
+  las entradas cada vez que intercambia los volantes.
 - **Datos de telemetría** mediante [SimHub](https://www.simhubdash.com/).
-  *Nota*: no hay disponible hardware de visualización en este momento.
+  *Nota*: el hardware de visualización es escaso en este momento.
 - **Apagado automático** cuando no se usa
-- **Controles de calidad** (no queremos que el volante falle en medio de una carrera)
+- **Controles de calidad**
+  (no queremos que el volante falle en medio de una carrera)
 - **Documentación extensa**
 - **Costes contenidos**.
 
-Por favor, comience por el [índice de documentación (inglés)](./doc/Index_en.md).
+Por favor, comience por el [índice de documentación (en inglés)](./doc/Index_en.md).
 
-Existe una [aplicación auxiliar](https://github.com/afpineda/SimWheelESP32Config) para las preferencias de usuario, no obligatoria,
-pero necesaria para establecer el mapa de botones definido por el usuario.
+Existe una [aplicación auxiliar](https://github.com/afpineda/SimWheelESP32Config) para las preferencias de usuario,
+no obligatoria, pero necesaria para algunas funcionalidades.
 
 Un [plugin para SimHub](https://github.com/afpineda/SimWheelESP32-SimHub-Plugin/releases)
 es necesario para la telemetría.
