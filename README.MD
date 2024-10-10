@@ -38,7 +38,7 @@ This project provides open hardware and software for a sim-racing wheel or butto
   This way, the simulator does not force the user to reconfigure
   inputs every time these wheels are swapped.
 - **Telemetry data** using [SimHub](https://www.simhubdash.com/).
-  *Note*: There is no display hardware available at this time.
+  *Note*: supported display hardware is currently scarce.
 - **Automatic power-off** when not in use.
 - **Quality control** (you don't want your wheel to fail in the middle of a race)
 - **Extensive documentation**

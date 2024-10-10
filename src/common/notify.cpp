@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 
 // Notification daemon
-#define DEFAULT_STACK_SIZE 2 * 1024
+#define DEFAULT_STACK_SIZE 4 * 1024
 static TaskHandle_t notificationDaemon = nullptr;
 static notificationImplementorsArray_t implementorArray;
 

@@ -65,6 +65,9 @@
 // Wake up
 #define TEST_POWER_PIN TEST_ROTARY_SW
 
+// Simple shift light UI
+#define TEST_SIMPLE_SHIFT_LIGHT_PIN GPIO_NUM_33
+
 // -------------------------------------------------------------
 #elif defined(CONFIG_IDF_TARGET_ESP32S3)
 // -------------------------------------------------------------
@@ -108,6 +111,9 @@
 
 // Wake up
 #define TEST_POWER_PIN TEST_ROTARY_SW
+
+// Simple shift light UI
+#define TEST_SIMPLE_SHIFT_LIGHT_PIN GPIO_NUM_40
 
 // -------------------------------------------------------------
 #elif defined(CONFIG_IDF_TARGET_ESP32C3)
@@ -154,6 +160,9 @@
 
 // Wake up
 #define TEST_POWER_PIN GPIO_NUM_2
+
+// Simple shift light UI
+#define TEST_SIMPLE_SHIFT_LIGHT_PIN GPIO_NUM_NC
 
 // -------------------------------------------------------------
 #else

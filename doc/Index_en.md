@@ -34,8 +34,9 @@
 
 - Telemetry displays:
 
-  There is currently no telemetry display hardware.
-  Planned for a future release.
+  - [Simple shift light](./hardware/ui/SimpleShiftLight_en.md)
+
+  Additional display hardware may be available in future firmware releases.
 
 ## Known issues
 

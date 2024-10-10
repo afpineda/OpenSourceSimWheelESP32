@@ -38,7 +38,7 @@ Otherwise performance problems may occur.
 
 A secondary I2C bus must be used,
 which requires manual initialization (see below).
-Note that the secondary I2C bus is not available on ESP32C3 boards.
+Note that the secondary I2C bus is **not available on ESP32C3 boards** (sorry).
 
 ## SimHub plugin
 
@@ -51,7 +51,7 @@ and a custom plugin which is hosted here:
 
 Some minor tweaks are required.
 
-1. Add the following header to the top of your sketch file
+1. Add the following header to the top of your sketch file:
 
    ```c++
    #include "SimwheelUI.h"
@@ -93,7 +93,7 @@ Some minor tweaks are required.
    notify::begin({ui1},50);
    ```
 
-Another example follows:
+A better example follows:
 
 ```c++
 ...
@@ -102,7 +102,6 @@ Another example follows:
 #include "SimWheelUI.h"
 
 ...
-
 
 void setup()
 {
@@ -149,14 +148,22 @@ Consider contributing to this project.
 5. Include the header file
    [SimWheelTypes.h](../src/include/SimWheelTypes.h)
 6. When using the I2C bus, include the header file
-   [i2cTools.h](../src/include/i2cTools.h)
+   [i2cTools.h](../src/include/i2cTools.h).
+   Place a call to `i2c::require()` to ensure the
+   bus is initialized.
 7. Derive a new C++ class from `AbstractUserInterface`.
    See the [documentation](../src/include/SimWheelTypes.h)
    for this class.
-8. Override `AbstractUserInterface::onTelemetryData()`
+8. In the class constructor, make sure that at least one of the
+   following inherited fields is set to true:
+   - `requiresPowertrainTelemetry`
+   - `requiresECUTelemetry`
+   - `requiresRaceControlTelemetry`
+   - `requiresGaugeTelemetry`
+9. Override `AbstractUserInterface::onTelemetryData()`
    to react to new telemetry data.
-9. Override `AbstractUserInterface::serveSingleFrame()`
-   to handle the display hardware on a timed basis.
+10. Override `AbstractUserInterface::serveSingleFrame()`
+    to handle the display hardware on a timed basis.
 
 See [SimwheelUI.h](../src/include/SimWheelUI.h)
 and [SimWheelUI.cpp](../src/common/SimWheelUI.cpp)

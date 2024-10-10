@@ -1,0 +1,11 @@
+SimWheel.h
+SimWheelTypes.h
+SimWheelUI.h
+HID_definitions.h
+debugUtils.h
+SimWheelUI.cpp
+hidImplementation_common.cpp
+hidImplementation_NimBLE.cpp
+notify.cpp
+capabilities.cpp
+userSettings.cpp
