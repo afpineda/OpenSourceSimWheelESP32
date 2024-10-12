@@ -14,6 +14,8 @@ The recommended display rate is 50 frames per second.
 Components required:
 
 - One or two single color LEDs.
+  Forward voltage ( $V_F$ ) must not exceed 3.2 volts.
+  Red color is recommended ( $V_F=1.6$ ).
 - One or two 500 ohm or higher resistors.
   Lower impedance may damage your DevKit board.
   High impedance will result in dimmer lights.
