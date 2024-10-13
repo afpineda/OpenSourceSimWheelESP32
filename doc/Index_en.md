@@ -33,7 +33,7 @@
 - Telemetry:
 
   - [Overview of telemetry](./telemetry_en.md)
-  - [Working with LEDs](./LEDS_en.md)
+  - [Working with LEDs](./LEDs_en.md)
   - Telemetry displays:
 
     - [Simple shift light](./hardware/ui/SimpleShiftLight_en.md)
