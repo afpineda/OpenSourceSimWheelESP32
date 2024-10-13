@@ -30,13 +30,15 @@
 
 - [Changing your device's display name (Windows only) or Hardware ID (BLE only)](./RenameDeviceWin_en.md)
 
-- [Firmware customization to display telemetry](./telemetry_en.md)
+- Telemetry:
 
-- Telemetry displays:
+  - [Overview of telemetry](./telemetry_en.md)
+  - [Working with LEDs](./LEDS_en.md)
+  - Telemetry displays:
 
-  - [Simple shift light](./hardware/ui/SimpleShiftLight_en.md)
+    - [Simple shift light](./hardware/ui/SimpleShiftLight_en.md)
 
-  Additional display hardware may be available in future firmware releases.
+    Additional display hardware may be available in future firmware releases.
 
 ## Known issues
 
