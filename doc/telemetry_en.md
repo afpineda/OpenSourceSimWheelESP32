@@ -23,6 +23,11 @@ There are certain limitations to what the ESP32 hardware can do to display telem
 - **I/O capabilities**: DevKit boards cannot achieve high throughput.
   For example, a 128x64 monochrome display, in the I2C bus,
   is unable to display more than 20 frames per second.
+- **Memory size**:
+  The ESP32 architecture has 320 KB of
+  [RAM](https://en.wikipedia.org/wiki/Random-access_memory).
+  A full color display, 640x400 pixels,
+  requires 768 KB for a single image.
 
 For this reason, telemetry displays are **limited** to "rev lights",
 LED segment displays, real car gauges and the like.
