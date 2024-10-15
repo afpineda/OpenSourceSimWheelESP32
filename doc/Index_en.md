@@ -42,7 +42,10 @@
 
 ## Known issues
 
-- [ESP32C3](https://www.espressif.com/en/products/socs/esp32-c3) boards exposes a slightly different power management API than other ESP32 boards. The firmware has been updated, but not tested. Deep sleep mode may not work properly in battery-operated setups on these boards.
+- [ESP32C3](https://www.espressif.com/en/products/socs/esp32-c3)
+  boards exposes a slightly different power management API than other ESP32 boards.
+  The firmware has been updated, but not tested.
+  Deep sleep mode may not work properly in battery-operated setups on these boards.
 - Device not working after a firmware upgrade. This issue is caused by an operating system cache. Fix:
   - BLE devices: remove from the Bluetooth control panel then pair again.
   - USB devices: remove from the device manager then reboot your computer.
