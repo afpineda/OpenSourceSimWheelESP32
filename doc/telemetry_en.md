@@ -92,11 +92,13 @@ Some minor tweaks are required.
    - 3rd (optional): a stack size in bytes for the frame server.
      The default stack size is 4 KB.
      Increase this if you are getting "stack canary" or "dual exception" errors and reboots.
-   For example:
+     A stack size smaller than 2 KB may not work.
 
-   ```c++
-   notify::begin({ui1},50);
-   ```
+     For example:
+
+     ```c++
+     notify::begin({ui1},5000);
+      ```
 
 A better example follows:
 
