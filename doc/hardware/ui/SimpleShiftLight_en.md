@@ -11,23 +11,28 @@ The recommended display rate is 50 frames per second.
 
 ## Hardware design
 
-Components required:
-
-- One or two single color LEDs.
-  Forward voltage ( $V_F$ ) must not exceed 3.2 volts.
-  Red color is recommended ( $V_F=1.6$ ).
-- One or two 500 ohm or higher resistors.
-  Lower impedance may damage your DevKit board.
-  High impedance will result in dimmer lights.
-
-The circuit is fairly straightforward (choose one or two LEDs):
+The circuit is fairly straightforward
+(choose one or two LEDs, left or right):
 
 ![Circuit design](../pictures/SimpleShiftLight.png)
 
-- `3V3` is wired to the power source.
+- `VLED` is wired to the power source.
+  Both `3V3` and `5V` will work in this case.
 - `SLPin` is wired to an output-capable GPIO pin.
+  This pin will work in *open drain* mode.
 
-[See at falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKACdwU8RCAWT7mAyEoNSCwAmA8MOkoEIlCAl0AZgEMArgBsALiwAeyJJXC9yCbCH4p+2AGrZDyKlyVg+ILkhv8AygAyAAoAlgB2zm4g2MTRttZKvtGOkl7xYMRKKPGYWcpqWnrsafx4rumZopTiRkSx2LjRDU1WSYGhEVLYePwZSt02GHkqGjr6HAMgZdE94JW0cCwA7iVeQ9GQg0riK7hbG3abUMsHa-2zuccr2aVUe1NUO6fTk9NP9y9HvNziQA)
+Components required:
+
+- One or two single color LEDs.
+  Forward voltage ( $V_F$ ) must not exceed 3.2 volts
+  if you are wiring `VLED`to `3V3`.
+  Red color is recommended ( $V_F=1.6$ ).
+- One or two 500 ohm **or higher** resistors.
+  1 K-ohm is recommended.
+  Lower impedance may damage your DevKit board.
+  High impedance will result in dimmer lights.
+
+[See at falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKACcRCAWcQq7kJhRQakFgBNOPPPx5g+gkOLoAzAIYBXADYAXFgA8QXCIULJsnYkcE8AagBkAogBEDIbGZTE8yKrgg8KDwAyvYACgCWAHZumBZcfthIXPE2IA4uEoJBIDLZcgrCyuraehwoOfJUFYEYwrRwsXXuKD7YHu7YAWmhkTGS2HjSfkO81Uqqmrrs7qNVs7X1oiwA7vmCzbiLUKvukNtbezxia4dCCxv1uzW5fvu3O6f3eYPDj0cPh1w+YkA)
 
 ## Firmware customization
 
