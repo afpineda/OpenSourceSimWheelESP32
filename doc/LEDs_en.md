@@ -49,16 +49,14 @@ These LED strips are controlled by a single pin labelled `Din`
 which is wired to the first LED in the strip.
 This pin requires a minimum voltage of 3.5 volts.
 The ESP32 operates at 3.3 volts, which is insufficient.
-To overcome this limitation, a "level shifter" circuit is required:
+To overcome this limitation, a "level shifter" circuit is required.
+We are using the most simple level shifter available:
+a pull resistor attached to a GPIO pin in *open drain* mode (`Dout`).
 
 ![Level shifter](./hardware/pictures/LevelShifter.png)
 
-[Test this circuit at falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKABcQmNCRiemUeXjxThO2aBgAskFFLCDckBFO5IYhFGGVhC2DMTSGpxZFQAmdAGYBDAK4AbNiwDmnPiDRCGHlHKhQLABOnIRSIHhUDGHg3AHa8JDBnHJUHlw8HlQJ8CwA7u4i+IWxPKwF0eFgcT5lcUkVCkLV-E3gCoEcAs2tgpy6INj9nBpoCNhSekR4qpCGI9B6eBiQKwar2AjEeEgJIJa2js4AMikywuJoF9kgtg4AznSD0EMN-R1M-DGfgRUeLf0+gCkgAPTjyNKmBjYfTIURVUQAQQAdgBPAA69wA4gAFACSAHlMQAHACWyPyoXCP0qESoSQASv0pNSBgw-KyePSQOd1AEYAgWGD2dh+Jh+sRqf4qkIAGrHOjmIWeIbLCgQYhUGUgAAieIpFRikXAPGNKEp3RNgKExqSACNwVJvN9BBAUONAg6hCZBn52qJQeJJZdxKKUqZwlcdXQAG4AaVJzjBYEoERE2FEeAjnioxwAojrMfc2EFScSWEA)
+[Test this circuit at falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKACcQG8rvPenCUZPEgsAHpzC8MKSQBZyGJHPCCAIgHsArgBcWAd0mCBRkIRWiASnyommYWSapU5tIc+gJxktJyKcMPD9sEBUpEAA1ABk6ABNvJhC8QTAkPGJQ8CC1AEkAOxYAI05sBEd+KSQUbHJRYoYUFTkMlGIqZllRCQbiIIY5PsbbOWUQXzU6ADcAaQBLPQlmIOSxuBB0zN8ogFE1AB0AZwOdNlmABwNTYmMwFJQg0QBzUwc+29VnKASHMxVZQnIYVkCAi33akBSKUgGSBIAA4gA5NSXEz8Xi8FAoio3HFfQxcHi2NDLZwJbDvMAySTEMJKTI-AAUGjOdDyh1ibAAhrM2UdZgBbLQAG05OlmGjyAEoWAc-Ph1kSqa8hBATlo6Cxng0lfc-Eq5BYvvVcCpzHLZKkHiwgA)
 
 Needed parts:
 
-- 100K-ohms resistor (x2)
-- A bipolar junction transistor (x1), NPN type: any kind should work (for example: [BC637](https://www.onsemi.com/pdf/datasheet/bc637-d.pdf)).
-  Located at the bottom of the circuit diagram.
-- A bipolar junction transistor (x1), PNP type: any kind should work (for example: [BC640](https://www.onsemi.com/pdf/datasheet/bc640-d.pdf)).
-  Located at the top of the circuit diagram.
+- 100K-ohms resistor (x1)

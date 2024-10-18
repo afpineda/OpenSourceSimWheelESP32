@@ -82,4 +82,78 @@ private:
     void write(uint8_t state);
 };
 
+typedef enum
+{
+    PIXEL_WS2811,
+    PIXEL_WS2812
+} pixel_type_t;
+
+//-----------------------------------------------------------------------------
+
+class LEDStrip
+{
+public:
+    /**
+     * @brief Create an LED strip object.
+     *
+     * @param dataPin GPIO number attached to `Din` (data input).
+     * @param pixelCount Total count of pixels in the strip.
+     * @param pixelType Type of pixel controller.
+     */
+    LEDStrip(
+        gpio_num_t dataPin,
+        uint8_t pixelCount,
+        pixel_type_t pixelType = PIXEL_WS2812);
+    ~LEDStrip();
+
+    /**
+     * @brief Retrieve the pixel count in the strip.
+     *
+     * @return uint8_t Pixel count.
+     */
+    uint8_t getPixelCount() { return pixelCount; }
+
+    /**
+     * @brief Set pixel color
+     *
+     * @param pixelIndex Index of the pixel in the strip.
+     * @param redChannel Red component of the color.
+     * @param greenChannel Green component of the color.
+     * @param blueChannel Blue component of the color.
+     * @note Effective after show() is called.
+     */
+    void pixelColor(
+        uint8_t pixelIndex,
+        uint8_t redChannel,
+        uint8_t greenChannel,
+        uint8_t blueChannel);
+
+    void pixelRangeColor(
+        uint8_t fromPixelIndex,
+        uint8_t toPixelIndex,
+        uint8_t redChannel = 0,
+        uint8_t greenChannel = 0,
+        uint8_t blueChannel = 0);
+
+    /**
+     * @brief Turn off all LEDs
+     * @note Effective after show() is called.
+     *
+     */
+    void clear();
+
+    /**
+     * @brief Show pixel colors.
+     *
+     */
+    void show();
+
+private:
+    uint8_t pixelCount;
+    byte *rawData;
+    rmt_channel_handle_t rmtHandle = nullptr;
+    rmt_encoder_handle_t encHandle = nullptr;
+    bool changed = false;
+};
+
 #endif

@@ -11,11 +11,20 @@
 
 #include "SimWheelUI.h"
 #include "i2cTools.h"
+#include "driver/rmt_tx.h"
 
-#define MODE_OFF 0
-#define MODE_ON 1
-#define MODE_MAX_POWER 2
-#define MODE_MAX_RPM 3
+//-----------------------------------------------------------------------------
+// GLOBALS
+//-----------------------------------------------------------------------------
+
+// SINGLE-LED display modes
+#define MODE_OFF 0       // No light
+#define MODE_ON 1        // Light
+#define MODE_MAX_POWER 2 // Flash
+#define MODE_MAX_RPM 3   // Flash quicker
+
+// LED strips
+#define PIXEL_TO_SYMBOL_COUNT(pixelCount) pixelCount * 3 * 8
 
 //-----------------------------------------------------------------------------
 // Single Color-Single LED user interface
@@ -209,4 +218,169 @@ void PCF8574RevLights::serveSingleFrame(uint32_t elapsedMs)
         else
             write(ledState);
     }
+}
+
+//-----------------------------------------------------------------------------
+// NeoPixel
+//-----------------------------------------------------------------------------
+//
+// API REFERENCE:
+// https://docs.espressif.com/projects/esp-idf/en/release-v5.1/esp32/api-reference/peripherals/rmt.html
+//
+// EXAMPLES:
+// https://github.com/espressif/esp-idf/tree/master/examples/peripherals/rmt/led_strip/main
+//
+//-----------------------------------------------------------------------------
+
+static rmt_transmit_config_t rmt_transmit_config = {
+    .loop_count = 0,
+    .flags = {
+        .eot_level = 0,
+        .queue_nonblocking = false}};
+
+LEDStrip::LEDStrip(
+    gpio_num_t dataPin,
+    uint8_t pixelCount,
+    pixel_type_t pixelType)
+{
+    // Check parameters
+    if (!GPIO_IS_VALID_OUTPUT_GPIO(dataPin))
+    {
+        log_e("Requested GPIO %d can't be used as output", dataPin);
+        abort();
+    }
+    if (pixelCount == 0)
+    {
+        log_e("LEDStrip: pixel count can not be zero");
+        abort();
+    }
+
+    // Compute buffer size
+    int rawDataCount = PIXEL_TO_SYMBOL_COUNT(pixelCount);
+    // The API requires an even number of block symbols
+    if (rawDataCount % 2)
+        rawDataCount++;
+
+    // Configure RMT channel
+    rmt_tx_channel_config_t tx_config = {
+        .gpio_num = dataPin,
+        .clk_src = RMT_CLK_SRC_DEFAULT,
+        .resolution_hz = 10000000, // 10MHz resolution, 1 tick = 0.1us
+        .mem_block_symbols = rawDataCount,
+        .trans_queue_depth = 1,
+        .intr_priority = 0,
+        .flags{
+            .invert_out = 0,
+            .with_dma = 0,
+            .io_loop_back = 0,
+            .io_od_mode = 0 // This is critical to level shifting
+        }};
+    ESP_ERROR_CHECK(rmt_new_tx_channel(&tx_config, &rmtHandle));
+    if (!rmtHandle)
+        abort();
+
+    // Configure byte encoder
+    rmt_bytes_encoder_config_t byte_enc_config = {};
+    byte_enc_config.bit0.level0 = 1;
+    byte_enc_config.bit0.level1 = 0;
+    byte_enc_config.bit1.level0 = 1;
+    byte_enc_config.bit1.level1 = 0;
+    switch (pixelType)
+    {
+    case PIXEL_WS2811:
+        byte_enc_config.bit0.duration0 = 5;
+        byte_enc_config.bit0.duration1 = 20;
+        byte_enc_config.bit1.duration0 = 12;
+        byte_enc_config.bit1.duration1 = 13;
+        break;
+    case PIXEL_WS2812:
+        byte_enc_config.bit0.duration0 = 4;
+        byte_enc_config.bit0.duration1 = 8;
+        byte_enc_config.bit1.duration0 = 8;
+        byte_enc_config.bit1.duration1 = 4;
+        break;
+
+    default:
+        // Should not enter here
+        abort();
+        break;
+    }
+    ESP_ERROR_CHECK(rmt_new_bytes_encoder(&byte_enc_config, &encHandle));
+    if (!encHandle)
+        abort();
+
+    // Initialize instance
+    this->pixelCount = pixelCount;
+    this->rawData = new byte[pixelCount * 3];
+    clear();
+}
+
+LEDStrip::~LEDStrip()
+{
+    ESP_ERROR_CHECK(rmt_del_encoder(encHandle));
+    ESP_ERROR_CHECK(rmt_del_channel(rmtHandle));
+}
+
+void LEDStrip::show()
+{
+    if (changed)
+    {
+        changed = false;
+        ESP_ERROR_CHECK(
+            rmt_transmit(
+                rmtHandle,
+                encHandle,
+                (const void *)rawData,
+                pixelCount * 3,
+                &rmt_transmit_config));
+        ESP_ERROR_CHECK(
+            rmt_tx_wait_all_done(
+                rmtHandle,
+                portMAX_DELAY));
+        vTaskDelay(1);
+    }
+}
+
+void LEDStrip::pixelColor(
+    uint8_t pixelIndex,
+    uint8_t redChannel,
+    uint8_t greenChannel,
+    uint8_t blueChannel)
+{
+    if (pixelIndex < pixelCount)
+    {
+        int rawIndex = (pixelIndex * 3);
+        rawData[rawIndex++] = greenChannel;
+        rawData[rawIndex++] = blueChannel;
+        rawData[rawIndex] = redChannel;
+        changed = true;
+    }
+}
+
+void LEDStrip::pixelRangeColor(
+    uint8_t fromPixelIndex,
+    uint8_t toPixelIndex,
+    uint8_t redChannel,
+    uint8_t greenChannel,
+    uint8_t blueChannel)
+{
+    if (fromPixelIndex > toPixelIndex)
+        pixelRangeColor(
+            toPixelIndex,
+            fromPixelIndex,
+            redChannel,
+            greenChannel,
+            blueChannel);
+    else
+    {
+        for (uint8_t i = fromPixelIndex; i <= toPixelIndex; i++)
+            pixelColor(i, redChannel, greenChannel, blueChannel);
+        changed = true;
+    }
+}
+
+void LEDStrip::clear()
+{
+    memset((void *)rawData, 0, pixelCount * 3);
+    changed = true;
 }
