@@ -72,7 +72,7 @@ void setup()
     Serial.printf("Using device address %x (hexadecimal)\n", factoryAddress | hwAddress);
 
     // Initialize
-    auto ui = new PCF8574RevLights(hwAddress, true, 0x38);
+    auto ui = new PCF8574RevLights(hwAddress, true, factoryAddress);
     notify::begin({ui}, 50);
     userSettings::cpWorkingMode = CF_CLUTCH;
     userSettings::altButtonsWorkingMode = true;
