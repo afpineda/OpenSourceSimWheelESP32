@@ -115,6 +115,11 @@
 // Simple shift light UI
 #define TEST_SIMPLE_SHIFT_LIGHT_PIN GPIO_NUM_40
 
+// Secondary I2C bus
+#define TEST_SECONDARY_SDA GPIO_NUM_21
+#define TEST_SECONDARY_SCL GPIO_NUM_47
+
+
 // -------------------------------------------------------------
 #elif defined(CONFIG_IDF_TARGET_ESP32C3)
 // -------------------------------------------------------------

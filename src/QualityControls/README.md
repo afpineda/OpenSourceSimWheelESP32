@@ -28,8 +28,8 @@ is the main board for development and testing. However, all tests should work in
 |   ---    | ---                                              |
 |    19    | **Not usable (USB)**                             |
 |    20    | **Not usable (USB)**                             |
-|    21    | Multiplexer S0                                   |
-|    47    | Multiplexer S1                                   |
+|    21    | Multiplexer S0, Secondary SDA                    |
+|    47    | Multiplexer S1, Secondary SCL                    |
 |    48    | Multiplexer S2                                   |
 |    45    | **Reserved (strap pin)**                         |
 |    00    | Digital button (BOOT)                            |

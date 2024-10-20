@@ -14,6 +14,8 @@
 
 #include "SimWheelTypes.h"
 #include "driver/i2c.h"
+#include "driver/rmt_tx.h"
+#include "i2cTools.h"
 
 //-----------------------------------------------------------------------------
 // Single Color-Single LED user interface
@@ -150,7 +152,7 @@ public:
 
 private:
     uint8_t pixelCount;
-    byte *rawData;
+    uint8_t *rawData;
     rmt_channel_handle_t rmtHandle = nullptr;
     rmt_encoder_handle_t encHandle = nullptr;
     bool changed = false;

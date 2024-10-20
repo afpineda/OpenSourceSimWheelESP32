@@ -36,7 +36,8 @@
   - [Working with LEDs](./LEDs_en.md)
   - Telemetry displays:
 
-    - [Simple shift light](./hardware/ui/SimpleShiftLight_en.md)
+    - [Simple shift light](./hardware/ui/SimpleShiftLight/SimpleShiftLight_en.md)
+    - [PFC8574-driven "rev lights"](./hardware/ui/PCF8574RevLights/PCF8574RevLights_en.md)
 
     Additional display hardware may be available in future firmware releases.
 

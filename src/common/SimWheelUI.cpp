@@ -11,7 +11,6 @@
 
 #include "SimWheelUI.h"
 #include "i2cTools.h"
-#include "driver/rmt_tx.h"
 
 //-----------------------------------------------------------------------------
 // GLOBALS
@@ -138,6 +137,9 @@ PCF8574RevLights::PCF8574RevLights(
     bool useSecondaryBus,
     uint8_t factoryAddress)
 {
+    // Announce required telemetry data
+    requiresPowertrainTelemetry = true;
+
     // Check parameters
     i2c::abortOnInvalidAddress(hardwareAddress, 0, 7);
     i2c::abortOnInvalidAddress(factoryAddress >> 3, 0, 15);
@@ -145,11 +147,21 @@ PCF8574RevLights::PCF8574RevLights(
     // Initialize
     i2c::require(1, useSecondaryBus);
     busDriver = i2c::getBus(useSecondaryBus);
-    address8bits = ((factoryAddress & 0b01111000) | hardwareAddress) << 1;
+    uint8_t address7Bits = ((factoryAddress & 0b01111000) | hardwareAddress);
+    address8bits = address7Bits << 1;
     blinkTimer = 0;
     ledState = 0;
     isBlinking = false;
     forceUpdate = false;
+
+    // Check chip availability
+    if (!i2c::probe(address7Bits, useSecondaryBus))
+    {
+        log_e("PCF8574 chip not found. Bus: %d, Full address: %X (hex)", busDriver, address7Bits);
+        abort();
+    }
+
+    // Turn leds off
     write(0x00);
 }
 
@@ -190,17 +202,24 @@ void PCF8574RevLights::onConnected()
 void PCF8574RevLights::onTelemetryData(
     const telemetryData_t *pTelemetryData)
 {
-    uint8_t aux = (pTelemetryData->powertrain.rpmPercent) * 8 / 100;
-    uint8_t newLedState = 0xFF >> (8 - aux);
-    if (isBlinking ^ pTelemetryData->powertrain.revLimiter)
+    uint8_t newLedState;
+    if (pTelemetryData)
     {
-        isBlinking = pTelemetryData->powertrain.revLimiter;
-        blinkTimer = 0;
-        blinkState = false;
-        forceUpdate = true;
+        uint8_t aux = (pTelemetryData->powertrain.rpmPercent) * 8 / 100;
+        newLedState = 0xFF >> (8 - aux);
+        if (isBlinking ^ pTelemetryData->powertrain.revLimiter)
+        {
+            isBlinking = pTelemetryData->powertrain.revLimiter;
+            blinkTimer = 0;
+            blinkState = false;
+            forceUpdate = true;
+        }
     }
     else
-        forceUpdate = (newLedState != ledState);
+    {
+        newLedState = 0;
+    }
+    forceUpdate = (newLedState != ledState);
     ledState = newLedState;
 }
 
@@ -311,7 +330,7 @@ LEDStrip::LEDStrip(
 
     // Initialize instance
     this->pixelCount = pixelCount;
-    this->rawData = new byte[pixelCount * 3];
+    this->rawData = new uint8_t[pixelCount * 3];
     clear();
 }
 

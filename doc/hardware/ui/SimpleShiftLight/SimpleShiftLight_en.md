@@ -14,7 +14,7 @@ The recommended display rate is 50 frames per second.
 The circuit is fairly straightforward
 (choose one or two LEDs, left or right):
 
-![Circuit design](../pictures/SimpleShiftLight.png)
+![Circuit design](./SimpleShiftLight.png)
 
 - `VLED` is wired to the power source.
   Both `3V3` and `5V` will work in this case.
@@ -25,7 +25,7 @@ Components required:
 
 - One or two single color LEDs.
   Forward voltage ( $V_F$ ) must not exceed 3.2 volts
-  if you are wiring `VLED`to `3V3`.
+  if you are wiring `VLED` to `3V3`.
   Red color is recommended ( $V_F=1.6$ ).
 - One or two 500 ohm **or higher** resistors.
   1 K-ohm is recommended.

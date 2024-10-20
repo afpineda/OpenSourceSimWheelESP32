@@ -116,7 +116,7 @@ void setup()
 
     /// --- relevant code here ---
     auto ui1 = new SimpleShiftLight(GPIO_NUM40);
-    notify::begin({ui},50);
+    notify::begin({ui1},50);
     /// --- relevant code here ---
 
     power::begin((gpio_num_t)WAKE_UP_PIN);
