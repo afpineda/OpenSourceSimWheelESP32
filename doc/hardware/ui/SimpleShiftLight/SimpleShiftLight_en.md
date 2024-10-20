@@ -45,5 +45,5 @@ auto sl = new SimpleShiftLight(GPIO_NUM_40);
 ```
 
 See the corresponding
-[integration test](../../../src/QualityControls/UITests/SimpleShiftLightTest/SimpleShiftLightTest.ino)
+[integration test](../../../../src/QualityControls/UITests/PCF8574RevLightsTest/PCF8574RevLightsTest.ino)
 for an example.

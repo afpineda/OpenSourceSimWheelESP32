@@ -52,3 +52,7 @@ Constructor parameters are:
 If you are using the secondary I2C bus,
 you must first initialize it to the desired SDA and SCL pins.
 See [Overview of telemetry](../../../telemetry_en.md).
+
+See the corresponding
+[integration test](../../../../src/QualityControls/UITests/PCF8574RevLights/PCF8574RevLights.ino)
+for an example.
