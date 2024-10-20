@@ -24,6 +24,14 @@ Components required:
 - [PCF8574](../../esp32reference/PCF8574_datasheet.pdf) GPIO expander.
 - Wires.
 
+External wiring:
+
+- `VLED` is wired to the power source.
+  Both `3V3` and `5V` will work in this case.
+- Attach `SCL` and `SCA` to the corresponding pins at the DevKit board.
+  You may configure any output-capable pin as
+  `SCL`/`SDA` to work as a secondary I2C bus.
+
 ## Firmware customization
 
 The involved class is `PCF8574RevLights`.
