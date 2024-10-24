@@ -239,3 +239,159 @@ void PCF8574RevLights::serveSingleFrame(uint32_t elapsedMs)
 //-----------------------------------------------------------------------------
 // LED Strip telemetry display
 //-----------------------------------------------------------------------------
+
+LEDStripTelemetry::LEDStripTelemetry(
+    gpio_num_t dataPin,
+    uint8_t pixelCount,
+    bool useLevelShift,
+    pixel_driver_t pixelType,
+    pixel_format_t pixelFormat)
+{
+    this->ledStrip = new LEDStrip(dataPin, pixelCount, useLevelShift, pixelType, pixelFormat);
+}
+
+LEDStripTelemetry::~LEDStripTelemetry()
+{
+    delete this->ledStrip;
+    log_e("An LEDStripTelemetry object was destroyed");
+    abort();
+}
+
+void LEDStripTelemetry::brightness(uint8_t value)
+{
+    this->ledStrip->brightness(value);
+}
+
+void LEDStripTelemetry::onStart()
+{
+    this->ledStrip->pixelRangeRGB(0, 0xFF, 0x7F7F7F); // white
+    this->ledStrip->show();
+    this->started = true;
+}
+
+void LEDStripTelemetry::onBLEdiscovering()
+{
+    this->ledStrip->pixelRangeRGB(0, 0xFF, 128, 0, 128); // purple
+    this->ledStrip->show();
+}
+
+void LEDStripTelemetry::onConnected()
+{
+    this->ledStrip->pixelRangeRGB(0, 0xFF, 0, 128, 0); // green
+    this->ledStrip->show();
+    vTaskDelay(pdMS_TO_TICKS(250));
+    this->ledStrip->clear();
+    this->ledStrip->show();
+}
+
+void LEDStripTelemetry::onLowBattery()
+{
+    // Flash 3 times in white
+    for (int i = 0; i < 3; i++)
+    {
+        this->ledStrip->pixelRangeRGB(0, 0xFF, 0xFFFFFF); // white
+        this->ledStrip->show();
+        vTaskDelay(pdMS_TO_TICKS(150));
+        this->ledStrip->clear();
+        this->ledStrip->show();
+        vTaskDelay(pdMS_TO_TICKS(150));
+    }
+}
+
+void LEDStripTelemetry::onBitePoint()
+{
+    for (size_t i = 0; i < ledSegments.size(); i++)
+        ledSegments[i]->onBitePoint(*this);
+    this->ledStrip->show();
+}
+
+void LEDStripTelemetry::onTelemetryData(const telemetryData_t *pTelemetryData)
+{
+    if (pTelemetryData)
+    {
+        for (size_t i = 0; i < ledSegments.size(); i++)
+            ledSegments[i]->onTelemetryData(pTelemetryData, *this);
+    }
+    else
+    {
+        this->ledStrip->clear();
+        this->ledStrip->show();
+    }
+}
+
+void LEDStripTelemetry::serveSingleFrame(uint32_t elapsedMs)
+{
+    for (size_t i = 0; i < ledSegments.size(); i++)
+        ledSegments[i]->serveSingleFrame(elapsedMs, *this);
+    this->ledStrip->show();
+}
+
+void LEDStripTelemetry::setPixelColor(
+    uint8_t fromPixelIndex,
+    uint8_t toPixelIndex,
+    uint32_t packedRGB)
+{
+    this->ledStrip->pixelRangeRGB(fromPixelIndex, toPixelIndex, packedRGB);
+}
+
+void LEDStripTelemetry::setPixelColor(
+    uint8_t pixelIndex,
+    uint32_t packedRGB)
+{
+    this->ledStrip->pixelRGB(pixelIndex, packedRGB);
+}
+
+void LEDStripTelemetry::addSegment(
+    LEDSegment *segment,
+    bool requiresPowertrainTelemetry,
+    bool requiresECUTelemetry,
+    bool requiresRaceControlTelemetry,
+    bool requiresGaugeTelemetry)
+{
+    if (started)
+    {
+        log_e("An LED segment was created after notify::begin()");
+        abort();
+    }
+    else if (segment)
+    {
+        ledSegments.push_back(segment);
+        this->requiresPowertrainTelemetry |= requiresPowertrainTelemetry;
+        this->requiresECUTelemetry |= requiresECUTelemetry;
+        this->requiresRaceControlTelemetry |= requiresRaceControlTelemetry;
+        this->requiresGaugeTelemetry |= requiresGaugeTelemetry;
+    }
+}
+
+//-----------------------------------------------------------------------------
+// Abstract LED strip segment
+//-----------------------------------------------------------------------------
+
+LEDSegment::LEDSegment(
+    LEDStripTelemetry *ledStripTelemetry,
+    bool requiresPowertrainTelemetry,
+    bool requiresECUTelemetry,
+    bool requiresRaceControlTelemetry,
+    bool requiresGaugeTelemetry)
+{
+    if (ledStripTelemetry)
+    {
+        ledStripTelemetry->addSegment(
+            this,
+            requiresPowertrainTelemetry,
+            requiresECUTelemetry,
+            requiresRaceControlTelemetry,
+            requiresGaugeTelemetry);
+    }
+    else
+    {
+        log_e("LEDStripTelemetry object is null");
+        abort();
+    }
+}
+
+LEDSegment::~LEDSegment()
+{
+    log_e("An LED segment was destroyed.");
+    abort();
+}

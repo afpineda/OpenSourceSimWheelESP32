@@ -85,80 +85,182 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-// LED strip telemetry
+// Segment to LED strip interface
 //-----------------------------------------------------------------------------
 
-class LEDSegmentInterface
+class LEDSegmentToStripInterface
 {
+public:
+    /**
+     * @brief Set the color of a range of consecutive pixels.
+     *
+     * @param fromPixelIndex Index of the first pixel.
+     * @param toPixelIndex Index of the last pixel.
+     * @param packedRGB Pixel color in RGB format.
+     */
+    virtual void setPixelColor(
+        uint8_t fromPixelIndex,
+        uint8_t toPixelIndex,
+        uint32_t packedRGB) = 0;
 
+    /**
+     * @brief Set the color of a single pixel.
+     *
+     * @param pixelIndex Pixel index.
+     * @param packedRGB Pixel color in RGB format.
+     */
+    virtual void setPixelColor(
+        uint8_t pixelIndex,
+        uint32_t packedRGB) = 0;
 };
 
 //-----------------------------------------------------------------------------
-
-// class LEDStripTelemetry : public AbstractUserInterface
-// {
-// public:
-//     /**
-//      * @brief Create an LED strip for telemetry display.
-//      *
-//      * @param dataPin GPIO number attached to `Din` (data input).
-//      * @param pixelCount Total count of pixels in the strip.
-//      * @param useLevelShift Set to `false` when using 3.3V logic.
-//      *                      Set to `true` when using the level
-//      *                      shifter in open-drain mode.
-//      * @param pixelType Pixel driver.
-//      * @param pixelFormat Format of color data (byte order).
-//      *                    Set to `AUTO` for auto-detection.
-//      */
-//     LEDStripTelemetry(
-//         gpio_num_t dataPin,
-//         uint8_t pixelCount,
-//         bool useLevelShift,
-//         pixel_driver_t pixelType = WS2812,
-//         pixel_format_t pixelFormat = pixel_format_t::AUTO);
-//     ~LEDStripTelemetry();
-
-// public:
-//     virtual void onStart() override;
-//     virtual void onTelemetryData(const telemetryData_t *pTelemetryData) override;
-//     virtual void serveSingleFrame(uint32_t elapsedMs) override;
-//     virtual void onBitePoint() override;
-//     virtual void onConnected() override;
-//     virtual void onBLEdiscovering() override;
-
-// private:
-//     LEDStrip *ledStrip;
-//     std::vector<LEDSegment *> ledSegments;
-// }
-
-//-----------------------------------------------------------------------------
-// LED segment
+// Abstract LED strip segment
 //-----------------------------------------------------------------------------
 
-// class LEDSegment
-// {
-//     friend class LEDStrip;
+class LEDStripTelemetry; // forward declaration
 
-// public:
-//     LEDSegment(
-//         LEDStrip *strip,
-//         uint8_t fromPixelIndex,
-//         uint8_t toPixelIndex);
+class LEDSegment
+{
+public:
+    LEDSegment(
+        LEDStripTelemetry *ledStripTelemetry,
+        bool requiresPowertrainTelemetry,
+        bool requiresECUTelemetry,
+        bool requiresRaceControlTelemetry,
+        bool requiresGaugeTelemetry);
+    ~LEDSegment();
 
-// protected:
-//     /// Set to true to receive and use powertrain telemetry data
-//     bool requiresPowertrainTelemetry = false;
-//     /// Set to true to receive and use ECU telemetry data
-//     bool requiresECUTelemetry = false;
-//     /// Set to true to receive and use race control telemetry data
-//     bool requiresRaceControlTelemetry = false;
-//     /// Set to true to receive and use telemetry data for gauges
-//     bool requiresGaugeTelemetry = false;
+public:
+    /**
+     * @brief Notify new telemetry data
+     *
+     * @param pTelemetryData Pointer to telemetry data. Can not be null.
+     *                       Safe to store for later use.
+     * @param ledInterface Interface to set pixel colors.
+     * @note Must not enter an infinite loop. Must return as soon as possible.
+     *
+     */
+    virtual void onTelemetryData(
+        const telemetryData_t *pTelemetryData,
+        const LEDSegmentToStripInterface &ledInterface) = 0;
 
-// private:
-//     uint8_t fromPixelIndex;
-//     uint8_t toPixelIndex;
-//     LEDStrip *strip;
-// }
+    /**
+     * @brief Draw a single frame.
+     *
+     * @param elapsedMs Elapsed milliseconds since last call.
+     *
+     * @note Must not enter an infinite loop. Must return as soon as possible.
+     *
+     */
+    virtual void serveSingleFrame(
+        uint32_t elapsedMs,
+        const LEDSegmentToStripInterface &ledInterface) = 0;
+
+    /**
+     * @brief Notify a change in current bite point.
+     *
+     * @note Read userSetting::bitePoint to know the last value
+     */
+    virtual void onBitePoint(const LEDSegmentToStripInterface &ledInterface) {};
+
+protected:
+    /**
+     * @brief Simple timer.
+     *
+     * @note To be used in serveSingleFrame().
+     *       Initialize the timer variable to zero.
+     *
+     * @param timerVariable Timer variable.
+     * @param elapsedTimeMs Time elapsed since last call in miliseconds.
+     * @param timeLimitMs Expiration time in miliseconds.
+     * @return uint32_t The count of times the timer has expired in the elapsed time.
+     */
+    uint32_t frameTimer(
+        uint32_t &timerVariable,
+        uint32_t elapsedTimeMs,
+        uint32_t timeLimitMs)
+    {
+        timerVariable += elapsedTimeMs;
+        uint32_t result = timerVariable / timeLimitMs;
+        timerVariable %= timeLimitMs;
+        return result;
+    };
+};
+
+//-----------------------------------------------------------------------------
+// LED strip telemetry
+//-----------------------------------------------------------------------------
+
+class LEDStripTelemetry : public AbstractUserInterface,
+                          public LEDSegmentToStripInterface
+{
+    friend class LEDSegment;
+
+public:
+    /**
+     * @brief Create an LED strip for telemetry display.
+     *
+     * @param dataPin GPIO number attached to `Din` (data input).
+     * @param pixelCount Total count of pixels in the strip.
+     * @param useLevelShift Set to `false` when using 3.3V logic.
+     *                      Set to `true` when using the level
+     *                      shifter in open-drain mode.
+     * @param pixelType Pixel driver.
+     * @param pixelFormat Format of color data (byte order).
+     *                    Set to `AUTO` for auto-detection.
+     */
+    LEDStripTelemetry(
+        gpio_num_t dataPin,
+        uint8_t pixelCount,
+        bool useLevelShift,
+        pixel_driver_t pixelType = WS2812,
+        pixel_format_t pixelFormat = pixel_format_t::AUTO);
+    ~LEDStripTelemetry();
+
+    /**
+     * @brief Set global LED brightness
+     *
+     * @param value Brightness.
+     *              255 is the highest and
+     *              0 will turn all LEDs off.
+     *
+     * @note LEDs are very bright.
+     *       Keep this value low for a comfortable experience.
+     *       Defaults to 15 (decimal).
+     */
+    void brightness(uint8_t value);
+
+public: // LEDSegmentToStripInterface implementation
+    virtual void setPixelColor(
+        uint8_t fromPixelIndex,
+        uint8_t toPixelIndex,
+        uint32_t packedRGB) override;
+
+    virtual void setPixelColor(
+        uint8_t pixelIndex,
+        uint32_t packedRGB) override;
+
+public: // AbstractUserInterface implementation
+    virtual void onStart() override;
+    virtual void onTelemetryData(const telemetryData_t *pTelemetryData) override;
+    virtual void serveSingleFrame(uint32_t elapsedMs) override;
+    virtual void onBitePoint() override;
+    virtual void onConnected() override;
+    virtual void onBLEdiscovering() override;
+    virtual void onLowBattery() override;
+
+private:
+    LEDStrip *ledStrip;
+    bool started = false;
+    std::vector<LEDSegment *> ledSegments;
+
+    void addSegment(
+        LEDSegment *segment,
+        bool requiresPowertrainTelemetry,
+        bool requiresECUTelemetry,
+        bool requiresRaceControlTelemetry,
+        bool requiresGaugeTelemetry);
+};
 
 #endif
