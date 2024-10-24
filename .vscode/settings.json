@@ -50,5 +50,6 @@
         "typeinfo": "cpp",
         "xutility": "cpp",
         "compare": "cpp"
-    }
+    },
+    "C_Cpp.default.compilerPath": ""
 }

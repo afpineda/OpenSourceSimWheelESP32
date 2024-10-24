@@ -17,7 +17,8 @@
 #include <stdint.h>
 #include <vector>
 #include <string>
-#include "esp32-hal.h" // declares gpio_num_t
+#include "hal/gpio_types.h" // declares gpio_num_t
+#include "esp32-hal.h"
 
 /**
  * @brief A bit array which assembles the state of every button, being the least significant bit

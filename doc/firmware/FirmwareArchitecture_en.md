@@ -34,7 +34,8 @@ Some namespaces are implemented with the help of auxiliary modules which are not
 - *adcTools*: Reading of ADC pins.
 - *AnalogMultiplexerInput*: Everything related to multiplexed buttons/switches.
 - *ButtonMatrixInput*: Everything related to button/switch matrices.
-- *debugUtils.cpp*: Minor utilities for debugging and testing.
+- *debugUtils*: Minor utilities for debugging and testing.
+- *LedStrip*: Interface to single-wire LED strips.
 - *PolledInput*: Related to inputs that must be read in a polling (or sampling) loop.
   Defines two main c++ classes: `AnalogAxisInput` and `DigitalPolledInput`.
 - *RotaryEncoderInput*: Everything related to rotary encoders.
@@ -60,6 +61,7 @@ Some namespaces are implemented with the help of auxiliary modules which are not
 | inputHub               | Device functionality                                    |
 | inputs                 | Input hardware                                          |
 | notify                 | User interface hardware (if any)                        |
+| LedStrip               | Underlying LED strip single-wire protocol               |
 | power                  | Underlying power management capabilities                |
 | RotaryEncoderInput     | Hardware design                                         |
 | ShiftRegistersInput    | Hardware design                                         |

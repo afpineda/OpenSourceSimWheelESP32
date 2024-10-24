@@ -10,6 +10,7 @@ SimWheel.h
 SimWheelTypes.h
 SimWheelUI.h
 i2cTools.h
+LedStrip.h
 adcTools.cpp
 AnalogMultiplexerInput.cpp
 BatteryCalibration.cpp
@@ -28,4 +29,5 @@ RotaryEncoderInput.cpp
 ShiftRegistersInput.cpp
 userSettings.cpp
 i2cTools.cpp
+LedStrip.cpp
 SimWheelUI.cpp

@@ -37,7 +37,7 @@ is the main board for development and testing. However, all tests should work in
 |    36    | **Not usable (PSRAM)**                           |
 |    37    | **Not usable (PSRAM)**                           |
 |    38    | ALPS Encoder B                                   |
-|    39    | Shift register LOAD                              |
+|    39    | Shift register LOAD, DOut                        |
 |    40    | Shift register NEXT, Simple shift light pin      |
 |    41    | Shift register SERIAL                            |
 |    42    | BattEN (Battery monitor enable)                  |
@@ -68,7 +68,7 @@ for the built-in RGB led to work.
 |    27    | Button matrix I1                                            |
 |    14    | Button matrix I2                                            |
 |    12    | Button matrix S0                                            |
-|    13    | Button matrix S1                                            |
+|    13    | Button matrix S1, DOut                                      |
 |    9     | **Not usable (flash mem)**                                  |
 |    10    | **Not usable (flash mem)**                                  |
 |    11    | **Not usable (flash mem)**                                  |

@@ -68,6 +68,12 @@
 // Simple shift light UI
 #define TEST_SIMPLE_SHIFT_LIGHT_PIN GPIO_NUM_33
 
+// Simple shift light UI
+#define TEST_SIMPLE_SHIFT_LIGHT_PIN GPIO_NUM_NC
+
+// LED strip
+#define TEST_D_OUT GPIO_NUM_13
+
 // -------------------------------------------------------------
 #elif defined(CONFIG_IDF_TARGET_ESP32S3)
 // -------------------------------------------------------------
@@ -119,6 +125,8 @@
 #define TEST_SECONDARY_SDA GPIO_NUM_21
 #define TEST_SECONDARY_SCL GPIO_NUM_47
 
+// LED strip
+#define TEST_D_OUT GPIO_NUM_39
 
 // -------------------------------------------------------------
 #elif defined(CONFIG_IDF_TARGET_ESP32C3)
@@ -165,9 +173,6 @@
 
 // Wake up
 #define TEST_POWER_PIN GPIO_NUM_2
-
-// Simple shift light UI
-#define TEST_SIMPLE_SHIFT_LIGHT_PIN GPIO_NUM_NC
 
 // -------------------------------------------------------------
 #else
