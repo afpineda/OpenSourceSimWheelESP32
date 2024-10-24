@@ -84,11 +84,36 @@ private:
     void write(uint8_t state);
 };
 
+//-----------------------------------------------------------------------------
+// LED strip
+//-----------------------------------------------------------------------------
+
+/**
+ * @brief Pixel driver
+ *
+ */
 typedef enum
 {
-    PIXEL_WS2811,
-    PIXEL_WS2812
-} pixel_type_t;
+    PIXEL_WS2811, // WS2811
+    PIXEL_WS2812  // WS2812 and WS2812B
+} pixel_drive_t;
+
+//-----------------------------------------------------------------------------
+
+/**
+ * @brief Byte order of pixel data
+ *
+ */
+typedef enum
+{
+    AUTO, // Auto-detect based on pixel driver
+    RGB,  // Red-green-blue
+    RBG,  // Red-blue-green
+    GRB,  // Green-red-blue
+    GBR,  // Green-blue-red
+    BRG,  // Blue-red-green
+    BGR   // Blue-green-red
+} pixel_format_t;
 
 //-----------------------------------------------------------------------------
 
@@ -100,12 +125,19 @@ public:
      *
      * @param dataPin GPIO number attached to `Din` (data input).
      * @param pixelCount Total count of pixels in the strip.
-     * @param pixelType Type of pixel controller.
+     * @param useLevelShift Set to `false` when using 3.3V logic.
+     *                      Set to `true` when using the level
+     *                      shifter in open-drain mode.
+     * @param pixelType Pixel driver.
+     * @param pixelFormat Format of color data (byte order).
+     *                    Set to `AUTO` for auto-detection.
      */
     LEDStrip(
         gpio_num_t dataPin,
         uint8_t pixelCount,
-        pixel_type_t pixelType = PIXEL_WS2812);
+        bool useLevelShift = false,
+        pixel_drive_t pixelType = PIXEL_WS2812,
+        pixel_format_t pixelFormat = pixel_format_t::AUTO);
     ~LEDStrip();
 
     /**
@@ -116,7 +148,7 @@ public:
     uint8_t getPixelCount() { return pixelCount; }
 
     /**
-     * @brief Set pixel color
+     * @brief Set pixel color in RGB format
      *
      * @param pixelIndex Index of the pixel in the strip.
      * @param redChannel Red component of the color.
@@ -124,18 +156,50 @@ public:
      * @param blueChannel Blue component of the color.
      * @note Effective after show() is called.
      */
-    void pixelColor(
+    void pixelRGB(
         uint8_t pixelIndex,
         uint8_t redChannel,
         uint8_t greenChannel,
         uint8_t blueChannel);
 
-    void pixelRangeColor(
+    /**
+     * @brief Set color (in RGB format) to a range of pixels
+     *
+     * @param fromPixelIndex Index of the first pixel.
+     * @param toPixelIndex Index of the last pixel.
+     * @param redChannel Red component of the color.
+     * @param greenChannel Green component of the color.
+     * @param blueChannel  lue component of the color.
+     * @note Effective after show() is called.
+     */
+    void pixelRangeRGB(
         uint8_t fromPixelIndex,
         uint8_t toPixelIndex,
-        uint8_t redChannel = 0,
-        uint8_t greenChannel = 0,
-        uint8_t blueChannel = 0);
+        uint8_t redChannel,
+        uint8_t greenChannel,
+        uint8_t blueChannel);
+
+    void pixelRGB(
+        uint8_t pixelIndex,
+        uint32_t packedRGB)
+    {
+        pixelRGB(pixelIndex,
+                 (uint8_t)(packedRGB >> 16),
+                 (uint8_t)(packedRGB >> 8),
+                 (uint8_t)(packedRGB));
+    }
+
+    void pixelRangeRGB(
+        uint8_t fromPixelIndex,
+        uint8_t toPixelIndex,
+        uint32_t packedRGB)
+    {
+        pixelRangeRGB(fromPixelIndex,
+                      toPixelIndex,
+                      (uint8_t)(packedRGB >> 16),
+                      (uint8_t)(packedRGB >> 8),
+                      (uint8_t)(packedRGB));
+    }
 
     /**
      * @brief Turn off all LEDs
@@ -150,12 +214,34 @@ public:
      */
     void show();
 
+    /**
+     * @brief Set global LED brightness
+     *
+     * @param value Brightness.
+     *              255 is the highest and
+     *              0 will turn all LEDs off.
+     *
+     * @note LEDs are very bright.
+     *       Keep this value low for a comfortable experience.
+     *       Defaults to 15 (decimal).
+     */
+    void brightness(uint8_t value) { brightnessWeight = value + 1; }
+
 private:
     uint8_t pixelCount;
-    uint8_t *rawData;
+    uint8_t *pixelData;
+    pixel_format_t pixelFormat;
     rmt_channel_handle_t rmtHandle = nullptr;
     rmt_encoder_handle_t encHandle = nullptr;
     bool changed = false;
+    uint8_t brightnessWeight = 16;
+
+    void normalizeColor(uint8_t &r, uint8_t &g, uint8_t &b);
+    void rawPixelRGB(
+        uint8_t pixelIndex,
+        uint8_t redChannel,
+        uint8_t greenChannel,
+        uint8_t blueChannel);
 };
 
 #endif

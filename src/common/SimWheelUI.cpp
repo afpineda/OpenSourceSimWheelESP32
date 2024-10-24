@@ -24,6 +24,11 @@
 
 // LED strips
 #define PIXEL_TO_SYMBOL_COUNT(pixelCount) pixelCount * 3 * 8
+static rmt_transmit_config_t rmt_transmit_config = {
+    .loop_count = 0,
+    .flags = {
+        .eot_level = 0,
+        .queue_nonblocking = false}};
 
 //-----------------------------------------------------------------------------
 // Single Color-Single LED user interface
@@ -251,16 +256,13 @@ void PCF8574RevLights::serveSingleFrame(uint32_t elapsedMs)
 //
 //-----------------------------------------------------------------------------
 
-static rmt_transmit_config_t rmt_transmit_config = {
-    .loop_count = 0,
-    .flags = {
-        .eot_level = 0,
-        .queue_nonblocking = false}};
 
 LEDStrip::LEDStrip(
     gpio_num_t dataPin,
     uint8_t pixelCount,
-    pixel_type_t pixelType)
+    bool useLevelShift,
+    pixel_drive_t pixelType,
+    pixel_format_t pixelFormat)
 {
     // Check parameters
     if (!GPIO_IS_VALID_OUTPUT_GPIO(dataPin))
@@ -272,6 +274,15 @@ LEDStrip::LEDStrip(
     {
         log_e("LEDStrip: pixel count can not be zero");
         abort();
+    }
+
+    // Compute pixel format when required
+    if (pixelFormat == pixel_format_t::AUTO)
+    {
+        if (pixelType == pixel_drive_t::PIXEL_WS2811)
+            pixelFormat = pixel_format_t::RGB;
+        else
+            pixelFormat = pixel_format_t::GRB;
     }
 
     // Compute buffer size
@@ -286,17 +297,22 @@ LEDStrip::LEDStrip(
         .clk_src = RMT_CLK_SRC_DEFAULT,
         .resolution_hz = 10000000, // 10MHz resolution, 1 tick = 0.1us
         .mem_block_symbols = rawDataCount,
-        .trans_queue_depth = 1,
+        .trans_queue_depth = 4,
         .intr_priority = 0,
         .flags{
             .invert_out = 0,
             .with_dma = 0,
             .io_loop_back = 0,
-            .io_od_mode = 0 // This is critical to level shifting
-        }};
+            .io_od_mode = 0}};
+    if (useLevelShift)
+    {
+        tx_config.flags.io_od_mode = 1;
+        tx_config.flags.io_loop_back = 1;
+    }
     ESP_ERROR_CHECK(rmt_new_tx_channel(&tx_config, &rmtHandle));
     if (!rmtHandle)
         abort();
+    ESP_ERROR_CHECK(rmt_enable(rmtHandle));
 
     // Configure byte encoder
     rmt_bytes_encoder_config_t byte_enc_config = {};
@@ -304,6 +320,7 @@ LEDStrip::LEDStrip(
     byte_enc_config.bit0.level1 = 0;
     byte_enc_config.bit1.level0 = 1;
     byte_enc_config.bit1.level1 = 0;
+    byte_enc_config.flags.msb_first = 1;
     switch (pixelType)
     {
     case PIXEL_WS2811:
@@ -313,14 +330,15 @@ LEDStrip::LEDStrip(
         byte_enc_config.bit1.duration1 = 13;
         break;
     case PIXEL_WS2812:
-        byte_enc_config.bit0.duration0 = 4;
-        byte_enc_config.bit0.duration1 = 8;
-        byte_enc_config.bit1.duration0 = 8;
-        byte_enc_config.bit1.duration1 = 4;
+        byte_enc_config.bit0.duration0 = 3;
+        byte_enc_config.bit0.duration1 = 9;
+        byte_enc_config.bit1.duration0 = 9;
+        byte_enc_config.bit1.duration1 = 3;
         break;
 
     default:
         // Should not enter here
+        log_e("Unknown pixel driver %d in LED strip", pixelType);
         abort();
         break;
     }
@@ -330,14 +348,17 @@ LEDStrip::LEDStrip(
 
     // Initialize instance
     this->pixelCount = pixelCount;
-    this->rawData = new uint8_t[pixelCount * 3];
+    this->pixelFormat = pixelFormat;
+    this->pixelData = new uint8_t[pixelCount * 3];
     clear();
 }
 
 LEDStrip::~LEDStrip()
 {
+    ESP_ERROR_CHECK(rmt_disable(rmtHandle));
     ESP_ERROR_CHECK(rmt_del_encoder(encHandle));
     ESP_ERROR_CHECK(rmt_del_channel(rmtHandle));
+    delete this->pixelData;
 }
 
 void LEDStrip::show()
@@ -349,18 +370,77 @@ void LEDStrip::show()
             rmt_transmit(
                 rmtHandle,
                 encHandle,
-                (const void *)rawData,
+                (const void *)pixelData,
                 pixelCount * 3,
                 &rmt_transmit_config));
         ESP_ERROR_CHECK(
             rmt_tx_wait_all_done(
                 rmtHandle,
-                portMAX_DELAY));
+                -1));
         vTaskDelay(1);
     }
 }
 
-void LEDStrip::pixelColor(
+void LEDStrip::normalizeColor(uint8_t &r, uint8_t &g, uint8_t &b)
+{
+    // Normalize to a common brightness
+    if (brightnessWeight)
+    {
+        // Note: "">> 8" is equal to "/ 256"
+        r = (r * brightnessWeight) >> 8;
+        g = (g * brightnessWeight) >> 8;
+        b = (b * brightnessWeight) >> 8;
+    }
+}
+
+void LEDStrip::rawPixelRGB(
+    uint8_t pixelIndex,
+    uint8_t redChannel,
+    uint8_t greenChannel,
+    uint8_t blueChannel)
+{
+    // Note: caller must check that pixelIndex is in range
+
+    size_t dataIndex = (pixelIndex * 3);
+    switch (pixelFormat)
+    {
+    case pixel_format_t::BGR:
+        pixelData[dataIndex++] = blueChannel;
+        pixelData[dataIndex++] = greenChannel;
+        pixelData[dataIndex] = redChannel;
+        break;
+    case pixel_format_t::BRG:
+        pixelData[dataIndex++] = blueChannel;
+        pixelData[dataIndex++] = redChannel;
+        pixelData[dataIndex] = greenChannel;
+        break;
+    case pixel_format_t::GBR:
+        pixelData[dataIndex++] = greenChannel;
+        pixelData[dataIndex++] = blueChannel;
+        pixelData[dataIndex] = redChannel;
+        break;
+    case pixel_format_t::GRB:
+        pixelData[dataIndex++] = greenChannel;
+        pixelData[dataIndex++] = redChannel;
+        pixelData[dataIndex] = blueChannel;
+        break;
+    case pixel_format_t::RBG:
+        pixelData[dataIndex++] = redChannel;
+        pixelData[dataIndex++] = blueChannel;
+        pixelData[dataIndex] = greenChannel;
+        break;
+    case pixel_format_t::RGB:
+        pixelData[dataIndex++] = redChannel;
+        pixelData[dataIndex++] = greenChannel;
+        pixelData[dataIndex] = blueChannel;
+        break;
+    default:
+        return;
+    }
+    changed = true;
+}
+
+void LEDStrip::pixelRGB(
     uint8_t pixelIndex,
     uint8_t redChannel,
     uint8_t greenChannel,
@@ -368,15 +448,12 @@ void LEDStrip::pixelColor(
 {
     if (pixelIndex < pixelCount)
     {
-        int rawIndex = (pixelIndex * 3);
-        rawData[rawIndex++] = greenChannel;
-        rawData[rawIndex++] = blueChannel;
-        rawData[rawIndex] = redChannel;
-        changed = true;
+        normalizeColor(redChannel, greenChannel, blueChannel);
+        rawPixelRGB(pixelIndex, redChannel, greenChannel, blueChannel);
     }
 }
 
-void LEDStrip::pixelRangeColor(
+void LEDStrip::pixelRangeRGB(
     uint8_t fromPixelIndex,
     uint8_t toPixelIndex,
     uint8_t redChannel,
@@ -384,22 +461,18 @@ void LEDStrip::pixelRangeColor(
     uint8_t blueChannel)
 {
     if (fromPixelIndex > toPixelIndex)
-        pixelRangeColor(
-            toPixelIndex,
-            fromPixelIndex,
-            redChannel,
-            greenChannel,
-            blueChannel);
-    else
     {
-        for (uint8_t i = fromPixelIndex; i <= toPixelIndex; i++)
-            pixelColor(i, redChannel, greenChannel, blueChannel);
-        changed = true;
+        uint8_t swapAux = fromPixelIndex;
+        fromPixelIndex = toPixelIndex;
+        toPixelIndex = swapAux;
     }
+    normalizeColor(redChannel, greenChannel, blueChannel);
+    for (uint8_t i = fromPixelIndex; (i <= toPixelIndex) && (i < pixelCount); i++)
+        rawPixelRGB(i, redChannel, greenChannel, blueChannel);
 }
 
 void LEDStrip::clear()
 {
-    memset((void *)rawData, 0, pixelCount * 3);
+    memset((void *)pixelData, 0, pixelCount * 3);
     changed = true;
 }
