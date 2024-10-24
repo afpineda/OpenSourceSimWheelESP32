@@ -48,6 +48,7 @@
         "streambuf": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "compare": "cpp"
     }
 }
