@@ -122,7 +122,6 @@ void SimpleShiftLight::setMode(uint8_t newMode)
     else
         setLED(true);
     ledMode = newMode;
-    log_e("setMode %d", ledMode);
 }
 
 //-----------------------------------------------------------------------------
@@ -257,11 +256,6 @@ LEDStripTelemetry::~LEDStripTelemetry()
     abort();
 }
 
-void LEDStripTelemetry::brightness(uint8_t value)
-{
-    this->ledStrip->brightness(value);
-}
-
 void LEDStripTelemetry::onStart()
 {
     this->ledStrip->pixelRangeRGB(0, 0xFF, 0x7F7F7F); // white
@@ -394,4 +388,74 @@ LEDSegment::~LEDSegment()
 {
     log_e("An LED segment was destroyed.");
     abort();
+}
+
+//-----------------------------------------------------------------------------
+// LED segment: shift light
+//-----------------------------------------------------------------------------
+
+ShiftLightLEDSegment::ShiftLightLEDSegment(
+    LEDStripTelemetry *ledStripTelemetry,
+    uint8_t pixelIndex,
+    uint32_t maxTorqueColor,
+    uint32_t maxRPMColor) : LEDSegment(ledStripTelemetry, true, false, false, false)
+{
+    this->pixelIndex = pixelIndex;
+    this->maxTorqueColor = maxTorqueColor;
+    this->maxRPMColor = maxRPMColor;
+    this->blinkTimer = 0;
+    this->blink = false;
+    this->blinkState = false;
+    ledStripTelemetry->setPixelColor(pixelIndex, 0);
+}
+
+void ShiftLightLEDSegment::onTelemetryData(
+    const telemetryData_t *pTelemetryData,
+    LEDSegmentToStripInterface &ledInterface)
+{
+    uint32_t currentColor;
+    if (pTelemetryData == nullptr)
+    {
+        currentColor = 0;
+        blink = false;
+        blinkTimer = 0;
+    }
+    else if (pTelemetryData->powertrain.revLimiter)
+    {
+        currentColor = maxRPMColor;
+        blink = true;
+    }
+    else if (pTelemetryData->powertrain.shiftLight2 > 0)
+    {
+        currentColor = maxRPMColor;
+        blink = false;
+        blinkTimer = 0;
+    }
+    else if (pTelemetryData->powertrain.shiftLight1 > 0)
+    {
+        currentColor = maxTorqueColor;
+        blink = false;
+        blinkTimer = 0;
+    }
+    else
+    {
+        currentColor = 0;
+        blink = false;
+        blinkTimer = 0;
+    };
+    ledInterface.setPixelColor(pixelIndex, currentColor);
+}
+
+void ShiftLightLEDSegment::serveSingleFrame(
+    uint32_t elapsedMs,
+    LEDSegmentToStripInterface &ledInterface)
+{
+    if (blink && (frameTimer(blinkTimer, elapsedMs, 60) % 2 > 0))
+    {
+        blinkState = !blinkState;
+        if (blinkState)
+            ledInterface.setPixelColor(pixelIndex, maxRPMColor);
+        else
+            ledInterface.setPixelColor(pixelIndex, 0);
+    }
 }

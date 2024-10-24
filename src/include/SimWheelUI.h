@@ -143,7 +143,7 @@ public:
      */
     virtual void onTelemetryData(
         const telemetryData_t *pTelemetryData,
-        const LEDSegmentToStripInterface &ledInterface) = 0;
+        LEDSegmentToStripInterface &ledInterface) = 0;
 
     /**
      * @brief Draw a single frame.
@@ -155,14 +155,14 @@ public:
      */
     virtual void serveSingleFrame(
         uint32_t elapsedMs,
-        const LEDSegmentToStripInterface &ledInterface) = 0;
+        LEDSegmentToStripInterface &ledInterface) = 0;
 
     /**
      * @brief Notify a change in current bite point.
      *
      * @note Read userSetting::bitePoint to know the last value
      */
-    virtual void onBitePoint(const LEDSegmentToStripInterface &ledInterface) {};
+    virtual void onBitePoint(LEDSegmentToStripInterface &ledInterface) {};
 
 protected:
     /**
@@ -229,7 +229,14 @@ public:
      *       Keep this value low for a comfortable experience.
      *       Defaults to 15 (decimal).
      */
-    void brightness(uint8_t value);
+    void brightness(uint8_t value) { ledStrip->brightness(value); }
+
+    /**
+     * @brief Retrieve the count of pixels in the strip.
+     *
+     * @return uint8_t Pixel count.
+     */
+    uint8_t getPixelCount() { return ledStrip->getPixelCount(); }
 
 public: // LEDSegmentToStripInterface implementation
     virtual void setPixelColor(
@@ -261,6 +268,36 @@ private:
         bool requiresECUTelemetry,
         bool requiresRaceControlTelemetry,
         bool requiresGaugeTelemetry);
+};
+
+//-----------------------------------------------------------------------------
+// LED segment: shift light
+//-----------------------------------------------------------------------------
+
+class ShiftLightLEDSegment : public LEDSegment
+{
+public:
+    ShiftLightLEDSegment(
+        LEDStripTelemetry *ledStripTelemetry,
+        uint8_t pixelIndex,
+        uint32_t maxTorqueColor = 0xFFFF00,
+        uint32_t maxRPMColor = 0xFF0000);
+
+public: // LEDSegment implementation
+    virtual void onTelemetryData(
+        const telemetryData_t *pTelemetryData,
+        LEDSegmentToStripInterface &ledInterface) override;
+    virtual void serveSingleFrame(
+        uint32_t elapsedMs,
+        LEDSegmentToStripInterface &ledInterface) override;
+
+private:
+    uint8_t pixelIndex;
+    uint32_t blinkTimer;
+    uint32_t maxTorqueColor;
+    uint32_t maxRPMColor;
+    bool blinkState;
+    bool blink;
 };
 
 #endif
