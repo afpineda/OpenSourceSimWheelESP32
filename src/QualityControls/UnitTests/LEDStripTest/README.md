@@ -6,8 +6,7 @@ To test that an LED strip is properly interfaced using a single GPIO pin.
 
 ## Hardware setup
 
-A WS2812B 8 pixel LED strip is required.
-A "lever shifter" consisting of a pull-up resistor is required.
+A WS2812B 8 pixel LED strip is required without a "lever shifter".
 Output via USB serial port at 115200 baud. Connect before reset.
 
 ## Procedure and expected output

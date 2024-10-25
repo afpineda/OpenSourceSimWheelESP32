@@ -11,14 +11,23 @@
 #include "debugUtils.h"
 #include "LedStrip.h"
 
+//------------------------------------------------------------------
+// Globals
+//------------------------------------------------------------------
+
 #define LED_COUNT 8
+#define LEVEL_SHIFTER false
 
 LEDStrip *strip;
+
+//------------------------------------------------------------------
+// Arduino entry point
+//------------------------------------------------------------------
 
 void setup()
 {
     Serial.begin(115200);
-    strip = new LEDStrip(TEST_D_OUT, LED_COUNT, true);
+    strip = new LEDStrip(TEST_D_OUT, LED_COUNT, LEVEL_SHIFTER);
     strip->brightness(16);
     // strip = new LEDStrip(LED_PIN, LED_COUNT, PIXEL_WS2811);
     Serial.println("--GO--");
