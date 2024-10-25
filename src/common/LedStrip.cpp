@@ -250,12 +250,6 @@ void LEDStrip::pixelRangeRGB(
     uint8_t greenChannel,
     uint8_t blueChannel)
 {
-    if (fromPixelIndex > toPixelIndex)
-    {
-        uint8_t swapAux = fromPixelIndex;
-        fromPixelIndex = toPixelIndex;
-        toPixelIndex = swapAux;
-    }
     normalizeColor(redChannel, greenChannel, blueChannel);
     for (uint8_t i = fromPixelIndex; (i <= toPixelIndex) && (i < pixelCount); i++)
         rawPixelRGB(i, redChannel, greenChannel, blueChannel);
