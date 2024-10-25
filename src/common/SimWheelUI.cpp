@@ -551,7 +551,10 @@ void RevLightsLEDSegment::serveSingleFrame(
 void RevLightsLEDSegment::onBitePoint(
     LEDSegmentToStripInterface &ledInterface)
 {
-    displayBitePoint = true;
-    timer = 0;
-    buildLEDs(ledInterface);
+    if (bitePointColor)
+    {
+        displayBitePoint = true;
+        timer = 0;
+        buildLEDs(ledInterface);
+    }
 }
