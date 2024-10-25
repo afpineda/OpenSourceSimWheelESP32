@@ -38,6 +38,10 @@
 
     - [Simple shift light](./hardware/ui/SimpleShiftLight/SimpleShiftLight_en.md)
     - [PFC8574-driven "rev lights"](./hardware/ui/PCF8574RevLights/PCF8574RevLights_en.md)
+    - [RGB LED strips](./hardware/ui/LEDStrips/LEDStrips_en.md). Including:
+      - "Rev lights"
+      - Shift light
+      - Flags light
 
     Additional display hardware may be available in future firmware releases.
 

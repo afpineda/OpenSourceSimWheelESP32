@@ -26,7 +26,7 @@ There are a number of options available:
 
     Higher voltages will work as long as you use a proper
     **current limiting** resistor for each LED.
-    When working with LED strips,
+    When working with **LED strips**,
     make sure your power source is within its specifications.
 
 - **External powerboost module/shield**
@@ -42,32 +42,3 @@ There are a number of options available:
     Connect `VLed` directly to the positive pole of the battery.
     This is **not optimal** as some LEDs will go off
     before the battery is discharged.
-
-## Single-wire RGB LED strips
-
-These LED strips are controlled by a single output-capable pin labelled `Dout` in this project.
-Some LED strips can work with 3.3V logic, others cannot.
-If your LED strip does not work with 3.3V logic,
-you will need a small "level shifter" circuit, which is described below.
-
-- **No level shifter (3.3V logic)**
-
-  Simply wire `Dout` to `Din` in the first pixel.
-
-  ![No level shifter](./hardware/pictures/NoLevelShifter.png)
-
-- **Level shifter (5V logic)**
-
-  `Dout` requires a minimum voltage of 3.5 volts.
-  The ESP32 operates at 3.3 volts, which is insufficient.
-  To overcome this limitation, a "level shifter" circuit is required.
-  We are using the most simple level shifter available:
-  a pull resistor attached to a GPIO pin in *open drain* mode (`Dout`).
-
-  ![Level shifter](./hardware/pictures/LevelShifter.png)
-
-  [Test this circuit at falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKACcQG8rvPenCUZHBYAPTmF4YUEgCzkMSWeEEARAPYBXAC4sA7hMEDDIQssgsASnyrGmYGcapVZtIc+gIxEtJyKcMPD9sEGVJEAA1ABk6ABNvJhC8QTAkPGJQ8CDVAEkAOxYAI05sBEd+SSQUbHILYoYUZVkMlGIqZhkLcQbiIIZZPsbbWSUQX1U6ADcAaQBLXXFmIOSxuBB0zN8ogFFVAB0AZwPtNlmAB30TYiMwFJQgiwBzEwc+25VnKASHU2UZQnIYRkCAi33akBSKUgGSBIAA4gA5VSXYz8Xi8FAoio3HFfAxcHi2NDLZwJbDvMDSCTEMKKTI-AAU6jOdDyh1ibAAhrM2UdZgBbTQAG052lm6jyAEoWAc-Ph1kSqa93CATpo6Cxng0lfc-ErZOYvvVcMozHKZKkHiwgA)
-
-  Needed parts:
-
-  - 1K-ohms resistor (x1)
