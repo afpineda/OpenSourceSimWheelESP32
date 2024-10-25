@@ -17,6 +17,7 @@
 
 #define LED_COUNT 8
 #define LEVEL_SHIFTER false
+#define DEFAULT_DELAY 2000
 
 LEDStrip *strip;
 
@@ -38,35 +39,35 @@ void loop()
     Serial.println("Go red");
     strip->pixelRangeRGB(0, LED_COUNT - 1, 255, 0, 0);
     strip->show();
-    delay(2000);
+    delay(DEFAULT_DELAY);
     Serial.println("Go green");
     strip->pixelRangeRGB(0, LED_COUNT - 1, 0, 255, 0);
     strip->show();
-    delay(2000);
+    delay(DEFAULT_DELAY);
     Serial.println("Go blue");
     strip->pixelRangeRGB(0, LED_COUNT - 1, 0, 0, 255);
     strip->show();
-    delay(2000);
+    delay(DEFAULT_DELAY);
     Serial.println("Go white");
     strip->pixelRangeRGB(0, LED_COUNT - 1, 255, 255, 255);
     strip->show();
-    delay(2000);
+    delay(DEFAULT_DELAY);
     Serial.println("Go purple");
     strip->pixelRangeRGB(0, LED_COUNT - 1, 128, 0, 128);
     strip->show();
-    delay(2000);
+    delay(DEFAULT_DELAY);
     Serial.println("Go orange");
     strip->pixelRangeRGB(0, LED_COUNT - 1, 255, 65, 0);
     strip->show();
-    delay(2000);
+    delay(DEFAULT_DELAY);
     Serial.println("Go orange dimmer");
     strip->pixelRangeRGB(0, LED_COUNT - 1, 64, 16, 0);
     strip->show();
-    delay(2000);
+    delay(DEFAULT_DELAY);
     Serial.println("Go off");
     strip->clear();
     strip->show();
-    delay(2000);
+    delay(DEFAULT_DELAY);
     Serial.println("rainbow");
     strip->pixelRGB(0, 0xEE82EE);
     strip->pixelRGB(1, 0x4B0082);
@@ -76,5 +77,5 @@ void loop()
     strip->pixelRGB(5, 0xFFA500);
     strip->pixelRGB(6, 0xFF0000);
     strip->show();
-    delay(4000);
+    delay(DEFAULT_DELAY*2);
 }
