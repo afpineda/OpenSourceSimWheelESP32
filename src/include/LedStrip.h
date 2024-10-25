@@ -118,7 +118,7 @@ public:
      * @param toPixelIndex Index of the last pixel.
      * @param redChannel Red component of the color.
      * @param greenChannel Green component of the color.
-     * @param blueChannel  lue component of the color.
+     * @param blueChannel Blue component of the color.
      * @note Effective after show() is called.
      */
     void pixelRangeRGB(

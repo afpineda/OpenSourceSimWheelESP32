@@ -343,8 +343,8 @@ private:
     uint8_t firstPixelIndex;
     uint8_t pixelCount;
     uint8_t litCount;
-    uint8_t litColor;
-    int32_t mainColor;
+    uint32_t litColor;
+    uint32_t mainColor;
     uint32_t maxTorqueColor;
     uint32_t maxPowerColor;
     uint32_t bitePointColor;

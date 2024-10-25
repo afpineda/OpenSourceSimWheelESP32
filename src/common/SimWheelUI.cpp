@@ -22,6 +22,9 @@
 #define MODE_MAX_POWER 2 // Flash
 #define MODE_MAX_RPM 3   // Flash quicker
 
+// Utility
+#define CEIL_DIV(dividend, divisor) (dividend + divisor - 1) / divisor
+
 //-----------------------------------------------------------------------------
 // Single Color-Single LED user interface
 //-----------------------------------------------------------------------------
@@ -312,7 +315,6 @@ void LEDStripTelemetry::serveSingleFrame(uint32_t elapsedMs)
     for (size_t i = 0; i < ledSegments.size(); i++)
         ledSegments[i]->serveSingleFrame(elapsedMs, *this);
     this->ledStrip->show();
-    vTaskDelay(pdMS_TO_TICKS(150)); // debug
 }
 
 void LEDStripTelemetry::setPixelColor(
@@ -485,25 +487,20 @@ RevLightsLEDSegment::RevLightsLEDSegment(
 
 void RevLightsLEDSegment::buildLEDs(LEDSegmentToStripInterface &ledInterface)
 {
-    ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + pixelCount - 1, litColor);
-    // if (displayBitePoint)
-    // {
-    //     litCount = (userSettings::bitePoint * pixelCount) / CLUTCH_FULL_VALUE;
-    //     ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, bitePointColor);
-    // }
-    // else
-    // {
-    //     if (!blink || blinkState)
-    //         ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, litColor);
-    //     else
-    //         ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, 0);
-    // }
-    // ledInterface.setPixelColor(firstPixelIndex + litCount, pixelCount - 1, 0);
-    // log_e("buildLEDs: %d -> %d -> %d (%d)",
-    //       firstPixelIndex,
-    //       firstPixelIndex + litCount - 1,
-    //       pixelCount - 1,
-    //       blink);
+    // ledInterface.setPixelColor(0, 7, litColor);
+    if (displayBitePoint)
+    {
+        litCount = (userSettings::bitePoint * pixelCount) / CLUTCH_FULL_VALUE;
+        ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, bitePointColor);
+    }
+    else
+    {
+        if (!blink || blinkState)
+            ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, litColor);
+        else
+            ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, 0);
+    }
+    ledInterface.setPixelColor(firstPixelIndex + litCount, pixelCount - 1, 0);
 }
 
 void RevLightsLEDSegment::onTelemetryData(
@@ -514,7 +511,8 @@ void RevLightsLEDSegment::onTelemetryData(
         return;
     if (pTelemetryData)
     {
-        litCount = (pTelemetryData->powertrain.rpmPercent * pixelCount) / 100;
+        // litCount = (pTelemetryData->powertrain.rpmPercent * pixelCount) / 100;
+        litCount = CEIL_DIV(pTelemetryData->powertrain.rpmPercent * pixelCount, 100);
         if (pTelemetryData->powertrain.shiftLight2)
             litColor = maxPowerColor;
         else if (pTelemetryData->powertrain.shiftLight1)
@@ -530,7 +528,6 @@ void RevLightsLEDSegment::onTelemetryData(
     }
     else
         litCount = 0;
-    // log_e("onTelemetryData: %d", litCount);
     buildLEDs(ledInterface);
 }
 
@@ -541,6 +538,7 @@ void RevLightsLEDSegment::serveSingleFrame(
     if (displayBitePoint && (frameTimer(timer, elapsedMs, 2000) % 2 > 0))
     {
         displayBitePoint = false;
+        litCount = 0;
         buildLEDs(ledInterface);
     }
     else if (blink && (frameTimer(timer, elapsedMs, 60) % 2 > 0))
