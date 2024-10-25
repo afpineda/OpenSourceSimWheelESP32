@@ -12,6 +12,7 @@
 #ifndef __SIM_WHEEL_UI__
 #define __SIM_WHEEL_UI__
 
+#include "SimWheel.h"
 #include "SimWheelTypes.h"
 #include "driver/i2c.h"
 #include "i2cTools.h"
@@ -135,7 +136,7 @@ public:
     /**
      * @brief Notify new telemetry data
      *
-     * @param pTelemetryData Pointer to telemetry data. Can not be null.
+     * @param pTelemetryData Pointer to telemetry data. Can be null.
      *                       Safe to store for later use.
      * @param ledInterface Interface to set pixel colors.
      * @note Must not enter an infinite loop. Must return as soon as possible.
@@ -298,6 +299,61 @@ private:
     uint32_t maxRPMColor;
     bool blinkState;
     bool blink;
+};
+
+//-----------------------------------------------------------------------------
+// LED segment: Rev Lights
+//-----------------------------------------------------------------------------
+
+class RevLightsLEDSegment : public LEDSegment
+{
+public:
+    /**
+     * @brief Create a "rev lights" LED segment
+     *
+     * @param ledStripTelemetry Instance of LED strip telemetry display.
+     *                          Not null.
+     * @param firstPixelIndex Index of the first pixel in the "rev lights" segment.
+     * @param pixelCount Count of consecutive pixels in the "rev lights" segment.
+     * @param mainColor Main color to display
+     * @param maxTorqueColor Color to display when maximum torque has been reached.
+     * @param maxPowerColor Color to display when maximum power has been reached.
+     * @param bitePointColor Color to display when clutch bite point calibration is in progress.
+     */
+    RevLightsLEDSegment(
+        LEDStripTelemetry *ledStripTelemetry,
+        uint8_t firstPixelIndex,
+        uint8_t pixelCount,
+        uint32_t mainColor = 0x00FF00,
+        uint32_t maxTorqueColor = 0xFFFF00,
+        uint32_t maxPowerColor = 0xFF0000,
+        uint32_t bitePointColor = 0xFFFFFF);
+
+public: // LEDSegment implementation
+    virtual void onTelemetryData(
+        const telemetryData_t *pTelemetryData,
+        LEDSegmentToStripInterface &ledInterface) override;
+    virtual void serveSingleFrame(
+        uint32_t elapsedMs,
+        LEDSegmentToStripInterface &ledInterface) override;
+    virtual void onBitePoint(
+        LEDSegmentToStripInterface &ledInterface) override;
+
+private:
+    uint8_t firstPixelIndex;
+    uint8_t pixelCount;
+    uint8_t litCount;
+    uint8_t litColor;
+    int32_t mainColor;
+    uint32_t maxTorqueColor;
+    uint32_t maxPowerColor;
+    uint32_t bitePointColor;
+    uint32_t timer;
+    bool blinkState;
+    bool blink;
+    bool displayBitePoint;
+
+    void buildLEDs(LEDSegmentToStripInterface &ledInterface);
 };
 
 #endif

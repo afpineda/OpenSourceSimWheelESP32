@@ -157,7 +157,7 @@ PCF8574RevLights::PCF8574RevLights(
         abort();
     }
 
-    // Turn leds off
+    // Turn LEDs off
     write(0x00);
 }
 
@@ -260,6 +260,7 @@ void LEDStripTelemetry::onStart()
 {
     this->ledStrip->pixelRangeRGB(0, 0xFF, 0x7F7F7F); // white
     this->ledStrip->show();
+    vTaskDelay(pdMS_TO_TICKS(500));
     this->started = true;
 }
 
@@ -267,13 +268,14 @@ void LEDStripTelemetry::onBLEdiscovering()
 {
     this->ledStrip->pixelRangeRGB(0, 0xFF, 128, 0, 128); // purple
     this->ledStrip->show();
+    vTaskDelay(pdMS_TO_TICKS(250));
 }
 
 void LEDStripTelemetry::onConnected()
 {
     this->ledStrip->pixelRangeRGB(0, 0xFF, 0, 128, 0); // green
     this->ledStrip->show();
-    vTaskDelay(pdMS_TO_TICKS(250));
+    vTaskDelay(pdMS_TO_TICKS(500));
     this->ledStrip->clear();
     this->ledStrip->show();
 }
@@ -285,10 +287,10 @@ void LEDStripTelemetry::onLowBattery()
     {
         this->ledStrip->pixelRangeRGB(0, 0xFF, 0xFFFFFF); // white
         this->ledStrip->show();
-        vTaskDelay(pdMS_TO_TICKS(150));
+        vTaskDelay(pdMS_TO_TICKS(250));
         this->ledStrip->clear();
         this->ledStrip->show();
-        vTaskDelay(pdMS_TO_TICKS(150));
+        vTaskDelay(pdMS_TO_TICKS(250));
     }
 }
 
@@ -301,16 +303,8 @@ void LEDStripTelemetry::onBitePoint()
 
 void LEDStripTelemetry::onTelemetryData(const telemetryData_t *pTelemetryData)
 {
-    if (pTelemetryData)
-    {
-        for (size_t i = 0; i < ledSegments.size(); i++)
-            ledSegments[i]->onTelemetryData(pTelemetryData, *this);
-    }
-    else
-    {
-        this->ledStrip->clear();
-        this->ledStrip->show();
-    }
+    for (size_t i = 0; i < ledSegments.size(); i++)
+        ledSegments[i]->onTelemetryData(pTelemetryData, *this);
 }
 
 void LEDStripTelemetry::serveSingleFrame(uint32_t elapsedMs)
@@ -318,6 +312,7 @@ void LEDStripTelemetry::serveSingleFrame(uint32_t elapsedMs)
     for (size_t i = 0; i < ledSegments.size(); i++)
         ledSegments[i]->serveSingleFrame(elapsedMs, *this);
     this->ledStrip->show();
+    vTaskDelay(pdMS_TO_TICKS(150)); // debug
 }
 
 void LEDStripTelemetry::setPixelColor(
@@ -458,4 +453,107 @@ void ShiftLightLEDSegment::serveSingleFrame(
         else
             ledInterface.setPixelColor(pixelIndex, 0);
     }
+}
+
+//-----------------------------------------------------------------------------
+// LED segment: Rev Lights
+//-----------------------------------------------------------------------------
+
+RevLightsLEDSegment::RevLightsLEDSegment(
+    LEDStripTelemetry *ledStripTelemetry,
+    uint8_t firstPixelIndex,
+    uint8_t pixelCount,
+    uint32_t mainColor,
+    uint32_t maxTorqueColor,
+    uint32_t maxPowerColor,
+    uint32_t bitePointColor) : LEDSegment(ledStripTelemetry, true, false, false, false)
+{
+    this->firstPixelIndex = firstPixelIndex;
+    this->pixelCount = pixelCount;
+    this->mainColor = mainColor;
+    this->maxTorqueColor = maxTorqueColor;
+    this->maxPowerColor = maxPowerColor;
+    this->bitePointColor = bitePointColor;
+    litCount = 0;
+    litColor = 0;
+    timer = 0;
+    blinkState = false;
+    blink = false;
+    displayBitePoint = false;
+    ledStripTelemetry->setPixelColor(firstPixelIndex, firstPixelIndex + pixelCount - 1, litColor);
+}
+
+void RevLightsLEDSegment::buildLEDs(LEDSegmentToStripInterface &ledInterface)
+{
+    ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + pixelCount - 1, litColor);
+    // if (displayBitePoint)
+    // {
+    //     litCount = (userSettings::bitePoint * pixelCount) / CLUTCH_FULL_VALUE;
+    //     ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, bitePointColor);
+    // }
+    // else
+    // {
+    //     if (!blink || blinkState)
+    //         ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, litColor);
+    //     else
+    //         ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, 0);
+    // }
+    // ledInterface.setPixelColor(firstPixelIndex + litCount, pixelCount - 1, 0);
+    // log_e("buildLEDs: %d -> %d -> %d (%d)",
+    //       firstPixelIndex,
+    //       firstPixelIndex + litCount - 1,
+    //       pixelCount - 1,
+    //       blink);
+}
+
+void RevLightsLEDSegment::onTelemetryData(
+    const telemetryData_t *pTelemetryData,
+    LEDSegmentToStripInterface &ledInterface)
+{
+    if (displayBitePoint)
+        return;
+    if (pTelemetryData)
+    {
+        litCount = (pTelemetryData->powertrain.rpmPercent * pixelCount) / 100;
+        if (pTelemetryData->powertrain.shiftLight2)
+            litColor = maxPowerColor;
+        else if (pTelemetryData->powertrain.shiftLight1)
+            litColor = maxTorqueColor;
+        else
+            litColor = mainColor;
+        if (!blink && (pTelemetryData->powertrain.revLimiter))
+        {
+            timer = 0;
+            blinkState = true;
+        }
+        blink = (pTelemetryData->powertrain.revLimiter);
+    }
+    else
+        litCount = 0;
+    // log_e("onTelemetryData: %d", litCount);
+    buildLEDs(ledInterface);
+}
+
+void RevLightsLEDSegment::serveSingleFrame(
+    uint32_t elapsedMs,
+    LEDSegmentToStripInterface &ledInterface)
+{
+    if (displayBitePoint && (frameTimer(timer, elapsedMs, 2000) % 2 > 0))
+    {
+        displayBitePoint = false;
+        buildLEDs(ledInterface);
+    }
+    else if (blink && (frameTimer(timer, elapsedMs, 60) % 2 > 0))
+    {
+        blinkState = !blinkState;
+        buildLEDs(ledInterface);
+    }
+}
+
+void RevLightsLEDSegment::onBitePoint(
+    LEDSegmentToStripInterface &ledInterface)
+{
+    displayBitePoint = true;
+    timer = 0;
+    buildLEDs(ledInterface);
 }
