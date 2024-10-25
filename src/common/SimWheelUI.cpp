@@ -487,10 +487,10 @@ RevLightsLEDSegment::RevLightsLEDSegment(
 
 void RevLightsLEDSegment::buildLEDs(LEDSegmentToStripInterface &ledInterface)
 {
-    // ledInterface.setPixelColor(0, 7, litColor);
     if (displayBitePoint)
     {
-        litCount = (userSettings::bitePoint * pixelCount) / CLUTCH_FULL_VALUE;
+        // litCount = (userSettings::bitePoint * pixelCount) / CLUTCH_FULL_VALUE;
+        litCount = CEIL_DIV(userSettings::bitePoint * pixelCount, CLUTCH_FULL_VALUE);
         ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, bitePointColor);
     }
     else

@@ -66,6 +66,7 @@ void setup()
     userSettings::dpadWorkingMode = true;
     userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
     userSettings::securityLock = false;
+    capabilities::setFlag(deviceCapability_t::CAP_CLUTCH_BUTTON);
     hidImplementation::begin("RevLightsSegment", "Mamandurrio", false);
 
     Serial.println("-- GO --");
