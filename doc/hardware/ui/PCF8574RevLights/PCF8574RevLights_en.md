@@ -54,5 +54,5 @@ you must first initialize it to the desired SDA and SCL pins.
 See [Overview of telemetry](../../../telemetry_en.md).
 
 See the corresponding
-[integration test](../../../../src/QualityControls/UITests/PCF8574RevLights/PCF8574RevLights.ino)
+[integration test](../../../../src/QualityControls/UITests/PCF8574RevLightsTest/PCF8574RevLightsTest.ino)
 for an example.
