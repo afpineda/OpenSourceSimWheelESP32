@@ -11,6 +11,7 @@
 
 #include "LedStrip.h"
 #include "esp32-hal.h"
+#include "driver/gpio.h"
 
 //-----------------------------------------------------------------------------
 // GLOBALS
