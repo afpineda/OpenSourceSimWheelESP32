@@ -31,7 +31,7 @@ you will need a small "level shifter" circuit, which is described below.
 
 - **Level shifter (5V logic)**
 
-  `Dout` requires a minimum voltage of 3.5 volts.
+  `Din` requires a minimum voltage of 3.5 volts.
   The ESP32 operates at 3.3 volts, which is insufficient.
   To overcome this limitation, a "level shifter" circuit is required.
   We are using the most simple level shifter available:
@@ -51,7 +51,7 @@ The involved class is `LEDStripTelemetry`. Constructor parameters are:
 
 - 1st: GPIO pin number (or alias) for `Dout`.
 - 2nd: The total number of pixels available in the LED strip.
-- 3rd:
+- 3rd: logic level shifting.
   - `false` if your LED strip works in 3.3V logic.
   - `true` if your LED strip works in 5V logic
     (so the "level shifter" is in place).

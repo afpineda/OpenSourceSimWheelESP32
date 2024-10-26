@@ -265,3 +265,13 @@ First release.
 ## 6.1.1
 
 - Fix compilation bug using Arduino IDE 2.3.2 caused by the new C++20 compilation standards.
+
+## 6.2.0
+
+- New telemetry display hardware: LED strips and single color LEDs.
+- This display hardware includes "rev lights", gear shift lights, ECU witnesses
+  and race flags.
+- Support for single wire RGB LED strips based on WS2811, WS2812 and WS2812B pixel drivers.
+- You can mix multiple telemetry displays in a single RGB LED strip.
+- Integration tests are available for this display hardware.
+- Documentation updated.
