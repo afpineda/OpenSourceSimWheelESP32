@@ -261,3 +261,7 @@ First release.
 ## 6.1.0
 
 - A simple shift light is available as a telemetry indicator.
+
+## 6.1.1
+
+- Fix compilation bug using Arduino IDE 2.3.2 caused by the new C++20 compilation standards.
