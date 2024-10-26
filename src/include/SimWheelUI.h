@@ -280,10 +280,19 @@ private:
 class ShiftLightLEDSegment : public LEDSegment
 {
 public:
+    /**
+     * @brief Create a shift light LED segment
+     *
+     * @param ledStripTelemetry Instance of LED strip telemetry display.
+     *                          Not null.
+     * @param pixelIndex Index of a single pixel.
+     * @param maxTorqueColor Color to display when maximum torque is reached.
+     * @param maxRPMColor Color to display when maximum power is reached.
+     */
     ShiftLightLEDSegment(
         LEDStripTelemetry *ledStripTelemetry,
         uint8_t pixelIndex,
-        uint32_t maxTorqueColor = 0xFFFF00,
+        uint32_t maxTorqueColor = 0x00FF00,
         uint32_t maxRPMColor = 0xFF0000);
 
 public: // LEDSegment implementation
@@ -356,6 +365,117 @@ private:
     bool displayBitePoint;
 
     void buildLEDs(LEDSegmentToStripInterface &ledInterface);
+};
+
+//-----------------------------------------------------------------------------
+// LED segment: race flags
+//-----------------------------------------------------------------------------
+
+class RaceFlagsLEDSegment : public LEDSegment
+{
+public:
+    /**
+     * @brief Create a race flags LED segment
+     *
+     * @param ledStripTelemetry Instance of LED strip telemetry display.
+     *                          Not null.
+     * @param pixelIndex Index of a single pixel.
+     * @param blinkRateMs Blink rate in milliseconds.
+     *                    Set to zero to disable blinking.
+     */
+    RaceFlagsLEDSegment(
+        LEDStripTelemetry *ledStripTelemetry,
+        uint8_t pixelIndex,
+        uint32_t blinkRateMs = 500);
+
+public: // LEDSegment implementation
+    virtual void onTelemetryData(
+        const telemetryData_t *pTelemetryData,
+        LEDSegmentToStripInterface &ledInterface) override;
+    virtual void serveSingleFrame(
+        uint32_t elapsedMs,
+        LEDSegmentToStripInterface &ledInterface) override;
+
+public:
+    static uint32_t color_blackFlag;
+    static uint32_t color_checkeredFlag;
+    static uint32_t color_blueFlag;
+    static uint32_t color_greenFlag;
+    static uint32_t color_orangeFlag;
+    static uint32_t color_whiteFlag;
+    static uint32_t color_yellowFlag;
+
+private:
+    uint8_t pixelIndex;
+    uint32_t litColor;
+    uint32_t blinkRateMs;
+    uint32_t blinkTimer;
+    bool blinkState;
+    bool update;
+};
+
+//-----------------------------------------------------------------------------
+// LED segment: ECU witness light
+//-----------------------------------------------------------------------------
+
+/**
+ * @brief Available ECU witnesses
+ *
+ */
+typedef enum
+{
+    NONE,        // No witness
+    LOW_FUEL,    // Low fuel alert
+    TC_ENGAGED,  // TC engaged
+    ABS_ENGAGED, // ABS engaged
+    DRS_ENGAGED, // DRS engaged
+    PIT_LIMITER  // Pit limiter engaged
+} witness_t;
+
+//-----------------------------------------------------------------------------
+
+class WitnessLEDSegment : public LEDSegment
+{
+public:
+    /**
+     * @brief Create a witness LED segment
+     *
+     * @param ledStripTelemetry Instance of LED strip telemetry display.
+     *                          Not null.
+     * @param pixelIndex Index of a single pixel.
+     * @param witness1 First-priority witness.
+     * @param witness1Color Color for the first witness.
+     * @param witness2 Second-priority witness.
+     * @param witness2Color Color for the second witness.
+     * @param witness3 Third-priority witness.
+     * @param witness3Color Color for the third witness.
+     */
+    WitnessLEDSegment(
+        LEDStripTelemetry *ledStripTelemetry,
+        uint8_t pixelIndex,
+        witness_t witness1,
+        uint32_t witness1Color = 0x0000FF,
+        witness_t witness2 = witness_t::NONE,
+        uint32_t witness2Color = 0x00FF00,
+        witness_t witness3 = witness_t::NONE,
+        uint32_t witness3Color = 0xFFFFFF);
+
+public: // LEDSegment implementation
+    virtual void onTelemetryData(
+        const telemetryData_t *pTelemetryData,
+        LEDSegmentToStripInterface &ledInterface) override;
+    virtual void serveSingleFrame(
+        uint32_t elapsedMs,
+        LEDSegmentToStripInterface &ledInterface) override {}
+
+private:
+    witness_t witness1;
+    witness_t witness2;
+    witness_t witness3;
+    uint32_t witness1Color;
+    uint32_t witness2Color;
+    uint32_t witness3Color;
+    uint8_t pixelIndex;
 };
 
 #endif

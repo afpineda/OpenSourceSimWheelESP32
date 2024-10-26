@@ -25,6 +25,15 @@
 // Utility
 #define CEIL_DIV(dividend, divisor) (dividend + divisor - 1) / divisor
 
+// Flag colors
+#define COLOR_BLACK_FLAG 0
+#define COLOR_CHECKERED_FLAG 0
+#define COLOR_BLUE_FLAG 0x0000FF
+#define COLOR_GREEN_FLAG 0x00FF00
+#define COLOR_ORANGE_FLAG 0xFF8000
+#define COLOR_WHITE_FLAG 0xFFFFFF
+#define COLOR_YELLOW_FLAG 0xFFFF00
+
 //-----------------------------------------------------------------------------
 // Single Color-Single LED user interface
 //-----------------------------------------------------------------------------
@@ -175,7 +184,6 @@ PCF8574RevLights::~PCF8574RevLights()
     log_e("PCF8574RevLights instance was deleted");
     abort();
 }
-
 
 void PCF8574RevLights::write(uint8_t state)
 {
@@ -570,4 +578,155 @@ void RevLightsLEDSegment::onBitePoint(
         timer = 0;
         buildLEDs(ledInterface);
     }
+}
+
+//-----------------------------------------------------------------------------
+// LED segment: race flags
+//-----------------------------------------------------------------------------
+
+uint32_t RaceFlagsLEDSegment::color_blackFlag = COLOR_BLACK_FLAG;
+uint32_t RaceFlagsLEDSegment::color_checkeredFlag = COLOR_CHECKERED_FLAG;
+uint32_t RaceFlagsLEDSegment::color_blueFlag = COLOR_BLUE_FLAG;
+uint32_t RaceFlagsLEDSegment::color_greenFlag = COLOR_GREEN_FLAG;
+uint32_t RaceFlagsLEDSegment::color_orangeFlag = COLOR_ORANGE_FLAG;
+uint32_t RaceFlagsLEDSegment::color_whiteFlag = COLOR_WHITE_FLAG;
+uint32_t RaceFlagsLEDSegment::color_yellowFlag = COLOR_YELLOW_FLAG;
+
+RaceFlagsLEDSegment::RaceFlagsLEDSegment(
+    LEDStripTelemetry *ledStripTelemetry,
+    uint8_t pixelIndex,
+    uint32_t blinkRateMs) : LEDSegment(ledStripTelemetry, false, false, true, false)
+{
+    this->pixelIndex = pixelIndex;
+    this->blinkRateMs = blinkRateMs;
+    blinkState = true; // Must always be true if blinkRateMs == 0
+    update = false;
+    litColor = 0;
+    blinkTimer = 0;
+    ledStripTelemetry->setPixelColor(pixelIndex, 0);
+}
+
+void RaceFlagsLEDSegment::onTelemetryData(
+    const telemetryData_t *pTelemetryData,
+    LEDSegmentToStripInterface &ledInterface)
+{
+    uint32_t newLitColor;
+    if (pTelemetryData)
+    {
+        if (pTelemetryData->raceControl.blueFlag)
+            newLitColor = RaceFlagsLEDSegment::color_blueFlag;
+        else if (pTelemetryData->raceControl.yellowFlag)
+            newLitColor = RaceFlagsLEDSegment::color_yellowFlag;
+        else if (pTelemetryData->raceControl.whiteFlag)
+            newLitColor = RaceFlagsLEDSegment::color_whiteFlag;
+        else if (pTelemetryData->raceControl.greenFlag)
+            newLitColor = RaceFlagsLEDSegment::color_greenFlag;
+        else if (pTelemetryData->raceControl.orangeFlag)
+            newLitColor = RaceFlagsLEDSegment::color_orangeFlag;
+        else if (pTelemetryData->raceControl.blackFlag)
+            newLitColor = RaceFlagsLEDSegment::color_blackFlag;
+        else if (pTelemetryData->raceControl.checkeredFlag)
+            newLitColor = RaceFlagsLEDSegment::color_checkeredFlag;
+        else
+            newLitColor = 0;
+    }
+    else
+        newLitColor = 0;
+    update = (newLitColor != litColor);
+    litColor = newLitColor;
+}
+
+void RaceFlagsLEDSegment::serveSingleFrame(
+    uint32_t elapsedMs,
+    LEDSegmentToStripInterface &ledInterface)
+{
+    if (blinkRateMs && (frameTimer(blinkTimer, elapsedMs, blinkRateMs) % 2 > 0))
+    {
+        update = true;
+        blinkState = !blinkState;
+    }
+    if (update)
+    {
+        update = false;
+        if (blinkState || !blinkRateMs)
+            ledInterface.setPixelColor(pixelIndex, litColor);
+        else
+            ledInterface.setPixelColor(pixelIndex, 0);
+    }
+}
+
+//-----------------------------------------------------------------------------
+// LED segment: ECU witness light
+//-----------------------------------------------------------------------------
+
+WitnessLEDSegment::WitnessLEDSegment(
+    LEDStripTelemetry *ledStripTelemetry,
+    uint8_t pixelIndex,
+    witness_t witness1,
+    uint32_t witness1Color,
+    witness_t witness2,
+    uint32_t witness2Color,
+    witness_t witness3,
+    uint32_t witness3Color) : LEDSegment(ledStripTelemetry, false, true, false, false)
+{
+    this->pixelIndex = pixelIndex;
+    this->witness1 = witness1;
+    this->witness2 = witness2;
+    this->witness2 = witness3;
+    this->witness1Color = witness1Color;
+    this->witness2Color = witness2Color;
+    this->witness3Color = witness3Color;
+    ledStripTelemetry->setPixelColor(pixelIndex, 0);
+}
+
+bool witnessState(
+    witness_t witness,
+    const telemetryData_t *pTelemetryData)
+{
+    switch (witness)
+    {
+    case LOW_FUEL:
+        return pTelemetryData->ecu.lowFuelAlert;
+    case TC_ENGAGED:
+        return pTelemetryData->ecu.tcEngaged;
+    case ABS_ENGAGED:
+        return pTelemetryData->ecu.absEngaged;
+    case DRS_ENGAGED:
+        return pTelemetryData->ecu.drsEngaged;
+    case PIT_LIMITER:
+        return pTelemetryData->ecu.pitLimiter;
+    default:
+        break;
+    }
+    return false;
+}
+
+void WitnessLEDSegment::onTelemetryData(
+    const telemetryData_t *pTelemetryData,
+    LEDSegmentToStripInterface &ledInterface)
+{
+    uint32_t newColor;
+    if (pTelemetryData)
+    {
+        bool state = witnessState(witness1, pTelemetryData);
+        if (state)
+            newColor = witness1Color;
+        else
+        {
+            state = witnessState(witness2, pTelemetryData);
+            if (state)
+                newColor = witness2Color;
+            else
+            {
+                state = witnessState(witness3, pTelemetryData);
+                if (state)
+                    newColor = witness3Color;
+                else
+                    newColor = 0;
+            }
+        }
+    }
+    else
+        newColor = 0;
+    ledInterface.setPixelColor(pixelIndex, newColor);
 }

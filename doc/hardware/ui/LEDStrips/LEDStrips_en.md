@@ -83,8 +83,8 @@ For example:
 
 ```c++
 new RevLightsLEDSegment(ui,0,8);
-new FlagsLightLEDSegment(ui,8);
-new FlagsLightLEDSegment(ui,9);
+new RaceFlagsLEDSegment(ui,8);
+new RaceFlagsLEDSegment(ui,9);
 ```
 
 Finally, pass the `LEDStripTelemetry` instance to notify::begin().
@@ -96,16 +96,22 @@ Finally, pass the `LEDStripTelemetry` instance to notify::begin().
 - Pixels are indexed starting from zero.
 - Don't overlap *segments*.
   Use different pixels for each *segment*.
+- Non-existent pixels are ignored without warning.
 - You can set the global LED brightness by calling `brightness()` with a parameter.
   Pass `255` (decimal) for full brightness (not recommended).
   The default is 15.
   Keep this value low for a comfortable user experience.
   However, a very low value may prevent some colors from appearing.
 
+Have a look at the code for the specific integration tests for an example:
+
+- [Rev lights](../../../../src/QualityControls/UITests/RevLightsSegmentTest/RevLightsSegmentTest.ino)
+- [Other single-pixel segments](../../../../src/QualityControls/UITests/SinglePixelSegmentsTest/SinglePixelSegmentsTest.ino)
+
 ### "Rev lights"
 
 The `RevLightsLEDSegment` class shows an RPM bar.
-The colour depends on the maximum torque and power.
+The color depends on the maximum torque and power.
 It will flash at the rev limiter.
 
 Constructor parameters are:
@@ -121,3 +127,70 @@ Constructor parameters are:
   Default is red.
 - 7th (optional): bar color to notify current bite point (RGB).
   Pass zero to disable. Default is white.
+
+### Race flags
+
+The `RaceFlagsLEDSegment` class shows race flags in a single pixel.
+By default, black and checkered flags are not shown (there is no color for them).
+You may adjust a blink rate or disable blinking.
+Flag display priority is (from highest to lowest):
+
+- Blue
+- Yellow
+- White
+- Green
+- Orange
+- Black
+- Checkered
+
+Constructor parameters are:
+
+- 1st: `LEDStripTelemetry` instance.
+- 2nd: Pixel index.
+- 3rd (optional): Blink rate in milliseconds.
+  Pass zero to disable blinking. Default is 500 ms.
+
+Additionally, you can set the exact flag color by setting the
+`RaceFlagsLEDSegment::color_*` static variables
+(see [SimwheelUI.h](../../../../src/include/SimWheelUI.h)).
+Use this trick to adjust the brightness independent of the global brightness.
+
+### Shift light
+
+The `ShiftLightLEDSegment` class displays shift information in a single pixel.
+The pixel lights green when maximum torque is reached,
+then red when maximum power is reached,
+then flashes when the rev limiter is reached.
+Colors are customizable.
+
+Constructor parameters are:
+
+- 1st: `LEDStripTelemetry` instance.
+- 2nd: Pixel index.
+- 3rd (optional): Color for maximum torque (RGB).
+- 4th (optional): Color for maximum power (RGB).
+
+### Witnesses
+
+The `WitnessLEDSegment` class displays witness information from the ECU:
+TC, ABS, DRS, pit limiter or low fuel.
+You can have up to three witnesses in a single pixel.
+The first takes precedence over the second and so on.
+Colors are customizable.
+
+Constructor parameters are:
+
+- 1st: `LEDStripTelemetry` instance.
+- 2nd: Pixel index.
+- 3rd: First-priority witness.
+  Pass one of the constants in the
+  [witness_t](../../../../src/include/SimWheelUI.h) enumeration.
+- 4th: Color for the first-priority witness.
+- 5th (optional): Second-priority witness.
+  Pass `NONE` to ignore.
+- 6th (optional): Color for the second-priority witness.
+- 7th (optional): Third-priority witness.
+  Pass `NONE` to ignore.
+- 8th (optional): Color for the third-priority witness.
+
+Typically, you will ignore the 5th and subsequent parameters to create a single witness light.

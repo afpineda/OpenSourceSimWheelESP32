@@ -41,7 +41,8 @@
     - [RGB LED strips](./hardware/ui/LEDStrips/LEDStrips_en.md). Including:
       - "Rev lights"
       - Shift light
-      - Flags light
+      - Race flags
+      - Witnesses
 
     Additional display hardware may be available in future firmware releases.
 
