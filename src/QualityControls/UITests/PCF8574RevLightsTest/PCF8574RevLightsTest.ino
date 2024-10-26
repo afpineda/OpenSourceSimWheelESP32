@@ -71,14 +71,21 @@ void setup()
     uint8_t factoryAddress = 0x38;
     Serial.printf("Using device address %x (hexadecimal)\n", factoryAddress | hwAddress);
 
-    // Initialize
+    // Initialize UI
     auto ui = new PCF8574RevLights(hwAddress, true, factoryAddress);
     notify::begin({ui}, 50);
+
+    // Check
+    if (!capabilities::hasFlag(deviceCapability_t::CAP_TELEMETRY_POWERTRAIN))
+        log_e("PCF8574RevLights did not set the powertrain telemetry flag");
+
+    // Initialize other namespaces
     userSettings::cpWorkingMode = CF_CLUTCH;
     userSettings::altButtonsWorkingMode = true;
     userSettings::dpadWorkingMode = true;
     userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
     userSettings::securityLock = false;
+    capabilities::setFlag(deviceCapability_t::CAP_CLUTCH_BUTTON);
     hidImplementation::begin("PCF8574RevLights", "Mamandurrio", false);
 
     Serial.println("-- GO --");

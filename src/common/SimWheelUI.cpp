@@ -24,6 +24,7 @@
 
 // Utility
 #define CEIL_DIV(dividend, divisor) (dividend + divisor - 1) / divisor
+#define LED_BAR(litCount, ledCount) 0xFF >> (ledCount - litCount)
 
 // Flag colors
 #define COLOR_BLACK_FLAG 0
@@ -163,10 +164,11 @@ PCF8574RevLights::PCF8574RevLights(
     busDriver = i2c::getBus(useSecondaryBus);
     uint8_t address7Bits = ((factoryAddress & 0b01111000) | hardwareAddress);
     address8bits = address7Bits << 1;
-    blinkTimer = 0;
-    ledState = 0;
-    isBlinking = false;
-    forceUpdate = false;
+    timer = 0;
+    litCount = 0;
+    blinkState = false;
+    blink = false;
+    displayBitePoint = false;
 
     // Check chip availability
     if (!i2c::probe(address7Bits, useSecondaryBus))
@@ -222,41 +224,51 @@ void PCF8574RevLights::onConnected()
 void PCF8574RevLights::onTelemetryData(
     const telemetryData_t *pTelemetryData)
 {
-    uint8_t newLedState;
+    if (displayBitePoint)
+        return;
     if (pTelemetryData)
     {
-        uint8_t aux = (pTelemetryData->powertrain.rpmPercent) * 8 / 100;
-        newLedState = 0xFF >> (8 - aux);
-        if (isBlinking ^ pTelemetryData->powertrain.revLimiter)
+        // litCount = (pTelemetryData->powertrain.rpmPercent * 8) / 100;
+        litCount = CEIL_DIV(pTelemetryData->powertrain.rpmPercent * 8, 100);
+        if (!blink && (pTelemetryData->powertrain.revLimiter))
         {
-            isBlinking = pTelemetryData->powertrain.revLimiter;
-            blinkTimer = 0;
-            blinkState = false;
-            forceUpdate = true;
+            timer = 0;
+            blinkState = true;
         }
+        blink = (pTelemetryData->powertrain.revLimiter);
     }
     else
-    {
-        newLedState = 0;
-    }
-    forceUpdate = (newLedState != ledState);
-    ledState = newLedState;
+        litCount = 0;
 }
 
 void PCF8574RevLights::serveSingleFrame(uint32_t elapsedMs)
 {
-    if (isBlinking && (frameTimer(blinkTimer, elapsedMs, 60) % 2 > 0))
+    // Use timer
+    if (displayBitePoint && (frameTimer(timer, elapsedMs, 2000) % 2 > 0))
     {
+        displayBitePoint = false;
+        litCount = 0;
+    }
+    else if (blink && (frameTimer(timer, elapsedMs, 60) % 2 > 0))
         blinkState = !blinkState;
-        forceUpdate = true;
-    }
-    if (forceUpdate)
+
+    // Build LED state
+    if (displayBitePoint)
     {
-        if (blinkState)
-            write(0x00);
-        else
-            write(ledState);
+        // litCount = (userSettings::bitePoint * 8) / CLUTCH_FULL_VALUE;
+        litCount = CEIL_DIV(userSettings::bitePoint * 8, CLUTCH_FULL_VALUE);
+        write(LED_BAR(litCount, 8));
     }
+    else if (blink && !blinkState)
+        write(0);
+    else
+        write(LED_BAR(litCount, 8));
+}
+
+void PCF8574RevLights::onBitePoint()
+{
+    displayBitePoint = true;
+    timer = 0;
 }
 
 //-----------------------------------------------------------------------------

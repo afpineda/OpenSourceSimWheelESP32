@@ -75,15 +75,16 @@ public:
     virtual void onConnected() override;
     virtual void onTelemetryData(const telemetryData_t *pTelemetryData) override;
     virtual void serveSingleFrame(uint32_t elapsedMs) override;
+    virtual void onBitePoint() override;
 
 private:
     uint8_t address8bits;
     i2c_port_t busDriver;
-    uint8_t ledState;
-    bool forceUpdate;
-    bool isBlinking;
+    uint8_t litCount;
+    uint32_t timer;
+    bool displayBitePoint;
+    bool blink;
     bool blinkState;
-    uint32_t blinkTimer;
     void write(uint8_t state);
 };
 
