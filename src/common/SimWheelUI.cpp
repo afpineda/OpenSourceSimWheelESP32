@@ -55,6 +55,12 @@ SimpleShiftLight::SimpleShiftLight(gpio_num_t ledPin)
     setMode(MODE_OFF);
 }
 
+SimpleShiftLight::~SimpleShiftLight()
+{
+    log_e("SimpleShiftLight instance was deleted");
+    abort();
+}
+
 void SimpleShiftLight::onStart()
 {
     setLED(true);
@@ -163,6 +169,13 @@ PCF8574RevLights::PCF8574RevLights(
     // Turn LEDs off
     write(0x00);
 }
+
+PCF8574RevLights::~PCF8574RevLights()
+{
+    log_e("PCF8574RevLights instance was deleted");
+    abort();
+}
+
 
 void PCF8574RevLights::write(uint8_t state)
 {

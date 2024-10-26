@@ -31,6 +31,7 @@ public:
      * @param ledPin GPIO pin where the LED is attached to.
      */
     SimpleShiftLight(gpio_num_t ledPin);
+    ~SimpleShiftLight();
 
     virtual void onStart() override;
     virtual void onConnected() override;
@@ -68,6 +69,7 @@ public:
         uint8_t hardwareAddress,
         bool useSecondaryBus = true,
         uint8_t factoryAddress = 0b0100000);
+    ~PCF8574RevLights();
 
     virtual void onStart() override;
     virtual void onConnected() override;
