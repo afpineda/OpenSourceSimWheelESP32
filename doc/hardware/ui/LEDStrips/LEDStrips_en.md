@@ -76,8 +76,8 @@ auto ui = new LEDStripTelemetry(GPIO_NUM_13, 10, true, WS2812, BGR);
 ```
 
 Create each *segment* as described below,
-passing the `LEDStripTelemetry` instance as the first argument.
-Other arguments depend on the *segment*.
+passing the `LEDStripTelemetry` instance as the first parameter.
+Other parameters depend on the *segment*.
 
 For example:
 
@@ -96,6 +96,11 @@ Finally, pass the `LEDStripTelemetry` instance to notify::begin().
 - Pixels are indexed starting from zero.
 - Don't overlap *segments*.
   Use different pixels for each *segment*.
+- You can set the global LED brightness by calling `brightness()` with a parameter.
+  Pass `255` (decimal) for full brightness (not recommended).
+  The default is 15.
+  Keep this value low for a comfortable user experience.
+  However, a very low value may prevent some colors from appearing.
 
 ### "Rev lights"
 
