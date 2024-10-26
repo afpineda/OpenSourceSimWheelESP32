@@ -38,7 +38,7 @@ This project provides open hardware and software for a sim-racing wheel or butto
   This way, the simulator does not force the user to reconfigure
   inputs every time these wheels are swapped.
 - **Telemetry data** using [SimHub](https://www.simhubdash.com/).
-  *Note*: supported display hardware is currently scarce.
+  Supported display hardware includes RGB LED strips and single color LEDs.
 - **Automatic power-off** when not in use.
 - **Quality control** (you don't want your wheel to fail in the middle of a race)
 - **Extensive documentation**
@@ -92,7 +92,7 @@ o una caja de botones con las siguientes características:
   De esta manera, el simulador no fuerza al usuario a configurar
   las entradas cada vez que intercambia los volantes.
 - **Datos de telemetría** mediante [SimHub](https://www.simhubdash.com/).
-  *Nota*: el hardware de visualización es escaso en este momento.
+  El hardware de visualización incluye tiras LED RGB y LED de un único color.
 - **Apagado automático** cuando no se usa
 - **Controles de calidad**
   (no queremos que el volante falle en medio de una carrera)
