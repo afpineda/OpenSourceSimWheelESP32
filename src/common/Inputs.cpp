@@ -17,6 +17,7 @@
 #include "I2CExpanderInput.h"
 #include <Preferences.h>
 #include "i2cTools.h"
+#include <stdexcept>
 
 // #include "debugUtils.h"
 
@@ -334,6 +335,8 @@ ButtonMatrixInputSpec &inputs::addButtonMatrix(
   }
   else
     abortDueToCallAfterStart();
+  // C++20 compiler requires this
+  throw std::runtime_error("");
 }
 
 Multiplexers8InputSpec &inputs::addAnalogMultiplexer(
@@ -352,6 +355,8 @@ Multiplexers8InputSpec &inputs::addAnalogMultiplexer(
   }
   else
     abortDueToCallAfterStart();
+  // C++20 compiler requires this
+  throw std::runtime_error("");
 }
 
 ShiftRegisters8InputSpec &inputs::addShiftRegisters(
@@ -377,6 +382,8 @@ ShiftRegisters8InputSpec &inputs::addShiftRegisters(
   }
   else
     abortDueToCallAfterStart();
+  // C++20 compiler requires this
+  throw std::runtime_error("");
 }
 
 void inputs::setAnalogClutchPaddles(
@@ -446,6 +453,8 @@ PCF8574InputSpec &inputs::addPCF8574Digital(
   }
   else
     abortDueToCallAfterStart();
+  // C++20 compiler requires this
+  throw std::runtime_error("");
 }
 
 MCP23017InputSpec &inputs::addMCP23017Digital(
@@ -465,6 +474,8 @@ MCP23017InputSpec &inputs::addMCP23017Digital(
   }
   else
     abortDueToCallAfterStart();
+  // C++20 compiler requires this
+  throw std::runtime_error("");
 }
 
 void inputs::initializeI2C(gpio_num_t sdaPin, gpio_num_t sclPin)
