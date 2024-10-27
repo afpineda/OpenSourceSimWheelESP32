@@ -91,8 +91,8 @@ This article is focused on **firmware-defined** error messages.
 
   The printed hardware address in not unique. You must specify a *full address* instead.
   In case you have no clue about what the full address could be,
-  upload and run the [I2C probe](../../../../src/Firmware/I2C_probe/I2C_probe.ino) firmware
-  provided in this project.
+  upload and run the [I2C probe](../../src/Firmware/I2C_probe/I2C_probe.ino)
+  firmware provided in this project.
 
 - *Unable to create event queue*
 - *Unable to create inputHub task*
@@ -108,6 +108,9 @@ This article is focused on **firmware-defined** error messages.
 
   In a call to `inputs::...` you are passing a GPIO pin which is not output-capable.
   Check selector, `next`, `load` and/or I2C pins in your custom firmware.
+
+  Another reason is passing a non-output-capable GPIO pin as parameter to the
+  `SimpleShiftLight` constructor.
 
 - *Requested GPIO N can't be used as input*
 
@@ -128,7 +131,7 @@ This article is focused on **firmware-defined** error messages.
 
   A GPIO expander is not powered or the given *I2C address* is wrong.
   Check your wiring, then your custom firmware.
-  Run the [I2C probe](../../../../src/Firmware/I2C_probe/I2C_probe.ino) firmware
+  Run the [I2C probe](../../src/Firmware/I2C_probe/I2C_probe.ino) firmware
   provided in this project to reveal all I2C (full) addresses.
 
 - *Too many buttons at GPIO expander. Address=N, bus=M*
@@ -214,3 +217,28 @@ This article is focused on **firmware-defined** error messages.
     then pair again.
   - USB implementation: remove your device from the device manager,
     then reboot your computer.
+
+- *PCF8574 chip not found. Bus: N, Full address: X (hex)*
+
+  The firmware is unable to find the PCF8574-driven "rev lights".
+  Check the hardware and factory addresses.
+  Ensure the circuit has power.
+
+- *An LED segment was created after notify::begin()*
+
+  When using LED strips, all "segments" must be created
+  before `notify::begin()` is executed.
+  Check your custom firmware.
+
+- *LEDStripTelemetry object is null*
+
+  An invalid `LEDStripTelemetry` instance was passed as first argument
+  to a LED strip "segment". Check your custom firmware.
+  Run the [I2C probe](../../../../src/Firmware/I2C_probe/I2C_probe.ino) firmware
+  if you have no clue.
+
+- *An XYZ instance was deleted/destroyed*
+
+  All user interface instances (including LED strip "segments") must
+  be created with `new` and never deleted.
+  Check your custom firmware.
