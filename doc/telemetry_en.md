@@ -97,7 +97,7 @@ Some minor tweaks are required.
      For example:
 
      ```c++
-     notify::begin({ui1},5000);
+     notify::begin({ui1},50,5000);
       ```
 
 A better example follows:

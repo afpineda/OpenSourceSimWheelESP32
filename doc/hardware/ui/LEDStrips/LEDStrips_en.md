@@ -87,7 +87,7 @@ new RaceFlagsLEDSegment(ui,8);
 new RaceFlagsLEDSegment(ui,9);
 ```
 
-Finally, pass the `LEDStripTelemetry` instance to notify::begin().
+Finally, pass the `LEDStripTelemetry` instance to `notify::begin()`.
 
 **Take into account**:
 
