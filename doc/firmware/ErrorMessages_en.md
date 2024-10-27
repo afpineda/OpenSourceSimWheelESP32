@@ -234,7 +234,7 @@ This article is focused on **firmware-defined** error messages.
 
   An invalid `LEDStripTelemetry` instance was passed as first argument
   to a LED strip "segment". Check your custom firmware.
-  Run the [I2C probe](../../../../src/Firmware/I2C_probe/I2C_probe.ino) firmware
+  Run the [I2C probe](../../src/Firmware/I2C_probe/I2C_probe.ino) firmware
   if you have no clue.
 
 - *An XYZ instance was deleted/destroyed*
