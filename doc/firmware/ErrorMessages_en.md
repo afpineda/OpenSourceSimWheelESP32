@@ -222,6 +222,8 @@ This article is focused on **firmware-defined** error messages.
 
   The firmware is unable to find the PCF8574-driven "rev lights".
   Check the hardware and factory addresses.
+  Run the [I2C probe](../../src/Firmware/I2C_probe/I2C_probe.ino) firmware
+  if you have no clue.
   Ensure the circuit has power.
 
 - *An LED segment was created after notify::begin()*
@@ -234,8 +236,6 @@ This article is focused on **firmware-defined** error messages.
 
   An invalid `LEDStripTelemetry` instance was passed as first argument
   to a LED strip "segment". Check your custom firmware.
-  Run the [I2C probe](../../src/Firmware/I2C_probe/I2C_probe.ino) firmware
-  if you have no clue.
 
 - *An XYZ instance was deleted/destroyed*
 
