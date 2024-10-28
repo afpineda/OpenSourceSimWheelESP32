@@ -74,6 +74,7 @@
         "USBHID",
         "VLED",
         "WROOM",
+        "autocalibrated",
         "benbaker",
         "bootloader",
         "ccal",

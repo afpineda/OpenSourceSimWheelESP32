@@ -28,12 +28,15 @@ int getADCreading(int pin, adc_atten_t attenuation, int sampleCount)
   else if (sampleCount > 0)
   {
     adc_oneshot_unit_handle_t handle;
-    adc_oneshot_unit_init_cfg_t unitCfg;
-    adc_oneshot_chan_cfg_t channelCfg;
-    unitCfg.unit_id = adc_unit;
-    unitCfg.ulp_mode = ADC_ULP_MODE_DISABLE;
-    channelCfg.atten = attenuation;
-    channelCfg.bitwidth = ADC_BITWIDTH_12;
+    adc_oneshot_unit_init_cfg_t unitCfg =
+        {
+            .unit_id = adc_unit,
+        };
+    adc_oneshot_chan_cfg_t channelCfg =
+        {
+            .atten = attenuation,
+            .bitwidth = ADC_BITWIDTH_12,
+        };
     ESP_ERROR_CHECK(adc_oneshot_new_unit(&unitCfg, &handle));
     ESP_ERROR_CHECK(adc_oneshot_config_channel(handle, channel, &channelCfg));
     int result = 0;
@@ -42,7 +45,6 @@ int getADCreading(int pin, adc_atten_t attenuation, int sampleCount)
       int reading;
       ESP_ERROR_CHECK(adc_oneshot_read(handle, channel, &reading));
       result += reading;
-      sampleCount--;
     }
     result = result / sampleCount;
     ESP_ERROR_CHECK(adc_oneshot_del_unit(handle));

@@ -29,4 +29,4 @@ Note that `pot(-)` and `pot(+)` are interchangeable.
 5. Move the potentiometer all the way to `pot(-)`. The last output line must show "(autocalibrated)".
 6. Move the potentiometer all the way to `pot(+)`. The last output line must show "(autocalibrated)".
 7. Move the potentiometer slowly towards `pot(-)`. The value `xxx` shown at `Axis: xxx` should get higher and higher (up to 254). The word "autocalibrated" must not show up.
-8. Move the potentiometer slowly towards `pot(+)`. The value `xxx` shown at `Axis: xxx` should get lower and lower (down to -0). The word "autocalibrated" must not show up.
+8. Move the potentiometer slowly towards `pot(+)`. The value `xxx` shown at `Axis: xxx` should get lower and lower (down to 0). The word "autocalibrated" must not show up.
