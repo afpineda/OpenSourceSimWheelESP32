@@ -141,7 +141,7 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
 
 void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *buffer, uint16_t len)
 {
-    if ((userSettings::securityLock) || (report_id==RID_FEATURE_CAPABILITIES))
+    if ((userSettings::securityLock) || (report_id == RID_FEATURE_CAPABILITIES))
         return;
     if (report_id == RID_FEATURE_CONFIG)
     {
@@ -250,7 +250,7 @@ void hidImplementation::common::onOutput(
     {
         notify::telemetryData.powertrain.gear = (char)buffer[0];
         notify::telemetryData.powertrain.rpm = *((uint16_t *)(buffer + 1));
-        notify::telemetryData.powertrain.rpmPercent =  buffer[3];
+        notify::telemetryData.powertrain.rpmPercent = buffer[3];
         if (notify::telemetryData.powertrain.rpmPercent > 100)
             notify::telemetryData.powertrain.rpmPercent = 100;
         notify::telemetryData.powertrain.shiftLight1 = buffer[4];
@@ -299,7 +299,7 @@ void hidImplementation::common::onOutput(
             notify::telemetryData.gauges.relativeRemainingFuel = 100;
         notify::telemetryData.gauges.absoluteRemainingFuel = *((uint16_t *)(buffer + 10));
     }
-    notify::telemetryData.frameID++;
+    notify::telemetryData.frameID = notify::telemetryData.frameID + 1;
     // log_d("frame id: %u", notify::telemetryData.frameID);
 }
 

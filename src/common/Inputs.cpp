@@ -545,7 +545,7 @@ void inputs::start()
 
     // Take note of used input numbers
     inputBitmap_t usedInputs = ~DigitalPolledInput::getChainMask(digitalInputChain);
-    capabilities::availableInputs |= usedInputs;
+    capabilities::availableInputs = capabilities::availableInputs | usedInputs;
 
     // Create and run hub task
     xTaskCreate(hubLoop, "hub", HUB_STACK_SIZE, (void *)nullptr, INPUT_TASK_PRIORITY, &hubTask);
