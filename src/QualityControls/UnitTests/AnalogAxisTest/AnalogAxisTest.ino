@@ -27,7 +27,6 @@ clutchValue_t oldValue = CLUTCH_INVALID_VALUE;
 
 void setup()
 {
-    esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
     Serial.println("-- READY --");
 

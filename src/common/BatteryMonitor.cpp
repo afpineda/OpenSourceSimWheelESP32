@@ -213,16 +213,10 @@ int getBatteryReadingForTesting(gpio_num_t battENPin, gpio_num_t battREADPin)
     if ((battENPin < 0) || (gpio_set_level(battENPin, 1) == ESP_OK))
     {
         vTaskDelay(200);
-        uint64_t sum = 0;
-        for (int i = 0; i < VOLTAGE_SAMPLES_COUNT; i++)
-        {
-            // sum += analogRead(batteryREADPin);
-            sum += getADCreading(battREADPin, ADC_ATTEN_DB_11);
-            // vTaskDelay(10);
-        }
+        int mean = getADCreading(battREADPin, ADC_ATTEN_DB_12, VOLTAGE_SAMPLES_COUNT);
         if (battENPin >= 0)
             gpio_set_level(battENPin, 0);
-        return (sum / VOLTAGE_SAMPLES_COUNT);
+        return mean;
     }
     return 0;
 }

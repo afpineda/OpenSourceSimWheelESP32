@@ -10,31 +10,43 @@
  */
 
 #include "adcTools.h"
+#include "esp32-hal-log.h"
 
 // ----------------------------------------------------------------------------
 // Basic ADC reading
 // ----------------------------------------------------------------------------
 
-int getADCreading(int pin, adc_atten_t attenuation)
+int getADCreading(int pin, adc_atten_t attenuation, int sampleCount)
 {
-  int8_t channel = digitalPinToAnalogChannel(pin);
-  if (channel < 0)
+  adc_channel_t channel;
+  adc_unit_t adc_unit;
+  if (adc_oneshot_io_to_channel(pin, &adc_unit, &channel) != ESP_OK)
   {
     log_e("getADCreading: GPIO %u is not ADC", pin);
     abort();
   }
-  else if (channel > 9)
+  else if (sampleCount > 0)
   {
-    channel -= 10;
-    int value = 0;
-    ESP_ERROR_CHECK(adc2_config_channel_atten((adc2_channel_t)channel, attenuation));
-    ESP_ERROR_CHECK(adc2_get_raw((adc2_channel_t)channel, ADC_WIDTH_BIT_12, &value));
-    return value;
+    adc_oneshot_unit_handle_t handle;
+    adc_oneshot_unit_init_cfg_t unitCfg;
+    adc_oneshot_chan_cfg_t channelCfg;
+    unitCfg.unit_id = adc_unit;
+    unitCfg.ulp_mode = ADC_ULP_MODE_DISABLE;
+    channelCfg.atten = attenuation;
+    channelCfg.bitwidth = ADC_BITWIDTH_12;
+    ESP_ERROR_CHECK(adc_oneshot_new_unit(&unitCfg, &handle));
+    ESP_ERROR_CHECK(adc_oneshot_config_channel(handle, channel, &channelCfg));
+    int result = 0;
+    for (int i = 0; i < sampleCount; i++)
+    {
+      int reading;
+      ESP_ERROR_CHECK(adc_oneshot_read(handle, channel, &reading));
+      result += reading;
+      sampleCount--;
+    }
+    result = result / sampleCount;
+    ESP_ERROR_CHECK(adc_oneshot_del_unit(handle));
+    return result;
   }
-  else
-  {
-    ESP_ERROR_CHECK(adc1_config_channel_atten((adc1_channel_t)channel, attenuation));
-    ESP_ERROR_CHECK(adc1_config_width(ADC_WIDTH_BIT_12));
-    return adc1_get_raw((adc1_channel_t)channel);
-  }
+  return -1;
 }

@@ -266,7 +266,7 @@ AnalogAxisInput::AnalogAxisInput(
 void AnalogAxisInput::read(clutchValue_t &value, bool &autocalibrated)
 {
     // read ADC and remove 4 bits of noise
-    int currentReading = getADCreading(pinNumber, ADC_ATTEN_DB_11) >> 4;
+    int currentReading = getADCreading(pinNumber, ADC_ATTEN_DB_12) >> 4;
     // filter
     currentReading = (currentReading + lastADCReading) >> 1; // average
 
