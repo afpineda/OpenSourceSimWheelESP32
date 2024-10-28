@@ -1,7 +1,7 @@
 # Quality controls (overview)
 
 Starting with version 5.0.0, the
-[ESP32-DevKitC V1.0](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/hw-reference/esp32s3/user-guide-devkitc-1.html)
+[ESP32S3-DevKitC V1.0](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/hw-reference/esp32s3/user-guide-devkitc-1.html)
 is the main board for development and testing. However, all tests should work in a pure ESP32 board, too.
 
 ## Pin-out plan (ESP32S3)
