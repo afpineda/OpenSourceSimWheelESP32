@@ -75,7 +75,7 @@ public:
  * @brief 74HC4051N pin tags for switches
  *
  */
-typedef enum class mux8_pin_t
+enum class mux8_pin_t
 {
     A0 = 0,
     A1,
@@ -104,7 +104,7 @@ public:
  * @brief  74HC165N pin tags for switches
  *
  */
-typedef enum class sr8_pin_t
+enum class sr8_pin_t
 {
     H = 0,
     G,
@@ -134,7 +134,7 @@ public:
  * @brief MCP23017 pin tags for switches
  *
  */
-typedef enum class MCP23017_pin_t
+enum class MCP23017_pin_t
 {
     GPA0 = 0,
     GPA1,
@@ -168,7 +168,7 @@ public:
  * @brief MCP23017 pin tags for switches
  *
  */
-typedef enum class PCF8574_pin_t
+enum class PCF8574_pin_t
 {
     P0 = 0,
     P1,
