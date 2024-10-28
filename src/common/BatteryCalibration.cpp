@@ -26,7 +26,7 @@ volatile int batteryCalibration::maxBatteryReadingEver = -1; // unknown
 volatile bool batteryCalibration::calibrationInProgress = false;
 
 #define PREFS_NAMESPACE "bcal"
-#define KEY_SAMPLE_COUNT "q%02.2d"
+#define KEY_SAMPLE_COUNT "q%2.2d"
 #define KEY_MAX_READING "m"
 
 

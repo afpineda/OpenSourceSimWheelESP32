@@ -155,7 +155,7 @@ void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *b
             // ALT Buttons mode
             userSettings::setALTButtonsWorkingMode((bool)buffer[1]);
         }
-        if ((len > 2) && ((clutchValue_t)buffer[2] >= CLUTCH_NONE_VALUE) && ((clutchValue_t)buffer[2] <= CLUTCH_FULL_VALUE))
+        if ((len > 2) && ((clutchValue_t)buffer[2] <= CLUTCH_FULL_VALUE)) // && ((clutchValue_t)buffer[2] >= CLUTCH_NONE_VALUE)
         {
             // Bite point
             userSettings::setBitePoint((clutchValue_t)buffer[2]);

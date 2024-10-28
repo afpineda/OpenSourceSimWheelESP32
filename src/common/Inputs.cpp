@@ -510,7 +510,6 @@ void inputs::notifyInputEventForTesting(
 
 void inputs::start()
 {
-  void *dummy;
   if (pollingTask == nullptr)
   {
     // Load axis calibration data, if any

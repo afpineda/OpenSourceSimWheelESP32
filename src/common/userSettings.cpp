@@ -107,7 +107,7 @@ void userSettings::begin()
                 userSettings::cpWorkingMode = (clutchFunction_t)value1;
 
             uint8_t value2 = prefs.getUChar(KEY_CLUTCH_CALIBRATION, (uint8_t)userSettings::bitePoint);
-            if ((value2 >= CLUTCH_NONE_VALUE) && (value2 <= CLUTCH_FULL_VALUE))
+            if ((value2 <= CLUTCH_FULL_VALUE)) // && (value2 >= CLUTCH_NONE_VALUE)
                 userSettings::bitePoint = (clutchValue_t)value2;
 
             userSettings::dpadWorkingMode = prefs.getBool(KEY_DPAD_FUNCTION, userSettings::dpadWorkingMode);
