@@ -30,17 +30,15 @@ Output through USB serial port at 115200 bauds.
    --GO--
    ```
 
-3. A message must appear every 5 seconds. For example (not to be taken literally):
-
-   ```text
-   Reading: 1695
-   ```
-
-4. Ignore repeated messages from now on.
+3. Ensure `Battery(+)` is not wired.
+4. Wait for 20 seconds. No output should appear.
 5. Wire `battery(+)` to `GND`.
-6. **No output** should appear.
-7. Wire `battery(+)` to `3V3`.
-8. Take note of the displayed number, named "L1" for future reference.
-9. Wire `battery(+)` to the positive terminal of the battery.
-10. Take note of the displayed number, named "L2".
-11. "L2" must be greater then "L1".
+6. Wait for 20 seconds. No output should appear.
+7. Ignore repeated messages from now on.
+8. Wire `battery(+)` to `3V3`.
+9. Wait for 10 seconds.
+10. Take note of the displayed number, named "L1" for future reference.
+11. Wire `battery(+)` to the positive terminal of the battery.
+12. Wait for 10 seconds.
+13. Take note of the displayed number, named "L2".
+14. "L2" must be greater then "L1".

@@ -281,10 +281,7 @@ bool batteryMonitor_getSoC(int &batteryLevel)
         }
     }
     // else
-    // {
     //     // Battery(+) is not connected, so battery level is unknown
-    //     batteryLevel = UNKNOWN_BATTERY_LEVEL;
-    // }
     return result;
 }
 
