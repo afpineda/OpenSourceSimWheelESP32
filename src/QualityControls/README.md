@@ -51,7 +51,7 @@ but GPIO #48 in revision 1.0.
 In any case, there is a solder pad that needs to be in short-circuit
 for the built-in RGB led to work.
 
-![ESP32S3-DevKitC pin-out](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/_images/ESP32-S3_DevKitC-1_pinlayout_v1.1.jpg)
+![ESP32S3-DevKitC pin-out](../../doc/hardware/esp32reference/ESP32-S3-DevKitC-pinout.jpg)
 
 ## Pin-out plan (ESP32)
 
@@ -91,7 +91,7 @@ for the built-in RGB led to work.
 |    22    |                                                             |
 |    23    | Power LATCH                                                 |
 
-![ESP32-DevKitC pin-out](https://docs.espressif.com/projects/esp-dev-kits/en/latest/_images/esp32_devkitC_v4_pinlayout.png)
+![ESP32-DevKitC pin-out](../../doc/hardware/esp32reference/esp32-devkitC-v4-pinout.png)
 
 ## Integration tests for display hardware
 
