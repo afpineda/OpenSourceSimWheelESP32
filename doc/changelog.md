@@ -275,3 +275,13 @@ First release.
 - You can mix multiple telemetry displays in a single RGB LED strip.
 - Integration tests are available for this display hardware.
 - Documentation updated.
+
+## 6.2.1
+
+- All warnings have been removed when compiling with Arduino IDE 2.3.2.
+  Note that [C++ revision 20](https://en.cppreference.com/w/cpp/20)
+  is the new standard.
+- File `adcTools.cpp` has been rewritten to remove deprecated code.
+- The I2C probe firmware has been improved for better information.
+  You can now use the probe on the secondary I2C bus.
+- Minor errata fixes and documentation updates.

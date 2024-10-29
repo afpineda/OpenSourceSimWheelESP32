@@ -6,9 +6,10 @@ Indispensable:
 
 - [Arduino IDE](https://www.arduino.cc/en/software).
   Choose a stable release and follow instructions.
+  This project has been successfully compiled with **version 2.3.2**.
 - Official [Arduino-ESP32 support package](https://docs.espressif.com/projects/arduino-esp32/en/latest/getting_started.html).
   Follow [this link](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html) for installation instructions.
-  This project has been successfully tested with **version 3.0.1**, however, BLE implementation does not work (use *NimBLE* instead).
+  This project has been successfully tested with **version 3.0.1**, however, BLE implementation does not work (use *NimBLE-Arduino* instead).
 - Indispensable [Arduino libraries](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries) for this project.
   Install their dependencies as well.
   - [NimBLE-Arduino](https://www.arduino.cc/reference/en/libraries/nimble-arduino/).
