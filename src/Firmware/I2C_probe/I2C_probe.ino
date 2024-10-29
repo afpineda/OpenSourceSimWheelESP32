@@ -25,6 +25,27 @@
 // #define SECONDARY_SCL
 
 //------------------------------------------------------------------
+// Auxiliary
+//------------------------------------------------------------------
+
+void dump_results(std::vector<uint8_t> &addressList)
+{
+    size_t count = addressList.size();
+    Serial.printf("Auto-discovery finished. %d device(s) found:\n", count);
+    for (int idx = 0; idx < count; idx++)
+    {
+        uint8_t addr = addressList.at(idx);
+        Serial.printf("- Device found at address %x (hexadecimal), %d (decimal)\n",
+                      addr,
+                      addr);
+        Serial.printf("  - Hardware address (3 bits) is %d\n",
+                      (addr & 0b00000111));
+        Serial.printf("  - Factory address (7 bits) is %x (hexadecimal), %d (decimal)\n",
+                      (addr & 0b11111000), (addr & 0b11111000));
+    }
+}
+
+//------------------------------------------------------------------
 // Arduino entry point
 //------------------------------------------------------------------
 
@@ -41,13 +62,7 @@ void setup()
     Serial.printf("SDA = #%d. SCL = #%d. Please, wait ...\n\n", SDA, SCL);
     std::vector<uint8_t> addressList;
     i2c::probe(addressList);
-    count = addressList.size();
-    Serial.printf("Auto-discovery finished. %d device(s) found:\n", count);
-    for (int idx = 0; idx < count; idx++)
-    {
-        uint8_t addr = addressList.at(idx);
-        Serial.printf("- Device found at address %x (hexadecimal), %d (decimal)\n", addr, addr);
-    }
+    dump_results(addressList);
     Serial.println("");
     Serial.println("");
 
@@ -59,13 +74,7 @@ void setup()
         true);
     addressList.clear();
     i2c::probe(addressList, true);
-    count = addressList.size();
-    Serial.printf("Auto-discovery finished. %d device(s) found:\n", count);
-    for (int idx = 0; idx < count; idx++)
-    {
-        uint8_t addr = addressList.at(idx);
-        Serial.printf("- Device found at address %x (hexadecimal), %d (decimal)\n", addr, addr);
-    }
+    dump_results(addressList);
     Serial.println("");
     Serial.println("");
 #endif
