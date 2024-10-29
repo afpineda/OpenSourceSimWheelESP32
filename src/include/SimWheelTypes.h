@@ -372,9 +372,9 @@ typedef struct
     {
         uint8_t relativeTurboPressure = 0;  /// Percentage of turbo pressure
         float absoluteTurboPressure = 0.0;  /// Turbo pressure in bars
-        uint16_t waterTemperature = 0;      /// Water temperature in user-defined units (Celsius or Kelvin)
+        uint16_t waterTemperature = 0;      /// Water temperature in user-defined units (Celsius or Farenheit)
         float oilPressure = 0.0;            /// Oil pressure in bars
-        uint16_t oilTemperature = 0;        /// Oil temperature in user-defined units (Celsius or Kelvin)
+        uint16_t oilTemperature = 0;        /// Oil temperature in user-defined units (Celsius or Farenheit)
         uint8_t relativeRemainingFuel = 0;  /// Percentage of remaining fuel
         uint16_t absoluteRemainingFuel = 0; /// Remaining fuel in user-defined units (litres or gallons)
     } gauges;
