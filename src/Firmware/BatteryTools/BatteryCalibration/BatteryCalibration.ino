@@ -84,6 +84,7 @@ void setup()
 
     int countdown = 3 * 60;
     // int countdown = 10;
+    Serial.begin(115200);
 
     configureBatteryMonitor(BATT_EN_PIN, BATT_READ_PIN);
     if (getBatteryReadingForTesting(BATT_EN_PIN, BATT_READ_PIN) < 150)
@@ -91,7 +92,6 @@ void setup()
         Serial.println("Note: No battery detected.");
     }
 
-    Serial.begin(115200);
     Serial.println("Waiting...");
     while ((!Serial.available()) && (countdown > 0))
     {
