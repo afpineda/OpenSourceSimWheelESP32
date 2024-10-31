@@ -19,6 +19,8 @@
 // Globals
 //------------------------------------------------------------------
 
+revLightsMode_t mode = revLightsMode_t::LEFT_TO_RIGHT;
+
 //------------------------------------------------------------------
 // Mocks
 //------------------------------------------------------------------
@@ -72,7 +74,7 @@ void setup()
     Serial.printf("Using device address %x (hexadecimal)\n", factoryAddress | hwAddress);
 
     // Initialize UI
-    auto ui = new PCF8574RevLights(hwAddress, true, factoryAddress);
+    auto ui = new PCF8574RevLights(hwAddress, true, factoryAddress, mode);
     notify::begin({ui}, 50);
 
     // Check
