@@ -56,10 +56,16 @@ LEDStrip::LEDStrip(
     // Compute pixel format when required
     if (pixelFormat == pixel_format_t::AUTO)
     {
-        if (pixelType == pixel_driver_t::WS2811)
+        switch (pixelFormat)
+        {
+        case WS2811:
+        case UCS1903:
             pixelFormat = pixel_format_t::RGB;
-        else
+            break;
+        default:
             pixelFormat = pixel_format_t::GRB;
+            break;
+        }
     }
 
     // Compute buffer size
@@ -112,6 +118,18 @@ LEDStrip::LEDStrip(
         byte_enc_config.bit0.duration1 = 9;
         byte_enc_config.bit1.duration0 = 9;
         byte_enc_config.bit1.duration1 = 3;
+        break;
+    case SK6812:
+        byte_enc_config.bit0.duration0 = 3;
+        byte_enc_config.bit0.duration1 = 9;
+        byte_enc_config.bit1.duration0 = 6;
+        byte_enc_config.bit1.duration1 = 6;
+        break;
+    case UCS1903:
+        byte_enc_config.bit0.duration0 = 4;
+        byte_enc_config.bit0.duration1 = 8;
+        byte_enc_config.bit1.duration0 = 8;
+        byte_enc_config.bit1.duration1 = 4;
         break;
 
     default:
