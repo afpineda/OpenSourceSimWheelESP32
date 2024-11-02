@@ -98,11 +98,8 @@ Finally, pass the `LEDStripTelemetry` instance to `notify::begin()`.
 - Don't overlap *segments*.
   Use different pixels for each *segment*.
 - Non-existent pixels are ignored without warning.
-- You can set the global LED brightness by calling `brightness()` with a parameter.
-  Pass `255` (decimal) for full brightness (not recommended).
-  The default is 15.
-  Keep this value low for a comfortable user experience.
-  However, a very low value may prevent some colors from appearing.
+- You can set the **global LED brightness** by calling `brightness()` with a parameter.
+  More on this below.
 
 Have a look at the code for the specific integration tests for an example:
 
@@ -195,3 +192,18 @@ Constructor parameters are:
 - 8th (optional): Color for the third-priority witness.
 
 Typically, you will ignore the 5th and subsequent parameters to create a single witness light.
+
+## Brightness
+
+RGB LED strips are so bright that they are harmful to the eyes.
+You should use low brightness pixel colors for a comfortable user experience.
+For example, both `0xFFFFFF` and `0x7F7F7F` are the RGB representation of the color white.
+However, the former is at full brightness and the latter is at half brightness.
+
+The API will reduce any pixel brightness to the proportional value set by `brightness()`.
+For fine tuning, set the global brightness to `0xFF` (full brightness)
+and then provide the per pixel brightness via color data.
+
+The default global brightness setting is 15.
+Unfortunately, a low global brightness may prevent some colors from appearing.
+The entire LED strip will turn off if you set the global brightness to zero.
