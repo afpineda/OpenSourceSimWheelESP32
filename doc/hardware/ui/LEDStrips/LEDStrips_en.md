@@ -209,6 +209,7 @@ For example, both `0xFFFFFF` and `0x7F7F7F` are the RGB representation of the co
 However, the former is at full brightness and the latter is at half brightness.
 
 The API will reduce any pixel brightness to the proportional value set by `brightness()`.
+For example, `0xFFFFFFFF` becomes `0x202020` when using a global brightness of 32 (decimal).
 For fine tuning, set the global brightness to `0xFF` (full brightness)
 and then provide the per pixel brightness via color data.
 
