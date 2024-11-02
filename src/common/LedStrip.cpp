@@ -107,10 +107,17 @@ LEDStrip::LEDStrip(
         byte_enc_config.bit1.duration1 = 13;
         break;
     case WS2812:
+    case WS2815:
         byte_enc_config.bit0.duration0 = 3;
         byte_enc_config.bit0.duration1 = 9;
         byte_enc_config.bit1.duration0 = 9;
         byte_enc_config.bit1.duration1 = 3;
+        break;
+    case WS2816:
+        byte_enc_config.bit0.duration0 = 3;
+        byte_enc_config.bit0.duration1 = 10;
+        byte_enc_config.bit1.duration0 = 7;
+        byte_enc_config.bit1.duration1 = 7;
         break;
 
     default:

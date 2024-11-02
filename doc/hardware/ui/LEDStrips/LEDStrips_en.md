@@ -56,14 +56,18 @@ The involved class is `LEDStripTelemetry`. Constructor parameters are:
   - `true` if your LED strip works in 5V logic
     (so the "level shifter" is in place).
 - 4th (optional): Pixel driver. The firmware supports several pixel drivers:
+  - Pass `WS2811` for
+    [WS2811](https://www.alldatasheet.com/datasheet-pdf/pdf/1132633/WORLDSEMI/WS2811.html)
+    drivers.
   - Pass `WS2812` (default) for any driver in that [family](http://world-semi.com/ws2812-family/),
     including:
     [WS2812](https://www.alldatasheet.com/datasheet-pdf/pdf/1134521/WORLDSEMI/WS2812.html) and
     [WS2812B](https://www.alldatasheet.com/datasheet-pdf/pdf/1179113/WORLDSEMI/WS2812B.html)
     drivers.
-  - Pass `WS2811` for
-    [WS2811](https://www.alldatasheet.com/datasheet-pdf/pdf/1132633/WORLDSEMI/WS2811.html)
-    drivers.
+  - Pass `WS2815` for any driver in that [family](http://world-semi.com/ws2815-family/).
+    *Note*: not tested.
+  - Pass `WS2816` for any driver in that [family](http://world-semi.com/ws2816-family308/).
+    *Note*: not tested.
 - 5th (optional): Pixel data format (byte order):
   - Pass `AUTO` (default) to use the expected pixel format for the given pixel driver.
   - If your LED strip uses another pixel format, use another constant from the

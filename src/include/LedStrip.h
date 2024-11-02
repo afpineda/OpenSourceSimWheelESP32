@@ -23,7 +23,9 @@
 typedef enum
 {
     WS2811, // WS2811
-    WS2812  // WS2812 family
+    WS2812, // WS2812 family
+    WS2815, // WS2815 family
+    WS2816  // WS2816 family
 } pixel_driver_t;
 
 //-----------------------------------------------------------------------------
