@@ -66,8 +66,6 @@ The involved class is `LEDStripTelemetry`. Constructor parameters are:
     drivers.
   - Pass `WS2815` for any driver in that [family](http://world-semi.com/ws2815-family/).
     *Note*: not tested.
-  - Pass `WS2816` for any driver in that [family](http://world-semi.com/ws2816-family308/).
-    *Note*: not tested.
 - 5th (optional): Pixel data format (byte order):
   - Pass `AUTO` (default) to use the expected pixel format for the given pixel driver.
   - If your LED strip uses another pixel format, use another constant from the
