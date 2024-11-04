@@ -364,6 +364,7 @@ public:
      * @param maxTorqueColor Color to display when maximum torque has been reached.
      * @param maxPowerColor Color to display when maximum power has been reached.
      * @param bitePointColor Color to display when clutch bite point calibration is in progress.
+     * @param displayMode Display mode.
      */
     RevLightsLEDSegment(
         LEDStripTelemetry *ledStripTelemetry,

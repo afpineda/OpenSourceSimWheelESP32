@@ -285,3 +285,10 @@ First release.
 - The I2C probe firmware has been improved for better information.
   You can now use the probe on the secondary I2C bus.
 - Minor errata fixes and documentation updates.
+
+## 6.3.0
+
+- Support for more RGB LED drivers (but not tested).
+- Four display modes are available to all "rev lights":
+  left to right (default), right to left, center to edges and edges to center.
+- Documentation updates.
