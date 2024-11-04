@@ -539,7 +539,8 @@ RevLightsLEDSegment::RevLightsLEDSegment(
     uint32_t mainColor,
     uint32_t maxTorqueColor,
     uint32_t maxPowerColor,
-    uint32_t bitePointColor) : LEDSegment(ledStripTelemetry, true, false, false, false)
+    uint32_t bitePointColor,
+    revLightsMode_t displayMode) : LEDSegment(ledStripTelemetry, true, false, false, false)
 {
     this->firstPixelIndex = firstPixelIndex;
     this->pixelCount = pixelCount;
@@ -547,6 +548,7 @@ RevLightsLEDSegment::RevLightsLEDSegment(
     this->maxTorqueColor = maxTorqueColor;
     this->maxPowerColor = maxPowerColor;
     this->bitePointColor = bitePointColor;
+    this->displayMode = displayMode;
     litCount = 0;
     litColor = 0;
     timer = 0;
@@ -556,22 +558,100 @@ RevLightsLEDSegment::RevLightsLEDSegment(
     ledStripTelemetry->setPixelColor(firstPixelIndex, firstPixelIndex + pixelCount - 1, litColor);
 }
 
+inline uint8_t litCountFromCenter(uint8_t pixelCount, uint8_t litCount)
+{
+    bool pixelCountEven = (pixelCount % 2);
+    bool litCountEven = (litCount % 2);
+    if (pixelCountEven && !litCountEven && (litCount > 0))
+        return litCount - 1;
+    else if (!pixelCountEven && litCountEven)
+        return litCount + 1;
+    else
+        return litCount;
+}
+
 void RevLightsLEDSegment::buildLEDs(LEDSegmentToStripInterface &ledInterface)
 {
     if (displayBitePoint)
     {
         // litCount = (userSettings::bitePoint * pixelCount) / CLUTCH_FULL_VALUE;
         litCount = CEIL_DIV(userSettings::bitePoint * pixelCount, CLUTCH_FULL_VALUE);
-        ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, bitePointColor);
+        ledInterface.setPixelColor(
+            firstPixelIndex,
+            firstPixelIndex + litCount - 1,
+            bitePointColor);
+        ledInterface.setPixelColor(
+            firstPixelIndex + litCount,
+            firstPixelIndex + pixelCount - 1,
+            0);
     }
     else
     {
         if (!blink || blinkState)
-            ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, litColor);
+        {
+            switch (displayMode)
+            {
+            case RIGHT_TO_LEFT:
+                ledInterface.setPixelColor(
+                    firstPixelIndex,
+                    firstPixelIndex + (pixelCount - litCount) - 1,
+                    0);
+                ledInterface.setPixelColor(
+                    firstPixelIndex + (pixelCount - litCount),
+                    firstPixelIndex + pixelCount - 1,
+                    litColor);
+                break;
+
+            case IN_OUT:
+                ledInterface.setPixelColor(
+                    firstPixelIndex,
+                    firstPixelIndex + pixelCount - 1,
+                    0);
+                if (litCount > 0)
+                {
+                    uint8_t lc2 = litCountFromCenter(pixelCount, litCount);
+                    uint8_t first = ((pixelCount - lc2) / 2) + firstPixelIndex;
+                    ledInterface.setPixelColor(
+                        first,
+                        first + lc2 - 1,
+                        litColor);
+                }
+                break;
+
+            case OUT_IN:
+                ledInterface.setPixelColor(
+                    firstPixelIndex,
+                    firstPixelIndex + pixelCount - 1,
+                    0);
+                if (litCount > 0)
+                {
+                    uint8_t lc2 = CEIL_DIV(litCount, 2);
+                    ledInterface.setPixelColor(
+                        firstPixelIndex,
+                        firstPixelIndex + lc2 - 1,
+                        litColor);
+                    ledInterface.setPixelColor(
+                        firstPixelIndex + (pixelCount - lc2),
+                        firstPixelIndex + pixelCount - 1,
+                        litColor);
+                }
+                break;
+
+            default: // LEFT_TO_RIGHT
+                ledInterface.setPixelColor(
+                    firstPixelIndex,
+                    firstPixelIndex + litCount - 1,
+                    litColor);
+                ledInterface.setPixelColor(
+                    firstPixelIndex + litCount,
+                    firstPixelIndex + pixelCount - 1,
+                    0);
+                break;
+            }
+        }
         else
-            ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, 0);
+            ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + pixelCount - 1, 0);
     }
-    ledInterface.setPixelColor(firstPixelIndex + litCount, pixelCount - 1, 0);
 }
 
 void RevLightsLEDSegment::onTelemetryData(

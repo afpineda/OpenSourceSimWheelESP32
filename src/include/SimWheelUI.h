@@ -44,8 +44,8 @@ typedef enum
 {
     LEFT_TO_RIGHT, // Moving from left to right
     RIGHT_TO_LEFT, // Moving from right to left
-    IN_OUT, // Moving from center to edges
-    OUT_IN // Moving from edges to center
+    IN_OUT,        // Moving from center to edges
+    OUT_IN         // Moving from edges to center
 } revLightsMode_t;
 
 //-----------------------------------------------------------------------------
@@ -372,7 +372,8 @@ public:
         uint32_t mainColor = 0x00FF00,
         uint32_t maxTorqueColor = 0xFFFF00,
         uint32_t maxPowerColor = 0xFF0000,
-        uint32_t bitePointColor = 0xFFFFFF);
+        uint32_t bitePointColor = 0xFFFFFF,
+        revLightsMode_t displayMode = LEFT_TO_RIGHT);
 
 public: // LEDSegment implementation
     virtual void onTelemetryData(
@@ -397,6 +398,7 @@ private:
     bool blinkState;
     bool blink;
     bool displayBitePoint;
+    revLightsMode_t displayMode;
 
     void buildLEDs(LEDSegmentToStripInterface &ledInterface);
 };

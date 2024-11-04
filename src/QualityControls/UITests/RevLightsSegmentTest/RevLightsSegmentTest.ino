@@ -20,6 +20,7 @@
 
 #define LED_COUNT 8
 #define USE_LEVEL_SHIFT false
+const revLightsMode_t displayMode = LEFT_TO_RIGHT;
 
 //------------------------------------------------------------------
 // Mocks
@@ -56,7 +57,12 @@ void setup()
     auto revLights = new RevLightsLEDSegment(
         ui,
         0,
-        LED_COUNT);
+        LED_COUNT,
+        0x00FF00,
+        0xFFFF00,
+        0xFF0000,
+        0xFFFFFF,
+        displayMode);
     notify::begin({ui}, 50);
     if (!capabilities::hasFlag(deviceCapability_t::CAP_TELEMETRY_POWERTRAIN))
         log_e("LEDStripTelemetry did not set the powertrain telemetry flag");
