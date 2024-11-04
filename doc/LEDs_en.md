@@ -13,10 +13,16 @@ As a result, a forward voltage of around 3.7 volts is required to light them.
 
 However, the ESP32 hardware operates at 3.3 volts,
 which is not enough to light some of these LEDs.
-
 For this reason, you may need a different power source,
 which is labelled `VLed` in this project.
+
 There are a number of options available:
+
+- **3.3V power sources**
+
+    Some LEDs, including the RGB LED strips,
+    will work with a 3.3 volt power supply.
+    Attach `VLed` to `3V3`.
 
 - **5 volts power sources (and higher)**
 

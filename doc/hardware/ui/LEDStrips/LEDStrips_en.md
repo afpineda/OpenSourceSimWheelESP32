@@ -59,6 +59,7 @@ The involved class is `LEDStripTelemetry`. Constructor parameters are:
   - Pass `WS2811` for
     [WS2811](https://www.alldatasheet.com/datasheet-pdf/pdf/1132633/WORLDSEMI/WS2811.html)
     drivers.
+    *Note*: not tested.
   - Pass `WS2812` (default) for any driver in that [family](http://world-semi.com/ws2812-family/),
     including:
     [WS2812](https://www.alldatasheet.com/datasheet-pdf/pdf/1134521/WORLDSEMI/WS2812.html) and
@@ -69,9 +70,11 @@ The involved class is `LEDStripTelemetry`. Constructor parameters are:
   - Pass `SK6812` for
     [SK6812](https://cdn-shop.adafruit.com/product-files/1138/SK6812%20LED%20datasheet%20.pdf)
     drivers.
+    *Note*: not tested.
   - Pass `UCS1903` for
     [UCS1903](https://www.led-stuebchen.de/download/UCS1903_English.pdf)
     drivers.
+    *Note*: not tested.
 - 5th (optional): Pixel data format (byte order):
   - Pass `AUTO` (default) to use the expected pixel format for the given pixel driver.
   - If your LED strip uses another pixel format, use another constant from the
