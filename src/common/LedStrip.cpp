@@ -56,7 +56,7 @@ LEDStrip::LEDStrip(
     // Compute pixel format when required
     if (pixelFormat == pixel_format_t::AUTO)
     {
-        switch (pixelFormat)
+        switch (pixelType)
         {
         case WS2811:
         case UCS1903:

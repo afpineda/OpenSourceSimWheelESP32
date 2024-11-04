@@ -30,7 +30,6 @@ void setup()
     Serial.begin(115200);
     strip = new LEDStrip(TEST_D_OUT, LED_COUNT, LEVEL_SHIFTER);
     strip->brightness(16);
-    // strip = new LEDStrip(LED_PIN, LED_COUNT, PIXEL_WS2811);
     Serial.println("--GO--");
 }
 
