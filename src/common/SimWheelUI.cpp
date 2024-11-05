@@ -24,7 +24,6 @@
 
 // Utility
 #define CEIL_DIV(dividend, divisor) (dividend + divisor - 1) / divisor
-#define LED_BAR(litCount, ledCount) 0xFF >> (ledCount - litCount)
 
 // Flag colors
 #define COLOR_BLACK_FLAG 0
@@ -34,6 +33,21 @@
 #define COLOR_ORANGE_FLAG 0xFF8000
 #define COLOR_WHITE_FLAG 0xFFFFFF
 #define COLOR_YELLOW_FLAG 0xFFFF00
+
+// Rev lights display patterns
+const uint8_t in_out_mode[] = {
+    0b00000000,
+    0b00011000,
+    0b00111100,
+    0b01111110,
+    0b11111111};
+
+const uint8_t out_in_mode[] = {
+    0b00000000,
+    0b10000001,
+    0b11000011,
+    0b11100111,
+    0b11111111};
 
 //-----------------------------------------------------------------------------
 // Single Color-Single LED user interface
@@ -150,7 +164,8 @@ void SimpleShiftLight::setMode(uint8_t newMode)
 PCF8574RevLights::PCF8574RevLights(
     uint8_t hardwareAddress,
     bool useSecondaryBus,
-    uint8_t factoryAddress)
+    uint8_t factoryAddress,
+    revLightsMode_t displayMode)
 {
     // Announce required telemetry data
     requiresPowertrainTelemetry = true;
@@ -169,6 +184,7 @@ PCF8574RevLights::PCF8574RevLights(
     blinkState = false;
     blink = false;
     displayBitePoint = false;
+    this->displayMode = displayMode;
 
     // Check chip availability
     if (!i2c::probe(address7Bits, useSecondaryBus))
@@ -257,12 +273,34 @@ void PCF8574RevLights::serveSingleFrame(uint32_t elapsedMs)
     {
         // litCount = (userSettings::bitePoint * 8) / CLUTCH_FULL_VALUE;
         litCount = CEIL_DIV(userSettings::bitePoint * 8, CLUTCH_FULL_VALUE);
-        write(LED_BAR(litCount, 8));
+        write(~(0xFF << litCount));
     }
     else if (blink && !blinkState)
         write(0);
     else
-        write(LED_BAR(litCount, 8));
+    {
+        uint8_t litCount2;
+        switch (displayMode)
+        {
+        case RIGHT_TO_LEFT:
+            write(0xFF << (8 - litCount));
+            break;
+
+        case IN_OUT:
+            litCount2 = litCount >> 1; // = litCount / 2
+            write(in_out_mode[litCount2]);
+            break;
+
+        case OUT_IN:
+            litCount2 = litCount >> 1; // = litCount / 2
+            write(out_in_mode[litCount2]);
+            break;
+
+        default: // LEFT_TO_RIGHT
+            write(~(0xFF << litCount));
+            break;
+        }
+    }
 }
 
 void PCF8574RevLights::onBitePoint()
@@ -501,7 +539,8 @@ RevLightsLEDSegment::RevLightsLEDSegment(
     uint32_t mainColor,
     uint32_t maxTorqueColor,
     uint32_t maxPowerColor,
-    uint32_t bitePointColor) : LEDSegment(ledStripTelemetry, true, false, false, false)
+    uint32_t bitePointColor,
+    revLightsMode_t displayMode) : LEDSegment(ledStripTelemetry, true, false, false, false)
 {
     this->firstPixelIndex = firstPixelIndex;
     this->pixelCount = pixelCount;
@@ -509,6 +548,7 @@ RevLightsLEDSegment::RevLightsLEDSegment(
     this->maxTorqueColor = maxTorqueColor;
     this->maxPowerColor = maxPowerColor;
     this->bitePointColor = bitePointColor;
+    this->displayMode = displayMode;
     litCount = 0;
     litColor = 0;
     timer = 0;
@@ -518,22 +558,100 @@ RevLightsLEDSegment::RevLightsLEDSegment(
     ledStripTelemetry->setPixelColor(firstPixelIndex, firstPixelIndex + pixelCount - 1, litColor);
 }
 
+inline uint8_t litCountFromCenter(uint8_t pixelCount, uint8_t litCount)
+{
+    bool pixelCountEven = (pixelCount % 2);
+    bool litCountEven = (litCount % 2);
+    if (pixelCountEven && !litCountEven && (litCount > 0))
+        return litCount - 1;
+    else if (!pixelCountEven && litCountEven)
+        return litCount + 1;
+    else
+        return litCount;
+}
+
 void RevLightsLEDSegment::buildLEDs(LEDSegmentToStripInterface &ledInterface)
 {
     if (displayBitePoint)
     {
         // litCount = (userSettings::bitePoint * pixelCount) / CLUTCH_FULL_VALUE;
         litCount = CEIL_DIV(userSettings::bitePoint * pixelCount, CLUTCH_FULL_VALUE);
-        ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, bitePointColor);
+        ledInterface.setPixelColor(
+            firstPixelIndex,
+            firstPixelIndex + litCount - 1,
+            bitePointColor);
+        ledInterface.setPixelColor(
+            firstPixelIndex + litCount,
+            firstPixelIndex + pixelCount - 1,
+            0);
     }
     else
     {
         if (!blink || blinkState)
-            ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, litColor);
+        {
+            switch (displayMode)
+            {
+            case RIGHT_TO_LEFT:
+                ledInterface.setPixelColor(
+                    firstPixelIndex,
+                    firstPixelIndex + (pixelCount - litCount) - 1,
+                    0);
+                ledInterface.setPixelColor(
+                    firstPixelIndex + (pixelCount - litCount),
+                    firstPixelIndex + pixelCount - 1,
+                    litColor);
+                break;
+
+            case IN_OUT:
+                ledInterface.setPixelColor(
+                    firstPixelIndex,
+                    firstPixelIndex + pixelCount - 1,
+                    0);
+                if (litCount > 0)
+                {
+                    uint8_t lc2 = litCountFromCenter(pixelCount, litCount);
+                    uint8_t first = ((pixelCount - lc2) / 2) + firstPixelIndex;
+                    ledInterface.setPixelColor(
+                        first,
+                        first + lc2 - 1,
+                        litColor);
+                }
+                break;
+
+            case OUT_IN:
+                ledInterface.setPixelColor(
+                    firstPixelIndex,
+                    firstPixelIndex + pixelCount - 1,
+                    0);
+                if (litCount > 0)
+                {
+                    uint8_t lc2 = CEIL_DIV(litCount, 2);
+                    ledInterface.setPixelColor(
+                        firstPixelIndex,
+                        firstPixelIndex + lc2 - 1,
+                        litColor);
+                    ledInterface.setPixelColor(
+                        firstPixelIndex + (pixelCount - lc2),
+                        firstPixelIndex + pixelCount - 1,
+                        litColor);
+                }
+                break;
+
+            default: // LEFT_TO_RIGHT
+                ledInterface.setPixelColor(
+                    firstPixelIndex,
+                    firstPixelIndex + litCount - 1,
+                    litColor);
+                ledInterface.setPixelColor(
+                    firstPixelIndex + litCount,
+                    firstPixelIndex + pixelCount - 1,
+                    0);
+                break;
+            }
+        }
         else
-            ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + litCount - 1, 0);
+            ledInterface.setPixelColor(firstPixelIndex, firstPixelIndex + pixelCount - 1, 0);
     }
-    ledInterface.setPixelColor(firstPixelIndex + litCount, pixelCount - 1, 0);
 }
 
 void RevLightsLEDSegment::onTelemetryData(

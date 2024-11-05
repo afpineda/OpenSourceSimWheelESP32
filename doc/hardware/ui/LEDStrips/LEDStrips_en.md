@@ -56,13 +56,25 @@ The involved class is `LEDStripTelemetry`. Constructor parameters are:
   - `true` if your LED strip works in 5V logic
     (so the "level shifter" is in place).
 - 4th (optional): Pixel driver. The firmware supports several pixel drivers:
-  - Pass `WS2812` (default) for
-    [WS2812](https://www.alldatasheet.com/datasheet-pdf/pdf/1134521/WORLDSEMI/WS2812.html) and
-    [WS2812B](https://www.alldatasheet.com/datasheet-pdf/pdf/1179113/WORLDSEMI/WS2812B.html)
-    drivers.
   - Pass `WS2811` for
     [WS2811](https://www.alldatasheet.com/datasheet-pdf/pdf/1132633/WORLDSEMI/WS2811.html)
     drivers.
+    *Note*: not tested.
+  - Pass `WS2812` (default) for any driver in that [family](http://world-semi.com/ws2812-family/),
+    including:
+    [WS2812](https://www.alldatasheet.com/datasheet-pdf/pdf/1134521/WORLDSEMI/WS2812.html) and
+    [WS2812B](https://www.alldatasheet.com/datasheet-pdf/pdf/1179113/WORLDSEMI/WS2812B.html)
+    drivers.
+  - Pass `WS2815` for any driver in that [family](http://world-semi.com/ws2815-family/).
+    *Note*: not tested.
+  - Pass `SK6812` for
+    [SK6812](https://cdn-shop.adafruit.com/product-files/1138/SK6812%20LED%20datasheet%20.pdf)
+    drivers.
+    *Note*: not tested.
+  - Pass `UCS1903` for
+    [UCS1903](https://www.led-stuebchen.de/download/UCS1903_English.pdf)
+    drivers.
+    *Note*: not tested.
 - 5th (optional): Pixel data format (byte order):
   - Pass `AUTO` (default) to use the expected pixel format for the given pixel driver.
   - If your LED strip uses another pixel format, use another constant from the
@@ -97,11 +109,8 @@ Finally, pass the `LEDStripTelemetry` instance to `notify::begin()`.
 - Don't overlap *segments*.
   Use different pixels for each *segment*.
 - Non-existent pixels are ignored without warning.
-- You can set the global LED brightness by calling `brightness()` with a parameter.
-  Pass `255` (decimal) for full brightness (not recommended).
-  The default is 15.
-  Keep this value low for a comfortable user experience.
-  However, a very low value may prevent some colors from appearing.
+- You can set the **global LED brightness** by calling `brightness()` with a parameter.
+  More on this below.
 
 Have a look at the code for the specific integration tests for an example:
 
@@ -194,3 +203,19 @@ Constructor parameters are:
 - 8th (optional): Color for the third-priority witness.
 
 Typically, you will ignore the 5th and subsequent parameters to create a single witness light.
+
+## Brightness
+
+RGB LED strips are so bright that they are harmful to the eyes.
+You should use low brightness pixel colors for a comfortable user experience.
+For example, both `0xFFFFFF` and `0x7F7F7F` are the RGB representation of the color white.
+However, the former is at full brightness and the latter is at half brightness.
+
+The API will reduce any pixel brightness to the proportional value set by `brightness()`.
+For example, `0xFFFFFFFF` becomes `0x202020` when using a global brightness of 32 (decimal).
+For fine tuning, set the global brightness to `0xFF` (full brightness)
+and then provide the per pixel brightness via color data.
+
+The default global brightness setting is 15.
+Unfortunately, a low global brightness may prevent some colors from appearing.
+The entire LED strip will turn off if you set the global brightness to zero.

@@ -23,8 +23,15 @@
 typedef enum
 {
     WS2811, // WS2811
-    WS2812  // WS2812 and WS2812B
+    WS2812, // WS2812 family
+    WS2815, // WS2815 family
+    SK6812,
+    UCS1903
 } pixel_driver_t;
+
+// Datasheets:
+// SK6812: https://cdn-shop.adafruit.com/product-files/1138/SK6812%20LED%20datasheet%20.pdf
+// UCS1903: https://www.led-stuebchen.de/download/UCS1903_English.pdf
 
 //-----------------------------------------------------------------------------
 

@@ -19,6 +19,36 @@
 #include "LedStrip.h"
 
 //-----------------------------------------------------------------------------
+// Auxiliary types
+//-----------------------------------------------------------------------------
+
+/**
+ * @brief Available ECU witnesses
+ *
+ */
+typedef enum
+{
+    NONE,        // No witness
+    LOW_FUEL,    // Low fuel alert
+    TC_ENGAGED,  // TC engaged
+    ABS_ENGAGED, // ABS engaged
+    DRS_ENGAGED, // DRS engaged
+    PIT_LIMITER  // Pit limiter engaged
+} witness_t;
+
+/**
+ * @brief Display modes for "rev lights"
+ *
+ */
+typedef enum
+{
+    LEFT_TO_RIGHT, // Moving from left to right
+    RIGHT_TO_LEFT, // Moving from right to left
+    IN_OUT,        // Moving from center to edges
+    OUT_IN         // Moving from edges to center
+} revLightsMode_t;
+
+//-----------------------------------------------------------------------------
 // Single Color-Single LED user interface
 //-----------------------------------------------------------------------------
 
@@ -64,11 +94,13 @@ public:
      * @param useSecondaryBus `true` to use the secondary I2C bus (recommended).
      *                        `false` otherwise.
      * @param factoryAddress  Fixed factory-defined part of the full I2C address (7 bits).
+     * @param displayMode Display mode.
      */
     PCF8574RevLights(
         uint8_t hardwareAddress,
         bool useSecondaryBus = true,
-        uint8_t factoryAddress = 0b0100000);
+        uint8_t factoryAddress = 0b0100000,
+        revLightsMode_t displayMode = LEFT_TO_RIGHT);
     ~PCF8574RevLights();
 
     virtual void onStart() override;
@@ -85,6 +117,7 @@ private:
     bool displayBitePoint;
     bool blink;
     bool blinkState;
+    revLightsMode_t displayMode;
     void write(uint8_t state);
 };
 
@@ -331,6 +364,7 @@ public:
      * @param maxTorqueColor Color to display when maximum torque has been reached.
      * @param maxPowerColor Color to display when maximum power has been reached.
      * @param bitePointColor Color to display when clutch bite point calibration is in progress.
+     * @param displayMode Display mode.
      */
     RevLightsLEDSegment(
         LEDStripTelemetry *ledStripTelemetry,
@@ -339,7 +373,8 @@ public:
         uint32_t mainColor = 0x00FF00,
         uint32_t maxTorqueColor = 0xFFFF00,
         uint32_t maxPowerColor = 0xFF0000,
-        uint32_t bitePointColor = 0xFFFFFF);
+        uint32_t bitePointColor = 0xFFFFFF,
+        revLightsMode_t displayMode = LEFT_TO_RIGHT);
 
 public: // LEDSegment implementation
     virtual void onTelemetryData(
@@ -364,6 +399,7 @@ private:
     bool blinkState;
     bool blink;
     bool displayBitePoint;
+    revLightsMode_t displayMode;
 
     void buildLEDs(LEDSegmentToStripInterface &ledInterface);
 };
@@ -417,22 +453,6 @@ private:
 
 //-----------------------------------------------------------------------------
 // LED segment: ECU witness light
-//-----------------------------------------------------------------------------
-
-/**
- * @brief Available ECU witnesses
- *
- */
-typedef enum
-{
-    NONE,        // No witness
-    LOW_FUEL,    // Low fuel alert
-    TC_ENGAGED,  // TC engaged
-    ABS_ENGAGED, // ABS engaged
-    DRS_ENGAGED, // DRS engaged
-    PIT_LIMITER  // Pit limiter engaged
-} witness_t;
-
 //-----------------------------------------------------------------------------
 
 class WitnessLEDSegment : public LEDSegment
