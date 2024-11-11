@@ -22,6 +22,9 @@ This procedure relays on a **powershell script**, named [**MakeSymLinks.ps1**](.
 
    Another way is to open *MakeSymLinks.ps1* with "Powershell ISE" and click on the "play" icon (or press F5).
 
+Linux users can use a `bash` script instead of the PowerShell script:
+[MakeSymLinks.sh](../../src/MakeSymLinks.sh).
+
 Anyway, there are two choices:
 
 ## Running with administrator privileges (*recommended*)
