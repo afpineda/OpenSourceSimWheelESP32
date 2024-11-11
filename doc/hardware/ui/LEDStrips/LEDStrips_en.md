@@ -136,6 +136,9 @@ Constructor parameters are:
   Default is red.
 - 7th (optional): bar color to notify current bite point (RGB).
   Pass zero to disable. Default is white.
+- 8th (optional): display mode (left to right, right to left, center to edges, or edges to center).
+  A constant in the `revLightsMode_t` enumeration.
+  Default is left to right.
 
 ### Race flags
 
