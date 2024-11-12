@@ -9,6 +9,8 @@
     to be used for compilation.
     If no ".fqbn" file is found, the sketch will be ignored.
     Arduino-cli must be available in the PATH environment variable.
+    For output redirection:
+    ./BatchCompile.ps1 *>filename.txt
 
 .AUTHOR
     Ángel Fernández Pineda. Madrid. Spain. 2024.
@@ -77,7 +79,9 @@ function Invoke-ArduinoCLI {
     if ($null -ne $fqbn) {
         Write-Host "FQBN: $fqbn"
         Write-Host "================================================================================"
-        &$_compiler compile $Filename -b $fqbn --no-color --warnings all --build-path $BuildPath
+        $ErrorActionPreference = 'Continue'
+        &$_compiler compile $Filename -b $fqbn --no-color --warnings all --build-path $BuildPath # 2>&1
+        $ErrorActionPreference = 'Stop'
     }
     else {
         Write-Host "No FQBN file found. Ignoring."
@@ -118,5 +122,5 @@ try {
 }
 finally {
     # Remove temporary folder
-    Remove-Item -LiteralPath $tempFolder.FullName -Force | Out-Null
+    Remove-Item -Recurse -LiteralPath $tempFolder.FullName -Force | Out-Null
 }
