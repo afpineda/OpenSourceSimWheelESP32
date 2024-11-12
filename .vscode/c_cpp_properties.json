@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "name": "Arduino",
+            "includePath": [
+                "${workspaceRoot}/**",
+                "d:/Documentos/Arduino/libraries/**",
+                "${LOCALAPPDATA}/Arduino15/packages/**"
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": false,
+                "path": [
+                    "${workspaceRoot}",
+                    "d:/Documentos/Arduino/libraries",
+                    "${LOCALAPPDATA}/Arduino15/packages"
+                ]
+            },
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "gcc-arm"
+        }
+    ],
+    "version": 4
+}

@@ -39,6 +39,7 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
+!.vscode/c_cpp_properties.json
 
 # Local History for Visual Studio Code
 .history/
