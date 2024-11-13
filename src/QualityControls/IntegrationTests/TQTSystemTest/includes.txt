@@ -9,6 +9,7 @@ ShiftRegistersInput.h
 I2CExpanderInput.h
 PolledInput.h
 HID_definitions.h
+i2cTools.h
 adcTools.cpp
 notify.cpp
 userSettings.cpp
@@ -24,4 +25,6 @@ power.cpp
 hidImplementation_NimBLE.cpp
 hidImplementation_common.cpp
 batteryCalibration.cpp
+batteryMonitor.cpp
 capabilities.cpp
+i2cTools.cpp

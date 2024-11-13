@@ -54,7 +54,7 @@ void setup()
         TEST_D_OUT,
         LED_COUNT,
         USE_LEVEL_SHIFT);
-    auto revLights = new RevLightsLEDSegment(
+    new RevLightsLEDSegment(
         ui,
         0,
         LED_COUNT,

@@ -81,8 +81,8 @@ void setup()
 
 void loop()
 {
-    notify::telemetryData.powertrain.rpm++;
-    notify::telemetryData.powertrain.speed++;
-    notify::telemetryData.frameID++;
+    notify::telemetryData.powertrain.rpm = notify::telemetryData.powertrain.rpm + 1;
+    notify::telemetryData.powertrain.speed = notify::telemetryData.powertrain.speed + 1;
+    notify::telemetryData.frameID = notify::telemetryData.frameID + 1;
     delay(period);
 }

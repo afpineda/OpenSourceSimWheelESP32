@@ -40,7 +40,7 @@ void TelemetryDisplayMock::onTelemetryData(const telemetryData_t *data)
     else
     {
         Serial.println("*******************");
-        Serial.printf("* Frame ID: %u\n", data->frameID);
+        Serial.printf("* Frame ID: %lu\n", data->frameID);
         Serial.println("*******************");
         Serial.printf(
             "  Gear: %c RPM: %u / %u%% SL1: %u SL2: %u RevLim: %u Speed: %u Running: %u\n",

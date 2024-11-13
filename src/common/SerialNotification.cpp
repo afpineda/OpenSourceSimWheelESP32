@@ -44,7 +44,7 @@ void SerialNotificationImpl::onLowBattery()
 
 void SerialNotificationImpl::serveSingleFrame(uint32_t elapsedMs)
 {
-    Serial.printf("(FRAME %u MS)\n", elapsedMs);
+    Serial.printf("(FRAME %lu MS)\n", elapsedMs);
 }
 
 void SerialNotificationImpl::onTelemetryData(const telemetryData_t *data)
@@ -53,7 +53,7 @@ void SerialNotificationImpl::onTelemetryData(const telemetryData_t *data)
         Serial.println("(TELEMETRY OFF)");
     else
     {
-        Serial.printf("(TELEMETRY ID %d)\n", data->frameID);
+        Serial.printf("(TELEMETRY ID %lu)\n", data->frameID);
     }
 }
 
@@ -76,7 +76,7 @@ void SerialTelemetryDisplay::onTelemetryData(const telemetryData_t *data)
         snprintf(
             displayBuffer,
             SERIAL_DISPLAY_BUFFER_SIZE,
-            "Frame=%u,RPM=%u,Speed=%u",
+            "Frame=%lu,RPM=%u,Speed=%u",
             data->frameID,
             data->powertrain.rpm,
             data->powertrain.speed);
@@ -89,7 +89,7 @@ void SerialTelemetryDisplay::serveSingleFrame(uint32_t elapsedMs)
 {
     if (!displayOff)
     {
-        Serial.printf("Elapsed: %u. Telemetry: %s\n", elapsedMs, displayBuffer);
+        Serial.printf("Elapsed: %lu. Telemetry: %s\n", elapsedMs, displayBuffer);
         Serial.flush();
     }
 }

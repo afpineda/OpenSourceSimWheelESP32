@@ -4,7 +4,7 @@
     Compile all sketches in batch
 
 .USAGE
-    Create a file named ".fqbn" anywhere in the path to each sketck folder.
+    Create a file named ".fqbn" anywhere in the path to each sketch folder.
     The first line in that file must contain a Full Qualified Board Name
     to be used for compilation.
     If no ".fqbn" file is found, the sketch will be ignored.

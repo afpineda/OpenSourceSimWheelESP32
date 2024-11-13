@@ -51,7 +51,6 @@ void dump_results(std::vector<uint8_t> &addressList)
 
 void setup()
 {
-    uint8_t count = 0;
     esp_log_level_set("*", ESP_LOG_ERROR);
     Serial.begin(115200);
     Serial.println("=================================");

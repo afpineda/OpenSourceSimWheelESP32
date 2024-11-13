@@ -30,7 +30,7 @@ void setup()
     Serial.begin(115200);
     Serial.println("-- READY --");
 
-    input = new AnalogAxisInput(TEST_ANALOG_PIN1, TEST_ANALOG_PIN1);
+    input = new AnalogAxisInput(TEST_ANALOG_PIN1);
     input->resetCalibrationData();
     Serial.println("-- GO --");
 }

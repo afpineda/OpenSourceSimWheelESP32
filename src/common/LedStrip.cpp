@@ -69,7 +69,7 @@ LEDStrip::LEDStrip(
     }
 
     // Compute buffer size
-    int rawDataCount = PIXEL_TO_SYMBOL_COUNT(pixelCount);
+    size_t rawDataCount = PIXEL_TO_SYMBOL_COUNT(pixelCount);
     // The API requires an even number of block symbols
     if (rawDataCount % 2)
         rawDataCount++;

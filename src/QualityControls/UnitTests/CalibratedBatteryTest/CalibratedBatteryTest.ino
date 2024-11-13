@@ -27,7 +27,7 @@ bool hasCalibrationData()
 {
     int calData = 0;
     int sum = 0;
-    for (uint8_t index = 0; (index <= 255) && (calData >= 0); index++)
+    for (uint8_t index = 0; (index < 255) && (calData >= 0); index++)
     {
         calData = batteryCalibration::getCalibration(index);
         if (calData > 0)
