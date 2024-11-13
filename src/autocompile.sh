@@ -36,6 +36,7 @@ for sketch in $(find ./Firmware/ -type f -name "*.ino"); do
         echo "✅ Compilation successful for $filename"
     else
         echo "❌ Compilation error for $filename"
+        arduino-cli compile -b "$config_content" "$sketch" 2>&1 | sed -E 's|(/[^ ]+/)+||g'
     fi
     echo "------------------------"
     config_content=""
