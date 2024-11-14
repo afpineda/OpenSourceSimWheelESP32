@@ -55,5 +55,12 @@ debug.cfg
 # Doxygen output
 doc/API
 
+# Python venv files
+src/bin/
+src/bin/
+src/lib/
+src/lib64/
+src/logs/
+src/pyvenv.cfg
 # other
 
