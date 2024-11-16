@@ -1,4 +1,3 @@
-
 #!/bin/bash
 THIS_PATH="$(dirname "$(realpath "$0")")"
 INCLUDE_PATH="$THIS_PATH/include"
@@ -8,8 +7,12 @@ INCLUDES_FILE="includes.txt"
 get_required_links() {
     local path="$1"
     local links=()
+    file_content=$(<"$path/$INCLUDES_FILE")
+    if [ -n "$file_content" ] && [ "${file_content: -1}" != $'\n' ]; then
+        file_content="$file_content"$'\n'
+    fi
     while IFS= read -r line; do
-        line=$(echo "$line" | xargs)  
+        line=$(echo "$line" | sed 's/\r//;s/^[[:space:]]*//;s/[[:space:]]*$//')
         if [[ -n "$line" ]]; then
             if [[ "$line" == *.h ]]; then
                 links+=("$INCLUDE_PATH/$line")
@@ -17,7 +20,7 @@ get_required_links() {
                 links+=("$COMMON_PATH/$line")
             fi
         fi
-    done < "$path/$INCLUDES_FILE"
+    done <<< "$file_content"
     echo "${links[@]}"
 }
 
