@@ -1,0 +1,43 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - '**'
+      - '!main'
+    paths:
+      - '**.c'
+      - '**.cpp'
+      - '**.ino'
+      - '**.h'
+      - '**.hpp'
+      - '.fqbn'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '**.c'
+      - '**.cpp'
+      - '**.ino'
+      - '**.h'
+      - '**.hpp'
+      - '.fqbn'
+
+jobs:
+  build:
+    name: Compile and link all sketches
+    runs-on: 'ubuntu-latest'
+    steps:
+    
+      - name: Checkout repository contents
+        uses: actions/checkout@v4
+        
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v2
+        
+      - name: Set execution permissions
+        run: |
+          chmod +x ${{ github.workspace }}/src/autocompile.sh
+          chmod +x ${{ github.workspace }}/src/MakeSymLinks.sh
+        
+      - name: Build
+        run: ${{ github.workspace }}/src/autocompile.sh
