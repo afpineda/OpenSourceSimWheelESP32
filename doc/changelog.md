@@ -1,5 +1,17 @@
 # Change log
 
+## 6.3.1
+
+- This changelog now lists updates in reverse order.
+- Removed remaining compilation warnings,
+  except for a single test sketch.
+- Minor documentation updates.
+- A build workflow using *GitHub Actions* has been implemented.
+  This will compile all sketches under the "Firmware" path.
+- There is also a batch build script that can be run on demand.
+  This will compile all sketches under the "Firmware" and "QualityControls" paths,
+  and displays any warnings.
+
 ## 6.3.0
 
 - Support for more RGB LED drivers (but not tested).
