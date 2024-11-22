@@ -71,3 +71,15 @@ General rules:
 - Bloatware from the *ESP32-Arduino core* should be avoided as far as possible.
   Most code must rely on the underlying *ESP-IDF* API.
 - Custom code is preferred to external libraries.
+
+## Versioning
+
+This project follows
+[Semantic Versioning 2.0.0](https://semver.org/).
+Additional rules:
+
+- *Version tags* must be placed in the `main` branch **only**.
+  Only released software has a *version tag*.
+- A *version tag* is not mandatory if there are no changes to the source code
+  (e.g. errata fixes).
+- A *version tag* is mandatory if there are changes to the source code.
