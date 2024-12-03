@@ -557,13 +557,13 @@ namespace inputs
     /**
      * @brief Change polarity of right axis (if any)
      *
+     * @note Saved to flash memory without delay
      */
     void reverseRightAxis();
 
     /**
      * @brief Exposed for testing. Do not call.
      *
-     * @note Saved to flash memory without delay
      */
     void notifyInputEventForTesting(
         inputBitmap_t state,
