@@ -51,6 +51,7 @@ not mandatory but needed for some features.
 
 A [SimHub plugin](https://github.com/afpineda/SimWheelESP32-SimHub-Plugin/releases)
 is required for telemetry.
+This plugin can also configure basic user preferences.
 
 This project is **fully operational**.
 
@@ -106,5 +107,6 @@ no obligatoria, pero necesaria para algunas funcionalidades.
 
 Un [plugin para SimHub](https://github.com/afpineda/SimWheelESP32-SimHub-Plugin/releases)
 es necesario para la telemetría.
+Este plugin también puede configurar las preferencias básicas del usuario.
 
 Este proyecto está **totalmente operativo**.

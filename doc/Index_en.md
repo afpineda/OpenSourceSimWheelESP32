@@ -79,4 +79,5 @@ See [how to contribute](../.github/CONTRIBUTING.md).
 ## Other
 
 - [Companion app](https://github.com/afpineda/SimWheelESP32Config)
+- [SimHub plugin](https://github.com/afpineda/SimWheelESP32-SimHub-Plugin)
 - [Some thoughts from the author](./Thoughts_en.md)
