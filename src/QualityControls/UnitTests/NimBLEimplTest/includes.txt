@@ -5,4 +5,3 @@ hidImplementation_NimBLE.cpp
 hidImplementation_common.cpp
 userSettings.cpp
 hidTestHelper.cpp
-pixels_dummy.cpp
