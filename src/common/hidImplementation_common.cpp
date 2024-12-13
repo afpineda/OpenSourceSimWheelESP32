@@ -91,7 +91,6 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
 {
     if ((report_id == RID_FEATURE_CAPABILITIES) && (len >= CAPABILITIES_REPORT_SIZE))
     {
-
         buffer[0] = MAGIC_NUMBER_LOW;
         buffer[1] = MAGIC_NUMBER_HIGH;
         *(uint16_t *)(buffer + 2) = DATA_MAJOR_VERSION;
@@ -100,11 +99,13 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
         *(uint64_t *)(buffer + 8) = 0ULL;
         esp_efuse_mac_get_default(buffer + 8);
         buffer[16] = notify::maxFPS;
+        buffer[17] = pixels::getPixelCount(pixelGroup_t::GRP_TELEMETRY);
+        buffer[18] = pixels::getPixelCount(pixelGroup_t::GRP_BUTTONS);
+        buffer[19] = pixels::getPixelCount(pixelGroup_t::GRP_INDIVIDUAL);
         return CAPABILITIES_REPORT_SIZE;
     }
     if ((report_id == RID_FEATURE_CONFIG) && (len >= CONFIG_REPORT_SIZE))
     {
-
         buffer[0] = (uint8_t)userSettings::cpWorkingMode;
         buffer[1] = (uint8_t)userSettings::altButtonsWorkingMode;
         buffer[2] = (uint8_t)userSettings::bitePoint;
@@ -189,6 +190,11 @@ void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *b
         {
             // change left axis polarity
             inputs::reverseRightAxis();
+        }
+        if ((len > 3) && (buffer[3] == (uint8_t)simpleCommands_t::CMD_SHOW_PIXELS))
+        {
+            // Show all pixels at once
+            pixels::show();
         }
         if ((len > 4) && (buffer[4] != 0xff))
         {
@@ -298,6 +304,18 @@ void hidImplementation::common::onOutput(
         if (notify::telemetryData.gauges.relativeRemainingFuel > 100)
             notify::telemetryData.gauges.relativeRemainingFuel = 100;
         notify::telemetryData.gauges.absoluteRemainingFuel = *((uint16_t *)(buffer + 10));
+    }
+    else if ((report_id == RID_OUTPUT_PIXEL) && (len >= PIXEL_REPORT_SIZE))
+    {
+        if (buffer[0] > (uint8_t)pixelGroup_t::GRP_INDIVIDUAL)
+            // Invalid pixel group
+            return;
+
+        pixels::set(
+            (pixelGroup_t)buffer[0],
+            buffer[1],
+            *((uint32_t *)(buffer + 2)));
+        return;
     }
     notify::telemetryData.frameID = notify::telemetryData.frameID + 1;
     // log_d("frame id: %u", notify::telemetryData.frameID);

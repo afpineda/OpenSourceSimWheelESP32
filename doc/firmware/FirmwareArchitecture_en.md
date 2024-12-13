@@ -14,6 +14,7 @@ All of them are defined at *SimWheel.h*:
 - **inputHub**: Everything related to the combined state of all inputs and their treatment.
   Translates input events into a HID report.
 - **notify**: Everything related to the notification of some events to the user if an user interface is available.
+- **pixels**: Everything related to pixel control.
 - **power**: Everything related to power management.
 - **userSettings**: Manages user settings and their long term storage.
 
@@ -62,6 +63,7 @@ Some namespaces are implemented with the help of auxiliary modules which are not
 | inputs                 | Input hardware                                          |
 | notify                 | User interface hardware (if any)                        |
 | LedStrip               | Underlying LED strip single-wire protocol               |
+| pixels                 | Hardware design                                         |
 | power                  | Underlying power management capabilities                |
 | RotaryEncoderInput     | Hardware design                                         |
 | ShiftRegistersInput    | Hardware design                                         |
@@ -138,12 +140,13 @@ classDiagram
 classDiagram
     hidImplementation --> inputs: command to calibrate analog axes
     hidImplementation --> batteryCalibration: command to recalibrate battery
-    hidImplementation --> notify: connected, discovering, \n telemetry data
+    hidImplementation --> notify: connected, discovering, telemetry data
+    hidImplementation --> pixels: pixel data
     batteryMonitor --> notify: low battery level
     userSettings --> notify: bite point
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9kbFuwzAMRH-F0Oz8gIcubYcOnbJqoSXGISCRhkQnNYL8e2XYReElmoTT3dOBfLigkVzvQsJaPxjHgtkLtHPl-JWnRJnE0FgFTqc3YJlmqz0EzRklgikETDwUNAIUTDoC_lB9xRjQjMryvueafOAV-ifu1lc0UePLshJEKBjFDiLXoDcqLGMHvoWN1pSVBSIabrQd_a3CpuWASnr_e4ZEN0pbYq5UzmTWsPXgH7hVnZTFXOcylYwc20wfa8w7u7a_vevbNdIF52TeeXk2K86m50WC663M1Ll5avVo38JR_Ixry017_gIhTprY)
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9UTFuwzAM_Iqg2fmAhy5thw6dshVeaIm2CUikIVFJjCB_r9w6aL1Yi8TT3fEo3a0Tj7a1LkDObwRjgtixqWsi_xHngBFZQUnYnE4vhngumlvjJEZgb1SMg0B9AkUDDEFGAzfMRx49qGJaXjddhXd-Cf8cN-qRG4vSsKwOzOgUfWM8ZScXTMRjYxRXhabFeFA4cprphqHO9rP_Y28hPoVJJe2aBrk-r03AC4ZfRcmYzqhaA-Qdv6c61CzEahsbMUUgX1__vso6q1NN1Nm2Hj0OUIJ2tuNHpUJROS_sbKupYGPLXOPh9l978N2vKZ9YkjJOth0g5FrNwF8icasf30Rzs-0)
 
 Some modules have a `begin()` method that must be called at system startup (`main()`or `setup()`).
 The calling order is defined by the previous diagram, where bottom modules must be called first.

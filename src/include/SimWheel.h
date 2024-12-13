@@ -969,4 +969,60 @@ namespace hidImplementation
     }
 }
 
+/**
+ * @brief Pixel control
+ *
+ */
+namespace pixels
+{
+    /**
+     * @brief Configure an LED strip for pixel control
+     *
+     * @param group Group of pixels to configure
+     * @param dataPin GPIO number attached to `Din` (data input)
+     *                in the LED strip. Must be output-capable.
+     * @param pixelCount  Total count of pixels in the strip.
+     * @param useLevelShift Set to `false` when using 3.3V logic.
+     *                      Set to `true` when using the level
+     *                      shifter in open-drain mode.
+     * @param pixelType Pixel driver.
+     * @param pixelFormat  Format of color data (byte order).
+     *                    Set to `AUTO` for auto-detection.
+     */
+    void configure(
+        pixelGroup_t group,
+        gpio_num_t dataPin,
+        uint8_t pixelCount,
+        bool useLevelShift,
+        pixel_driver_t pixelType = WS2812,
+        pixel_format_t pixelFormat = pixel_format_t::AUTO);
+
+    /**
+     * @brief Set the color of a single pixel
+     *
+     * @note Not displayed immediately
+     * @note Non-existing pixels will be ignored
+     *
+     * @param group The group to which the pixel is a member
+     * @param pixelIndex Index of the pixel in the LED strip
+     *                   (zero-based)
+     * @param rgb Color of the pixel in packet RGB format
+     */
+    void set(pixelGroup_t group, uint8_t pixelIndex, uint32_t rgb);
+
+    /**
+     * @brief Display all pixels in all groups at once
+     *
+     */
+    void show();
+
+    /**
+     * @brief Get the total number of pixels in a group
+     *
+     * @param group Group of pixels
+     * @return byte Number of pixels in the given group
+     */
+    uint8_t getPixelCount(pixelGroup_t group);
+}
+
 #endif

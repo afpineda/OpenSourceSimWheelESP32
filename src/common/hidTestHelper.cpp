@@ -110,6 +110,41 @@ int batteryMonitor::getLastBatteryLevel()
 }
 
 //------------------------------------------------------------------
+
+void pixels::configure(
+    pixelGroup_t group,
+    gpio_num_t dataPin,
+    uint8_t pixelCount,
+    bool useLevelShift,
+    pixel_driver_t pixelType,
+    pixel_format_t pixelFormat)
+{
+    // Do nothing
+}
+
+void pixels::set(pixelGroup_t group, uint8_t pixelIndex, uint32_t rgb)
+{
+#if ARDUINO_USB_MODE == 1
+    Serial.printf("pixels::set(%hhu,%hhu,%u)\n",
+                  group,
+                  pixelIndex,
+                  rgb);
+#endif
+}
+
+void pixels::show()
+{
+#if ARDUINO_USB_MODE == 1
+    Serial.println("pixels::show()");
+#endif
+}
+
+uint8_t pixels::getPixelCount(pixelGroup_t group)
+{
+    return 8;
+}
+
+//------------------------------------------------------------------
 // Auxiliary
 //------------------------------------------------------------------
 

@@ -146,12 +146,14 @@ Not applicable to USB implementation.
 11. Enter `FF FF FF 06 FF FF` at fields below `ReportID`.
 12. Click on `Set Feature`.
 13. Serial output must show: `CMD: reverse right axis`.
+14. Enter `FF FF FF 07 FF FF` at fields below `ReportID`.
+15. Serial output must show: `pixels::show()`.
 
 ### Capabilities (HID report)
 
 1. Enter `02` at field `ReportID`.
 2. Click on `Get Feature`.
-3. Must show the following line: `RD 02  51 BF xx xx xx xx 07 00 xx xx xx xx xx xx xx xx 32`.
+3. Must show the following line: `RD 02  51 BF xx xx xx xx 07 00 xx xx xx xx xx xx xx xx 32 08 08 08`.
    Ignore `xx`.
 
 ### Buttons map (HID report)
@@ -192,6 +194,17 @@ Not applicable to USB implementation.
 13. Enter `56 71 00 b0 04 5e 27 bf 04 01 74 00` at fields below `ReportID`.
 14. Serial output must show this line among others:
     `gauges: 86 1.13 1200 100.78 1215 1 116`
+
+## Pixel control
+
+*Note*: do not confuse `Set Report` with `Set Feature`.
+
+1. Enter `1E` at field `ReportID`.
+2. Enter `01 03 01 02 03 04` at fields below `ReportID`.
+3. Click on `Set Report`.
+4. Serial output must show this line:
+   `pixels::set(1,3,67305985)`
+5. Enter `
 
 ### Custom Hardware ID (HID report)
 

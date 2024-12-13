@@ -15,42 +15,11 @@
 #include <stdint.h>
 #include "driver/rmt_tx.h"
 #include "hal/gpio_types.h" // declares gpio_num_t
-
-/**
- * @brief Pixel driver
- *
- */
-typedef enum
-{
-    WS2811, // WS2811
-    WS2812, // WS2812 family
-    WS2815, // WS2815 family
-    SK6812,
-    UCS1903
-} pixel_driver_t;
+#include "SimWheelTypes.h"
 
 // Datasheets:
 // SK6812: https://cdn-shop.adafruit.com/product-files/1138/SK6812%20LED%20datasheet%20.pdf
 // UCS1903: https://www.led-stuebchen.de/download/UCS1903_English.pdf
-
-//-----------------------------------------------------------------------------
-
-/**
- * @brief Byte order of pixel data
- *
- */
-typedef enum
-{
-    AUTO, // Auto-detect based on pixel driver
-    RGB,  // Red-green-blue
-    RBG,  // Red-blue-green
-    GRB,  // Green-red-blue
-    GBR,  // Green-blue-red
-    BRG,  // Blue-red-green
-    BGR   // Blue-green-red
-} pixel_format_t;
-
-//-----------------------------------------------------------------------------
 
 class LEDStrip
 {

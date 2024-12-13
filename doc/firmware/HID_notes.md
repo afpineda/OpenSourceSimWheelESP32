@@ -55,6 +55,7 @@ This project make use of a number of HID reports:
 |    21     | Output  | Telemetry data / ECU              |
 |    22     | Output  | Telemetry data / Race control     |
 |    23     | Output  | Telemetry data / Gauges           |
+|    30     | Output  | Pixel control                     |
 
 Note that feature reports are both read and write.
 
@@ -91,6 +92,9 @@ Write attempts will be ignored, so this report is read-only.
 |     6      |      2       | Flags           | Device capabilities              | 1.0                |
 |     8      |      8       | ID              | Chip identifier                  | 1.1                |
 |     16     |      1       | Max FPS         | Maximum frames per second        | 1.3                |
+|     17     |      1       | Pixel count     | In the "telemetry leds" group    | 1.4                |
+|     18     |      1       | Pixel count     | In the "Buttons lighting" group  | 1.4                |
+|     19     |      1       | Pixel count     | In the "Individual LEDs" group   | 1.4                |
 
 Report ID 1 (input) is not affected by versioning.
 
@@ -115,7 +119,7 @@ Some examples:
 
 However, host-side software may support several data versions at the same time.
 
-Current data version is 1.3.
+Current data version is 1.4.
 
 ### Flags
 
@@ -148,6 +152,12 @@ This is the maximum display rate (in frames per second) supported by the device'
 Zero will be read if there is no user interface.
 When sending telemetry data (output reports),
 the host computer should adapt its data rate to this display rate.
+
+### Pixel count fields
+
+The number of RGB pixels available for pixel control (see report ID 30).
+There are three groups of pixels.
+Zero means that pixel control is not available in that group.
 
 ## Data format of report ID 3 (wheel configuration)
 
@@ -442,3 +452,32 @@ The following fields will be interpreted as fixed-point numbers with two decimal
 - Oil pressure.
 
 For example, the value 113 in `oil pressure` means 1.13 pressure units.
+
+## Data format of report ID 30 (Pixel control)
+
+| Byte index | Size  | Field         | Data version |
+| :--------: | :---: | ------------- | ------------ |
+|     0      |   1   | Pixel group   | 1.4          |
+|     1      |   1   | Pixel index   | 1.4          |
+|     2      |   1   | Blue channel  | 1.4          |
+|     3      |   1   | Green channel | 1.4          |
+|     4      |   1   | Red channel   | 1.4          |
+|     5      |   1   | Reserved      | 1.4          |
+
+This report will set the color of a single pixel,
+but **does not  display it immediately**.
+You will need to issue the appropriate *simple command* (see report ID 3)
+in order to display all the pixels at once.
+
+Note: Invalid values will be ignored with no effect.
+
+- *Pixel group*: the group in which the pixel is to be set.
+  One of the constants defined in the `pixelGroup_t` enumeration.
+
+- *Pixel index*: the index of the pixel to be set in the given group,
+  starting with zero.
+  The number of available pixels can be obtained from report ID 2.
+
+- *Blue, Red and Green channels*: define the color of the given pixel.
+- *Reserved*: this field is reserved for future use and is ignored for now.
+  Any value is valid.

@@ -26,10 +26,11 @@
 #define RID_OUTPUT_ECU 0x15          // 21 dec
 #define RID_OUTPUT_RACE_CONTROL 0x16 // 22 dec
 #define RID_OUTPUT_GAUGES 0x17       // 23 dec
+#define RID_OUTPUT_PIXEL 0x1E        // 30 dec
 
 // Report sizes (bytes)
 #define GAMEPAD_REPORT_SIZE 20
-#define CAPABILITIES_REPORT_SIZE 17
+#define CAPABILITIES_REPORT_SIZE 20
 #define CONFIG_REPORT_SIZE 6
 #define BUTTONS_MAP_REPORT_SIZE 3
 #define HARDWARE_ID_REPORT_SIZE 6
@@ -38,6 +39,7 @@
 #define ECU_REPORT_SIZE 9
 #define RACE_CONTROL_REPORT_SIZE 11
 #define GAUGES_REPORT_SIZE 12
+#define PIXEL_REPORT_SIZE 6
 
 // GAME CONTROLLER APPEARANCES
 #define CONTROLLER_TYPE_GAMEPAD 0x05
@@ -57,7 +59,7 @@
 
 // Data specification version
 #define DATA_MAJOR_VERSION 1
-#define DATA_MINOR_VERSION 3
+#define DATA_MINOR_VERSION 4
 
 // Magic number, do not change
 #define MAGIC_NUMBER_LOW 0x51
@@ -173,6 +175,13 @@ static const uint8_t hid_descriptor[] = {
     0x75, 0x08,               // Report Size (8)
     0x95, GAUGES_REPORT_SIZE, // Report count
     0x91, 0x22,               // OUTPUT (Data,var,abs,Nprf)
+
+    // ___ PIXEL CONTROL (OUTPUT) REPORT ___
+    0x09, 0x00,              // USAGE (undefined)
+    0x85, RID_OUTPUT_PIXEL,  // REPORT ID
+    0x75, 0x08,              // Report Size (8)
+    0x95, PIXEL_REPORT_SIZE, // Report count
+    0x91, 0x22,              // OUTPUT (Data,var,abs,Nprf)
 
     // END APPLICATION
     0xC0 // EndCollection()

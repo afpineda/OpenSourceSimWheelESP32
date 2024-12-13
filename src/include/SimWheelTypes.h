@@ -315,13 +315,14 @@ typedef enum
  */
 typedef enum
 {
-    CMD_RESERVED = 0,          // Not a command, reserved to avoid mistakes
-    CMD_AXIS_RECALIBRATE = 1,  // Recalibrate analog axes (if any)
-    CMD_BATT_RECALIBRATE = 2,  // Restart battery auto-calibration
-    CMD_RESET_BUTTONS_MAP = 3, // Reset buttons map to factory defaults
-    CMD_SAVE_NOW = 4,          // Save all user settings to flash memory immediately
-    CMD_REVERSE_LEFT_AXIS = 5, // Reverse left axis (if any)
-    CMD_REVERSE_RIGHT_AXIS = 6 // Reverse right axis (if any)
+    CMD_RESERVED = 0,           // Not a command, reserved to avoid mistakes
+    CMD_AXIS_RECALIBRATE = 1,   // Recalibrate analog axes (if any)
+    CMD_BATT_RECALIBRATE = 2,   // Restart battery auto-calibration
+    CMD_RESET_BUTTONS_MAP = 3,  // Reset buttons map to factory defaults
+    CMD_SAVE_NOW = 4,           // Save all user settings to flash memory immediately
+    CMD_REVERSE_LEFT_AXIS = 5,  // Reverse left axis (if any)
+    CMD_REVERSE_RIGHT_AXIS = 6, // Reverse right axis (if any)
+    CMD_SHOW_PIXELS = 7,        // Display all pixels in all pixel groups
 } simpleCommands_t;
 
 /**
@@ -509,5 +510,46 @@ public:
  *
  */
 typedef std::vector<AbstractUserInterface *> notificationImplementorsArray_t;
+
+/**
+ * @brief Available RGB LED groups for pixel control
+ *
+ */
+typedef enum
+{
+    GRP_TELEMETRY = 0, // Telemetry leds group
+    GRP_BUTTONS,       // Buttons lighting group
+    GRP_INDIVIDUAL     // Individual leds group
+} pixelGroup_t;
+
+/**
+ * @brief Pixel driver
+ *
+ */
+typedef enum
+{
+    WS2811, // WS2811
+    WS2812, // WS2812 family
+    WS2815, // WS2815 family
+    SK6812,
+    UCS1903
+} pixel_driver_t;
+
+
+/**
+ * @brief Byte order of pixel data
+ *
+ */
+typedef enum
+{
+    AUTO, // Auto-detect based on pixel driver
+    RGB,  // Red-green-blue
+    RBG,  // Red-blue-green
+    GRB,  // Green-red-blue
+    GBR,  // Green-blue-red
+    BRG,  // Blue-red-green
+    BGR   // Blue-green-red
+} pixel_format_t;
+
 
 #endif
