@@ -196,6 +196,11 @@ void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *b
             // Show all pixels at once
             pixels::show();
         }
+        if ((len > 3) && (buffer[3] == (uint8_t)simpleCommands_t::CMD_RESET_PIXELS))
+        {
+            // Turn off all pixels
+            pixels::reset();
+        }
         if ((len > 4) && (buffer[4] != 0xff))
         {
             // Set working mode of DPAD
@@ -314,7 +319,9 @@ void hidImplementation::common::onOutput(
         pixels::set(
             (pixelGroup_t)buffer[0],
             buffer[1],
-            *((uint32_t *)(buffer + 2)));
+            buffer[4],
+            buffer[3],
+            buffer[2]);
         return;
     }
     notify::telemetryData.frameID = notify::telemetryData.frameID + 1;

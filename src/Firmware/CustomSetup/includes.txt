@@ -31,3 +31,4 @@ userSettings.cpp
 i2cTools.cpp
 LedStrip.cpp
 SimWheelUI.cpp
+pixels.cpp

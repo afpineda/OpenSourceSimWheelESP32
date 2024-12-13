@@ -323,6 +323,7 @@ typedef enum
     CMD_REVERSE_LEFT_AXIS = 5,  // Reverse left axis (if any)
     CMD_REVERSE_RIGHT_AXIS = 6, // Reverse right axis (if any)
     CMD_SHOW_PIXELS = 7,        // Display all pixels in all pixel groups
+    CMD_RESET_PIXELS = 8        // Turn off all pixels in all groups
 } simpleCommands_t;
 
 /**
@@ -535,7 +536,6 @@ typedef enum
     UCS1903
 } pixel_driver_t;
 
-
 /**
  * @brief Byte order of pixel data
  *
@@ -550,6 +550,5 @@ typedef enum
     BRG,  // Blue-red-green
     BGR   // Blue-green-red
 } pixel_format_t;
-
 
 #endif

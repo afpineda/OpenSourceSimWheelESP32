@@ -12,6 +12,7 @@ Run order:
 flowchart TD
     subgraph Path 1
         TelemetryIntegrationTest --> Proto1
+        PixelControlTest --> Proto1
         DigitalInputsTest --> InputHubTest --> Proto1 --> Proto2
         BatteryAutocal --> Proto2
     end
@@ -21,7 +22,7 @@ flowchart TD
     TQTSystemTest
 ```
 
-Render this graph at [mermaid.live](https://mermaid.live/view#pako:eNp9kE1vwjAMhv9K5DMc6LEHJLYijRuoOeZiGkMj5UupI6gQ_33pKsHGpvlg2a8fW698gy5oghpONly6HhML2SgvSgz5eE4Ye7FH7sVqFqeQZMkRp3HnmQrCJnhJA4vlci32KXD4BjfmbBjtzsfMw4P6aj_y8WXtWVbPC2_ITGncZA4d2l8Ief2X3-ofC9XsoXrfXiN6Takhiq0taZq-nJUH2Y4Dk5tmsABHyaHR5WW3CVDAffmGgrqUmk6YLStQ_l5QLJbb0XdQc8q0gBw1MjUGi0_3U9xqwyHN2v0TZvqDxA)
+Render this graph at [mermaid.live](https://mermaid.live/view#pako:eNp9kE1rwzAMhv-K8bk9LMccBltTWG8pyWnkosZKYrCt4MisofS_T1m3des-dDB6pUfitU66JYM6152jl3aAyKoumqAkpnToI4yDKoEHdXcpLlGjQ48c511gFIQthRonVuv1vSojMX2BS3tEt6HAkdyfUGF7y-B2YUw8fVJv8ikdbsauaXbd8AjMGOeHxNSC-4FgML99KvvHQnbxkG22xxGCwVggjpWTZ-nerK33dTVPjH7p6ZX2GD1YI3c9LUCjeZCTNTqX1GAHyXGjm3AWFMRyNYdW5xwTrnQaDTAWFsSn_17cGssUP2qRUj_ovAM3iRKPz0T-XZ9fAeP1maE)
 
 ## *Test name*: [DigitalInputsTest](./DigitalInputsTest/README.md)
 
@@ -63,6 +64,13 @@ Render this graph at [mermaid.live](https://mermaid.live/view#pako:eNp9kE1vwjAMh
 
 - **hidImplementation**
 - **notify**
+
+*Note:* This test requires SimHub.
+
+## *Test name*: [PixelControlTest](./PixelControlTest/PixelControlTest.ino)
+
+- **hidImplementation**
+- **pixels**
 
 *Note:* This test requires SimHub.
 

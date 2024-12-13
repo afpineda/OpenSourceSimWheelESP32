@@ -1,0 +1,11 @@
+debugUtils.h
+SimWheel.h
+SimWheelTypes.h
+HID_definitions.h
+LedStrip.h
+pixels.cpp
+LedStrip.cpp
+hidImplementation_NimBLE.cpp
+hidImplementation_common.cpp
+capabilities.cpp
+userSettings.cpp

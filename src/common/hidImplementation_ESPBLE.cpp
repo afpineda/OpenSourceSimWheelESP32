@@ -234,6 +234,7 @@ void hidImplementation::begin(
         OutputReport::attachTo(hid, RID_OUTPUT_ECU);
         OutputReport::attachTo(hid, RID_OUTPUT_RACE_CONTROL);
         OutputReport::attachTo(hid, RID_OUTPUT_GAUGES);
+        OutputReport::attachTo(hid, RID_OUTPUT_PIXEL);
 
         // Configure BLE advertising
         BLEAdvertising *pAdvertising = pServer->getAdvertising();

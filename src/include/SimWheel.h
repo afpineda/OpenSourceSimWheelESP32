@@ -1006,15 +1006,27 @@ namespace pixels
      * @param group The group to which the pixel is a member
      * @param pixelIndex Index of the pixel in the LED strip
      *                   (zero-based)
-     * @param rgb Color of the pixel in packet RGB format
+     * @param red Red component of the pixel color
+     * @param green Green component of the pixel color
+     * @param blue Blue component of the pixel color
      */
-    void set(pixelGroup_t group, uint8_t pixelIndex, uint32_t rgb);
+    void set(pixelGroup_t group,
+             uint8_t pixelIndex,
+             uint8_t red,
+             uint8_t green,
+             uint8_t blue);
 
     /**
      * @brief Display all pixels in all groups at once
      *
      */
     void show();
+
+    /**
+     * @brief Turn off all pixels in all groups
+     *
+     */
+    void reset();
 
     /**
      * @brief Get the total number of pixels in a group

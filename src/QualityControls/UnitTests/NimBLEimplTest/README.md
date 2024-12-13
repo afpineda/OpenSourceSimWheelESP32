@@ -147,7 +147,11 @@ Not applicable to USB implementation.
 12. Click on `Set Feature`.
 13. Serial output must show: `CMD: reverse right axis`.
 14. Enter `FF FF FF 07 FF FF` at fields below `ReportID`.
-15. Serial output must show: `pixels::show()`.
+15. Click on `Set Feature`.
+16. Serial output must show: `pixels::show()`.
+17. Enter `FF FF FF 08 FF FF` at fields below `ReportID`.
+18. Click on `Set Feature`.
+19. Serial output must show: `pixels::reset()`.
 
 ### Capabilities (HID report)
 
@@ -200,11 +204,10 @@ Not applicable to USB implementation.
 *Note*: do not confuse `Set Report` with `Set Feature`.
 
 1. Enter `1E` at field `ReportID`.
-2. Enter `01 03 01 02 03 04` at fields below `ReportID`.
+2. Enter `01 0A 01 02 03 04` at fields below `ReportID`.
 3. Click on `Set Report`.
 4. Serial output must show this line:
-   `pixels::set(1,3,67305985)`
-5. Enter `
+   `pixels::set(1,10,3,2,1)`
 
 ### Custom Hardware ID (HID report)
 

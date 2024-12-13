@@ -122,13 +122,27 @@ void pixels::configure(
     // Do nothing
 }
 
-void pixels::set(pixelGroup_t group, uint8_t pixelIndex, uint32_t rgb)
+void pixels::set(
+    pixelGroup_t group,
+    uint8_t pixelIndex,
+    uint8_t red,
+    uint8_t green,
+    uint8_t blue)
 {
 #if ARDUINO_USB_MODE == 1
-    Serial.printf("pixels::set(%hhu,%hhu,%u)\n",
+    Serial.printf("pixels::set(%hhu,%hhu,%hhu,%hhu,%hhu)\n",
                   group,
                   pixelIndex,
-                  rgb);
+                  red,
+                  green,
+                  blue);
+#endif
+}
+
+void pixels::reset()
+{
+#if ARDUINO_USB_MODE == 1
+    Serial.println("pixels::reset()");
 #endif
 }
 
@@ -231,7 +245,9 @@ void loop()
     if (!powerSim)
     {
         // Simulate power off
+#if ARDUINO_USB_MODE == 1
         Serial.println("(Reset required)");
+#endif
         for (;;)
             ;
     }
