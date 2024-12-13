@@ -13,3 +13,4 @@ capabilities.cpp
 userSettings.cpp
 i2cTools.cpp
 LedStrip.cpp
+pixels_dummy.cpp

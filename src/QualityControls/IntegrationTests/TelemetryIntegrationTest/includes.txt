@@ -6,3 +6,4 @@ hidImplementation_NimBLE.cpp
 notify.cpp
 capabilities.cpp
 userSettings.cpp
+pixels_dummy.cpp

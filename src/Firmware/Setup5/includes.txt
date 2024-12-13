@@ -27,3 +27,4 @@ RotaryEncoderInput.cpp
 ShiftRegistersInput.cpp
 userSettings.cpp
 i2cTools.cpp
+pixels_dummy.cpp

@@ -13,3 +13,4 @@ capabilities.cpp
 userSettings.cpp
 notify.cpp
 i2cTools.cpp
+pixels_dummy.cpp

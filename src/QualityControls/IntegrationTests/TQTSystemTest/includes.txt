@@ -28,3 +28,4 @@ batteryCalibration.cpp
 batteryMonitor.cpp
 capabilities.cpp
 i2cTools.cpp
+pixels_dummy.cpp
