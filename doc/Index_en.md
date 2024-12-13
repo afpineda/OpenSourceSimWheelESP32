@@ -33,18 +33,9 @@
 - Telemetry:
 
   - [Overview of telemetry](./telemetry_en.md)
-  - [Working with LEDs](./LEDs_en.md)
-  - Telemetry displays:
-
-    - [Simple shift light](./hardware/ui/SimpleShiftLight/SimpleShiftLight_en.md)
-    - [PFC8574-driven "rev lights"](./hardware/ui/PCF8574RevLights/PCF8574RevLights_en.md)
-    - [RGB LED strips](./hardware/ui/LEDStrips/LEDStrips_en.md). Including:
-      - "Rev lights"
-      - Shift light
-      - Race flags
-      - Witnesses
-
-    Additional display hardware may be available in future firmware releases.
+  - [Working with LEDs and RGB LED strips](./LEDs_en.md)
+  - [Firmware customization in the *pixel control* approach](./hardware/ui/PixelControl_en.md)
+  - [Firmware customization in the *telemetry data* approach](./hardware/ui/TelemetryData_en.md)
 
 ## Known issues
 

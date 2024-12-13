@@ -9,6 +9,7 @@
     "words": [
         "Adafruit",
         "autocalibration",
+        "backlighting",
         "bitmask",
         "Bluefruit",
         "Doxyfile",
@@ -71,6 +72,7 @@
         "RSHIFT",
         "RTHUMBSTICK",
         "Rpms",
+        "Shanpu",
         "USBHID",
         "VLED",
         "WROOM",

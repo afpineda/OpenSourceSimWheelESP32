@@ -1,6 +1,8 @@
-# RGB LED Strips
+# Using RGB LED Strips for raw telemetry display
 
-This project supports RGB LED strips for telemetry display.
+> [!NOTE] The "pixel control" approach is a better choice to telemetry display using LED strips.
+
+This project supports RGB LED strips to display raw telemetry data.
 You can have multiple "gauges" in the same strip,
 which are called **segments** here.
 For example, let's say you have an LED strip consisting of 10 pixels.
@@ -16,35 +18,6 @@ power on, BLE discovery, host connection and low battery.
 
 The recommended display rate is 50 frames per second.
 
-## Hardware design
-
-These LED strips are controlled by a single output-capable pin labelled `Dout` in this project.
-Some LED strips can work with 3.3V logic, others cannot.
-If your LED strip does not work with 3.3V logic,
-you will need a small "level shifter" circuit, which is described below.
-
-- **No level shifter (3.3V logic)**
-
-  Simply wire `Dout` to `Din` in the first pixel.
-
-  ![No level shifter](./NoLevelShifter.png)
-
-- **Level shifter (5V logic)**
-
-  `Din` requires a minimum voltage of 3.5 volts.
-  The ESP32 operates at 3.3 volts, which is insufficient.
-  To overcome this limitation, a "level shifter" circuit is required.
-  We are using the most simple level shifter available:
-  a pull resistor attached to a GPIO pin in *open drain* mode (`Dout`).
-
-  ![Level shifter](./LevelShifter.png)
-
-  [Test this circuit at falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKACcQG8rvPenCUZHBYAPTmF4YUEgCzkMSWeEEARAPYBXAC4sA7hMEDDIQssgsASnyrGmYGcapVZtIc+gIxEtJyKcMPD9sEGVJEAA1ABk6ABNvJhC8QTAkPGJQ8CDVAEkAOxYAI05sBEd+SSQUbHILYoYUZVkMlGIqZhkLcQbiIIZZPsbbWSUQX1U6ADcAaQBLXXFmIOSxuBB0zN8ogFFVAB0AZwPtNlmAB30TYiMwFJQgiwBzEwc+25VnKASHU2UZQnIYRkCAi33akBSKUgGSBIAA4gA5VSXYz8Xi8FAoio3HFfAxcHi2NDLZwJbDvMDSCTEMKKTI-AAU6jOdDyh1ibAAhrM2UdZgBbTQAG052lm6jyAEoWAc-Ph1kSqa93CATpo6Cxng0lfc-ErZOYvvVcMozHKZKkHiwgA)
-
-  Needed parts:
-
-  - 1K-ohms resistor (x1)
-
 ## Firmware customization
 
 The involved class is `LEDStripTelemetry`. Constructor parameters are:
@@ -55,30 +28,12 @@ The involved class is `LEDStripTelemetry`. Constructor parameters are:
   - `false` if your LED strip works in 3.3V logic.
   - `true` if your LED strip works in 5V logic
     (so the "level shifter" is in place).
-- 4th (optional): Pixel driver. The firmware supports several pixel drivers:
-  - Pass `WS2811` for
-    [WS2811](https://www.alldatasheet.com/datasheet-pdf/pdf/1132633/WORLDSEMI/WS2811.html)
-    drivers.
-    *Note*: not tested.
-  - Pass `WS2812` (default) for any driver in that [family](http://world-semi.com/ws2812-family/),
-    including:
-    [WS2812](https://www.alldatasheet.com/datasheet-pdf/pdf/1134521/WORLDSEMI/WS2812.html) and
-    [WS2812B](https://www.alldatasheet.com/datasheet-pdf/pdf/1179113/WORLDSEMI/WS2812B.html)
-    drivers.
-  - Pass `WS2815` for any driver in that [family](http://world-semi.com/ws2815-family/).
-    *Note*: not tested.
-  - Pass `SK6812` for
-    [SK6812](https://cdn-shop.adafruit.com/product-files/1138/SK6812%20LED%20datasheet%20.pdf)
-    drivers.
-    *Note*: not tested.
-  - Pass `UCS1903` for
-    [UCS1903](https://www.led-stuebchen.de/download/UCS1903_English.pdf)
-    drivers.
-    *Note*: not tested.
+- 4th (optional): pixel driver. Choose a constant from the
+  [pixel_driver_t](../../../../src/include/SimWheelTypes.h) enumeration.
 - 5th (optional): Pixel data format (byte order):
   - Pass `AUTO` (default) to use the expected pixel format for the given pixel driver.
   - If your LED strip uses another pixel format, use another constant from the
-    [pixel_format_t](../../../../src/include/LedStrip.h) enumeration,
+    [pixel_format_t](../../../../src/include/SimWheelTypes.h) enumeration
     describing the red, green and blue byte order.
 
 For example:

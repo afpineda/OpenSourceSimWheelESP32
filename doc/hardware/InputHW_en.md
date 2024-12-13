@@ -27,10 +27,9 @@ This project provides debouncing by software means.
 
 You may use them, but they are not recommended for battery-based systems.
 
-- Single-color backlit switches: there is no need for specific firmware support. All you need is wiring.
-- Programable RGB backlit switches: this project does not provide specific support for them.
-  However, you could build a LED strip using RGB+IC switches
-  (LED strips are supported for telemetry display).
+- *Single-color backlit switches*: there is no need for specific firmware support. All you need is wiring.
+- *Programable RGB backlit switches*: this project support them via RGB LED strips.
+  You could build a LED strip using RGB+IC switches.
   See the [ZLS67-ZLS70](https://www.shanpu.com.tw/en/product/series/ZLS67-ZLS70)
   series of RGB+IC switches from the Taiwanese manufacturer *Shanpu*.
 
