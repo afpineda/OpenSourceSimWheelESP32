@@ -1,6 +1,7 @@
 # Using RGB LED Strips for raw telemetry display
 
-> [!NOTE] The "pixel control" approach is a better choice to telemetry display using LED strips.
+> [!NOTE]
+> The "pixel control" approach is a better choice to telemetry display using LED strips.
 
 This project supports RGB LED strips to display raw telemetry data.
 You can have multiple "gauges" in the same strip,
