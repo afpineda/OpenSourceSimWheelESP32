@@ -209,6 +209,8 @@ At write (unless locked):
   | 4                        | Save all user settings at once (including button mapping).                         |
   | 5                        | Reverse left clutch paddle polarity (analog only if any).                          |
   | 6                        | Reverse right clutch paddle polarity (analog only if any).                         |
+  | 7                        | Show all pixels in all groups at once                                              |
+  | 8                        | Turn off all pixels in all groups                                                  |
 
 - Write FF (hexadecimal) to ignore this field.
 
@@ -465,7 +467,7 @@ For example, the value 113 in `oil pressure` means 1.13 pressure units.
 |     5      |   1   | Reserved      | 1.4          |
 
 This report will set the color of a single pixel,
-but **does not  display it immediately**.
+but **does not display it immediately**.
 You will need to issue the appropriate *simple command* (see report ID 3)
 in order to display all the pixels at once.
 
