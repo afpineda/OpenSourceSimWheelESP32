@@ -1,5 +1,14 @@
 # Change log
 
+## 6.4.0
+
+- "Pixel control" is available for LED strips.
+  This is compatible with the "telemetry data" approach.
+  The *SimHub plugin* has been updated to support this feature.
+  Now, the end user can configure the behavior of each
+  single pixel.
+- Documentation updates.
+
 ## 6.3.1
 
 - This changelog now lists updates in reverse order.
