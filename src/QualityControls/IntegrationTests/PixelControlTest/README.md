@@ -17,11 +17,43 @@ Output through USB serial port at 115200 bauds.
 
 ## Software setup
 
-SimHub must be installed in the test machine.
-The official plugin must be installed and enabled.
-However, no game is required.
-We are using pre-recorded telemetry data found in the
-[TestTelemetryData](../TelemetryIntegrationTest/TestTelemetryData/) folder.
+In the test computer:
+
+- SimpleHIDWrite.exe: available at [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm).
+  There is a modern clone at [https://github.com/Robmaister/SimplerHidWrite](https://github.com/Robmaister/SimplerHidWrite).
+- **Optional**: *SimHub* and the official plugin.
+  No game is required. We are using pre-recorded telemetry data found in the
+  [TestTelemetryData](../TelemetryIntegrationTest/TestTelemetryData/) folder.
+
+## Procedure and expected output
+
+### Primary test
+
+*Note*: do not confuse `Set Report` with `Set Feature`.
+
+1. Open "SimpleHidWriter.exe". Locate this test device in the top area, and click on it.
+   Look for `Device VID= ... PID= ...`.
+2. You should see continuous report lines starting with `RD 01`.
+   Ignore them. Click on `Clear` from time to time.
+3. Enter `1E` at field `ReportID`.
+4. Enter `00 00 FF FF FF 00` at fields below `ReportID`.
+5. Click on `Set Report`.
+6. Enter `00 07 FF 00 00 00` at fields below `ReportID`.
+7. Click on `Set Report`.
+8. Enter `03` at field `ReportID`.
+9. Enter `FF FF FF 07 FF FF` at fields below `ReportID`.
+10. Click on `Set Feature`.
+11. The LED strip must show the following pixels in order:
+    white, off, off, off, off, off, off, blue.
+12. Enter `FF FF FF 08 FF FF` at fields below `ReportID`.
+13. Click on `Set Feature`.
+14. All pixels must turn off.
+
+### Secondary and **optional** test
+
+**Important note**:
+this test departs a lot from others because there is no way to predict
+a "correct" behavior.
 
 1. Ensure the device is connected to the host computer through BLE.
 2. Run SimHub. Enable the official plugin if asked to.
@@ -39,12 +71,3 @@ We are using pre-recorded telemetry data found in the
    - Copy pre-recorded files to that folder.
    - Once done, close the window and click on `Replay` again.
 8. Choose the recording and hit the play button.
-
-## Procedure and expected output
-
-**Important note**:
-this test departs a lot from others because there is no way to predict
-a "correct" behavior.
-
-The LED strip should reflect the engine speed
-as configured in the LED profile.
