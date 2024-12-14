@@ -72,3 +72,20 @@ Otherwise performance problems may occur.
 
 A secondary I2C bus must be used, which requires manual initialization.
 Note that the secondary I2C bus is **not available on ESP32C3 boards** (sorry).
+
+If your display hardware requires the secondary I2C bus,
+call `i2c::begin()` first. The parameters are:
+- 1st: the `SDA` pin for the secondary bus.
+- 2nd: the `SCL` pin for the secondary bus.
+- 3rd: set to `true`. This is mandatory.
+
+Both pins **must** support input, output and pull-up resistors.
+For example:
+
+```c++
+#include "SimWheelUI.h"
+
+...
+
+i2c::begin(GPIO_NUM_19,GPIO_NUM_20,true);
+```
