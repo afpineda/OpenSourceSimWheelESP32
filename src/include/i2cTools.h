@@ -1,5 +1,5 @@
 /**
- * @file i2c.h
+ * @file i2cTools.h
  *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2024-08-16
@@ -15,7 +15,6 @@
 #include "esp32-hal.h" // declares gpio_num_t
 #include <vector>
 #include "driver/i2c.h"
-
 
 namespace i2c
 {
@@ -102,6 +101,12 @@ namespace i2c
 
     // ----------------------------------------------------------------------------
 
+    /**
+     * @brief Get the internal bus port constant
+     *
+     * @param secondaryBus True for the secondary bus, false for the primary bus.
+     * @return i2c_port_t Bus port
+     */
     inline i2c_port_t getBus(bool secondaryBus)
     {
 #ifndef CONFIG_IDF_TARGET_ESP32C3

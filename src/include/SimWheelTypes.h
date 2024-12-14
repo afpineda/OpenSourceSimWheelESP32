@@ -65,6 +65,14 @@ typedef std::vector<gpio_num_t> gpio_num_array_t;
 class ButtonMatrixInputSpec
 {
 public:
+    /**
+     * @brief Abstract definition of buttons attached to a button matrix
+     *
+     * @param selectorPin Selector pin (GPIO number or alias)
+     * @param inputPin Selector pin (GPIO number or alias)
+     * @param number Input number assigned to the button
+     * @return ButtonMatrixInputSpec& This object (to chain calls)
+     */
     virtual ButtonMatrixInputSpec &inputNumber(
         gpio_num_t selectorPin,
         gpio_num_t inputPin,
@@ -94,6 +102,14 @@ enum class mux8_pin_t
 class Multiplexers8InputSpec
 {
 public:
+    /**
+     * @brief Abstract definition of buttons attached to a multiplexer
+     *
+     * @param inputPin Input pin (GPIO number or alias)
+     * @param pin Pin name in the chip to which the button is connected
+     * @param number Input number assigned to the button
+     * @return Multiplexers8InputSpec& This object (to chain calls)
+     */
     virtual Multiplexers8InputSpec &inputNumber(
         gpio_num_t inputPin,
         mux8_pin_t pin,
@@ -124,6 +140,14 @@ enum class sr8_pin_t
 class ShiftRegisters8InputSpec
 {
 public:
+    /**
+     * @brief Abstract definition of buttons attached to a shift registers chain
+     *
+     * @param indexInChain Position of a chip in the chain
+     * @param pin Pin name in the chip to which the button is connected
+     * @param number Input number assigned to the button
+     * @return ShiftRegisters8InputSpec& This object (to chain calls)
+     */
     virtual ShiftRegisters8InputSpec &inputNumber(
         uint8_t indexInChain,
         sr8_pin_t pin,
@@ -161,6 +185,13 @@ enum class MCP23017_pin_t
 class MCP23017InputSpec
 {
 public:
+    /**
+     * @brief Abstract definition of buttons attached to MCP23017 chip
+     *
+     * @param pin Pin name in the chip to which the button is connected
+     * @param number Input number assigned to the button
+     * @return MCP23017InputSpec& This object (to chain calls)
+     */
     virtual MCP23017InputSpec &inputNumber(MCP23017_pin_t pin, inputNumber_t number) = 0;
 };
 
@@ -187,6 +218,13 @@ enum class PCF8574_pin_t
 class PCF8574InputSpec
 {
 public:
+    /**
+     * @brief Abstract definition of buttons attached to PCF8574 chip
+     *
+     * @param pin Pin name in the chip to which the button is connected
+     * @param number Input number assigned to the button
+     * @return PCF8574InputSpec& This object (to chain calls)
+     */
     virtual PCF8574InputSpec &inputNumber(PCF8574_pin_t pin, inputNumber_t number) = 0;
 };
 
@@ -332,7 +370,15 @@ typedef enum
  */
 typedef struct
 {
-    uint32_t frameID; /// For internal use. Do not overwrite.
+    /**
+     * @brief Identifies a telemetry frame. For internal use. Do not overwrite.
+     *
+     */
+    uint32_t frameID;
+    /**
+     * @brief Powertrain telemetry
+     *
+     */
     struct
     {
         char gear = ' ';            /// Display character for current gear
@@ -344,6 +390,10 @@ typedef struct
         bool engineStarted = false; /// True if the engine is running
         uint16_t speed = 0;         /// Speed in user-defined units (Kph or Mph)
     } powertrain;
+    /**
+     * @brief ECU telemetry
+     *
+     */
     struct
     {
         bool absEngaged = false;   /// ABS is engaged
@@ -356,6 +406,10 @@ typedef struct
         uint8_t tcCut = 0;         /// Driver-selected TC Cut mode
         uint8_t brakeBias = 0;     /// Percentage of brake bias towards front wheels
     } ecu;
+    /**
+     * @brief Race control telemetry
+     *
+     */
     struct
     {
         bool blackFlag = false;
@@ -370,6 +424,10 @@ typedef struct
         /// Remaining time to the end of the session, in minutes. Zero if does not apply.
         uint16_t remainingMinutes = 0;
     } raceControl;
+    /**
+     * @brief Gauges telemetry
+     *
+     */
     struct
     {
         uint8_t relativeTurboPressure = 0;  /// Percentage of turbo pressure

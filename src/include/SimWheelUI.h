@@ -52,6 +52,10 @@ typedef enum
 // Single Color-Single LED user interface
 //-----------------------------------------------------------------------------
 
+/**
+ * @brief Use a single-color LED as a shift light indicator
+ *
+ */
 class SimpleShiftLight : public AbstractUserInterface
 {
 public:
@@ -82,6 +86,10 @@ private:
 // PCF8574-driven rev lights
 //-----------------------------------------------------------------------------
 
+/**
+ * @brief Use eight single-color LEDS as "rev lights"
+ *
+ */
 class PCF8574RevLights : public AbstractUserInterface
 {
 public:
@@ -125,6 +133,10 @@ private:
 // Segment to LED strip interface
 //-----------------------------------------------------------------------------
 
+/**
+ * @brief Abstract interface to work with individual pixels in an LED strip
+ *
+ */
 class LEDSegmentToStripInterface
 {
 public:
@@ -157,9 +169,22 @@ public:
 
 class LEDStripTelemetry; // forward declaration
 
+/**
+ * @brief Abstract definition of segments in an LED strip
+ *
+ */
 class LEDSegment
 {
 public:
+    /**
+     * @brief Construct a new LEDSegment object
+     *
+     * @param ledStripTelemetry Pointer to the "parent" LED strip which the segment belongs to
+     * @param requiresPowertrainTelemetry True if this segment uses powertrain telemetry
+     * @param requiresECUTelemetry True if this segment uses ECU telemetry
+     * @param requiresRaceControlTelemetry True if this segment uses race control telemetry
+     * @param requiresGaugeTelemetry True if this segment uses gauges telemetry
+     */
     LEDSegment(
         LEDStripTelemetry *ledStripTelemetry,
         bool requiresPowertrainTelemetry,
@@ -186,6 +211,7 @@ public:
      * @brief Draw a single frame.
      *
      * @param elapsedMs Elapsed milliseconds since last call.
+     * @param ledInterface Interface to set pixel colors.
      *
      * @note Must not enter an infinite loop. Must return as soon as possible.
      *
@@ -229,6 +255,10 @@ protected:
 // LED strip telemetry
 //-----------------------------------------------------------------------------
 
+/**
+ * @brief Use a LED strip for telemetry display in the "telemetry data" approach
+ *
+ */
 class LEDStripTelemetry : public AbstractUserInterface,
                           public LEDSegmentToStripInterface
 {
@@ -311,6 +341,10 @@ private:
 // LED segment: shift light
 //-----------------------------------------------------------------------------
 
+/**
+ * @brief Use an LED strip segment as a shift light indicator
+ *
+ */
 class ShiftLightLEDSegment : public LEDSegment
 {
 public:
@@ -350,6 +384,10 @@ private:
 // LED segment: Rev Lights
 //-----------------------------------------------------------------------------
 
+/**
+ * @brief Use an LED strip segment as "rev lights"
+ *
+ */
 class RevLightsLEDSegment : public LEDSegment
 {
 public:
@@ -408,6 +446,10 @@ private:
 // LED segment: race flags
 //-----------------------------------------------------------------------------
 
+/**
+ * @brief Use an LED strip segment as race flag indicator
+ *
+ */
 class RaceFlagsLEDSegment : public LEDSegment
 {
 public:
@@ -434,12 +476,40 @@ public: // LEDSegment implementation
         LEDSegmentToStripInterface &ledInterface) override;
 
 public:
+    /**
+     * @brief Default color for the black flag
+     *
+     */
     static uint32_t color_blackFlag;
+    /**
+     * @brief Default color for the checkered flag
+     *
+     */
     static uint32_t color_checkeredFlag;
+    /**
+     * @brief Default color for the blue flag
+     *
+     */
     static uint32_t color_blueFlag;
+    /**
+     * @brief Default color for the green flag
+     *
+     */
     static uint32_t color_greenFlag;
+    /**
+     * @brief Default color for the orange flag
+     *
+     */
     static uint32_t color_orangeFlag;
+    /**
+     * @brief Default color for the white flag
+     *
+     */
     static uint32_t color_whiteFlag;
+    /**
+     * @brief Default color for the yellow flag
+     *
+     */
     static uint32_t color_yellowFlag;
 
 private:
@@ -455,6 +525,10 @@ private:
 // LED segment: ECU witness light
 //-----------------------------------------------------------------------------
 
+/**
+ * @brief Use an LED strip segment as witness
+ *
+ */
 class WitnessLEDSegment : public LEDSegment
 {
 public:

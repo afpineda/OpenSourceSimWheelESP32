@@ -5,9 +5,7 @@
  * @date 2022-02-27
  * @brief Detect input events in a polling (or sampling) loop.
  *
- * @section DESCRIPTION
- *
- * Events are detected by a polling loop that runs in a separate thread.
+ * @details Events are detected by a polling loop that runs in a separate thread.
  *
  * @copyright Licensed under the EUPL
  *

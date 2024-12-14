@@ -6,10 +6,9 @@
  * @brief Use a rotary encoder's rotation, both clockwise and counter-clockwise,
  *        as inputs for a sim racing wheel or button box.
  *
- * @section DESCRIPTION
- *
- * Each single "detent" is translated into two events: a "virtual button" press and then release,
- * with a short delay between them.
+ * @details Each single "detent" is translated into two events:
+ *          a "virtual button" press and then release,
+ *          with a short delay between them.
  *
  * @copyright Licensed under the EUPL
  *

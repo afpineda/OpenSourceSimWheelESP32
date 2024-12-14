@@ -5,10 +5,9 @@
  * @date 2022-02-27
  * @brief Main header for common sources
  *
- * @section DESCRIPTION
- *
- * This file declares all the namespaces that builds the system architecture.
- * See the [Firmware Architecture document](../../doc/firmware/FirmwareArchitecture_en.md).
+ * @details This file declares all the namespaces that
+ *          builds the system architecture. See the
+ *          [Firmware Architecture document](https://github.com/afpineda/OpenSourceSimWheelESP32/blob/Development/doc/firmware/FirmwareArchitecture_en.md).
  *
  * @copyright Licensed under the EUPL
  *
@@ -27,8 +26,17 @@
  */
 namespace capabilities
 {
-    // For read only. Do not write
+    /**
+     * @brief Capability flags. Exposed for read-only. Do not overwrite.
+     *
+     */
     extern volatile uint32_t flags;
+
+    /**
+     * @brief Bitmap of available inputs. Set from the inputs namespace.
+     *        Do not overwrite.
+     *
+     */
     extern volatile inputBitmap_t availableInputs;
 
     /**
@@ -149,7 +157,6 @@ namespace userSettings
      *
      * @note Changes are **not** automatically saved to flash memory. Must call saveNow().
      *
-     * @param altMode True if this setting is intended for "ALT" mode, false otherwise.
      * @param rawInputNumber Firmware-defined input number in the range 0-63.
      * @param userInputNumberNoAlt User-defined input number in the range 0-127
      *                             to be used when ALT mode is disengaged.
@@ -345,16 +352,16 @@ namespace batteryMonitor
      *
      * @note No effect if there is no user interface.
      *
-     * @param[in] percentage. Value in the range from 0% (disable) to 100%.
-     *                        Invalid values are ignored.
+     * @param[in] percentage Value in the range from 0% (disable) to 100%.
+     *                       Invalid values are ignored.
      */
     void setWarningSoC(uint8_t percentage);
 
     /**
      * @brief Set a battery level to shutdown the system
      *
-     * @param[in] percentage. Value in the range from 0% (disable) to 100%.
-     *                        Invalid values are ignored.
+     * @param[in] percentage Value in the range from 0% (disable) to 100%.
+     *                       Invalid values are ignored.
      */
     void setPowerOffSoC(uint8_t percentage);
 
@@ -385,7 +392,7 @@ namespace power
      *
      * @param latchPin Output-capable GPIO that drives power on/off.
      * @param mode Expected behaviour of 'latchPin' to keep power on or go to power off.
-     * @param waitTicks A delay to wait for power off to happen, in milliseconds.
+     * @param waitMs A delay to wait for power off to happen, in milliseconds.
      */
     void setPowerLatch(gpio_num_t latchPin, powerLatchMode_t mode, uint32_t waitMs);
 
@@ -432,8 +439,8 @@ namespace inputs
      *
      * @param clkPin pin number attached to CLK or A
      * @param dtPin pin number attached to DT or B
-     * @param[in] cwButtonNumber A number for the "virtual button" of a clockwise rotation event.
-     * @param[in] ccwButtonNumber A number for the "virtual button" of a counter-clockwise rotation event.
+     * @param[in] cwInputNumber A number for the "virtual button" of a clockwise rotation event.
+     * @param[in] ccwInputNumber A number for the "virtual button" of a counter-clockwise rotation event.
      * @param[in] useAlternateEncoding Set to true in order to use the signal encoding of
      *                                 ALPS RKJX series of rotary encoders, and the alike.
      *
@@ -626,8 +633,8 @@ namespace inputHub
     /**
      * @brief Set inputs for clutch calibration while one and only one clutch paddle is pressed
      *
-     * @param upButtonNumber Input number to increase bite point
-     * @param downButtonNumber Input number to decrease bite point
+     * @param incInputNumber Input number to increase bite point
+     * @param decInputNumber Input number to decrease bite point
      */
     void setClutchCalibrationInputNumbers(const inputNumber_t incInputNumber, const inputNumber_t decInputNumber);
 
@@ -952,10 +959,17 @@ namespace hidImplementation
         void onReset(uint8_t *report);
 
         /**
-         * @brief Sets data for the input report
+         * @brief  Sets data for the input report
          *
-         * @param[out] report Pointer to report buffer.
-         *                    Size is defined by GAMEPAD_REPORT_SIZE.
+         * @param report Pointer to report buffer.
+         *               Size is defined by GAMEPAD_REPORT_SIZE.
+         * @param notifyConfigChanges True to notify changes in the device settings
+         * @param inputsLow State of inputs (low-order bytes)
+         * @param inputsHigh State of inputs (high-order bytes)
+         * @param POVstate State of the DPAD (aka "point of view")
+         * @param leftAxis State of the left axis
+         * @param rightAxis State of the right axis
+         * @param clutchAxis State of the clutch axis
          */
         void onReportInput(
             uint8_t *report,

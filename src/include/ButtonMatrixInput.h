@@ -5,27 +5,35 @@
  * @date 2022-03-03
  * @brief Use of a switch/button matrix as inputs
  *
- * @section DESCRIPTION
- *
- * A button matrix is composed by selector (output) pins and input pins, sometimes they are
- * called row and column pins. In order to read the full state of the matrix,
- * this algorithm applies:
- * 1. Set one selector pin to HIGH
- * 2. Read all inputs
- * 3. Set the previous selector to LOW.
- * 4. Move to the next selector pin, and back to 1.
+ * @details A button matrix is composed by selector (output) pins and input pins,
+ *          sometimes they are called row and column pins.
+ *          In order to read the full state of the matrix,
+ *          this algorithm applies:
+ *          1. Set one selector pin to HIGH
+ *          2. Read all inputs
+ *          3. Set the previous selector to LOW.
+ *          4. Move to the next selector pin, and back to 1.
  *
  * @copyright Licensed under the EUPL
  *
  */
 
-#ifndef __BUTTONMATRIXINPUT_H__
-#define __BUTTONMATRIXINPUT_H__
+#ifndef __BUTTON_MATRIX_INPUT_H__
+#define __BUTTON_MATRIX_INPUT_H__
 
 #include "PolledInput.h"
 #include "SimWheelTypes.h"
 
+/**
+ * @def MAX_MATRIX_SELECTOR_COUNT
+ * @brief Maximum selector pins allowed
+ */
 #define MAX_MATRIX_SELECTOR_COUNT 8
+
+/**
+ * @def MAX_MATRIX_INPUT_COUNT
+ * @brief Maximum input pins allowed
+ */
 #define MAX_MATRIX_INPUT_COUNT 8
 
 /**
@@ -41,7 +49,6 @@ private:
     inputBitmap_t *bitmap;
 
 public:
-
     /**
      * @brief Construct a new Button Matrix Input object
      *

@@ -16,6 +16,10 @@
 
 //-------------------------------------------------------------------
 
+/**
+ * @brief Abstract interface to user notifications
+ *
+ */
 class SerialNotificationImpl : public AbstractUserInterface
 {
 public:
@@ -32,12 +36,18 @@ public:
 
 #define SERIAL_DISPLAY_BUFFER_SIZE 64
 
+/**
+ * @brief User notifications in the serial interface
+ *        (for testing)
+ *
+ */
 class SerialTelemetryDisplay : public AbstractUserInterface
 {
 private:
     char displayBuffer[SERIAL_DISPLAY_BUFFER_SIZE];
     bool displayOff = true;
     uint32_t lastFrameID = 0;
+
 public:
     SerialTelemetryDisplay();
     virtual void onTelemetryData(const telemetryData_t *data) override;

@@ -21,6 +21,10 @@
 // SK6812: https://cdn-shop.adafruit.com/product-files/1138/SK6812%20LED%20datasheet%20.pdf
 // UCS1903: https://www.led-stuebchen.de/download/UCS1903_English.pdf
 
+/**
+ * @brief Low-level interface to LED strips
+ *
+ */
 class LEDStrip
 {
 public:
@@ -104,6 +108,12 @@ public:
         uint8_t greenChannel,
         uint8_t blueChannel);
 
+    /**
+     * @brief Set pixel color in RGB format
+     *
+     * @param pixelIndex Index of the pixel.
+     * @param packedRGB Pixel color in packet RGB format
+     */
     void pixelRGB(
         uint8_t pixelIndex,
         uint32_t packedRGB)
@@ -114,6 +124,13 @@ public:
                  (uint8_t)(packedRGB));
     }
 
+    /**
+     * @brief Set color (in RGB format) to a range of pixels
+     *
+     * @param fromPixelIndex Index of the first pixel.
+     * @param toPixelIndex Index of the last pixel.
+     * @param packedRGB Pixel color in packet RGB format
+     */
     void pixelRangeRGB(
         uint8_t fromPixelIndex,
         uint8_t toPixelIndex,
