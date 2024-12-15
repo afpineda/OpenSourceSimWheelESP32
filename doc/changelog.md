@@ -1,5 +1,14 @@
 # Change log
 
+## 6.4.1
+
+- Documentation fixes and updates.
+- Some code commentaries has been fixed for Doxygen to process them properly.
+- No changes to the source code other than headers.
+- The "build" GitHub action has been modified to only trigger
+  on pushes to the "development" branch.
+  This change does not apply to pull requests.
+
 ## 6.4.0
 
 - "Pixel control" is available for LED strips.
