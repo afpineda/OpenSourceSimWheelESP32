@@ -25,6 +25,11 @@ There are **two non-exclusive approaches** to telemetry in this project:
   - The host computer determines how the telemetry data is displayed.
     This allows for end-user configuration to be carried out.
 
+You can mix both approaches in the same custom firmware
+**as long as** they don't share display hardware.
+You will get unexpected behavior if you use the same
+display hardware for telemetry and pixel control.
+
 ## Limitations
 
 There are certain limitations to what the ESP32 hardware can do to display telemetry or pixel data:

@@ -43,7 +43,16 @@ Depending on how much space is available in the wheel's case, you have the choic
 
 ## Configure your custom firmware
 
-Arduino's sketch named [**CustomSetup**](../../../src/Firmware/CustomSetup/CustomSetup.ino) is the place where you build your own firmware by modifying a few specific lines of code. There are few steps:
+Arduino's sketch named
+[**CustomSetup**](../../../src/Firmware/CustomSetup/CustomSetup.ino)
+is the place where you build your own firmware by modifying a few specific lines of code.
+You may want to make a copy first to prevent your customized code from being deleted after updating.
+To make a working copy:
+
+- Copy the entire folder under a different name.
+- Make sure that both the folder and the ".ino" file inside it have exactly the same name.
+
+Then, there are a few steps:
 
 1. Configure each subsystem as described in their documentation.
 
