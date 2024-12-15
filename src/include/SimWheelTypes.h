@@ -291,16 +291,18 @@ typedef std::vector<inputNumber_t> inputNumberCombination_t;
 
 /**
  * @brief User-selected function of the clutch paddles
- *        CF_CLUTCH = F1-style clutch
- *        CF_ALT = Alternate button numbers (like ALT key in PC keyboards)
- *        CF_BUTTON = a button like any other
+ *
  */
 typedef enum
 {
-    CF_CLUTCH = 0, // F1-Style clutch. Must be the first in the enum: do not change
-    CF_AXIS,       // Independent axes
-    CF_ALT,        // "ALT" mode
-    CF_BUTTON      // Regular buttons. Must be the last in the enum: do not change
+    /// F1-Style clutch. Must be the first in the enum: do not change
+    CF_CLUTCH = 0,
+    /// Independent axes
+    CF_AXIS,
+    /// "ALT" mode
+    CF_ALT,
+    /// Regular buttons. Must be the last in the enum: do not change
+    CF_BUTTON
 } clutchFunction_t;
 
 /**
@@ -309,7 +311,10 @@ typedef enum
  */
 #define DEFAULT_AUTOSAVE_us 20 * 1000 * 1000
 
-// Time to wait for connection before power off (in seconds)
+/**
+ * @brief Time to wait for connection before power off (in seconds)
+ *
+ */
 #define AUTO_POWER_OFF_DELAY_SECS 60
 
 /**
@@ -318,9 +323,12 @@ typedef enum
  */
 typedef enum
 {
-    POWER_OPEN_DRAIN, // Power on when open drain, power off when low voltage
-    POWER_OFF_HIGH,   // Power on when low voltage, power off when high voltage
-    POWER_OFF_LOW,    // Power on when high voltage, power off when low voltage
+    /// Power on when open drain, power off when low voltage
+    POWER_OPEN_DRAIN,
+    /// Power on when low voltage, power off when high voltage
+    POWER_OFF_HIGH,
+    /// Power on when high voltage, power off when low voltage
+    POWER_OFF_LOW
 } powerLatchMode_t;
 
 /**
@@ -335,16 +343,26 @@ typedef enum
  */
 typedef enum
 {
-    CAP_CLUTCH_BUTTON = 0,                 // has digital clutch paddles (switches)
-    CAP_CLUTCH_ANALOG = 1,                 // has analog clutch paddles (potentiometers)
-    CAP_ALT = 2,                           // has "ALT" buttons
-    CAP_DPAD = 3,                          // has a directional pad
-    CAP_BATTERY = 4,                       // battery-operated
-    CAP_BATTERY_CALIBRATION_AVAILABLE = 5, // has battery calibration data
-    CAP_TELEMETRY_POWERTRAIN = 6,          /// Able to display powertrain telemetry data
-    CAP_TELEMETRY_ECU = 7,                 /// Able to display ECU telemetry data
-    CAP_TELEMETRY_RACE_CONTROL = 8,        /// Able to display race control telemetry data
-    CAP_TELEMETRY_GAUGES = 9               /// Able to display telemetry data for gauges
+    /// Has digital clutch paddles (switches)
+    CAP_CLUTCH_BUTTON = 0,
+    /// Has analog clutch paddles (potentiometers)
+    CAP_CLUTCH_ANALOG = 1,
+    /// Has "ALT" buttons
+    CAP_ALT = 2,
+    /// Has a directional pad
+    CAP_DPAD = 3,
+    /// Battery-operated
+    CAP_BATTERY = 4,
+    /// Has battery calibration data
+    CAP_BATTERY_CALIBRATION_AVAILABLE = 5,
+    /// Able to display powertrain telemetry data
+    CAP_TELEMETRY_POWERTRAIN = 6,
+    /// Able to display ECU telemetry data
+    CAP_TELEMETRY_ECU = 7,
+    /// Able to display race control telemetry data
+    CAP_TELEMETRY_RACE_CONTROL = 8,
+    /// Able to display telemetry data for gauges
+    CAP_TELEMETRY_GAUGES = 9
 } deviceCapability_t;
 
 /**
@@ -353,15 +371,24 @@ typedef enum
  */
 typedef enum
 {
-    CMD_RESERVED = 0,           // Not a command, reserved to avoid mistakes
-    CMD_AXIS_RECALIBRATE = 1,   // Recalibrate analog axes (if any)
-    CMD_BATT_RECALIBRATE = 2,   // Restart battery auto-calibration
-    CMD_RESET_BUTTONS_MAP = 3,  // Reset buttons map to factory defaults
-    CMD_SAVE_NOW = 4,           // Save all user settings to flash memory immediately
-    CMD_REVERSE_LEFT_AXIS = 5,  // Reverse left axis (if any)
-    CMD_REVERSE_RIGHT_AXIS = 6, // Reverse right axis (if any)
-    CMD_SHOW_PIXELS = 7,        // Display all pixels in all pixel groups
-    CMD_RESET_PIXELS = 8        // Turn off all pixels in all groups
+    /// Not a command, reserved to avoid mistakes
+    CMD_RESERVED = 0,
+    /// Recalibrate analog axes (if any)
+    CMD_AXIS_RECALIBRATE = 1,
+    /// Restart battery auto-calibration
+    CMD_BATT_RECALIBRATE = 2,
+    /// Reset buttons map to factory defaults
+    CMD_RESET_BUTTONS_MAP = 3,
+    /// Save all user settings to flash memory immediately
+    CMD_SAVE_NOW = 4,
+    /// Reverse left axis (if any)
+    CMD_REVERSE_LEFT_AXIS = 5,
+    /// Reverse right axis (if any)
+    CMD_REVERSE_RIGHT_AXIS = 6,
+    /// Display all pixels in all pixel groups
+    CMD_SHOW_PIXELS = 7,
+    /// Turn off all pixels in all groups
+    CMD_RESET_PIXELS = 8
 } simpleCommands_t;
 
 /**
@@ -381,14 +408,22 @@ typedef struct
      */
     struct
     {
-        char gear = ' ';            /// Display character for current gear
-        uint16_t rpm = 0;           /// Revolutions per minute
-        uint8_t rpmPercent = 0;     /// Percentage of RPM
-        uint8_t shiftLight1 = 0;    /// Non-zero at maximum torque
-        uint8_t shiftLight2 = 0;    /// Non-zero at maximum power
-        bool revLimiter = false;    /// True at maximum RPM
-        bool engineStarted = false; /// True if the engine is running
-        uint16_t speed = 0;         /// Speed in user-defined units (Kph or Mph)
+        /// Display character for current gear
+        char gear = ' ';
+        /// Revolutions per minute
+        uint16_t rpm = 0;
+        /// Percentage of RPM
+        uint8_t rpmPercent = 0;
+        /// Non-zero at maximum torque
+        uint8_t shiftLight1 = 0;
+        /// Non-zero at maximum power
+        uint8_t shiftLight2 = 0;
+        /// True at maximum RPM
+        bool revLimiter = false;
+        /// True if the engine is running
+        bool engineStarted = false;
+        /// Speed in user-defined units (Kph or Mph)
+        uint16_t speed = 0;
     } powertrain;
     /**
      * @brief ECU telemetry
@@ -396,15 +431,24 @@ typedef struct
      */
     struct
     {
-        bool absEngaged = false;   /// ABS is engaged
-        bool tcEngaged = false;    /// TC is engaged
-        bool drsEngaged = false;   /// DRS is engaged
-        bool pitLimiter = false;   /// The pit limiter is engaged
-        bool lowFuelAlert = false; /// True when fuel is low
-        uint8_t absLevel = 0;      /// Driver-selected ABS mode
-        uint8_t tcLevel = 0;       /// Driver-selected TC mode
-        uint8_t tcCut = 0;         /// Driver-selected TC Cut mode
-        uint8_t brakeBias = 0;     /// Percentage of brake bias towards front wheels
+        /// ABS is engaged
+        bool absEngaged = false;
+        /// TC is engaged
+        bool tcEngaged = false;
+        /// DRS is engaged
+        bool drsEngaged = false;
+        /// The pit limiter is engaged
+        bool pitLimiter = false;
+        /// True when fuel is low
+        bool lowFuelAlert = false;
+        /// Driver-selected ABS mode
+        uint8_t absLevel = 0;
+        /// Driver-selected TC mode
+        uint8_t tcLevel = 0;
+        /// Driver-selected TC Cut mode (NOTE: currently not available)
+        uint8_t tcCut = 0;
+        /// Percentage of brake bias towards front wheels
+        uint8_t brakeBias = 0;
     } ecu;
     /**
      * @brief Race control telemetry
@@ -430,13 +474,20 @@ typedef struct
      */
     struct
     {
-        uint8_t relativeTurboPressure = 0;  /// Percentage of turbo pressure
-        float absoluteTurboPressure = 0.0;  /// Turbo pressure in bars
-        uint16_t waterTemperature = 0;      /// Water temperature in user-defined units (Celsius or Farenheit)
-        float oilPressure = 0.0;            /// Oil pressure in bars
-        uint16_t oilTemperature = 0;        /// Oil temperature in user-defined units (Celsius or Farenheit)
-        uint8_t relativeRemainingFuel = 0;  /// Percentage of remaining fuel
-        uint16_t absoluteRemainingFuel = 0; /// Remaining fuel in user-defined units (litres or gallons)
+        /// Percentage of turbo pressure
+        uint8_t relativeTurboPressure = 0;
+        /// Turbo pressure in bars
+        float absoluteTurboPressure = 0.0;
+        /// Water temperature in user-defined units (Celsius or Fahrenheit)
+        uint16_t waterTemperature = 0;
+        /// Oil pressure in bars
+        float oilPressure = 0.0;
+        /// Oil temperature in user-defined units (Celsius or Fahrenheit)
+        uint16_t oilTemperature = 0;
+        /// Percentage of remaining fuel
+        uint8_t relativeRemainingFuel = 0;
+        /// Remaining fuel in user-defined units (litres or gallons)
+        uint16_t absoluteRemainingFuel = 0;
     } gauges;
 } telemetryData_t;
 
@@ -576,9 +627,12 @@ typedef std::vector<AbstractUserInterface *> notificationImplementorsArray_t;
  */
 typedef enum
 {
-    GRP_TELEMETRY = 0, // Telemetry leds group
-    GRP_BUTTONS,       // Buttons lighting group
-    GRP_INDIVIDUAL     // Individual leds group
+    /// Telemetry leds group
+    GRP_TELEMETRY = 0,
+    /// Buttons lighting group
+    GRP_BUTTONS,
+    /// Individual leds group
+    GRP_INDIVIDUAL
 } pixelGroup_t;
 
 /**
@@ -587,10 +641,15 @@ typedef enum
  */
 typedef enum
 {
-    WS2811, // WS2811
-    WS2812, // WS2812 family
-    WS2815, // WS2815 family
+    /// WS2811 driver
+    WS2811,
+    /// WS2812 family
+    WS2812,
+    /// WS2815 family
+    WS2815,
+    /// SK6812 driver
     SK6812,
+    /// UCS1903 driver
     UCS1903
 } pixel_driver_t;
 
@@ -600,13 +659,20 @@ typedef enum
  */
 typedef enum
 {
-    AUTO, // Auto-detect based on pixel driver
-    RGB,  // Red-green-blue
-    RBG,  // Red-blue-green
-    GRB,  // Green-red-blue
-    GBR,  // Green-blue-red
-    BRG,  // Blue-red-green
-    BGR   // Blue-green-red
+    /// Auto-detect based on pixel driver
+    AUTO,
+     /// Red-green-blue
+    RGB,
+    /// Red-blue-green
+    RBG,
+    /// Green-red-blue
+    GRB,
+    /// Green-blue-red
+    GBR,
+    /// Blue-red-green
+    BRG,
+    /// Blue-green-red
+    BGR
 } pixel_format_t;
 
 #endif
