@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'Development'
+      - 'BugFix'
     paths:
       - '**.c'
       - '**.cpp'
