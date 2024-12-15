@@ -6,6 +6,12 @@ Place up to three calls to `pixels::configure()` with the following parameters
 1. **Pixel group** to configure.
    The valid values are found in the `pixelGroup_t` enumeration:
    `GRP_TELEMETRY`, `GRP_BUTTONS` or `GRP_INDIVIDUAL`.
+
+   > [!NOTE]
+   > These three groups are indicative, **not mandatory**.
+   > You could use a single LED strip for telemetry,
+   > button backlighting and individual pixels.
+
 2. **DOut** pin: GPIO pin number (or alias) where the first pixel
    is connected to the DevKit board.
 3. Total **number of pixels** in the RGB LED strip.
