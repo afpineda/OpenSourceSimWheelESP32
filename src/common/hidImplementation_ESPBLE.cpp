@@ -196,9 +196,11 @@ void hidImplementation::begin(
 
         // Stack initialization
         BLEDevice::init(String(deviceName.c_str()));
-        // NOTE: this library lacks BLEDevice::setSecurityAuth(BLE_SM_PAIR_AUTHREQ_BOND);
         pServer = BLEDevice::createServer();
         pServer->setCallbacks(&connectionStatus);
+        BLESecurity *pSecurity = new BLESecurity();
+        pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_MITM_BOND);
+        pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
 
         // PNP hardware ID
         uint16_t custom_vid = BLE_VENDOR_ID;
