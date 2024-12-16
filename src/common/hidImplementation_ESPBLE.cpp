@@ -36,10 +36,45 @@
 static esp_timer_handle_t autoPowerOffTimer = nullptr;
 
 // Related to HID device
-static BLEHIDDevice *hid = nullptr;
+class BLEHIDDeviceFix;
+static BLEHIDDeviceFix *hid = nullptr;
 static BLECharacteristic *inputGamepad = nullptr;
 static BLEServer *pServer = nullptr;
 static bool notifyConfigChanges = false;
+
+// ----------------------------------------------------------------------------
+// BLEHIDDeviceFix
+//
+// This subclass is a workaround for a bug in Arduino-ESP32
+// For unknown reasons,
+// notifications get randomly disabled in the input report.
+// ----------------------------------------------------------------------------
+
+class BLEHIDDeviceFix : public BLEHIDDevice
+{
+public:
+    BLECharacteristic *inputReport(uint8_t reportID)
+    {
+        BLECharacteristic *inputReportCharacteristic =
+            hidService()->createCharacteristic((uint16_t)0x2a4d, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY);
+        BLEDescriptor *inputReportDescriptor = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
+        BLE2902 *p2902 = new BLE2902();
+        inputReportCharacteristic->setAccessPermissions(ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
+        inputReportDescriptor->setAccessPermissions(ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
+        p2902->setAccessPermissions(ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
+        p2902->setNotifications(true);
+        p2902->setIndications(true);
+
+        uint8_t desc1_val[] = {reportID, 0x01};
+        inputReportDescriptor->setValue((uint8_t *)desc1_val, 2);
+        inputReportCharacteristic->addDescriptor(p2902);
+        inputReportCharacteristic->addDescriptor(inputReportDescriptor);
+
+        return inputReportCharacteristic;
+    }
+
+    BLEHIDDeviceFix(BLEServer *pServer) : BLEHIDDevice(pServer) {}
+};
 
 // ----------------------------------------------------------------------------
 // BLE Server callbacks and advertising
@@ -80,7 +115,7 @@ public:
     void onWrite(BLECharacteristic *pCharacteristic) override;
     void onRead(BLECharacteristic *pCharacteristic) override;
     FeatureReport(uint8_t RID, uint16_t size);
-    static void attachTo(BLEHIDDevice *hid, uint8_t RID, uint16_t size);
+    static void attachTo(BLEHIDDeviceFix *hid, uint8_t RID, uint16_t size);
 
 private:
     uint8_t _reportID;
@@ -111,7 +146,7 @@ FeatureReport::FeatureReport(uint8_t RID, uint16_t size)
 }
 
 // Attach to HID device
-void FeatureReport::attachTo(BLEHIDDevice *hid, uint8_t RID, uint16_t size)
+void FeatureReport::attachTo(BLEHIDDeviceFix *hid, uint8_t RID, uint16_t size)
 {
     BLECharacteristic *reportCharacteristic = hid->featureReport(RID);
     if (!reportCharacteristic)
@@ -131,7 +166,7 @@ class OutputReport : public BLECharacteristicCallbacks
 public:
     void onWrite(BLECharacteristic *pCharacteristic) override;
     OutputReport(uint8_t RID);
-    static void attachTo(BLEHIDDevice *hid, uint8_t RID);
+    static void attachTo(BLEHIDDeviceFix *hid, uint8_t RID);
 
 private:
     uint8_t _reportID;
@@ -151,7 +186,7 @@ void OutputReport::onWrite(BLECharacteristic *pCharacteristic)
 }
 
 // Attach to HID device
-void OutputReport::attachTo(BLEHIDDevice *hid, uint8_t RID)
+void OutputReport::attachTo(BLEHIDDeviceFix *hid, uint8_t RID)
 {
     BLECharacteristic *reportCharacteristic = hid->outputReport(RID);
     if (!reportCharacteristic)
@@ -196,9 +231,11 @@ void hidImplementation::begin(
 
         // Stack initialization
         BLEDevice::init(String(deviceName.c_str()));
-        // NOTE: this library lacks BLEDevice::setSecurityAuth(BLE_SM_PAIR_AUTHREQ_BOND);
         pServer = BLEDevice::createServer();
         pServer->setCallbacks(&connectionStatus);
+        BLESecurity *pSecurity = new BLESecurity();
+        pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_MITM_BOND);
+        pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
 
         // PNP hardware ID
         uint16_t custom_vid = BLE_VENDOR_ID;
@@ -208,7 +245,7 @@ void hidImplementation::begin(
             hidImplementation::common::loadHardwareID(custom_vid, custom_pid);
 
         // HID initialization
-        hid = new BLEHIDDevice(pServer);
+        hid = new BLEHIDDeviceFix(pServer);
         if (!hid)
         {
             log_e("Unable to create HID device");
@@ -289,7 +326,6 @@ void hidImplementation::reportInput(
             rightAxis,
             clutchAxis);
         inputGamepad->setValue(report, GAMEPAD_REPORT_SIZE);
-        inputGamepad->setNotifyProperty(true);
         inputGamepad->notify(true);
     }
 }
