@@ -1,5 +1,14 @@
 # Change log
 
+## 6.4.2
+
+- The native BLE implementation (Arduino-ESP32) now works (v3.0.7).
+  This is a caution against bugs and breaking changes.
+- Code updated to work with
+  [NimBLE-Arduino v2.1.0](https://github.com/h2zero/NimBLE-Arduino/releases/tag/2.1.0).
+  NimBLE-Arduino continues to be the default BLE stack.
+- Minor documentation updates.
+
 ## 6.4.1
 
 - Documentation fixes and updates.
