@@ -50,7 +50,8 @@
         "typeinfo": "cpp",
         "xutility": "cpp",
         "compare": "cpp",
-        "unordered_set": "cpp"
+        "unordered_set": "cpp",
+        "span": "cpp"
     },
     "C_Cpp.default.compilerPath": ""
 }
