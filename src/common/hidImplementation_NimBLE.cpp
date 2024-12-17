@@ -76,6 +76,7 @@ NimBLECharacteristic *NimBLEHIDDeviceFix::getOutputReport(uint8_t reportId)
     outputReportDsc->setValue(desc1_val, 2);
 
     return outputReportChr;
+    // return NimBLEHIDDevice::getOutputReport(reportId);
 } // getOutputReport
 
 NimBLECharacteristic *NimBLEHIDDeviceFix::getFeatureReport(uint8_t reportId)
@@ -98,7 +99,7 @@ NimBLECharacteristic *NimBLEHIDDeviceFix::getInputReport(uint8_t reportId)
 {
     NimBLECharacteristic *inputReportChr =
         getHidService()->createCharacteristic(hidReportChrUuid,
-                                       NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC);
+                                              NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC);
     NimBLEDescriptor *inputReportDsc =
         inputReportChr->createDescriptor(hidReportChrDscUuid, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::READ_ENC);
 
@@ -208,6 +209,11 @@ void FeatureReport::attachTo(NimBLEHIDDeviceFix *hid, uint8_t RID, uint16_t size
         abort();
     }
     reportCharacteristic->setCallbacks(new FeatureReport(RID, size));
+
+    // Make the data available on first read
+    uint8_t data[size];
+    hidImplementation::common::onGetFeature(RID, data, size);
+    reportCharacteristic->setValue(data, size);
 }
 
 // ----------------------------------------------------------------------------
