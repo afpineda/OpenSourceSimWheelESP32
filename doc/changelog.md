@@ -1,5 +1,9 @@
 # Change log
 
+## 6.4.3
+
+- Small, but relevant, bug fix.
+
 ## 6.4.2
 
 - The native BLE implementation (Arduino-ESP32) now works (v3.0.7).
