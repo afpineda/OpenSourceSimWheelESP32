@@ -20,6 +20,7 @@
 LEDStrip *pixelData[3] = {nullptr};
 SemaphoreHandle_t pixelLock = nullptr;
 StaticSemaphore_t pixelLockBuffer;
+#define WAIT_TICKS pdMS_TO_TICKS(150)
 
 // ----------------------------------------------------------------------------
 // Configuration
@@ -153,7 +154,7 @@ void pixels::show()
 void PixelControlNotification::onStart()
 {
     if (pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, 0) == pdTRUE))
+        (xSemaphoreTakeRecursive(pixelLock, WAIT_TICKS) == pdTRUE))
     {
         pixelControl_OnStart();
         xSemaphoreGiveRecursive(pixelLock);
@@ -163,7 +164,7 @@ void PixelControlNotification::onStart()
 void PixelControlNotification::onBitePoint()
 {
     if (pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, 0) == pdTRUE))
+        (xSemaphoreTakeRecursive(pixelLock, WAIT_TICKS) == pdTRUE))
     {
         pixelControl_OnBitePoint();
         xSemaphoreGiveRecursive(pixelLock);
@@ -173,7 +174,7 @@ void PixelControlNotification::onBitePoint()
 void PixelControlNotification::onConnected()
 {
     if (pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, 0) == pdTRUE))
+        (xSemaphoreTakeRecursive(pixelLock, WAIT_TICKS) == pdTRUE))
     {
         pixelControl_OnConnected();
         xSemaphoreGiveRecursive(pixelLock);
@@ -183,7 +184,7 @@ void PixelControlNotification::onConnected()
 void PixelControlNotification::onBLEdiscovering()
 {
     if (pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, 0) == pdTRUE))
+        (xSemaphoreTakeRecursive(pixelLock, WAIT_TICKS) == pdTRUE))
     {
         pixelControl_OnBLEdiscovering();
         xSemaphoreGiveRecursive(pixelLock);
@@ -193,7 +194,7 @@ void PixelControlNotification::onBLEdiscovering()
 void PixelControlNotification::onLowBattery()
 {
     if (pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, 0) == pdTRUE))
+        (xSemaphoreTakeRecursive(pixelLock, WAIT_TICKS) == pdTRUE))
     {
         pixelControl_OnLowBattery();
         xSemaphoreGiveRecursive(pixelLock);
