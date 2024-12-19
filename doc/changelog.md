@@ -1,5 +1,14 @@
 # Change log
 
+## 6.5.0
+
+- Pixel Control is now compatible with notifications (e.g., low battery).
+  There are predefined notifications, but they are optional.
+  Custom notifications can also be developed.
+- Documentation is up to date with this.
+  A workaround has been documented to make 5V LED strips work
+  with 3.3V power sources.
+
 ## 6.4.3
 
 - Small, but relevant, bug fix.
