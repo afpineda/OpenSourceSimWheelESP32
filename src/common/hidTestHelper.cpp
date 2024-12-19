@@ -111,17 +111,6 @@ int batteryMonitor::getLastBatteryLevel()
 
 //------------------------------------------------------------------
 
-void pixels::configure(
-    pixelGroup_t group,
-    gpio_num_t dataPin,
-    uint8_t pixelCount,
-    bool useLevelShift,
-    pixel_driver_t pixelType,
-    pixel_format_t pixelFormat)
-{
-    // Do nothing
-}
-
 void pixels::set(
     pixelGroup_t group,
     uint8_t pixelIndex,
