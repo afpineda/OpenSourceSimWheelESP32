@@ -16,7 +16,7 @@
 //------------------------------------------------------------------
 
 #define LED_COUNT 8
-#define LEVEL_SHIFTER false
+#define LEVEL_SHIFTER true
 #define DEFAULT_DELAY 2000
 
 LEDStrip *strip;
@@ -76,5 +76,13 @@ void loop()
     strip->pixelRGB(5, 0xFFA500);
     strip->pixelRGB(6, 0xFF0000);
     strip->show();
-    delay(DEFAULT_DELAY*2);
+    delay(DEFAULT_DELAY);
+    Serial.println("Shift to next");
+    strip->shiftToNext();
+    strip->show();
+    delay(DEFAULT_DELAY);
+    Serial.println("Shift to previous");
+    strip->shiftToPrevious();
+    strip->show();
+    delay(DEFAULT_DELAY);
 }

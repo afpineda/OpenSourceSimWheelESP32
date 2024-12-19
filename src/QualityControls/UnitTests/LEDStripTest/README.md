@@ -27,4 +27,6 @@ Output via USB serial port at 115200 baud. Connect before reset.
 9. All LEDs must go dimmer. Output must show `Go orange dimmer`.
 10. All LEDs must go off. Output must show `Go off`.
 11. LEDs must show rainbow colors. Output must show `rainbow`.
-12. Back to 3.
+12. LEDs must show rainbow colors displaced one pixel to the right. Output must show `Shift to next`.
+13. LEDs must show rainbow colors again. Output must show `Shift to previous`.
+14. Back to 3.

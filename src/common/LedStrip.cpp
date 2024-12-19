@@ -73,6 +73,9 @@ LEDStrip::LEDStrip(
     // The API requires an even number of block symbols
     if (rawDataCount % 2)
         rawDataCount++;
+    // The API requires 64 bytes minimum
+    if (rawDataCount < 64)
+        rawDataCount = 64;
 
     // Configure RMT channel
     rmt_tx_channel_config_t tx_config = {
@@ -90,7 +93,6 @@ LEDStrip::LEDStrip(
     if (useLevelShift)
     {
         tx_config.flags.io_od_mode = 1;
-        tx_config.flags.io_loop_back = 1;
     }
     ESP_ERROR_CHECK(rmt_new_tx_channel(&tx_config, &rmtHandle));
     if (!rmtHandle)
@@ -188,13 +190,16 @@ void LEDStrip::show()
 void LEDStrip::normalizeColor(uint8_t &r, uint8_t &g, uint8_t &b)
 {
     // Normalize to a common brightness
+    log_e("normalizeColor IN %hhu %hhu %hhu", r, g, b);
     if (brightnessWeight)
     {
+        log_e("normalize to %hhu", brightnessWeight);
         // Note: "">> 8" is equal to "/ 256"
         r = (r * brightnessWeight) >> 8;
         g = (g * brightnessWeight) >> 8;
         b = (b * brightnessWeight) >> 8;
     }
+    log_e("normalizeColor OUT %hhu %hhu %hhu", r, g, b);
 }
 
 //-----------------------------------------------------------------------------
@@ -273,6 +278,54 @@ void LEDStrip::pixelRangeRGB(
     normalizeColor(redChannel, greenChannel, blueChannel);
     for (uint8_t i = fromPixelIndex; (i <= toPixelIndex) && (i < pixelCount); i++)
         rawPixelRGB(i, redChannel, greenChannel, blueChannel);
+}
+
+//-----------------------------------------------------------------------------
+
+void LEDStrip::shiftToNext()
+{
+    if (pixelCount > 1)
+    {
+        size_t lastPixelIndex = pixelCount - 1;
+        uint8_t aux0 = pixelData[lastPixelIndex * 3];
+        uint8_t aux1 = pixelData[(lastPixelIndex * 3) + 1];
+        uint8_t aux2 = pixelData[(lastPixelIndex * 3) + 2];
+        for (size_t pixelIndex = lastPixelIndex; (pixelIndex > 0); pixelIndex--)
+        {
+            uint8_t byteIndex = pixelIndex * 3;
+            pixelData[byteIndex] = pixelData[byteIndex - 3];
+            pixelData[byteIndex + 1] = pixelData[byteIndex - 2];
+            pixelData[byteIndex + 2] = pixelData[byteIndex - 1];
+        }
+        pixelData[0] = aux0;
+        pixelData[1] = aux1;
+        pixelData[2] = aux2;
+        changed = true;
+    }
+}
+
+//-----------------------------------------------------------------------------
+
+void LEDStrip::shiftToPrevious()
+{
+    if (pixelCount > 1)
+    {
+        uint8_t aux0 = pixelData[0];
+        uint8_t aux1 = pixelData[1];
+        uint8_t aux2 = pixelData[2];
+        for (size_t pixelIndex = 1; pixelIndex < pixelCount; pixelIndex++)
+        {
+            uint8_t byteIndex = pixelIndex * 3;
+            pixelData[byteIndex - 3] = pixelData[byteIndex];
+            pixelData[byteIndex - 2] = pixelData[byteIndex + 1];
+            pixelData[byteIndex - 1] = pixelData[byteIndex + 2];
+        }
+        size_t lastByteIndex = (pixelCount - 1) * 3;
+        pixelData[lastByteIndex] = aux0;
+        pixelData[lastByteIndex + 1] = aux1;
+        pixelData[lastByteIndex + 2] = aux2;
+        changed = true;
+    }
 }
 
 //-----------------------------------------------------------------------------

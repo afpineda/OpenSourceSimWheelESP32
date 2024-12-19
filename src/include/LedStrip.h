@@ -144,6 +144,18 @@ public:
     }
 
     /**
+     * @brief Shift all pixel colors to the next pixel index
+     *
+     */
+    void shiftToNext();
+
+    /**
+     * @brief Shift all pixel colors to the previous pixel index
+     *
+     */
+    void shiftToPrevious();
+
+    /**
      * @brief Show pixel colors.
      *
      */

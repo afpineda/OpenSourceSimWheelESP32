@@ -20,9 +20,17 @@ There are a number of options available:
 
 - **3.3V power sources**
 
-    Some LEDs, including the RGB LED strips,
-    will work with a 3.3 volt power supply.
+    Some LEDs will work with a 3.3 volt power supply.
     Attach `VLed` to `3V3`.
+
+    > [!WARNING]
+    > If your RGB LED strip seems to work with a 3.3V power supply,
+    > but shows **wrong colors**,
+    > then you need a 5V power supply.
+    > The main symptom is a red pixel when it should be white.
+    > If you don't have a 5V power source available,
+    > you may set the global brightness to a low value
+    > (more on this later) as a workaround.
 
 - **5 volts power sources (and higher)**
 
@@ -93,3 +101,7 @@ This project supports the following:
   drivers. *Note*: not tested.
 - [UCS1903](https://www.led-stuebchen.de/download/UCS1903_English.pdf)
   drivers. *Note*: not tested.
+
+> [!NOTE]
+> The popular RGB LED strips based on the **WS2812B** driver require
+> a 5V power supply and a lever shifter.
