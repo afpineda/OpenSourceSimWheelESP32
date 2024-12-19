@@ -31,23 +31,31 @@ In the test computer:
 
 *Note*: do not confuse `Set Report` with `Set Feature`.
 
-1. Open "SimpleHidWriter.exe". Locate this test device in the top area, and click on it.
+1. On reset or power on, all pixels must light up white for a second,
+2. The, all pixels should light up purple (BLE advertising)
+   until the device connects to the host computer (less than a second).
+3. Then, all pixels must go out.
+4. Open "SimpleHidWriter.exe". Locate this test device in the top area, and click on it.
    Look for `Device VID= ... PID= ...`.
-2. You should see continuous report lines starting with `RD 01`.
+5. You should see continuous report lines starting with `RD 01`.
    Ignore them. Click on `Clear` from time to time.
-3. Enter `1E` at field `ReportID`.
-4. Enter `00 00 FF FF FF 00` at fields below `ReportID`.
-5. Click on `Set Report`.
-6. Enter `00 07 FF 00 00 00` at fields below `ReportID`.
-7. Click on `Set Report`.
-8. Enter `03` at field `ReportID`.
-9. Enter `FF FF FF 07 FF FF` at fields below `ReportID`.
-10. Click on `Set Feature`.
-11. The LED strip must show the following pixels in order:
-    white, off, off, off, off, off, off, blue.
-12. Enter `FF FF FF 08 FF FF` at fields below `ReportID`.
+6. Enter `1E` at field `ReportID`.
+7. Enter `00 00 FF FF FF 00` at fields below `ReportID`.
+8. Click on `Set Report`.
+9. Enter `00 07 FF 00 00 00` at fields below `ReportID`.
+10. Click on `Set Report`.
+11. Enter `03` at field `ReportID`.
+12. Enter `FF FF FF 07 FF FF` at fields below `ReportID`.
 13. Click on `Set Feature`.
-14. All pixels must turn off.
+14. The LED strip must show the following pixels in order:
+    white, off, off, off, off, off, off, blue.
+15. Enter `FF FF FF 08 FF FF` at fields below `ReportID`.
+16. Click on `Set Feature`.
+17. All pixels must go out.
+18. Type any character in the serial monitor and press `enter`.
+19. All pixels must show an animated blue-red pattern for a second.
+20. For a short time, the first 4 pixels must light up yellow, and the rest must go out.
+21. All pixels must go out.
 
 ### Secondary and **optional** test
 

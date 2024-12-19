@@ -675,4 +675,60 @@ typedef enum
     BGR
 } pixel_format_t;
 
+
+/**
+ * @brief Notifications using the pixel control interface
+ *
+ */
+class PixelControlNotification: public AbstractUserInterface
+{
+private:
+    virtual void onStart() override;
+    virtual void onBitePoint() override;
+    virtual void onConnected() override;
+    virtual void onBLEdiscovering() override;
+    virtual void onLowBattery() override;
+public:
+    /**
+     * @brief Called just once after initialization.
+     *
+     * @note Called in a low priority thread.
+     */
+    virtual void pixelControl_OnStart();
+
+    /**
+     * @brief Notify a change in current bite point.
+     *
+     * @note Read userSetting::bitePoint to know the last value
+     * @note Called in a low priority thread.
+     */
+    virtual void pixelControl_OnBitePoint();
+
+    /**
+     * @brief Notify device is connected.
+     *
+     * @note Called in a low priority thread.
+     */
+    virtual void pixelControl_OnConnected();
+
+    /**
+     * @brief Notify device is in discovery mode.
+     *
+     * @note Called in a low priority thread.
+     *
+     * @note Not called in the USB implementation.
+     */
+    virtual void pixelControl_OnBLEdiscovering();
+
+    /**
+     * @brief Notify low battery.
+     *
+     * @note Called in a low priority thread.
+     * @note Called at timed intervals while the low battery
+     *       condition persists.
+     */
+    virtual void pixelControl_OnLowBattery();
+};
+
+
 #endif

@@ -35,18 +35,6 @@ int batteryMonitor::getLastBatteryLevel() { return 66; }
 
 void power::powerOff() {}
 
-void notify::bitePoint() {}
-
-void notify::connected() {}
-
-void notify::BLEdiscovering() {}
-
-void notify::lowBattery() {}
-
-uint8_t notify::maxFPS = 0;
-
-volatile telemetryData_t notify::telemetryData;
-
 //------------------------------------------------------------------
 // Arduino entry point
 //------------------------------------------------------------------
@@ -56,7 +44,15 @@ void setup()
     Serial.begin(115200);
     Serial.println("-- READY --");
 
-    pixels::configure(GRP_TELEMETRY, TEST_D_OUT, 8, false);
+    pixels::configure(
+        GRP_TELEMETRY,
+        TEST_D_OUT,
+        8,
+        TEST_LEVEL_SHIFTER,
+        pixel_driver_t::WS2812,
+        pixel_format_t::AUTO,
+        16);
+    notify::begin({new PixelControlNotification()});
     userSettings::cpWorkingMode = CF_CLUTCH;
     userSettings::altButtonsWorkingMode = true;
     userSettings::dpadWorkingMode = true;
@@ -69,6 +65,10 @@ void setup()
 
 void loop()
 {
-    delay(5000);
-    hidImplementation::reset();
+    if (Serial.read() >= 0)
+    {
+        notify::lowBattery();
+        notify::bitePoint();
+    }
+    delay(250);
 }

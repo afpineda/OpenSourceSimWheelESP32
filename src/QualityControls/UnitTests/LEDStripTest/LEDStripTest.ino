@@ -16,7 +16,6 @@
 //------------------------------------------------------------------
 
 #define LED_COUNT 8
-#define LEVEL_SHIFTER true
 #define DEFAULT_DELAY 2000
 
 LEDStrip *strip;
@@ -28,7 +27,7 @@ LEDStrip *strip;
 void setup()
 {
     Serial.begin(115200);
-    strip = new LEDStrip(TEST_D_OUT, LED_COUNT, LEVEL_SHIFTER);
+    strip = new LEDStrip(TEST_D_OUT, LED_COUNT, TEST_LEVEL_SHIFTER);
     strip->brightness(16);
     Serial.println("--GO--");
 }

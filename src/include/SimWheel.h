@@ -1002,6 +1002,10 @@ namespace pixels
      * @param pixelType Pixel driver.
      * @param pixelFormat  Format of color data (byte order).
      *                    Set to `AUTO` for auto-detection.
+     * @param globalBrightness Global brightness for all pixels.
+     *                         By default, the maximum brightness.
+     *                         Set to 16 when using a 3.3V power supply
+     *                         with a non-3.3V LED strip and no level shifter.
      */
     void configure(
         pixelGroup_t group,
@@ -1009,7 +1013,8 @@ namespace pixels
         uint8_t pixelCount,
         bool useLevelShift,
         pixel_driver_t pixelType = WS2812,
-        pixel_format_t pixelFormat = pixel_format_t::AUTO);
+        pixel_format_t pixelFormat = pixel_format_t::AUTO,
+        uint8_t globalBrightness = 0xFF);
 
     /**
      * @brief Set the color of a single pixel
@@ -1029,6 +1034,33 @@ namespace pixels
              uint8_t red,
              uint8_t green,
              uint8_t blue);
+
+    /**
+     * @brief Set the color of all pixels in a group
+     *
+     * @param group A group of pixels
+     * @param red Red component of the pixel color
+     * @param green Green component of the pixel color
+     * @param blue Blue component of the pixel color
+     */
+    void setAll(pixelGroup_t group,
+             uint8_t red,
+             uint8_t green,
+             uint8_t blue);
+
+    /**
+     * @brief Shift all pixel colors to the next pixel index
+     *
+     * @param group A group of pixels
+     */
+    void shiftToNext(pixelGroup_t group);
+
+    /**
+     * @brief Shift all pixel colors to the previous pixel index
+     *
+     * @param group A group of pixels
+     */
+    void shiftToPrevious(pixelGroup_t group);
 
     /**
      * @brief Display all pixels in all groups at once

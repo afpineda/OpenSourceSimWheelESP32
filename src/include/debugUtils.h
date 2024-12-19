@@ -73,6 +73,7 @@
 
 // LED strip
 #define TEST_D_OUT GPIO_NUM_13
+#define TEST_LEVEL_SHIFTER true
 
 // -------------------------------------------------------------
 #elif defined(CONFIG_IDF_TARGET_ESP32S3)
@@ -127,6 +128,7 @@
 
 // LED strip
 #define TEST_D_OUT GPIO_NUM_39
+#define TEST_LEVEL_SHIFTER false
 
 // -------------------------------------------------------------
 #elif defined(CONFIG_IDF_TARGET_ESP32C3)

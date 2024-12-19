@@ -28,6 +28,13 @@ Place up to three calls to `pixels::configure()` with the following parameters
     The valid values are found in the `pixel_format_t` enumeration.
     Pass `AUTO` (the default) to use the expected pixel format
     for the given pixel driver.
+7. **Global brightness** (optional).
+   A brightness for all pixels.
+   The default and recommended value is 255 (maximum brightness).
+   Do not set to zero (no brightness).
+   If a 5V power supply is required but not available for the LED strip,
+   use a 3.3V power supply, no level shifter and set this value to 16.
+   This is **not optimal** as not all colors will be displayed.
 
 Example:
 
@@ -39,3 +46,49 @@ Example:
 ```
 
 Place those calls before `hidImplementation::begin()`.
+
+## Event notifications
+
+If you want to be notified of startup, BLE advertising, connection
+or low battery events, place the following call next to `pixels::configure()`:
+
+```c++
+notify::begin({new PixelControlNotification()});
+```
+
+Events are notified in this way:
+
+- *Startup*: all LEDs light up white for one second.
+- *BLE advertising*: all LEDs light up purple until the host computer is connected.
+- *Connection*: all LEDS will go out.
+- *Low battery*: all LEDs will show a red and blue animation for one second.
+- *Bite point calibration*:
+  The telemetry segment (exclusively) will briefly show a yellow bar.
+
+## Custom event notifications
+
+If you don't like the predefined notifications and have the skills,
+you can customize them:
+
+1. Derive a new class from `PixelControlNotification`.
+2. Override the following methods (when required):
+   - `pixelControl_OnStart()`
+   - `pixelControl_OnBitePoint()`
+   - `pixelControl_OnConnected()`
+   - `pixelControl_OnBLEdiscovering()`
+   - `pixelControl_OnLowBattery()`
+3. Place calls to the `pixels` namespace to display custom colors:
+   - `pixels::set()`
+   - `pixels::setAll()`
+   - `pixels::shiftToNext()`
+   - `pixels::shiftToPrevious()`
+   - `pixels::show()`
+4. Create a new instance of your custom class (never to be destroyed).
+5. Pass your instance to `notify::begin()`,
+   next to `pixels::configure()`.
+
+As an example, see the implementation of [PixelControlNotification](../../../src/common/pixels.cpp).
+
+> [!WARNING]
+> Do not call the `pixels` namespace from other UI classes
+> (those derived from `AbstractUserInterface`). It will not work.

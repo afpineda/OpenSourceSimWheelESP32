@@ -104,4 +104,6 @@ This project supports the following:
 
 > [!NOTE]
 > The popular RGB LED strips based on the **WS2812B** driver require
-> a 5V power supply and a lever shifter.
+> a 5V power supply and a level shifter.
+> However, I made it work with the brightness workaround,
+> no level shifter and a 3.3V power supply.

@@ -9,3 +9,4 @@ hidImplementation_NimBLE.cpp
 hidImplementation_common.cpp
 capabilities.cpp
 userSettings.cpp
+notify.cpp

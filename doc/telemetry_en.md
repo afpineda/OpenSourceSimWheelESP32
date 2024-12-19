@@ -18,10 +18,10 @@ There are **two non-exclusive approaches** to telemetry in this project:
 
   This firmware is capable of receiving and displaying pixel color data sent from the host computer.
 
-  - The display hardware is limited to single wire RGB LED strips.
-  - You can have up to three LED strips:
+  - The display hardware is limited to three single wire RGB LED strips:
     *telemetry LEDs*, *button backlighting* and *individual LEDs*.
-  - The user will not be notified of events.
+  - Optionally, the display hardware can also notify the user of some events,
+    such as low battery.
   - The host computer determines how the telemetry data is displayed.
     This allows for end-user configuration to be carried out.
 

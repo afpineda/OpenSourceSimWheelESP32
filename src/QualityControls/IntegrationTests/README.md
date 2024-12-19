@@ -71,6 +71,7 @@ Render this graph at [mermaid.live](https://mermaid.live/view#pako:eNp9kE1rwzAMh
 
 - **hidImplementation**
 - **pixels**
+- **notify**
 
 *Note:* This test requires SimHub.
 
