@@ -17,9 +17,9 @@
 // Globals
 // ----------------------------------------------------------------------------
 
-LEDStrip *pixelData[3] = {nullptr};
-SemaphoreHandle_t pixelLock = nullptr;
-StaticSemaphore_t pixelLockBuffer;
+static LEDStrip *pixelData[3] = {nullptr};
+static SemaphoreHandle_t pixelLock = nullptr;
+static StaticSemaphore_t pixelLockBuffer;
 #define WAIT_TICKS pdMS_TO_TICKS(150)
 
 // ----------------------------------------------------------------------------

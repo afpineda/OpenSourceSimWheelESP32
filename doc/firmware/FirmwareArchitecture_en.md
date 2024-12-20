@@ -148,6 +148,14 @@ classDiagram
 
 [Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9UTFuwzAM_Iqg2fmAhy5thw6dshVeaIm2CUikIVFJjCB_r9w6aL1Yi8TT3fEo3a0Tj7a1LkDObwRjgtixqWsi_xHngBFZQUnYnE4vhngumlvjJEZgb1SMg0B9AkUDDEFGAzfMRx49qGJaXjddhXd-Cf8cN-qRG4vSsKwOzOgUfWM8ZScXTMRjYxRXhabFeFA4cprphqHO9rP_Y28hPoVJJe2aBrk-r03AC4ZfRcmYzqhaA-Qdv6c61CzEahsbMUUgX1__vso6q1NN1Nm2Hj0OUIJ2tuNHpUJROS_sbKupYGPLXOPh9l978N2vKZ9YkjJOth0g5FrNwF8icasf30Rzs-0)
 
+```mermaid
+classDiagram
+    power --> notify: shutdown
+    power --> pixels: shutdown
+```
+
+[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNpdTksKwyAQvYrMOrmAi67aE3RX3AxxTAR1REfSEHL3Wkgp7Vu9H4-3w8SWQMMUsNarx7lgNEl1ZF6pqHG8qMTi3aZVXZpYXtN_nv2TQv3mMECkEtHbPry_2wZkoUgGdKeWHLYgBkw6ehWb8H1LE2gpjQZo2aLQeeXXvFkvXD5e4TYvoB2G2lXG9GCOpz5eNhJKpQ)
+
 Some modules have a `begin()` method that must be called at system startup (`main()`or `setup()`).
 The calling order is defined by the previous diagram, where bottom modules must be called first.
 
@@ -543,10 +551,11 @@ System concurrency comes from these OS task and daemons:
   - `batteryCalibration`
   - `notify`
   - `batteryMonitor`
+  - `pixels`
 - *Frameserver*. May call:
   - `userSettings`
   - `notify`
-  - `AbstractUserInterface`
+  - `AbstractUserInterface` (which may call `pixels`)
 
 *Notes*:
 

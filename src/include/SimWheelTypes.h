@@ -613,6 +613,14 @@ public:
      *       condition persists.
      */
     virtual void onLowBattery() {};
+
+    /**
+     * @brief Cut power to the UI hardware.
+     *
+     * @note This is a command, not a notification. Not reversible.
+     *
+     */
+    virtual void shutdown() {};
 };
 
 /**

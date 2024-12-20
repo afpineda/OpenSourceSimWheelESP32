@@ -165,8 +165,9 @@ void latchPowerOff()
 
 void power::powerOff()
 {
-  // Turn off perihperals
+  // Turn off peripherals
   pixels::shutdown();
+  notify::shutdown();
   // try external latch circuit
   latchPowerOff();
   // if still up and running, enter deep sleep

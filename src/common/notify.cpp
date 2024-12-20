@@ -20,6 +20,8 @@
 #define DEFAULT_STACK_SIZE 4 * 1024
 static TaskHandle_t notificationDaemon = nullptr;
 static notificationImplementorsArray_t implementorArray;
+static SemaphoreHandle_t shutdownSemaphore = nullptr;
+static StaticSemaphore_t shutdownSemaphoreBuffer;
 
 // Frame server and telemetry
 static TickType_t frameServerPeriod = portMAX_DELAY;
@@ -35,6 +37,7 @@ static uint32_t lastFrameID;
 #define EVENT_CONNECTED 2
 #define EVENT_BLE_DISCOVERING 3
 #define EVENT_LOW_BATTERY 4
+#define EVENT_SHUTDOWN 255
 static uint8_t eventBuffer[EVENT_QUEUE_SIZE];
 static uint8_t queueHead = 0;
 static uint8_t queueTail = 0;
@@ -79,6 +82,7 @@ void notificationDaemonLoop(void *param)
 {
     uint8_t eventID;
     bool telemetryReceived = false;
+    bool shutdownRequest = false;
     TickType_t previousTelemetryTimestamp = 0;
     TickType_t currentTelemetryTimestamp = 0;
 
@@ -86,7 +90,7 @@ void notificationDaemonLoop(void *param)
         impl->onStart();
 
     TickType_t frameTimestamp = xTaskGetTickCount();
-    while (true)
+    while (!shutdownRequest)
     {
         if (ulTaskNotifyTake(pdTRUE, frameServerPeriod))
         {
@@ -106,6 +110,11 @@ void notificationDaemonLoop(void *param)
                         break;
                     case EVENT_LOW_BATTERY:
                         impl->onLowBattery();
+                        break;
+                    case EVENT_SHUTDOWN:
+                        shutdownRequest = true;
+                        break;
+                    default:
                         break;
                     }
         }
@@ -138,6 +147,12 @@ void notificationDaemonLoop(void *param)
             frameTimestamp = xTaskGetTickCount();
         }
     }
+
+    // Shutdown
+    xSemaphoreGive(shutdownSemaphore);
+    vTaskDelete(notificationDaemon);
+    for (;;)
+        ;
 }
 
 // ----------------------------------------------------------------------------
@@ -206,6 +221,14 @@ void notify::begin(
                 capabilities::setFlag(deviceCapability_t::CAP_TELEMETRY_GAUGES);
         }
 
+        // Create binary semaphore for shutdown
+        shutdownSemaphore = xSemaphoreCreateBinaryStatic(&shutdownSemaphoreBuffer);
+        if (shutdownSemaphore == nullptr)
+        {
+            log_e("Unable to create notifications daemon");
+            abort();
+        }
+
         // Create notifications daemon
         xTaskCreate(
             notificationDaemonLoop,
@@ -222,6 +245,24 @@ void notify::begin(
     }
     else
         log_w("notify::begin() called twice");
+}
+
+// ----------------------------------------------------------------------------
+// Finalization
+// ----------------------------------------------------------------------------
+
+void notify::shutdown()
+{
+    if (notificationDaemon)
+    {
+        // Ask the notification daemon to kill itself
+        eventPush(EVENT_SHUTDOWN);
+        // Wait for the notification daemon to stop
+        xSemaphoreTake(shutdownSemaphore, portMAX_DELAY);
+        // Turn off all UI devices
+        for (AbstractUserInterface *impl : implementorArray)
+            impl->shutdown();
+    }
 }
 
 // ----------------------------------------------------------------------------

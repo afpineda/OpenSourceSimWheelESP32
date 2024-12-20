@@ -785,6 +785,13 @@ namespace notify
         uint16_t stackSize = 0);
 
     /**
+     * @brief Cut power to all UI devices
+     *
+     * @note This is a command, not a notification. Not reversible.
+     */
+    void shutdown();
+
+    /**
      * @brief Notify current clutch's bite point.
      *
      */
