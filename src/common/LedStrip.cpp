@@ -190,16 +190,13 @@ void LEDStrip::show()
 void LEDStrip::normalizeColor(uint8_t &r, uint8_t &g, uint8_t &b)
 {
     // Normalize to a common brightness
-    log_e("normalizeColor IN %hhu %hhu %hhu", r, g, b);
     if (brightnessWeight)
     {
-        log_e("normalize to %hhu", brightnessWeight);
         // Note: "">> 8" is equal to "/ 256"
         r = (r * brightnessWeight) >> 8;
         g = (g * brightnessWeight) >> 8;
         b = (b * brightnessWeight) >> 8;
     }
-    log_e("normalizeColor OUT %hhu %hhu %hhu", r, g, b);
 }
 
 //-----------------------------------------------------------------------------
