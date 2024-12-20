@@ -26,6 +26,10 @@ void notify::lowBattery()
 {
 }
 
+void notify::shutdown()
+{
+}
+
 void capabilities::setFlag(deviceCapability_t a, bool b)
 {
 }
