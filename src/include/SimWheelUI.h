@@ -71,6 +71,7 @@ public:
     virtual void onConnected() override;
     virtual void onTelemetryData(const telemetryData_t *pTelemetryData) override;
     virtual void serveSingleFrame(uint32_t elapsedMs) override;
+    virtual void shutdown() override;
 
 private:
     gpio_num_t ledPin;
@@ -116,6 +117,7 @@ public:
     virtual void onTelemetryData(const telemetryData_t *pTelemetryData) override;
     virtual void serveSingleFrame(uint32_t elapsedMs) override;
     virtual void onBitePoint() override;
+    virtual void shutdown() override;
 
 private:
     uint8_t address8bits;
@@ -323,6 +325,7 @@ public: // AbstractUserInterface implementation
     virtual void onConnected() override;
     virtual void onBLEdiscovering() override;
     virtual void onLowBattery() override;
+    virtual void shutdown() override;
 
 private:
     LEDStrip *ledStrip;

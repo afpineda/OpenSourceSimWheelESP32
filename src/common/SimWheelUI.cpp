@@ -157,6 +157,11 @@ void SimpleShiftLight::setMode(uint8_t newMode)
     ledMode = newMode;
 }
 
+void SimpleShiftLight::shutdown()
+{
+    setLED(false);
+}
+
 //-----------------------------------------------------------------------------
 // PCF8574-driven rev lights
 //-----------------------------------------------------------------------------
@@ -309,6 +314,11 @@ void PCF8574RevLights::onBitePoint()
     timer = 0;
 }
 
+void PCF8574RevLights::shutdown()
+{
+    write(0);
+}
+
 //-----------------------------------------------------------------------------
 // LED Strip telemetry display
 //-----------------------------------------------------------------------------
@@ -423,6 +433,12 @@ void LEDStripTelemetry::addSegment(
         this->requiresRaceControlTelemetry |= requiresRaceControlTelemetry;
         this->requiresGaugeTelemetry |= requiresGaugeTelemetry;
     }
+}
+
+void LEDStripTelemetry::shutdown()
+{
+    this->ledStrip->clear();
+    this->ledStrip->show();
 }
 
 //-----------------------------------------------------------------------------

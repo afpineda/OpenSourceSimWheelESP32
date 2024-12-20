@@ -17,7 +17,8 @@
 //-------------------------------------------------------------------
 
 /**
- * @brief Abstract interface to user notifications
+ * @brief User notifications in the serial interface
+ *        (for testing)
  *
  */
 class SerialNotificationImpl : public AbstractUserInterface
@@ -37,7 +38,7 @@ public:
 #define SERIAL_DISPLAY_BUFFER_SIZE 64
 
 /**
- * @brief User notifications in the serial interface
+ * @brief Telemetry display in the serial interface
  *        (for testing)
  *
  */
