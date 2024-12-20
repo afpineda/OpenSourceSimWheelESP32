@@ -1,5 +1,12 @@
 # Change log
 
+## 6.6.0
+
+- When the system shuts down,
+  all display peripherals are also instructed to shut down.
+  This was a missing feature.
+- A new integration test has been added for this scenario.
+
 ## 6.5.0
 
 - Pixel Control is now compatible with notifications (e.g., low battery).
