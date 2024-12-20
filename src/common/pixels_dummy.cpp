@@ -25,6 +25,8 @@ void pixels::configure(
     pixel_format_t pixelFormat,
     uint8_t globalBrightness) {}
 
+void pixels::shutdown() {}
+
 uint8_t pixels::getPixelCount(pixelGroup_t group)
 {
     return 0;
@@ -42,9 +44,9 @@ void pixels::set(
     uint8_t blue) {}
 
 void pixels::setAll(pixelGroup_t group,
-                 uint8_t red,
-                 uint8_t green,
-                 uint8_t blue) {}
+                    uint8_t red,
+                    uint8_t green,
+                    uint8_t blue) {}
 
 void pixels::shiftToNext(pixelGroup_t group) {}
 

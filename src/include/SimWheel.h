@@ -1017,6 +1017,13 @@ namespace pixels
         uint8_t globalBrightness = 0xFF);
 
     /**
+     * @brief Turn off all LED strips for shutdown
+     *
+     * @note Can not be reversed.
+     */
+    void shutdown();
+
+    /**
      * @brief Set the color of a single pixel
      *
      * @note Not displayed immediately

@@ -8,3 +8,4 @@ BatteryCalibration.cpp
 BatteryMonitor.cpp
 power.cpp
 i2cTools.cpp
+pixels_dummy.cpp

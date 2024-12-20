@@ -39,8 +39,7 @@ void pixels::configure(
         delete pixelData[group];
     if (pixelLock == nullptr)
     {
-        // pixelLock = xSemaphoreCreateRecursiveMutexStatic(&pixelLockBuffer);
-        pixelLock = xSemaphoreCreateRecursiveMutex();
+        pixelLock = xSemaphoreCreateRecursiveMutexStatic(&pixelLockBuffer);
         if (pixelLock == nullptr)
         {
             log_e("pixels::configure() unable to create mutex");
@@ -54,6 +53,30 @@ void pixels::configure(
         pixelType,
         pixelFormat);
     pixelData[group]->brightness(globalBrightness);
+}
+
+void pixels::shutdown()
+{
+    if (pixelLock != nullptr)
+    {
+        if (xSemaphoreTakeRecursive(pixelLock, portMAX_DELAY) == pdTRUE)
+        {
+            for (int group = 0; group < 3; group++)
+            {
+                if (pixelData[group] != nullptr)
+                {
+                    pixelData[group]->clear();
+                    pixelData[group]->show();
+                    delete pixelData[group];
+                }
+                pixelData[group] = nullptr;
+            }
+            xSemaphoreGiveRecursive(pixelLock);
+        } else {
+            log_e("pixels::shutdown() unable to shutdown");
+            abort();
+        }
+    }
 }
 
 uint8_t pixels::getPixelCount(pixelGroup_t group)

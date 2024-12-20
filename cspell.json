@@ -86,6 +86,7 @@
         "frameserver",
         "gpio",
         "kohms",
+        "ledsprofile",
         "perfboard",
         "perfboards",
         "pinterest",

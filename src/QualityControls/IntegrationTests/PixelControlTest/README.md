@@ -31,8 +31,8 @@ In the test computer:
 
 *Note*: do not confuse `Set Report` with `Set Feature`.
 
-1. On reset or power on, all pixels must light up white for a second,
-2. The, all pixels should light up purple (BLE advertising)
+1. On reset or power on, all pixels must light up white for a second.
+2. All pixels must light up purple (BLE advertising)
    until the device connects to the host computer (less than a second).
 3. Then, all pixels must go out.
 4. Open "SimpleHidWriter.exe". Locate this test device in the top area, and click on it.
@@ -52,10 +52,16 @@ In the test computer:
 15. Enter `FF FF FF 08 FF FF` at fields below `ReportID`.
 16. Click on `Set Feature`.
 17. All pixels must go out.
-18. Type any character in the serial monitor and press `enter`.
+18. Type "x" in the serial monitor and press `enter`.
 19. All pixels must show an animated blue-red pattern for a second.
 20. For a short time, the first 4 pixels must light up yellow, and the rest must go out.
 21. All pixels must go out.
+22. Type "s" in the serial monitor and press `enter`.
+23. Type "x" in the serial monitor and press `enter`.
+24. **No pixel should light up**.
+
+If anything is missed, a reset is required
+before restarting this test procedure.
 
 ### Secondary and **optional** test
 

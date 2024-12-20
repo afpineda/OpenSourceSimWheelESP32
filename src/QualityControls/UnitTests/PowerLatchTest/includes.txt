@@ -4,3 +4,4 @@ debugUtils.h
 adcTools.h
 power.cpp
 adcTools.cpp
+pixels_dummy.cpp

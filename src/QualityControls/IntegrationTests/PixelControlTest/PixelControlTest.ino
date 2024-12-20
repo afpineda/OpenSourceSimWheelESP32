@@ -65,10 +65,19 @@ void setup()
 
 void loop()
 {
-    if (Serial.read() >= 0)
+    int chr = Serial.read();
+    if (chr >= 0)
     {
-        notify::lowBattery();
-        notify::bitePoint();
+        if ((chr == 's') || (chr == 'S'))
+        {
+            Serial.println("SHUTDOWN");
+            pixels::shutdown();
+        }
+        else
+        {
+            notify::lowBattery();
+            notify::bitePoint();
+        }
     }
     delay(250);
 }

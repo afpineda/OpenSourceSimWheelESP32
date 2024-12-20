@@ -17,3 +17,4 @@ PolledInput.cpp
 I2CExpanderInput.cpp
 capabilities.cpp
 i2cTools.cpp
+pixels_dummy.cpp

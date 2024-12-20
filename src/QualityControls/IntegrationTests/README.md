@@ -73,8 +73,6 @@ Render this graph at [mermaid.live](https://mermaid.live/view#pako:eNp9kE1rwzAMh
 - **pixels**
 - **notify**
 
-*Note:* This test requires SimHub.
-
 ## *Test name*: [Proto1](./Proto1/README.md)
 
 - RotaryEncoderInput
