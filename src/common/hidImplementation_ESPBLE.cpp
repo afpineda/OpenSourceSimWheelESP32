@@ -22,6 +22,7 @@
 #include "HIDTypes.h"
 #include "HIDKeyboardTypes.h"
 #include "sdkconfig.h"
+#include "esp_gap_ble_api.h"
 
 #include "SimWheel.h"
 #include "HID_definitions.h"
@@ -75,6 +76,18 @@ public:
 
     BLEHIDDeviceFix(BLEServer *pServer) : BLEHIDDevice(pServer) {}
 };
+
+// ----------------------------------------------------------------------------
+// PHY configuration
+// ----------------------------------------------------------------------------
+
+bool setDefaultPhy(
+    esp_ble_gap_prefer_phy_options_t txPhyMask,
+    esp_ble_gap_prefer_phy_options_t rxPhyMask)
+{
+    esp_err_t rc = esp_ble_gap_set_preferred_default_phy(txPhyMask, rxPhyMask);
+    return rc == ESP_OK;
+}
 
 // ----------------------------------------------------------------------------
 // BLE Server callbacks and advertising
@@ -231,6 +244,8 @@ void hidImplementation::begin(
 
         // Stack initialization
         BLEDevice::init(String(deviceName.c_str()));
+        BLEDevice::setMTU(24); // Minimum allowed MTU
+        setDefaultPhy(ESP_BLE_GAP_PHY_2M_PREF_MASK, ESP_BLE_GAP_PHY_2M_PREF_MASK);
         pServer = BLEDevice::createServer();
         pServer->setCallbacks(&connectionStatus);
         BLESecurity *pSecurity = new BLESecurity();

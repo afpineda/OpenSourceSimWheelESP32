@@ -110,6 +110,15 @@ NimBLECharacteristic *NimBLEHIDDeviceFix::getInputReport(uint8_t reportId)
 } // getInputReport
 
 // ----------------------------------------------------------------------------
+// PHY configuration
+// ----------------------------------------------------------------------------
+
+bool setDefaultPhy(uint8_t txPhyMask, uint8_t rxPhyMask) {
+    int rc = ble_gap_set_prefered_default_le_phy(txPhyMask, rxPhyMask);
+    return rc == 0;
+}
+
+// ----------------------------------------------------------------------------
 // BLE Server callbacks and advertising
 // ----------------------------------------------------------------------------
 
@@ -291,6 +300,8 @@ void hidImplementation::begin(
         // Stack initialization
         NimBLEDevice::init(deviceName);
         NimBLEDevice::setSecurityAuth(BLE_SM_PAIR_AUTHREQ_BOND);
+        NimBLEDevice::setMTU(24); // Minimum allowed MTU
+        setDefaultPhy(BLE_GAP_LE_PHY_2M_MASK, BLE_GAP_LE_PHY_2M_MASK);
         pServer = NimBLEDevice::createServer();
         pServer->setCallbacks(&connectionStatus);
 

@@ -1,5 +1,10 @@
 # Change log
 
+## 6.7.0
+
+- Data rate increased to 2Mbps for all BLE implementations (2M PHY).
+- The default MTU (in BLE) has been adjusted to match the maximum HID report size.
+
 ## 6.6.0
 
 - When the system shuts down,
