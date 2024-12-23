@@ -300,7 +300,7 @@ void hidImplementation::begin(
         // Stack initialization
         NimBLEDevice::init(deviceName);
         NimBLEDevice::setSecurityAuth(BLE_SM_PAIR_AUTHREQ_BOND);
-        NimBLEDevice::setMTU(24); // Minimum allowed MTU
+        NimBLEDevice::setMTU(BLE_MTU_SIZE);
         setDefaultPhy(BLE_GAP_LE_PHY_2M_MASK, BLE_GAP_LE_PHY_2M_MASK);
         pServer = NimBLEDevice::createServer();
         pServer->setCallbacks(&connectionStatus);

@@ -244,7 +244,7 @@ void hidImplementation::begin(
 
         // Stack initialization
         BLEDevice::init(String(deviceName.c_str()));
-        BLEDevice::setMTU(24); // Minimum allowed MTU
+        BLEDevice::setMTU(BLE_MTU_SIZE);
         setDefaultPhy(ESP_BLE_GAP_PHY_2M_PREF_MASK, ESP_BLE_GAP_PHY_2M_PREF_MASK);
         pServer = BLEDevice::createServer();
         pServer->setCallbacks(&connectionStatus);

@@ -15,7 +15,10 @@
 
 #include "SimWheelTypes.h"
 
+// ----------------------------------------------------------------------------
 // Report ID's
+// ----------------------------------------------------------------------------
+
 #define RID_INPUT_GAMEPAD 0x01
 #define RID_FEATURE_CAPABILITIES 0x02
 #define RID_FEATURE_CONFIG 0x03
@@ -28,7 +31,10 @@
 #define RID_OUTPUT_GAUGES 0x17       // 23 dec
 #define RID_OUTPUT_PIXEL 0x1E        // 30 dec
 
+// ----------------------------------------------------------------------------
 // Report sizes (bytes)
+// ----------------------------------------------------------------------------
+
 #define GAMEPAD_REPORT_SIZE 20
 #define CAPABILITIES_REPORT_SIZE 20
 #define CONFIG_REPORT_SIZE 6
@@ -40,31 +46,57 @@
 #define GAUGES_REPORT_SIZE 12
 #define PIXEL_REPORT_SIZE 6
 
+// ----------------------------------------------------------------------------
 // GAME CONTROLLER APPEARANCES
+// ----------------------------------------------------------------------------
+
 #define CONTROLLER_TYPE_GAMEPAD 0x05
 #define CONTROLLER_TYPE_JOYSTICK 0x04
 
+// ----------------------------------------------------------------------------
 // INPUT REPORT constants
+// ----------------------------------------------------------------------------
+
 #define BUTTON_COUNT 128
 
-//   BLE
-#define BLE_VENDOR_SOURCE 0x00
-#define BLE_VENDOR_ID 0x1d50   // default VID
-#define BLE_PRODUCT_ID 0xffff  // default PID
-#define TEST_PRODUCT_ID 0xffff // Flag not to load stored hardware ID
+// ----------------------------------------------------------------------------
+// BLE implementation
+// ----------------------------------------------------------------------------
 
+#define BLE_VENDOR_SOURCE 0x00
+#define BLE_VENDOR_ID 0x1d50   //< default VID
+#define BLE_PRODUCT_ID 0xffff  //< default PID
+#define TEST_PRODUCT_ID 0xffff //< Flag not to load stored hardware ID
+
+// See https://devzone.nordicsemi.com/nordic/nordic-blog/b/blog/posts/one-minute-to-understand-ble-mtu-data-package
+// BLE_MTU_SIZE must be greater than 23 bytes
+// BLE_MTU_SIZE = max report size + report ID + payload metadata
+
+#define BLE_MTU_SIZE GAMEPAD_REPORT_SIZE + 1 + 14
+
+// ----------------------------------------------------------------------------
 // Hardware revision
+// ----------------------------------------------------------------------------
+
 #define PRODUCT_REVISION 0x0100
 
+// ----------------------------------------------------------------------------
 // Data specification version
+// ----------------------------------------------------------------------------
+
 #define DATA_MAJOR_VERSION 1
 #define DATA_MINOR_VERSION 4
 
+// ----------------------------------------------------------------------------
 // Magic number, do not change
+// ----------------------------------------------------------------------------
+
 #define MAGIC_NUMBER_LOW 0x51
 #define MAGIC_NUMBER_HIGH 0xBF
 
+// ----------------------------------------------------------------------------
 // HID report descriptor
+// ----------------------------------------------------------------------------
 
 static const uint8_t hid_descriptor[] = {
     0x05, 0x01,                    // UsagePage(Generic Desktop[1])
