@@ -40,14 +40,14 @@ uint8_t notify::maxFPS = 50;
 
 void notify::connected()
 {
-#if ARDUINO_USB_MODE == 1
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.println("*** CONNECTED ***");
 #endif
 }
 
 void notify::BLEdiscovering()
 {
-#if ARDUINO_USB_MODE == 1
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.println("*** DISCOVERING ***");
 #endif
 }
@@ -60,7 +60,7 @@ void notify::bitePoint()
 
 void inputs::recalibrateAxes()
 {
-#if ARDUINO_USB_MODE == 1
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.println("CMD: recalibrate axes");
 #endif
 }
@@ -71,14 +71,14 @@ void inputs::update()
 
 void inputs::reverseLeftAxis()
 {
-#if ARDUINO_USB_MODE == 1
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.println("CMD: reverse left axis");
 #endif
 }
 
 void inputs::reverseRightAxis()
 {
-#if ARDUINO_USB_MODE == 1
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.println("CMD: reverse right axis");
 #endif
 }
@@ -87,7 +87,7 @@ void inputs::reverseRightAxis()
 
 void batteryCalibration::restartAutoCalibration()
 {
-#if ARDUINO_USB_MODE == 1
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.println("CMD: recalibrate battery");
 #endif
 }
@@ -96,7 +96,7 @@ void batteryCalibration::restartAutoCalibration()
 
 void power::powerOff()
 {
-#if ARDUINO_USB_MODE == 1
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.println("*** POWER OFF ***");
 #endif
     powerSim = false;
@@ -118,7 +118,7 @@ void pixels::set(
     uint8_t green,
     uint8_t blue)
 {
-#if ARDUINO_USB_MODE == 1
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.printf("pixels::set(%hhu,%hhu,%hhu,%hhu,%hhu)\n",
                   group,
                   pixelIndex,
@@ -130,14 +130,14 @@ void pixels::set(
 
 void pixels::reset()
 {
-#if ARDUINO_USB_MODE == 1
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.println("pixels::reset()");
 #endif
 }
 
 void pixels::show()
 {
-#if ARDUINO_USB_MODE == 1
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.println("pixels::show()");
 #endif
 }
@@ -153,7 +153,7 @@ uint8_t pixels::getPixelCount(pixelGroup_t group)
 
 void checkAndPrintTelemetryData()
 {
-#if ARDUINO_USB_MODE == 1
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     if (notify::telemetryData.frameID != lastFrameID)
     {
         lastFrameID = notify::telemetryData.frameID;
@@ -205,7 +205,7 @@ void checkAndPrintTelemetryData()
 void setup()
 {
     esp_log_level_set("*", ESP_LOG_ERROR);
-#if ARDUINO_USB_MODE == 1
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.begin(115200);
     Serial.println("--START--");
 #endif
@@ -215,7 +215,7 @@ void setup()
     userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
     userSettings::securityLock = false;
     hidImplementation::begin(HID_TESTER, "Mamandurrio", true);
-#if ARDUINO_USB_MODE == 1
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.printf("Factory default VID / PID: %04x / %04x\n", factoryVID, factoryPID);
     Serial.printf("Actual VID / PID: %04x / %04x\n", customVID, customPID);
     Serial.println("--GO--");
@@ -234,7 +234,7 @@ void loop()
     if (!powerSim)
     {
         // Simulate power off
-#if ARDUINO_USB_MODE == 1
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
         Serial.println("(Reset required)");
 #endif
         for (;;)
@@ -243,7 +243,7 @@ void loop()
 
     if (!hidImplementation::isConnected())
     {
-#if ARDUINO_USB_MODE == 1
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
         Serial.println("(Waiting for connection)");
 #endif
     }
