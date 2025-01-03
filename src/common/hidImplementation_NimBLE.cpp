@@ -39,6 +39,7 @@ static esp_timer_handle_t autoPowerOffTimer = nullptr;
 
 // Related to HID device
 class NimBLEHIDDeviceFix;
+// #define NimBLEHIDDeviceFix NimBLEHIDDevice
 static NimBLEHIDDeviceFix *hid = nullptr;
 static NimBLECharacteristic *inputGamepad = nullptr;
 static NimBLEServer *pServer = nullptr;
@@ -52,6 +53,7 @@ static bool notifyConfigChanges = false;
 
 static constexpr uint16_t hidReportChrUuid = 0x2a4d;
 static constexpr uint16_t hidReportChrDscUuid = 0x2908;
+static constexpr uint16_t hidReport2902DscUuid = 0x2902;
 
 class NimBLEHIDDeviceFix : public NimBLEHIDDevice
 {
@@ -65,9 +67,11 @@ public:
 NimBLECharacteristic *NimBLEHIDDeviceFix::getOutputReport(uint8_t reportId)
 {
     NimBLECharacteristic *outputReportChr =
-        getHidService()->createCharacteristic(hidReportChrUuid,
-                                              NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::WRITE_NR |
-                                                  NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC);
+        getHidService()->createCharacteristic(
+            hidReportChrUuid,
+            NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::WRITE_NR |
+                NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC,
+            2);
     NimBLEDescriptor *outputReportDsc = outputReportChr->createDescriptor(
         hidReportChrDscUuid,
         NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC);
@@ -76,7 +80,6 @@ NimBLECharacteristic *NimBLEHIDDeviceFix::getOutputReport(uint8_t reportId)
     outputReportDsc->setValue(desc1_val, 2);
 
     return outputReportChr;
-    // return NimBLEHIDDevice::getOutputReport(reportId);
 } // getOutputReport
 
 NimBLECharacteristic *NimBLEHIDDeviceFix::getFeatureReport(uint8_t reportId)
@@ -87,7 +90,8 @@ NimBLECharacteristic *NimBLEHIDDeviceFix::getFeatureReport(uint8_t reportId)
 
     NimBLEDescriptor *featureReportDsc = featureReportChr->createDescriptor(
         hidReportChrDscUuid,
-        NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC);
+        NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC,
+        2);
 
     uint8_t desc1_val[] = {reportId, 0x03};
     featureReportDsc->setValue(desc1_val, 2);
@@ -98,13 +102,30 @@ NimBLECharacteristic *NimBLEHIDDeviceFix::getFeatureReport(uint8_t reportId)
 NimBLECharacteristic *NimBLEHIDDeviceFix::getInputReport(uint8_t reportId)
 {
     NimBLECharacteristic *inputReportChr =
-        getHidService()->createCharacteristic(hidReportChrUuid,
-                                              NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC);
-    NimBLEDescriptor *inputReportDsc =
-        inputReportChr->createDescriptor(hidReportChrDscUuid, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::READ_ENC);
+        getHidService()->createCharacteristic(
+            hidReportChrUuid,
+            NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC);
 
+    NimBLEDescriptor *inputReportDsc =
+        inputReportChr->createDescriptor(
+            hidReportChrDscUuid,
+            NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::READ_ENC,
+            2);
     uint8_t desc1_val[] = {reportId, 0x01};
     inputReportDsc->setValue(desc1_val, 2);
+
+    /*
+     * Descriptor 2902 is required by the HID over GATT spec
+     * (input reports only), but it works without it.
+     * Uncomment the following lines if you want to add it.
+
+    NimBLEDescriptor *p2902 = inputReportChr->createDescriptor(
+        hidReport2902DscUuid,
+        NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC,
+        2);
+    uint8_t desc2_val[] = {0b01, 0}; // Notifications enabled by default
+    p2902->setValue(desc2_val, 2);
+    */
 
     return inputReportChr;
 } // getInputReport
@@ -113,7 +134,8 @@ NimBLECharacteristic *NimBLEHIDDeviceFix::getInputReport(uint8_t reportId)
 // PHY configuration
 // ----------------------------------------------------------------------------
 
-bool setDefaultPhy(uint8_t txPhyMask, uint8_t rxPhyMask) {
+bool setDefaultPhy(uint8_t txPhyMask, uint8_t rxPhyMask)
+{
     int rc = ble_gap_set_prefered_default_le_phy(txPhyMask, rxPhyMask);
     return rc == 0;
 }
