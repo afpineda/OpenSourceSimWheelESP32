@@ -85,8 +85,12 @@ bool setDefaultPhy(
     esp_ble_gap_prefer_phy_options_t txPhyMask,
     esp_ble_gap_prefer_phy_options_t rxPhyMask)
 {
+#if defined(CONFIG_IDF_TARGET_ESP32S3)
     esp_err_t rc = esp_ble_gap_set_preferred_default_phy(txPhyMask, rxPhyMask);
     return rc == ESP_OK;
+#else
+    return true;
+#endif
 }
 
 // ----------------------------------------------------------------------------
