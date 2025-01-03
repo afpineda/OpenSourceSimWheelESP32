@@ -1,5 +1,9 @@
 # Change log
 
+## 6.7.1
+
+- Fix minor bugs.
+
 ## 6.7.0
 
 - Data rate increased to 2Mbps for all BLE implementations (2M PHY).
