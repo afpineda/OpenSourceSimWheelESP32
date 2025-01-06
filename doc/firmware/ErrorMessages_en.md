@@ -6,6 +6,10 @@ Error messages are **not** shown by default.
 In order to enable them, go to the "board manager" and configure "Core debug level" to "error".
 Then, upload the firmware again (if not done yet).
 
+> [!NOTE]
+> The message "**abort() was called at ...**" means that you have made a wrong call in your custom firmware.
+> If you don't see any other explanatory message, you need to configure "Core debug level" as said before.
+
 Open the "Serial monitor" at Arduino IDE to view error messages.
 Then, reset the board not to miss any message at boot-up.
 
@@ -109,8 +113,8 @@ This article is focused on **firmware-defined** error messages.
   In a call to `inputs::...` you are passing a GPIO pin which is not output-capable.
   Check selector, `next`, `load` and/or I2C pins in your custom firmware.
 
-  Another reason is passing a non-output-capable GPIO pin as parameter to the
-  `SimpleShiftLight` constructor.
+  Another reason is passing a non-output-capable pin when configuring RGB LED strips or
+  single color LEDs.
 
 - *Requested GPIO N can't be used as input*
 
@@ -242,3 +246,26 @@ This article is focused on **firmware-defined** error messages.
   All user interface instances (including LED strip "segments") must
   be created with `new` and never deleted.
   Check your custom firmware.
+
+- *pixels::configure() unable to create mutex*
+- *pixels::shutdown() unable to shutdown*
+
+  Should not happen. Please, open an issue.
+
+- *LEDStrip: pixel count can not be zero*
+
+  You configured an RGB LED strip with no pixels.
+  Check the *pixel count* parameter.
+
+- *Unknown pixel driver ... in LED strip*
+
+  You configured an RGB LED strip with an unknown pixel driver.
+  Check the *pixel driver* parameter. Avoid typecasting.
+
+## Non-error messages
+
+Some "error messages" are not errors at all.
+You can ignore them:
+
+- *... nvs_open failed ...*
+- *E (15) gpio: gpio_install_isr_service(500): GPIO isr service already installed*
