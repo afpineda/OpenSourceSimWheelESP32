@@ -19,6 +19,10 @@
 #include "i2cTools.h"
 #include <stdexcept>
 
+#if defined(CONFIG_IDF_TARGET_ESP32S3)
+#include "esp32-hal-psram.h"
+#endif
+
 // #include "debugUtils.h"
 
 // ----------------------------------------------------------------------------
@@ -272,6 +276,53 @@ void hubLoop(void *unused)
 // Configure inputs
 // ----------------------------------------------------------------------------
 
+void abortOnUnusableGPIO(gpio_num_t pinNumber)
+{
+  if (pinNumber == GPIO_NUM_NC)
+  {
+    log_e("GPIO_NUM_NC is not usable");
+    abort();
+  }
+#if defined(CONFIG_IDF_TARGET_ESP32)
+  if ((pinNumber >= GPIO_NUM_6) && (pinNumber <= GPIO_NUM_11))
+  {
+    log_e("GPIO pin %d is not usable in a pure ESP32 board. Reserved for SPI Flash", pinNumber);
+    abort();
+  }
+#elif defined(CONFIG_IDF_TARGET_ESP32S3)
+  if ((pinNumber >= GPIO_NUM_19) && (pinNumber <= GPIO_NUM_20))
+  {
+    log_e("CAUTION: GPIO pin %d is reserved for USB data", pinNumber);
+  }
+  if ((pinNumber >= GPIO_NUM_35) && (pinNumber <= GPIO_NUM_37) && psramFound())
+  {
+    log_e("GPIO pin %d is not usable in a ESP32-S3 board. Reserved for PSRAM", pinNumber);
+    abort();
+  }
+  if ((pinNumber >= GPIO_NUM_26) && (pinNumber <= GPIO_NUM_32))
+  {
+    log_e("GPIO pin %d is not usable in a ESP32-S3 board. Reserved for SPI Flash.", pinNumber);
+    abort();
+  }
+#elif defined(CONFIG_IDF_TARGET_ESP32C3)
+  if ((pinNumber >= GPIO_NUM_11) && (pinNumber <= GPIO_NUM_17))
+  {
+    log_e("GPIO pin %d is not usable in a ESP32-C3 board. Reserved for SPI Flash.", pinNumber);
+    abort();
+  }
+#endif
+}
+
+// ----------------------------------------------------------------------------
+
+void abortOnUnusableGPIO(gpio_num_array_t pins)
+{
+  for (int i = 0; i < pins.size(); i++)
+    abortOnUnusableGPIO(pins[i]);
+}
+
+// ----------------------------------------------------------------------------
+
 void abortDueToCallAfterStart()
 {
   log_e("inputs::add*() or inputs::set*() called after inputs::start()");
@@ -286,6 +337,7 @@ void inputs::addDigital(
 {
   if ((!pollingTask) && (!hubTask))
   {
+    abortOnUnusableGPIO(pinNumber);
     digitalInputChain = new DigitalButton(
         pinNumber,
         inputNumber,
@@ -308,6 +360,8 @@ void inputs::addRotaryEncoder(
 {
   if ((!pollingTask) && (!hubTask))
   {
+    abortOnUnusableGPIO(clkPin);
+    abortOnUnusableGPIO(dtPin);
     esp_err_t err = gpio_install_isr_service(0);
     if (err != ESP_ERR_INVALID_STATE)
       ESP_ERROR_CHECK(err);
@@ -326,6 +380,8 @@ ButtonMatrixInputSpec &inputs::addButtonMatrix(
 {
   if ((!pollingTask) && (!hubTask))
   {
+    abortOnUnusableGPIO(selectorPins);
+    abortOnUnusableGPIO(inputPins);
     ButtonMatrixInput *matrix = new ButtonMatrixInput(
         selectorPins,
         inputPins,
@@ -345,6 +401,8 @@ Multiplexers8InputSpec &inputs::addAnalogMultiplexer(
 {
   if ((!pollingTask) && (!hubTask))
   {
+    abortOnUnusableGPIO(selectorPins);
+    abortOnUnusableGPIO(inputPins);
     AnalogMultiplexerInput *mux = new AnalogMultiplexerInput(
         selectorPins,
         inputPins,
@@ -367,6 +425,9 @@ ShiftRegisters8InputSpec &inputs::addShiftRegisters(
 {
   if ((!pollingTask) && (!hubTask))
   {
+    abortOnUnusableGPIO(serialPin);
+    abortOnUnusableGPIO(loadPin);
+    abortOnUnusableGPIO(nextPin);
     ShiftRegistersInput *sr =
         new ShiftRegistersInput(
             serialPin,
@@ -394,6 +455,8 @@ void inputs::setAnalogClutchPaddles(
   {
     if ((leftClutchPin != rightClutchPin) && (rightClutchAxis == nullptr) && (leftClutchAxis == nullptr))
     {
+      abortOnUnusableGPIO(leftClutchPin);
+      abortOnUnusableGPIO(rightClutchPin);
       rightClutchAxis = new AnalogAxisInput(rightClutchPin);
       leftClutchAxis = new AnalogAxisInput(leftClutchPin);
       capabilities::setFlag(CAP_CLUTCH_ANALOG);
@@ -480,6 +543,8 @@ MCP23017InputSpec &inputs::addMCP23017Digital(
 
 void inputs::initializeI2C(gpio_num_t sdaPin, gpio_num_t sclPin)
 {
+  abortOnUnusableGPIO(sdaPin);
+  abortOnUnusableGPIO(sclPin);
   i2c::begin(sdaPin, sclPin);
 }
 
