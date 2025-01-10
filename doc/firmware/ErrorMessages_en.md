@@ -262,6 +262,13 @@ This article is focused on **firmware-defined** error messages.
   You configured an RGB LED strip with an unknown pixel driver.
   Check the *pixel driver* parameter. Avoid typecasting.
 
+- *GPIO_NUM_NC is not usable*
+- *GPIO pin ... is not usable ...*
+
+  You are trying to use a GPIO pin which is reserved to the DevKit board.
+  Check your calls to `inputs::add*()` or `inputs::initializeI2C()`
+  and try other pin.
+
 ## Non-error messages
 
 Some "error messages" are not errors at all.
@@ -269,3 +276,4 @@ You can ignore them:
 
 - *... nvs_open failed ...*
 - *E (15) gpio: gpio_install_isr_service(500): GPIO isr service already installed*
+- *CAUTION: GPIO pin ... is reserved for USB data* (ignore unless you are using USB connectivity)
