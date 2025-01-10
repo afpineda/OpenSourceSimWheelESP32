@@ -1,5 +1,12 @@
 # Change log
 
+## 6.8.0
+
+- The `inputs` namespace API will abort and display an error message
+  if the custom firmware attempts to use a reserved GPIO pin (flash, psram, etc).
+  This will be very helpful when troubleshooting boot problems.
+- Documentation updates.
+
 ## 6.7.1
 
 - Fix minor bugs.
