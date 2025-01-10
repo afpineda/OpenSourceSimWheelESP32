@@ -87,6 +87,11 @@ However, we can get more specific:
 
   - **UNUSABLE**. Do not attach anything to those pins.
 
+- **GPIO #16 and #17**
+
+  - Boards based on **ESP32-WROVER-B** requires these pins for PSRAM, so they are **not usable**.
+  - Safe to use in other cases (ESP32-WROOM-32).
+
 - **GPIO #0**:
 
   - Despite being described as pulled-up, it seems to work in other modes.

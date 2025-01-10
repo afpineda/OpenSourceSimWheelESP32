@@ -18,10 +18,7 @@
 #include <Preferences.h>
 #include "i2cTools.h"
 #include <stdexcept>
-
-#if defined(CONFIG_IDF_TARGET_ESP32S3)
-#include "esp32-hal-psram.h"
-#endif
+#include "esp32-hal-psram.h" // For psramFound()
 
 // #include "debugUtils.h"
 
@@ -287,6 +284,11 @@ void abortOnUnusableGPIO(gpio_num_t pinNumber)
   if ((pinNumber >= GPIO_NUM_6) && (pinNumber <= GPIO_NUM_11))
   {
     log_e("GPIO pin %d is not usable in a pure ESP32 board. Reserved for SPI Flash", pinNumber);
+    abort();
+  }
+  if ((pinNumber >= GPIO_NUM_16) && (pinNumber <= GPIO_NUM_17) && psramFound())
+  {
+    log_e("GPIO pin %d is not usable in a ESP32 board. Reserved for PSRAM", pinNumber);
     abort();
   }
 #elif defined(CONFIG_IDF_TARGET_ESP32S3)
