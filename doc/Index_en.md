@@ -1,5 +1,9 @@
 # Index
 
+> [!NOTE]
+> Reading this documentation carefully from start to finish
+> will save you a lot of time and effort.
+
 ## Build manual and electronics
 
 - [Overview](./overview_en.md)
