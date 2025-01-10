@@ -107,20 +107,41 @@ However, we can get more specific:
 - **GPIO #0**
 
   - The board will enter "bootloader mode" if this pin is set to low voltage at startup.
-    Connected to the on-board "boot" button. Avoid other uses.
+  - Connected to the on-board "boot" button.
+  - Avoid other uses.
 
 - **GPIO #45 and #46**
 
   - Bootstrap pins better to avoid.
   - GPIO #46 is input-only.
 
+- **GPIO #19 and #20**
+
+  - Connected to the USB port header.
+  - **NOT USABLE** if USB connectivity is required.
+  - Better to avoid in any case.
+
 - **GPIO #35, #36 and #37**
 
-  - Connected to PSRAM, thus **NOT USABLE**.
+  - Connected to PSRAM, thus **NOT USABLE** unless there is no PSRAM.
+
+- **GPIOs #26 to #32 (inclusive)**
+
+  - Connected to SPI Flash, thus **NOT USABLE**.
 
 More information [here](https://www.luisllamas.es/en/esp32-s3-hardware-details-pinout/)
 and
 [here](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/hw-reference/esp32s3/user-guide-devkitc-1.html).
+
+### ESP32-C3 boards
+
+- **GPIOs #11 to #17 (inclusive)**
+
+  - Connected to SPI Flash, thus **NOT USABLE**.
+
+More information [here](https://www.studiopieters.nl/esp32-c3-pinout/)
+and
+[here](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32c3/esp32-c3-devkitc-02/index.html).
 
 ## Uploading firmware to your DevKit board
 
