@@ -52,7 +52,7 @@ This project provides open hardware and software for a sim-racing wheel or butto
   This way, the simulator does not force the user to reconfigure
   inputs every time these wheels are swapped.
 
-- ⛐ **Telemetry data** using [SimHub](https://www.simhubdash.com/).
+- ⛐ **Telemetry** using [SimHub](https://www.simhubdash.com/).
   Supported display hardware includes RGB LED strips and single color LEDs.
 
 - 💤 **Automatic power-off** when not in use.
@@ -63,11 +63,10 @@ This project provides open hardware and software for a sim-racing wheel or butto
 
 - 💰 **Low budget**.
 
-This project is **fully operational**.
+- ✅ **Fully operational**.
 
 There is a [companion app](https://github.com/afpineda/SimWheelESP32Config) for user preferences,
 not mandatory but needed for some features.
-
 A [SimHub plugin](https://github.com/afpineda/SimWheelESP32-SimHub-Plugin/releases)
 is required for telemetry.
 This plugin can also configure basic user preferences.
@@ -125,7 +124,7 @@ o una caja de botones con las siguientes características:
   De esta manera, el simulador no fuerza al usuario a configurar
   las entradas cada vez que intercambia los volantes.
 
-- ⛐ **Datos de telemetría** mediante [SimHub](https://www.simhubdash.com/).
+- ⛐ **Telemetría** mediante [SimHub](https://www.simhubdash.com/).
   El hardware de visualización incluye tiras LED RGB y LED de un único color.
 
 - 💤 **Apagado automático** cuando no se usa
@@ -137,11 +136,10 @@ o una caja de botones con las siguientes características:
 
 - 💰 **Costes contenidos**.
 
-Este proyecto está **totalmente operativo**.
+- ✅ **Totalmente operativo**.
 
 Existe una [aplicación auxiliar](https://github.com/afpineda/SimWheelESP32Config) para las preferencias de usuario,
 no obligatoria, pero necesaria para algunas funcionalidades.
-
 Un [plugin para SimHub](https://github.com/afpineda/SimWheelESP32-SimHub-Plugin/releases)
 es necesario para la telemetría.
 Este plugin también puede configurar las preferencias básicas del usuario.
