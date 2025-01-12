@@ -160,7 +160,16 @@ public:
         if (autoPowerOffTimer != nullptr)
             esp_timer_stop(autoPowerOffTimer);
         connected = true;
-        hidImplementation::reset();
+        //************************************************
+        // Do not call hidImplementation::reset() here
+        //************************************************
+        // Quoting h2zero:
+        //
+        // When Windows bonds with a device and subscribes to notifications/indications
+        // of the device characteristics it does not re-subscribe on subsequent connections.
+        // If a notification is sent when Windows reconnects it will overwrite the stored subscription value
+        // in the NimBLE stack configuration with an invalid value which
+        // results in notifications/indications not being sent.
         notify::connected();
     }
 
@@ -317,7 +326,8 @@ void hidImplementation::begin(
 
         // Stack initialization
         NimBLEDevice::init(deviceName);
-        NimBLEDevice::setSecurityAuth(BLE_SM_PAIR_AUTHREQ_BOND);
+        // NimBLEDevice::setSecurityAuth(BLE_SM_PAIR_AUTHREQ_BOND);
+        NimBLEDevice::setSecurityAuth(true, false, false);
         NimBLEDevice::setMTU(BLE_MTU_SIZE);
         setDefaultPhy(BLE_GAP_LE_PHY_2M_MASK, BLE_GAP_LE_PHY_2M_MASK);
         pServer = NimBLEDevice::createServer();
