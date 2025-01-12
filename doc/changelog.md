@@ -1,5 +1,13 @@
 # Change log
 
+## 6.8.1
+
+- Fix Windows notifications not being sent on reconnection
+  in the NimBLE-Arduino stack.
+  The workaround is taken from the
+  [ESP32-BLE-Gamepad]( https://github.com/lemmingDev/ESP32-BLE-Gamepad/pull/257/files)
+  project.
+
 ## 6.8.0
 
 - The `inputs` namespace API will abort and display an error message
