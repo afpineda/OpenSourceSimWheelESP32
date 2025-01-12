@@ -101,6 +101,7 @@ NimBLECharacteristic *NimBLEHIDDeviceFix::getFeatureReport(uint8_t reportId)
 
 NimBLECharacteristic *NimBLEHIDDeviceFix::getInputReport(uint8_t reportId)
 {
+    // Note: the NOTIFY flag will internally create the 0x2902 descriptor
     NimBLECharacteristic *inputReportChr =
         getHidService()->createCharacteristic(
             hidReportChrUuid,
@@ -113,19 +114,6 @@ NimBLECharacteristic *NimBLEHIDDeviceFix::getInputReport(uint8_t reportId)
             2);
     uint8_t desc1_val[] = {reportId, 0x01};
     inputReportDsc->setValue(desc1_val, 2);
-
-    /*
-     * Descriptor 2902 is required by the HID over GATT spec
-     * (input reports only), but it works without it.
-     * Uncomment the following lines if you want to add it.
-
-    NimBLEDescriptor *p2902 = inputReportChr->createDescriptor(
-        hidReport2902DscUuid,
-        NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::WRITE_ENC,
-        2);
-    uint8_t desc2_val[] = {0b01, 0}; // Notifications enabled by default
-    p2902->setValue(desc2_val, 2);
-    */
 
     return inputReportChr;
 } // getInputReport
@@ -157,16 +145,24 @@ class BleConnectionStatus : public NimBLEServerCallbacks
 public:
     BleConnectionStatus(void) {};
     bool connected = false;
-    void onConnect(
-        NimBLEServer *pServer,
-        NimBLEConnInfo &connInfo) override
+
+    // Not needed for now
+    // void onConnect(
+    //     NimBLEServer *pServer,
+    //     NimBLEConnInfo &connInfo) override {
+    //     pServer->updateConnParams(connInfo.getConnHandle(), 6, 7, 0, 600);
+    // };
+
+    // Fix Windows notifications not being sent on reconnection
+    // See https://github.com/lemmingDev/ESP32-BLE-Gamepad/pull/257/files
+    void onAuthenticationComplete(NimBLEConnInfo &connInfo) override
     {
         if (autoPowerOffTimer != nullptr)
             esp_timer_stop(autoPowerOffTimer);
-        hidImplementation::reset();
         connected = true;
+        hidImplementation::reset();
         notify::connected();
-    };
+    }
 
     void onDisconnect(
         NimBLEServer *pServer,
