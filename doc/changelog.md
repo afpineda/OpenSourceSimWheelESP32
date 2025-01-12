@@ -1,5 +1,10 @@
 # Change log
 
+## 6.8.2
+
+- Previous fix in 6.8.1 was incomplete.
+  This patch should put an end to that issue.
+
 ## 6.8.1
 
 - Fix Windows notifications not being sent on reconnection
