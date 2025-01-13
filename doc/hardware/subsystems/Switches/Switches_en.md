@@ -324,6 +324,18 @@ The firmware will **automatically** detect those 4 bits,
 but **you must ensure** that all hardware addresses on the I2C bus are also **unique**.
 Otherwise, you have to manually provide a full I2C address to the firmware (see below).
 
+```mermaid
+---
+title: "I2C address"
+---
+block-beta
+   columns 7
+   A6 A5 A4 A3 A2 A1 A0
+   FA["Factory address"]:4
+   HW["Hardware address"]:3
+   FL["Full I2C address (7 bits)"]:7
+```
+
 ## Implementation of a single switch attached to a single pin
 
 There is no circuit involved here, just wiring.
