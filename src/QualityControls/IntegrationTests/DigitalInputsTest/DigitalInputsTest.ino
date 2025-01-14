@@ -51,7 +51,7 @@ void setup()
     Serial.println("-- READY --");
     auto &matrix = inputs::addButtonMatrix(mtxSelectors, mtxInputs);
     setDebugInputNumbers(matrix);
-    auto &mux = inputs::addAnalogMultiplexer(amtxerSelectors, amtxerInputs);
+    auto &mux = inputs::addAnalogMultiplexer8(amtxerSelectors, amtxerInputs);
     setDebugInputNumbers(mux);
 
     inputs::addDigital(TEST_ROTARY_SW, ROTARY_PUSH_BN);

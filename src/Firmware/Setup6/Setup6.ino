@@ -80,7 +80,7 @@ static const gpio_num_array_t mpxInputs = {GPIO_NUM_14, GPIO_NUM_22};
 
 void simWheelSetup()
 {
-    inputs::addAnalogMultiplexer(mpxSelectors, mpxInputs)
+    inputs::addAnalogMultiplexer8(mpxSelectors, mpxInputs)
         //
         .inputNumber(mpxInputs[0], mux8_pin_t::A0, 10)
         .inputNumber(mpxInputs[0], mux8_pin_t::A1, JOY_BACK)
