@@ -424,7 +424,7 @@ However, the parameters to `.inputNumber()` are slightly different:
   This pin must be included in `mtxInputs`. Otherwise, the firmware won`t boot.
 - The second parameter is a pin tag at the multiplexer where the switch is attached,
   prefixed with `mux8_pin_t::`, `mux16_pint_t::` or `mux32_pint_t::`
-  (depending on depending on how many channels each chip has).
+  (depending on how many channels each chip has).
   So, this parameter goes from
   `mux8_pin_t::A0` to `mux8_pin_t::A7`,
   `mux16_pin_t::I0` to `mux16_pin_t::I15` or
