@@ -1,5 +1,12 @@
 # Change log
 
+## 6.9.0
+
+- Support for 16 and 32-channel analog multiplexers has been fixed
+  by adding two new API calls: `inputs::addAnalogMultiplexer16()` and
+  `inputs::addAnalogMultiplexer32()`.
+- Documentation updates.
+
 ## 6.8.2
 
 - Previous fix in 6.8.1 was incomplete.
@@ -10,7 +17,7 @@
 - Fix Windows notifications not being sent on reconnection
   in the NimBLE-Arduino stack.
   The workaround is taken from the
-  [ESP32-BLE-Gamepad]( https://github.com/lemmingDev/ESP32-BLE-Gamepad/pull/257/files)
+  [ESP32-BLE-Gamepad](https://github.com/lemmingDev/ESP32-BLE-Gamepad/pull/257/files)
   project.
 
 ## 6.8.0
