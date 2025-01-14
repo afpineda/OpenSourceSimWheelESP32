@@ -397,7 +397,7 @@ ButtonMatrixInputSpec &inputs::addButtonMatrix(
   throw std::runtime_error("");
 }
 
-Multiplexers8InputSpec &inputs::addAnalogMultiplexer(
+AnalogMultiplexerInput &addAnalogMultiplexerInternal(
     const gpio_num_array_t &selectorPins,
     const gpio_num_array_t &inputPins)
 {
@@ -417,6 +417,49 @@ Multiplexers8InputSpec &inputs::addAnalogMultiplexer(
     abortDueToCallAfterStart();
   // C++20 compiler requires this
   throw std::runtime_error("");
+}
+
+Multiplexers8InputSpec &inputs::addAnalogMultiplexer(
+    const gpio_num_array_t &selectorPins,
+    const gpio_num_array_t &inputPins)
+{
+  return inputs::addAnalogMultiplexer8(selectorPins, inputPins);
+}
+
+Multiplexers8InputSpec &inputs::addAnalogMultiplexer8(
+    const gpio_num_array_t &selectorPins,
+    const gpio_num_array_t &inputPins)
+{
+  if (selectorPins.size() != 3)
+  {
+    log_e("An 8-channel analog multiplexer requires 3 selector pins");
+    abort();
+  }
+  return addAnalogMultiplexerInternal(selectorPins, inputPins);
+}
+
+Multiplexers16InputSpec &inputs::addAnalogMultiplexer16(
+    const gpio_num_array_t &selectorPins,
+    const gpio_num_array_t &inputPins)
+{
+  if (selectorPins.size() != 4)
+  {
+    log_e("A 16-channel analog multiplexer requires 4 selector pins");
+    abort();
+  }
+  return addAnalogMultiplexerInternal(selectorPins, inputPins);
+}
+
+Multiplexers32InputSpec &inputs::addAnalogMultiplexer32(
+    const gpio_num_array_t &selectorPins,
+    const gpio_num_array_t &inputPins)
+{
+  if (selectorPins.size() != 5)
+  {
+    log_e("A 32-channel analog multiplexer requires 5 selector pins");
+    abort();
+  }
+  return addAnalogMultiplexerInternal(selectorPins, inputPins);
 }
 
 ShiftRegisters8InputSpec &inputs::addShiftRegisters(

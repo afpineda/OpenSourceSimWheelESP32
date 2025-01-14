@@ -96,28 +96,58 @@ inputBitmap_t AnalogMultiplexerInput::read(inputBitmap_t lastState)
 // Input numbers
 // ----------------------------------------------------------------------------
 
+void AnalogMultiplexerInput::setBitmap(
+    gpio_num_t inputPin,
+    uint8_t chipPinIndex,
+    inputNumber_t number)
+{
+    // Locate GPIO input pin index
+    uint8_t inputPinIndex = 0;
+    while ((inputPinIndex < inputPinCount) && (inputPins[inputPinIndex] != inputPin))
+        inputPinIndex++;
+    if (inputPinIndex >= inputPinCount)
+    {
+        log_e(
+            "Invalid input pin at AnalogMultiplexerInput::inputNumber(%d,%d,%d)",
+            inputPin,
+            chipPinIndex,
+            number);
+        abort();
+    }
+
+    // Set bitmap
+    uint8_t switchIndex = (inputPinIndex << selectorPinCount) + chipPinIndex;
+    mask |= bitmap[switchIndex];
+    bitmap[switchIndex] = BITMAP(number);
+    mask &= ~bitmap[switchIndex];
+}
+
 Multiplexers8InputSpec &AnalogMultiplexerInput::inputNumber(
     gpio_num_t inputPin,
     mux8_pin_t pin,
     inputNumber_t number)
 {
     uint8_t muxPinIndex = static_cast<uint8_t>(pin);
+    setBitmap(inputPin, muxPinIndex, number);
+    return *this;
+}
 
-    // locate index of input pin
-    uint8_t inputPinIndex = 0;
-    while ((inputPinIndex < inputPinCount) && (inputPins[inputPinIndex] != inputPin))
-        inputPinIndex++;
-    if (inputPinIndex >= inputPinCount)
-    {
-        // Not found
-        log_e("Invalid input pin at AnalogMultiplexerInput::inputNumber(%d,%d,%d)", inputPin, muxPinIndex, number);
-        abort();
-    }
+Multiplexers16InputSpec &AnalogMultiplexerInput::inputNumber(
+    gpio_num_t inputPin,
+    mux16_pin_t pin,
+    inputNumber_t number)
+{
+    uint8_t muxPinIndex = static_cast<uint8_t>(pin);
+    setBitmap(inputPin, muxPinIndex, number);
+    return *this;
+}
 
-    // Set bitmap
-    uint8_t switchIndex = (inputPinIndex << selectorPinCount) + muxPinIndex;
-    mask |= bitmap[switchIndex];
-    bitmap[switchIndex] = BITMAP(number);
-    mask &= ~bitmap[switchIndex];
+Multiplexers32InputSpec &AnalogMultiplexerInput::inputNumber(
+    gpio_num_t inputPin,
+    mux32_pin_t pin,
+    inputNumber_t number)
+{
+    uint8_t muxPinIndex = static_cast<uint8_t>(pin);
+    setBitmap(inputPin, muxPinIndex, number);
     return *this;
 }

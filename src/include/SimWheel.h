@@ -468,8 +468,10 @@ namespace inputs
         const gpio_num_array_t inputPins);
 
     /**
-     * @brief Add analog multiplexers for switches.
+     * @brief Add an 8-channel analog multiplexers for switches.
      *        Must be called before `start()`. You can have more than one.
+     *
+     * @deprecated Use addAnalogMultiplexer8() instead.
      *
      * @param selectorPins Array of GPIO numbers for selector pins.
      * @param inputPins Array of GPIO numbers for input pins.
@@ -477,6 +479,45 @@ namespace inputs
      * @return Multiplexers8InputSpec& Input numbers specification
      */
     Multiplexers8InputSpec &addAnalogMultiplexer(
+        const gpio_num_array_t &selectorPins,
+        const gpio_num_array_t &inputPins);
+
+    /**
+     * @brief Add an 8-channel analog multiplexers for switches.
+     *        Must be called before `start()`. You can have more than one.
+     *
+     * @param selectorPins Array of GPIO numbers for selector pins.
+     * @param inputPins Array of GPIO numbers for input pins.
+     *
+     * @return Multiplexers8InputSpec& Input numbers specification
+     */
+    Multiplexers8InputSpec &addAnalogMultiplexer8(
+        const gpio_num_array_t &selectorPins,
+        const gpio_num_array_t &inputPins);
+
+    /**
+     * @brief Add a 16-channel analog multiplexers for switches.
+     *        Must be called before `start()`. You can have more than one.
+     *
+     * @param selectorPins Array of GPIO numbers for selector pins.
+     * @param inputPins Array of GPIO numbers for input pins.
+     *
+     * @return Multiplexers16InputSpec& Input numbers specification
+     */
+    Multiplexers16InputSpec &addAnalogMultiplexer16(
+        const gpio_num_array_t &selectorPins,
+        const gpio_num_array_t &inputPins);
+
+    /**
+     * @brief Add a 32-channel analog multiplexers for switches.
+     *        Must be called before `start()`. You can have more than one.
+     *
+     * @param selectorPins Array of GPIO numbers for selector pins.
+     * @param inputPins Array of GPIO numbers for input pins.
+     *
+     * @return Multiplexers32InputSpec& Input numbers specification
+     */
+    Multiplexers32InputSpec &addAnalogMultiplexer32(
         const gpio_num_array_t &selectorPins,
         const gpio_num_array_t &inputPins);
 
@@ -1058,9 +1099,9 @@ namespace pixels
      * @param blue Blue component of the pixel color
      */
     void setAll(pixelGroup_t group,
-             uint8_t red,
-             uint8_t green,
-             uint8_t blue);
+                uint8_t red,
+                uint8_t green,
+                uint8_t blue);
 
     /**
      * @brief Shift all pixel colors to the next pixel index

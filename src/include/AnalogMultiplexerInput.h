@@ -21,7 +21,10 @@
  * @note Despite the use of analog multiplexers, input is digital (on/off)
  *
  */
-class AnalogMultiplexerInput : public DigitalPolledInput, public Multiplexers8InputSpec
+class AnalogMultiplexerInput : public DigitalPolledInput,
+                               public Multiplexers8InputSpec,
+                               public Multiplexers16InputSpec,
+                               public Multiplexers32InputSpec
 {
 private:
     uint8_t selectorPinCount, inputPinCount;
@@ -30,6 +33,12 @@ private:
     inputBitmap_t *bitmap;
     bool negativeLogic;
     uint8_t switchCount;
+
+protected:
+    void setBitmap(
+        gpio_num_t inputPin,
+        uint8_t chipPinIndex,
+        inputNumber_t number);
 
 public:
     /**
@@ -63,9 +72,20 @@ public:
      */
     virtual inputBitmap_t read(inputBitmap_t lastState) override;
 
+public:
     virtual Multiplexers8InputSpec &inputNumber(
         gpio_num_t inputPin,
         mux8_pin_t pin,
+        inputNumber_t number) override;
+
+    virtual Multiplexers16InputSpec &inputNumber(
+        gpio_num_t inputPin,
+        mux16_pin_t pin,
+        inputNumber_t number) override;
+
+    virtual Multiplexers32InputSpec &inputNumber(
+        gpio_num_t inputPin,
+        mux32_pin_t pin,
         inputNumber_t number) override;
 };
 

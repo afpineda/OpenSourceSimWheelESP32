@@ -81,6 +81,7 @@ public:
 
 /**
  * @brief 74HC4051N pin tags for switches
+ *        or any other 8-channel multiplexer
  *
  */
 enum class mux8_pin_t
@@ -97,6 +98,7 @@ enum class mux8_pin_t
 
 /**
  * @brief Specification of input numbers for multiplexed switches
+ *        (8 channels)
  *
  */
 class Multiplexers8InputSpec
@@ -113,6 +115,117 @@ public:
     virtual Multiplexers8InputSpec &inputNumber(
         gpio_num_t inputPin,
         mux8_pin_t pin,
+        inputNumber_t number) = 0;
+};
+
+/**
+ * @brief CD74HCx4067 pin tags for switches
+ *        or any other 16-channel multiplexer
+ *
+ */
+enum class mux16_pin_t
+{
+    I0 = 0,
+    I1,
+    I2,
+    I3,
+    I4,
+    I5,
+    I6,
+    I7,
+    I8,
+    I9,
+    I10,
+    I11,
+    I12,
+    I13,
+    I14,
+    I15,
+};
+
+/**
+ * @brief Specification of input numbers for multiplexed switches
+ *        (16 channels)
+ *
+ */
+class Multiplexers16InputSpec
+{
+public:
+    /**
+     * @brief Abstract definition of buttons attached to a multiplexer
+     *
+     * @param inputPin Input pin (GPIO number or alias)
+     * @param pin Pin name in the chip to which the button is connected
+     * @param number Input number assigned to the button
+     * @return Multiplexers16InputSpec& This object (to chain calls)
+     */
+    virtual Multiplexers16InputSpec &inputNumber(
+        gpio_num_t inputPin,
+        mux16_pin_t pin,
+        inputNumber_t number) = 0;
+};
+
+
+/**
+ * @brief ADG732 pin tags for switches
+ *        or any other 32-channel multiplexer
+ *
+ */
+enum class mux32_pin_t
+{
+    S1 = 0,
+    S2,
+    S3,
+    S4,
+    S5,
+    S6,
+    S7,
+    S8,
+    S9,
+    S10,
+    S11,
+    S12,
+    S13,
+    S14,
+    S15,
+    S16,
+    S17,
+    S18,
+    S19,
+    S20,
+    S21,
+    S22,
+    S23,
+    S24,
+    S25,
+    S26,
+    S27,
+    S28,
+    S29,
+    S30,
+    S31,
+    S32
+};
+
+/**
+ * @brief Specification of input numbers for multiplexed switches
+ *        (32 channels)
+ *
+ */
+class Multiplexers32InputSpec
+{
+public:
+    /**
+     * @brief Abstract definition of buttons attached to a multiplexer
+     *
+     * @param inputPin Input pin (GPIO number or alias)
+     * @param pin Pin name in the chip to which the button is connected
+     * @param number Input number assigned to the button
+     * @return Multiplexers16InputSpec& This object (to chain calls)
+     */
+    virtual Multiplexers32InputSpec &inputNumber(
+        gpio_num_t inputPin,
+        mux32_pin_t pin,
         inputNumber_t number) = 0;
 };
 

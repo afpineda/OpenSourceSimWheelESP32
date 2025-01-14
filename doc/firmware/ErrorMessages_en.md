@@ -269,6 +269,12 @@ This article is focused on **firmware-defined** error messages.
   Check your calls to `inputs::add*()` or `inputs::initializeI2C()`
   and try other pin.
 
+- *A N-channel analog multiplexer requires M selector pins*
+
+  The array given to `inputs::addAnalogMultiplexer*()` in the first parameter
+  (`selectorPins`) has too many or too few GPIO pin numbers (or aliases).
+  Note that $N=2^M$.
+
 ## Non-error messages
 
 Some "error messages" are not errors at all.
