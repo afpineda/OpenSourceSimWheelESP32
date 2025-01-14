@@ -1,0 +1,1264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project>
+  <fileVersion>
+    <major>4</major>
+    <minor>37</minor>
+    <build>0</build>
+  </fileVersion>
+  <title>CD74HC4067E</title>
+  <author>Ángel Fernández Pineda. Madrid. Spain. 2025.</author>
+  <description>16-channel analog multiplexer &lt;br&gt;from Texas Instruments&lt;br&gt;(through-hole package)</description>
+  <width value="6.0" unit="cm"/>
+  <height value="4.0" unit="cm"/>
+  <gridSpacing value="0.1" unit="in"/>
+  <dotSpacing>1</dotSpacing>
+  <components>
+    <diylc.semiconductors.DIL__IC>
+      <name>CD74HC4067E</name>
+      <alpha>94</alpha>
+      <value>CD74HC4067E</value>
+      <orientation>DEFAULT</orientation>
+      <pinCount>_24</pinCount>
+      <pinSpacing value="0.1" unit="in"/>
+      <rowSpacing value="0.3" unit="in"/>
+      <controlPoints>
+        <point x="0.1" y="0.2"/>
+        <point x="0.1" y="0.3"/>
+        <point x="0.1" y="0.4"/>
+        <point x="0.1" y="0.5"/>
+        <point x="0.1" y="0.6"/>
+        <point x="0.1" y="0.7"/>
+        <point x="0.1" y="0.8"/>
+        <point x="0.1" y="0.9"/>
+        <point x="0.1" y="1.0"/>
+        <point x="0.1" y="1.1"/>
+        <point x="0.1" y="1.2"/>
+        <point x="0.1" y="1.3"/>
+        <point x="0.4" y="0.2"/>
+        <point x="0.4" y="0.3"/>
+        <point x="0.4" y="0.4"/>
+        <point x="0.4" y="0.5"/>
+        <point x="0.4" y="0.6"/>
+        <point x="0.4" y="0.7"/>
+        <point x="0.4" y="0.8"/>
+        <point x="0.4" y="0.9"/>
+        <point x="0.4" y="1.0"/>
+        <point x="0.4" y="1.1"/>
+        <point x="0.4" y="1.2"/>
+        <point x="0.4" y="1.3"/>
+      </controlPoints>
+      <display>VALUE</display>
+      <bodyColor hex="808080"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+      <indentColor hex="595959"/>
+      <displayNumbers>NO</displayNumbers>
+    </diylc.semiconductors.DIL__IC>
+    <diylc.semiconductors.DIL__IC>
+      <name>CD74HC4067E</name>
+      <alpha>94</alpha>
+      <value>CD74HC4067E</value>
+      <orientation>_90</orientation>
+      <pinCount>_24</pinCount>
+      <pinSpacing value="0.1" unit="in"/>
+      <rowSpacing value="0.3" unit="in"/>
+      <controlPoints>
+        <point x="1.7" y="0.1"/>
+        <point x="1.6" y="0.1"/>
+        <point x="1.5" y="0.1"/>
+        <point x="1.4" y="0.1"/>
+        <point x="1.3" y="0.1"/>
+        <point x="1.2" y="0.1"/>
+        <point x="1.1" y="0.1"/>
+        <point x="1.0" y="0.1"/>
+        <point x="0.9" y="0.1"/>
+        <point x="0.8" y="0.1"/>
+        <point x="0.7" y="0.1"/>
+        <point x="0.6" y="0.1"/>
+        <point x="1.7" y="0.4"/>
+        <point x="1.6" y="0.4"/>
+        <point x="1.5" y="0.4"/>
+        <point x="1.4" y="0.4"/>
+        <point x="1.3" y="0.4"/>
+        <point x="1.2" y="0.4"/>
+        <point x="1.1" y="0.4"/>
+        <point x="1.0" y="0.4"/>
+        <point x="0.9" y="0.4"/>
+        <point x="0.8" y="0.4"/>
+        <point x="0.7" y="0.4"/>
+        <point x="0.6" y="0.4"/>
+      </controlPoints>
+      <display>VALUE</display>
+      <bodyColor hex="808080"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+      <indentColor hex="595959"/>
+      <displayNumbers>NO</displayNumbers>
+    </diylc.semiconductors.DIL__IC>
+    <diylc.semiconductors.DIL__IC>
+      <name>CD74HC4067E</name>
+      <alpha>94</alpha>
+      <value>CD74HC4067E</value>
+      <orientation>_270</orientation>
+      <pinCount>_24</pinCount>
+      <pinSpacing value="0.1" unit="in"/>
+      <rowSpacing value="0.3" unit="in"/>
+      <controlPoints>
+        <point x="0.6" y="1.4"/>
+        <point x="0.7" y="1.4"/>
+        <point x="0.8" y="1.4"/>
+        <point x="0.9" y="1.4"/>
+        <point x="1.0" y="1.4"/>
+        <point x="1.1" y="1.4"/>
+        <point x="1.2" y="1.4"/>
+        <point x="1.3" y="1.4"/>
+        <point x="1.4" y="1.4"/>
+        <point x="1.5" y="1.4"/>
+        <point x="1.6" y="1.4"/>
+        <point x="1.7" y="1.4"/>
+        <point x="0.6" y="1.1"/>
+        <point x="0.7" y="1.1"/>
+        <point x="0.8" y="1.1"/>
+        <point x="0.9" y="1.1"/>
+        <point x="1.0" y="1.1"/>
+        <point x="1.1" y="1.1"/>
+        <point x="1.2" y="1.1"/>
+        <point x="1.3" y="1.1"/>
+        <point x="1.4" y="1.1"/>
+        <point x="1.5" y="1.1"/>
+        <point x="1.6" y="1.1"/>
+        <point x="1.7" y="1.1"/>
+      </controlPoints>
+      <display>VALUE</display>
+      <bodyColor hex="808080"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+      <indentColor hex="595959"/>
+      <displayNumbers>NO</displayNumbers>
+    </diylc.semiconductors.DIL__IC>
+    <diylc.semiconductors.DIL__IC>
+      <name>CD74HC4067E</name>
+      <alpha>94</alpha>
+      <value>CD74HC4067E</value>
+      <orientation>_180</orientation>
+      <pinCount>_24</pinCount>
+      <pinSpacing value="0.1" unit="in"/>
+      <rowSpacing value="0.3" unit="in"/>
+      <controlPoints>
+        <point x="2.2" y="1.3"/>
+        <point x="2.2" y="1.2"/>
+        <point x="2.2" y="1.1"/>
+        <point x="2.2" y="1.0"/>
+        <point x="2.2" y="0.9"/>
+        <point x="2.2" y="0.8"/>
+        <point x="2.2" y="0.7"/>
+        <point x="2.2" y="0.6"/>
+        <point x="2.2" y="0.5"/>
+        <point x="2.2" y="0.4"/>
+        <point x="2.2" y="0.3"/>
+        <point x="2.2" y="0.2"/>
+        <point x="1.9" y="1.3"/>
+        <point x="1.9" y="1.2"/>
+        <point x="1.9" y="1.1"/>
+        <point x="1.9" y="1.0"/>
+        <point x="1.9" y="0.9"/>
+        <point x="1.9" y="0.8"/>
+        <point x="1.9" y="0.7"/>
+        <point x="1.9" y="0.6"/>
+        <point x="1.9" y="0.5"/>
+        <point x="1.9" y="0.4"/>
+        <point x="1.9" y="0.3"/>
+        <point x="1.9" y="0.2"/>
+      </controlPoints>
+      <display>VALUE</display>
+      <bodyColor hex="808080"/>
+      <borderColor hex="595959"/>
+      <labelColor hex="ffffff"/>
+      <indentColor hex="595959"/>
+      <displayNumbers>NO</displayNumbers>
+    </diylc.semiconductors.DIL__IC>
+    <diylc.misc.Label>
+      <name>LAB1</name>
+      <point x="0.1" y="0.2"/>
+      <text>  COM</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB2</name>
+      <point x="0.4" y="0.2"/>
+      <text>Vcc  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB3</name>
+      <point x="0.1" y="0.3"/>
+      <text>  I7</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB4</name>
+      <point x="0.1" y="0.4"/>
+      <text>  I6</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB5</name>
+      <point x="0.1" y="0.5"/>
+      <text>  I5</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB6</name>
+      <point x="0.1" y="0.6"/>
+      <text>  I4</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB7</name>
+      <point x="0.1" y="0.7"/>
+      <text>  I3</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB8</name>
+      <point x="0.1" y="0.8"/>
+      <text>  I2</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB9</name>
+      <point x="0.1" y="0.9"/>
+      <text>  I1</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB10</name>
+      <point x="0.1" y="1.0"/>
+      <text>  I0</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB11</name>
+      <point x="0.1" y="1.1"/>
+      <text>  S0</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB12</name>
+      <point x="0.1" y="1.2"/>
+      <text>  S1</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB13</name>
+      <point x="0.1" y="1.3"/>
+      <text>  GND</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB14</name>
+      <point x="0.4" y="0.3"/>
+      <text>I8  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB15</name>
+      <point x="0.4" y="0.4"/>
+      <text>I9  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB16</name>
+      <point x="0.4" y="0.5"/>
+      <text>I10  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB17</name>
+      <point x="0.4" y="0.6"/>
+      <text>I11  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB18</name>
+      <point x="0.4" y="0.7"/>
+      <text>I12  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB19</name>
+      <point x="0.4" y="0.8"/>
+      <text>I13  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB20</name>
+      <point x="0.4" y="0.9"/>
+      <text>I14  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB21</name>
+      <point x="0.4" y="1.0"/>
+      <text>I15  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB22</name>
+      <point x="0.4" y="1.1"/>
+      <text>~E  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB23</name>
+      <point x="0.4" y="1.2"/>
+      <text>S2  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB24</name>
+      <point x="0.4" y="1.3"/>
+      <text>S3  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB25</name>
+      <point x="1.7" y="0.1"/>
+      <text>  COM</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB26</name>
+      <point x="1.7" y="0.4"/>
+      <text>Vcc  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB27</name>
+      <point x="1.6" y="0.1"/>
+      <text>  I7</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB28</name>
+      <point x="1.5" y="0.1"/>
+      <text>  I6</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB29</name>
+      <point x="1.4" y="0.1"/>
+      <text>  I5</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB30</name>
+      <point x="1.3" y="0.1"/>
+      <text>  I4</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB31</name>
+      <point x="1.2" y="0.1"/>
+      <text>  I3</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB32</name>
+      <point x="1.1" y="0.1"/>
+      <text>  I2</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB33</name>
+      <point x="1.0" y="0.1"/>
+      <text>  I1</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB34</name>
+      <point x="0.9" y="0.1"/>
+      <text>  I0</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB35</name>
+      <point x="0.8" y="0.1"/>
+      <text>  S0</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB36</name>
+      <point x="0.7" y="0.1"/>
+      <text>  S1</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB37</name>
+      <point x="0.6" y="0.1"/>
+      <text>  GND</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB38</name>
+      <point x="1.6" y="0.4"/>
+      <text>I8  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB39</name>
+      <point x="1.5" y="0.4"/>
+      <text>I9  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB40</name>
+      <point x="1.4" y="0.4"/>
+      <text>I10  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB41</name>
+      <point x="1.3" y="0.4"/>
+      <text>I11  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB42</name>
+      <point x="1.2" y="0.4"/>
+      <text>I12  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB43</name>
+      <point x="1.1" y="0.4"/>
+      <text>I13  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB44</name>
+      <point x="1.0" y="0.4"/>
+      <text>I14  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB45</name>
+      <point x="0.9" y="0.4"/>
+      <text>I15  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB46</name>
+      <point x="0.8" y="0.4"/>
+      <text>~E  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB47</name>
+      <point x="0.7" y="0.4"/>
+      <text>S2  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB48</name>
+      <point x="0.6" y="0.4"/>
+      <text>S3  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_90</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB49</name>
+      <point x="0.6" y="1.4"/>
+      <text>  COM</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB50</name>
+      <point x="0.6" y="1.1"/>
+      <text>Vcc  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB51</name>
+      <point x="0.7" y="1.4"/>
+      <text>  I7</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB52</name>
+      <point x="0.8" y="1.4"/>
+      <text>  I6</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB53</name>
+      <point x="0.9" y="1.4"/>
+      <text>  I5</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB54</name>
+      <point x="1.0" y="1.4"/>
+      <text>  I4</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB55</name>
+      <point x="1.1" y="1.4"/>
+      <text>  I3</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB56</name>
+      <point x="1.2" y="1.4"/>
+      <text>  I2</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB57</name>
+      <point x="1.3" y="1.4"/>
+      <text>  I1</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB58</name>
+      <point x="1.4" y="1.4"/>
+      <text>  I0</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB59</name>
+      <point x="1.5" y="1.4"/>
+      <text>  S0</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB60</name>
+      <point x="1.6" y="1.4"/>
+      <text>  S1</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB61</name>
+      <point x="1.7" y="1.4"/>
+      <text>  GND</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB62</name>
+      <point x="0.7" y="1.1"/>
+      <text>I8  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB63</name>
+      <point x="0.8" y="1.1"/>
+      <text>I9  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB64</name>
+      <point x="0.9" y="1.1"/>
+      <text>I10  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB65</name>
+      <point x="1.0" y="1.1"/>
+      <text>I11  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB66</name>
+      <point x="1.1" y="1.1"/>
+      <text>I12  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB67</name>
+      <point x="1.2" y="1.1"/>
+      <text>I13  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB68</name>
+      <point x="1.3" y="1.1"/>
+      <text>I14  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB69</name>
+      <point x="1.4" y="1.1"/>
+      <text>I15  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB70</name>
+      <point x="1.5" y="1.1"/>
+      <text>~E  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB71</name>
+      <point x="1.6" y="1.1"/>
+      <text>S2  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB72</name>
+      <point x="1.7" y="1.1"/>
+      <text>S3  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>_270</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB73</name>
+      <point x="2.2" y="1.3"/>
+      <text>COM  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB74</name>
+      <point x="1.9" y="1.3"/>
+      <text>  Vcc</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB75</name>
+      <point x="2.2" y="1.2"/>
+      <text>I7  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB76</name>
+      <point x="2.2" y="1.1"/>
+      <text>I6  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB77</name>
+      <point x="2.2" y="1.0"/>
+      <text>I5  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB78</name>
+      <point x="2.2" y="0.9"/>
+      <text>I4  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB79</name>
+      <point x="2.2" y="0.8"/>
+      <text>I3  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB80</name>
+      <point x="2.2" y="0.7"/>
+      <text>I2  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB81</name>
+      <point x="2.2" y="0.6"/>
+      <text>I1  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB82</name>
+      <point x="2.2" y="0.5"/>
+      <text>I0  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB83</name>
+      <point x="2.2" y="0.4"/>
+      <text>S0  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB84</name>
+      <point x="2.2" y="0.3"/>
+      <text>S1  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB85</name>
+      <point x="2.2" y="0.2"/>
+      <text>GND  </text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>RIGHT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB86</name>
+      <point x="1.9" y="1.2"/>
+      <text>  I8</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB87</name>
+      <point x="1.9" y="1.1"/>
+      <text>  I9</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB88</name>
+      <point x="1.9" y="1.0"/>
+      <text>  I10</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB89</name>
+      <point x="1.9" y="0.9"/>
+      <text>  I11</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB90</name>
+      <point x="1.9" y="0.8"/>
+      <text>  I12</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB91</name>
+      <point x="1.9" y="0.7"/>
+      <text>  I13</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB92</name>
+      <point x="1.9" y="0.6"/>
+      <text>  I14</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB93</name>
+      <point x="1.9" y="0.5"/>
+      <text>  I15</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB94</name>
+      <point x="1.9" y="0.4"/>
+      <text>  ~E</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB95</name>
+      <point x="1.9" y="0.3"/>
+      <text>  S2</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+    <diylc.misc.Label>
+      <name>LAB96</name>
+      <point x="1.9" y="0.2"/>
+      <text>  S3</text>
+      <font name="Dialog.plain" size="8" style="0"/>
+      <color hex="ffffff"/>
+      <horizontalAlignment>LEFT</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
+  </components>
+  <groups>
+    <set/>
+    <set/>
+    <set>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[53]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[60]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[54]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[69]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[65]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[61]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[52]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[67]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[71]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[70]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[68]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[57]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[72]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[3]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[58]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[66]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[49]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[50]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[51]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[62]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[55]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[59]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[56]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[63]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[64]"/>
+    </set>
+    <set/>
+    <set/>
+    <set>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[73]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[75]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[81]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[95]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[96]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[85]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[92]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[91]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[78]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[83]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[87]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[77]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[89]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[86]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[79]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[93]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[4]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[76]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[82]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[74]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[80]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[94]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[84]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[90]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[88]"/>
+    </set>
+    <set/>
+    <set/>
+    <set/>
+    <set/>
+    <set/>
+    <set>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[48]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[41]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[31]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[45]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[26]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[30]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[27]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[35]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[39]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[43]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[47]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[32]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[28]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[34]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[36]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[46]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[33]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[42]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[29]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[40]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[44]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[25]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[38]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[37]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[2]"/>
+    </set>
+    <set>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[16]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[14]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[4]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[7]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[6]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[10]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[3]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[21]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[12]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[9]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[22]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[24]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[5]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[8]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[13]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[20]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[11]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[23]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[17]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[15]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[19]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[18]"/>
+    </set>
+  </groups>
+  <lockedLayers/>
+  <lockedComponents/>
+  <hiddenLayers/>
+  <font name="Dialog.plain" size="14" style="0"/>
+</project>

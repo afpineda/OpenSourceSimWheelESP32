@@ -171,6 +171,26 @@ If you have two or more chips in the circuit, all of them must be identical.
 
 All switches work in *negative logic*, so their common pole must be attached to `GND`. See below.
 
+### Circuit design using 16-channel multiplexers
+
+The following circuit design is based on the widely available
+[CD74HC4067E](../../esp32reference/CD74HC4067_datasheet.pdf)
+analog multiplexer: an *16 to 1* multiplexer (16 channels).
+Provides 32 inputs using 6 pins, which should be enough for most steering wheels.
+
+![Multiplexed switches design (16-channel)](./MultiplexedSwitchesX32.png)
+
+Open this [circuit layout](./MultiplexedSwitchesX32.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
+
+Needed parts (not counting input hardware like push buttons):
+
+- Standard-sized perfboard 28x6 holes.
+- CD74HC4067E analog multiplexer: x2.
+- Dupond pin headers (male or female): x48.
+- Thin wire.
+
+### Circuit design using 8-channel multiplexers
+
 The following circuit design is based on the widely available
 [74HC4051N](../../esp32reference/75HC4051_datasheet.pdf)
 analog multiplexer: an *8 to 1* multiplexer (8 channels).
@@ -185,7 +205,7 @@ However, this design can be extended easily:
 > If  more than three 74HC4051N chips are needed,
 > 16 or 32-channel multiplexers are a better choice.
 
-![Multiplexed switches design](./MultiplexedSwitchesX24.png)
+![Multiplexed switches design (8-channel)](./MultiplexedSwitchesX24.png)
 
 Open this [circuit layout](./MultiplexedSwitchesX24.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
 
