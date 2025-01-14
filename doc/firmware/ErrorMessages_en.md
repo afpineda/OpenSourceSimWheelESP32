@@ -31,7 +31,7 @@ This article is focused on **firmware-defined** error messages.
 
 - *Invalid input pin at AnalogMultiplexerInput::inputNumber()*.
 
-  An input number is not in the range from 0 to 63 in `inputs::addAnalogMultiplexer().inputNumber()`.
+  An input number is not in the range from 0 to 63 in `inputs::addAnalogMultiplexer*().inputNumber()`.
   Check your custom firmware.
 
 - *Not enough memory at AnalogMultiplexerInput::AnalogMultiplexerInput()*
