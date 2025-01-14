@@ -166,19 +166,24 @@ Open this [circuit layout](./LogicInverter.diy) using
 
 ## Analog multiplexer implementation
 
-This implementation is based on the widely available
-[74HC4051N](../../esp32reference/75HC4051_datasheet.pdf)
-analog multiplexer: an *8 to 1* multiplexer.
-However, this firmware should work with *any* analog multiplexer in the market.
+This implementation works with *any* analog multiplexer in the market (8, 16 or 32 channels).
+If you have two or more chips in the circuit, all of them must be identical.
+
 All switches work in *negative logic*, so their common pole must be attached to `GND`. See below.
 
-The following circuit design provides 24 inputs using 6 pins,
-which should be enough for most steering wheels.
+The following circuit design is based on the widely available
+[74HC4051N](../../esp32reference/75HC4051_datasheet.pdf)
+analog multiplexer: an *8 to 1* multiplexer (8 channels).
+Provides 24 inputs using 6 pins, which should be enough for most steering wheels.
 However, this design can be extended easily:
 
 - Add another analog multiplexer.
 - Wire `S0`, `S1` and `S2` (selector pins) to the same pin tags at another multiplexer.
 - Add a new input pin wired to `(A)`.
+
+> [!NOTE]
+> If  more than three 74HC4051N chips are needed,
+> 16 or 32-channel multiplexers are a better choice.
 
 ![Multiplexed switches design](./MultiplexedSwitchesX24.png)
 
@@ -395,15 +400,29 @@ Input pins must be wired to valid input-capable GPIO pins with internal pull-up 
 Otherwise, external pull-up resistors must be added to the circuit design.
 Selector pins must be wired to valid output-capable GPIO pins.
 
-Place a call to `inputs::addAnalogMultiplexer()`.
+Place a call to
+`inputs::addAnalogMultiplexer8()`,
+`inputs::addAnalogMultiplexer16()` or
+`inputs::addAnalogMultiplexer32()`
+depending on how many channels each chip has.
 Parameters are just the same as shown for `inputs::addButtonMatrix()`.
 However, the parameters to `.inputNumber()` are slightly different:
 
 - The first parameter is the input pin coming from the multiplexer where the switch is attached.
   This pin must be included in `mtxInputs`. Otherwise, the firmware won`t boot.
 - The second parameter is a pin tag at the multiplexer where the switch is attached,
-  prefixed with `mux8_pin_t::`.
-  So, this parameter goes from `mux8_pin_t::A0` to `mux8_pin_t::A7`.
+  prefixed with `mux8_pin_t::`, `mux16_pint_t::` or `mux32_pint_t::`
+  (depending on depending on how many channels each chip has).
+  So, this parameter goes from
+  `mux8_pin_t::A0` to `mux8_pin_t::A7`,
+  `mux16_pin_t::I0` to `mux16_pin_t::I15` or
+  `mux8_pin_t::S1` to `mux8_pin_t::S32`.
+  Those pins are named after the 74HC4051N,
+  [CD74HC4067](../../../hardware/esp32reference/CD74HC4067_datasheet.pdf)
+  and
+  [ADG732](../../../hardware/esp32reference/ADG726_732_datasheet.pdf)
+  chips, but you can choose any other brand.
+
 - The third parameter is the assigned input number for that switch.
 
 For example:
@@ -414,7 +433,7 @@ void simWheelSetup()
     static const gpio_num_t mtxSelectors[] = {GPIO_NUM_24,GPIO_NUM_33,GPIO_NUM_32};
     static const gpio_num_t mtxInputs[] = {GPIO_NUM_15, GPIO_NUM_2 };
     ...
-    inputs::addAnalogMultiplexer(mtxSelectors,mtxInputs)
+    inputs::addAnalogMultiplexer8(mtxSelectors,mtxInputs)
       .inputNumber(GPIO_NUM_15,mux8_pin_t::A0,10)
       .inputNumber(GPIO_NUM_15,mux8_pin_t::A1,11)
       .inputNumber(GPIO_NUM_15,mux8_pin_t::A2,12)
@@ -434,6 +453,10 @@ void simWheelSetup()
     ...
 }
 ```
+
+> [!NOTE]
+> `inputs::addAnalogMultiplexer()` is available for backwards compatibility,
+> but may be removed in the future. Substitute with `inputs::addAnalogMultiplexer8()`
 
 ### Shift registers
 
