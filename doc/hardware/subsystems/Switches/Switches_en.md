@@ -410,10 +410,13 @@ Selector pins must be wired to valid output-capable GPIO pins.
 For example:
 
 ```c++
+static const gpio_num_array_t mtxSelectors = {GPIO_NUM_24,GPIO_NUM_33,GPIO_NUM_32};
+static const gpio_num_array_t mtxInputs = {GPIO_NUM_15, GPIO_NUM_2};
+
+...
+
 void simWheelSetup()
 {
-    static const gpio_num_array_t mtxSelectors = {GPIO_NUM_24,GPIO_NUM_33,GPIO_NUM_32};
-    static const gpio_num_array_t mtxInputs = {GPIO_NUM_15, GPIO_NUM_2};
     ...
     inputs::addButtonMatrix(mtxSelectors, mtxInputs)
       .inputNumber(GPIO_NUM_24,GPIO_NUM_15,1)
@@ -460,10 +463,13 @@ However, the parameters to `.inputNumber()` are slightly different:
 For example:
 
 ```c++
+static const gpio_num_array_t mtxSelectors = {GPIO_NUM_24,GPIO_NUM_33,GPIO_NUM_32};
+static const gpio_num_array_t mtxInputs = {GPIO_NUM_15, GPIO_NUM_2};
+
+...
+
 void simWheelSetup()
 {
-    static const gpio_num_t mtxSelectors[] = {GPIO_NUM_24,GPIO_NUM_33,GPIO_NUM_32};
-    static const gpio_num_t mtxInputs[] = {GPIO_NUM_15, GPIO_NUM_2 };
     ...
     inputs::addAnalogMultiplexer8(mtxSelectors,mtxInputs)
       .inputNumber(GPIO_NUM_15,mux8_pin_t::A0,10)
