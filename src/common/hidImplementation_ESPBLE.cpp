@@ -11,9 +11,6 @@
 
 // Implementation inspired by
 // https://github.com/espressif/arduino-esp32/blob/master/libraries/BLE/examples/Server/Server.ino
-//
-// Use this app for testing:
-// http://www.planetpointy.co.uk/joystick-test-application/
 
 #include <BLEDevice.h>
 #include <BLEUtils.h>
@@ -26,8 +23,7 @@
 
 #include "SimWheel.h"
 #include "HID_definitions.h"
-#include <arduino.h>
-#include <bit>
+//#include <arduino.h> // For debugging
 
 // ----------------------------------------------------------------------------
 // Globals
@@ -91,6 +87,15 @@ bool setDefaultPhy(
 #else
     return true;
 #endif
+}
+
+// ----------------------------------------------------------------------------
+// Utility
+// ----------------------------------------------------------------------------
+
+uint16_t byteswap(uint16_t value)
+{
+    return (value >> 8) | (value << 8);
 }
 
 // ----------------------------------------------------------------------------
@@ -273,8 +278,8 @@ void hidImplementation::begin(
         hid->manufacturer()->setValue(String(deviceManufacturer.c_str())); // Workaround for bug in `hid->manufacturer(deviceManufacturer)`
 
         // Note: Workaround for bug in ESP-Arduino as of version 3.0.3
-        uint16_t debugged_vid = std::byteswap(custom_vid);
-        uint16_t debugged_pid = std::byteswap(custom_pid);
+        uint16_t debugged_vid = byteswap(custom_vid);
+        uint16_t debugged_pid = byteswap(custom_pid);
 
         hid->pnp(BLE_VENDOR_SOURCE, debugged_vid, debugged_pid, PRODUCT_REVISION);
         hid->hidInfo(0x00, 0x01);
