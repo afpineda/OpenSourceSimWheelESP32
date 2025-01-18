@@ -1,6 +1,6 @@
 # Required skills and tools
 
-## Software tools
+## Software tools (and external dependencies)
 
 Indispensable:
 
@@ -13,9 +13,14 @@ Indispensable:
 - Indispensable [Arduino libraries](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries) for this project.
   Install their dependencies as well.
   - [NimBLE-Arduino](https://www.arduino.cc/reference/en/libraries/nimble-arduino/).
-    This project has been successfully tested with **version 2.1.0**.
+    This project has been successfully tested with **version 2.2.0**.
+    Any previous vesion will not work.
 - [Powershell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.2).
   Already installed in Windows.
+
+> [!IMPORTANT]
+> This project is not guaranteed to work with untested version dependencies.
+> When troubleshooting, check this first.
 
 May be needed:
 

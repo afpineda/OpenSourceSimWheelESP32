@@ -11,9 +11,13 @@
 
 // Implementation heavily inspired by
 // https://github.com/lemmingDev/ESP32-BLE-Gamepad
-//
-// Use this app for testing:
-// http://www.planetpointy.co.uk/joystick-test-application/
+
+// ----------------------------------------------------------------------------
+// NOTE:
+// Do not delete commented out code. It may be reused in the future.
+// The NimBLEHIDDeviceFix class is used to implement workarounds
+// for bugs in the NimBLE-Arduino library, when required.
+// ----------------------------------------------------------------------------
 
 #include <NimBLEDevice.h>
 #include <NimBLEUtils.h>
@@ -38,8 +42,8 @@
 static esp_timer_handle_t autoPowerOffTimer = nullptr;
 
 // Related to HID device
-class NimBLEHIDDeviceFix;
-// #define NimBLEHIDDeviceFix NimBLEHIDDevice
+// class NimBLEHIDDeviceFix;
+#define NimBLEHIDDeviceFix NimBLEHIDDevice
 static NimBLEHIDDeviceFix *hid = nullptr;
 static NimBLECharacteristic *inputGamepad = nullptr;
 static NimBLEServer *pServer = nullptr;
@@ -50,7 +54,7 @@ static bool notifyConfigChanges = false;
 //
 // This subclass is a workaround for a bug in NimBLE-Arduino v2.1.0
 // ----------------------------------------------------------------------------
-
+/*
 static constexpr uint16_t hidReportChrUuid = 0x2a4d;
 static constexpr uint16_t hidReportChrDscUuid = 0x2908;
 static constexpr uint16_t hidReport2902DscUuid = 0x2902;
@@ -117,7 +121,7 @@ NimBLECharacteristic *NimBLEHIDDeviceFix::getInputReport(uint8_t reportId)
 
     return inputReportChr;
 } // getInputReport
-
+*/
 // ----------------------------------------------------------------------------
 // PHY configuration
 // ----------------------------------------------------------------------------
@@ -392,6 +396,7 @@ void hidImplementation::reset()
         inputGamepad->notify();
     }
 }
+
 void hidImplementation::reportInput(
     inputBitmap_t inputsLow,
     inputBitmap_t inputsHigh,

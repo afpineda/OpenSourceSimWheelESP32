@@ -51,7 +51,27 @@
         "xutility": "cpp",
         "compare": "cpp",
         "unordered_set": "cpp",
-        "span": "cpp"
+        "span": "cpp",
+        "bit": "cpp",
+        "bitset": "cpp",
+        "charconv": "cpp",
+        "chrono": "cpp",
+        "concepts": "cpp",
+        "condition_variable": "cpp",
+        "cstring": "cpp",
+        "ctime": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "netfwd": "cpp",
+        "ratio": "cpp",
+        "format": "cpp",
+        "iomanip": "cpp",
+        "mutex": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp",
+        "variant": "cpp"
     },
     "C_Cpp.default.compilerPath": ""
 }
