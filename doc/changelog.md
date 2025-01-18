@@ -1,5 +1,12 @@
 # Change log
 
+## 6.9.1
+
+- Code updated to work with the latest external dependencies:
+  - NimBLE-Arduino version 2.2.0
+  - Arduino-ESP3 version 3.1.1
+- Documentation updates and errata fixes.
+
 ## 6.9.0
 
 - Support for 16 and 32-channel analog multiplexers has been fixed
