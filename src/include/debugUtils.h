@@ -68,9 +68,6 @@
 // Simple shift light UI
 #define TEST_SIMPLE_SHIFT_LIGHT_PIN GPIO_NUM_33
 
-// Simple shift light UI
-#define TEST_SIMPLE_SHIFT_LIGHT_PIN GPIO_NUM_NC
-
 // LED strip
 #define TEST_D_OUT GPIO_NUM_13
 #define TEST_LEVEL_SHIFTER true
@@ -175,6 +172,9 @@
 
 // Wake up
 #define TEST_POWER_PIN GPIO_NUM_2
+
+// Simple shift light UI
+#define TEST_SIMPLE_SHIFT_LIGHT_PIN GPIO_NUM_NC
 
 // -------------------------------------------------------------
 #else
