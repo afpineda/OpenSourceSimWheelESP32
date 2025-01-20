@@ -146,7 +146,7 @@ void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *b
         return;
     if (report_id == RID_FEATURE_CONFIG)
     {
-        if ((len > 0) && (buffer[0] >= CF_CLUTCH) && (buffer[0] <= CF_BUTTON))
+        if ((len > 0) && (buffer[0] >= CF_CLUTCH) && (buffer[0] <= CF_LAUNCH_CONTROL_MASTER_RIGHT))
         {
             // clutch function
             userSettings::setCPWorkingMode((clutchFunction_t)buffer[0]);

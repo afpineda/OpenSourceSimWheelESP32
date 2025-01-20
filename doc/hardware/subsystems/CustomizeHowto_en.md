@@ -198,7 +198,15 @@ Any of the given input numbers will engage "ALT" mode when activated, except if 
 
 ### Cycle working mode for clutch paddles
 
-Each time this function is activated, the working mode of the clutch paddles will move to the next one : F1-style clutch, autonomous axes, "ALT" mode, regular buttons and back to the first mode. There is no point on this if there are no clutch paddles.
+Each time this function is activated, the working mode of the clutch paddles will move to the next one :
+F1-style clutch,
+autonomous axes,
+"ALT" mode,
+regular buttons,
+launch control (left paddle is master),
+launch control (right paddle is master)
+and back to the first mode.
+There is no point on this if there are no clutch paddles.
 
 Assign a combination of input numbers to activate this function by placing a call to
 `inputHub::cycleCPWorkingMode_setInputNumbers()`. There is one parameter: a sequence of input numbers between brackets.
@@ -224,12 +232,16 @@ void simWheelSetup()
 
 As an alternative, you may assign specific button combinations to specific working modes.
 Place a call to `inputHub::cpWorkingMode_setInputNumbers()`.
-There are four parameters. Each one must contain a sequence of input numbers between brackets as seen in the previous calls:
+There are four parameters.
+Each one must contain a sequence of input numbers between brackets as seen in the previous calls.
+From left to right:
 
-- First parameter: button combination to select F1-Style clutch mode.
-- Second parameter: button combination to select autonomous axes mode.
-- Third parameter: button combination to select "ALT" mode.
-- Fourth parameter: button combination to select "regular buttons" mode.
+1. Button combination to select F1-Style clutch mode.
+2. Button combination to select autonomous axes mode.
+3. Button combination to select "ALT" mode.
+4. Button combination to select "regular buttons" mode.
+5. Optional: button combination to select "launch control" mode (left paddle is master).
+6. Optional: button combination to select "launch control" mode (right paddle is master).
 
 For example:
 

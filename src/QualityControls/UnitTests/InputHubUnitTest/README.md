@@ -20,6 +20,7 @@ To test that:
   - Analog clutch position is properly reported as an axis position.
 - User-defined button map is applied.
 - Security lock is engaged in response to the proper input events.
+- Launch control works as expected.
 
 ## Hardware setup
 
@@ -46,6 +47,7 @@ Output through USB serial port at 115200 bauds. Connect before reset.
 - simulate explicit selection of clutch working mode -
 - simulate non-mapped button combinations -
 - simulate bite point calibration -
+- simulate bite point calibration in launch control mode -
 - simulate dual clutch operation -
 - simulate analog clutch operation in buttons mode -
 - simulate digital clutch operation in axis mode -
@@ -54,5 +56,6 @@ Output through USB serial port at 115200 bauds. Connect before reset.
 - simulate repeated input without real change in inputs state -
 - simulate input in user-defined buttons map -
 - simulate security lock -
+- simulate launch control -
 -- END --
 ```

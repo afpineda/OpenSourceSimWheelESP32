@@ -27,9 +27,11 @@
 #define RIGHT 10
 #define CYCLE_DPAD 11
 #define OTHER 20
+#define OTHER2 21
+#define OTHER3 22
 
 #define OTHER_MAP 126
-#define OTHER_MAP_ALT 21
+#define OTHER_MAP_ALT 30
 
 #define COMBINATION_CYCLE_CLUTCH {CMD, CYCLE_CLUTCH}
 #define COMBINATION_CYCLE_ALT {CMD, CYCLE_ALT}
@@ -37,6 +39,8 @@
 #define COMBINATION_SELECT_ALT_F {(CMD), (DOWN)}
 #define COMBINATION_SELECT_AXIS_F {(CMD), (LEFT)}
 #define COMBINATION_SELECT_BUTTON_F {(CMD), (RIGHT)}
+#define COMBINATION_SELECT_LC_LEFT_F {(CMD), (OTHER2)}
+#define COMBINATION_SELECT_LC_RIGHT_F {(CMD), (OTHER3)}
 #define COMBINATION_SECURITY_LOCK {(CMD), (OTHER), (UP)}
 
 #define BMP_CYCLE_CLUTCH BITMAP(CMD) | BITMAP(CYCLE_CLUTCH)
@@ -45,6 +49,8 @@
 #define BMP_SELECT_ALT_F BITMAP(CMD) | BITMAP(DOWN)
 #define BMP_SELECT_AXIS_F BITMAP(CMD) | BITMAP(LEFT)
 #define BMP_SELECT_BUTTON_F BITMAP(CMD) | BITMAP(RIGHT)
+#define BMP_SELECT_LC_LEFT_F BITMAP(CMD) | BITMAP(OTHER2)
+#define BMP_SELECT_LC_RIGHT_F BITMAP(CMD) | BITMAP(OTHER3)
 
 #define BMP_OTHER_MAP_LOW 0ULL
 #define BMP_OTHER_MAP_HIGH BITMAP(OTHER_MAP - 64)
@@ -380,11 +386,13 @@ void TG_cycleAlt()
 void TG_cycleClutchWorkingMode()
 {
     // Cycle working mode of clutch paddles
-    userSettings::setCPWorkingMode(CF_BUTTON);
+    userSettings::setCPWorkingMode(CF_LAUNCH_CONTROL_MASTER_RIGHT);
     pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 1", CF_CLUTCH, (clutchFunction_t *)&userSettings::cpWorkingMode);
     pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 2", CF_AXIS, (clutchFunction_t *)&userSettings::cpWorkingMode);
     pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 3", CF_ALT, (clutchFunction_t *)&userSettings::cpWorkingMode);
     pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 4", CF_BUTTON, (clutchFunction_t *)&userSettings::cpWorkingMode);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 5", CF_LAUNCH_CONTROL_MASTER_LEFT, (clutchFunction_t *)&userSettings::cpWorkingMode);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_CYCLE_CLUTCH, "Cycle clutch 6", CF_LAUNCH_CONTROL_MASTER_RIGHT, (clutchFunction_t *)&userSettings::cpWorkingMode);
 }
 
 void TG_cycleDPADWorkingMode()
@@ -410,6 +418,10 @@ void TG_selectClutchWorkingMode()
     pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_BUTTON_F, "CF_BUTTON", CF_BUTTON, (clutchFunction_t *)&userSettings::cpWorkingMode);
     userSettings::setCPWorkingMode(CF_BUTTON);
     pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_AXIS_F, "CF_AXIS", CF_AXIS, (clutchFunction_t *)&userSettings::cpWorkingMode);
+    userSettings::setCPWorkingMode(CF_BUTTON);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_LC_LEFT_F, "CF_LC_LEFT", CF_LAUNCH_CONTROL_MASTER_LEFT, (clutchFunction_t *)&userSettings::cpWorkingMode);
+    userSettings::setCPWorkingMode(CF_BUTTON);
+    pushAssertEqualsRelease<clutchFunction_t>(BMP_SELECT_LC_RIGHT_F, "CF_LC_RIGHT", CF_LAUNCH_CONTROL_MASTER_RIGHT, (clutchFunction_t *)&userSettings::cpWorkingMode);
 }
 
 void TG_nonMappedCombinations()
@@ -445,6 +457,97 @@ void TG_bitePointCalibration()
     input.release(DOWN);
     if (userSettings::bitePoint >= biteP)
         Serial.printf("Invalid bite point. Expected < %d, Found: %d\n", biteP, userSettings::bitePoint);
+
+    /// Test that the bite point calibration is not triggered without paddle operation
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
+    biteP = userSettings::bitePoint;
+    input.push(UP);
+    input.release(UP);
+    if (userSettings::bitePoint != biteP)
+        Serial.printf("Invalid bite point. Expected no change since no clutch paddle is pressed");
+
+    /// Test that the bite point calibration is not triggered when both paddles are pressed
+    input.axis(CLUTCH_FULL_VALUE, CLUTCH_FULL_VALUE);
+    biteP = userSettings::bitePoint;
+    input.push(UP);
+    input.release(UP);
+    if (userSettings::bitePoint != biteP)
+        Serial.printf("Invalid bite point. Expected no change since both clutch paddles are pressed");
+}
+
+void TG_bitePointCalibrationInLaunchControl()
+{
+    // Simulate inputs for bite point calibration,
+    // test that bite point changes as expected
+
+    /// --- Right paddle is master
+    clutchValue_t biteP;
+    input.hasAnalogAxes = true;
+    userSettings::setCPWorkingMode(CF_LAUNCH_CONTROL_MASTER_RIGHT);
+    userSettings::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    input.axis(CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
+    biteP = userSettings::bitePoint;
+    input.push(UP);
+    input.release(UP);
+    if (userSettings::bitePoint <= biteP)
+        Serial.printf("Master=right. Invalid bite point. Expected > %d, Found: %d\n", biteP, userSettings::bitePoint);
+    biteP = userSettings::bitePoint;
+    input.push(DOWN);
+    input.release(DOWN);
+    input.push(DOWN);
+    input.release(DOWN);
+    if (userSettings::bitePoint >= biteP)
+        Serial.printf("Master=right. Invalid bite point. Expected < %d, Found: %d\n", biteP, userSettings::bitePoint);
+
+    //// Test that the master paddle does not trigger bite point calibration
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
+    biteP = userSettings::bitePoint;
+    input.push(UP);
+    input.release(UP);
+    if (userSettings::bitePoint != biteP)
+        Serial.printf("Master=right. Invalid bite point. Expected no change");
+
+    /// --- Left paddle is master
+    userSettings::setCPWorkingMode(CF_LAUNCH_CONTROL_MASTER_LEFT);
+    userSettings::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
+    biteP = userSettings::bitePoint;
+    input.push(UP);
+    input.release(UP);
+    if (userSettings::bitePoint <= biteP)
+        Serial.printf("Master=left. Invalid bite point. Expected > %d, Found: %d\n", biteP, userSettings::bitePoint);
+    biteP = userSettings::bitePoint;
+    input.push(DOWN);
+    input.release(DOWN);
+    input.push(DOWN);
+    input.release(DOWN);
+    if (userSettings::bitePoint >= biteP)
+        Serial.printf("Master=left. Invalid bite point. Expected < %d, Found: %d\n", biteP, userSettings::bitePoint);
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
+
+    //// Test that the master paddle does not trigger bite point calibration
+    input.axis(CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
+    biteP = userSettings::bitePoint;
+    input.push(UP);
+    input.release(UP);
+    if (userSettings::bitePoint != biteP)
+        Serial.printf("Master=left. Invalid bite point. Expected no change");
+
+    /// Test that the bite point calibration is not triggered without paddle operation
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
+    biteP = userSettings::bitePoint;
+    input.push(UP);
+    input.release(UP);
+    if (userSettings::bitePoint != biteP)
+        Serial.printf("Master=left. Invalid bite point. Expected no change since no clutch paddle is pressed");
+
+    /// Test that the bite point calibration is not triggered when both paddles are pressed
+    input.axis(CLUTCH_FULL_VALUE, CLUTCH_FULL_VALUE);
+    biteP = userSettings::bitePoint;
+    input.push(UP);
+    input.release(UP);
+    if (userSettings::bitePoint != biteP)
+        Serial.printf("Master=left. Invalid bite point. Expected no change since both clutch paddles are pressed");
 }
 
 void TG_dualClutch()
@@ -463,6 +566,40 @@ void TG_dualClutch()
     userSettings::setBitePoint(CLUTCH_3_4_VALUE);
     input.axis(CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
     assertAlmostEquals<clutchValue_t>("dual clutch: FULL,0", currentClutch, (clutchValue_t)userSettings::bitePoint, 1);
+}
+
+void TG_launchControl()
+{
+    // Simulate clutch paddle operation,
+    // Test computed clutch position in launch control mode
+    input.hasAnalogAxes = true;
+    userSettings::setBitePoint(CLUTCH_DEFAULT_VALUE);
+
+    /// --- Left paddle is master
+    userSettings::setCPWorkingMode(CF_LAUNCH_CONTROL_MASTER_LEFT);
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
+    assertEquals<clutchValue_t>("Launch control master left: 0,0", currentClutch, (clutchValue_t)CLUTCH_NONE_VALUE);
+    input.axis(CLUTCH_FULL_VALUE, CLUTCH_FULL_VALUE);
+    assertEquals<clutchValue_t>("Launch control master left: FULL,FULL", currentClutch, (clutchValue_t)CLUTCH_FULL_VALUE);
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
+    assertEquals<clutchValue_t>("Launch control master left: 0,FULL", currentClutch, (clutchValue_t)CLUTCH_DEFAULT_VALUE);
+    input.axis(CLUTCH_3_4_VALUE, CLUTCH_FULL_VALUE);
+    assertEquals<clutchValue_t>("Launch control master left: 3/4,FULL", currentClutch, (clutchValue_t)CLUTCH_3_4_VALUE);
+    input.axis(CLUTCH_3_4_VALUE, CLUTCH_NONE_VALUE);
+    assertEquals<clutchValue_t>("Launch control master left: 3/4,0", currentClutch, (clutchValue_t)CLUTCH_3_4_VALUE);
+
+    /// --- Right paddle is master
+    userSettings::setCPWorkingMode(CF_LAUNCH_CONTROL_MASTER_RIGHT);
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
+    assertEquals<clutchValue_t>("Launch control master right: 0,0", currentClutch, (clutchValue_t)CLUTCH_NONE_VALUE);
+    input.axis(CLUTCH_FULL_VALUE, CLUTCH_FULL_VALUE);
+    assertEquals<clutchValue_t>("Launch control master right: FULL,FULL", currentClutch, (clutchValue_t)CLUTCH_FULL_VALUE);
+    input.axis(CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
+    assertEquals<clutchValue_t>("Launch control master right: FULL,0", currentClutch, (clutchValue_t)CLUTCH_DEFAULT_VALUE);
+    input.axis(CLUTCH_FULL_VALUE, CLUTCH_3_4_VALUE);
+    assertEquals<clutchValue_t>("Launch control master right: FULL,3/4", currentClutch, (clutchValue_t)CLUTCH_3_4_VALUE);
+    input.axis(CLUTCH_NONE_VALUE, CLUTCH_3_4_VALUE);
+    assertEquals<clutchValue_t>("Launch control master right: 0, 3/4", currentClutch, (clutchValue_t)CLUTCH_3_4_VALUE);
 }
 
 void TG_analogClutchInButtonsMode()
@@ -655,7 +792,9 @@ void setup()
         COMBINATION_SELECT_CLUTCH_F,
         COMBINATION_SELECT_AXIS_F,
         COMBINATION_SELECT_ALT_F,
-        COMBINATION_SELECT_BUTTON_F);
+        COMBINATION_SELECT_BUTTON_F,
+        COMBINATION_SELECT_LC_LEFT_F,
+        COMBINATION_SELECT_LC_RIGHT_F);
     inputHub::setClutchCalibrationInputNumbers(UP, DOWN);
     inputHub::setClutchInputNumbers(LCLUTCH, RCLUTCH);
     inputHub::cycleSecurityLock_setInputNumbers(COMBINATION_SECURITY_LOCK);
@@ -701,6 +840,9 @@ void setup()
     Serial.println("- simulate bite point calibration -");
     TG_bitePointCalibration();
 
+    Serial.println("- simulate bite point calibration in launch control mode -");
+    TG_bitePointCalibrationInLaunchControl();
+
     Serial.println("- simulate dual clutch operation -");
     TG_dualClutch();
 
@@ -722,8 +864,11 @@ void setup()
     Serial.println("- simulate input in user-defined buttons map -");
     TG_userMappedInput();
 
-     Serial.println("- simulate security lock -");
+    Serial.println("- simulate security lock -");
     TG_securityLock();
+
+    Serial.println("- simulate launch control -");
+    TG_launchControl();
 
     Serial.println("-- END --");
     for (;;)

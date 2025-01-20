@@ -103,7 +103,7 @@ void userSettings::begin()
             userSettings::altButtonsWorkingMode = prefs.getBool(KEY_ALT_FUNCTION, userSettings::altButtonsWorkingMode);
 
             uint8_t value1 = prefs.getUChar(KEY_CLUTCH_FUNCTION, (uint8_t)userSettings::cpWorkingMode);
-            if ((value1 >= CF_CLUTCH) && (value1 <= CF_BUTTON))
+            if ((value1 >= CF_CLUTCH) && (value1 <= CF_LAUNCH_CONTROL_MASTER_RIGHT))
                 userSettings::cpWorkingMode = (clutchFunction_t)value1;
 
             uint8_t value2 = prefs.getUChar(KEY_CLUTCH_CALIBRATION, (uint8_t)userSettings::bitePoint);
@@ -150,7 +150,8 @@ void userSettings::setALTButtonsWorkingMode(bool newMode)
 void userSettings::setCPWorkingMode(clutchFunction_t newFunction)
 {
     if ((newFunction != userSettings::cpWorkingMode) &&
-        (newFunction >= CF_CLUTCH) && (newFunction <= CF_BUTTON))
+        (newFunction >= CF_CLUTCH) &&
+        (newFunction <= CF_LAUNCH_CONTROL_MASTER_RIGHT))
     {
         userSettings::cpWorkingMode = newFunction;
         requestSave();

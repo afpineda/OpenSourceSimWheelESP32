@@ -28,8 +28,9 @@ This project provides open hardware and software for a sim-racing wheel or butto
   doubling the number of effective inputs.
   Much like your keyboard's SHIFT key.
 
-- 🏎️ **Clutch paddles** that can be mapped to one of four functions by user preference:
+- 🏎️ **Clutch paddles** that can be mapped to one of five functions by user preference:
   - **F1-style clutch** with bite-point calibration.
+  - **Launch control** with bite-point calibration and user-selected master paddle.
   - Alternate mode.
   - Regular button.
   - Individual analog axes.
@@ -99,8 +100,9 @@ o una caja de botones con las siguientes características:
   duplicando su número en consecuencia.
   Similar a la tecla SHIFT de un teclado.
 
-- 🏎️ **Levas de embrague** que pueden ser configuradas en una de cuatro funciones:
+- 🏎️ **Levas de embrague** que pueden ser configuradas en una de cinco funciones:
   - **Embrague tipo F1** con calibración del punto de mordida
+  - **Control de lanzada** con calibración del punto de mordida y leva maestra elegida por el usuario.
   - Modo alternativo
   - Botón normal y corriente
   - Ejes analógicos independientes.

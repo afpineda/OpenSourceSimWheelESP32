@@ -36,6 +36,8 @@ static inputBitmap_t cmdCPWorkingModeBitmap_clutch = 0ULL;
 static inputBitmap_t cmdCPWorkingModeBitmap_axis = 0ULL;
 static inputBitmap_t cmdCPWorkingModeBitmap_alt = 0ULL;
 static inputBitmap_t cmdCPWorkingModeBitmap_button = 0ULL;
+static inputBitmap_t cmdCPWorkingModeBitmap_LC_left = 0ULL;
+static inputBitmap_t cmdCPWorkingModeBitmap_LC_right = 0ULL;
 static inputBitmap_t cmdAxisAutocalibrationBitmap = 0ULL;
 static inputBitmap_t cmdBatteryRecalibrationBitmap = 0ULL;
 static inputBitmap_t cycleDPADWorkingModeBitmap = 0ULL;
@@ -80,7 +82,7 @@ bool inputHub_commands_filter(
     if ((changes & cycleClutchWorkingModeBitmap) && (globalState == cycleClutchWorkingModeBitmap))
     {
         int f = userSettings::cpWorkingMode + 1;
-        if (f > CF_BUTTON)
+        if (f > CF_LAUNCH_CONTROL_MASTER_RIGHT)
             f = CF_CLUTCH;
         userSettings::setCPWorkingMode((clutchFunction_t)f);
         return true;
@@ -108,6 +110,16 @@ bool inputHub_commands_filter(
     if ((changes & cmdCPWorkingModeBitmap_button) && (globalState == cmdCPWorkingModeBitmap_button))
     {
         userSettings::setCPWorkingMode(CF_BUTTON);
+        return true;
+    }
+    if ((changes & cmdCPWorkingModeBitmap_LC_left) && (globalState == cmdCPWorkingModeBitmap_LC_left))
+    {
+        userSettings::setCPWorkingMode(CF_LAUNCH_CONTROL_MASTER_LEFT);
+        return true;
+    }
+    if ((changes & cmdCPWorkingModeBitmap_LC_right) && (globalState == cmdCPWorkingModeBitmap_LC_right))
+    {
+        userSettings::setCPWorkingMode(CF_LAUNCH_CONTROL_MASTER_RIGHT);
         return true;
     }
     if ((changes & cmdAxisAutocalibrationBitmap) && (globalState == cmdAxisAutocalibrationBitmap))
@@ -142,18 +154,30 @@ void inputHub_bitePointCalibration_filter(
     clutchValue_t leftAxis,
     clutchValue_t rightAxis)
 {
-    if (userSettings::cpWorkingMode != CF_CLUTCH)
-        // not in clutch mode
-        return;
+    bool isCalibrationInProgress = false;
+    if (userSettings::cpWorkingMode == CF_CLUTCH)
+    {
+        isCalibrationInProgress =
+            ((leftAxis == CLUTCH_FULL_VALUE) && (rightAxis == CLUTCH_NONE_VALUE));
+        isCalibrationInProgress =
+            isCalibrationInProgress ||
+            ((leftAxis == CLUTCH_NONE_VALUE) && (rightAxis == CLUTCH_FULL_VALUE));
+    }
+    else if (userSettings::cpWorkingMode == CF_LAUNCH_CONTROL_MASTER_LEFT)
+    {
+        isCalibrationInProgress =
+            (rightAxis > CLUTCH_3_4_VALUE) &&
+            (leftAxis == CLUTCH_NONE_VALUE);
+    }
+    else if (userSettings::cpWorkingMode == CF_LAUNCH_CONTROL_MASTER_RIGHT)
+    {
+        isCalibrationInProgress =
+            (leftAxis > CLUTCH_3_4_VALUE) &&
+            (rightAxis == CLUTCH_NONE_VALUE);
+    }
 
-    bool isCalibrationInProgress =
-        ((leftAxis == CLUTCH_FULL_VALUE) && (rightAxis == CLUTCH_NONE_VALUE));
-    isCalibrationInProgress =
-        isCalibrationInProgress ||
-        ((leftAxis == CLUTCH_NONE_VALUE) && (rightAxis == CLUTCH_FULL_VALUE));
     if (isCalibrationInProgress)
     {
-        // Serial.println("isCalibrationInProgress");
         // One and only one clutch paddle is pressed
         // Check for bite point calibration events
         int aux;
@@ -221,7 +245,10 @@ void inputHub_AxisButton_filter(
         rightAxis = CLUTCH_NONE_VALUE;
     }
     else if ((!axesAvailable) &&
-             ((userSettings::cpWorkingMode == CF_AXIS) || (userSettings::cpWorkingMode == CF_CLUTCH)))
+             ((userSettings::cpWorkingMode == CF_AXIS) ||
+              (userSettings::cpWorkingMode == CF_CLUTCH) ||
+              (userSettings::cpWorkingMode == CF_LAUNCH_CONTROL_MASTER_LEFT) ||
+              (userSettings::cpWorkingMode == CF_LAUNCH_CONTROL_MASTER_RIGHT)))
     {
         // Transform input state into an axis position
         if (rawInputBitmap & leftClutchBitmap)
@@ -260,6 +287,28 @@ void inputHub_combinedAxis_filter(
                 (rightAxis * userSettings::bitePoint +
                  (leftAxis * (255 - userSettings::bitePoint))) /
                 255;
+        leftAxis = CLUTCH_NONE_VALUE;
+        rightAxis = CLUTCH_NONE_VALUE;
+    }
+    else if (userSettings::cpWorkingMode == CF_LAUNCH_CONTROL_MASTER_LEFT)
+    {
+        if (rightAxis > CLUTCH_3_4_VALUE)
+            clutchAxis = userSettings::bitePoint;
+        else
+            clutchAxis = CLUTCH_NONE_VALUE;
+        if (leftAxis > clutchAxis)
+            clutchAxis = leftAxis;
+        leftAxis = CLUTCH_NONE_VALUE;
+        rightAxis = CLUTCH_NONE_VALUE;
+    }
+    else if (userSettings::cpWorkingMode == CF_LAUNCH_CONTROL_MASTER_RIGHT)
+    {
+        if (leftAxis > CLUTCH_3_4_VALUE)
+            clutchAxis = userSettings::bitePoint;
+        else
+            clutchAxis = CLUTCH_NONE_VALUE;
+        if (rightAxis > clutchAxis)
+            clutchAxis = rightAxis;
         leftAxis = CLUTCH_NONE_VALUE;
         rightAxis = CLUTCH_NONE_VALUE;
     }
@@ -369,8 +418,8 @@ void inputHub_UserMap_filter(
                 else
                     low |= singleInputBmp;
             } // end if-else
-        }     // end if
-    }         // end for
+        } // end if
+    } // end for
 }
 
 // ----------------------------------------------------------------------------
@@ -594,12 +643,16 @@ void inputHub::cpWorkingMode_setInputNumbers(
     const inputNumberCombination_t clutchModeCombination,
     const inputNumberCombination_t axisModeCombination,
     const inputNumberCombination_t altModeCombination,
-    const inputNumberCombination_t buttonModeCombination)
+    const inputNumberCombination_t buttonModeCombination,
+    const inputNumberCombination_t launchControlLeftModeCombination,
+    const inputNumberCombination_t launchControlRightModeCombination)
 {
     cmdCPWorkingModeBitmap_clutch = combination2bitmap(clutchModeCombination);
     cmdCPWorkingModeBitmap_axis = combination2bitmap(axisModeCombination);
     cmdCPWorkingModeBitmap_alt = combination2bitmap(altModeCombination);
     cmdCPWorkingModeBitmap_button = combination2bitmap(buttonModeCombination);
+    cmdCPWorkingModeBitmap_LC_left = combination2bitmap(launchControlLeftModeCombination);
+    cmdCPWorkingModeBitmap_LC_right = combination2bitmap(launchControlRightModeCombination);
 }
 
 // ----------------------------------------------------------------------------
@@ -619,7 +672,7 @@ void inputHub::cmdRecalibrateBattery_setInputNumbers(const inputNumberCombinatio
 
 // ----------------------------------------------------------------------------
 
-void  inputHub::cycleSecurityLock_setInputNumbers(const inputNumberCombination_t inputNumbers)
+void inputHub::cycleSecurityLock_setInputNumbers(const inputNumberCombination_t inputNumbers)
 {
     cycleSecurityLockBitmap = combination2bitmap(inputNumbers);
 }

@@ -745,12 +745,16 @@ namespace inputHub
      * @param axisModeCombination Array of input numbers for axis mode
      * @param altModeCombination Array of input numbers for "ALT" mode
      * @param buttonModeCombination Array of input numbers for regular buttons mode
+     * @param launchControlLeftModeCombination Array of input numbers for launch control mode (master paddle is the left one)
+     * @param launchControlRightModeCombination Array of input numbers for launch control mode (master paddle is the right one)
      */
     void cpWorkingMode_setInputNumbers(
         const inputNumberCombination_t clutchModeCombination,
         const inputNumberCombination_t axisModeCombination,
         const inputNumberCombination_t altModeCombination,
-        const inputNumberCombination_t buttonModeCombination);
+        const inputNumberCombination_t buttonModeCombination,
+        const inputNumberCombination_t launchControlLeftModeCombination = {},
+        const inputNumberCombination_t launchControlRightModeCombination = {});
 
     /**
      * @brief Set a combination of inputs for analog axis calibration (at clutch paddles).

@@ -165,7 +165,6 @@ public:
         inputNumber_t number) = 0;
 };
 
-
 /**
  * @brief ADG732 pin tags for switches
  *        or any other 32-channel multiplexer
@@ -415,7 +414,11 @@ typedef enum
     /// "ALT" mode
     CF_ALT,
     /// Regular buttons. Must be the last in the enum: do not change
-    CF_BUTTON
+    CF_BUTTON,
+    /// Launch control. Left paddle is master
+    CF_LAUNCH_CONTROL_MASTER_LEFT,
+    /// Launch control. Right paddle is master
+    CF_LAUNCH_CONTROL_MASTER_RIGHT
 } clutchFunction_t;
 
 /**
@@ -782,7 +785,7 @@ typedef enum
 {
     /// Auto-detect based on pixel driver
     AUTO,
-     /// Red-green-blue
+    /// Red-green-blue
     RGB,
     /// Red-blue-green
     RBG,
@@ -796,12 +799,11 @@ typedef enum
     BGR
 } pixel_format_t;
 
-
 /**
  * @brief Notifications using the pixel control interface
  *
  */
-class PixelControlNotification: public AbstractUserInterface
+class PixelControlNotification : public AbstractUserInterface
 {
 private:
     virtual void onStart() override;
@@ -809,6 +811,7 @@ private:
     virtual void onConnected() override;
     virtual void onBLEdiscovering() override;
     virtual void onLowBattery() override;
+
 public:
     /**
      * @brief Called just once after initialization.
@@ -850,6 +853,5 @@ public:
      */
     virtual void pixelControl_OnLowBattery();
 };
-
 
 #endif
