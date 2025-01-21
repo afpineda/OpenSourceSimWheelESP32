@@ -25,14 +25,16 @@ If a simple voltage divider is used as a battery monitor, the first "define" mus
 Some DevKit boards feature a built-in voltage divider internally wired to a certain GPIO.
 Look for a data sheet to know which one and set `BATT_READ_PIN` properly.
 
-**Warning**: If your DevKit does not feature a built-in powerboost,
-**never plug the USB cable and the external powerboost at the same time**.
+> [!CAUTION]
+> If your DevKit does not feature a built-in powerboost,
+> **never plug the USB cable and the external powerboost at the same time**.
 
 ## Battery calibration
 
-**Note**: completing this procedure may take hours or days, however,
-no human supervision is required. This procedure is **optional**, but highly recommended.
-Please, read from start to end before proceeding.
+> [!NOTE]
+> Completing this procedure may take hours or days, however,
+> no human supervision is required. This procedure is **optional**, but highly recommended.
+> Please, read from start to end before proceeding.
 
 Due to non-linearity of battery charge versus battery voltage,
 only a rough and imprecise estimation can be achieved.
@@ -44,9 +46,11 @@ This procedure will go through a complete discharge cycle.
 Use [Online calculator: Battery discharge time depending upon load](https://planetcalc.com/2283/)
 to estimate how long will it take to deplete the battery.
 
-*Warning:* if `battery(+)` is not properly attached to the positive pole of the battery
-or `BATT_READ_PIN` is not properly set,
-calibration data will be cleared but not collected, thus this procedure will be useless.
+> [!WARNING]
+> If `battery(+)` is not properly attached to the positive pole of the battery
+> or `BATT_READ_PIN` is not properly set,
+> calibration data will be cleared but not collected,
+> thus this procedure will be useless.
 
 ### Calibration procedure
 

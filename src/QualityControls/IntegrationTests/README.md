@@ -39,7 +39,8 @@ Render this graph at [mermaid.live](https://mermaid.live/view#pako:eNp9kE1rwzAMh
   - I2CExpanderInput
 - inputs
 
-*Note:* This test differs from the previous one in the involved hardware.
+> [!NOTE]
+> This test differs from the previous one in the involved hardware.
 
 ## *Test name*: [I2CExpanderDeepSleepTest](./I2CExpanderDeepSleepTest/README.md)
 
@@ -49,7 +50,8 @@ Render this graph at [mermaid.live](https://mermaid.live/view#pako:eNp9kE1rwzAMh
 - inputs
 - **power**
 
-*Note:* This test ensures the *inputs* subsystem properly configures interrupt pins at the GPIO expanders for wake up.
+> [!NOTE]
+> This test ensures the *inputs* subsystem properly configures interrupt pins at the GPIO expanders for wake up.
 
 ## *Test name*: [InputHubTest](./InputHubTest/README.md)
 
@@ -65,7 +67,8 @@ Render this graph at [mermaid.live](https://mermaid.live/view#pako:eNp9kE1rwzAMh
 - **hidImplementation**
 - **notify**
 
-*Note:* This test requires SimHub.
+> [!NOTE]
+> This test requires SimHub.
 
 ## *Test name*: [PixelControlTest](./PixelControlTest/PixelControlTest.ino)
 
@@ -84,14 +87,16 @@ Render this graph at [mermaid.live](https://mermaid.live/view#pako:eNp9kE1rwzAMh
 - **hidImplementation**
 - **notify**
 
-*Note*: This is a working prototype
+> [!NOTE]
+> This is a working prototype
 
 ## *Test name*: [BatteryAutocal](./BatteryAutocal/README.md)
 
 - power
 - batteryCalibration
 
-*Note*: Only autocalibration algorithm is tested.
+> [!NOTE]
+> Only autocalibration algorithm is tested.
 
 ## *Test name*: [Proto2](./Proto2/README.md)
 
@@ -106,7 +111,8 @@ Render this graph at [mermaid.live](https://mermaid.live/view#pako:eNp9kE1rwzAMh
 - **power**
 - **batteryCalibration**
 
-*Note*: This is a system test except for the involved hardware.
+> [!NOTE]
+> This is a system test except for the involved hardware.
 
 ## *Test name*: [TQTSystemTest](./TQTSystemTest/README.md)
 

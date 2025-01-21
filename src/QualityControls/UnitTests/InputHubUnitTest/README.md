@@ -1,6 +1,7 @@
 # Unit test: Input hub
 
-**NOTE**:: This is also an integration test for modules `inputHub` and `userSettings`.
+> [!NOTE]
+> This is also an integration test for modules `inputHub` and `userSettings`.
 
 ## Purpose and summary
 

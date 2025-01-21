@@ -4,9 +4,10 @@
 
 To test power off using an external latch circuit.
 
-## Warning
-
-In this particular case, **under no circumstances should you power the DevKit board with the powerboost module/shield nor the batteries**. The board could get damaged. The system will get power from the USB cable.
+> [!CAUTION]
+> In this particular case,
+> **under no circumstances should you power the DevKit board with the powerboost module/shield nor the batteries**.
+> The board could get damaged. The system will get power from the USB cable.
 
 ## Hardware setup
 

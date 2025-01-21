@@ -2,9 +2,9 @@
 
 This subsystem is for **battery-operated** systems, only.
 
-**Warning**:
-this subsystem is designed to work with batteries below 5 volts ("1S" Lithium-Polymer or LiPo batteries).
-Higher voltages may damage your DevKit board.
+> [!CAUTION]
+> This subsystem is designed to work with batteries below 5 volts ("1S" Lithium-Polymer or LiPo batteries).
+> Higher voltages may damage your DevKit board.
 
 ## Purpose
 
@@ -280,9 +280,10 @@ The expected (standard) 7-bit address is 36 (hexadecimal).
 
 Your chip/module will share the I2C bus with [GPIO expanders](../Switches/Switches_en.md#gpio-expanders), if any.
 
-**Note**: If the chip/module is not powered or not found in the I2C bus, the system will boot normally.
-You will get just a warning: "Fuel gauge not found in the I2C bus"
-(only if Arduino IDE is configured to core debug level "warning" or higher).
+> [!NOTE]
+> If the chip/module is not powered or not found in the I2C bus, the system will boot normally.
+> You will get just a warning: "Fuel gauge not found in the I2C bus"
+> (only if Arduino IDE is configured to core debug level "warning" or higher).
 
 ## Further firmware customization
 

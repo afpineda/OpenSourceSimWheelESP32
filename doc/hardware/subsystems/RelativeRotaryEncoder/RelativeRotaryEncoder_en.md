@@ -26,8 +26,11 @@ Each rotary encoder requires two dedicated pins at the DevKit board, no matter i
   - Pin labeled `DT`, `ENCODER_B` or `B` must be wired to any input-capable GPIO pin **with internal pull-up resistors**.
     Otherwise, a external pull-up resistor must be placed.
 
-Note: ALPS funky switches exposes both `ENCODER_A` and `A` pins (the same for `ENCODER_B` and `B`). Do not confuse them.
-Only `ENCODER_A` and `ENCODER_B` are related to this subsystem, while `A` and `B` are related to the [switches subsystem](../Switches/Switches_en.md).
+> [!IMPORTANT]
+> ALPS funky switches exposes both `ENCODER_A` and `A` pins (the same for `ENCODER_B` and `B`).
+> Do not confuse them.
+> Only `ENCODER_A` and `ENCODER_B` are related to this subsystem,
+> while `A` and `B` are related to the [switches subsystem](../Switches/Switches_en.md).
 
 ## Signal encoding
 

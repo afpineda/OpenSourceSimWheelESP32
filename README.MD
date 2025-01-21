@@ -146,5 +146,5 @@ Un [plugin para SimHub](https://github.com/afpineda/SimWheelESP32-SimHub-Plugin/
 es necesario para la telemetría.
 Este plugin también puede configurar las preferencias básicas del usuario.
 
-> [!IMPORTANT] Importante
+> [!IMPORTANT]
 > Por favor, comience por el [índice de documentación (en inglés)](./doc/Index_en.md).

@@ -117,7 +117,8 @@ A note of caution here: funky switches are priced around 4 dollars at AliExpress
 The main disadvantage of funky switches is that can't be mounted into a panel (they lack a nut).
 Funky switches are supported by this project.
 
-**Warning**: misleading terminal tags have been reported at some ALPS funky switches (more information later).
+> [!CAUTION]
+> Misleading terminal tags have been reported at some ALPS funky switches (more information later).
 
 ## Magnets (magnetic shift paddles and the alike)
 

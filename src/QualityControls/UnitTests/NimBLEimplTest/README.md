@@ -1,6 +1,7 @@
 # Unit test: game pad
 
-**NOTE**:: This is also an integration test for modules `hidImplementation` and `userSettings`.
+> [!NOTE]
+> This is also an integration test for modules `hidImplementation` and `userSettings`.
 
 ## Purpose and summary
 

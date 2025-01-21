@@ -30,9 +30,9 @@ We are using pre-recorded telemetry data found in the
 
 ## Procedure and expected output
 
-**Important note**:
-this test departs a lot from others because there is no way to predict
-a "correct" behavior.
+> [!IMPORTANT]
+> This test departs a lot from others because there is no way to predict
+> a "correct" behavior.
 
 1. Open the serial monitor.
 2. A never-ending loop of telemetry data should be displayed.

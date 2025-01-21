@@ -16,8 +16,9 @@ We are using the battery monitor subsystem, only: `TEST_BATTERY_READ_ENABLE` and
 `Battery(+)` will be wired to different inputs through this procedure. Use a wire with Dupond terminals.
 Get ready a fully charged battery. Do not wire the positive terminal yet.
 
-**Warning**: Do not wire the negative pole of the battery (**risk of fire**).
-Wire `GND` from the powerboost module instead.
+> [!CAUTION]
+> Do not wire the negative pole of the battery (**risk of fire**).
+> Wire `GND` from the powerboost module instead.
 
 Output through USB serial port at 115200 bauds.
 

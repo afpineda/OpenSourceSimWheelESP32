@@ -295,8 +295,9 @@ For example:
    }
 ```
 
-*Note*: `AbstractUserInterface::onLowBattery()` is already
-called at timed intervals as long as such a condition persists.
+> [!NOTE]
+> `AbstractUserInterface::onLowBattery()` is already
+> called at timed intervals as long as such a condition persists.
 
 #### Telemetry display
 

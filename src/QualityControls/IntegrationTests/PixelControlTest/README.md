@@ -65,9 +65,9 @@ before restarting this test procedure.
 
 ### Secondary and **optional** test
 
-**Important note**:
-this test departs a lot from others because there is no way to predict
-a "correct" behavior.
+> [!IMPORTANT]
+> This test departs a lot from others because there is no way to predict
+> a "correct" behavior.
 
 1. Ensure the device is connected to the host computer through BLE.
 2. Run SimHub. Enable the official plugin if asked to.
