@@ -30,6 +30,12 @@
 clutchFunction_t oldCP;
 bool oldAltF;
 
+inputBitmap_t oldInputsLow = ~0ULL;
+inputBitmap_t oldInputsHigh = ~0ULL;
+clutchValue_t oldLeftAxis = 0xff;
+clutchValue_t oldRightAxis = 0xff;
+clutchValue_t oldClutchAxis = 0xff;
+
 //------------------------------------------------------------------
 // Mocks
 //------------------------------------------------------------------
@@ -42,15 +48,29 @@ void hidImplementation::reportInput(
     clutchValue_t rightAxis,
     clutchValue_t clutchAxis)
 {
-    Serial.print("...");
-    debugPrintBool(inputsHigh, 16);
-    Serial.print(" ...");
-    debugPrintBool(inputsLow, 16);
-    Serial.printf(" | %3.3d | %3.3d | %3.3d || %3.3d\n",
-                  leftAxis,
-                  rightAxis,
-                  clutchAxis,
-                  userSettings::bitePoint);
+    // We try to reduce the amount of data printed to the console
+    // for this test to be more user-friendly
+    if (inputsLow != oldInputsLow ||
+        inputsHigh != oldInputsHigh ||
+        leftAxis != oldLeftAxis ||
+        rightAxis != oldRightAxis ||
+        clutchAxis != oldClutchAxis)
+    {
+        oldInputsLow = inputsLow;
+        oldInputsHigh = inputsHigh;
+        oldLeftAxis = leftAxis;
+        oldRightAxis = rightAxis;
+        oldClutchAxis = clutchAxis;
+        Serial.print("...");
+        debugPrintBool(inputsHigh, 16);
+        Serial.print(" ...");
+        debugPrintBool(inputsLow, 16);
+        Serial.printf(" | %3.3d | %3.3d | %3.3d || %3.3d\n",
+                      leftAxis,
+                      rightAxis,
+                      clutchAxis,
+                      userSettings::bitePoint);
+    }
 }
 
 void hidImplementation::reset()
@@ -88,7 +108,7 @@ void setup()
     inputHub::setClutchInputNumbers(LEFT_CLUTCH_IN, RIGHT_CLUTCH_IN);
     inputHub::setALTInputNumbers({ALT_IN});
     inputHub::cycleALTButtonsWorkingMode_setInputNumbers({(COMMAND_IN), (CYCLE_ALT_IN)});
-    inputHub::cycleCPWorkingMode_setInputNumbers({(COMMAND_IN) , (CYCLE_CLUTCH_IN)});
+    inputHub::cycleCPWorkingMode_setInputNumbers({(COMMAND_IN), (CYCLE_CLUTCH_IN)});
     inputHub::setClutchCalibrationInputNumbers(CW_IN, CCW_IN);
 
     oldCP = CF_BUTTON;

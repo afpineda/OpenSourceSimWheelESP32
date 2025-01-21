@@ -7,8 +7,8 @@ To test that:
 - In button mode, clutch paddles are mapped to button numbers when pushed.
 - In "ALT" mode, clutch paddles activate the "ALT" function when pushed.
 - In axis mode, clutch paddles are mapped to independent analog axes.
-- In clutch mode, clutch paddles are combined into a single axis.
-- In clutch mode, bite point calibration works properly.
+- In clutch mode or launch control mode, clutch paddles are combined into a single axis.
+- In clutch mode or launch control mode, bite point calibration works properly.
 - Configured button combinations works properly when selecting wheel functions.
 - In "ALT" mode, "ALT" buttons engage the "ALT" function when pushed.
 - In button mode, "ALT" buttons are mapped to their button numbers when pushed.
@@ -25,7 +25,8 @@ We are using the KY-040 rotary encoder, both clutch potentiometers and the butto
 For later reference:
 
 - "ALT" is the built-in push button into the rotary encoder, button number 10.
-- "CLUTCH1" and "CLUTCH2" are the analog potentiometers (numbered 0 and 1).
+- "LCLUTCH" and "RCLUTCH" are the analog potentiometers (numbered 0 and 1)
+  for the left and right clutch paddles, respectively.
 - "COMMAND" is the button number 2 in the button matrix (see picture).
 - "CYCLE_ALT" is the button number 3 in the button matrix.
 - "CYCLE_PADDLES" is the button number 4 in the button matrix.
@@ -53,8 +54,6 @@ Output through USB serial port at 115200 bauds.
 
 ## Procedure and expected output
 
-Note: **Ignore** repeated output lines along this procedure.
-
 1. Reset. Ignore output from the operating system itself.
 2. Output must match:
 
@@ -64,7 +63,8 @@ Note: **Ignore** repeated output lines along this procedure.
    ```
 
 3. Move both potentiometers from one end to the other (calibration). Ignore output.
-4. Move "CLUTCH1" to full extent, then "CLUTCH2" to full extent, then "CLUTCH1" to idle, then "CLUTCH2" to idle.
+4. Move "LCLUTCH" to full extent, then "RCLUTCH" to full extent,
+   then "LCLUTCH" to idle, then "RCLUTCH" to idle.
 5. Not to be taken literally, output must show the following lines in any order:
 
    ```text
@@ -74,21 +74,22 @@ Note: **Ignore** repeated output lines along this procedure.
    ...0000000000000000 ...0000000000000000 | 000 | 000 | 000 || 127
    ```
 
-6. Push and release "ALT". Last output line must show:
+6. Push and release "ALT".
+   Nothing should happen.
 
-   ```text
-   ...0000000000000000 ...0000000000000000 | 000 | 000 | 000 || 127
-   ```
-
-7. Push and hold "COMMAND", then "RCW", then release "COMMAND". Output must show:
+7. Push and hold "COMMAND", then "RCW", then release "COMMAND".
+   Output must show:
 
    ```text
    ...0000000000000000 ...0000000000000100 | 000 | 000 | 000 || 127
    ...0000000000000000 ...0001000000000100 | 000 | 000 | 000 || 127
    ...0000000000000000 ...0000000000000100 | 000 | 000 | 000 || 127
+   ...0000000000000000 ...0000000000000000 | 000 | 000 | 000 || 127
    ```
 
-8. Push "COMMAND" and "CYCLE_ALT" at the same time, then release. Output must show `ALT mode: 0`.
+8. Push "COMMAND" and "CYCLE_ALT" at the same time, then release.
+   Output must show `ALT mode: 0`, along other lines.
+
 9. Push and release "ALT". Output must show:
 
    ```text
@@ -96,26 +97,75 @@ Note: **Ignore** repeated output lines along this procedure.
    ...0000000000000000 ...0000000000000000 | 000 | 000 | 000 || 127
    ```
 
-10. Push "COMMAND" and "CYCLE_ALT" at the same time, then release. Output must show `ALT mode: 1`.
-11. Push "COMMAND" and "CYCLE_PADDLES" at the same time, then release. Output must show `Clutch mode: 0`.
-12. Ensure both potentiometers are idle.
-13. Move "CLUTCH1" slowly to full extent. Output must show an increasing number at `<C>` up to 127. `<L>` and `<R>` must remain in zero.
-14. Move "CLUTCH2" slowly to full extent. Output must show an increasing number at `<C>`, greater than 127, and up to 254.
-15. Move "CLUTCH1" slowly to idle. Output must show a decreasing number at `<C>` down to 127.
-16. Keep "CLUTCH2" at full extent.
-17. Rotate "RCCW" many times. Output must show a decreasing number at `<BP>` down to 1. All binary digits must remain in 0.
-18. Rotate "CCW" many times. Output must show an increasing number at `<BP>` up to 254. All binary digits must remain in 0.
-19. Move "CLUTCH2" to idle.
-20. Push "COMMAND" and "CYCLE_PADDLES" at the same time, then release. Output must show `Clutch mode: 1`.
-21. Output must show `<C>` set to 0.
-22. Move "CLUTCH1" at random. Output must show a changing value at `<L>` and `<C>` set to 0.
-23. Move "CLUTCH2" at random. Output must show a changing value at `<R>` and `<C>` set to 0.
-24. Move both "CLUTCH1" and "CLUTCH2" to idle.
-25. Push "COMMAND" and "CYCLE_PADDLES" at the same time, then release. Output must show `Clutch mode: 2`.
-26. Move "CLUTCH1" to full extent, then back to idle. Last line of output must show:
+10. Push "COMMAND" and "CYCLE_ALT" at the same time, then release.
+    Output must show `ALT mode: 1`, along other lines.
 
-    ```text
-    ...0000000000000000 ...0000000000000000 | 000 | 000 | 000 || 254
-    ```
+11. Push "COMMAND" and "CYCLE_PADDLES" at the same time, then release.
+    Output must show `Clutch mode: 4`
+    (meaning "launch control - master is left"),
+    along other lines.
 
-27. Push "COMMAND" and "CYCLE_PADDLES" at the same time, then release. Output must show `Clutch mode: 3`.
+12. Move `RCLUTCH` from end to end and back to idle.
+    Look at the output lines.
+    The field `<C>` must hold `000` or `127`,
+    but no other value.
+
+13. Move `LCLUTCH` slowly from end to end and back to idle.
+    Look at the output lines.
+    The field `<C>` must show `000` and `254`,
+    along many intermediate values.
+
+14. Push "COMMAND" and "CYCLE_PADDLES" at the same time, then release.
+    Output must show `Clutch mode: 5`
+    (meaning "launch control - master is right"),
+    along other lines.
+
+15. Move `LCLUTCH` from end to end and back to idle.
+    Look at the output lines.
+    The field `<C>` must hold `000` or `127`,
+    but no other value.
+
+16. Move `RCLUTCH` slowly from end to end and back to idle.
+    Look at the output lines.
+    The field `<C>` must show `000` and `254`,
+    along many intermediate values.
+
+17. Move `LCLUTCH` to full engagaged and keep `RCLUTCH` idle.
+18. Rotate "RCCW" just one time.
+    The field `<BP>` must show `124`.
+19. Rotate "CCW" just one time.
+    The field `<BP>` must show `127` again.
+
+20. Push "COMMAND" and "CYCLE_PADDLES" at the same time, then release.
+    Output must show `Clutch mode: 0` (meaning "clutch mode"),
+    along other lines.
+
+21. Ensure both potentiometers are idle.
+22. Move "LCLUTCH" slowly to full extent.
+    Output must show an increasing number at `<C>` up to 127.
+    `<L>` and `<R>` must remain in zero.
+23. Move "RCLUTCH" slowly to full extent. Output must show an increasing number at `<C>`,
+    greater than 127, and up to 254.
+24. Move "LCLUTCH" slowly to idle.
+    Output must show a decreasing number at `<C>` down to 127.
+25. Keep "RCLUTCH" at full extent.
+26. Rotate "RCCW" many times.
+    Output must show a decreasing number at `<BP>` down to 1.
+    All binary digits must remain in 0.
+27. Rotate "CCW" many times. Output must show an increasing number at `<BP>` up to 254.
+    All binary digits must remain in 0.
+28. Move "RCLUTCH" to idle.
+29. Push "COMMAND" and "CYCLE_PADDLES" at the same time, then release.
+    Output must show `Clutch mode: 1` (meaning "axis mode").
+30. Output must show `<C>` set to 0.
+31. Move "LCLUTCH" at random.
+    Output must show a changing value at `<L>`, and `<C>` set to 0.
+32. Move "RCLUTCH" at random.
+    Output must show a changing value at `<R>`, and `<C>` set to 0.
+33. Move both "LCLUTCH" and "RCLUTCH" to idle.
+34. Push "COMMAND" and "CYCLE_PADDLES" at the same time, then release.
+    Output must show `Clutch mode: 2` (meaning "Alternate mode").
+35. Move "LCLUTCH" to full extent, then back to idle. Nothing should happen.
+
+36. Push "COMMAND" and "CYCLE_PADDLES" at the same time, then release.
+    Output must show `Clutch mode: 3` (meaning "button mode").
