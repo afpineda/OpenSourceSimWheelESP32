@@ -1,5 +1,14 @@
 # Change log
 
+## 6.10.0
+
+- "Launch control" is available as a new working mode for the clutch paddles.
+- All relevant unit and integration tests have been updated.
+- The new feature has been synchronously updated in the companion app and SimHub plugin.
+- A new document explains the working modes of the clutch paddles.
+- Minor bug fixes.
+- Minor documentation updates.
+
 ## 6.9.1
 
 - Code updated to work with the latest external dependencies:
