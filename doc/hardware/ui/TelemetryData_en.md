@@ -102,8 +102,6 @@ Consider [contributing](/.github/CONTRIBUTING.md) to this project.
    [SimWheelTypes.h](../../../src/include/SimWheelTypes.h)
 6. When using the I2C bus, include the header file
    [i2cTools.h](../../../src/include/i2cTools.h).
-   Place a call to `i2c::require()` to ensure the
-   bus is initialized.
 7. Derive a new C++ class from `AbstractUserInterface`.
    See the [documentation](../../../src/include/SimWheelTypes.h)
    for this class.
@@ -113,9 +111,12 @@ Consider [contributing](/.github/CONTRIBUTING.md) to this project.
    - `requiresECUTelemetry`
    - `requiresRaceControlTelemetry`
    - `requiresGaugeTelemetry`
-9. Override `AbstractUserInterface::onTelemetryData()`
-   to react to new telemetry data.
-10. Override `AbstractUserInterface::serveSingleFrame()`
+9. When using the I2C bus, in the class constructor
+   place a call to `i2c::require()` to ensure the
+   bus is initialized.
+10. Override `AbstractUserInterface::onTelemetryData()`
+    to react to new telemetry data.
+11. Override `AbstractUserInterface::serveSingleFrame()`
     to handle the display hardware on a timed basis.
 
 See [SimwheelUI.h](../../../src/include/SimWheelUI.h)
@@ -134,6 +135,9 @@ It is divided into four groups:
 - Gauges
 
 ## Available displays for raw telemetry data
+
+The C++ classes already included in this project (representing display hardware)
+are explained in the following documents.
 
 - [Simple shift light](./SimpleShiftLight/SimpleShiftLight_en.md)
 - [PFC8574-driven "rev lights"](./PCF8574RevLights/PCF8574RevLights_en.md)
