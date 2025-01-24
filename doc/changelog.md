@@ -1,5 +1,12 @@
 # Change log
 
+## 6.11.0
+
+- The *pulse width* of all rotary encoders can now be set using HID reports.
+- The new feature has been synchronously updated in the companion app.
+- All relevant unit and integration tests have been updated.
+- Minor documentation updates.
+
 ## 6.10.0
 
 - "Launch control" is available as a new working mode for the clutch paddles.
