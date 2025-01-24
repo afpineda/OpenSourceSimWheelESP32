@@ -2,7 +2,12 @@
 
 ## 6.11.0
 
-- The *pulse width* of all rotary encoders can now be set using HID reports.
+- For better host-side detection of rotation events,
+  the behaviour of rotary encoders has been improved.
+- The default *pulse width* of the rotary encoders
+  has been increased to 100 ms pressed and 100 ms released.
+- The *pulse width* of all encoders can now be set as a time multiplier
+  using HID reports (x1, x2, etc.).
 - The new feature has been synchronously updated in the companion app.
 - All relevant unit and integration tests have been updated.
 - Minor documentation updates.
