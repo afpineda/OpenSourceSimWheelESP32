@@ -53,6 +53,10 @@ This project provides open hardware and software for a sim-racing wheel or butto
   This way, the simulator does not force the user to reconfigure
   inputs every time these wheels are swapped.
 
+- ∿ Adjustable **pulse width** for rotary encoders (by user preference).
+  Some simulators may miss a rotation due to their own polling interval.
+  This feature alleviates this problem.
+
 - ⛐ **Telemetry** using [SimHub](https://www.simhubdash.com/).
   Supported display hardware includes RGB LED strips and single color LEDs.
 
@@ -125,6 +129,10 @@ o una caja de botones con las siguientes características:
   coincida con cualquier otro volante.
   De esta manera, el simulador no fuerza al usuario a configurar
   las entradas cada vez que intercambia los volantes.
+
+- ∿ **Ancho de pulso** ajustable para los codificadores rotativos (mediante preferencias de usuario).
+  Algunos simuladores pueden perderse rotaciones debido a su propio intervalo de muestreo.
+  Esta característica alivia este problema.
 
 - ⛐ **Telemetría** mediante [SimHub](https://www.simhubdash.com/).
   El hardware de visualización incluye tiras LED RGB y LED de un único color.
