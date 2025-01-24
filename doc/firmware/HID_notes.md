@@ -139,6 +139,7 @@ This is a summary:
 - Display for ECU telemetry
 - Display for race control telemetry
 - Display for gauges telemetry
+- Rotary encoders
 
 ### ID
 
@@ -211,6 +212,9 @@ At write (unless locked):
   | 6                        | Reverse right clutch paddle polarity (analog only if any).                         |
   | 7                        | Show all pixels in all groups at once                                              |
   | 8                        | Turn off all pixels in all groups                                                  |
+  | 9                        | Set the pulse width for rotary encoders to defaults                                |
+  | 10                       | Double the default pulse width of rotary encoders                                  |
+  | 11                       | Triple the default pulse width of rotary encoders                                  |
 
 - Write FF (hexadecimal) to ignore this field.
 

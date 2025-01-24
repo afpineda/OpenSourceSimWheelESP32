@@ -478,7 +478,9 @@ typedef enum
     /// Able to display race control telemetry data
     CAP_TELEMETRY_RACE_CONTROL = 8,
     /// Able to display telemetry data for gauges
-    CAP_TELEMETRY_GAUGES = 9
+    CAP_TELEMETRY_GAUGES = 9,
+    /// Has one or more rotary encoders
+    CAP_ROTARY_ENCODERS = 10
 } deviceCapability_t;
 
 /**
@@ -504,7 +506,13 @@ typedef enum
     /// Display all pixels in all pixel groups
     CMD_SHOW_PIXELS = 7,
     /// Turn off all pixels in all groups
-    CMD_RESET_PIXELS = 8
+    CMD_RESET_PIXELS = 8,
+    /// Set the pulse width for rotary encoders to defaults
+    CMD_ENCODER_PULSE_X1 = 9,
+    /// Double the default pulse width of rotary encoders
+    CMD_ENCODER_PULSE_X2 = 10,
+    /// Triple the default pulse width of rotary encoders
+    CMD_ENCODER_PULSE_X3 = 11
 } simpleCommands_t;
 
 /**

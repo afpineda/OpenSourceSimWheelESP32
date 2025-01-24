@@ -40,9 +40,9 @@ private:
   inputNumber_t ccwButtonNumber;
 
   // Circular bits queue
-  uint64_t bitsQueue;      // data: bit 1 = clockwise rotation, 0 = counter-clockwise rotation
-  uint8_t bqHead;          // "pointer" (short of) to head
-  uint8_t bqTail;          // "pointer" to tail
+  uint64_t bitsQueue;         // data: bit 1 = clockwise rotation, 0 = counter-clockwise rotation
+  uint8_t bqHead;             // "pointer" (short of) to head
+  uint8_t bqTail;             // "pointer" to tail
   uint8_t pressEventNotified; // a "virtual button" press event was notified at read(), so a release event must be notified next
 
 private:
@@ -74,7 +74,7 @@ protected:
    * @brief Extract a rotation event from the queue
    *
    * @param[out] cwOrCcw The extracted event, if any
-   * @return true if the queue was not empty, so @p cwOrCcw contains valid data .
+   * @return true if the queue was not empty, so @p cwOrCcw contains valid data.
    * @return false if the queue was empty, so @p cwOrCcw was not written.
    */
   bool bitsQueuePop(bool &cwOrCcw);
@@ -106,11 +106,17 @@ public:
    * @brief Set a time multiplier for "pulse" events
    *
    * @param multiplier A time multiplier between 1 and 3.
+   * @return true if the multiplier has changed.
+   * @return false otherwise.
    */
-  static void setPulseMultiplier(uint8_t multiplier)
+  static bool setPulseMultiplier(uint8_t multiplier)
   {
-    if ((multiplier > 0) && (multiplier < 4))
+    if ((multiplier > 0) && (multiplier < 4) && (pulseMultiplier != multiplier))
+    {
       pulseMultiplier = multiplier;
+      return true;
+    }
+    return false;
   };
 
   virtual inputBitmap_t read(inputBitmap_t lastState) override;

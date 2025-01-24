@@ -84,6 +84,7 @@ void setup()
     Serial.println("-- GO --");
     inputs::start();
     resetAxesPolarityForTesting();
+    inputs::setRotaryPulseX1();
 }
 
 void loop()

@@ -201,6 +201,21 @@ void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *b
             // Turn off all pixels
             pixels::reset();
         }
+        if ((len > 3) && (buffer[3] == (uint8_t)simpleCommands_t::CMD_ENCODER_PULSE_X1))
+        {
+            // Set pulse width to default
+            inputs::setRotaryPulseX1();
+        }
+        if ((len > 3) && (buffer[3] == (uint8_t)simpleCommands_t::CMD_ENCODER_PULSE_X2))
+        {
+            // Set pulse width to double
+            inputs::setRotaryPulseX2();
+        }
+        if ((len > 3) && (buffer[3] == (uint8_t)simpleCommands_t::CMD_ENCODER_PULSE_X3))
+        {
+            // Set pulse width to triple
+            inputs::setRotaryPulseX3();
+        }
         if ((len > 4) && (buffer[4] != 0xff))
         {
             // Set working mode of DPAD

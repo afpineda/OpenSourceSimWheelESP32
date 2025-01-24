@@ -153,6 +153,9 @@ Not applicable to USB implementation.
 17. Enter `FF FF FF 08 FF FF` at fields below `ReportID`.
 18. Click on `Set Feature`.
 19. Serial output must show: `pixels::reset()`.
+20. Enter `FF FF FF 0B FF FF` at fields below `ReportID`.
+21. Click on `Set Feature`.
+22. Serial output must show: `CMD: pulse width x3`.
 
 ### Capabilities (HID report)
 

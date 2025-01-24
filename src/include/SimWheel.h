@@ -610,6 +610,24 @@ namespace inputs
     void reverseRightAxis();
 
     /**
+     * @brief Reset the duration of a rotary encoder "pulse" event
+     *
+     */
+    void setRotaryPulseX1();
+
+    /**
+     * @brief Double the duration of a rotary encoder "pulse" event
+     *
+     */
+    void setRotaryPulseX2();
+
+    /**
+     * @brief Triple the duration of a rotary encoder "pulse" event
+     *
+     */
+    void setRotaryPulseX3();
+
+    /**
      * @brief Exposed for testing. Do not call.
      *
      */

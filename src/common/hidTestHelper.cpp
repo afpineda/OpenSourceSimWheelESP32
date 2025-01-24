@@ -83,6 +83,27 @@ void inputs::reverseRightAxis()
 #endif
 }
 
+void inputs::setRotaryPulseX1()
+{
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
+    Serial.println("CMD: pulse width x1");
+#endif
+}
+
+void inputs::setRotaryPulseX2()
+{
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
+    Serial.println("CMD: pulse width x2");
+#endif
+}
+
+void inputs::setRotaryPulseX3()
+{
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
+    Serial.println("CMD: pulse width x3");
+#endif
+}
+
 //------------------------------------------------------------------
 
 void batteryCalibration::restartAutoCalibration()

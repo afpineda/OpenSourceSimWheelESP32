@@ -69,6 +69,10 @@ static esp_timer_handle_t autoSaveTimer = nullptr;
 #define LEFT_CLUTCH_INDEX 0
 #define RIGHT_CLUTCH_INDEX 1
 
+// Related to rotary encoders
+#define ROTARY_NAMESPACE "rot"
+#define KEY_PULSE_MULT "X"
+
 // Related to I2C bus
 static std::vector<uint8_t> *i2cAddressesFromProbe = nullptr;
 
@@ -182,6 +186,53 @@ void resetAxesPolarityForTesting()
     rightClutchAxis->reversed = true;
   if (leftClutchAxis)
     leftClutchAxis->reversed = true;
+}
+
+// ----------------------------------------------------------------------------
+// Pulse duration for rotary encoders
+// ----------------------------------------------------------------------------
+
+void loadRotaryPulseMultiplier()
+{
+  Preferences prefs;
+  uint8_t multiplier = 1;
+  if (prefs.begin(ROTARY_NAMESPACE, true))
+  {
+    multiplier = prefs.getUChar(KEY_PULSE_MULT, 1);
+    if ((multiplier < 1) || (multiplier > 3))
+      multiplier = 1;
+    prefs.end();
+  }
+  RotaryEncoderInput::setPulseMultiplier(multiplier);
+}
+
+void internalSetRotaryPulseMultiplier(uint8_t multiplier)
+{
+  if (RotaryEncoderInput::setPulseMultiplier(multiplier))
+  {
+    // Save to flash memory
+    Preferences prefs;
+    if (prefs.begin(ROTARY_NAMESPACE, false))
+    {
+      prefs.putUChar(KEY_PULSE_MULT, multiplier);
+      prefs.end();
+    }
+  }
+}
+
+void inputs::setRotaryPulseX1()
+{
+  internalSetRotaryPulseMultiplier(1);
+}
+
+void inputs::setRotaryPulseX2()
+{
+  internalSetRotaryPulseMultiplier(2);
+}
+
+void inputs::setRotaryPulseX3()
+{
+  internalSetRotaryPulseMultiplier(3);
 }
 
 // ----------------------------------------------------------------------------
@@ -369,6 +420,7 @@ void inputs::addRotaryEncoder(
       ESP_ERROR_CHECK(err);
     digitalInputChain = new RotaryEncoderInput(
         clkPin, dtPin, cwInputNumber, ccwInputNumber, useAlternateEncoding, digitalInputChain);
+    capabilities::setFlag(CAP_ROTARY_ENCODERS);
   }
   else
     abortDueToCallAfterStart();
@@ -635,6 +687,9 @@ void inputs::start()
       loadAxisPolarity(prefs, RIGHT_CLUTCH_INDEX, rightClutchAxis->reversed);
       prefs.end();
     }
+
+    // Load rotary encoder pulse multiplier
+    loadRotaryPulseMultiplier();
 
     // create autosave timer
     esp_timer_create_args_t args;

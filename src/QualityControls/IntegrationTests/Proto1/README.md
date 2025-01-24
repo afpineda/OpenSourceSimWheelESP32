@@ -95,3 +95,15 @@ For later reference:
    Axis "RX" or "RY" must go in the opposite way it did before.
 7. Enter `FF FF FF 05 FF FF` at fields below `ReportID`. Click on `Set Feature`.
 8. Enter `FF FF FF 06 FF FF` at fields below `ReportID`. Click on `Set Feature`.
+
+## Part 5 (pulse width of rotary encoders)
+
+Subjectivity can not be avoided in this test.
+*SimpleHIDWrite* is a better tool to check the "pulse width" of input events.
+Be conscious of the delay between `RD 01 ...` lines.
+
+1. Enter `03` at field `ReportID`.
+2. Enter `FF FF FF 0B FF FF` at fields below `ReportID`. Click on `Set Feature`.
+3. Rotate "RCW". A button press should be registered **for a longer time** than before.
+4. Enter `FF FF FF 09 FF FF` at fields below `ReportID`. Click on `Set Feature`.
+5. Rotate "RCW". A button press should be registered **for a shorter time** than before.
