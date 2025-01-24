@@ -74,6 +74,12 @@ void inputs::reverseRightAxis()
 {
 }
 
+void inputs::setRotaryPulseX1() {}
+
+void inputs::setRotaryPulseX2() {}
+
+void inputs::setRotaryPulseX3() {}
+
 // ----------------------------------------------------------------------------
 // Arduino entry point
 // ----------------------------------------------------------------------------

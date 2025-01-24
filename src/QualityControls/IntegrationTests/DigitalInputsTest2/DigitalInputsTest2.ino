@@ -11,6 +11,7 @@
 
 #include <HardwareSerial.h>
 #include "debugUtils.h"
+#include "RotaryEncoderInput.h"
 #include "SimWheel.h"
 
 //------------------------------------------------------------------
@@ -39,6 +40,8 @@ void inputHub::onRawInput(
     debugPrintBool(rawInputChanges);
     Serial.println("");
 }
+
+uint8_t RotaryEncoderInput::pulseMultiplier = 1;
 
 //------------------------------------------------------------------
 // Arduino entry point

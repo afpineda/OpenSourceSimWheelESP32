@@ -29,6 +29,12 @@ void inputs::reverseRightAxis() {}
 
 void inputs::update() {}
 
+void inputs::setRotaryPulseX1() {}
+
+void inputs::setRotaryPulseX2() {}
+
+void inputs::setRotaryPulseX3() {}
+
 void batteryCalibration::restartAutoCalibration() {}
 
 int batteryMonitor::getLastBatteryLevel() { return 66; }
