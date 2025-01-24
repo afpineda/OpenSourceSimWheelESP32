@@ -43,13 +43,21 @@ private:
   uint64_t bitsQueue;      // data: bit 1 = clockwise rotation, 0 = counter-clockwise rotation
   uint8_t bqHead;          // "pointer" (short of) to head
   uint8_t bqTail;          // "pointer" to tail
-  bool pressEventNotified; // a "virtual button" press event was notified at read(), so a release event must be notified next
+  uint8_t pressEventNotified; // a "virtual button" press event was notified at read(), so a release event must be notified next
 
 private:
   friend void IRAM_ATTR isrh(void *instance);
   friend void IRAM_ATTR isrhAlternateEncoding(void *instance);
 
 protected:
+  /**
+   * @brief Pulse multiplier for rotary encoders
+   *
+   * @note For read only. Do not overwrite.
+   *       Always greater than zero.
+   */
+  static uint8_t pulseMultiplier;
+
   void incBitQueuePointer(uint8_t &pointer)
   {
     pointer = (pointer + 1) % sizeof(bitsQueue);
@@ -93,6 +101,17 @@ public:
       inputNumber_t ccwButtonNumber = UNSPECIFIED_INPUT_NUMBER,
       bool useAlternateEncoding = false,
       DigitalPolledInput *nextInChain = nullptr);
+
+  /**
+   * @brief Set a time multiplier for "pulse" events
+   *
+   * @param multiplier A time multiplier between 1 and 3.
+   */
+  static void setPulseMultiplier(uint8_t multiplier)
+  {
+    if ((multiplier > 0) && (multiplier < 4))
+      pulseMultiplier = multiplier;
+  };
 
   virtual inputBitmap_t read(inputBitmap_t lastState) override;
 };

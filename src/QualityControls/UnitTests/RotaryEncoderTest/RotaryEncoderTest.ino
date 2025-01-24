@@ -66,5 +66,28 @@ void loop()
         notifyInputEvent(mask, newState);
         globalState = newState;
     }
+    else if (newState != 0)
+    {
+        Serial.println("Pulse delay");
+    }
     vTaskDelay(DEBOUNCE_TICKS);
+    if (Serial.available())
+    {
+        int key = Serial.read();
+        if (key == '3')
+        {
+            RotaryEncoderInput::setPulseMultiplier(3);
+            Serial.println("Pulse multiplier set to 3");
+        }
+        else if (key == '2')
+        {
+            RotaryEncoderInput::setPulseMultiplier(2);
+            Serial.println("Pulse multiplier set to 2");
+        }
+        else if (key == '1')
+        {
+            RotaryEncoderInput::setPulseMultiplier(1);
+            Serial.println("Pulse multiplier set to 1");
+        }
+    }
 }

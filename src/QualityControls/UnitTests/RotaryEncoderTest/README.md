@@ -95,3 +95,46 @@ Output through USB serial port at 115200 bauds.
 6. Check the correct position of every bit. Note that output from (4) is not the same as output from (1). There is a bit displacement to the left.
 7. Rotate encoder randomly many times both fast and slow. Check there is output on every single detent.
 8. Rotate encoder randomly many times at slow pace. Check that output is six and only six lines long with each detent.
+
+## Pulse width testing (any rotary encoder)
+
+1. Type `2` in the serial monitor and hit `enter`.
+2. Output should be:
+
+    ```text
+    Pulse multiplier set to 2
+    ```
+
+3. Rotate clockwise or counter-clockwise (it doesn't matter).
+   Ignoring `...`, output should be:
+
+   ```text
+   MASK  : ...
+   STATE : ...
+   CHANGE: ...
+   Pulse delay
+   MASK  : ...
+   STATE : ...
+   CHANGE: ...
+   ```
+
+4. Type `3` in the serial monitor and hit `enter`.
+    Output should be:
+
+    ```text
+    Pulse multiplier set to 3
+    ```
+
+5. Rotate clockwise or counter-clockwise (it doesn't matter).
+   Ignoring `...`, output should be:
+
+   ```text
+   MASK  : ...
+   STATE : ...
+   CHANGE: ...
+   Pulse delay
+   Pulse delay
+   MASK  : ...
+   STATE : ...
+   CHANGE: ...
+   ```

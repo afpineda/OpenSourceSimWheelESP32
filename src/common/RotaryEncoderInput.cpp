@@ -129,6 +129,8 @@ void IRAM_ATTR isrhAlternateEncoding(void *instance)
 // Constructor
 // ----------------------------------------------------------------------------
 
+uint8_t RotaryEncoderInput::pulseMultiplier = 1;
+
 RotaryEncoderInput::RotaryEncoderInput(
     gpio_num_t clkPin,
     gpio_num_t dtPin,
@@ -156,7 +158,7 @@ RotaryEncoderInput::RotaryEncoderInput(
     bitsQueue = 0ULL;
     bqHead = 0;
     bqTail = 0;
-    pressEventNotified = false;
+    pressEventNotified = 0;
 
     // Config clkPin
     checkAndInitializeInputPin(clkPin, false, true);
@@ -200,20 +202,32 @@ RotaryEncoderInput::RotaryEncoderInput(
 
 inputBitmap_t RotaryEncoderInput::read(inputBitmap_t lastState)
 {
-    if (!pressEventNotified)
+    if (pressEventNotified > 0)
+    {
+        pressEventNotified--;
+        if (pressEventNotified == 0)
+            // end of "pulse"
+            return 0;
+        else
+            // "pulse" in progress
+            return lastState;
+    }
+    else
     {
         bool cwOrCcw;
         if (bitsQueuePop(cwOrCcw))
         {
-            pressEventNotified = true;
+            // start a "pulse"
+            pressEventNotified = RotaryEncoderInput::pulseMultiplier;
             if (cwOrCcw)
                 return BITMAP(cwButtonNumber);
             else
                 return BITMAP(ccwButtonNumber);
         }
+        else
+            // No input event
+            return 0;
     }
-    pressEventNotified = false;
-    return 0;
 }
 
 // ----------------------------------------------------------------------------
