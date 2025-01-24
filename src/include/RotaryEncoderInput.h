@@ -40,24 +40,17 @@ private:
   inputNumber_t ccwButtonNumber;
 
   // Circular bits queue
-  uint64_t bitsQueue;         // data: bit 1 = clockwise rotation, 0 = counter-clockwise rotation
-  uint8_t bqHead;             // "pointer" (short of) to head
-  uint8_t bqTail;             // "pointer" to tail
-  uint8_t pressEventNotified; // a "virtual button" press event was notified at read(), so a release event must be notified next
+  uint64_t bitsQueue;        // data: bit 1 = clockwise rotation, 0 = counter-clockwise rotation
+  uint8_t bqHead;            // "pointer" (short of) to head
+  uint8_t bqTail;            // "pointer" to tail
+  uint8_t currentPulseWidth; // duration of the current "pulse" event in polling cycles
+  bool pressEventNotified;   // a "virtual button" press event was notified at read(), so a release event must be notified next
 
 private:
   friend void IRAM_ATTR isrh(void *instance);
   friend void IRAM_ATTR isrhAlternateEncoding(void *instance);
 
 protected:
-  /**
-   * @brief Pulse multiplier for rotary encoders
-   *
-   * @note For read only. Do not overwrite.
-   *       Always greater than zero.
-   */
-  static uint8_t pulseMultiplier;
-
   void incBitQueuePointer(uint8_t &pointer)
   {
     pointer = (pointer + 1) % sizeof(bitsQueue);
@@ -80,6 +73,14 @@ protected:
   bool bitsQueuePop(bool &cwOrCcw);
 
 public:
+  /**
+   * @brief Pulse multiplier for rotary encoders
+   *
+   * @note For read only. Do not overwrite.
+   *       Always greater than zero.
+   */
+  static uint8_t pulseMultiplier;
+
   /**
    * @brief Construct a new Rotary Encoder Input object
    *
@@ -105,13 +106,13 @@ public:
   /**
    * @brief Set a time multiplier for "pulse" events
    *
-   * @param multiplier A time multiplier between 1 and 3.
+   * @param multiplier A time multiplier between 1 and 6.
    * @return true if the multiplier has changed.
    * @return false otherwise.
    */
   static bool setPulseMultiplier(uint8_t multiplier)
   {
-    if ((multiplier > 0) && (multiplier < 4) && (pulseMultiplier != multiplier))
+    if ((multiplier > 0) && (multiplier < 7) && (pulseMultiplier != multiplier))
     {
       pulseMultiplier = multiplier;
       return true;

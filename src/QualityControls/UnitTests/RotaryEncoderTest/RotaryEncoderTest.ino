@@ -74,20 +74,12 @@ void loop()
     if (Serial.available())
     {
         int key = Serial.read();
-        if (key == '3')
+        if ((key >= '1') && (key <= '6'))
         {
-            RotaryEncoderInput::setPulseMultiplier(3);
-            Serial.println("Pulse multiplier set to 3");
-        }
-        else if (key == '2')
-        {
-            RotaryEncoderInput::setPulseMultiplier(2);
-            Serial.println("Pulse multiplier set to 2");
-        }
-        else if (key == '1')
-        {
-            RotaryEncoderInput::setPulseMultiplier(1);
-            Serial.println("Pulse multiplier set to 1");
+            RotaryEncoderInput::setPulseMultiplier(key - '1' + 1);
+            Serial.printf(
+                "Pulse multiplier set to %hhu\n",
+                RotaryEncoderInput::pulseMultiplier);
         }
     }
 }

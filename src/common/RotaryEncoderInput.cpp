@@ -158,7 +158,8 @@ RotaryEncoderInput::RotaryEncoderInput(
     bitsQueue = 0ULL;
     bqHead = 0;
     bqTail = 0;
-    pressEventNotified = 0;
+    pressEventNotified = false;
+    currentPulseWidth = 0;
 
     // Config clkPin
     checkAndInitializeInputPin(clkPin, false, true);
@@ -202,15 +203,20 @@ RotaryEncoderInput::RotaryEncoderInput(
 
 inputBitmap_t RotaryEncoderInput::read(inputBitmap_t lastState)
 {
-    if (pressEventNotified > 0)
+    if (currentPulseWidth > 0)
     {
-        pressEventNotified--;
-        if (pressEventNotified == 0)
-            // end of "pulse"
+        currentPulseWidth--;
+        if (currentPulseWidth == 0)
+        {
+            if (pressEventNotified)
+            {
+                pressEventNotified = false;
+                currentPulseWidth = pulseMultiplier;
+            }
             return 0;
-        else
-            // "pulse" in progress
-            return lastState;
+        }
+        // "pulse" in progress
+        return lastState;
     }
     else
     {
@@ -218,7 +224,8 @@ inputBitmap_t RotaryEncoderInput::read(inputBitmap_t lastState)
         if (bitsQueuePop(cwOrCcw))
         {
             // start a "pulse"
-            pressEventNotified = RotaryEncoderInput::pulseMultiplier;
+            pressEventNotified = true;
+            currentPulseWidth = pulseMultiplier;
             if (cwOrCcw)
                 return BITMAP(cwButtonNumber);
             else
