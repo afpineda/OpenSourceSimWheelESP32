@@ -137,25 +137,24 @@ Not applicable to USB implementation.
    - *USB implementation*: look for the device name.
 2. You should see continuous report lines starting with `RD 01`. Ignore them. Click on `Clear` from time to time.
 3. Enter `03` at field `ReportID`.
-4. Enter `FF FF FF FF FF FF` (6 times `FF`) at fields below `ReportID`.
+4. Enter `FF FF FF FF FF FF FF` (7 times `FF`) at fields below `ReportID`.
 5. Click on `Set Feature` , then on `Get Feature`.
-6. Must show a line starting with `RD 03  00 01 7F 42 01 00`.
-7. Enter `01 FF 40 01 FF 01` at fields below `ReportID`.
+6. Must show a line starting with `RD 03  00 01 7F 42 01 00 01`.
+7. Enter `01 FF 40 01 FF 01 FF` at fields below `ReportID`.
 8. Click on `Set Feature` , then on `Get Feature`.
-9. Must show a line starting with: `RD 03  01 01 40 42 01 00`.
+9. Must show a line starting with: `RD 03  01 01 40 42 01 00 01`.
 10. Serial output must show: `CMD: recalibrate axes`.
-11. Enter `FF FF FF 06 FF FF` at fields below `ReportID`.
+11. Enter `FF FF FF 06 FF FF FF` at fields below `ReportID`.
 12. Click on `Set Feature`.
 13. Serial output must show: `CMD: reverse right axis`.
-14. Enter `FF FF FF 07 FF FF` at fields below `ReportID`.
+14. Enter `FF FF FF 07 FF FF FF` at fields below `ReportID`.
 15. Click on `Set Feature`.
 16. Serial output must show: `pixels::show()`.
-17. Enter `FF FF FF 08 FF FF` at fields below `ReportID`.
+17. Enter `FF FF FF 08 FF FF FF` at fields below `ReportID`.
 18. Click on `Set Feature`.
 19. Serial output must show: `pixels::reset()`.
-20. Enter `FF FF FF 0B FF FF` at fields below `ReportID`.
-21. Click on `Set Feature`.
-22. Serial output must show: `CMD: pulse width x3`.
+20. Enter `FF FF FF FF FF FF 03` at fields below `ReportID`.
+21. Serial output must show: `CMD: pulse width x3`.
 
 ### Capabilities (HID report)
 

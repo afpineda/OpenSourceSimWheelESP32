@@ -112,6 +112,7 @@ uint16_t hidImplementation::common::onGetFeature(uint8_t report_id, uint8_t *buf
         buffer[3] = (uint8_t)batteryMonitor::getLastBatteryLevel();
         buffer[4] = (uint8_t)userSettings::dpadWorkingMode;
         buffer[5] = (userSettings::securityLock) ? 0xFF : 0x00;
+        buffer[6] = inputs::getRotaryPulseWidthMultiplier();
         return CONFIG_REPORT_SIZE;
     }
     if ((report_id == RID_FEATURE_BUTTONS_MAP) && (len >= BUTTONS_MAP_REPORT_SIZE))
@@ -201,27 +202,17 @@ void hidImplementation::common::onSetFeature(uint8_t report_id, const uint8_t *b
             // Turn off all pixels
             pixels::reset();
         }
-        if ((len > 3) && (buffer[3] == (uint8_t)simpleCommands_t::CMD_ENCODER_PULSE_X1))
-        {
-            // Set pulse width to default
-            inputs::setRotaryPulseX1();
-        }
-        if ((len > 3) && (buffer[3] == (uint8_t)simpleCommands_t::CMD_ENCODER_PULSE_X2))
-        {
-            // Set pulse width to double
-            inputs::setRotaryPulseX2();
-        }
-        if ((len > 3) && (buffer[3] == (uint8_t)simpleCommands_t::CMD_ENCODER_PULSE_X3))
-        {
-            // Set pulse width to triple
-            inputs::setRotaryPulseX3();
-        }
         if ((len > 4) && (buffer[4] != 0xff))
         {
             // Set working mode of DPAD
             userSettings::setDPADWorkingMode((bool)buffer[4]);
         }
         // Note: byte index 5 is read-only
+        if ((len > 6) && (buffer[6] != 0xff))
+        {
+            // Set a pulse width multiplier for all rotary encoders
+            inputs::setRotaryPulseWidthMultiplier(buffer[6]);
+        }
     }
     else if ((report_id == RID_FEATURE_BUTTONS_MAP) && (len >= BUTTONS_MAP_REPORT_SIZE))
     {

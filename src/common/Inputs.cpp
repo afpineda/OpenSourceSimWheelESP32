@@ -72,6 +72,7 @@ static esp_timer_handle_t autoSaveTimer = nullptr;
 // Related to rotary encoders
 #define ROTARY_NAMESPACE "rot"
 #define KEY_PULSE_MULT "X"
+#define DEFAULT_ROTARY_MULTIPLIER 2
 
 // Related to I2C bus
 static std::vector<uint8_t> *i2cAddressesFromProbe = nullptr;
@@ -195,18 +196,16 @@ void resetAxesPolarityForTesting()
 void loadRotaryPulseMultiplier()
 {
   Preferences prefs;
-  uint8_t multiplier = 1;
+  uint8_t multiplier = DEFAULT_ROTARY_MULTIPLIER;
   if (prefs.begin(ROTARY_NAMESPACE, true))
   {
-    multiplier = prefs.getUChar(KEY_PULSE_MULT, 1);
-    if ((multiplier < 1) || (multiplier > 3))
-      multiplier = 1;
+    multiplier = prefs.getUChar(KEY_PULSE_MULT, multiplier);
     prefs.end();
   }
   RotaryEncoderInput::setPulseMultiplier(multiplier);
 }
 
-void internalSetRotaryPulseMultiplier(uint8_t multiplier)
+void inputs::setRotaryPulseWidthMultiplier(uint8_t multiplier)
 {
   if (RotaryEncoderInput::setPulseMultiplier(multiplier))
   {
@@ -220,19 +219,9 @@ void internalSetRotaryPulseMultiplier(uint8_t multiplier)
   }
 }
 
-void inputs::setRotaryPulseX1()
+uint8_t inputs::getRotaryPulseWidthMultiplier()
 {
-  internalSetRotaryPulseMultiplier(1);
-}
-
-void inputs::setRotaryPulseX2()
-{
-  internalSetRotaryPulseMultiplier(2);
-}
-
-void inputs::setRotaryPulseX3()
-{
-  internalSetRotaryPulseMultiplier(3);
+  return RotaryEncoderInput::pulseMultiplier;
 }
 
 // ----------------------------------------------------------------------------

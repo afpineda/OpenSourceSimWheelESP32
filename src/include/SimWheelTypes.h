@@ -506,13 +506,7 @@ typedef enum
     /// Display all pixels in all pixel groups
     CMD_SHOW_PIXELS = 7,
     /// Turn off all pixels in all groups
-    CMD_RESET_PIXELS = 8,
-    /// Set the pulse width for rotary encoders to defaults
-    CMD_ENCODER_PULSE_X1 = 9,
-    /// Double the default pulse width of rotary encoders
-    CMD_ENCODER_PULSE_X2 = 10,
-    /// Triple the default pulse width of rotary encoders
-    CMD_ENCODER_PULSE_X3 = 11
+    CMD_RESET_PIXELS = 8
 } simpleCommands_t;
 
 /**

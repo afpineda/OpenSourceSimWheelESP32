@@ -37,7 +37,7 @@
 
 #define GAMEPAD_REPORT_SIZE 20
 #define CAPABILITIES_REPORT_SIZE 20
-#define CONFIG_REPORT_SIZE 6
+#define CONFIG_REPORT_SIZE 7
 #define BUTTONS_MAP_REPORT_SIZE 3
 #define HARDWARE_ID_REPORT_SIZE 6
 #define POWERTRAIN_REPORT_SIZE 10
@@ -85,7 +85,7 @@
 // ----------------------------------------------------------------------------
 
 #define DATA_MAJOR_VERSION 1
-#define DATA_MINOR_VERSION 4
+#define DATA_MINOR_VERSION 5
 
 // ----------------------------------------------------------------------------
 // Magic number, do not change

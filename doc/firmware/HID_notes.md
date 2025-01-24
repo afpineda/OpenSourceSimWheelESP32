@@ -119,7 +119,7 @@ Some examples:
 
 However, host-side software may support several data versions at the same time.
 
-Current data version is 1.4.
+Current data version is 1.5.
 
 ### Flags
 
@@ -165,14 +165,15 @@ Zero means that pixel control is not available in that group.
 While writing, any value outside of the valid range will be ignored,
 so they me be used to mask which fields to modify or not.
 
-| Byte index | Size (bytes) | Purpose (field)                        | Since data version |
-| :--------: | :----------: | -------------------------------------- | ------------------ |
-|     0      |      1       | Working mode of clutch paddles         | 1.0                |
-|     1      |      1       | Working mode of ALT buttons            | 1.0                |
-|     2      |      1       | Current bite point                     | 1.0                |
-|     3      |      1       | Simple command / Current battery level | 1.0                |
-|     4      |      1       | Working mode of DPAD inputs            | 1.1                |
-|     5      |      1       | Security lock                          | 1.2                |
+| Byte index | Size (bytes) | Purpose (field)                            | Since data version |
+| :--------: | :----------: | ------------------------------------------ | ------------------ |
+|     0      |      1       | Working mode of clutch paddles             | 1.0                |
+|     1      |      1       | Working mode of ALT buttons                | 1.0                |
+|     2      |      1       | Current bite point                         | 1.0                |
+|     3      |      1       | Simple command / Current battery level     | 1.0                |
+|     4      |      1       | Working mode of DPAD inputs                | 1.1                |
+|     5      |      1       | Security lock                              | 1.2                |
+|     6      |      1       | Pulse width multiplier for rotary encoders | 1.5                |
 
 ### Working mode of clutch paddles
 
@@ -212,9 +213,6 @@ At write (unless locked):
   | 6                        | Reverse right clutch paddle polarity (analog only if any).                         |
   | 7                        | Show all pixels in all groups at once                                              |
   | 8                        | Turn off all pixels in all groups                                                  |
-  | 9                        | Set the pulse width for rotary encoders to defaults                                |
-  | 10                       | Double the default pulse width of rotary encoders                                  |
-  | 11                       | Triple the default pulse width of rotary encoders                                  |
 
 - Write FF (hexadecimal) to ignore this field.
 
@@ -232,6 +230,15 @@ When zero, write is allowed. Otherwise, write is forbidden.
 
 For security concerns, the user can lock or unlock all writing attempts to HID reports by using just hardware inputs.
 This is a security precaution to stop unauthorized configuration modifications caused by rogue programs.
+
+### Pulse width multiplier for rotary encoders
+
+Read/write (unless locked).
+Write FF (hexadecimal) to ignore this field.
+
+Valid values are in the range from `1` to `6` (inclusive).
+Invalid values are ignored.
+Valid values are saved to flash memory without delay.
 
 ## Data format of report ID 4 (user-defined buttons map)
 

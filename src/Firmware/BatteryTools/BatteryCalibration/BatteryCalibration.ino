@@ -74,11 +74,9 @@ void inputs::reverseRightAxis()
 {
 }
 
-void inputs::setRotaryPulseX1() {}
+void inputs::setRotaryPulseWidthMultiplier(uint8_t multiplier) {}
 
-void inputs::setRotaryPulseX2() {}
-
-void inputs::setRotaryPulseX3() {}
+uint8_t inputs::getRotaryPulseWidthMultiplier() { return 1; }
 
 // ----------------------------------------------------------------------------
 // Arduino entry point

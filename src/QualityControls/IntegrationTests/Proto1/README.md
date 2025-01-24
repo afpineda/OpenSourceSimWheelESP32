@@ -103,7 +103,7 @@ Subjectivity can not be avoided in this test.
 Be conscious of the delay between `RD 01 ...` lines.
 
 1. Enter `03` at field `ReportID`.
-2. Enter `FF FF FF 0B FF FF` at fields below `ReportID`. Click on `Set Feature`.
+2. Enter `FF FF FF FF FF FF 06` at fields below `ReportID`. Click on `Set Feature`.
 3. Rotate "RCW". A button press should be registered **for a longer time** than before.
-4. Enter `FF FF FF 09 FF FF` at fields below `ReportID`. Click on `Set Feature`.
+4. Enter `FF FF FF FF FF FF 01` at fields below `ReportID`. Click on `Set Feature`.
 5. Rotate "RCW". A button press should be registered **for a shorter time** than before.

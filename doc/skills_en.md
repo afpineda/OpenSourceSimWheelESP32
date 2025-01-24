@@ -39,7 +39,10 @@ Recommended:
   - [pygame-joystick-test](https://github.com/denilsonsa/pygame-joystick-test). Requires Python.
   - [Multi-joystick tester](https://github.com/EDDiscovery/MultiJoyStickTest/releases/tag/Release_1_2_0).
     Works in Windows 11.
-    Best choice for now.
+    Best choice for now, but **be aware**
+    that this app has a relatively high polling interval
+    that may miss some rotation events from rotary encoders.
+
 - [Visual Studio Code](https://code.visualstudio.com/), as an alternative to Arduino IDE.
   Requires [Arduino Community Edition for VSCode](https://marketplace.visualstudio.com/items?itemName=vscode-arduino.vscode-arduino-community).
   Installable from VSCode itself.

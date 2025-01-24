@@ -83,26 +83,14 @@ void inputs::reverseRightAxis()
 #endif
 }
 
-void inputs::setRotaryPulseX1()
+void inputs::setRotaryPulseWidthMultiplier(uint8_t multiplier)
 {
 #if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
-    Serial.println("CMD: pulse width x1");
+    Serial.printf("CMD: pulse width x%hhu\n", multiplier);
 #endif
 }
 
-void inputs::setRotaryPulseX2()
-{
-#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
-    Serial.println("CMD: pulse width x2");
-#endif
-}
-
-void inputs::setRotaryPulseX3()
-{
-#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
-    Serial.println("CMD: pulse width x3");
-#endif
-}
+uint8_t inputs::getRotaryPulseWidthMultiplier() { return 1; }
 
 //------------------------------------------------------------------
 

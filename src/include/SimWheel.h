@@ -610,22 +610,21 @@ namespace inputs
     void reverseRightAxis();
 
     /**
-     * @brief Reset the duration of a rotary encoder "pulse" event
+     * @brief Multiply the pulse width of rotary encoders
      *
+     * @note Valid values are saved to flash memory without delay.
+     * @param multiplier A pulse width multiplier greater than zero.
+     *                   Valid values are between 1 and 6.
+     *                   Invalid values are ignored.
      */
-    void setRotaryPulseX1();
+    void setRotaryPulseWidthMultiplier(uint8_t multiplier);
 
     /**
-     * @brief Double the duration of a rotary encoder "pulse" event
+     * @brief Get the current pulse width multiplier for rotary encoders
      *
+     * @return uint8_t A pulse width multiplier greater than zero.
      */
-    void setRotaryPulseX2();
-
-    /**
-     * @brief Triple the duration of a rotary encoder "pulse" event
-     *
-     */
-    void setRotaryPulseX3();
+    uint8_t getRotaryPulseWidthMultiplier();
 
     /**
      * @brief Exposed for testing. Do not call.
