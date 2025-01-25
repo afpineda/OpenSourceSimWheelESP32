@@ -25,7 +25,7 @@ the bite point calibration is performed as follows:
 If the "Alternate Mode" or "Buttons Mode" is selected,
 the clutch paddle must be pressed down 3/4 of the way
 for the input to be detected as engaged.
-On the other hand, the clutch paddle must be released 1/4 of the way up
+On the other hand, the clutch paddle must be released 3/4 of the way up
 for the input to be detected as disengaged.
 
 ## F1-Style clutch
