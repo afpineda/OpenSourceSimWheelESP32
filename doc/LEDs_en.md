@@ -59,6 +59,11 @@ There are a number of options available:
 
 ## RGB LED strips
 
+> [!WARNING]
+> In addition to this notes, always follow
+> [Adafruit's advice](https://learn.adafruit.com/adafruit-neopixel-uberguide/best-practices)
+> when working with LED strips.
+
 LED strips are controlled by a single output-capable pin labelled `Dout` in this project.
 Some LED strips can work with 3.3V logic, others cannot.
 If your LED strip does not work with 3.3V logic,
@@ -66,9 +71,20 @@ you will need a small "level shifter" circuit, which is described below.
 
 - **No level shifter (3.3V logic)**
 
-  Simply wire `Dout` to `Din` in the first pixel.
+  Wire `Dout` to `Din` in the first pixel via a 300 to 500 ohm resistor.
+  The resistor should be at the end of the wire closest to the LED strip,
+  not the DevKit board.
+  This resistor can be omitted **only**
+  if your LED strip already has a resistor in `Din`.
+  Otherwise your LED strip could burn out.
 
   ![No level shifter](./hardware/ui/LEDStrips/NoLevelShifter.png)
+
+  [Show at falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKAHcQnDOxuuRCAFigsAHjzScinDHinYQwsHIBqAGToATMTwV5uYJHmKLwcgCIBJAHYsARp2wIUnPFSZ4kKbOUj2pwoImKMRUzC5+4gwhcgyCsSiC7oJIwpLmdABuANIAlgAuOsxy+iBoVMamkmoAouYAOgDOjfkATrkADuw83MR8vOAocn4A5j2DsQO8VDM6TC5CZVSE5Eou2CoMCCpzYGGQBgaQJmsgAOIAcubd-G6ci3coN3f8rwN+rffCL2BDIHe0OAsNQSEruRIVGbgEAAMwAhgAbRp0EDYaAKSI8WQgDAuJgpHGpcDccwAewAroUgA)
+
+  Needed parts:
+
+  - 300 to 500 ohm resistor (x1)
 
 - **Level shifter (5V logic)**
 
