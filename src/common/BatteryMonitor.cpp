@@ -41,7 +41,7 @@ static TaskHandle_t batteryMonitorDaemon = nullptr;
 static uint8_t fg_i2c_address;
 
 // Other
-#define DAEMON_STACK_SIZE 2048
+#define DAEMON_STACK_SIZE 2512
 
 // ----------------------------------------------------------------------------
 // Setters

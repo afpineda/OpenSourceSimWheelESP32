@@ -283,6 +283,7 @@ You can ignore them:
 - *... nvs_open failed ...*
 - *E (15) gpio: gpio_install_isr_service(500): GPIO isr service already installed*
 - *CAUTION: GPIO pin ... is reserved for USB data* (ignore unless you are using USB connectivity)
+- *E NimBLEAdvertisementData: Cannot add UUID, data length exceeded!*
 
 ## USB not recognized error (ESP32S3 boards)
 
