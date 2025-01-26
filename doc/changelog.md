@@ -1,5 +1,12 @@
 # Change log
 
+## 6.11.1
+
+- A very small but important bug in the *battery monitor* API has been fixed.
+- Additional advice is given to avoid LED strip burnout.
+  Thanks to @ArtTales for reporting this.
+- Minor errata fix.
+
 ## 6.11.0
 
 - For better host-side detection of rotation events,
