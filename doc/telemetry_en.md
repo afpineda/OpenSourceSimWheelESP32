@@ -89,8 +89,10 @@ For example:
 
 ```c++
 #include "SimWheelUI.h"
-
 ...
-
-i2c::begin(GPIO_NUM_19,GPIO_NUM_20,true);
+void simWheelSetup()
+{
+   i2c::begin(GPIO_NUM_19,GPIO_NUM_20,true);
+   ...
+}
 ```

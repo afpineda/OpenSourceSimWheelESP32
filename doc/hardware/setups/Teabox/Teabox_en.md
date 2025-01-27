@@ -1,6 +1,7 @@
 # Ready to deploy design: the "teabox"
 
-Read this document from start to end before building anything. Ensure you understand everything.
+Read this document from start to end before building anything.
+Ensure you understand everything.
 
 This setup has been tested.
 
@@ -10,6 +11,12 @@ This setup has been tested.
 
 - Bluetooth Low Energy
 - Powered through USB cable
+
+> [!TIP]
+> No need to sacrifice a USB port on your PC.
+> You can get power from an auxiliary port  on the steering wheel base
+> or from a USB charger.
+
 - Two-way switch lever
 - Rotary encoder
 - 3 push buttons
@@ -84,18 +91,24 @@ Additional notes:
 
 ## Common ground pole for all switches (not counting the KY-040 rotary encoder)
 
-Use welding tin to build an electrical connection between all pins of the row, at the short side of them. Use isolation tape to cover the welding tin.
+Use welding tin to build an electrical connection between all pins of the row,
+at the short side of them.
+Use isolation tape to cover the welding tin.
 
 ## External wiring
 
-There is no circuit, just wiring. Open the [layout](./teabox.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
+There is no circuit, just wiring.
+Open the [layout](./teabox.diy) using
+[DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
 
 ![Teabox layout](./Teabox.png)
 
 Notes and build tips:
 
-- Dupond connectors are not suitable for the switches: cut one end of the wire and solder it to the proper terminal.
-- Your KY-040 rotary may use a different pin-out than the one shown here. Check first.
+- Dupond connectors are not suitable for the switches:
+  cut one end of the wire and solder it to the proper terminal.
+- Your KY-040 rotary may use a different pin-out than the one shown here.
+  Check first.
 - Use isolation tape to cover all unused pins and exposed solder points.
 
 ![teabox wiring](../../pictures/Teabox_inside.png)
@@ -107,7 +120,8 @@ Notes and build tips:
 At Arduino IDE, configure the board manager for "WEMOS LOLIN32 Lite".
 
 1. Detach the DevKit board from the circuit before continuing.
-2. Plug the USB cable to the Devkit board and upload the [sketch](../../../../src/Firmware/Teabox/Teabox.ino) with Arduino IDE.
+2. Plug the USB cable to the Devkit board and upload the
+   [sketch](../../../../src/Firmware/Teabox/Teabox.ino) with Arduino IDE.
 3. Attach the DevKit board to the circuit. Keep the USB cable plugged in.
 4. Open the serial monitor (Arduino IDE).
 5. Reset.
