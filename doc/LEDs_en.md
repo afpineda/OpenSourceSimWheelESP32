@@ -9,13 +9,12 @@ LEDs have a high forward voltage depending on the color of the light:
 - Blue: 2.5 to 3.7 volts.
 
 An RGB LED is the physical combination of three LEDs: red, green and blue.
-As a result, a forward voltage of around 3.7 volts is required to light them.
+As a result, a forward voltage of around 3.5 volts is required to light them.
 
-However, the ESP32 hardware operates at 3.3 volts,
+The ESP32 hardware operates at 3.3 volts,
 which is not enough to light some of these LEDs.
 For this reason, you may need a different power source,
 which is labelled `VLed` in this project.
-
 There are a number of options available:
 
 - **3.3V power sources**
@@ -23,14 +22,14 @@ There are a number of options available:
     Some LEDs will work with a 3.3 volt power supply.
     Attach `VLed` to `3V3`.
 
-    > [!WARNING]
-    > If your RGB LED strip seems to work with a 3.3V power supply,
-    > but shows **wrong colors**,
-    > then you need a 5V power supply.
-    > The main symptom is a red pixel when it should be white.
-    > If you don't have a 5V power source available,
-    > you may set the global brightness to a low value
-    > (more on this later) as a workaround.
+> [!IMPORTANT]
+> If your RGB LED strip seems to work with a 3.3V power supply,
+> but shows **wrong colors**,
+> then you need a 5V power supply.
+> The main symptom is a red pixel when it should be white.
+> If you don't have a 5V power supply available,
+> you may set the global brightness to a low value
+> (more on this later) as a workaround.
 
 - **5 volts power sources (and higher)**
 
