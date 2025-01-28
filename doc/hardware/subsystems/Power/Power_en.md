@@ -122,6 +122,26 @@ but not 3.3V-capable.
 This is the powerboost module used for testing in this project (note there is a latch circuit):
 ![module used for testing](./BatteryShieldSpecs.png)
 
+#### Battery capacity
+
+Choose your battery capacity according to the amount of continuous use you require.
+Assuming no telemetry display hardware or LED lights are used,
+the system will draw approximately
+[150mA of current for BLE operation](https://www.luisllamas.es/en/esp32-power-consumption/)
+(this is a very rough estimate).
+A typical lithium battery delivers 3.7 volts when fully charged.
+Using this data, it is possible to estimate the battery capacity required.
+Use this [online calculator](https://whycalculator.com/battery-run-time-calculator/).
+
+| 3.7V LiPo standard capacity | Roughly estimated run time |
+| --------------------------- | -------------------------- |
+| 1000 mAh                    | 6 hours and 40 minutes     |
+| 1500 mAh                    | 10 hours                   |
+| 2000 mAh                    | 13 hours and 20 minutes    |
+| 2500 mAh                    | 16 hours and 40 minutes    |
+| 3000 mAh                    | 20 hours                   |
+| 4000 mAh                    | 26 hours and 40 minutes    |
+
 ## Firmware customization
 
 Nothing is required.
