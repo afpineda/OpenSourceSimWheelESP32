@@ -168,8 +168,9 @@ finally {
     # Print footer
     Write-Host "======================================================================" -ForegroundColor Yellow -BackgroundColor Black
     $stopWatch.Stop()
-    Write-Host "🛈 Run time (minutes) = " -NoNewline -ForegroundColor Blue
-    Write-Host $stopWatch.Elapsed.TotalMinutes
+    $timeStr = "{0,2:d2}:{1,2:d2}:{2,2:d2}" -f $stopWatch.Elapsed.Hours, $stopWatch.Elapsed.Minutes, $stopWatch.Elapsed.Seconds
+    Write-Host "🛈 Run time (hh:mm:ss) = " -NoNewline -ForegroundColor Blue
+    Write-Host $timeStr
 
     # Remove temporary folder
     Remove-Item -Recurse -LiteralPath $tempFolder.FullName -Force | Out-Null
