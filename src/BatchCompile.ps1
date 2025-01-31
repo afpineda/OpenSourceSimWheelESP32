@@ -113,10 +113,9 @@ function Write-SketchInfo {
     )
     $filename = Split-Path $LiteralPath -leaf
     Write-Host "======================================================================" -ForegroundColor Yellow -BackgroundColor Black
-    Write-Host "⛏ " -NoNewline -ForegroundColor Magenta
-    Write-Host "Compiling " -NoNewline  -ForegroundColor Green
+    Write-Host "⛏ Compiling " -NoNewline -ForegroundColor Blue
     Write-Host $filename -NoNewline
-    Write-Host " 🛈 " -NoNewline -ForegroundColor Magenta
+    Write-Host " 🛈 " -NoNewline -ForegroundColor Blue
     Write-Host $item.FQBN
     Write-Host "======================================================================" -ForegroundColor Yellow -BackgroundColor Black
 }
@@ -148,7 +147,7 @@ $plan = Get-SketchFiles | Add-FQBN | Sort-Object { $_.FQBN }
 $tempFolder = New-TemporaryFolder
 
 Clear-Host
-Write-Host " 🛈 Temp folder: " -NoNewline -ForegroundColor Magenta
+Write-Host "🛈 Temp folder = " -NoNewline -ForegroundColor Blue
 Write-Host $tempFolder
 try {
     # Compile
