@@ -31,7 +31,6 @@ int getADCreading(int pin, adc_atten_t attenuation, int sampleCount)
     adc_oneshot_unit_init_cfg_t unitCfg =
         {
             .unit_id = adc_unit,
-            .clk_src = adc_oneshot_clk_src_t::ADC_RTC_CLK_SRC_DEFAULT,
             .ulp_mode = ADC_ULP_MODE_DISABLE,
         };
     adc_oneshot_chan_cfg_t channelCfg =
