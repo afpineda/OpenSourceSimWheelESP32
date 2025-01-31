@@ -1,5 +1,11 @@
 # Change log
 
+## 6.11.2
+
+- Fix minor compiler error on ESP32-C3 boards.
+- Battery capacity is explicitly advised.
+- Other minor documentation updates.
+
 ## 6.11.1
 
 - A very small but important bug in the *battery monitor* API has been fixed.
