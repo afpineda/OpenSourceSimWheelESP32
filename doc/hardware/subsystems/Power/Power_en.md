@@ -129,7 +129,7 @@ Assuming no telemetry display hardware or LED lights are used,
 the system will draw approximately
 [150mA of current for BLE operation](https://www.luisllamas.es/en/esp32-power-consumption/)
 (this is a very rough estimate).
-A typical lithium battery delivers 3.7 volts when fully charged.
+The nominal voltage of a typical 1S lithium battery is 3.7 volts.
 Using this data, it is possible to estimate the battery capacity required.
 Use this [online calculator](https://whycalculator.com/battery-run-time-calculator/).
 
