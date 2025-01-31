@@ -1,4 +1,4 @@
-<############################################################################
+﻿<############################################################################
 
 .SYNOPSYS
     Compile all sketches in batch
@@ -13,7 +13,7 @@
     ./BatchCompile.ps1 *>filename.txt
 
 .AUTHOR
-    Ángel Fernández Pineda. Madrid. Spain. 2024.
+    Angel Fernandez Pineda. Madrid. Spain. 2024.
 
 .LICENSE
     Licensed under the EUPL
@@ -33,6 +33,7 @@ $_fqbn_file = ".fqbn"
 <#############################################################################
 # Auxiliary functions
 #############################################################################>
+
 function Test-ArduinoCLI {
     &$_compiler version | Out-Null
     if ($LASTEXITCODE -ne 0) {
@@ -46,6 +47,7 @@ function Get-SketchFiles {
 
 function Find-FQBN {
     param(
+        [Parameter(Mandatory)]
         [string]$LiteralPath
     )
     $candidate = Join-Path $LiteralPath $_fqbn_file
@@ -66,26 +68,34 @@ function Find-FQBN {
     }
 }
 
+function Add-FQBN {
+    param(
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [string]$LiteralPath
+    )
+    process {
+        $path = Split-Path $LiteralPath
+        $fqbn = Find-FQBN $path
+        if ($fqbn.Length -gt 0) {
+            @{ FQBN = $fqbn; Sketch = $LiteralPath }
+        }
+    }
+}
+
 function Invoke-ArduinoCLI {
     param(
+        [Parameter(Mandatory)]
         [string]$Filename,
+        [Parameter(Mandatory)]
+        [string]$FQBN,
+        [Parameter(Mandatory)]
         [string]$BuildPath
     )
-    Write-Host "--------------------------------------------------------------------------------"
-    Write-Host "Sketch: $Filename"
-
     $sketch_folder = Split-Path -Parent $Filename
     $fqbn = Find-FQBN -LiteralPath $sketch_folder
-    if ($null -ne $fqbn) {
-        Write-Host "FQBN: $fqbn"
-        Write-Host "================================================================================"
-        $ErrorActionPreference = 'Continue'
-        &$_compiler compile $Filename -b $fqbn --no-color --warnings all --build-path $BuildPath # 2>&1
-        $ErrorActionPreference = 'Stop'
-    }
-    else {
-        Write-Host "No FQBN file found. Ignoring."
-    }
+    $ErrorActionPreference = 'Continue'
+    &$_compiler compile $Filename -b $fqbn --no-color --warnings all --build-path $BuildPath # 2>&1
+    $ErrorActionPreference = 'Stop'
 }
 
 function New-TemporaryFolder {
@@ -94,6 +104,29 @@ function New-TemporaryFolder {
     $tempFolderName = Join-Path $ENV:Temp $File.Name
     $Folder = New-Item -Itemtype Directory -Path $tempFolderName
     return $Folder
+}
+
+function Write-SketchInfo {
+    param(
+        [Parameter(Mandatory)]
+        [string]$LiteralPath
+    )
+    $filename = Split-Path $LiteralPath -leaf
+    Write-Host "======================================================================" -ForegroundColor Yellow -BackgroundColor Black
+    Write-Host "⛏ " -NoNewline -ForegroundColor Magenta
+    Write-Host "Compiling " -NoNewline  -ForegroundColor Green
+    Write-Host $filename -NoNewline
+    Write-Host " 🛈 " -NoNewline -ForegroundColor Magenta
+    Write-Host $item.FQBN
+    Write-Host "======================================================================" -ForegroundColor Yellow -BackgroundColor Black
+}
+
+function Write-FailureMessage {
+    Write-Host "❌ Error " -ForegroundColor Red
+}
+
+function Write-SuccessMessage {
+    Write-Host "✅ Success" -ForegroundColor Green
 }
 
 ## Compile command example:
@@ -108,16 +141,27 @@ $VerbosePreference = "continue"
 $InformationPreference = "continue"
 Test-ArduinoCLI
 
+# Look for sketch files
+$plan = Get-SketchFiles | Add-FQBN | Sort-Object { $_.FQBN }
+
 # Create a temporary folder (will speed up compilation)
 $tempFolder = New-TemporaryFolder
 
+Clear-Host
+Write-Host " 🛈 Temp folder: " -NoNewline -ForegroundColor Magenta
+Write-Host $tempFolder
 try {
-    # Look for sketch files
-    $sketchFiles = Get-SketchFiles
-
     # Compile
-    foreach ($sketch in $sketchFiles) {
-        Invoke-ArduinoCLI -Filename $sketch -BuildPath $tempFolder
+    foreach ($item in $plan) {
+        # Write header
+        Write-SketchInfo -LiteralPath $item.Sketch
+        Invoke-ArduinoCLI -Filename $item.Sketch -FQBN $item.FQBN -BuildPath $tempFolder
+        if ($LASTEXITCODE -gt 0) {
+            Write-FailureMessage
+        }
+        else {
+            Write-SuccessMessage
+        }
     }
 }
 finally {
