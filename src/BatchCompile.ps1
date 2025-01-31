@@ -145,10 +145,11 @@ $plan = Get-SketchFiles | Add-FQBN | Sort-Object { $_.FQBN }
 
 # Create a temporary folder (will speed up compilation)
 $tempFolder = New-TemporaryFolder
-
 Clear-Host
 Write-Host "🛈 Temp folder = " -NoNewline -ForegroundColor Blue
 Write-Host $tempFolder
+
+$stopWatch = [System.Diagnostics.Stopwatch]::startNew();
 try {
     # Compile
     foreach ($item in $plan) {
@@ -164,6 +165,12 @@ try {
     }
 }
 finally {
+    # Print footer
+    Write-Host "======================================================================" -ForegroundColor Yellow -BackgroundColor Black
+    $stopWatch.Stop()
+    Write-Host "🛈 Run time (minutes) = " -NoNewline -ForegroundColor Blue
+    Write-Host $stopWatch.Elapsed.TotalMinutes
+
     # Remove temporary folder
     Remove-Item -Recurse -LiteralPath $tempFolder.FullName -Force | Out-Null
 }
