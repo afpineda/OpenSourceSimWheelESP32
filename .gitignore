@@ -63,4 +63,5 @@ src/lib64/
 src/logs/
 src/pyvenv.cfg
 # other
+debug/
 
