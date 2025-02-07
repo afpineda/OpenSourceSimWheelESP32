@@ -85,7 +85,7 @@
 // ----------------------------------------------------------------------------
 
 #define DATA_MAJOR_VERSION 1
-#define DATA_MINOR_VERSION 5
+#define DATA_MINOR_VERSION 6
 
 // ----------------------------------------------------------------------------
 // Magic number, do not change

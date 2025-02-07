@@ -119,7 +119,7 @@ Some examples:
 
 However, host-side software may support several data versions at the same time.
 
-Current data version is 1.5.
+Current data version is 1.6.
 
 ### Flags
 
@@ -468,24 +468,35 @@ For example, the value 113 in `oil pressure` means 1.13 pressure units.
 
 ## Data format of report ID 30 (Pixel control)
 
-| Byte index | Size  | Field         | Data version |
-| :--------: | :---: | ------------- | ------------ |
-|     0      |   1   | Pixel group   | 1.4          |
-|     1      |   1   | Pixel index   | 1.4          |
-|     2      |   1   | Blue channel  | 1.4          |
-|     3      |   1   | Green channel | 1.4          |
-|     4      |   1   | Red channel   | 1.4          |
-|     5      |   1   | Reserved      | 1.4          |
+| Byte index | Size  | Field                       | Data version |
+| :--------: | :---: | --------------------------- | ------------ |
+|     0      |   1   | Pixel group / pixel command | 1.4          |
+|     1      |   1   | Pixel index                 | 1.4          |
+|     2      |   1   | Blue channel                | 1.4          |
+|     3      |   1   | Green channel               | 1.4          |
+|     4      |   1   | Red channel                 | 1.4          |
+|     5      |   1   | Reserved                    | 1.4          |
 
 This report will set the color of a single pixel,
 but **does not display it immediately**.
 You will need to issue the appropriate *simple command* (see report ID 3)
-in order to display all the pixels at once.
+or a *pixel command* (see below) in order to display all the pixels at once.
 
 Note: Invalid values will be ignored with no effect.
 
-- *Pixel group*: the group in which the pixel is to be set.
-  One of the constants defined in the `pixelGroup_t` enumeration.
+- *Pixel group*: the group in which the pixel is to be set or a pixel command
+  (new in data version 1.6).
+  One of the constants defined in the `pixelGroup_t` enumeration or one pixel command:
+  - `0xFF`: show all pixels at once
+  - `0xFE`: turn off all pixels in all groups
+
+> [!TIP]
+> "Pixel commands" overlap with "simple commands" for a reason.
+> The MS Window's
+> [HidD_SetFeature()](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_setfeature)
+> API call, used to send feature reports as ID 3, has a *big* performance impact.
+> This made pixel control less than "real time".
+> Output reports does not have this problem.
 
 - *Pixel index*: the index of the pixel to be set in the given group,
   starting with zero.
