@@ -45,7 +45,7 @@ In the test computer:
 9. Enter `00 07 FF 00 00 00` at fields below `ReportID`.
 10. Click on `Set Report`.
 11. Enter `03` at field `ReportID`.
-12. Enter `FF FF FF 07 FF FF` at fields below `ReportID`.
+12. Enter `FF FF FF 07 FF FF FF` at fields below `ReportID`.
 13. Click on `Set Feature`.
 14. The LED strip must show the following pixels in order:
     white, off, off, off, off, off, off, blue.

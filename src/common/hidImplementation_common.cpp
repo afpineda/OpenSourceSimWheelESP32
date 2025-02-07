@@ -318,6 +318,16 @@ void hidImplementation::common::onOutput(
     }
     else if ((report_id == RID_OUTPUT_PIXEL) && (len >= PIXEL_REPORT_SIZE))
     {
+        if (buffer[0]==0xFF)
+        {
+            pixels::show();
+            return;
+        }
+        if (buffer[0]==0xFE)
+        {
+            pixels::reset();
+            return;
+        }
         if (buffer[0] > (uint8_t)pixelGroup_t::GRP_INDIVIDUAL)
             // Invalid pixel group
             return;
