@@ -32,9 +32,12 @@ Place up to three calls to `pixels::configure()` with the following parameters
    A brightness for all pixels.
    The default and recommended value is 255 (maximum brightness).
    Do not set to zero (no brightness).
-   If a 5V power supply is required but not available for the LED strip,
-   use a 3.3V power supply, no level shifter and set this value to 16.
-   This is **not optimal** as not all colors will be displayed.
+
+> [!TIP]
+> **Brightness workaround:**
+> If a 5V power supply is required but not available for the LED strip,
+> use a 3.3V power supply, no level shifter and set the global brightness to 16.
+> This is **not optimal** as some colors will be approximate.
 
 Example:
 

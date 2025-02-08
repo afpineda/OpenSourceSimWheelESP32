@@ -10,9 +10,16 @@ This article discuss different options to provide enough inputs to a sim wheel o
 
 Depending on how they are activated, may be classified as:
 
-- **Momentary switches** ("MOM"): they automatically return to the previous state and come in various shapes: push buttons, push levers and roller levers to name some of them.
+- **Momentary switches** ("MOM"):
+  they automatically return to the previous state and come in various shapes:
+  push buttons, push levers and roller levers to name some of them.
 
-- **Non-momentary switches**: once activated, they keep that state, and have to be manually reversed to the previous state. They also come in several shapes. They are suitable for this project, however, they offer no advantage over momentary switches and requires more complex software, so they are not used here.
+- **Non-momentary switches**:
+  once activated, they keep that state, and have to be manually reversed to the previous state.
+  They also come in several shapes.
+  They are suitable for this project, however,
+  they offer no advantage over momentary switches and requires more complex software,
+  so they are not used in this project.
 
 Depending on how the circuit is closed, momentary switches may be classified as:
 
@@ -20,8 +27,15 @@ Depending on how the circuit is closed, momentary switches may be classified as:
 - **Normally open** (NO): the switch is open if not pressed.
 - **NO-NC** (both): they have 3 or 4 terminals and may be used both as NO and NC at the same time. Note that NC terminals are closed while NO terminals are open, and vice versa. This has an interesting application with voltage dividers (see below).
 
-Switches are prone to [bouncing](https://circuitdigest.com/electronic-circuits/what-is-switch-bouncing-and-how-to-prevent-it-using-debounce-circuit) due to its mechanical nature.
+Switches are prone to
+[bouncing](https://circuitdigest.com/electronic-circuits/what-is-switch-bouncing-and-how-to-prevent-it-using-debounce-circuit)
+due to its mechanical nature.
 This project provides debouncing by software means.
+
+> [!TIP]
+> If, despite my advice, you choose to use non-momentary buttons,
+> make sure they are NO-NC and wire them as if they were two independent switches.
+> Otherwise your game/simulator will get very confused.
 
 ### A note on backlit switches
 
@@ -64,7 +78,7 @@ They are similar in shape to rotary encoders, but they work in a complete differ
 
 We could alleviate the situation by instructing the firmware to report a button press only if there is a change in the position of the rotary switch. However, the simulator will never know what such a position is at first.
 In this sense, there is **no specific support** to absolute rotary switches in this project.
-However, they work, but not recommended.
+They do work, but they are not recommended.
 
 ### A note about *"mode selectors"*
 
