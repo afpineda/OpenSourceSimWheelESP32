@@ -484,19 +484,13 @@ or a *pixel command* (see below) in order to display all the pixels at once.
 
 Note: Invalid values will be ignored with no effect.
 
-- *Pixel group*: the group in which the pixel is to be set or a pixel command
+- *Pixel group*: the group in which the pixel is to be set or a *pixel command*
   (new in data version 1.6).
   One of the constants defined in the `pixelGroup_t` enumeration or one pixel command:
   - `0xFF`: show all pixels at once
   - `0xFE`: turn off all pixels in all groups
 
-> [!TIP]
-> "Pixel commands" overlap with "simple commands" for a reason.
-> The MS Window's
-> [HidD_SetFeature()](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_setfeature)
-> API call, used to send feature reports as ID 3, has a *big* performance impact.
-> This made pixel control less than "real time".
-> Output reports does not have this problem.
+  If a pixel command is found, other fields are ignored.
 
 - *Pixel index*: the index of the pixel to be set in the given group,
   starting with zero.
@@ -505,3 +499,10 @@ Note: Invalid values will be ignored with no effect.
 - *Blue, Red and Green channels*: define the color of the given pixel.
 - *Reserved*: this field is reserved for future use and is ignored for now.
   Any value is valid.
+
+> [!TIP]
+> "Pixel commands" overlap with "simple commands" for a reason.
+> MS Window's
+> [HidD_SetFeature()](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_setfeature)
+> API call, used to send feature reports such as ID 3, has a big impact on performance.
+> This made pixel control less than "real time". Output reports do not have this problem.

@@ -1,5 +1,13 @@
 # Change log
 
+## 6.11.3
+
+- The HID specification for pixel control has been changed to
+  remove the use of feature reports for `pixels::show()`.
+  For unknown reasons, feature reports perform worse than output reports in Windows 11.
+  For this to work, you will need to update the SimHub plugin as well.
+- *BatchCompile.ps1* has been updated for a better look.
+
 ## 6.11.2
 
 - Fix minor compiler error on ESP32-C3 boards.
