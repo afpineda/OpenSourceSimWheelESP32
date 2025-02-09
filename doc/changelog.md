@@ -1,5 +1,9 @@
 # Change log
 
+## 6.11.4
+
+- Fixed wrong queue size for rotary encoders.
+
 ## 6.11.3
 
 - The HID specification for pixel control has been changed to
