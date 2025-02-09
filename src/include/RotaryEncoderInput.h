@@ -53,7 +53,7 @@ private:
 protected:
   void incBitQueuePointer(uint8_t &pointer)
   {
-    pointer = (pointer + 1) % sizeof(bitsQueue);
+    pointer = (pointer + 1) % 64;
   };
 
   /**
