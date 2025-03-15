@@ -273,7 +273,7 @@ just uncomment the following line:
 #define ENABLE_FUEL_GAUGE
 ```
 
-Or just call `batteryMonitor::begin()` with no parameters.
+Or just call `batteryMonitor::configure()` with no parameters.
 However, if your chip uses a non-standard I2C address,
 you must provide the proper 7-bit address as the first parameter.
 The expected (standard) 7-bit address is 36 (hexadecimal).
@@ -281,13 +281,13 @@ The expected (standard) 7-bit address is 36 (hexadecimal).
 Your chip/module will share the I2C bus with [GPIO expanders](../Switches/Switches_en.md#gpio-expanders), if any.
 
 > [!NOTE]
-> If the chip/module is not powered or not found in the I2C bus, the system will boot normally.
-> You will get just a warning: "Fuel gauge not found in the I2C bus"
-> (only if Arduino IDE is configured to core debug level "warning" or higher).
+> If the chip/module is not powered or not found in the I2C bus,
+> the system will boot normally.
 
 ## Further firmware customization
 
-Regardless of the implementation you choose, you may set the following parameters (not mandatory).
+Regardless of the implementation you choose,
+you may set the following parameters (not mandatory).
 
 ### Polling interval
 

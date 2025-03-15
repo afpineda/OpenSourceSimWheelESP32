@@ -1,20 +1,26 @@
 /**
+ * @file batteryCalibration.cpp
+ *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-04-11
- * @brief Calibrate and measure battery charge
+ * @brief Everything related to battery profiling.
  *
  * @copyright Licensed under the EUPL
  *
  */
 
-#include <Arduino.h>
-#include "Preferences.h"
-#include "SimWheel.h"
-// #include "debugUtils.h"
+//-------------------------------------------------------------------
+// Imports
+//-------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
+#include "SimWheel.hpp"
+#include "SimWheelInternals.hpp"
+#include "InternalServices.hpp"
+#include "HAL.hpp"
+
+//-------------------------------------------------------------------
 // Globals
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
 
 #define QUANTUM_BITS 5
 #define QUANTUM_COUNT (1 << QUANTUM_BITS)       // = 32
@@ -22,185 +28,11 @@
 
 static uint16_t batteryCalibrationQuantum[QUANTUM_COUNT];
 static uint32_t totalBatterySamplesCount = 0;
-volatile int batteryCalibration::maxBatteryReadingEver = -1; // unknown
-volatile bool batteryCalibration::calibrationInProgress = false;
+int maxBatteryReadingEver = -1; // unknown
 
-#define PREFS_NAMESPACE "bcal"
-#define KEY_SAMPLE_COUNT "q%2.2d"
-#define KEY_MAX_READING "m"
-
-
-// ----------------------------------------------------------------------------
-// Save to flash memory
-// ----------------------------------------------------------------------------
-
-void batteryCalibration::save()
-{
-    Preferences prefs;
-    if (prefs.begin(PREFS_NAMESPACE, false))
-    {
-        char key[5];
-        for (int q = 0; q < QUANTUM_COUNT; q++)
-        {
-            snprintf(key, 5, KEY_SAMPLE_COUNT, q);
-            prefs.putUShort(key, batteryCalibrationQuantum[q]);
-        }
-        prefs.end();
-    }
-    calibrationInProgress = false;
-}
-// ----------------------------------------------------------------------------
-// Initialization
-// ----------------------------------------------------------------------------
-
-void batteryCalibration::clear()
-{
-    for (int q = 0; q < QUANTUM_COUNT; q++)
-    {
-        batteryCalibrationQuantum[q] = 0;
-    }
-    maxBatteryReadingEver = -1;
-    totalBatterySamplesCount = 0;
-    calibrationInProgress = false;
-}
-
-void batteryCalibration::begin()
-{
-    Preferences prefs;
-    if (prefs.begin(PREFS_NAMESPACE, true))
-    {
-        char key[5];
-        totalBatterySamplesCount = 0;
-        calibrationInProgress = false;
-        // Read calibration data from flash memory, or initialize
-        for (int q = 0; q < QUANTUM_COUNT; q++)
-        {
-            snprintf(key, 5, KEY_SAMPLE_COUNT, q);
-            batteryCalibrationQuantum[q] = prefs.getUShort(key, 0);
-            totalBatterySamplesCount += batteryCalibrationQuantum[q];
-        }
-        maxBatteryReadingEver = prefs.getInt(KEY_MAX_READING, -1);
-        prefs.end();
-    }
-    else
-        clear();
-    if (totalBatterySamplesCount>0)
-        capabilities::setFlag(CAP_BATTERY_CALIBRATION_AVAILABLE);
-}
-
-// ----------------------------------------------------------------------------
-// Sampling
-// ----------------------------------------------------------------------------
-
-void batteryCalibration::addSample(int reading, bool save)
-{
-    if ((reading < 0) || (reading > 4095))
-    {
-        log_e("parameter out of range: batteryCalibration::addSample(%d)", reading);
-        return;
-    }
-
-    if (!calibrationInProgress)
-    {
-        clear();
-        calibrationInProgress = true;
-    }
-
-    int quantumIndex = reading >> (12 - QUANTUM_BITS);
-    if (quantumIndex < QUANTUM_COUNT)
-    {
-        batteryCalibrationQuantum[quantumIndex] += 1;
-        totalBatterySamplesCount++;
-        if (save)
-        {
-            Preferences prefs;
-            if (prefs.begin(PREFS_NAMESPACE, false))
-            {
-                char key[5];
-                snprintf(key, 5, KEY_SAMPLE_COUNT, quantumIndex);
-                prefs.putUShort(key, batteryCalibrationQuantum[quantumIndex]);
-                prefs.end();
-            }
-        }
-    }
-    else
-    {
-        log_e("Logic error at batteryCalibration::addSample()");
-        abort();
-    }
-}
-
-int batteryCalibration::getCalibration(uint8_t index)
-{
-    if (index < QUANTUM_COUNT)
-        return batteryCalibrationQuantum[index];
-    else
-        return -1;
-}
-
-void batteryCalibration::restoreCalibrationData(const uint16_t data[])
-{
-    for (uint8_t q = 0; q < QUANTUM_COUNT; q++)
-    {
-        batteryCalibrationQuantum[q] = data[q];
-    }
-}
-
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
 // Interpolation
-// ----------------------------------------------------------------------------
-
-int batteryCalibration::getBatteryLevel(int reading)
-{
-    if (calibrationInProgress || (totalBatterySamplesCount == 0))
-    {
-        return -1;
-    }
-    else if (reading >= 4096)
-    {
-        return 100;
-    }
-    else if (reading <= 0)
-    {
-        return 0;
-    }
-    else
-    {
-        // Interpolate
-        // Serial.printf("reading = %d | QUANTUM_SIZE = %d \n",reading,QUANTUM_SIZE);
-        int quantumIndex = reading >> (12 - QUANTUM_BITS);
-        if (quantumIndex < QUANTUM_COUNT)
-        {
-            int accumulatedSampleCount = 0;
-            for (int q = 0; q < quantumIndex; q++)
-                accumulatedSampleCount += batteryCalibrationQuantum[q];
-
-            // Serial.printf("quantumIndex = %d | batteryCalibrationQuantum = %u | accumulatedSampleCount = %d\n",
-            //              quantumIndex, batteryCalibrationQuantum[quantumIndex], accumulatedSampleCount);
-
-            int relativeReading = reading - (QUANTUM_SIZE * quantumIndex);
-            int samples1000perUnit = (batteryCalibrationQuantum[quantumIndex] * 1000) / QUANTUM_SIZE;
-            int interpolatedSamplesCount = ((relativeReading * samples1000perUnit) / 1000) + accumulatedSampleCount;
-            int batteryLevel = (interpolatedSamplesCount * 100) / totalBatterySamplesCount;
-
-            // Serial.printf("relativeReading = %d | samples1000perUnit = %d | interpolatedSamplesCount = %d | batteryLevel = %d\n",
-            //              relativeReading, samples1000perUnit, interpolatedSamplesCount, batteryLevel);
-            // Serial.println("");
-
-            return batteryLevel;
-        }
-        else
-        {
-            log_e("Logic error at batteryCalibration::getBatteryLevel()");
-            abort();
-            return -1;
-        }
-    }
-}
-
-// ----------------------------------------------------------------------------
-// Auto-calibrated algorithm
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
 
 int getGenericLiPoBatteryLevel(int reading)
 {
@@ -226,45 +58,192 @@ int getGenericLiPoBatteryLevel(int reading)
     return result;
 }
 
-int batteryCalibration::getBatteryLevelAutoCalibrated(int reading)
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+// Service class
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+
+class BatteryCalibrationProvider : public BatteryCalibrationService
 {
-    if (reading >= 4095)
+    virtual void restartAutoCalibration() override
     {
-        return 100;
+        maxBatteryReadingEver = -1;
+        SaveSetting::notify(UserSetting::BATTERY_AUTO_CALIBRATION);
     }
-    else if (reading <= 0)
+
+    virtual int getBatteryLevel(int reading) override
     {
-        return 0;
-    }
-    else if (reading > maxBatteryReadingEver)
-    {
-        maxBatteryReadingEver = reading;
-        Preferences prefs;
-        if (prefs.begin(PREFS_NAMESPACE, false))
+        if (totalBatterySamplesCount == 0)
         {
-            prefs.putInt(KEY_MAX_READING, maxBatteryReadingEver);
-            prefs.end();
+            return -1;
+        }
+        else if (reading >= 4096)
+        {
+            return 100;
+        }
+        else if (reading <= 0)
+        {
+            return 0;
+        }
+        else
+        {
+            // Interpolate
+            // Serial.printf("reading = %d | QUANTUM_SIZE = %d \n",reading,QUANTUM_SIZE);
+            int quantumIndex = reading >> (12 - QUANTUM_BITS);
+            if (quantumIndex < QUANTUM_COUNT)
+            {
+                int accumulatedSampleCount = 0;
+                for (int q = 0; q < quantumIndex; q++)
+                    accumulatedSampleCount += batteryCalibrationQuantum[q];
+
+                // Serial.printf("quantumIndex = %d | batteryCalibrationQuantum = %u | accumulatedSampleCount = %d\n",
+                //              quantumIndex, batteryCalibrationQuantum[quantumIndex], accumulatedSampleCount);
+
+                int relativeReading = reading - (QUANTUM_SIZE * quantumIndex);
+                int samples1000perUnit = (batteryCalibrationQuantum[quantumIndex] * 1000) / QUANTUM_SIZE;
+                int interpolatedSamplesCount = ((relativeReading * samples1000perUnit) / 1000) + accumulatedSampleCount;
+                int batteryLevel = (interpolatedSamplesCount * 100) / totalBatterySamplesCount;
+
+                // Serial.printf("relativeReading = %d | samples1000perUnit = %d | interpolatedSamplesCount = %d | batteryLevel = %d\n",
+                //              relativeReading, samples1000perUnit, interpolatedSamplesCount, batteryLevel);
+                // Serial.println("");
+
+                return batteryLevel;
+            }
+            else
+                throw std::runtime_error("Logic error at batteryCalibration::getBatteryLevel()");
+            return -1;
         }
     }
 
-    if (maxBatteryReadingEver >= 0)
+    virtual int getBatteryLevelAutoCalibrated(int reading) override
     {
-        int minBatteryReading = 4059 * maxBatteryReadingEver / 5213;
-        reading = map(reading, minBatteryReading, maxBatteryReadingEver, 4059, 5213);
-        return getGenericLiPoBatteryLevel(reading);
+        if (reading >= 4095)
+        {
+            return 100;
+        }
+        else if (reading <= 0)
+        {
+            return 0;
+        }
+        else if (reading > maxBatteryReadingEver)
+        {
+            maxBatteryReadingEver = reading;
+            SaveSetting::notify(UserSetting::BATTERY_AUTO_CALIBRATION);
+        }
+
+        if (maxBatteryReadingEver >= 0)
+        {
+            int minBatteryReading =
+                4059 * maxBatteryReadingEver / 5213;
+            reading = map_value(
+                reading,
+                minBatteryReading,
+                maxBatteryReadingEver,
+                4059,
+                5213);
+            return getGenericLiPoBatteryLevel(reading);
+        }
+        else
+            return UNKNOWN_BATTERY_LEVEL;
     }
-    else
-        return UNKNOWN_BATTERY_LEVEL;
+
+    virtual uint8_t getCalibrationDataCount() override
+    {
+        return QUANTUM_COUNT;
+    }
+
+    virtual uint16_t getCalibrationData(uint8_t index) override
+    {
+        if (index < QUANTUM_COUNT)
+            return batteryCalibrationQuantum[index];
+        else
+            return 0;
+    }
+
+    virtual void setCalibrationData(uint8_t index, uint16_t data, bool save) override
+    {
+        if ((index < QUANTUM_COUNT) && (batteryCalibrationQuantum[index] != data))
+        {
+            totalBatterySamplesCount -= batteryCalibrationQuantum[index];
+            totalBatterySamplesCount += data;
+            batteryCalibrationQuantum[index] = data;
+            if (save)
+                SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+        }
+    }
+
+    virtual int getAutoCalibrationParameter() override
+    {
+        return maxBatteryReadingEver;
+    }
+
+    virtual void setAutoCalibrationParameter(int value, bool save) override
+    {
+        if (value != maxBatteryReadingEver)
+        {
+            maxBatteryReadingEver = value;
+            if (save)
+                SaveSetting::notify(UserSetting::BATTERY_AUTO_CALIBRATION);
+        }
+    }
+};
+
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+// Internals
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+
+// void internals::batteryCalibration::save()
+// {
+//     SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+// }
+
+//-------------------------------------------------------------------
+
+void internals::batteryCalibration::clear()
+{
+    for (int q = 0; q < QUANTUM_COUNT; q++)
+        batteryCalibrationQuantum[q] = 0;
+    maxBatteryReadingEver = -1;
+    totalBatterySamplesCount = 0;
 }
 
-void batteryCalibration::restartAutoCalibration()
-{
-    maxBatteryReadingEver = -1;
+//-------------------------------------------------------------------
 
-    Preferences prefs;
-    if (prefs.begin(PREFS_NAMESPACE, false))
+void internals::batteryCalibration::addSample(int reading)
+{
+    if ((reading < 0) || (reading > 4095))
+        throw std::runtime_error("parameter out of range: batteryCalibration::addSample()");
+
+    int quantumIndex = reading >> (12 - QUANTUM_BITS);
+    if (quantumIndex < QUANTUM_COUNT)
     {
-        prefs.putInt(KEY_MAX_READING, maxBatteryReadingEver);
-        prefs.end();
+        batteryCalibrationQuantum[quantumIndex] += 1;
+        totalBatterySamplesCount++;
+    }
+    else
+        throw std::runtime_error("Logic error at batteryCalibration::addSample()");
+}
+
+//-------------------------------------------------------------------
+
+void batteryCalibrationStart()
+{
+    internals::batteryCalibration::clear();
+    LoadSetting::notify(UserSetting::BATTERY_AUTO_CALIBRATION);
+    LoadSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+    if (totalBatterySamplesCount > 0)
+        DeviceCapabilities::setFlag(DeviceCapability::BATTERY_CALIBRATION_AVAILABLE);
+}
+
+void internals::batteryCalibration::getReady()
+{
+    if (!FirmwareService::call::isRunning())
+    {
+        BatteryCalibrationService::inject(new BatteryCalibrationProvider());
+        OnStart::subscribe(batteryCalibrationStart);
     }
 }

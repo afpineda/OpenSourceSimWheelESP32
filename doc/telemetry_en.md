@@ -39,14 +39,16 @@ There are certain limitations to what the ESP32 hardware can do to display telem
   this firmware prioritizes functionality over telemetry display.
   Just the remaining CPU power is used for this.
   This is not the case in the *pixel control* approach.
-- **Bandwidth**: a telemetry display needs to be updated quickly.
+- **Bandwidth**:
+  A telemetry display needs to be updated quickly.
   This uses a lot of bandwidth,
   which is limited to 1Mbps in the BLE technology.
   For raw telemetry data,
   this firmware announces the maximum frames per second capability,
   and the SimHub plugin adjusts the transfer rate accordingly.
   Unnecessary data will not be sent.
-- **I/O capabilities**: DevKit boards cannot achieve high throughput.
+- **I/O capabilities**:
+  DevKit boards cannot achieve high throughput.
   For example, a 128x64 monochrome display, in the I2C bus,
   is unable to display more than 20 frames per second.
 - **Memory size**:
@@ -79,10 +81,11 @@ A secondary I2C bus must be used, which requires manual initialization.
 Note that the secondary I2C bus is **not available on ESP32C3 boards** (sorry).
 
 If your display hardware requires the secondary I2C bus,
-call `i2c::begin()` first. The parameters are:
+call `inputs::initializeI2C()` first. The parameters are:
+
 - 1st: the `SDA` pin for the secondary bus.
 - 2nd: the `SCL` pin for the secondary bus.
-- 3rd: set to `true`. This is mandatory.
+- 3rd: set to `I2CBus::SECONDARY`. This is mandatory.
 
 Both pins **must** support input, output and pull-up resistors.
 For example:
@@ -92,7 +95,7 @@ For example:
 ...
 void simWheelSetup()
 {
-   i2c::begin(GPIO_NUM_19,GPIO_NUM_20,true);
+   inputs::initializeI2C(19, 20, I2CBus::SECONDARY);
    ...
 }
 ```

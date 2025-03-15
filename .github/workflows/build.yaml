@@ -12,6 +12,7 @@ on:
       - '**.h'
       - '**.hpp'
       - '.fqbn'
+      - 'build.txt'
   workflow_dispatch:
   pull_request:
     paths:
@@ -21,10 +22,11 @@ on:
       - '**.h'
       - '**.hpp'
       - '.fqbn'
+      - 'build.txt'
 
 jobs:
   build:
-    name: Compile and link all sketches
+    name: CD/CI chain
     runs-on: 'ubuntu-latest'
     steps:
 
@@ -34,10 +36,30 @@ jobs:
       - name: Install Arduino CLI
         uses: arduino/setup-arduino-cli@v2
 
-      - name: Set execution permissions
-        run: |
-          chmod +x ${{ github.workspace }}/src/autocompile.sh
-          chmod +x ${{ github.workspace }}/src/MakeSymLinks.sh
+      - name: Build CD/CI code
+        shell: pwsh
+        run: ${{ github.workspace }}/CD_CI/Build.ps1 -RootPath ${{ github.workspace }}
 
-      - name: Build
-        run: ${{ github.workspace }}/src/autocompile.sh
+      - name: Run automated tests
+        shell: pwsh
+        run: ${{ github.workspace }}/CD_CI/Run.ps1 -RootPath ${{ github.workspace }}
+
+      - name: Create symbolic links for Arduino build
+        shell: pwsh
+        run: ${{ github.workspace }}/src/MakeSymLinks.ps1 -RootPath ${{ github.workspace }}
+
+      - name: Install Arduino dependencies
+        shell: pwsh
+        run: ${{ github.workspace }}/src/InstallBuildDependencies.ps1
+
+      - name: Build for Arduino
+        shell: pwsh
+        run: ${{ github.workspace }}/src/ArduinoBuild.ps1 -RootPath ${{ github.workspace }}
+
+      - name: Look for broken links
+        shell: pwsh
+        run: ${{ github.workspace }}/RevealBrokenLinks.ps1 -RootPath ${{ github.workspace }}
+
+      - name: Display statistics
+        shell: pwsh
+        run: ${{ github.workspace }}/ShowCodeStatistics.ps1 -RootPath ${{ github.workspace }}

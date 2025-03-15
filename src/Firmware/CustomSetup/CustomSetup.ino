@@ -10,7 +10,8 @@
  *
  */
 
-#include "SimWheel.h"
+#include "SimWheel.hpp"
+#include "SimWheelUI.hpp"
 
 //------------------------------------------------------------------
 // Global customization
@@ -62,6 +63,11 @@ std::string DEVICE_MANUFACTURER = "Me";
 // [EN] Substitute <here> with a GPIO number or alias
 // [ES] Sustituya <here> con un número de pin o su alias
 
+// [EN] Set a latch mode
+// [ES] Ajuste un mode de activación
+
+#define LATCH_MODE PowerLatchMode::POWER_OPEN_DRAIN
+
 // [EN] Set a delay (in milliseconds) to wait for the latch circuit
 //      to do its magic (optional)
 // [ES] Ajuste un retardo (en milisegundos) a esperar para
@@ -101,15 +107,16 @@ std::string DEVICE_MANUFACTURER = "Me";
  >>>> [ES] IDENTIFICATION DEL DISPOSITIVO
 ------------------------------------------------------------------ */
 
-// [EN] Uncomment the following line to set a custom PID
-// [ES] Descomente la siguiente linea para ajustar el PID a medida
+// [EN] Uncomment the following lines to set a custom VID/PID
+// [ES] Descomente la siguiente linea para ajustar el VID/PID a medida
 
+// #define BLE_CUSTOM_VID <here>
 // #define BLE_CUSTOM_PID <here>
 
 // [EN] Substitute <here> with a non-zero 16-bits number as
-//      a custom product ID
+//      a custom vendor/product ID
 // [ES] Sustituya <here> con un número de 16 bits distinto de cero
-//      como identificador de producto a medida
+//      como identificador de fabricante/producto a medida
 
 //------------------------------------------------------------------
 // Globals
@@ -128,14 +135,54 @@ void simWheelSetup()
     inputs::addRotaryEncoder(GPIO_NUM_35, GPIO_NUM_32, 27, 28);
     inputs::addRotaryEncoder(GPIO_NUM_25, GPIO_NUM_26, 29, 30);
     inputs::addRotaryEncoder(GPIO_NUM_14, GPIO_NUM_18, 31, 32);
-    inputs::addDigital(GPIO_NUM_34, 33);
-    inputs::addDigital(GPIO_NUM_33, 34);
-    inputs::addDigital(GPIO_NUM_27, 35);
+    inputs::addButton(GPIO_NUM_34, 33);
+    inputs::addButton(GPIO_NUM_33, 34);
+    inputs::addButton(GPIO_NUM_27, 35);
 
-    inputHub::setClutchInputNumbers(33, 34);
-    inputHub::setClutchCalibrationInputNumbers(31, 32); // Rotary 4
-    inputHub::setDPADControls(25, 26, 27, 28);
-    inputHub::setALTInputNumbers({35});
+    inputHub::clutch::inputs(33, 34);
+    inputHub::clutch::bitePointInputs(31, 32); // Rotary 4
+    inputHub::dpad::inputs(25, 26, 27, 28);
+    inputHub::altButtons::inputs({35});
+}
+
+//------------------------------------------------------------------
+
+void customFirmware()
+{
+
+#ifdef WAKE_UP_PIN
+    power::configureWakeUp(WAKE_UP_PIN);
+#endif
+
+#ifdef POWER_LATCH
+    power::configurePowerLatch(
+        POWER_LATCH,
+        LATCH_MODE,
+        LATCH_POWEROFF_DELAY);
+#endif
+
+    simWheelSetup();
+    hid::configure(
+        DEVICE_NAME,
+        DEVICE_MANUFACTURER,
+        true
+#if defined(BLE_CUSTOM_VID)
+        ,
+        BLE_CUSTOM_VID
+#if defined(BLE_CUSTOM_PID)
+        ,
+        BLE_CUSTOM_PID
+#endif
+#endif
+    );
+
+#if defined(ENABLE_FUEL_GAUGE)
+    batteryMonitor::configure();
+#elif defined(ENABLE_BATTERY_MONITOR)
+    batteryMonitor::configure(
+        BATTERY_READ_GPIO,
+        BATTERY_ENABLE_READ_GPIO);
+#endif
 }
 
 //------------------------------------------------------------------
@@ -144,39 +191,7 @@ void simWheelSetup()
 
 void setup()
 {
-    esp_log_level_set("*", ESP_LOG_ERROR);
-
-#ifdef WAKE_UP_PIN
-    power::begin((gpio_num_t)WAKE_UP_PIN);
-#endif
-
-#ifdef POWER_LATCH
-    power::setPowerLatch(
-        (gpio_num_t)POWER_LATCH,
-        LATCH_MODE,
-        LATCH_POWEROFF_DELAY);
-#endif
-
-    userSettings::begin();
-    simWheelSetup();
-    hidImplementation::begin(
-        DEVICE_NAME,
-        DEVICE_MANUFACTURER
-#if BLE_CUSTOM_PID != 0
-        ,
-        BLE_CUSTOM_PID
-#endif
-    );
-
-#if defined(ENABLE_FUEL_GAUGE)
-    batteryMonitor::begin();
-#elif defined(ENABLE_BATTERY_MONITOR)
-    batteryMonitor::begin(
-        (gpio_num_t)BATTERY_ENABLE_READ_GPIO,
-        (gpio_num_t)BATTERY_READ_GPIO);
-#endif
-
-    inputs::start();
+    firmware::run(customFirmware);
 }
 
 void loop()

@@ -12,18 +12,19 @@
 
 #ifdef HID_TESTER
 
+#include "SimWheel.hpp"
+#include "SimWheelInternals.hpp"
+#include "InternalServices.hpp"
+#include "HID_definitions.hpp"
 #include <HardwareSerial.h>
-#include "Simwheel.h"
 
 //------------------------------------------------------------------
 // Globals
 //------------------------------------------------------------------
 
 bool powerSim = true;
-extern uint16_t customVID;
-extern uint16_t customPID;
-extern uint16_t factoryVID;
-extern uint16_t factoryPID;
+extern uint16_t _factoryVID;
+extern uint16_t _factoryPID;
 
 uint32_t lastFrameID = 0;
 
@@ -31,97 +32,101 @@ uint32_t lastFrameID = 0;
 // Mocks
 //------------------------------------------------------------------
 
-volatile uint32_t capabilities::flags = 0x07;
-volatile inputBitmap_t capabilities::availableInputs = 0b0111ULL;
-volatile telemetryData_t notify::telemetryData = {};
-uint8_t notify::maxFPS = 50;
+class UIServiceMock : public UIService
+{
+public:
+    virtual uint8_t getMaxFPS() override { return 50; }
+} uiMock;
 
 //------------------------------------------------------------------
 
-void notify::connected()
+class InputServiceMock : public InputService
+{
+public:
+    virtual void recalibrateAxes() override
+    {
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
+        Serial.println("CMD: recalibrate axes");
+#endif
+    }
+
+    virtual void reverseLeftAxis() override
+    {
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
+        Serial.println("CMD: reverse left axis");
+#endif
+    }
+
+    virtual void reverseRightAxis() override
+    {
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
+        Serial.println("CMD: reverse right axis");
+#endif
+    }
+
+    virtual void setRotaryPulseWidthMultiplier(
+        PulseWidthMultiplier multiplier,
+        bool save) override
+    {
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
+        Serial.printf("CMD: pulse width x%hhu\n", (uint8_t)multiplier);
+#endif
+    }
+
+} inputMock;
+
+//------------------------------------------------------------------
+
+class BattCalMock : public BatteryCalibrationService
+{
+    virtual void restartAutoCalibration() override
+    {
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
+        Serial.println("CMD: recalibrate battery");
+#endif
+    }
+
+} battCalMock;
+
+//------------------------------------------------------------------
+
+class PowerMock : public PowerService
+{
+public:
+    virtual void shutdown()
+    {
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
+        Serial.println("*** POWER OFF ***");
+#endif
+        powerSim = false;
+    }
+
+    struct call
+    {
+        VOID_SINGLETON_INVOKER(shutdown(), shutdown())
+    };
+} powerMock;
+
+//------------------------------------------------------------------
+
+void onConnectedCallback()
 {
 #if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.println("*** CONNECTED ***");
 #endif
 }
 
-void notify::BLEdiscovering()
+void onDisconnectedCallback()
 {
 #if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.println("*** DISCOVERING ***");
 #endif
 }
 
-void notify::bitePoint()
-{
-}
-
 //------------------------------------------------------------------
 
-void inputs::recalibrateAxes()
-{
-#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
-    Serial.println("CMD: recalibrate axes");
-#endif
-}
-
-void inputs::update()
-{
-}
-
-void inputs::reverseLeftAxis()
-{
-#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
-    Serial.println("CMD: reverse left axis");
-#endif
-}
-
-void inputs::reverseRightAxis()
-{
-#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
-    Serial.println("CMD: reverse right axis");
-#endif
-}
-
-void inputs::setRotaryPulseWidthMultiplier(uint8_t multiplier)
-{
-#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
-    Serial.printf("CMD: pulse width x%hhu\n", multiplier);
-#endif
-}
-
-uint8_t inputs::getRotaryPulseWidthMultiplier() { return 1; }
-
-//------------------------------------------------------------------
-
-void batteryCalibration::restartAutoCalibration()
-{
-#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
-    Serial.println("CMD: recalibrate battery");
-#endif
-}
-
-//------------------------------------------------------------------
-
-void power::powerOff()
-{
-#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
-    Serial.println("*** POWER OFF ***");
-#endif
-    powerSim = false;
-}
-
-//------------------------------------------------------------------
-
-int batteryMonitor::getLastBatteryLevel()
-{
-    return UNKNOWN_BATTERY_LEVEL;
-}
-
-//------------------------------------------------------------------
-
-void pixels::set(
-    pixelGroup_t group,
+void internals::pixels::set(
+    PixelGroup group,
     uint8_t pixelIndex,
     uint8_t red,
     uint8_t green,
@@ -129,7 +134,7 @@ void pixels::set(
 {
 #if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.printf("pixels::set(%hhu,%hhu,%hhu,%hhu,%hhu)\n",
-                  group,
+                  (uint8_t)group,
                   pixelIndex,
                   red,
                   green,
@@ -137,24 +142,26 @@ void pixels::set(
 #endif
 }
 
-void pixels::reset()
+void internals::pixels::reset()
 {
 #if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.println("pixels::reset()");
 #endif
 }
 
-void pixels::show()
+void internals::pixels::show()
 {
 #if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.println("pixels::show()");
 #endif
 }
 
-uint8_t pixels::getPixelCount(pixelGroup_t group)
+uint8_t internals::pixels::getCount(PixelGroup group)
 {
     return 8;
 }
+
+void internals::pixels::getReady() {}
 
 //------------------------------------------------------------------
 // Auxiliary
@@ -163,46 +170,46 @@ uint8_t pixels::getPixelCount(pixelGroup_t group)
 void checkAndPrintTelemetryData()
 {
 #if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
-    if (notify::telemetryData.frameID != lastFrameID)
+    if (telemetry::data.frameID != lastFrameID)
     {
-        lastFrameID = notify::telemetryData.frameID;
+        lastFrameID = telemetry::data.frameID;
         Serial.printf("powertrain: %c %u %u %u %u %u %u %u\n",
-                      notify::telemetryData.powertrain.gear,
-                      notify::telemetryData.powertrain.rpm,
-                      notify::telemetryData.powertrain.rpmPercent,
-                      notify::telemetryData.powertrain.shiftLight1,
-                      notify::telemetryData.powertrain.shiftLight2,
-                      notify::telemetryData.powertrain.revLimiter,
-                      notify::telemetryData.powertrain.engineStarted,
-                      notify::telemetryData.powertrain.speed);
+                      telemetry::data.powertrain.gear,
+                      telemetry::data.powertrain.rpm,
+                      telemetry::data.powertrain.rpmPercent,
+                      telemetry::data.powertrain.shiftLight1,
+                      telemetry::data.powertrain.shiftLight2,
+                      telemetry::data.powertrain.revLimiter,
+                      telemetry::data.powertrain.engineStarted,
+                      telemetry::data.powertrain.speed);
         Serial.printf("ecu: %u %u %u %u %u %u %u %u %u\n",
-                      notify::telemetryData.ecu.absEngaged,
-                      notify::telemetryData.ecu.tcEngaged,
-                      notify::telemetryData.ecu.drsEngaged,
-                      notify::telemetryData.ecu.pitLimiter,
-                      notify::telemetryData.ecu.lowFuelAlert,
-                      notify::telemetryData.ecu.absLevel,
-                      notify::telemetryData.ecu.tcLevel,
-                      notify::telemetryData.ecu.tcCut,
-                      notify::telemetryData.ecu.brakeBias);
+                      telemetry::data.ecu.absEngaged,
+                      telemetry::data.ecu.tcEngaged,
+                      telemetry::data.ecu.drsEngaged,
+                      telemetry::data.ecu.pitLimiter,
+                      telemetry::data.ecu.lowFuelAlert,
+                      telemetry::data.ecu.absLevel,
+                      telemetry::data.ecu.tcLevel,
+                      telemetry::data.ecu.tcCut,
+                      telemetry::data.ecu.brakeBias);
         Serial.printf("race control: %u %u %u %u %u %u %u %u %u\n",
-                      notify::telemetryData.raceControl.blackFlag,
-                      notify::telemetryData.raceControl.blueFlag,
-                      notify::telemetryData.raceControl.checkeredFlag,
-                      notify::telemetryData.raceControl.greenFlag,
-                      notify::telemetryData.raceControl.orangeFlag,
-                      notify::telemetryData.raceControl.whiteFlag,
-                      notify::telemetryData.raceControl.yellowFlag,
-                      notify::telemetryData.raceControl.remainingLaps,
-                      notify::telemetryData.raceControl.remainingMinutes);
+                      telemetry::data.raceControl.blackFlag,
+                      telemetry::data.raceControl.blueFlag,
+                      telemetry::data.raceControl.checkeredFlag,
+                      telemetry::data.raceControl.greenFlag,
+                      telemetry::data.raceControl.orangeFlag,
+                      telemetry::data.raceControl.whiteFlag,
+                      telemetry::data.raceControl.yellowFlag,
+                      telemetry::data.raceControl.remainingLaps,
+                      telemetry::data.raceControl.remainingMinutes);
         Serial.printf("gauges: %u %.2f %u %.2f %u %u %u\n",
-                      notify::telemetryData.gauges.relativeTurboPressure,
-                      notify::telemetryData.gauges.absoluteTurboPressure,
-                      notify::telemetryData.gauges.waterTemperature,
-                      notify::telemetryData.gauges.oilPressure,
-                      notify::telemetryData.gauges.oilTemperature,
-                      notify::telemetryData.gauges.relativeRemainingFuel,
-                      notify::telemetryData.gauges.absoluteRemainingFuel);
+                      telemetry::data.gauges.relativeTurboPressure,
+                      telemetry::data.gauges.absoluteTurboPressure,
+                      telemetry::data.gauges.waterTemperature,
+                      telemetry::data.gauges.oilPressure,
+                      telemetry::data.gauges.oilTemperature,
+                      telemetry::data.gauges.relativeRemainingFuel,
+                      telemetry::data.gauges.absoluteRemainingFuel);
     }
 #endif
 }
@@ -213,20 +220,43 @@ void checkAndPrintTelemetryData()
 
 void setup()
 {
-    esp_log_level_set("*", ESP_LOG_ERROR);
 #if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
     Serial.begin(115200);
     Serial.println("--START--");
 #endif
-    userSettings::altButtonsWorkingMode = true;
-    userSettings::cpWorkingMode = CF_CLUTCH;
-    userSettings::dpadWorkingMode = true;
-    userSettings::bitePoint = CLUTCH_DEFAULT_VALUE;
-    userSettings::securityLock = false;
-    hidImplementation::begin(HID_TESTER, "Mamandurrio", true);
+    DeviceCapabilities::setFlag(DeviceCapability::CLUTCH_ANALOG);
+    DeviceCapabilities::setFlag(DeviceCapability::DPAD);
+    DeviceCapabilities::setFlag(DeviceCapability::ALT);
+    DeviceCapabilities::setFlag(DeviceCapability::TELEMETRY_POWERTRAIN);
+    DeviceCapabilities::setFlag(DeviceCapability::TELEMETRY_ECU);
+    DeviceCapabilities::setFlag(DeviceCapability::TELEMETRY_RACE_CONTROL);
+    DeviceCapabilities::setFlag(DeviceCapability::TELEMETRY_GAUGES);
+    DeviceCapabilities::setFlag(DeviceCapability::ROTARY_ENCODERS);
+    InputNumber::bookAll();
+
+    UIService::inject(&uiMock);
+    InputService::inject(&inputMock);
+    BatteryCalibrationService::inject(&battCalMock);
+    PowerService::inject(&powerMock);
+    OnConnected::subscribe(onConnectedCallback);
+    OnDisconnected::subscribe(onDisconnectedCallback);
+    hid::configure(
+        HID_TESTER,
+        "Mamandurrio",
+        true,
+        TEST_HARDWARE_ID,
+        TEST_HARDWARE_ID);
+    internals::hid::common::getReady();
+    OnStart::notify();
+
 #if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
-    Serial.printf("Factory default VID / PID: %04x / %04x\n", factoryVID, factoryPID);
-    Serial.printf("Actual VID / PID: %04x / %04x\n", customVID, customPID);
+    if (!internals::hid::supportsCustomHardwareID())
+        Serial.println("Actual VID / PID depends on DevKit (not BLE)");
+    else
+        Serial.printf(
+            "Actual VID / PID: %04x / %04x\n",
+            BLE_VENDOR_ID,
+            BLE_PRODUCT_ID);
     Serial.println("--GO--");
 #endif
 }
@@ -234,7 +264,7 @@ void setup()
 //------------------------------------------------------------------
 
 uint8_t btnIndex = 0;
-clutchValue_t axis = CLUTCH_NONE_VALUE;
+uint8_t axis = CLUTCH_NONE_VALUE;
 uint8_t battery = 99;
 uint8_t POV = 0;
 
@@ -250,7 +280,7 @@ void loop()
             ;
     }
 
-    if (!hidImplementation::isConnected())
+    if (!internals::hid::isConnected())
     {
 #if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
         Serial.println("(Waiting for connection)");
@@ -258,8 +288,8 @@ void loop()
     }
     else
     {
-        inputBitmap_t data = BITMAP(btnIndex);
-        hidImplementation::reportInput(
+        uint64_t data = (1ULL << btnIndex);
+        internals::hid::reportInput(
             data,
             data,
             POV,
@@ -269,7 +299,7 @@ void loop()
 
         // Update pressed buttons
         btnIndex++;
-        if (btnIndex > MAX_INPUT_NUMBER)
+        if (btnIndex > 63)
             btnIndex = 0;
 
         // Update DPAD state
@@ -277,14 +307,14 @@ void loop()
         if (POV > 8)
         {
             POV = 0;
-            hidImplementation::reportChangeInConfig();
+            internals::hid::reportChangeInConfig();
         }
 
         // Update battery info
         battery--;
         if (battery < 50)
             battery = 100;
-        hidImplementation::reportBatteryLevel(battery);
+        internals::hid::reportBatteryLevel(battery);
 
         // Update analog axis values
         axis = axis + 5;

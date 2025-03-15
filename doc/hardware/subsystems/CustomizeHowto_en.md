@@ -1,24 +1,35 @@
 # How to customize in order to build your own hardware and firmware setup
 
-The whole sim wheel/button box system has been divided into pieces called **subsystems**. Each subsystem performs a particular function and is composed both by hardware and (sometimes) software. A description of each subsystem is available below.
+The whole sim wheel/button box system has been divided into pieces called **subsystems**.
+Each subsystem performs a particular function and
+is composed both by hardware and (sometimes) software.
+A description of each subsystem is available below.
 In order to build your own setup, follow a few simple steps:
 
 1. Choose what is required from each subsystem
 2. Design your custom hardware
 3. Configure your custom firmware
-4. *Optional but recommended*: build the resulting circuit in a protoboard, upload your custom firmware and test it.
+4. *Optional but recommended*: build the resulting circuit in a protoboard,
+   upload your custom firmware and test it.
 5. Build your design into a [perfboard](https://en.wikipedia.org/wiki/Perfboard).
 
 ## Choose what is required from each subsystem
 
 Follow the links to get a detailed description of each subsystem:
 
-- [Power subsystem](./Power/Power_en.md): provides a power source to the system.
-- [Power latch subsystem](./PowerLatch/PowerLatch_en.md): provides power on/off functionality.
-- [Battery monitor subsystem](./BatteryMonitor/BatteryMonitor_en.md): provides an estimation of battery charge.
-- [Relative rotary encoder subsystem](./RelativeRotaryEncoder/RelativeRotaryEncoder_en.md): provides input from rotation of rotary encoders.
-- [Switches subsystem](./Switches/Switches_en.md): provides input from normally-open momentary switches (push buttons, paddles, etc.) and potentiometers (as on/off inputs, only).
-- [Analog clutch subsystem](./AnalogClutchPaddles/AnalogClutchPaddles_en.md): provides input from two potentiometers attached to clutch paddles as analog axes.
+- [Power subsystem](./Power/Power_en.md):
+  provides a power source to the system.
+- [Power latch subsystem](./PowerLatch/PowerLatch_en.md):
+  provides power on/off functionality.
+- [Battery monitor subsystem](./BatteryMonitor/BatteryMonitor_en.md):
+  provides an estimation of battery charge.
+- [Relative rotary encoder subsystem](./RelativeRotaryEncoder/RelativeRotaryEncoder_en.md):
+  provides input from rotation of rotary encoders.
+- [Switches subsystem](./Switches/Switches_en.md):
+  provides input from normally-open momentary switches (push buttons, paddles, etc.)
+  and potentiometers (as on/off inputs, only).
+- [Analog clutch subsystem](./AnalogClutchPaddles/AnalogClutchPaddles_en.md):
+  provides input from two potentiometers attached to clutch paddles as analog axes.
 
 ### About clutch paddles
 
@@ -29,16 +40,23 @@ This project support two kinds of clutch paddles:
   This is the best choice. Two ADC-capable pins are required.
 
 - **"Digital" clutch paddles**.
-  Take input from the *switches subsystem*, including any push button or roller lever (not just "paddles").
-  If no ADC-capable pins are available, you may still use potentiometers as "digital" clutch paddles by attaching them
+  Take input from the *switches subsystem*, including any push button
+  or roller lever (not just "paddles").
+  If no ADC-capable pins are available, you may still use potentiometers
+  as "digital" clutch paddles by attaching them
   to the *switches subsystems* instead of the *analog clutch subsystem*.
 
 ## Design your custom hardware
 
-Depending on how much space is available in the wheel's case, you have the choice to build all the subsystems in a single perfboard, or split them into several perfboards at the cost of extra wiring.
+Depending on how much space is available in the wheel's case,
+you have the choice to build all the subsystems in a single perfboard,
+or split them into several perfboards at the cost of extra wiring.
 
 1. Open [DIY layout creator](https://bancika.github.io/diy-layout-creator/) and create a new project file.
-2. Open the provided `.diy` file for each subsystem. Copy-paste whatever you need to your own project file. Use the "edit" menu since keyboard shortcuts does not seem to work. You may also start from a predefined setup.
+2. Open the provided `.diy` file for each subsystem.
+   Copy-paste whatever you need to your own project file.
+   Use the "edit" menu since keyboard shortcuts does not seem to work.
+   You may also start from a predefined setup.
 3. Re-arrange the components to fit your needs.
 
 ## Configure your custom firmware
@@ -64,8 +82,9 @@ Then, there are a few steps:
    Each input number corresponds to a certain position in a pin header in your hardware design.
    Some input numbers have a certain meaning in the hosting PC.
 
-3. Map certain input numbers to specific functions, as explained below. Edit the body of `simWheelSetup()` and place the required calls at the end of it.
-   All of those mappings are optional, but take care not to build a dis functional firmware.
+3. Map certain input numbers to specific functions using the `inputHub` namespace, as explained below.
+   Edit the body of `simWheelSetup()` and place the required calls at the end of it.
+   All of those mappings are optional, but take care not to build a non-functional firmware.
    Do not assign two functions to the same input numbers.
    Where available, do not use a combination of input numbers which can not be activated at the same time.
    Do not map a specific function to non-existent input numbers.
@@ -75,33 +94,39 @@ Then, there are a few steps:
 
 ### DPAD
 
-A DPAD is optional. Despite this function is designed for funky switches and directional pads, it may be assigned to *any* input, including rotary encoders and push buttons. Place a call to `inputHub::setDPADControls()`:
+A DPAD is optional.
+Despite this function is designed for funky switches and directional pads,
+it may be assigned to *any* input,
+including rotary encoders and push buttons.
+Place a call to `inputHub::dpad::inputs()`:
 
 - 1st parameter is the input number for the "up" button
 - 2nd parameter is the input number for the "down" button
 - 3rd parameter is the input number for the "left" button
 - 4th parameter is the input number for the "right" button
 
-For example, let's say the button matrix contains input numbers 20, 22, 25 and 28:
+For example, let's say the button matrix contains
+the input numbers 20, 22, 25 and 28:
 
 ```c
 void simWheelSetup()
 {
    ...
-   inputs::addButtonMatrix(...)
-   ...
-   inputHub::setDPADControls(20, 22, 25, 28);
+   inputHub::dpad::inputs(20, 22, 25, 28);
    ...
 }
 ```
 
-### Cycle working mode of DPAD
+### Cycle the working mode of the DPAD
 
-Each time this function is activated, the working mode of the DPAD will move to the next one : navigation controls, regular buttons and back to the first mode.
+Each time this function is activated,
+the working mode of the DPAD will move to the next one:
+navigation controls, regular buttons and back to the first mode.
 There is no point on this if there is no DPAD.
 
 Assign a combination of input numbers to activate this function by placing a call to
-`inputHub::cycleDPADWorkingMode_setInputNumbers()`. There is one parameter: a sequence of input numbers between brackets.
+`inputHub::dpad::cycleWorkingModeInputs()`.
+There is one parameter: a sequence of input numbers between braces.
 All the inputs have to be active at the same time, and none of the others.
 
 For example:
@@ -110,98 +135,98 @@ For example:
 void simWheelSetup()
 {
    ...
-   inputHub::cycleDPADWorkingMode_setInputNumbers({60,61});
+   inputHub::dpad::cycleWorkingModeInputs({60,61});
    ...
 }
 ```
 
 ### Clutch paddles
 
-Clutch paddles are optional. You can have *analog* or *digital* clutch paddles. They work just the same.
+Clutch paddles are optional.
+You can have *analog* or *digital* clutch paddles.
+They work just the same.
 
-Place a call to `inputHub::setClutchInputNumbers()`. Each parameter (there are two) is the input number assigned to a clutch paddle.
+Place a call to `inputHub::clutch::inputs()`. Each
+ parameter (there are two) is the input number assigned to a clutch paddle.
 For example, let's say the button matrix contains input numbers 45 and 46:
 
 ```c
 void simWheelSetup()
 {
    ...
-   inputs::addButtonMatrix(...)
-      .inputNumber(...,45)
-      .inputNumber(...,46)
-      ...
-   ...
-   inputHub::setClutchInputNumbers(45, 46);
+   inputHub::clutch::inputs(45, 46);
    ...
 }
 ```
 
 Now, those input numbers may work as clutch paddles depending on user preferences.
 
-It works the same for analog clutch paddles, but no existing input number is required, as shown in the following example:
+It works the same for analog clutch paddles,
+but no existing input number is required,
+as shown in the following example:
 
 ```c
 void simWheelSetup()
 {
    inputs::setAnalogClutchPaddles(...);
    ...
-   inputHub::setClutchInputNumbers(45, 46);
+   inputHub::clutch::inputs(45, 46);
    ...
 }
 ```
 
 Now, the analog clutch paddles may work as input numbers 45 and 46 depending on user preferences.
 
-### Clutch's bite point calibration
+### Bite point calibration
 
-Place a call to `inputHub::setClutchCalibrationInputNumbers()`:
+This feature is optional.
+Bite point calibration is also available in the companion app.
+
+Place a call to `inputHub::clutch::bitePointInputs()`:
 
 - 1st parameter is an input number to increase the bite point.
 - 2nd parameter is an input number to decrease the bite point.
 
-For example, let's say this function is mapped to a rotary encoder (input numbers 34 and 35):
+For example (input numbers 34 and 35):
 
 ```c
 void simWheelSetup()
 {
-   inputs::addRotaryEncoder(...,34,35);
    ...
-   inputHub::setClutchCalibrationInputNumbers(34, 35);
+   inputHub::clutch::bitePointInputs(34, 35);
    ...
 }
 ```
 
 There is no point on this if there are no clutch paddles.
 
-### ALT buttons
+### Alternate mode
 
-You may assign this function to any number of buttons (or none). Place a call to `inputHub::setALTInputNumbers()`.
-There is one parameter: a sequence of input numbers between brackets.
+You may assign this function to any number of buttons (or none).
+Place a call to `inputHub::altButtons::inputs()`.
+There is one parameter: a sequence of input numbers between braces.
 
-For example, let's say this function is mapped to two certain inputs at the button matrix:
+For example:
 
 ```c
 void simWheelSetup()
 {
    ...
-   inputs::addButtonMatrix(...)
-      .inputNumber(...,45)
-      .inputNumber(...,46)
-      ...
-   ...
-   inputHub::setALTInputNumbers({45,46});
+   inputHub::altButtons::inputs({45,46});
    ...
 }
 ```
 
-Any of the given input numbers will engage "ALT" mode when activated, except if they are set to work as "regular buttons" by the user.
+Any of the given input numbers will engage *alternate mode* when activated,
+except if they are set to work as "regular buttons" by the user.
 
-### Cycle working mode for clutch paddles
+### Cycle the working mode of the clutch paddles
 
-Each time this function is activated, the working mode of the clutch paddles will move to the next one :
+Each time this function is activated,
+the working mode of the clutch paddles will move to the next one :
 F1-style clutch,
 autonomous axes,
-"ALT" mode,
+alternate mode,
 regular buttons,
 launch control (left paddle is master),
 launch control (right paddle is master)
@@ -209,7 +234,8 @@ and back to the first mode.
 There is no point on this if there are no clutch paddles.
 
 Assign a combination of input numbers to activate this function by placing a call to
-`inputHub::cycleCPWorkingMode_setInputNumbers()`. There is one parameter: a sequence of input numbers between brackets.
+`inputHub::clutch::cycleWorkingModeInputs()`.
+There is one parameter: a sequence of input numbers between braces.
 All the inputs have to be active at the same time, and none of the others.
 For example:
 
@@ -217,59 +243,21 @@ For example:
 void simWheelSetup()
 {
    ...
-   inputs::addButtonMatrix(...)
-      .inputNumber(...,60)
-      .inputNumber(...,61)
-      .inputNumber(...,62)
-      ...
-   ...
-   inputHub::cycleCPWorkingMode_setInputNumbers({60,61,62});
+   inputHub::clutch::cycleWorkingModeInputs({60,61,62});
    ...
 }
 ```
 
-#### Select a specific working mode for clutch paddles
+### Cycle the working mode of the "ALT" buttons
 
-As an alternative, you may assign specific button combinations to specific working modes.
-Place a call to `inputHub::cpWorkingMode_setInputNumbers()`.
-There are four parameters.
-Each one must contain a sequence of input numbers between brackets as seen in the previous calls.
-From left to right:
-
-1. Button combination to select F1-Style clutch mode.
-2. Button combination to select autonomous axes mode.
-3. Button combination to select "ALT" mode.
-4. Button combination to select "regular buttons" mode.
-5. Optional: button combination to select "launch control" mode (left paddle is master).
-6. Optional: button combination to select "launch control" mode (right paddle is master).
-
-For example:
-
-```c
-void simWheelSetup()
-{
-   ...
-   inputs::addButtonMatrix(...)
-      .inputNumber(...,59)
-      .inputNumber(...,60)
-      .inputNumber(...,61)
-      .inputNumber(...,62)
-      .inputNumber(...,63)
-      ...
-   ...
-   inputHub::cpWorkingMode_setInputNumbers({59,60}, {59,61}, {59,62}, {59,63});
-   ...
-}
-```
-
-### Cycle working mode of "ALT" buttons
-
-Each time this function is activated, the working mode of the "ALT" buttons will move to the next one : "ALT" mode, regular buttons and back to the first mode.
+Each time this function is activated,
+the working mode of the "ALT" buttons will move to the next one:
+alternate mode, regular buttons and back to the first mode.
 There is no point on this if there are no "ALT" buttons.
 
 Assign a combination of input numbers to activate this function by placing a call to
-`inputHub::cycleALTButtonsWorkingMode_setInputNumbers()`.
-There is one parameter: a sequence of input numbers between brackets.
+`inputHub::altButtons::cycleWorkingModeInputs()`.
+There is one parameter: a sequence of input numbers between braces.
 All the inputs have to be active at the same time, and none of the others.
 
 ### Other game pad controls
@@ -287,43 +275,64 @@ Note that the following input numbers have a special meaning in Windows:
 
 ### Connectivity
 
-This project provides three (exclusive) connectivity choices:
+This project provides several (exclusive) connectivity choices:
 
-- Bluetooth Low Energy (BLE) using the [NimBLE stack](https://mynewt.apache.org/latest/network/). This is the default. If you are happy with this, ignore this section.
+- Bluetooth Low Energy (BLE) using the
+  [NimBLE stack](https://mynewt.apache.org/latest/network/) wrapper
+  from [h2zero](https://github.com/h2zero).
+  This is the default.
+  If you are happy with this, ignore this section.
 
-- Bluetooth Low Energy using the ESP32-Arduino stack. Currently not used (except for a test unit), but available.
+- Bluetooth Low Energy using the NimBLE stack wrapper from the ESP32-Arduino core.
+  Currently not used (except for a test unit), but available.
   This stack requires more flash memory compared to *NimBLE* (about 500 KB).
   If you have issues with *NimBLE*, this is a workaround.
 
 - Universal Serial Bus (USB).
 
+- "Dummy" connectivity, available for troubleshooting.
+  This option provides no connectivity at all.
+  Switch to this temporarily if your firmware won't boot and
+  you don't have access to the serial port.
+  This is the case when using USB connectivity on a DevKit board
+  with only one USB header.
+
 In order to use any of them:
 
-- Edit the file **"includes.txt"** at your sketch folder (under [src/Firmware](../../../src/Firmware/)). Replace the text "hidImplementation_NimBLE.cpp" with a filename chosen from this table:
+- Edit the file **"includes.txt"** at your sketch folder.
+  Replace the text "hid_NimBLE.cpp" with a filename chosen from this table:
 
-  | Connectivity | Stack         | Filename                     |
-  | ------------ | ------------- | ---------------------------- |
-  | BLE          | NimBLE        | hidImplementation_NimBLE.cpp |
-  | BLE          | ESP32-Arduino | hidImplementation_ESPBLE.cpp |
-  | USB          | ESP32-Arduino | hidImplementation_USB.cpp    |
+  | Connectivity | Stack         | Filename       |
+  | ------------ | ------------- | -------------- |
+  | BLE          | NimBLE        | hid_NimBLE.cpp |
+  | BLE          | ESP32-Arduino | hid_ESPBLE.cpp |
+  | USB          | ESP32-Arduino | hid_USB.cpp    |
+  | Dummy        | none          | hid_dummy.cpp  |
 
-- Do not confuse those with "hidImplementation_common.cpp". Do not touch that line.
-- Run the [sources setup procedure](../../firmware/sourcesSetup_en.md) again. **This is mandatory**.
+  Those file names are case-sensitive if you have Linux or Mac.
+
+- Do not confuse those with "hidCommon.cpp".
+  Do not touch that line.
+- Run the [sources setup procedure](../../firmware/sourcesSetup_en.md) again.
+  **This is mandatory**.
 
 If you go for a purely wired USB implementation:
 
 - Set USB-Mode to "USB-OTG (TinyUSB)" in Arduino-IDE (board configuration).
-- There is no sense in using a battery-operated design if you have USB power available. For this reason, automatic power-off is not available within this implementation.
+- There is no sense in using a battery-operated design if you have USB power available.
+  For this reason, automatic shutdown is not available within this implementation.
 - Note that you can not have both Bluetooth and USB at the same time in the same device.
 
 ### Security lock
 
-For security concerns, the user can lock or unlock configuration changes coming from any PC application (including the companion app).
+For security concerns,
+the user can lock or unlock configuration changes coming from any PC application
+(including the companion app).
 This is a security precaution to stop unauthorized configuration modifications caused by rogue programs.
 
 Assign a combination of input numbers to activate this function by placing a call to
-`inputHub::cycleSecurityLock_setInputNumbers()`.
-There is one parameter: a sequence of input numbers between brackets.
+`inputHub::securityLock::cycleWorkingModeInputs()`.
+There is one parameter: a sequence of input numbers between braces.
 All the inputs have to be active at the same time, and none of the others.
 For example:
 
@@ -331,12 +340,7 @@ For example:
 void simWheelSetup()
 {
    ...
-   inputs::addButtonMatrix(...)
-      .inputNumber(...,50)
-      .inputNumber(...,51)
-      ...
-   ...
-   inputHub::cycleSecurityLock_setInputNumbers({50,51});
+   inputHub::securityLock::cycleWorkingModeInputs({50,51});
    ...
 }
 ```
@@ -344,9 +348,70 @@ void simWheelSetup()
 The state of the security lock is changed on each activation,
 then saved to flash memory after a short delay.
 
+### Default input map
+
+This feature is optional.
+
+Regardless of the input numbers assigned to each input hardware,
+the end user can set up a custom input map using the companion application.
+Unlike firmware defined input numbers,
+user defined input numbers are in the range [0,127].
+By default, the input map follows this rule:
+
+- If *alternate mode* is not engaged,
+  the user defined input number is the firmware defined input number.
+- If *alternate mode* is engaged,
+  the user defined input number is the firmware defined input number plus 64.
+
+If have only a few buttons,
+their user-defined input numbers will be spread over 128 values.
+However, you can set **different default input map** by calling
+`inputMap::set()` with the following parameters (from left to right):
+
+1. A firmware-defined input number: must be assigned to the input hardware.
+2. A user-defined input number to be reported when *alternate mode* is **not** engaged.
+3. A user-defined input number to be reported when *alternate mode* **is** engaged.
+
+Make as many calls as you need.
+For the end user, your custom input map is considered "factory default".
+
+### Neutral gear ("virtual" button)
+
+This feature is optional.
+
+The *neutral gear* is an input number that is not assigned to any input hardware
+(but this is not mandatory).
+When the end-user presses a particular combination of buttons,
+the *neutral gear* is reported instead.
+Then, the end-user must then fully release that combination for those
+buttons to behave normally.
+
+Make a call to `inputHub::neutralGear::set()`
+with the following parameters (from left to right):
+
+1. The desired *neutral gear* input number.
+2. A combination of input numbers between braces
+   that engages the neutral gear.
+
+This function is intended for shift paddles,
+but you can assign this function to any combination of input numbers.
+"Neutral gear" is the intended use for this "virtual" button,
+but it is not a firmware function.
+You must assign the virtual button to *neutral*
+or any other function in-game.
+
+Note that the neutral gear will be engaged if the button
+combination is pressed *and* any of the others.
+
+The "virtual" input number is affected by the *alternate mode* and
+can be mapped to other user-defined input numbers.
+
 ## Build your design into a perfboard
 
-Some of the circuit designs may show very small resistors and diodes which does not fit the real ones. This is not a mistake. They must be placed in "vertical" layout, so they lie in a minimal surface of the perfboard.
+Some of the circuit designs may show very small resistors and diodes which does not fit the real ones.
+This is not a mistake.
+They must be placed in "vertical" layout,
+so they lie in a minimal surface of the perfboard.
 
 ![Vertical layout](../pictures/VerticalLayout.png)
 

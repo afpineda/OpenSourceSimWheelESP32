@@ -2,7 +2,7 @@
 
 Before compiling and uploading *any* of the Arduino sketches provided in this project
 (under [src/Firmware](../../src/Firmware/) or
-[src/QualityControls](../../src/QualityControls/)),
+[src/QualityControl](../../src/QualityControl/)),
 this procedure must be followed.
 
 This is due to how the Arduino IDE works,

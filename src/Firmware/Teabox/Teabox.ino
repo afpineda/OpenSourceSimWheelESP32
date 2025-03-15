@@ -9,8 +9,7 @@
  *
  */
 
-//#include <Arduino.h>
-#include "SimWheel.h"
+#include "SimWheel.hpp"
 
 //------------------------------------------------------------------
 // Global customization
@@ -47,22 +46,27 @@ std::string DEVICE_MANUFACTURER = "Mamandurrio";
 void simWheelSetup()
 {
     inputs::addRotaryEncoder(GPIO_NUM_12, GPIO_NUM_14, ROT1_CW, ROT1_CCW);
-    inputs::addDigital(GPIO_NUM_27, ROT1_SW);
-    inputs::addDigital(GPIO_NUM_26, BTN_UP);
-    inputs::addDigital(GPIO_NUM_25, BTN_DOWN);
-    inputs::addDigital(GPIO_NUM_13, BTN1);
-    inputs::addDigital(GPIO_NUM_15, BTN2);
-    inputs::addDigital(GPIO_NUM_2, BTN3);
-    // Note: some simulators are unable to map DPAD inputs.
-    // By default, DPAD inputs will behave as regular buttons.
-    // Use the companion app to change that behaviour.
-    inputHub::setDPADControls(BTN_UP,BTN_DOWN,ROT1_CCW,ROT1_CW);
+    inputs::addButton(GPIO_NUM_27, ROT1_SW);
+    inputs::addButton(GPIO_NUM_26, BTN_UP);
+    inputs::addButton(GPIO_NUM_25, BTN_DOWN);
+    inputs::addButton(GPIO_NUM_13, BTN1);
+    inputs::addButton(GPIO_NUM_15, BTN2);
+    inputs::addButton(GPIO_NUM_2, BTN3);
 
-    // Security lock
-    inputHub::cycleSecurityLock_setInputNumbers({BTN1,BTN2,BTN3});
+    inputHub::dpad::inputs(BTN_UP, BTN_DOWN, ROT1_CCW, ROT1_CW);
 
-    // Change defaults
-    userSettings::dpadWorkingMode = false;
+    inputHub::securityLock::cycleWorkingModeInputs({BTN1, BTN2, BTN3});
+}
+
+//------------------------------------------------------------------
+
+void customFirmware()
+{
+    simWheelSetup();
+    hid::configure(
+        DEVICE_NAME,
+        DEVICE_MANUFACTURER,
+        false);
 }
 
 //------------------------------------------------------------------
@@ -71,15 +75,7 @@ void simWheelSetup()
 
 void setup()
 {
-    esp_log_level_set("*", ESP_LOG_ERROR);
-
-    simWheelSetup();
-    userSettings::begin();
-    hidImplementation::begin(
-        DEVICE_NAME,
-        DEVICE_MANUFACTURER,
-        false);
-    inputs::start();
+    firmware::run(customFirmware);
 }
 
 void loop()

@@ -1,6 +1,7 @@
 # Subsystem for analog clutch paddles
 
-This subsystem is optional. Take into account that this subsystem is not "battery-friendly".
+This subsystem is optional.
+Take into account that this subsystem is not "battery-friendly".
 
 ## Purpose
 
@@ -9,8 +10,13 @@ The position of each potentiometer is translated into a logical axis position,
 which the user can map to several functions:
 
 - Regular buttons: on/off.
-- Two autonomous axes: this way, each clutch paddle may work as a regular clutch, a throttle, a brake or any other input.
-- F1-style clutch: the position of both axes are combined into a single axis.
+- Two autonomous axes:
+  this way, each clutch paddle may work as a regular clutch,
+  a throttle, a brake or any other input.
+- F1-style clutch:
+  the position of both axes are combined into a single axis.
+- Launch control:
+  close to the F1-style clutch, but there is a master paddle.
 - "ALT" buttons.
 
 This subsystem requires two ADC pins.
@@ -61,11 +67,12 @@ void simWheelSetup()
 ```
 
 You should also set two input numbers for the clutch paddles to work in "regular buttons" mode:
-place a call to `inputHub::setClutchInputNumbers()`.
+place a call to `inputHub::clutch::inputs()`.
 More on this later.
 
-Recalibration can be achieved through the companion app, but you may assign a button combination for that.
-Place a call to `inputHub:cmdRecalibrateAnalogAxis_setInputNumbers()`.
+Recalibration can be achieved through the companion app,
+but you may assign a button combination for that.
+Place a call to `inputHub::clutch::cmdRecalibrateAxisInputs()`.
 The parameter is a sequence of input numbers between brackets.
 All inputs must be active at the same time, and none of the others.
 
@@ -75,7 +82,7 @@ The following example will set the combination of buttons `A` and `Start` for re
 void simWheelSetup()
 {
     ...
-    inputHub::cmdRecalibrateAnalogAxis_setInputNumbers({JOY_START,JOY_A});
+    inputHub::clutch::cmdRecalibrateAxisInputs({JOY_START,JOY_A});
     ...
 }
 ```

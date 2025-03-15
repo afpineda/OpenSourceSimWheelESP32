@@ -9,8 +9,8 @@
  *
  */
 
-// #include <Arduino.h>
-#include "SimWheel.h"
+#include "SimWheel.hpp"
+#include "SimWheelUI.hpp"
 
 //------------------------------------------------------------------
 // Global customization
@@ -74,59 +74,70 @@ std::string DEVICE_MANUFACTURER = "Mamandurrio";
 
 #define BATTERY_READ_GPIO GPIO_NUM_35
 
-/* -----------------------------------------------------------------
- >>>> [EN] MULTIPLEXED BUTTONS
- >>>> [ES] BOTONES MULTIPLEXADOS
------------------------------------------------------------------- */
-
-// [EN] Set all GPIO numbers for selector pins between curly brackets
-// [ES] Indique los números de GPIO de todos los pines selectores entre las llaves
-static const gpio_num_array_t mpxSelectors = {GPIO_NUM_27, GPIO_NUM_15, GPIO_NUM_14};
-
-// [EN] Set all GPIO numbers for input pins between curly brackets
-// [ES] Indique los números de GPIO de todos los pines de entrada entre las llaves
-static const gpio_num_array_t mpxInputs = {GPIO_NUM_32, GPIO_NUM_33};
-
 //------------------------------------------------------------------
 // Setup
 //------------------------------------------------------------------
 
 void simWheelSetup()
 {
-    inputs::addAnalogMultiplexer8(mpxSelectors, mpxInputs)
-        //
-        .inputNumber(mpxInputs[0], mux8_pin_t::A0, 9)
-        .inputNumber(mpxInputs[0], mux8_pin_t::A1, 8)
-        .inputNumber(mpxInputs[0], mux8_pin_t::A2, JOY_BACK)
-        .inputNumber(mpxInputs[0], mux8_pin_t::A3, 10)
-        .inputNumber(mpxInputs[0], mux8_pin_t::A4, JOY_A)
-        .inputNumber(mpxInputs[0], mux8_pin_t::A5, JOY_Y)
-        .inputNumber(mpxInputs[0], mux8_pin_t::A6, JOY_B)
-        .inputNumber(mpxInputs[0], mux8_pin_t::A7, JOY_X)
-        //
-        .inputNumber(mpxInputs[1], mux8_pin_t::A0, 12)
-        .inputNumber(mpxInputs[1], mux8_pin_t::A1, 13)
-        .inputNumber(mpxInputs[1], mux8_pin_t::A2, 14)
-        .inputNumber(mpxInputs[1], mux8_pin_t::A3, 11)
-        .inputNumber(mpxInputs[1], mux8_pin_t::A4, JOY_RB)
-        .inputNumber(mpxInputs[1], mux8_pin_t::A5, JOY_LB)
-        .inputNumber(mpxInputs[1], mux8_pin_t::A6, ALT2)
-        .inputNumber(mpxInputs[1], mux8_pin_t::A7, ALT1);
+    AnalogMultiplexerChip8 chip1(GPIO_NUM_32);
+    chip1[Mux8Pin::A0] = 9;
+    chip1[Mux8Pin::A1] = 8;
+    chip1[Mux8Pin::A2] = JOY_BACK;
+    chip1[Mux8Pin::A3] = 10;
+    chip1[Mux8Pin::A4] = JOY_A;
+    chip1[Mux8Pin::A5] = JOY_Y;
+    chip1[Mux8Pin::A6] = JOY_B;
+    chip1[Mux8Pin::A7] = JOY_X;
 
-    inputs::addDigital(GPIO_NUM_4, JOY_START);
+    AnalogMultiplexerChip8 chip2(GPIO_NUM_33);
+    chip2[Mux8Pin::A0] = 12;
+    chip2[Mux8Pin::A1] = 13;
+    chip2[Mux8Pin::A2] = 14;
+    chip2[Mux8Pin::A3] = 11;
+    chip2[Mux8Pin::A4] = JOY_RB;
+    chip2[Mux8Pin::A5] = JOY_LB;
+    chip2[Mux8Pin::A6] = ALT2;
+    chip2[Mux8Pin::A7] = ALT1;
+
+    inputs::addAnalogMultiplexerGroup(
+        GPIO_NUM_27,
+        GPIO_NUM_15,
+        GPIO_NUM_14,
+        {chip1, chip2});
+
+    inputs::addButton(GPIO_NUM_4, JOY_START);
 
     inputs::addRotaryEncoder(GPIO_NUM_22, GPIO_NUM_21, ROT1_CW, ROT1_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_5, GPIO_NUM_18, ROT2_CW, ROT2_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_23, GPIO_NUM_19, ROT3_CW, ROT3_CCW);
 
     inputs::setAnalogClutchPaddles(GPIO_NUM_25, GPIO_NUM_26);
-    inputHub::setClutchInputNumbers(LCLUTCH, RCLUTCH);
-    inputHub::setClutchCalibrationInputNumbers(ROT1_CW, ROT1_CCW);
-    inputHub::cycleCPWorkingMode_setInputNumbers({JOY_START, JOY_LB});
-    inputHub::cmdRecalibrateAnalogAxis_setInputNumbers({JOY_RB, JOY_LB, JOY_START});
 
-    inputHub::setALTInputNumbers({ALT1, ALT2});
-    inputHub::cycleALTButtonsWorkingMode_setInputNumbers({JOY_START, JOY_RB});
+    inputHub::clutch::inputs(LCLUTCH, RCLUTCH);
+    inputHub::clutch::bitePointInputs(ROT1_CW, ROT1_CCW);
+    inputHub::clutch::cycleWorkingModeInputs({JOY_START, JOY_LB});
+    inputHub::clutch::cmdRecalibrateAxisInputs({JOY_RB, JOY_LB, JOY_START});
+
+    inputHub::altButtons::inputs({ALT1, ALT2});
+    inputHub::altButtons::cycleWorkingModeInputs({JOY_START, JOY_RB});
+}
+
+//------------------------------------------------------------------
+
+void customFirmware()
+{
+    power::configureWakeUp(WAKE_UP_PIN);
+    simWheelSetup();
+    hid::configure(
+        DEVICE_NAME,
+        DEVICE_MANUFACTURER);
+
+#ifdef ENABLE_BATTERY_MONITOR
+    batteryMonitor::configure(
+        BATTERY_READ_GPIO,
+        BATTERY_ENABLE_READ_GPIO);
+#endif
 }
 
 //------------------------------------------------------------------
@@ -135,23 +146,9 @@ void simWheelSetup()
 
 void setup()
 {
-    esp_log_level_set("*", ESP_LOG_ERROR);
-
-    userSettings::begin();
-    power::begin((gpio_num_t)WAKE_UP_PIN);
-    simWheelSetup();
-    hidImplementation::begin(
-        DEVICE_NAME,
-        DEVICE_MANUFACTURER);
-
-#ifdef ENABLE_BATTERY_MONITOR
-    batteryMonitor::begin(
-        (gpio_num_t)BATTERY_ENABLE_READ_GPIO,
-        (gpio_num_t)BATTERY_READ_GPIO);
-#endif
-
-    inputs::start();
+    firmware::run(customFirmware);
 }
+
 void loop()
 {
     vTaskDelay(portMAX_DELAY);

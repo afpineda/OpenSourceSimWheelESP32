@@ -9,8 +9,12 @@
  *
  */
 
-#include <Arduino.h>
-#include "SimWheel.h"
+#include "SimWheel.hpp"
+#include "SimWheelInternals.hpp"
+#include "InternalServices.hpp"
+#include "HAL.hpp"
+
+#include <HardwareSerial.h>
 
 // ----------------------------------------------------------------------------
 // GPIO
@@ -28,70 +32,70 @@
 
 #define SAMPLING_MILLIS (60 * 1000) // 1 minute
 
-extern int getBatteryReadingForTesting(gpio_num_t battENPin, gpio_num_t battREADPin);
-
 // ----------------------------------------------------------------------------
 // Auxiliary
 // ----------------------------------------------------------------------------
 
-extern void configureBatteryMonitor(
-    gpio_num_t enableBatteryReadPin,
-    gpio_num_t batteryLevelPin);
-
 void dumpCalibrationData()
 {
+    int data;
     Serial.print("{ ");
-    uint8_t index = 0;
-    int data = batteryCalibration::getCalibration(index);
-    while (data >= 0)
+    for (
+        uint8_t index = 0;
+        index < BatteryCalibrationService::call::getCalibrationDataCount();
+        index++)
     {
+        data = BatteryCalibrationService::call::getCalibrationData(index);
         if (index > 0)
             Serial.print(", ");
         Serial.print(data);
-        index++;
-        data = batteryCalibration::getCalibration(index);
     }
     Serial.println(" };");
+}
+
+int getBatteryReading(ADC_GPIO batteryREADPin, OutputGPIO battENPin)
+{
+    if (battENPin != UNSPECIFIED::VALUE)
+    {
+        GPIO_SET_LEVEL(battENPin, 1);
+        DELAY_TICKS(200);
+    }
+    int reading = internals::hal::gpio::getADCreading(batteryREADPin, 100);
+    if (battENPin != UNSPECIFIED::VALUE)
+    {
+        GPIO_SET_LEVEL(battENPin, 0);
+    }
+    return reading;
 }
 
 // ----------------------------------------------------------------------------
 // Mocks
 // ----------------------------------------------------------------------------
 
-void inputs::update()
-{
-}
-
-void inputs::recalibrateAxes()
-{
-}
-
-void inputs::reverseLeftAxis()
-{
-}
-
-void inputs::reverseRightAxis()
-{
-}
-
-void inputs::setRotaryPulseWidthMultiplier(uint8_t multiplier) {}
-
-uint8_t inputs::getRotaryPulseWidthMultiplier() { return 1; }
 
 // ----------------------------------------------------------------------------
 // Arduino entry point
 // ----------------------------------------------------------------------------
 
+ADC_GPIO battRead;
+OutputGPIO battEN;
+
 void setup()
 {
-    esp_log_level_set("*", ESP_LOG_ERROR);
-
     int countdown = 3 * 60;
     // int countdown = 10;
     Serial.begin(115200);
 
-    configureBatteryMonitor(BATT_EN_PIN, BATT_READ_PIN);
-    if (getBatteryReadingForTesting(BATT_EN_PIN, BATT_READ_PIN) < 150)
+    battRead = BATT_READ_PIN;
+    battEN = BATT_EN_PIN;
+    batteryMonitor::configure(battRead, battEN);
+    hid::configure("Battery calibration", "Mamandurrio", false);
+    internals::hid::common::getReady();
+    internals::storage::getReady();
+    internals::batteryCalibration::getReady();
+    OnStart::notify();
+
+    if (getBatteryReading(battRead, battEN) < 150)
     {
         Serial.println("Note: No battery detected.");
     }
@@ -100,7 +104,7 @@ void setup()
     while ((!Serial.available()) && (countdown > 0))
     {
         countdown--;
-        delay(1000);
+        DELAY_MS(1000);
     }
 
     if (countdown <= 0)
@@ -108,14 +112,12 @@ void setup()
         Serial.println("Running...");
         Serial.println("If you can see this message, unplug the USB cable,");
         Serial.println("plug a fully charged battery and reset.");
-        batteryCalibration::clear();
-        batteryCalibration::save();
+        internals::batteryCalibration::clear();
+        SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
         Serial.println("Calibration data has been cleared.");
-        hidImplementation::begin("Battery calibration", "Mamandurrio", false);
     }
     else
     {
-        batteryCalibration::begin();
         Serial.println("[EN] Current battery calibration data:");
         Serial.println("[ES] Datos actuales de calibracion de bateria:");
         Serial.println("----------------------------------------------");
@@ -124,15 +126,17 @@ void setup()
         Serial.println("--END--FIN--");
         Serial.end();
         for (;;)
-            delay(1000);
+            DELAY_MS(1000);
     }
 }
 
 void loop()
 {
-    int reading = getBatteryReadingForTesting(BATT_EN_PIN, BATT_READ_PIN);
+    int reading = getBatteryReading(battRead, battEN);
     if (reading >= 150)
-        batteryCalibration::addSample(reading, true);
-    // else BATT_READ_PIN is not connected
-    delay(SAMPLING_MILLIS);
+    {
+        internals::batteryCalibration::addSample(reading);
+        SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+    } // else BATT_READ_PIN is not connected
+    DELAY_MS(SAMPLING_MILLIS);
 }

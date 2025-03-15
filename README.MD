@@ -1,4 +1,3 @@
-
 #
 
 <div align="center">
@@ -48,10 +47,11 @@ This project provides open hardware and software for a sim-racing wheel or butto
     Navigation controls cannot be assigned to car functions in some simulators.
     This solves that problem.
 
-- 🎮 **Custom button mapping**.
+- 🎮 **Custom button map**.
   The user can customize the button numbering on this wheel to match other wheels.
   This way, the simulator does not force the user to reconfigure
   inputs every time these wheels are swapped.
+  You can set your own "factory defaults" too.
 
 - ∿ Adjustable **pulse width** for rotary encoders (by user preference).
   Some simulators may miss a rotation due to their own polling interval.
@@ -59,6 +59,9 @@ This project provides open hardware and software for a sim-racing wheel or butto
 
 - ⛐ **Telemetry** using [SimHub](https://www.simhubdash.com/).
   Supported display hardware includes RGB LED strips and single color LEDs.
+
+- ⚙️ **Neutral gear** ("virtual" button).
+  You can set a button combination to engage a "virtual" button for *neutral gear*.
 
 - 💤 **Automatic power-off** when not in use.
 
@@ -69,6 +72,8 @@ This project provides open hardware and software for a sim-racing wheel or butto
 - 💰 **Low budget**.
 
 - ✅ **Fully operational**.
+
+- 👷‍♀️State-of-the-art software-engineering (no amateur code).
 
 There is a [companion app](https://github.com/afpineda/SimWheelESP32Config) for user preferences,
 not mandatory but needed for some features.
@@ -137,6 +142,10 @@ o una caja de botones con las siguientes características:
 - ⛐ **Telemetría** mediante [SimHub](https://www.simhubdash.com/).
   El hardware de visualización incluye tiras LED RGB y LED de un único color.
 
+- ⚙️ **Punto muerto** (botón "virtual").
+  Puede asignar una combinación de botones para activar un botón "virtual"
+  como *punto muerto* (marcha neutra).
+
 - 💤 **Apagado automático** cuando no se usa
 
 - 👍 **Controles de calidad**
@@ -147,6 +156,8 @@ o una caja de botones con las siguientes características:
 - 💰 **Costes contenidos**.
 
 - ✅ **Totalmente operativo**.
+
+- 👷‍♀️Ingeniería software según el estado de la cuestión (nada de código de aficionado).
 
 Existe una [aplicación auxiliar](https://github.com/afpineda/SimWheelESP32Config) para las preferencias de usuario,
 no obligatoria, pero necesaria para algunas funcionalidades.

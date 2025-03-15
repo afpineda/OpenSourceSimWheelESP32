@@ -1,0 +1,3 @@
+StorageIntgTest.cpp
+storage.cpp
+Preferences_fake.cpp

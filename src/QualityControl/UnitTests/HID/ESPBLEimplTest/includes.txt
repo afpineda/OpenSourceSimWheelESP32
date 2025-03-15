@@ -1,0 +1,4 @@
+hid_ESPBLE.cpp
+hidCommon.cpp
+hidTestHelper.cpp
+telemetry.cpp

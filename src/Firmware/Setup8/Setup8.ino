@@ -9,8 +9,8 @@
  *
  */
 
-//#include <Arduino.h>
-#include "SimWheel.h"
+#include "SimWheel.hpp"
+#include "SimWheelUI.hpp"
 
 //------------------------------------------------------------------
 // Global customization
@@ -46,35 +46,41 @@ std::string DEVICE_MANUFACTURER = "Mamandurrio";
 
 void simWheelSetup()
 {
-    inputs::addShiftRegisters(GPIO_NUM_39, GPIO_NUM_33, GPIO_NUM_34, 25)
-        //
-        .inputNumber(0, sr8_pin_t::A, 9)
-        .inputNumber(0, sr8_pin_t::B, 10)
-        .inputNumber(0, sr8_pin_t::C, 15)
-        .inputNumber(0, sr8_pin_t::D, 16)
-        .inputNumber(0, sr8_pin_t::E, JOY_RB)
-        .inputNumber(0, sr8_pin_t::F, 8)
-        .inputNumber(0, sr8_pin_t::G, JOY_A)
-        .inputNumber(0, sr8_pin_t::H, JOY_LB)
-        //
-        .inputNumber(1, sr8_pin_t::A, 11)
-        .inputNumber(1, sr8_pin_t::B, 12)
-        .inputNumber(1, sr8_pin_t::C, 13)
-        .inputNumber(1, sr8_pin_t::D, 14)
-        .inputNumber(1, sr8_pin_t::E, JOY_BACK)
-        .inputNumber(1, sr8_pin_t::F, JOY_Y)
-        .inputNumber(1, sr8_pin_t::G, JOY_X)
-        .inputNumber(1, sr8_pin_t::H, JOY_B)
-        //
-        .inputNumber(2, sr8_pin_t::A, 17)
-        .inputNumber(2, sr8_pin_t::B, 18)
-        .inputNumber(2, sr8_pin_t::C, 24)
-        .inputNumber(2, sr8_pin_t::D, JOY_START)
-        .inputNumber(2, sr8_pin_t::E, 22)
-        .inputNumber(2, sr8_pin_t::F, 21)
-        .inputNumber(2, sr8_pin_t::G, 20)
-        .inputNumber(2, sr8_pin_t::H, 19)
-        .inputNumber(2, sr8_pin_t::SER, 23);
+    ShiftRegisterChip chip1, chip2, chip3;
+    //
+    chip1[SR8Pin::A] = 9;
+    chip1[SR8Pin::B] = 10;
+    chip1[SR8Pin::C] = 15;
+    chip1[SR8Pin::D] = 16;
+    chip1[SR8Pin::E] = JOY_RB;
+    chip1[SR8Pin::F] = 8;
+    chip1[SR8Pin::G] = JOY_A;
+    chip1[SR8Pin::H] = JOY_LB;
+    //
+    chip2[SR8Pin::A] = 11;
+    chip2[SR8Pin::B] = 12;
+    chip2[SR8Pin::C] = 13;
+    chip2[SR8Pin::D] = 14;
+    chip2[SR8Pin::E] = JOY_BACK;
+    chip2[SR8Pin::F] = JOY_Y;
+    chip2[SR8Pin::G] = JOY_X;
+    chip2[SR8Pin::H] = JOY_B;
+    //
+    chip3[SR8Pin::A] = 17;
+    chip3[SR8Pin::B] = 18;
+    chip3[SR8Pin::C] = 24;
+    chip3[SR8Pin::D] = JOY_START;
+    chip3[SR8Pin::E] = 22;
+    chip3[SR8Pin::F] = 21;
+    chip3[SR8Pin::G] = 20;
+    chip3[SR8Pin::H] = 19;
+
+    inputs::add74HC165NChain(
+        GPIO_NUM_34,
+        GPIO_NUM_48,
+        GPIO_NUM_18,
+        {chip1, chip2, chip3},
+        23);
 
     inputs::addRotaryEncoder(GPIO_NUM_38, GPIO_NUM_37, ROT1_CW, ROT1_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_35, ROT2_CW, ROT2_CCW);
@@ -82,8 +88,19 @@ void simWheelSetup()
     inputs::addRotaryEncoder(GPIO_NUM_17, GPIO_NUM_16, ROT4_CW, ROT4_CCW);
 
     // LilyGo T-QT built-in push buttons
-    inputs::addDigital(GPIO_NUM_0,60);
-    inputs::addDigital(GPIO_NUM_47,61);
+    inputs::addButton(GPIO_NUM_0, 60);
+    inputs::addButton(GPIO_NUM_47, 61);
+}
+
+//------------------------------------------------------------------
+
+void customFirmware()
+{
+    simWheelSetup();
+    hid::configure(
+        DEVICE_NAME,
+        DEVICE_MANUFACTURER,
+        false);
 }
 
 //------------------------------------------------------------------
@@ -92,13 +109,7 @@ void simWheelSetup()
 
 void setup()
 {
-    esp_log_level_set("*", ESP_LOG_ERROR);
-    simWheelSetup();
-    hidImplementation::begin(
-        DEVICE_NAME,
-        DEVICE_MANUFACTURER,
-        false);
-    inputs::start();
+    firmware::run(customFirmware);
 }
 
 void loop()

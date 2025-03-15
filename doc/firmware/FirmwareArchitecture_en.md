@@ -1,186 +1,374 @@
 # Firmware (software) architecture
 
-## Modules
+The *system* have been broken down into several *subsystems*:
 
-The *system* have been broken into several *modules* that have been implemented as C++ namespaces.
-All of them are defined at *SimWheel.h*:
-
-- **batteryCalibration**: Everything related to battery profiling.
-- **batteryMonitor**: Everything related to the measurement of available battery charge.
-- **capabilities**: Everything related to the capabilities of the hardware and firmware.
-- **hidImplementation**: Everything related to the HID protocol.
-- **hidImplementation::common**: Common behavior for all HID implementations (USB and BLE).
-- **inputs**: Everything related to hardware inputs and their events.
-- **inputHub**: Everything related to the combined state of all inputs and their treatment.
+- `batteryCalibration`:
+  Everything related to battery profiling.
+- `batteryMonitor`:
+  Everything related to the measurement of available battery charge.
+- `firmware`:
+  Performs initialization and launches execution.
+- `hid`:
+  Everything related to the HID protocol.
+- `inputs`:
+  Everything related to hardware inputs and their events.
+- `inputHub`:
+  Everything related to the combined state of all inputs and their treatment.
   Translates input events into a HID report.
-- **notify**: Everything related to the notification of some events to the user if an user interface is available.
-- **pixels**: Everything related to pixel control.
-- **power**: Everything related to power management.
-- **userSettings**: Manages user settings and their long term storage.
+- `inputMap`:
+  Translates firmware-defined input numbers to user-defined input numbers.
+- `pixels`:
+  Everything related to pixel control.
+- `power`:
+  Everything related to power management.
+- `storage`:
+  Manages long-term storage of user settings in flash memory.
+- `telemetry`:
+  Holds received telemetry data.
+- `ui`
+  Everything related to the user interface, if available.
 
-Each namespace is implemented in a single *cpp* file with its name, however,
-some of them have alternate implementations in order to enable unit and integration testing.
-Those files are named following this pattern: `<namespace>_<implementation>.cpp`.
-Some implementations are:
+Each subsystem is implemented through one or more code abstractions:
 
-- *mock*: dummy implementation with no actual behavior.
-- *serial*: implementation providing output to the serial port.
+- **A "public" namespace**, matching the subsystem name.
+  Contains code available for firmware customization.
+- **An "internal" namespace**, matching the pattern `internals::<subsystem>`.
+  Contains code for internal operation,
+  not exposed for customization.
+- **A "Service class"**, matching the pattern `<subsystem>Service`.
+  Does not contain code, just an interface.
+  A "service provider" descendant class is in charge of the actual implementation.
+  For performance reasons, only non-critical code is placed in a service provider.
+- Auxiliary classes and type names (do not belong to any namespace).
+- Auxiliary namespaces which belong to `internals`, but do not name a subsystem:
+  - `internals::hal`:
+    Utilities for ESP32 hardware operation.
 
-All modules can be found at the [/common](../../src/common/) folder.
+## Code structure
 
-### Auxiliary modules
+Those code abstractions are found in code artifacts:
+header files (.hpp) and translation units (.cpp).
+Some header files contain both a declaration and an implementation,
+thus not requiring a translation unit.
 
-Some namespaces are implemented with the help of auxiliary modules which are not exposed at *SimWheel.h*, one *cpp* file for each:
+- Header files:
 
-- *adcTools*: Reading of ADC pins.
-- *AnalogMultiplexerInput*: Everything related to multiplexed buttons/switches.
-- *ButtonMatrixInput*: Everything related to button/switch matrices.
-- *debugUtils*: Minor utilities for debugging and testing.
-- *LedStrip*: Interface to single-wire LED strips.
-- *PolledInput*: Related to inputs that must be read in a polling (or sampling) loop.
-  Defines two main c++ classes: `AnalogAxisInput` and `DigitalPolledInput`.
-- *RotaryEncoderInput*: Everything related to rotary encoders.
-- *SerialNotification*: For the testing of user notifications through the USB serial interface.
-- *ShiftRegistersInput*: Everything related to serialized buttons/switches.
-- *i2cTools*: I2C bus initialization and common utilities.
-- *I2CExpanderInput*: Everything related to GPIO expanders on the I2C bus.
+  - Core:
 
-### Principle of single responsibility
+    - `SimWheel.hpp`: declares all *public namespaces*.
+    - `SimWheelTypes.hpp`:
+      declares all type names required by public namespaces.
+    - `SimWheelInternals.hpp`: declares all *internal namespaces*
+    - `InternalTypes.hpp`:
+      declares all type names required by internal namespaces.
+    - `InternalServices.hpp`: declares all service classes.
 
-| Module                 | Reason to change                                        |
-| ---------------------- | ------------------------------------------------------- |
-| adcTools               | Requirements to ADC readings (for example, attenuation) |
-| AnalogAxisInput        | Hardware design                                         |
-| AnalogMultiplexerInput | Hardware design                                         |
-| batteryCalibration     | SoC algorithm                                           |
-| batteryMonitor         | Hardware for SoC measurement                            |
-| ButtonMatrixInput      | Hardware design                                         |
-| capabilities           | Hardware and firmware features relevant to the user     |
-| hidImplementation      | Device-computer intercommunication                      |
-| I2CExpanderInput       | Hardware design                                         |
-| i2cTools               | I2C API                                                 |
-| inputHub               | Device functionality                                    |
-| inputs                 | Input hardware                                          |
-| notify                 | User interface hardware (if any)                        |
-| LedStrip               | Underlying LED strip single-wire protocol               |
-| pixels                 | Hardware design                                         |
-| power                  | Underlying power management capabilities                |
-| RotaryEncoderInput     | Hardware design                                         |
-| ShiftRegistersInput    | Hardware design                                         |
-| userSettings           | Long term storage of user settings                      |
+  - Auxiliary:
 
-### Module dependencies
+    - `HAL.hpp`:
+      implements the `internals::hal` namespace.
+    - `HID_definitions.hpp`:
+      required by the internal namespace `internals::hid`.
+    - `InputSpecification.hpp`:
+      required by the public namespace `inputs`.
+    - `InputValidation.hpp` and `InputHardware.hpp`:
+      required by the internal namespace `internals::inputs`.
+    - `OutputHardware.hpp`:
+      required by the `pixels` subsystem and `SimWheelUI.hpp`.
+    - `SimWheelUI.hpp`:
+      declares out-of-the-box user interfaces for telemetry display
+      and notifications.
+    - `Testing.hpp`:
+      common utilities for Arduino-only test sketches.
 
-Only most relevant information is shown below:
+- Translation units:
+
+  - Core:
+
+    Each subsystem is implemented in a *cpp* file with its name,
+    including a public namespace, an internal namespace and a service class (if any).
+    However, some of them have alternate implementations.
+    Those files are named following this pattern: `<subsystem>_<implementation>.cpp`.
+
+  - Auxiliary:
+
+    Provide implementation for the matching header file.
+    For example, `InputHardware.cpp` implements all declarations
+    found in `InputHardware.hpp`.
+
+### Exceptions to this rule
+
+- `hid::configure()` is implemented in `hidCommon.cpp`.
+- The `HidService` service class is implemented in `hidCommon.cpp`.
+
+## Principle of single responsibility
+
+| Code artifact            | Reason to change                                                       |
+| ------------------------ | ---------------------------------------------------------------------- |
+| batteryCalibration.cpp   | SOC algorithm                                                          |
+| batteryMonitor.cpp       | Battery management capabilities                                        |
+| firmware.cpp             | Firmware initialization                                                |
+| HAL.cpp                  | Underlying ESP-IDF API                                                 |
+| hid_«implementation».cpp | Underlying HID stack                                                   |
+| hidCommon.cpp            | Features available through the companion app or SimHub                 |
+| InputHardware.cpp        | Input hardware design                                                  |
+| inputHub.cpp             | Device operation through specific button press combinations            |
+| inputMap.cpp             | Firmware-defined or user-defined input numbers                         |
+| inputs.cpp               | Input hardware settings                                                |
+| OutputHardware.cpp       | Output hardware design                                                 |
+| pixels.cpp               | Pixel control capabilities or available UI notifications               |
+| power.cpp                | Underlying power management capabilities                               |
+| SimWheelUI.cpp           | Out-of-the-box user interfaces for telemetry display and notifications |
+| storage.cpp              | User settings that require long-term storage                           |
+| telemetry.cpp            | Telemetry data                                                         |
+| ui.cpp                   | Support for custom user interfaces                                     |
+
+## Approach to dependency injection
+
+Three kinds of dependency injections are found in this project:
+
+- Static (dependencies are injected at compile time):
+
+  A translation unit is replaced by another one implementing the same declarations.
+  Thus, dependencies are injected at compile time in the build process.
+  Static dependency injection does not provide dependency inversion,
+  but is required for performance concerns.
+
+- Dynamic (dependencies are injected at run time):
+
+  - Service classes:
+
+    They follow the dependency injection design pattern,
+    but using static classes (not parameter injection nor constructor injection),
+    since all of them require a singleton instance.
+    This pattern involves virtual methods and there is a performance
+    penalty in them. However, this pattern achieves dependency inversion.
+
+    *Note*: Each service class is also a mock for itself.
+    If no dependency is injected, the mock is automatically injected
+    without a runtime failure. This simplifies testing.
+
+  - Publish-subscribe events:
+
+    An "event" class decouples the caller from the callee.
+    The caller triggers the event (static method `notify()`) which,
+    in turn, runs a number of subscribed callbacks unknown to the caller.
+    This pattern removes static dependencies completely
+    and there is almost no performance penalty.
+
+  The procedure for dynamic dependency injection is this:
+
+  1. The main program (an Arduino sketch file)
+     calls `firmware::run()`.
+  2. This method calls all `internals::<subsystem>::getReady()` methods.
+  3. Each `getReady()` method subscribe to the required events and
+     inject an instance for its service class.
+     However, other dependencies are not injected yet,
+     thus can not be called.
+     For this reason, they typically subscribe to the `OnStart` event.
+  4. `firmware::run()` triggers `OnStart::notify()`.
+  5. Each `OnStart` callback is executed.
+     At this point, all dependencies are available to them.
+     Each subsystem performs initialization and
+     may call other subsystems if required.
+
+## Internal dependencies
+
+Only **most relevant information** is shown below.
+A solid arrow means a static dependency.
+A dotted arrow means a dynamic dependency through a service class.
+
+### Core
 
 ```mermaid
 classDiagram
     class inputs {
-      +start()
     }
-    class AnalogAxisInput
+    class AnalogInput
     class inputHub {
       +onRawInput()
     }
-    class hidImplementation {
+    class hid {
       +reportInput()
     }
-    class power {
-      +powerOff()
-    }
-    class batteryCalibration {
-      +getBatteryLevel()
-      +getBatteryLevelAutoCalibrated()
-    }
-    class DigitalPolledInput {
-      +read()
-    }
-    class batteryMonitor {
-        + getLastBatteryLevel()
-    }
-    class userSettings {
-      +bitePoint
-      +cpWorkingMode
-      +altButtonsWorkingMode
-    }
+    class telemetry
+    class pixels
     inputHub <-- inputs: input events
-    inputs <-- PolledInput: state of input hardware
-    inputs <-- AnalogAxisInput: axis position
-    PolledInput <|-- DigitalPolledInput
-    inputHub --> hidImplementation: processed events
-    inputHub <--> userSettings: configuration
-    hidImplementation <--> userSettings: configuration
-    hidImplementation --> power: auto power-off
-    hidImplementation <-- batteryMonitor: current battery level
-    batteryMonitor --> batteryCalibration: battery voltage
-    batteryMonitor <-- batteryCalibration: computed battery level
-    batteryMonitor --> power: power-off on critical battery level
+    inputs <-- DigitalInput: state of switches
+    inputs <-- AnalogInput: axis position
+    inputMap <-- inputHub : map input numbers (command)
+    hid <-- inputHub: processed events
+    pixels <-- hid: pixel data and commands
+    telemetry <-- hid: raw telemetry data
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqdVMtu2zAQ_BWCpxaNf0AIAjhNgQZI0KA59KLLWlzJRClSIJdxg9T_3tXDAiWqQVFfTC1nZl8jvcnKKZSFrAyEcKeh8dCWVvBviAhtu0hBvI0xIT4FAk8fPo7P5xS6t2Bcs_-lw31PylS-xkOi4-x3OA3ATbGjVvdtZ7BFS0Da2YTqsXOe_s7t3Al9gh-ev9X1JvgAROhfP4PRB7_O1CDdjvcP-ILmIpDf7CO5iwSqzUR3utEE5skZg2ooftESqPfKe3RWk0uaYo7gGh4gbFa40IgB_TMSadukmzxowienLc2Rqvvh_E-GPbIp5igYuo1Ezobsdkozr_d6t5scU4z_gouyFBJYGEDJFArBliIUrp4oR_DqBB4z0spghQA-8raD7tc2wtPxXv9mUj72Vc273U3utkJ03lUYAqq8hanTm8VgC1E5W-smjiYa4bmL_5fX0wYfc9fstfG8c3X9TqKVeThT9J4Bl7gwvWVGgZXP-nT5m1HMzBdnCBrc5CaZF9zKtTw8Hui_pZ-6nRsV3FTledUVmExCXskWfQta8bdssHgp6cjjKGXBR4U1REOlLO2Zof0En19tJQvyEa9k7BQ7cPr6LYNfVF_QGDv_Abn-wmA)
+[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNp1krtuAyEQRX9lROUo9g-gNJFcJEWauIu2GS_jXSRegiFry_K_h33YJnKyDcvl3OEOcBatVySkaA2mtNXYRbSNg_JNCmgXMic4z9qlXnp1aHz3PgIPjre8v3oAnr37xGECV09_FOq1quBIwUf-n2YyZInjqRaDPpJJs3IL8LLZLPnlPAJ9k-MaSxO01Z1mNNOeEhIjE_gDpEFz29MjX3UuAY-67O-TZu1dhX5guCcY40iwRZqDuGz3FBOsWm8tOrU0Op5E7ZEQom8pJVK_ss_tTmixyHkOChmhFIOl6ALfDuzORxwqefSJtbAULWpVHsN0GY3gvgCNkOVX0QGz4UY07lJQzOx3J9cKyTHTWkSfu17IA5pUZjmUirQ8pisS0H15bxfo8gNIDNOG)
+
+### Hardware inputs
 
 ```mermaid
 classDiagram
-    class I2CButtonsInput{
+    class I2CInput{
       #getGPIOstate()
     }
-    DigitalPolledInput <|-- ButtonMatrixInput
-    DigitalPolledInput <|-- AnalogMultiplexerInput
-    DigitalPolledInput <|-- ShiftRegistersInput
-    DigitalPolledInput <|-- RotaryEncoderInput
-    DigitalPolledInput <|-- I2CInput
-    I2CInput <|-- I2CButtonsInput
-    I2CButtonsInput <|-- PCF8574ButtonsInput
-    I2CButtonsInput <|-- MCP23017ButtonsInput
+    class DigitalInput{
+      +read()
+    }
+    DigitalInput <|-- ButtonMatrixInput
+    DigitalInput <|-- AnalogMultiplexerInput
+    DigitalInput <|-- ShiftRegistersInput
+    DigitalInput <|-- RotaryEncoderInput
+    DigitalInput <|-- DigitalButton
+    DigitalInput <|-- I2CInput
+    I2CInput     <|-- PCF8574ButtonsInput
+    I2CInput     <|-- MCP23017ButtonsInput
+    AnalogInput  <|-- AnalogClutchInput
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNqNkVFLwzAUhf9KuL4obKBTmRRftJvSh2LZXvtyaW67QJqU5AY2Zv-7sdVRfJDmJcm530ngnDNUVhIkUGn0fqOwcdiWRsQ1KCJbpa-B2RqfmS7weZwJcdUQvxfZh2dkur4Z5X7cNqpRjLqwWpMcbOL5c7kU40M5slPHQf4ffzGobZMHzarTdCQ3w7M_qJp31CjP5PwMw84yutPWfMcw54OYx4T6vV1m06wuyFQcySJ9e3pcP8yk87RY3d_eracTWEBLrkUlY3lDKyXwgVoqIYlHSTXG4EooTR9RDGz3J1NBUqP2tIDQydjbT99_1K1UbB0k7AL1X8JeuZc)
+**Link here**
+
+### Internal services
 
 ```mermaid
 classDiagram
-    hidImplementation --> inputs: command to calibrate analog axes
-    hidImplementation --> batteryCalibration: command to recalibrate battery
-    hidImplementation --> notify: connected, discovering, telemetry data
-    hidImplementation --> pixels: pixel data
-    batteryMonitor --> notify: low battery level
-    userSettings --> notify: bite point
+    class inputs {
+    }
+    class inputHub {
+      +onRawInput()
+    }
+    class hid {
+      +reportInput()
+    }
+    class batteryMonitor {
+    }
+    class batteryCalibration {
+    }
+    class power {
+      +shutdown()
+    }
+    power <.. hid: shutdown on timeout (command)
+    power <.. batteryMonitor: shutdown on critical battery level (command)
+    inputs <.. inputHub: recalibrate axes (command)
+    inputs <.. hid: recalibrate axes, set pulse width, reverse axes (commands)
+    batteryCalibration <.. hid: restart auto-calibration algorithm (command)
+    inputMap <.. hid: current input map
+    hid <.. inputHub : working modes, bite point, etc
+    ui <.. inputHub: bite point
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNp9UTFuwzAM_Iqg2fmAhy5thw6dshVeaIm2CUikIVFJjCB_r9w6aL1Yi8TT3fEo3a0Tj7a1LkDObwRjgtixqWsi_xHngBFZQUnYnE4vhngumlvjJEZgb1SMg0B9AkUDDEFGAzfMRx49qGJaXjddhXd-Cf8cN-qRG4vSsKwOzOgUfWM8ZScXTMRjYxRXhabFeFA4cprphqHO9rP_Y28hPoVJJe2aBrk-r03AC4ZfRcmYzqhaA-Qdv6c61CzEahsbMUUgX1__vso6q1NN1Nm2Hj0OUIJ2tuNHpUJROS_sbKupYGPLXOPh9l978N2vKZ9YkjJOth0g5FrNwF8icasf30Rzs-0)
+**Link here**
+
+## Event system
+
+
+- Initialization and load/save settings:
+
+  ```mermaid
+  flowchart LR
+    OnStart@{ shape: stadium }
+    LoadSettings@{ shape: stadium }
+    SaveSettings@{ shape: stadium }
+    OnSettingsSaved@{ shape: stadium }
+    any@{ shape: procs }
+    firmware -- notify --> OnStart -- subscribed --> any
+    any -- notify --> SaveSettings -- subscribed --> storage
+    any -- notify --> LoadSettings -- subscribed --> storage
+    storage -- notify --> OnSettingsSaved
+  ```
+
+- Battery level and shutdown:
+
+  ```mermaid
+  flowchart LR
+    OnShutDown@{ shape: stadium }
+    OnBatteryLevel@{ shape: stadium }
+    OnLowBattery@{ shape: stadium }
+    ui_pixels@{ shape: procs, label: "ui / pixels" }
+    power -- notify --> OnShutDown
+    batteryMonitor -- notify --> OnBatteryLevel
+    batteryMonitor -- notify --> OnLowBattery
+    OnShutDown -- subscribed --> ui_pixels
+    OnBatteryLevel -- subscribed --> hid
+    OnLowBattery -- subscribed --> ui_pixels
+  ```
+
+  *OnShutDown* is a notification, not a command.
+  However, the *ui* subsystems translates this event into a command
+  for all user interface instances.
+  To command a shutdown, the firmware needs to call
+  `PowerService::call::shutdown()`.
+
+- Connection/disconnection:
+
+  ```mermaid
+  flowchart LR
+    OnConnected@{ shape: stadium }
+    OnDisconnected@{ shape: stadium }
+    ui_pixels@{ shape: procs, label: "ui / pixels" }
+    hid -- notify --> OnConnected
+    hid -- notify --> OnDisconnected
+    OnConnected -- subscribed --> ui_pixels
+    OnDisconnected -- subscribed --> ui_pixels
+  ```
+
+**Link here**
+
+## Save settings
 
 ```mermaid
-classDiagram
-    power --> notify: shutdown
-    power --> pixels: shutdown
+sequenceDiagram
+  participant any
+  participant storage
+  participant timer
+  any ->> storage: SaveSettings::notify(userSetting) [callback]
+  storage ->> storage: remember this setting is to be stored
+
+  alt is delayed
+    storage ->> timer: restart
+    timer -->> storage: timeout
+  end
+  loop on every setting to be stored
+    storage ->>+ any: call getter at service class
+    any -->>- storage: current setting value
+    storage ->> storage: save
+  end
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNpdTksKwyAQvYrMOrmAi67aE3RX3AxxTAR1REfSEHL3Wkgp7Vu9H4-3w8SWQMMUsNarx7lgNEl1ZF6pqHG8qMTi3aZVXZpYXtN_nv2TQv3mMECkEtHbPry_2wZkoUgGdKeWHLYgBkw6ehWb8H1LE2gpjQZo2aLQeeXXvFkvXD5e4TYvoB2G2lXG9GCOpz5eNhJKpQ)
+**Link here**
 
-Some modules have a `begin()` method that must be called at system startup (`main()`or `setup()`).
-The calling order is defined by the previous diagram, where bottom modules must be called first.
+## Load settings
 
-### Definitions (header files)
+```mermaid
+sequenceDiagram
+  participant any
+  participant storage
+  any ->>+ storage: LoadSettings::notify(userSetting) [callback]
+  alt no default value
+    storage ->> storage: Check if the requested setting is stored
+    alt is stored
+      storage ->> storage: load setting
+      storage ->> any: call setter with argument save=false
+    end
+  else
+    storage ->> storage: load setting or set a default value
+    storage ->> any: call setter with argument save=false
+  end
+  deactivate storage
+```
 
-All header files can be found at the [/include](../../src/include/) folder.
-Most relevant are:
+## Brief description of most relevant subsystems
 
-- **SimWheel.h**: definition of all modules (namespaces).
-- **SimWheelTypes.h**: common constants and types for all modules.
-- **debugUtils.h**: constants and utilities for unit testing.
+For detailed description, see the Doxigen's documentation.
 
-## Brief description of most relevant modules
-
-For detailed description, see the Doxigen's documentation at [SimWheel.h](../../src/include/SimWheel.h).
-
-### DigitalPolledInput and descendant classes
+### DigitalInput and descendant classes
 
 There is a dedicated daemon that read the state of those inputs in a loop, every few milliseconds.
 Since many inputs are read at the same time, the combined state of all of them is reported to `inputHub`.
 Nothing is reported if there are no input events, this is, a state change since the previous iteration.
 
-### AnalogAxisInput
+### AnalogInput
 
-It works in a similar way to `DigitalPolledInput`, but for analog inputs,
+It works in a similar way to `DigitalInput`, but for analog inputs,
 which are limited to two clutch paddles with potentiometers.
 
 ### Inputs
@@ -200,50 +388,44 @@ else
    HID button number = raw input number
 ```
 
-### InputHub and userSettings
+### `inputHub` and `inputMap`
 
-Almost all the logic behind the behavior of the sim wheel is implemented at these modules.
-Wheel's functions are mapped to input numbers at `InputHub`.
+Almost all the logic behind the behavior of the sim wheel is implemented at these subsystems.
 
-### Capabilities
+### User interface (`ui` subsystem)
 
-This module holds static data about device capabilities.
-For example, it tells if the device has clutch paddles or not.
-Such data is set from other modules at startup.
-This module is trivial, so it is not shown in the previous diagram.
-It may be called from any other module.
-
-### Notifications ("notify" module)
-
-This module provides a generic way to notify events to the user, if a user interface is available.
-It does not depend on a particular hardware, so, anything could be implemented in the future:
+This subsystems provides a generic way to notify events to the user,
+if a user interface is available, and to display telemetry data.
+It does not depend on a particular hardware,
+so anything could be implemented:
 a single LED, sounds, an OLED, etc.
 By default, it does nothing.
 To provide a particular user-interface implementation,
 derive a new class from `AbstractUserInterface`,
-then provide instances to `notify::begin()`.
+then provide instances to `ui::add()`.
 
 All notifications are queued, serialized and executed
 in a very low priority separate thread: the *frameserver* daemon.
-The calling thread does not wait for them.
-For those reasons, some notifications may be missed.
+The caller thread does not wait for them.
+There is a *frameserver* daemon for each `AbstractUserInterface` instance.
 
 If there were two or more user interfaces (for example, display and sounds),
 they should be implemented in separate classes, not to mix their code.
 
 `AbstractUserInterface` may work in two, non-exclusive, modes:
 
-#### As a simple message queue
+- As a simple message queue
 
-For user interfaces not needing a perpetual loop or for one-time notifications. This is the default behavior.
-For example:
+  For user interfaces not needing a perpetual loop or for one-time notifications.
+  This is the default behavior.
+  For example:
 
-```c
-   void MyImpl::onStart() {
+  ```c
+  void MyImpl::onStart() {
       turnLedOn();
-   }
+  }
 
-   void MyImpl::onConnected() {
+  void MyImpl::onConnected() {
       // blink 2 times
       delay(250);
       turnLedOff();
@@ -253,47 +435,47 @@ For example:
       turnLedOff();
       delay(250);
       turnLedOn();
-   }
-```
+  }
+  ```
 
-#### As a frame server
+- As a frame server
 
-For user interfaces in need of a perpetual loop or for persistent notifications.
-If there are no pending notifications,
-`AbstractUserInterface::serveSingleFrame()` will be called at timed intervals.
-A non-zero frames-per-second value must be given to `notify::begin()`.
-For example:
+  For user interfaces in need of a perpetual loop or for persistent notifications.
+  If there are no pending notifications,
+  `AbstractUserInterface::serveSingleFrame()` will be called at timed intervals.
+  A non-zero frames-per-second value must be returned by `getMaxFPS()`.
+  For example:
 
-```c++
-   void MyImpl::onStart() {
-     discovering = false;
-   }
+  ```c++
+  void MyImpl::onStart() {
+    discovering = false;
+  }
 
-   void MyImpl::onBLEdiscovering() {
+  void MyImpl::onBLEdiscovering() {
       discovering = true;
-   }
+  }
 
-   void MyImpl::onConnected() {
+  void MyImpl::onConnected() {
       discovering = false;
       turnLedOn();
-   }
+  }
 
-   void MyImpl::serveSingleFrame(uint32_t elapsedMs) {
+  void MyImpl::serveSingleFrame(uint32_t elapsedMs) {
     // Called one time per second (more or less)
     // For perfect timing, use elapsedMs
     if (discovering)
       switchLed();
-   }
+  }
 
-   ...
+  ...
 
-   void setup()
-   {
+  void setup()
+  {
       ...
-      notify::begin({new MyImpl(ledPin)}, 1); // one frame per second
+      ui::add(new MyImpl(ledPin), 1); // one frame per second
       ...
-   }
-```
+  }
+  ```
 
 > [!NOTE]
 > `AbstractUserInterface::onLowBattery()` is already
@@ -323,10 +505,6 @@ There are two possible patterns to this end:
   to do all the painting.
   `AbstractUserInterface::serveSingleFrame()` does nothing.
 
-Note that `AbstractUserInterface::serveSingleFrame()` may get called
-several times in a row
-before `AbstractUserInterface::onTelemetryData()` gets called.
-
 ### BatteryMonitor
 
 This module is in charge of interfacing the underlying hardware for "state of charge" (SOC) estimation.
@@ -345,7 +523,7 @@ A daemon computes SOC in timed intervals under this algorithm:
    - *Fuel gauge*: computation is already done by the chip itself.
 
 4. Notify low battery levels.
-5. Power off on very low battery levels.
+5. Shutdown on very low battery levels.
 
 #### Fuel gauges
 
@@ -395,7 +573,7 @@ The battery needs a full charge before this algorithm provides any meaningful re
 
 (See [LiPoBatteryCharacterization.ods](./LiPoBatteryCharacterization.ods))
 
-### HidImplementation
+### Hid
 
 All data interchange between the device and the host computer is conducted through the HID protocol.
 This involves:
@@ -403,6 +581,7 @@ This involves:
 - State of buttons, axes and the alike.
 - Device capabilities.
 - Configuration: clutch paddles, "ALT" buttons, battery calibration, etc.
+- Telemetry and pixel control.
 
 See [HID notes](./HID_notes.md) for more details.
 
@@ -410,7 +589,8 @@ See [HID notes](./HID_notes.md) for more details.
 
 Every hardware input is assigned a single number starting from 0 and up to 63.
 
-The state of an input is represented by a single bit, 1 meaning a pressed button, 0 meaning a released button.
+The state of an input is represented by a single bit,
+1 meaning a pressed button, 0 meaning a released button.
 So, the combined state of all inputs is represented as a 64-bits word,
 where the n-th bit represents the n-th input number.
 This is called an *input bitmap*.
@@ -472,7 +652,8 @@ Raw inputs are transformed into a HID input report in a sequence of "filters" or
 4. Determine if ALT mode is engaged.
 5. Compute F1-style clutch position.
 6. Transform DPAD inputs into navigational input, depending on user settings.
-7. Map raw button inputs into user-defined inputs, if any, or use default mapping.
+7. Detect the neutral gear "virtual" button.
+8. Map raw button inputs into user-defined inputs, if any, or use default mapping.
 
 #### A note on rotary encoders
 
@@ -500,7 +681,7 @@ The bit-oriented queue shows the following properties:
 - Since each rotary is polled every 50 ms,
   it is unlikely for the queue to get full.
 
-## About auto power off
+## About automatic shutdown
 
 In a battery-operated system, when there is no Bluetooth connection,
 the systems goes to advertising.
@@ -509,18 +690,22 @@ the system goes to deep sleep or power off.
 
 ## About connectivity
 
-The firmware relies in the [HID](https://en.wikipedia.org/wiki/Human_interface_device) standard to provide connectivity.
-The device will appear as a [Gamepad](https://en.wikipedia.org/wiki/Gamepad) to the hosting computer.
+The firmware relies in the
+[HID](https://en.wikipedia.org/wiki/Human_interface_device) standard to provide connectivity.
+The device will appear as a
+[Gamepad](https://en.wikipedia.org/wiki/Gamepad) to the hosting computer.
 The *hidImplementation* namespace is in charge of that.
 However, this project provides several alternate implementations:
 
-- *hidImplementation_NimBLE.cpp*: BLE using the
+- *hid_NimBLE.cpp*: BLE using the
   [NimBLE stack](https://mynewt.apache.org/latest/network/).
   Requires an additional Arduino
   [library](https://www.arduino.cc/reference/en/libraries/nimble-arduino/).
-- *hidImplementation_ESPBLE.cpp*: BLE using the native ESP-Arduino stack.
+- *hid_ESPBLE.cpp*: BLE using the native ESP-Arduino stack.
   Does not require additional libraries, but it takes way more flash memory than *NimBLE*.
-- *hidImplementation_USB.cpp*: wired USB implementation.
+- *hid_USB.cpp*: wired USB implementation.
+- *hid_dummy.cpp*: dummy implementation with no actual behavior.
+  Provided to troubleshoot the custom firmware and for testing.
 
 ## Concurrency
 
@@ -528,42 +713,43 @@ System concurrency comes from these OS task and daemons:
 
 - *Main task*: Performs initialization, then goes dormant.
 - *Input poll daemon*. May call:
-  - `inputs` and auxiliary modules.
+  - `inputs` and auxiliary classes.
+  - `storage`.
 - *Input hub daemon*. May call:
   - `inputHub`
-  - `hidImplementation`
+  - `inputMap`
   - `inputs`
-  - `userSettings`
-  - `batteryCalibration`
-  - `notify`
+  - `hid`
+  - `storage`
 - *Battery monitor daemon*. May call:
-  - `power`
+  - `batteryMonitor`
   - `batteryCalibration`
-  - `hidImplementation`
-  - `notify`
+  - `hid`
+  - `ui`
+  - `storage`
+  - `power`
 - *OS timers*. May call:
   - `inputs`
-  - `userSettings`
-  - `notify`
+  - `storage`
+  - `ui`
 - *Bluetooth/USB stack*. May call:
-  - `hidImplementation`
-  - `userSettings`
+  - `hid`
   - `inputs`
-  - `batteryCalibration`
-  - `notify`
   - `batteryMonitor`
+  - `batteryCalibration`
   - `pixels`
+  - `storage`
+  - `ui`
 - *Frameserver*. May call:
-  - `userSettings`
-  - `notify`
-  - `AbstractUserInterface` (which may call `pixels`)
+  - `ui`
+  - The `AbstractUserInterface` descendants (which may call `pixels`)
 
 *Notes*:
 
 - There is no synchronization between the *frameserver* and the *Bluetooth/USB stack*,
   except for the basic atomicity of 32-bit writes.
   Performance takes precedence over consistency.
-  Only the *Bluetooth/USB stack* updates the `notify::telemetryData` variable.
-  `notify::telemetryData.frameID` is always written the last.
+  Only the *Bluetooth/USB stack* updates the `telemetry::data` variable.
+  `telemetry::data.frameID` is always written the last.
   The *frameserver* looks for a change in that field
-  in order to invoke `notify::onTelemetryData()`.
+  in order to invoke `AbstractUserInterface::onTelemetryData()`.

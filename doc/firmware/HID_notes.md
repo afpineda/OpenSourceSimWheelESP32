@@ -3,7 +3,7 @@
 This project implements a HID device (sorry for the redundancy)
 which may be used both through the USB and Bluetooth GATT protocol stacks.
 Most relevant implementation details can be found at file
-[HID_definitions.h](../../src/include/HID_definitions.h)
+[HID_definitions.h](../../src/include/HID_definitions.hpp)
 
 This document does not intent to explain HID devices.
 A good source is [Jan Axelson's Lakeview Research](http://www.janaxelson.com/hidpage.htm).

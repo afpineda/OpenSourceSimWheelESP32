@@ -3,269 +3,272 @@
  *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2024-12-13
- * @brief Implementation of the `pixels` namespace
+ * @brief Everything related to pixel control.
  *
  * @copyright Licensed under the EUPL
  *
  */
 
-#include "SimWheel.h"
-#include "SimWheelTypes.h"
-#include "LedStrip.h"
+//---------------------------------------------------------------
+// Imports
+//---------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
+#include "SimWheel.hpp"
+#include "SimWheelInternals.hpp"
+#include "OutputHardware.hpp"
+
+#include <mutex>
+#include <chrono>
+#include <thread>
+
+//---------------------------------------------------------------
 // Globals
-// ----------------------------------------------------------------------------
+//---------------------------------------------------------------
 
 static LEDStrip *pixelData[3] = {nullptr};
-static SemaphoreHandle_t pixelLock = nullptr;
-static StaticSemaphore_t pixelLockBuffer;
-#define WAIT_TICKS pdMS_TO_TICKS(150)
+static std::recursive_timed_mutex pixelMutex;
+#define DELAY_MS(ms) std::this_thread::sleep_for(std::chrono::milliseconds(ms))
+#define WAIT_MS std::chrono::milliseconds(80)
+#define INT(N) ((uint8_t)N)
+#define CEIL_DIV(dividend, divisor) (dividend + divisor - 1) / divisor
 
-// ----------------------------------------------------------------------------
-// Configuration
-// ----------------------------------------------------------------------------
+//---------------------------------------------------------------
+//---------------------------------------------------------------
+// Public
+//---------------------------------------------------------------
+//---------------------------------------------------------------
 
 void pixels::configure(
-    pixelGroup_t group,
-    gpio_num_t dataPin,
+    PixelGroup group,
+    OutputGPIO dataPin,
     uint8_t pixelCount,
     bool useLevelShift,
-    pixel_driver_t pixelType,
-    pixel_format_t pixelFormat,
+    PixelDriver pixelType,
+    PixelFormat pixelFormat,
     uint8_t globalBrightness)
 {
-    if (pixelData[group] != nullptr)
-        delete pixelData[group];
-    if (pixelLock == nullptr)
-    {
-        pixelLock = xSemaphoreCreateRecursiveMutexStatic(&pixelLockBuffer);
-        if (pixelLock == nullptr)
-        {
-            log_e("pixels::configure() unable to create mutex");
-            abort();
-        }
-    }
-    pixelData[group] = new LEDStrip(
+    if (pixelData[INT(group)] != nullptr)
+        throw std::runtime_error("A pixel group was configured twice");
+    pixelData[INT(group)] = new LEDStrip(
         dataPin,
         pixelCount,
         useLevelShift,
         pixelType,
         pixelFormat);
-    pixelData[group]->brightness(globalBrightness);
+    pixelData[INT(group)]->brightness(globalBrightness);
 }
 
-void pixels::shutdown()
+//---------------------------------------------------------------
+//---------------------------------------------------------------
+// Internal
+//---------------------------------------------------------------
+//---------------------------------------------------------------
+
+void pixelsShutdown()
 {
-    if (pixelLock != nullptr)
-    {
-        if (xSemaphoreTakeRecursive(pixelLock, portMAX_DELAY) == pdTRUE)
+    // NOTE: no timeouts here.
+    // Shutdown is mandatory.
+    pixelMutex.lock();
+    for (int i = 0; i < 3; i++)
+        if (pixelData[i])
         {
-            for (int group = 0; group < 3; group++)
-            {
-                if (pixelData[group] != nullptr)
-                {
-                    pixelData[group]->clear();
-                    pixelData[group]->show();
-                    delete pixelData[group];
-                }
-                pixelData[group] = nullptr;
-            }
-            xSemaphoreGiveRecursive(pixelLock);
-        } else {
-            log_e("pixels::shutdown() unable to shutdown");
-            abort();
+            pixelData[i]->clear();
+            pixelData[i]->show();
+            delete pixelData[i];
+            pixelData[i] = nullptr;
         }
-    }
+    pixelMutex.unlock();
 }
 
-uint8_t pixels::getPixelCount(pixelGroup_t group)
+//---------------------------------------------------------------
+
+void internals::pixels::getReady()
 {
-    if (pixelData[group] != nullptr)
-        return pixelData[group]->getPixelCount();
+    OnShutdown::subscribe(pixelsShutdown);
+}
+
+//---------------------------------------------------------------
+
+uint8_t internals::pixels::getCount(PixelGroup group)
+{
+    if (pixelData[INT(group)] != nullptr)
+        return pixelData[INT(group)]->getPixelCount();
     else
         return 0;
 }
 
-// ----------------------------------------------------------------------------
+//---------------------------------------------------------------
 // Pixel control
-// ----------------------------------------------------------------------------
+//---------------------------------------------------------------
 
-void pixels::set(
-    pixelGroup_t group,
+void internals::pixels::set(
+    PixelGroup group,
     uint8_t pixelIndex,
     uint8_t red,
     uint8_t green,
     uint8_t blue)
 {
-    if ((pixelData[group] != nullptr) &&
-        pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, 0) == pdTRUE))
+    if (pixelData[INT(group)] && pixelMutex.try_lock_for(WAIT_MS))
     {
-        pixelData[group]->pixelRGB(pixelIndex, red, green, blue);
-        xSemaphoreGiveRecursive(pixelLock);
+        pixelData[INT(group)]->pixelRGB(pixelIndex, red, green, blue);
+        pixelMutex.unlock();
     }
 }
 
-void pixels::setAll(pixelGroup_t group,
-                    uint8_t red,
-                    uint8_t green,
-                    uint8_t blue)
+void internals::pixels::setAll(
+    PixelGroup group,
+    uint8_t red,
+    uint8_t green,
+    uint8_t blue)
 {
-    if ((pixelData[group] != nullptr) &&
-        pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, 0) == pdTRUE))
+    if (pixelData[INT(group)] && pixelMutex.try_lock_for(WAIT_MS))
     {
-        pixelData[group]->pixelRangeRGB(0, 255, red, green, blue);
-        xSemaphoreGiveRecursive(pixelLock);
+        pixelData[INT(group)]->pixelRangeRGB(0, 255, red, green, blue);
+        pixelMutex.unlock();
     }
 }
 
-void pixels::shiftToNext(pixelGroup_t group)
+void internals::pixels::shiftToNext(PixelGroup group)
 {
-    if ((pixelData[group] != nullptr) &&
-        pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, 0) == pdTRUE))
+    if (pixelData[INT(group)] && pixelMutex.try_lock_for(WAIT_MS))
     {
-        pixelData[group]->shiftToNext();
-        xSemaphoreGiveRecursive(pixelLock);
+        pixelData[INT(group)]->shiftToNext();
+        pixelMutex.unlock();
     }
 }
 
-void pixels::shiftToPrevious(pixelGroup_t group)
+void internals::pixels::shiftToPrevious(PixelGroup group)
 {
-    if ((pixelData[group] != nullptr) &&
-        pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, 0) == pdTRUE))
+    if (pixelData[INT(group)] && pixelMutex.try_lock_for(WAIT_MS))
     {
-        pixelData[group]->shiftToPrevious();
-        xSemaphoreGiveRecursive(pixelLock);
+        pixelData[INT(group)]->shiftToPrevious();
+        pixelMutex.unlock();
     }
 }
 
-void pixels::reset()
+void internals::pixels::reset()
 {
-    if (pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, 0) == pdTRUE))
+    if (pixelMutex.try_lock_for(WAIT_MS))
     {
         for (int i = 0; i < 3; i++)
-            if (pixelData[i] != nullptr)
+            if (pixelData[i])
             {
                 pixelData[i]->pixelRangeRGB(0, 255, 0, 0, 0);
                 pixelData[i]->show();
             }
-        xSemaphoreGiveRecursive(pixelLock);
+        pixelMutex.unlock();
     }
 }
 
-void pixels::show()
+void internals::pixels::show()
 {
-    if (pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, 0) == pdTRUE))
+    if (pixelMutex.try_lock_for(WAIT_MS))
     {
         for (int i = 0; i < 3; i++)
-            if (pixelData[i] != nullptr)
+            if (pixelData[i])
+            {
                 pixelData[i]->show();
-        xSemaphoreGiveRecursive(pixelLock);
+            }
+        pixelMutex.unlock();
     }
 }
 
-// ----------------------------------------------------------------------------
+//---------------------------------------------------------------
+//---------------------------------------------------------------
 // Notifications
-// ----------------------------------------------------------------------------
+//---------------------------------------------------------------
+//---------------------------------------------------------------
 
 void PixelControlNotification::onStart()
 {
-    if (pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, WAIT_TICKS) == pdTRUE))
+    if (pixelMutex.try_lock_for(WAIT_MS))
     {
         pixelControl_OnStart();
-        xSemaphoreGiveRecursive(pixelLock);
+        pixelMutex.unlock();
     }
 }
-
-void PixelControlNotification::onBitePoint()
-{
-    if (pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, WAIT_TICKS) == pdTRUE))
-    {
-        pixelControl_OnBitePoint();
-        xSemaphoreGiveRecursive(pixelLock);
-    }
-}
-
-void PixelControlNotification::onConnected()
-{
-    if (pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, WAIT_TICKS) == pdTRUE))
-    {
-        pixelControl_OnConnected();
-        xSemaphoreGiveRecursive(pixelLock);
-    }
-}
-
-void PixelControlNotification::onBLEdiscovering()
-{
-    if (pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, WAIT_TICKS) == pdTRUE))
-    {
-        pixelControl_OnBLEdiscovering();
-        xSemaphoreGiveRecursive(pixelLock);
-    }
-}
-
-void PixelControlNotification::onLowBattery()
-{
-    if (pixelLock &&
-        (xSemaphoreTakeRecursive(pixelLock, WAIT_TICKS) == pdTRUE))
-    {
-        pixelControl_OnLowBattery();
-        xSemaphoreGiveRecursive(pixelLock);
-    }
-}
-
-// ----------------------------------------------------------------------------
 
 void PixelControlNotification::pixelControl_OnStart()
 {
     // All white
-    pixels::setAll(GRP_TELEMETRY, 85, 85, 85);
-    pixels::setAll(GRP_BUTTONS, 85, 85, 85);
-    pixels::setAll(GRP_INDIVIDUAL, 85, 85, 85);
-    pixels::show();
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 85, 85, 85);
+    internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 85, 85, 85);
+    internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 85, 85, 85);
+    internals::pixels::show();
+    DELAY_MS(1000);
 }
 
-#define CEIL_DIV(dividend, divisor) (dividend + divisor - 1) / divisor
+//---------------------------------------------------------------
 
-void PixelControlNotification::pixelControl_OnBitePoint()
+void PixelControlNotification::onBitePoint(uint8_t bitePoint)
 {
-    uint8_t pixelCount = pixels::getPixelCount(GRP_TELEMETRY);
-    uint8_t litCount = CEIL_DIV(userSettings::bitePoint * pixelCount, CLUTCH_FULL_VALUE);
-    pixels::setAll(GRP_TELEMETRY, 0, 0, 0);
-    pixels::setAll(GRP_BUTTONS, 0, 0, 0);
-    pixels::setAll(GRP_INDIVIDUAL, 0, 0, 0);
+    if (pixelMutex.try_lock_for(WAIT_MS))
+    {
+        pixelControl_OnBitePoint(bitePoint);
+        pixelMutex.unlock();
+    }
+}
+
+void PixelControlNotification::pixelControl_OnBitePoint(uint8_t bitePoint)
+{
+    uint8_t pixelCount = internals::pixels::getCount(PixelGroup::GRP_TELEMETRY);
+    uint8_t litCount = CEIL_DIV(bitePoint * pixelCount, CLUTCH_FULL_VALUE);
+    internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 0, 0, 0);
+    internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 0, 0, 0);
+    internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 0, 0, 0);
     for (int i = 0; i < litCount; i++)
-        pixels::set(GRP_TELEMETRY, i, 85, 85, 0);
-    pixels::show();
-    vTaskDelay(pdMS_TO_TICKS(250));
-    pixels::setAll(GRP_TELEMETRY, 0, 0, 0);
-    pixels::show();
+        internals::pixels::set(PixelGroup::GRP_TELEMETRY, i, 85, 85, 0);
+    internals::pixels::show();
+    DELAY_MS(250);
+    internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 0, 0, 0);
+    internals::pixels::show();
+}
+//---------------------------------------------------------------
+
+void PixelControlNotification::onConnected()
+{
+    if (pixelMutex.try_lock_for(WAIT_MS))
+    {
+        pixelControl_OnConnected();
+        pixelMutex.unlock();
+    }
 }
 
 void PixelControlNotification::pixelControl_OnConnected()
 {
-    pixels::reset();
+    internals::pixels::reset();
+}
+
+//---------------------------------------------------------------
+
+void PixelControlNotification::onBLEdiscovering()
+{
+    if (pixelMutex.try_lock_for(WAIT_MS))
+    {
+        pixelControl_OnBLEdiscovering();
+        pixelMutex.unlock();
+    }
 }
 
 void PixelControlNotification::pixelControl_OnBLEdiscovering()
 {
     // All purple
-    pixels::setAll(GRP_TELEMETRY, 85, 0, 85);
-    pixels::setAll(GRP_BUTTONS, 85, 0, 85);
-    pixels::setAll(GRP_INDIVIDUAL, 85, 0, 85);
-    pixels::show();
-    vTaskDelay(pdMS_TO_TICKS(250));
+    internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 85, 0, 85);
+    internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 85, 0, 85);
+    internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 85, 0, 85);
+    internals::pixels::show();
+    DELAY_MS(250);
+}
+
+//---------------------------------------------------------------
+
+void PixelControlNotification::onLowBattery()
+{
+    if (pixelMutex.try_lock_for(WAIT_MS))
+    {
+        pixelControl_OnLowBattery();
+        pixelMutex.unlock();
+    }
 }
 
 void PixelControlNotification::pixelControl_OnLowBattery()
@@ -273,25 +276,25 @@ void PixelControlNotification::pixelControl_OnLowBattery()
     // Alternate pixels in blue and red
     for (int group = 0; group < 3; group++)
     {
-        uint8_t pixelCount = pixels::getPixelCount((pixelGroup_t)group);
+        uint8_t pixelCount = internals::pixels::getCount((PixelGroup)group);
         for (int pixelIndex = 0; pixelIndex < pixelCount; pixelIndex = pixelIndex + 2)
-            pixels::set((pixelGroup_t)group, pixelIndex, 127, 0, 0); // red
+            internals::pixels::set((PixelGroup)group, pixelIndex, 127, 0, 0); // red
         for (int pixelIndex = 1; pixelIndex < pixelCount; pixelIndex = pixelIndex + 2)
-            pixels::set((pixelGroup_t)group, pixelIndex, 0, 0, 127); // blue
+            internals::pixels::set((PixelGroup)group, pixelIndex, 0, 0, 127); // blue
     }
-    pixels::show();
+    internals::pixels::show();
     // Cool animation
     for (int animCount = 0; animCount < 5; animCount++)
     {
-        vTaskDelay(pdMS_TO_TICKS(200));
-        pixels::shiftToNext(GRP_TELEMETRY);
-        pixels::shiftToNext(GRP_BUTTONS);
-        pixels::shiftToNext(GRP_INDIVIDUAL);
-        pixels::show();
+        DELAY_MS(200);
+        internals::pixels::shiftToNext(PixelGroup::GRP_TELEMETRY);
+        internals::pixels::shiftToNext(PixelGroup::GRP_BUTTONS);
+        internals::pixels::shiftToNext(PixelGroup::GRP_INDIVIDUAL);
+        internals::pixels::show();
     }
-    vTaskDelay(pdMS_TO_TICKS(200));
-    pixels::setAll(GRP_TELEMETRY, 0, 0, 0);
-    pixels::setAll(GRP_BUTTONS, 0, 0, 0);
-    pixels::setAll(GRP_INDIVIDUAL, 0, 0, 0);
-    pixels::show();
+    DELAY_MS(200);
+    internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 0, 0, 0);
+    internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 0, 0, 0);
+    internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 0, 0, 0);
+    internals::pixels::show();
 }

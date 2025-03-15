@@ -9,7 +9,8 @@
  *
  */
 
-#include "SimWheel.h"
+#include "SimWheel.hpp"
+#include "SimWheelUI.hpp"
 
 //------------------------------------------------------------------
 // Global customization
@@ -61,54 +62,71 @@ void simWheelSetup()
     inputs::addRotaryEncoder(GPIO_NUM_10, GPIO_NUM_9, ROT1_CW + 10, ROT1_CCW + 10);             // ROT6
     inputs::addRotaryEncoder(GPIO_NUM_37, GPIO_NUM_33, ROT1_CW + 12, ROT1_CCW + 12);            // ROT7
     inputs::addRotaryEncoder(GPIO_NUM_21, GPIO_NUM_16, ROT1_CW + 14, ROT1_CCW + 14, USE_FUNKY); // ROT8 or funky switch
-    inputs::addDigital(GPIO_NUM_33, JOY_A);
-    inputs::addDigital(GPIO_NUM_34, NAV_LEFT);
-    inputs::addDigital(GPIO_NUM_17, NAV_RIGHT);
-    inputs::addDigital(GPIO_NUM_38, NAV_UP);
-    inputs::addDigital(GPIO_NUM_18, NAV_DOWN);
-    inputs::setAnalogClutchPaddles(GPIO_NUM_14, GPIO_NUM_15);
-    inputs::addMCP23017Digital(7, false)
-        .inputNumber(MCP23017_pin_t::GPA0, JOY_LSHIFT_PADDLE)
-        .inputNumber(MCP23017_pin_t::GPA1, JOY_RSHIFT_PADDLE)
-        .inputNumber(MCP23017_pin_t::GPA2, ALT1)
-        .inputNumber(MCP23017_pin_t::GPA3, ALT2)
-        .inputNumber(MCP23017_pin_t::GPA4, 10)
-        .inputNumber(MCP23017_pin_t::GPA5, 11)
-        .inputNumber(MCP23017_pin_t::GPA6, 12)
-        .inputNumber(MCP23017_pin_t::GPA7, 13)
-        .inputNumber(MCP23017_pin_t::GPB0, 14)
-        .inputNumber(MCP23017_pin_t::GPB1, 15)
-        .inputNumber(MCP23017_pin_t::GPB2, 16)
-        .inputNumber(MCP23017_pin_t::GPB3, 17)
-        .inputNumber(MCP23017_pin_t::GPB4, 18)
-        .inputNumber(MCP23017_pin_t::GPB5, 19)
-        .inputNumber(MCP23017_pin_t::GPB6, 20)
-        .inputNumber(MCP23017_pin_t::GPB7, 21);
-    inputs::addMCP23017Digital(0, false)
-        .inputNumber(MCP23017_pin_t::GPA0, 22)
-        .inputNumber(MCP23017_pin_t::GPA1, 23)
-        .inputNumber(MCP23017_pin_t::GPA2, 24)
-        .inputNumber(MCP23017_pin_t::GPA3, 25)
-        .inputNumber(MCP23017_pin_t::GPA4, 26)
-        .inputNumber(MCP23017_pin_t::GPA5, 27)
-        .inputNumber(MCP23017_pin_t::GPA6, 28)
-        .inputNumber(MCP23017_pin_t::GPA7, 29)
-        .inputNumber(MCP23017_pin_t::GPB0, 30)
-        .inputNumber(MCP23017_pin_t::GPB1, 31)
-        .inputNumber(MCP23017_pin_t::GPB2, 32)
-        .inputNumber(MCP23017_pin_t::GPB3, JOY_Y)
-        .inputNumber(MCP23017_pin_t::GPB4, JOY_X)
-        .inputNumber(MCP23017_pin_t::GPB5, JOY_B)
-        .inputNumber(MCP23017_pin_t::GPB6, JOY_BACK)
-        .inputNumber(MCP23017_pin_t::GPB7, JOY_START);
 
-    inputHub::setClutchInputNumbers(CLUTCH1, CLUTCH2);
-    inputHub::setDPADControls(NAV_UP, NAV_DOWN, NAV_LEFT, NAV_RIGHT);
-    inputHub::setALTInputNumbers({(ALT1), (ALT2)});
-    inputHub::setClutchCalibrationInputNumbers(ROT1_CW, ROT1_CCW); // Rotary 1
-    inputHub::cmdRecalibrateAnalogAxis_setInputNumbers({(JOY_LSHIFT_PADDLE), (JOY_RSHIFT_PADDLE), (JOY_START)});
-    inputHub::cycleCPWorkingMode_setInputNumbers({(JOY_START), (JOY_LSHIFT_PADDLE)});
-    inputHub::cycleALTButtonsWorkingMode_setInputNumbers({(JOY_START), (JOY_RSHIFT_PADDLE)});
+    inputs::addButton(GPIO_NUM_33, JOY_A);
+    inputs::addButton(GPIO_NUM_34, NAV_LEFT);
+    inputs::addButton(GPIO_NUM_17, NAV_RIGHT);
+    inputs::addButton(GPIO_NUM_38, NAV_UP);
+    inputs::addButton(GPIO_NUM_18, NAV_DOWN);
+    inputs::setAnalogClutchPaddles(GPIO_NUM_14, GPIO_NUM_15);
+
+    MCP23017Expander chip1, chip2;
+
+    chip1[MCP23017Pin::GPA0] = JOY_LSHIFT_PADDLE;
+    chip1[MCP23017Pin::GPA1] = JOY_RSHIFT_PADDLE;
+    chip1[MCP23017Pin::GPA2] = ALT1;
+    chip1[MCP23017Pin::GPA3] = ALT2;
+    chip1[MCP23017Pin::GPA4] = 10;
+    chip1[MCP23017Pin::GPA5] = 11;
+    chip1[MCP23017Pin::GPA6] = 12;
+    chip1[MCP23017Pin::GPA7] = 13;
+    chip1[MCP23017Pin::GPB0] = 14;
+    chip1[MCP23017Pin::GPB1] = 15;
+    chip1[MCP23017Pin::GPB2] = 16;
+    chip1[MCP23017Pin::GPB3] = 17;
+    chip1[MCP23017Pin::GPB4] = 18;
+    chip1[MCP23017Pin::GPB5] = 19;
+    chip1[MCP23017Pin::GPB6] = 20;
+    chip1[MCP23017Pin::GPB7] = 21;
+
+    chip2[MCP23017Pin::GPA0] = 22;
+    chip2[MCP23017Pin::GPA1] = 23;
+    chip2[MCP23017Pin::GPA2] = 24;
+    chip2[MCP23017Pin::GPA3] = 25;
+    chip2[MCP23017Pin::GPA4] = 26;
+    chip2[MCP23017Pin::GPA5] = 27;
+    chip2[MCP23017Pin::GPA6] = 28;
+    chip2[MCP23017Pin::GPA7] = 29;
+    chip2[MCP23017Pin::GPB0] = 30;
+    chip2[MCP23017Pin::GPB1] = 31;
+    chip2[MCP23017Pin::GPB2] = 32;
+    chip2[MCP23017Pin::GPB3] = JOY_Y;
+    chip2[MCP23017Pin::GPB4] = JOY_X;
+    chip2[MCP23017Pin::GPB5] = JOY_B;
+    chip2[MCP23017Pin::GPB6] = JOY_BACK;
+    chip2[MCP23017Pin::GPB7] = JOY_START;
+
+    inputs::addMCP23017Expander(chip1, 7);
+    inputs::addMCP23017Expander(chip2, 0);
+
+    inputHub::clutch::inputs(CLUTCH1, CLUTCH2);
+    inputHub::dpad::inputs(NAV_UP, NAV_DOWN, NAV_LEFT, NAV_RIGHT);
+    inputHub::altButtons::inputs({(ALT1), (ALT2)});
+    inputHub::clutch::bitePointInputs(ROT1_CW, ROT1_CCW); // Rotary 1
+    inputHub::clutch::cmdRecalibrateAxisInputs({(JOY_LSHIFT_PADDLE), (JOY_RSHIFT_PADDLE), (JOY_START)});
+    inputHub::clutch::cycleWorkingModeInputs({(JOY_START), (JOY_LSHIFT_PADDLE)});
+    inputHub::altButtons::cycleWorkingModeInputs({(JOY_START), (JOY_RSHIFT_PADDLE)});
+}
+
+//------------------------------------------------------------------
+
+void customFirmware()
+{
+    simWheelSetup();
+    hid::configure(
+        DEVICE_NAME,
+        DEVICE_MANUFACTURER,
+        false);
 }
 
 //------------------------------------------------------------------
@@ -117,14 +135,7 @@ void simWheelSetup()
 
 void setup()
 {
-    esp_log_level_set("*", ESP_LOG_ERROR);
-    simWheelSetup();
-    userSettings::begin();
-    hidImplementation::begin(
-        DEVICE_NAME,
-        DEVICE_MANUFACTURER,
-        false);
-    inputs::start();
+    firmware::run(customFirmware);
 }
 
 void loop()

@@ -9,7 +9,7 @@ misleading tags in an ALPS rotary encoder. See below.
 ## Hardware features
 
 - Bluetooth Low Energy
-- Powered through external power source (quick release): DC +5V ~ +7V - 500 mA
+- Powered via external power source (quick release): DC +5V ~ +7V - 500 mA
 - Analog clutch paddles (potentiometers)
 - Shift paddles (x2)
 - Optional: "ALT" buttons (x2)

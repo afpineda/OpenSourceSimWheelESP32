@@ -1,0 +1,4 @@
+hid_USB.cpp
+hidCommon.cpp
+hidTestHelper.cpp
+telemetry.cpp

@@ -10,7 +10,7 @@
  */
 
 #include <HardwareSerial.h>
-#include "i2cTools.h"
+#include "HAL.hpp"
 
 //------------------------------------------------------------------
 // GLOBALS
@@ -60,19 +60,19 @@ void setup()
 
     Serial.printf("SDA = #%d. SCL = #%d. Please, wait ...\n\n", SDA, SCL);
     std::vector<uint8_t> addressList;
-    i2c::probe(addressList);
+    internals::hal::i2c::probe(addressList);
     dump_results(addressList);
     Serial.println("");
     Serial.println("");
 
 #if defined(SECONDARY_SDA) && defined(SECONDARY_SCL)
     Serial.printf("SDA = #%d. SCL = #%d. Please, wait ...\n\n", SECONDARY_SDA, SECONDARY_SCL);
-    i2c::begin(
+    internals::hal::i2c::initialize(
         SECONDARY_SDA,
         SECONDARY_SCL,
-        true);
+        I2CBus::SECONDARY);
     addressList.clear();
-    i2c::probe(addressList, true);
+    internals::hal::i2c::probe(addressList, true);
     dump_results(addressList);
     Serial.println("");
     Serial.println("");

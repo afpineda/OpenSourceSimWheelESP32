@@ -1,9 +1,0 @@
-SimWheel.h
-SimWheelTypes.h
-HID_definitions.h
-hidImplementation_common.cpp
-hidImplementation_NimBLE.cpp
-notify.cpp
-capabilities.cpp
-userSettings.cpp
-pixels_dummy.cpp

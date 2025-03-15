@@ -2,720 +2,573 @@
  * @file Inputs.cpp
  *
  * @author Ángel Fernández Pineda. Madrid. Spain.
- * @date 2022-02-27
- * @brief Implementation of the `inputs` namespace
+ * @date 2025-02-05
+ * @brief Everything related to hardware inputs and their events.
  *
  * @copyright Licensed under the EUPL
  *
  */
-#include "SimWheel.h"
-#include "RotaryEncoderInput.h"
-#include "PolledInput.h"
-#include "ButtonMatrixInput.h"
-#include "AnalogMultiplexerInput.h"
-#include "ShiftRegistersInput.h"
-#include "I2CExpanderInput.h"
-#include <Preferences.h>
-#include "i2cTools.h"
-#include <stdexcept>
-#include "esp32-hal-psram.h" // For psramFound()
 
-// #include "debugUtils.h"
+//-------------------------------------------------------------------
+// Imports
+//-------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-// Globals
-// ----------------------------------------------------------------------------
+#include "SimWheel.hpp"
+#include "SimWheelInternals.hpp"
+#include "InputHardware.hpp"
+#include "HAL.hpp"
+#include "InternalServices.hpp"
+#include "InputValidation.hpp"
 
-// Related to hardware inputs
+#include <cassert>
+#include <cstring> // For memset()
+#include <forward_list>
+#include <algorithm> // For find()
 
-static DigitalPolledInput *digitalInputChain = nullptr;
-static AnalogAxisInput *leftClutchAxis = nullptr;
-static AnalogAxisInput *rightClutchAxis = nullptr;
+#if !CD_CI
 
-// Related to the polling task
-
-static TaskHandle_t pollingTask = nullptr;
-static bool forceUpdate = false;
-#define SAMPLING_RATE_TICKS DEBOUNCE_TICKS * 2
-#define POLLING_TASK_STACK_SIZE 2 * 1024
-
-// Related to the decoupling queue
-
-typedef struct
-{
-  inputBitmap_t rawInputBitmap;
-  inputBitmap_t rawInputChanges;
-  bool axesAvailable;
-  clutchValue_t leftAxisValue;
-  clutchValue_t rightAxisValue;
-} decouplingEvent_t;
-
+#include "freertos/FreeRTOS.h"
 static QueueHandle_t decouplingQueue = nullptr;
 
-#define EVENT_SIZE sizeof(decouplingEvent_t)
+#else
 
-// Related to the hub task
+#include <thread>
+#include <chrono>
 
+#endif
+
+//-------------------------------------------------------------------
+// Globals
+//-------------------------------------------------------------------
+
+// Input hardware
+static std::forward_list<DigitalInput *> digitalInputsChain = {};
+static AnalogInput *leftAxis = nullptr;
+static AnalogInput *rightAxis = nullptr;
+static bool _reverseLeftAxis = false;
+static bool _reverseRightAxis = false;
+
+// Polling daemon
+#define DEBOUNCE_MS 30
+#define POLLING_TASK_STACK_SIZE 2 * 1024
+static bool forceUpdate;
+
+// Hub daemon
 #define HUB_STACK_SIZE 4 * 1024
-static TaskHandle_t hubTask = nullptr;
 
-// Related to axis calibration data and polarity
+// Decoupling queue
+#define EVENT_SIZE sizeof(DecouplingEvent)
 
-static esp_timer_handle_t autoSaveTimer = nullptr;
-#define AXIS_NAMESPACE "axis"
-#define KEY_MIN_CAL_DATA "a"
-#define KEY_MAX_CAL_DATA "z"
-#define KEY_POLARITY "!"
-#define LEFT_CLUTCH_INDEX 0
-#define RIGHT_CLUTCH_INDEX 1
+//-------------------------------------------------------------------
+// Input hardware
+//-------------------------------------------------------------------
 
-// Related to rotary encoders
-#define ROTARY_NAMESPACE "rot"
-#define KEY_PULSE_MULT "X"
-#define DEFAULT_ROTARY_MULTIPLIER 2
-
-// Related to I2C bus
-static std::vector<uint8_t> *i2cAddressesFromProbe = nullptr;
-
-// ----------------------------------------------------------------------------
-// Calibration data of analog axes
-// ----------------------------------------------------------------------------
-
-void saveAxisCalibration(Preferences &prefs, uint8_t index, int min, int max)
+static void abortIfStarted()
 {
-  char aux[6];
-  snprintf(aux, 6, "%s%d", KEY_MIN_CAL_DATA, index);
-  prefs.putInt(aux, min);
-  snprintf(aux, 6, "%s%d", KEY_MAX_CAL_DATA, index);
-  prefs.putInt(aux, max);
+    if (FirmwareService::call::isRunning())
+        throw std::runtime_error("Input service already started");
 }
 
-bool loadAxisCalibration(Preferences &prefs, uint8_t index, int &min, int &max)
+//-------------------------------------------------------------------
+
+uint8_t getI2CFullAddress(uint8_t I2CAddress, bool isFullAddress, I2CBus bus)
 {
-  char aux[6];
-  snprintf(aux, 6, "%s%d", KEY_MIN_CAL_DATA, index);
-  if (prefs.isKey(aux))
-  {
-    min = prefs.getInt(aux);
-    snprintf(aux, 6, "%s%d", KEY_MAX_CAL_DATA, index);
-    if (prefs.isKey(aux))
+    static bool firstRun = true;
+    static std::vector<uint8_t> i2cAddressesFromProbe;
+
+    // Retrieve all 7-bit addresses found in the bus (only once)
+    if (firstRun)
     {
-      max = prefs.getInt(aux);
-      return true;
+        firstRun = false;
+        internals::hal::i2c::probe(i2cAddressesFromProbe, bus);
     }
-  }
-  return false;
-}
 
-void axisCalibrationAutoSaveCallback(void *param)
-{
-  Preferences prefs;
-  int min, max;
-
-  if (prefs.begin(AXIS_NAMESPACE, false))
-  {
-    leftClutchAxis->getCalibrationData(&min, &max);
-    saveAxisCalibration(prefs, LEFT_CLUTCH_INDEX, min, max);
-    rightClutchAxis->getCalibrationData(&min, &max);
-    saveAxisCalibration(prefs, RIGHT_CLUTCH_INDEX, min, max);
-
-    prefs.end();
-  }
-}
-
-void requestSaveAxisCalibration()
-{
-  esp_timer_stop(autoSaveTimer);
-  esp_timer_start_once(autoSaveTimer, DEFAULT_AUTOSAVE_us);
-}
-
-void inputs::recalibrateAxes()
-{
-  if (leftClutchAxis)
-  {
-    leftClutchAxis->resetCalibrationData();
-    rightClutchAxis->resetCalibrationData();
-  }
-}
-
-// ----------------------------------------------------------------------------
-// Axis polarity
-// ----------------------------------------------------------------------------
-
-void loadAxisPolarity(Preferences &prefs, uint8_t index, bool &currentPolarity)
-{
-  char aux[6];
-  snprintf(aux, 6, "%s%d", KEY_POLARITY, index);
-  currentPolarity = prefs.getBool(aux, currentPolarity);
-}
-
-void saveAxisPolarity(uint8_t index, bool currentPolarity)
-{
-  Preferences prefs;
-  if (prefs.begin(AXIS_NAMESPACE, false))
-  {
-    char aux[6];
-    snprintf(aux, 6, "%s%d", KEY_POLARITY, index);
-    prefs.putBool(aux, currentPolarity);
-    prefs.end();
-  }
-}
-
-void inputs::reverseLeftAxis()
-{
-  if (leftClutchAxis)
-  {
-    leftClutchAxis->reversed = !leftClutchAxis->reversed;
-    saveAxisPolarity(LEFT_CLUTCH_INDEX, leftClutchAxis->reversed);
-    inputs::update();
-  }
-}
-
-void inputs::reverseRightAxis()
-{
-  if (rightClutchAxis)
-  {
-    rightClutchAxis->reversed = !rightClutchAxis->reversed;
-    saveAxisPolarity(RIGHT_CLUTCH_INDEX, rightClutchAxis->reversed);
-    inputs::update();
-  }
-}
-
-void resetAxesPolarityForTesting()
-{
-  if (rightClutchAxis)
-    rightClutchAxis->reversed = true;
-  if (leftClutchAxis)
-    leftClutchAxis->reversed = true;
-}
-
-// ----------------------------------------------------------------------------
-// Pulse duration for rotary encoders
-// ----------------------------------------------------------------------------
-
-void loadRotaryPulseMultiplier()
-{
-  Preferences prefs;
-  uint8_t multiplier = DEFAULT_ROTARY_MULTIPLIER;
-  if (prefs.begin(ROTARY_NAMESPACE, true))
-  {
-    multiplier = prefs.getUChar(KEY_PULSE_MULT, multiplier);
-    prefs.end();
-  }
-  RotaryEncoderInput::setPulseMultiplier(multiplier);
-}
-
-void inputs::setRotaryPulseWidthMultiplier(uint8_t multiplier)
-{
-  if (RotaryEncoderInput::setPulseMultiplier(multiplier))
-  {
-    // Save to flash memory
-    Preferences prefs;
-    if (prefs.begin(ROTARY_NAMESPACE, false))
+    // Check if a device is responding to the given
+    // I2C address
+    uint8_t fullAddress;
+    if (isFullAddress)
     {
-      prefs.putUChar(KEY_PULSE_MULT, multiplier);
-      prefs.end();
+        if (std::find(
+                i2cAddressesFromProbe.begin(),
+                i2cAddressesFromProbe.end(),
+                I2CAddress) != i2cAddressesFromProbe.end())
+            fullAddress = I2CAddress;
+        else
+            fullAddress = 0xFF; // Device not found
     }
-  }
+    else
+    {
+        fullAddress = internals::hal::i2c::findFullAddress(
+            i2cAddressesFromProbe,
+            I2CAddress);
+    }
+
+    if (fullAddress == 0xFF)
+        throw i2c_device_not_found(I2CAddress, static_cast<int>(bus));
+    else if (fullAddress == 0xFE)
+        throw i2c_full_address_unknown(I2CAddress, static_cast<int>(bus));
+
+    return fullAddress;
 }
 
-uint8_t inputs::getRotaryPulseWidthMultiplier()
+//-------------------------------------------------------------------
+
+void inputs::addButton(InputGPIO pin, InputNumber inputNumber)
 {
-  return RotaryEncoderInput::pulseMultiplier;
+    abortIfStarted();
+    internals::inputs::validate::button(pin, inputNumber);
+#if !CD_CI
+    digitalInputsChain.push_front(new DigitalButton(pin, inputNumber));
+#endif
 }
+
+//-------------------------------------------------------------------
+
+void inputs::addRotaryEncoder(
+    InputGPIO clkPin,
+    InputGPIO dtPin,
+    InputNumber cwInputNumber,
+    InputNumber ccwInputNumber,
+    bool useAlternateEncoding)
+{
+    abortIfStarted();
+    internals::inputs::validate::rotaryEncoder(dtPin, clkPin, cwInputNumber, ccwInputNumber);
+#if !CD_CI
+    digitalInputsChain.push_front(
+        new RotaryEncoderInput(
+            clkPin,
+            dtPin,
+            cwInputNumber,
+            ccwInputNumber,
+            useAlternateEncoding));
+#endif
+}
+
+//-------------------------------------------------------------------
+
+void inputs::addButtonMatrix(
+    const ButtonMatrix &matrix,
+    bool negativeLogic)
+{
+    abortIfStarted();
+    internals::inputs::validate::buttonMatrix(matrix);
+#if !CD_CI
+    digitalInputsChain.push_front(
+        new ButtonMatrixInput(matrix, negativeLogic));
+#endif
+}
+
+//-------------------------------------------------------------------
+
+void inputs::addAnalogMultiplexerGroup(
+    OutputGPIO selectorPin1,
+    OutputGPIO selectorPin2,
+    OutputGPIO selectorPin3,
+    const AnalogMultiplexerGroup<Mux8Pin> &chips)
+{
+    abortIfStarted();
+    internals::inputs::validate::analogMultiplexer(
+        {selectorPin1, selectorPin2, selectorPin3},
+        chips);
+#if !CD_CI
+    digitalInputsChain.push_front(
+        new AnalogMultiplexerInput(
+            selectorPin1,
+            selectorPin2,
+            selectorPin3,
+            chips));
+#endif
+}
+
+void inputs::addAnalogMultiplexerGroup(
+    OutputGPIO selectorPin1,
+    OutputGPIO selectorPin2,
+    OutputGPIO selectorPin3,
+    OutputGPIO selectorPin4,
+    const AnalogMultiplexerGroup<Mux16Pin> &chips)
+{
+    abortIfStarted();
+    internals::inputs::validate::analogMultiplexer(
+        {selectorPin1, selectorPin2, selectorPin3, selectorPin4},
+        chips);
+#if !CD_CI
+    digitalInputsChain.push_front(
+        new AnalogMultiplexerInput(
+            selectorPin1,
+            selectorPin2,
+            selectorPin3,
+            selectorPin4,
+            chips));
+#endif
+}
+
+void inputs::addAnalogMultiplexerGroup(
+    OutputGPIO selectorPin1,
+    OutputGPIO selectorPin2,
+    OutputGPIO selectorPin3,
+    OutputGPIO selectorPin4,
+    OutputGPIO selectorPin5,
+    const AnalogMultiplexerGroup<Mux32Pin> &chips)
+{
+    abortIfStarted();
+    internals::inputs::validate::analogMultiplexer(
+        {selectorPin1, selectorPin2, selectorPin3, selectorPin4, selectorPin5},
+        chips);
+#if !CD_CI
+    digitalInputsChain.push_front(
+        new AnalogMultiplexerInput(
+            selectorPin1,
+            selectorPin2,
+            selectorPin3,
+            selectorPin4,
+            selectorPin5,
+            chips));
+#endif
+}
+
+//-------------------------------------------------------------------
+
+void inputs::addMCP23017Expander(
+    const MCP23017Expander &chip,
+    uint8_t address,
+    bool isFullAddress,
+    I2CBus bus)
+{
+    abortIfStarted();
+    internals::inputs::validate::GPIOExpander<MCP23017Pin>(chip);
+#if !CD_CI
+    uint8_t fullAddress = getI2CFullAddress(address, isFullAddress, bus);
+    digitalInputsChain.push_front(
+        new MCP23017ButtonsInput(chip, fullAddress, bus));
+#endif
+}
+
+void inputs::addPCF8574Expander(
+    const PCF8574Expander &chip,
+    uint8_t address,
+    bool isFullAddress,
+    I2CBus bus)
+{
+    abortIfStarted();
+    internals::inputs::validate::GPIOExpander<PCF8574Pin>(chip);
+#if !CD_CI
+    uint8_t fullAddress = getI2CFullAddress(address, isFullAddress, bus);
+    digitalInputsChain.push_front(
+        new PCF8574ButtonsInput(chip, fullAddress, bus));
+#endif
+}
+
+//-------------------------------------------------------------------
+
+void inputs::add74HC165NChain(
+    OutputGPIO loadPin,
+    OutputGPIO nextPin,
+    InputGPIO inputPin,
+    const ShiftRegisterChain &chain,
+    InputNumber SER_inputNumber)
+{
+    abortIfStarted();
+    internals::inputs::validate::shiftRegisterChain(
+        loadPin,
+        nextPin,
+        inputPin,
+        chain);
+    // Instantiate
+#if !CD_CI
+    digitalInputsChain.push_front(
+        new ShiftRegistersInput(
+            loadPin,
+            nextPin,
+            inputPin,
+            chain));
+#endif
+}
+
+//-------------------------------------------------------------------
+
+void inputs::setAnalogClutchPaddles(
+    ADC_GPIO leftClutchPin,
+    ADC_GPIO rightClutchPin)
+{
+    abortIfStarted();
+    if (leftAxis != nullptr)
+        throw std::runtime_error("inputs::setAnalogClutchPaddles() called twice");
+    DeviceCapabilities::setFlag(DeviceCapability::CLUTCH_ANALOG);
+#if !CD_CI
+    leftAxis = new AnalogClutchInput(leftClutchPin);
+    rightAxis = new AnalogClutchInput(rightClutchPin);
+#endif
+}
+
+//-------------------------------------------------------------------
+
+void internals::inputs::addFakeInput(FakeInput *instance)
+{
+    abortIfStarted();
+    if (leftAxis == nullptr)
+    {
+        leftAxis = new FakeAxis(instance, true);
+        rightAxis = new FakeAxis(instance, false);
+        DeviceCapabilities::setFlag(DeviceCapability::CLUTCH_ANALOG);
+    }
+    digitalInputsChain.push_front(new FakeDigitalInput(instance));
+}
+
+//-------------------------------------------------------------------
+// Input service
+//-------------------------------------------------------------------
+
+class InputServiceProvider : public InputService
+{
+public:
+    virtual void recalibrateAxes() override
+    {
+        if (leftAxis)
+        {
+            leftAxis->resetCalibrationData();
+            rightAxis->resetCalibrationData();
+        }
+    }
+
+    virtual void reverseLeftAxis() override
+    {
+        _reverseLeftAxis = !_reverseLeftAxis;
+        SaveSetting::notify(UserSetting::AXIS_POLARITY);
+    }
+
+    virtual void reverseRightAxis() override
+    {
+        _reverseRightAxis = !_reverseRightAxis;
+        SaveSetting::notify(UserSetting::AXIS_POLARITY);
+    }
+
+    virtual void setRotaryPulseWidthMultiplier(
+        PulseWidthMultiplier multiplier,
+        bool save) override
+    {
+        RotaryEncoderInput::setPulseMultiplier((uint8_t)multiplier);
+        if (save)
+            SaveSetting::notify(UserSetting::PULSE_WIDTH);
+    }
+
+    virtual PulseWidthMultiplier getRotaryPulseWidthMultiplier() override
+    {
+        return (PulseWidthMultiplier)RotaryEncoderInput::pulseMultiplier;
+    };
+
+    virtual bool getAxisCalibration(
+        int &minLeft,
+        int &maxLeft,
+        int &minRight,
+        int &maxRight)
+    {
+        if (leftAxis)
+        {
+            leftAxis->getCalibrationData(minLeft, maxLeft);
+            rightAxis->getCalibrationData(minRight, maxRight);
+            return true;
+        }
+        return false;
+    }
+
+    virtual void setAxisCalibration(
+        int minLeft,
+        int maxLeft,
+        int minRight,
+        int maxRight,
+        bool save)
+    {
+        if (leftAxis)
+        {
+            leftAxis->setCalibrationData(minLeft, maxLeft);
+            rightAxis->setCalibrationData(minRight, maxRight);
+            if (save)
+                SaveSetting::notify(UserSetting::AXIS_CALIBRATION);
+        }
+    }
+
+    virtual void getAxisPolarity(
+        bool &leftAxisReversed,
+        bool &rightAxisReversed) override
+    {
+        leftAxisReversed = _reverseLeftAxis;
+        rightAxisReversed = _reverseRightAxis;
+    }
+
+    virtual void setAxisPolarity(
+        bool leftAxisReversed,
+        bool rightAxisReversed,
+        bool save) override
+    {
+        _reverseLeftAxis = leftAxisReversed;
+        _reverseRightAxis = rightAxisReversed;
+        if (save)
+            SaveSetting::notify(UserSetting::AXIS_POLARITY);
+    }
+
+    virtual void update()
+    {
+        forceUpdate = true;
+    }
+};
 
 // ----------------------------------------------------------------------------
-// Input polling
+// Poll daemon
 // ----------------------------------------------------------------------------
-
-void inputs::update()
-{
-  forceUpdate = true;
-}
 
 void inputPollingLoop(void *param)
 {
-  // Initialize
-  decouplingEvent_t currentState, previousState;
-  bool leftAxisAutocalibrated = false;
-  bool rightAxisAutocalibrated = false;
-  bool stateChanged;
-  currentState.leftAxisValue = CLUTCH_NONE_VALUE;
-  currentState.rightAxisValue = CLUTCH_NONE_VALUE;
-  currentState.rawInputBitmap = 0ULL;
-  currentState.axesAvailable = (leftClutchAxis != nullptr);
-  previousState = currentState;
+    // Initialize
+    DecouplingEvent currentState, previousState;
+    bool leftAxisAutocalibrated = false;
+    bool rightAxisAutocalibrated = false;
+    bool stateChanged;
+    currentState.leftAxisValue = CLUTCH_NONE_VALUE;
+    currentState.rightAxisValue = CLUTCH_NONE_VALUE;
+    currentState.rawInputBitmap = 0ULL;
+    previousState = currentState;
+    forceUpdate = true;
 
-  // loop
-  while (true)
-  {
-    // Read digital inputs
-    currentState.rawInputBitmap =
-        DigitalPolledInput::readInChain(previousState.rawInputBitmap, digitalInputChain);
-    currentState.rawInputChanges = currentState.rawInputBitmap ^ previousState.rawInputBitmap;
-    stateChanged = forceUpdate || (currentState.rawInputChanges);
-
-    // Read analog inputs
-    if (leftClutchAxis)
+    // loop
+    while (true)
     {
-      // Left clutch axis
-      leftClutchAxis->read(currentState.leftAxisValue, leftAxisAutocalibrated);
+        // Read digital inputs
+        currentState.rawInputBitmap = 0ULL;
+        for (DigitalInput *input : digitalInputsChain)
+        {
+            // currentState.rawInputBitmap =
+            //     (currentState.rawInputBitmap & input->mask) |
+            //     input->read(previousState.rawInputBitmap);
+            currentState.rawInputBitmap |= input->read(previousState.rawInputBitmap);
+        }
+        currentState.rawInputChanges = currentState.rawInputBitmap ^ previousState.rawInputBitmap;
+        stateChanged = forceUpdate || (currentState.rawInputChanges);
 
-      // Right clutch axis
-      rightClutchAxis->read(currentState.rightAxisValue, rightAxisAutocalibrated);
+        // Read analog inputs
+        if (leftAxis)
+        {
+            // Left clutch axis
+            leftAxis->read(currentState.leftAxisValue, leftAxisAutocalibrated);
+            if (_reverseLeftAxis)
+                currentState.leftAxisValue = CLUTCH_FULL_VALUE - currentState.leftAxisValue;
 
-      if (leftAxisAutocalibrated || rightAxisAutocalibrated)
-        requestSaveAxisCalibration();
+            // Right clutch axis
+            rightAxis->read(currentState.rightAxisValue, rightAxisAutocalibrated);
+            if (_reverseRightAxis)
+                currentState.rightAxisValue = CLUTCH_FULL_VALUE - currentState.rightAxisValue;
 
-      stateChanged =
-          stateChanged ||
-          (currentState.leftAxisValue != previousState.leftAxisValue) ||
-          (currentState.rightAxisValue != previousState.rightAxisValue);
+            if (leftAxisAutocalibrated || rightAxisAutocalibrated)
+                SaveSetting::notify(UserSetting::AXIS_CALIBRATION);
+
+            stateChanged =
+                stateChanged ||
+                (currentState.leftAxisValue != previousState.leftAxisValue) ||
+                (currentState.rightAxisValue != previousState.rightAxisValue);
+        }
+
+        // Check for a state change
+        if (stateChanged)
+        {
+            // Push state into the decoupling queue
+            internals::inputs::notifyInputEvent(currentState);
+            previousState = currentState;
+        }
+
+        // Prepare for the next iteration
+        forceUpdate = false;
+
+        // wait for the next sampling interval
+        DELAY_MS(DEBOUNCE_MS * 2);
     }
-
-    // Check for a state change
-    if (stateChanged)
-    {
-      // Push state into the decoupling queue
-      xQueueSend(decouplingQueue, &currentState, 0);
-      previousState = currentState;
-    }
-
-    // Prepare for next iteration
-    forceUpdate = false;
-
-    // wait for next sampling interval
-    vTaskDelay(SAMPLING_RATE_TICKS);
-  }
 }
 
 // ----------------------------------------------------------------------------
-// Input hub
+// Input Hub daemon
 // ----------------------------------------------------------------------------
 
+#if !CD_CI
 void hubLoop(void *unused)
 {
-  decouplingEvent_t currentState;
+    DecouplingEvent currentState;
 
-  while (true)
-  {
-    if (xQueueReceive(decouplingQueue, &currentState, portMAX_DELAY))
-      inputHub::onRawInput(
-          currentState.rawInputBitmap,
-          currentState.rawInputChanges,
-          currentState.leftAxisValue,
-          currentState.rightAxisValue,
-          currentState.axesAvailable);
-  } // end while
+    while (true)
+    {
+        if (xQueueReceive(decouplingQueue, &currentState, portMAX_DELAY))
+            internals::inputHub::onRawInput(currentState);
+    } // end while
 }
+#endif
 
 // ----------------------------------------------------------------------------
-// Configure inputs
+// Decoupling
 // ----------------------------------------------------------------------------
 
-void abortOnUnusableGPIO(gpio_num_t pinNumber)
+inline void internals::inputs::notifyInputEvent(const DecouplingEvent &input)
 {
-  if (pinNumber == GPIO_NUM_NC)
-  {
-    log_e("GPIO_NUM_NC is not usable");
-    abort();
-  }
-#if defined(CONFIG_IDF_TARGET_ESP32)
-  if ((pinNumber >= GPIO_NUM_6) && (pinNumber <= GPIO_NUM_11))
-  {
-    log_e("GPIO pin %d is not usable in a pure ESP32 board. Reserved for SPI Flash", pinNumber);
-    abort();
-  }
-  if ((pinNumber >= GPIO_NUM_16) && (pinNumber <= GPIO_NUM_17) && psramFound())
-  {
-    log_e("GPIO pin %d is not usable in a ESP32 board. Reserved for PSRAM", pinNumber);
-    abort();
-  }
-#elif defined(CONFIG_IDF_TARGET_ESP32S3)
-  if ((pinNumber >= GPIO_NUM_19) && (pinNumber <= GPIO_NUM_20))
-  {
-    log_e("CAUTION: GPIO pin %d is reserved for USB data", pinNumber);
-  }
-  if ((pinNumber >= GPIO_NUM_35) && (pinNumber <= GPIO_NUM_37) && psramFound())
-  {
-    log_e("GPIO pin %d is not usable in a ESP32-S3 board. Reserved for PSRAM", pinNumber);
-    abort();
-  }
-  if ((pinNumber >= GPIO_NUM_26) && (pinNumber <= GPIO_NUM_32))
-  {
-    log_e("GPIO pin %d is not usable in a ESP32-S3 board. Reserved for SPI Flash.", pinNumber);
-    abort();
-  }
-#elif defined(CONFIG_IDF_TARGET_ESP32C3)
-  if ((pinNumber >= GPIO_NUM_11) && (pinNumber <= GPIO_NUM_17))
-  {
-    log_e("GPIO pin %d is not usable in a ESP32-C3 board. Reserved for SPI Flash.", pinNumber);
-    abort();
-  }
+#if CD_CI
+    DecouplingEvent copy = input;
+    internals::inputHub::onRawInput(copy);
+#else
+    xQueueSend(decouplingQueue, &input, 0);
 #endif
 }
 
 // ----------------------------------------------------------------------------
-
-void abortOnUnusableGPIO(gpio_num_array_t pins)
-{
-  for (int i = 0; i < pins.size(); i++)
-    abortOnUnusableGPIO(pins[i]);
-}
-
+// Start
 // ----------------------------------------------------------------------------
 
-void abortDueToCallAfterStart()
+void inputStart()
 {
-  log_e("inputs::add*() or inputs::set*() called after inputs::start()");
-  abort();
-}
-
-// ----------------------------------------------------------------------------
-
-void inputs::addDigital(
-    gpio_num_t pinNumber,
-    inputNumber_t inputNumber)
-{
-  if ((!pollingTask) && (!hubTask))
-  {
-    abortOnUnusableGPIO(pinNumber);
-    digitalInputChain = new DigitalButton(
-        pinNumber,
-        inputNumber,
-        true,
-        true,
-        digitalInputChain);
-  }
-  else
-    abortDueToCallAfterStart();
-}
-
-// ----------------------------------------------------------------------------
-
-void inputs::addRotaryEncoder(
-    gpio_num_t clkPin,
-    gpio_num_t dtPin,
-    inputNumber_t cwInputNumber,
-    inputNumber_t ccwInputNumber,
-    bool useAlternateEncoding)
-{
-  if ((!pollingTask) && (!hubTask))
-  {
-    abortOnUnusableGPIO(clkPin);
-    abortOnUnusableGPIO(dtPin);
-    esp_err_t err = gpio_install_isr_service(0);
-    if (err != ESP_ERR_INVALID_STATE)
-      ESP_ERROR_CHECK(err);
-    digitalInputChain = new RotaryEncoderInput(
-        clkPin, dtPin, cwInputNumber, ccwInputNumber, useAlternateEncoding, digitalInputChain);
-    capabilities::setFlag(CAP_ROTARY_ENCODERS);
-  }
-  else
-    abortDueToCallAfterStart();
-}
-
-// ----------------------------------------------------------------------------
-
-ButtonMatrixInputSpec &inputs::addButtonMatrix(
-    const gpio_num_array_t selectorPins,
-    const gpio_num_array_t inputPins)
-{
-  if ((!pollingTask) && (!hubTask))
-  {
-    abortOnUnusableGPIO(selectorPins);
-    abortOnUnusableGPIO(inputPins);
-    ButtonMatrixInput *matrix = new ButtonMatrixInput(
-        selectorPins,
-        inputPins,
-        digitalInputChain);
-    digitalInputChain = matrix;
-    return *matrix;
-  }
-  else
-    abortDueToCallAfterStart();
-  // C++20 compiler requires this
-  throw std::runtime_error("");
-}
-
-AnalogMultiplexerInput &addAnalogMultiplexerInternal(
-    const gpio_num_array_t &selectorPins,
-    const gpio_num_array_t &inputPins)
-{
-  if ((!pollingTask) && (!hubTask))
-  {
-    abortOnUnusableGPIO(selectorPins);
-    abortOnUnusableGPIO(inputPins);
-    AnalogMultiplexerInput *mux = new AnalogMultiplexerInput(
-        selectorPins,
-        inputPins,
-        true,
-        digitalInputChain);
-    digitalInputChain = mux;
-    return *mux;
-  }
-  else
-    abortDueToCallAfterStart();
-  // C++20 compiler requires this
-  throw std::runtime_error("");
-}
-
-Multiplexers8InputSpec &inputs::addAnalogMultiplexer(
-    const gpio_num_array_t &selectorPins,
-    const gpio_num_array_t &inputPins)
-{
-  return inputs::addAnalogMultiplexer8(selectorPins, inputPins);
-}
-
-Multiplexers8InputSpec &inputs::addAnalogMultiplexer8(
-    const gpio_num_array_t &selectorPins,
-    const gpio_num_array_t &inputPins)
-{
-  if (selectorPins.size() != 3)
-  {
-    log_e("An 8-channel analog multiplexer requires 3 selector pins");
-    abort();
-  }
-  return addAnalogMultiplexerInternal(selectorPins, inputPins);
-}
-
-Multiplexers16InputSpec &inputs::addAnalogMultiplexer16(
-    const gpio_num_array_t &selectorPins,
-    const gpio_num_array_t &inputPins)
-{
-  if (selectorPins.size() != 4)
-  {
-    log_e("A 16-channel analog multiplexer requires 4 selector pins");
-    abort();
-  }
-  return addAnalogMultiplexerInternal(selectorPins, inputPins);
-}
-
-Multiplexers32InputSpec &inputs::addAnalogMultiplexer32(
-    const gpio_num_array_t &selectorPins,
-    const gpio_num_array_t &inputPins)
-{
-  if (selectorPins.size() != 5)
-  {
-    log_e("A 32-channel analog multiplexer requires 5 selector pins");
-    abort();
-  }
-  return addAnalogMultiplexerInternal(selectorPins, inputPins);
-}
-
-ShiftRegisters8InputSpec &inputs::addShiftRegisters(
-    const gpio_num_t serialPin,
-    const gpio_num_t loadPin,
-    const gpio_num_t nextPin,
-    const uint8_t switchCount)
-{
-  if ((!pollingTask) && (!hubTask))
-  {
-    abortOnUnusableGPIO(serialPin);
-    abortOnUnusableGPIO(loadPin);
-    abortOnUnusableGPIO(nextPin);
-    ShiftRegistersInput *sr =
-        new ShiftRegistersInput(
-            serialPin,
-            loadPin,
-            nextPin,
-            switchCount,
-            true,
-            false,
-            false,
-            digitalInputChain);
-    digitalInputChain = sr;
-    return *sr;
-  }
-  else
-    abortDueToCallAfterStart();
-  // C++20 compiler requires this
-  throw std::runtime_error("");
-}
-
-void inputs::setAnalogClutchPaddles(
-    const gpio_num_t leftClutchPin,
-    const gpio_num_t rightClutchPin)
-{
-  if ((!pollingTask) && (!hubTask))
-  {
-    if ((leftClutchPin != rightClutchPin) && (rightClutchAxis == nullptr) && (leftClutchAxis == nullptr))
+    if (!FirmwareService::call::isRunning())
     {
-      abortOnUnusableGPIO(leftClutchPin);
-      abortOnUnusableGPIO(rightClutchPin);
-      rightClutchAxis = new AnalogAxisInput(rightClutchPin);
-      leftClutchAxis = new AnalogAxisInput(leftClutchPin);
-      capabilities::setFlag(CAP_CLUTCH_ANALOG);
-      capabilities::setFlag(CAP_CLUTCH_BUTTON, false);
+        if (DeviceCapabilities::hasFlag(DeviceCapability::ROTARY_ENCODERS))
+            LoadSetting::notify(UserSetting::PULSE_WIDTH);
+        if (leftAxis)
+        {
+            LoadSetting::notify(UserSetting::AXIS_CALIBRATION);
+            LoadSetting::notify(UserSetting::AXIS_POLARITY);
+        }
+
+#if !CD_CI
+
+        // Create event queue
+        decouplingQueue = xQueueCreate(64, EVENT_SIZE);
+        if (decouplingQueue == nullptr)
+            throw std::runtime_error("Unable to create decoupling queue");
+
+        TaskHandle_t task = nullptr;
+        // Create and run the input hub
+        xTaskCreate(hubLoop, "hub", HUB_STACK_SIZE, (void *)nullptr, INPUT_TASK_PRIORITY, &task);
+        if (task == nullptr)
+            throw std::runtime_error("Unable to create inputHub task");
+
+        // Create and run the polling task
+        task = nullptr;
+        xTaskCreate(
+            inputPollingLoop,
+            "PolledInputs",
+            POLLING_TASK_STACK_SIZE,
+            nullptr,
+            INPUT_TASK_PRIORITY,
+            &task);
+        if (task == nullptr)
+            throw std::runtime_error("Unable to create polling task");
+
+#else
+
+        std::jthread pollingThread(inputPollingLoop, nullptr);
+        pollingThread.detach();
+
+#endif
     }
-    else
-    {
-      log_e("inputs::setAnalogClutchPaddles() called twice or for two identical GPIO pins");
-      abort();
-    }
-  }
-  else
-    abortDueToCallAfterStart();
-}
-
-uint8_t getI2CFullAddress(uint8_t I2CAddress, bool isFullAddress)
-{
-  if (isFullAddress)
-    return I2CAddress;
-
-  // Retrieve all 7-bit addresses found in the bus (only once)
-  if (i2cAddressesFromProbe == nullptr)
-  {
-    i2cAddressesFromProbe = new std::vector<uint8_t>;
-    i2c::probe(*i2cAddressesFromProbe);
-  }
-  uint8_t fullAddress = i2c::findFullAddress(*i2cAddressesFromProbe, I2CAddress);
-
-  if (fullAddress == 0xFF)
-  {
-
-    log_e("No GPIO expander found with hardware address %x (hex)", I2CAddress);
-    abort();
-  }
-  else if (fullAddress == 0xFE)
-  {
-    log_e("Unable to auto-detect full address of GPIO expander. Hardware address is %x (hex)", I2CAddress);
-    abort();
-  }
-  return fullAddress;
-}
-
-PCF8574InputSpec &inputs::addPCF8574Digital(
-    uint8_t I2CAddress,
-    bool isFullAddress)
-{
-  if ((!pollingTask) && (!hubTask))
-  {
-    uint8_t fullAddress = getI2CFullAddress(I2CAddress, isFullAddress);
-    PCF8574ButtonsInput *gpioExpander =
-        new PCF8574ButtonsInput(
-            fullAddress,
-            false,
-            digitalInputChain);
-    digitalInputChain = gpioExpander;
-    return *gpioExpander;
-  }
-  else
-    abortDueToCallAfterStart();
-  // C++20 compiler requires this
-  throw std::runtime_error("");
-}
-
-MCP23017InputSpec &inputs::addMCP23017Digital(
-    uint8_t I2CAddress,
-    bool isFullAddress)
-{
-  if ((!pollingTask) && (!hubTask))
-  {
-    uint8_t fullAddress = getI2CFullAddress(I2CAddress, isFullAddress);
-    MCP23017ButtonsInput *gpioExpander =
-        new MCP23017ButtonsInput(
-            fullAddress,
-            false,
-            digitalInputChain);
-    digitalInputChain = gpioExpander;
-    return *gpioExpander;
-  }
-  else
-    abortDueToCallAfterStart();
-  // C++20 compiler requires this
-  throw std::runtime_error("");
-}
-
-void inputs::initializeI2C(gpio_num_t sdaPin, gpio_num_t sclPin)
-{
-  abortOnUnusableGPIO(sdaPin);
-  abortOnUnusableGPIO(sclPin);
-  i2c::begin(sdaPin, sclPin);
 }
 
 // ----------------------------------------------------------------------------
-// Macros to send events
+// Injection
 // ----------------------------------------------------------------------------
 
-void inputs::notifyInputEventForTesting(
-    inputBitmap_t state,
-    clutchValue_t leftAxisValue,
-    clutchValue_t rightAxisValue)
+void internals::inputs::getReady()
 {
-  if (decouplingQueue)
-  {
-    decouplingEvent_t event;
-    event.leftAxisValue = leftAxisValue;
-    event.rightAxisValue = rightAxisValue;
-    event.rawInputBitmap = state;
-    event.axesAvailable = true;
-    event.rawInputChanges = state;
-    xQueueSend(decouplingQueue, &event, SAMPLING_RATE_TICKS); // portMAX_DELAY);
-  }
+    InputService::inject<InputServiceProvider>(new InputServiceProvider());
+    OnStart::subscribe(inputStart);
 }
-
-// ----------------------------------------------------------------------------
-// Initialization and start
-// ----------------------------------------------------------------------------
-
-void inputs::start()
-{
-  if (pollingTask == nullptr)
-  {
-    // Load axis calibration data, if any
-    Preferences prefs;
-    if ((leftClutchAxis) && (rightClutchAxis) && prefs.begin(AXIS_NAMESPACE, true))
-    {
-      int min, max;
-      if (loadAxisCalibration(prefs, LEFT_CLUTCH_INDEX, min, max))
-        leftClutchAxis->setCalibrationData(min, max);
-      if (loadAxisCalibration(prefs, RIGHT_CLUTCH_INDEX, min, max))
-        rightClutchAxis->setCalibrationData(min, max);
-      loadAxisPolarity(prefs, LEFT_CLUTCH_INDEX, leftClutchAxis->reversed);
-      loadAxisPolarity(prefs, RIGHT_CLUTCH_INDEX, rightClutchAxis->reversed);
-      prefs.end();
-    }
-
-    // Load rotary encoder pulse multiplier
-    loadRotaryPulseMultiplier();
-
-    // create autosave timer
-    esp_timer_create_args_t args;
-    args.callback = &axisCalibrationAutoSaveCallback;
-    args.arg = nullptr;
-    args.name = nullptr;
-    args.dispatch_method = ESP_TIMER_TASK;
-    ESP_ERROR_CHECK(esp_timer_create(&args, &autoSaveTimer));
-
-    // Create event queue
-    decouplingQueue = xQueueCreate(64, EVENT_SIZE);
-    if (decouplingQueue == nullptr)
-    {
-      log_e("Unable to create event queue");
-      abort();
-    }
-
-    // Take note of used input numbers
-    inputBitmap_t usedInputs = ~DigitalPolledInput::getChainMask(digitalInputChain);
-    capabilities::availableInputs = capabilities::availableInputs | usedInputs;
-
-    // Create and run hub task
-    xTaskCreate(hubLoop, "hub", HUB_STACK_SIZE, (void *)nullptr, INPUT_TASK_PRIORITY, &hubTask);
-    if (hubTask == nullptr)
-    {
-      log_e("Unable to create inputHub task");
-      abort();
-    }
-
-    // Create and run polling task
-    xTaskCreate(inputPollingLoop, "PolledInputs", POLLING_TASK_STACK_SIZE, nullptr, INPUT_TASK_PRIORITY, &pollingTask);
-    if (pollingTask == nullptr)
-    {
-      log_e("Unable to create polling task");
-      abort();
-    }
-  }
-}
-
-// ----------------------------------------------------------------------------

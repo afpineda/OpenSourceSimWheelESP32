@@ -1,0 +1,3 @@
+BatteryMonitorTest.cpp
+batteryMonitor.cpp
+HAL_dummy.cpp

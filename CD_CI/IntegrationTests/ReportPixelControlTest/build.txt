@@ -1,0 +1,5 @@
+ReportPixelControlTest.cpp
+pixels_fake.cpp
+hidCommon.cpp
+hid_dummy.cpp
+telemetry.cpp

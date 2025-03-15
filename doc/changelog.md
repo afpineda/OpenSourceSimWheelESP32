@@ -1,5 +1,51 @@
 # Change log
 
+## 7.0.0
+
+- TL;DR
+  - The code will check that you are not doing stupid things in your custom firmware.
+  - You will have to rewrite your custom code, but the setup is more intuitive.
+  - New features (thanks to @ArtTales for the suggestion):
+    - *Virtual* neutral gear.
+    - Configurable *default* input map.
+  - Huge improvement in testability, extensibility and maintainability.
+
+- This is a huge rewrite that affects the system architecture and most of the code base.
+- The code will perform new checks to prevent a non-functional custom firmware, regarding:
+  - Unusable, reserved, incapable, reused or non-existent GPIO pins.
+  - Invalid input numbers.
+  - Mapping non-existent hardware inputs to firmware features.
+  - Incompatible firmware features.
+- Error reporting no longer requires configuration in the Arduino IDE.
+- Testability and extensibility improved with new architectural patterns:
+  - Publish-Subscribe.
+  - Dependency injection.
+- Half of the code has been more or less rewritten to remove dependencies
+  with embedded libraries. This has **deep consequences**:
+  - This code can compile and run **in a PC workstation**,
+    container or virtual machine.
+  - Some test units are now automated, and do not require ESP32 hardware.
+  - New hardware independent test units are available.
+  - A **custom CD/CI chain** has been developed to take advantage of this.
+    No external build tools are required other than the GNU C++ compiler.
+- The old C-style code was rewritten in modern C++ style.
+  User-defined code is more intuitive and expressive.
+  Global variable declarations are no longer required
+  (one less point of failure).
+- A "virtual" button is available (optional).
+  You can map a combination of hardware inputs to this "virtual" button.
+  This is intended for shift paddles and **neutral gear**.
+  You can map the engagement of both paddles to a neutral gear button.
+- Now you can customize a *default* input map.
+  This way, you are not forced to use the full range of 128 gamepad buttons
+  if you only have a few physical buttons.
+  This feature does not interfere with the ability to set a different input map
+  using the *companion app*.
+- Each UI instance runs on its own thread with its own stack size.
+- The telemetry display using RGB LED strips has been **removed**,
+  as pixel control is a better option.
+- A [migration guide](./migrate_to_v7.md) is available.
+
 ## 6.11.4
 
 - Fixed wrong queue size for rotary encoders.
@@ -257,7 +303,7 @@
 ## 4.1.4
 
 - No code changes.
-  [NimBLEImplTest](../src/QualityControls/UnitTests/NimBLEimplTest/README.md) passed with
+  [NimBLEImplTest](../src/QualityControl/UnitTests/HID/README.md) passed with
   [NimBLE-Arduino v1.4.2](https://github.com/h2zero/NimBLE-Arduino/releases/tag/1.4.2).
 - Minor errata fixes and documentation updates.
 
@@ -267,7 +313,7 @@
 
 ## 4.1.2
 
-- Bug fix in [Setup3.ino](../src/Firmware/Setup9/Setup3.ino) due to wrong pin number at `BATTERY_READ_GPIO`.
+- Bug fix in [Setup3.ino](../src/Firmware/Setup3/Setup3.ino) due to wrong pin number at `BATTERY_READ_GPIO`.
 - Minor documentation changes due to outdated content.
 
 ## 4.1.1
@@ -322,7 +368,7 @@
 
 - Two brands of GPIO expanders (on the I2C bus) are now supported as input circuitry (for switches only)--almost
   unlimited switches with just two pins. This is the recommended way to go from now on.
-- Another [integration test](../src/QualityControls/IntegrationTests/DigitalInputsTest2/README.md)
+- Another integration test
   is in place for GPIO expanders and PISO shift registers.
 - Added another "ready to deploy" design as an example of GPIO expanders.
 
@@ -341,7 +387,7 @@
 - Rework on rotary encoders: no dedicated task is required anymore,
   thus saving a significant amount of memory.
 - Test unit for deep sleep on ESP32C3 boards is not needed anymore.
-  [DeepSleepTest](../src/QualityControls/UnitTests/DeepSleepTest/README.md) do the work for all boards.
+  [DeepSleepTest](../src/QualityControl/UnitTests/Power/DeepSleepTest/README.md) do the work for all boards.
 - Unified unit test procedure for all HID implementations.
 - DPAD inputs may work both as navigation controls or regular buttons depending on user preferences.
 - The user can choose which input number is reported for each physical button, even in alternate mode.

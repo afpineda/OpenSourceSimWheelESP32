@@ -7,8 +7,6 @@ then flashes faster at the rev limiter.
 
 Only one output pin is required.
 
-The recommended display rate is 50 frames per second.
-
 ## Hardware design
 
 The circuit is fairly straightforward
@@ -45,5 +43,5 @@ auto sl = new SimpleShiftLight(GPIO_NUM_40);
 ```
 
 See the corresponding
-[integration test](../../../../src/QualityControls/UITests/SimpleShiftLightTest/SimpleShiftLightTest.ino)
+[integration test](../../../../src/QualityControl/IntegrationTests/TelemetryIntegrationTest/TelemetryIntegrationTest.ino)
 for an example.

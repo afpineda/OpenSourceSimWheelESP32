@@ -1,7 +1,0 @@
-SimWheelTypes.h
-SimWheel.h
-debugUtils.h
-inputHub.cpp
-userSettings.cpp
-debugUtils.cpp
-capabilities.cpp

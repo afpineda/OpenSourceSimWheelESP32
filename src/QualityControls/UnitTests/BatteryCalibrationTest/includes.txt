@@ -1,6 +1,0 @@
-SimWheelTypes.h
-SimWheel.h
-debugUtils.h
-debugUtils.cpp
-BatteryCalibration.cpp
-capabilities.cpp

@@ -3,33 +3,46 @@
  *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2024-08-16
- * @brief  Implementation of the `batteryMonitor` namespace
+ * @brief Everything related to the measurement of available battery charge.
  *
  * @copyright Licensed under the EUPL
  *
  */
 
-#include "SimWheel.h"
-#include "adcTools.h"
-#include "esp32-hal-gpio.h"
-#include "i2cTools.h"
-#include "driver/i2c.h"
+//-------------------------------------------------------------------
+// Imports
+//-------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
+#include "HAL.hpp"
+#include "SimWheel.hpp"
+#include "SimWheelInternals.hpp"
+#include "InternalServices.hpp"
+
+#if !CD_CI
+#include "freertos/FreeRTOS.h"
+#include "driver/i2c.h" // For i2c operation
+#define I2C_WAIT_TICKS pdMS_TO_TICKS(150)
+#else
+#include <iostream>
+#include <thread>
+#endif
+
+//-------------------------------------------------------------------
 // Globals
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
 
 // Global parameters
-#define DEFAULT_SAMPLING_RATE_TICKS ((2 * 60 * 1000) / portTICK_RATE_MS) // 2 minutes
-static TickType_t sampling_rate_ticks = DEFAULT_SAMPLING_RATE_TICKS;
+#define DEFAULT_SAMPLING_SECONDS (2 * 60)
 static uint8_t low_battery_soc = 10;
 static uint8_t powerOff_soc = 4;
 int lastBatteryLevel = 100;
+bool configured = false;
+uint32_t sampling_rate_secs = DEFAULT_SAMPLING_SECONDS;
+int lastBatteryReading = 0;
 
 // Battery monitor
-static gpio_num_t batteryENPin = (gpio_num_t)-1;
-static gpio_num_t batteryREADPin = (gpio_num_t)-1;
-static TaskHandle_t batteryMonitorDaemon = nullptr;
+static OutputGPIO _batteryENPin;
+static ADC_GPIO _batteryREADPin;
 #define VOLTAGE_SAMPLES_COUNT 100
 
 // Fuel gauge
@@ -38,24 +51,73 @@ static TaskHandle_t batteryMonitorDaemon = nullptr;
 #define MAX1704x_REG_MODE 0x06
 #define MAX1704x_REG_VERSION 0x08
 #define MAX1704x_REG_CONFIG 0x0C
-static uint8_t fg_i2c_address;
+static uint8_t fg_i2c_address = 0xFF; // 8-bit format
 
 // Other
 #define DAEMON_STACK_SIZE 2512
 
-// ----------------------------------------------------------------------------
-// Setters
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
+// Auxiliary
+//-------------------------------------------------------------------
+
+static void abortIfStarted()
+{
+    if (FirmwareService::call::isRunning())
+        throw std::runtime_error("Battery monitor already started");
+}
+
+static void abortIfConfigured()
+{
+    if (configured)
+        throw std::runtime_error("Battery monitor already configured");
+}
+
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+// Public
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+
+void batteryMonitor::configure(ADC_GPIO battREADPin, OutputGPIO battENPin)
+{
+    abortIfStarted();
+    abortIfConfigured();
+    battREADPin.reserve();
+    internals::hal::gpio::forInput(battREADPin, false, false);
+    _batteryREADPin = battREADPin;
+    DeviceCapabilities::setFlag(DeviceCapability::BATTERY);
+    _batteryENPin = battENPin;
+    if (battENPin != UNSPECIFIED::VALUE)
+    {
+        battENPin.reserve();
+        internals::hal::gpio::forOutput(battENPin, false, false);
+    }
+    configured = true;
+}
+
+void batteryMonitor::configure(I2CBus bus, uint8_t i2c_address)
+{
+    abortIfStarted();
+    abortIfConfigured();
+    if (i2c_address < 128)
+    {
+        internals::hal::i2c::abortOnInvalidAddress(i2c_address);
+        fg_i2c_address = (i2c_address << 1);
+    }
+    else
+        fg_i2c_address = MAX1704x_I2C_ADDRESS_SHIFTED;
+    internals::hal::i2c::require(4, bus);
+    DeviceCapabilities::setFlag(DeviceCapability::BATTERY);
+    configured = true;
+}
 
 void batteryMonitor::setPeriod(uint32_t seconds)
 {
     if (seconds == 0)
-        sampling_rate_ticks = DEFAULT_SAMPLING_RATE_TICKS;
+        sampling_rate_secs = DEFAULT_SAMPLING_SECONDS;
     else
-        sampling_rate_ticks = (seconds * 1000) / portTICK_RATE_MS;
+        sampling_rate_secs = seconds;
 }
-
-// ----------------------------------------------------------------------------
 
 void batteryMonitor::setWarningSoC(uint8_t percentage)
 {
@@ -67,8 +129,6 @@ void batteryMonitor::setWarningSoC(uint8_t percentage)
     }
 }
 
-// ----------------------------------------------------------------------------
-
 void batteryMonitor::setPowerOffSoC(uint8_t percentage)
 {
     if (percentage <= 100)
@@ -79,30 +139,19 @@ void batteryMonitor::setPowerOffSoC(uint8_t percentage)
     }
 }
 
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+// Internals
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
 
-void batteryMonitor::configureForTesting()
-{
-    setPeriod(10);
-    setPowerOffSoC(0);
-    setWarningSoC(50);
-}
-
-// ----------------------------------------------------------------------------
-// Getters
-// ----------------------------------------------------------------------------
-
-int batteryMonitor::getLastBatteryLevel()
-{
-    return lastBatteryLevel;
-}
-
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
 // Fuel gauge commands
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
 
 bool max1704x_read(uint8_t regAddress, uint16_t &value)
 {
+#if !CD_CI
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, fg_i2c_address | I2C_MASTER_WRITE, true);
@@ -112,15 +161,19 @@ bool max1704x_read(uint8_t regAddress, uint16_t &value)
     i2c_master_read_byte(cmd, ((uint8_t *)&value) + 1, I2C_MASTER_ACK);
     i2c_master_read_byte(cmd, ((uint8_t *)&value), I2C_MASTER_LAST_NACK);
     i2c_master_stop(cmd);
-    bool result = (i2c_master_cmd_begin(I2C_NUM_0, cmd, DEBOUNCE_TICKS) == ESP_OK);
+    bool result = (i2c_master_cmd_begin(I2C_NUM_0, cmd, I2C_WAIT_TICKS) == ESP_OK);
     i2c_cmd_link_delete(cmd);
     return result;
+#else
+    return false;
+#endif
 }
 
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
 
 bool max1704x_write(uint8_t regAddress, uint16_t value)
 {
+#if !CD_CI
     uint8_t *data = (uint8_t *)&value;
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
@@ -129,35 +182,30 @@ bool max1704x_write(uint8_t regAddress, uint16_t value)
     i2c_master_write_byte(cmd, data[1], true);
     i2c_master_write_byte(cmd, data[0], true);
     i2c_master_stop(cmd);
-    bool result = (i2c_master_cmd_begin(I2C_NUM_0, cmd, DEBOUNCE_TICKS) == ESP_OK);
+    bool result = (i2c_master_cmd_begin(I2C_NUM_0, cmd, I2C_WAIT_TICKS) == ESP_OK);
     i2c_cmd_link_delete(cmd);
     return result;
+#else
+    return false;
+#endif
 }
 
-// ----------------------------------------------------------------------------
-
-bool max1704x_isPresent()
-{
-    // Command VERSION. This command ensures the i2c slave
-    // is a MAX1704x chip or compatible.
-    uint16_t version;
-    bool result = max1704x_read(MAX1704x_REG_VERSION, version);
-    if (result)
-        log_i("Fuel gauge version: %d", version);
-    return result;
-}
-
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
 
 bool max1704x_quickStart()
 {
+#if !CD_CI
     return max1704x_write(MAX1704x_REG_MODE, 0x4000);
+#else
+    return false;
+#endif
 }
 
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
 
 bool max1704x_getSoC(int &batteryLevel)
 {
+#if !CD_CI
     uint16_t value;
     bool result = max1704x_read(MAX1704x_REG_SoC, value);
     if (result)
@@ -168,9 +216,29 @@ bool max1704x_getSoC(int &batteryLevel)
             batteryLevel++;
     }
     return result;
+#else
+    return false;
+#endif
 }
 
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
+
+// bool max1704x_isPresent()
+// {
+// #if !CD_CI
+//     // Command VERSION. This command ensures the i2c slave
+//     // is a MAX1704x chip or compatible.
+//     uint16_t version;
+//     bool result = max1704x_read(MAX1704x_REG_VERSION, version);
+//     if (result)
+//         log_i("Fuel gauge version: %d", version);
+//     return result;
+// #else
+//     return false;
+// #endif
+// }
+
+//-------------------------------------------------------------------
 
 // bool max1704x_getCompensation(uint8_t &compensation)
 // {
@@ -181,7 +249,7 @@ bool max1704x_getSoC(int &batteryLevel)
 //     return result;
 // }
 
-// // ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
 
 // bool max1704x_setCompensation(uint8_t compensation)
 // {
@@ -196,182 +264,157 @@ bool max1704x_getSoC(int &batteryLevel)
 //     return result;
 // }
 
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
 // Battery monitor/voltage divider commands
-// ----------------------------------------------------------------------------
-
-/**
- * @brief Get ADC reading of the battery pin for testing purposes.
- *
- * @param battENPin Output-capable GPIO pin to enable battery readings.
- *                  Must have been properly initialized.
- * @param battREADPin ADC pin for reading. Must have been properly initialized.
- * @return int ADC reading
- */
-int getBatteryReadingForTesting(gpio_num_t battENPin, gpio_num_t battREADPin)
-{
-    if ((battENPin < 0) || (gpio_set_level(battENPin, 1) == ESP_OK))
-    {
-        vTaskDelay(200);
-        int mean = getADCreading(battREADPin, ADC_ATTEN_DB_12, VOLTAGE_SAMPLES_COUNT);
-        if (battENPin >= 0)
-            gpio_set_level(battENPin, 0);
-        return mean;
-    }
-    return 0;
-}
-
-// ----------------------------------------------------------------------------
-
-void configureBatteryMonitor(
-    gpio_num_t enableBatteryReadPin,
-    gpio_num_t batteryLevelPin)
-{
-    if (!GPIO_IS_VALID_GPIO(batteryLevelPin) ||
-        ((enableBatteryReadPin >= 0) && !GPIO_IS_VALID_OUTPUT_GPIO(enableBatteryReadPin)) ||
-        (digitalPinToAnalogChannel(batteryLevelPin) < 0))
-    {
-        log_e("batteryMonitor::begin(): given pins are not usable");
-        abort();
-    }
-
-    gpio_config_t io_conf = {};
-    if (enableBatteryReadPin >= 0)
-    {
-        // configure _battEN_ pin
-        io_conf.intr_type = GPIO_INTR_DISABLE;
-        io_conf.mode = GPIO_MODE_OUTPUT;
-        io_conf.pin_bit_mask = (1ULL << enableBatteryReadPin);
-        io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
-        io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
-        ESP_ERROR_CHECK(gpio_config(&io_conf));
-        ESP_ERROR_CHECK(gpio_set_level(enableBatteryReadPin, 0));
-    }
-
-    // configure _battRead_ pin
-    io_conf.intr_type = GPIO_INTR_DISABLE;
-    io_conf.mode = GPIO_MODE_INPUT;
-    io_conf.pin_bit_mask = (1ULL << batteryLevelPin);
-    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
-    io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
-    ESP_ERROR_CHECK(gpio_config(&io_conf));
-
-    // Store parameters
-    batteryENPin = enableBatteryReadPin;
-    batteryREADPin = batteryLevelPin;
-
-    capabilities::setFlag(deviceCapability_t::CAP_BATTERY);
-}
-
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
 
 bool batteryMonitor_getSoC(int &batteryLevel)
 {
-    // Determine battery level
-    int lastBatteryReading = getBatteryReadingForTesting(batteryENPin, batteryREADPin);
+#if !CD_CI
+    // Enable circuit when required
+    if (_batteryENPin != UNSPECIFIED::VALUE)
+    {
+        GPIO_SET_LEVEL(_batteryENPin, 1);
+        DELAY_TICKS(200);
+    }
+#endif
+
+    // Get ADC reading
+    // Note: lastBatteryReading is global to allow testing
+    lastBatteryReading = internals::hal::gpio::getADCreading(_batteryREADPin, VOLTAGE_SAMPLES_COUNT);
+
+#if !CD_CI
+    // Disable circuit when required
+    if (_batteryENPin != UNSPECIFIED::VALUE)
+    {
+        GPIO_SET_LEVEL(_batteryENPin, 0);
+    }
+#endif
+
     bool result = (lastBatteryReading >= 150);
     if (result)
     {
-        batteryLevel = batteryCalibration::getBatteryLevel(lastBatteryReading);
+        batteryLevel =
+            BatteryCalibrationService::call::getBatteryLevel(lastBatteryReading);
         if (batteryLevel < 0)
         {
             // Battery calibration is *not* available
             // fallback to auto-calibration algorithm
-            batteryLevel = batteryCalibration::getBatteryLevelAutoCalibrated(lastBatteryReading);
+            batteryLevel =
+                BatteryCalibrationService::call::getBatteryLevelAutoCalibrated(lastBatteryReading);
         }
     }
     // else
-    //     // Battery(+) is not connected, so battery level is unknown
+    //  Battery(+) is not connected, so battery level is unknown
+
     return result;
 }
 
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
 // SoC daemon
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
 
 void batteryMonitorDaemonLoop(void *arg)
 {
     while (true)
     {
         bool ok;
-        if (batteryREADPin < 0)
+        int currentBatteryLevel;
+        if (_batteryREADPin == UNSPECIFIED::VALUE)
         {
             // Use fuel gauge
-            ok = max1704x_getSoC(lastBatteryLevel);
+            ok = max1704x_getSoC(currentBatteryLevel);
         }
         else
         {
             // Use battery monitor
-            ok = batteryMonitor_getSoC(lastBatteryLevel);
+            ok = batteryMonitor_getSoC(currentBatteryLevel);
         }
 
         // Report battery level
         if (!ok)
-            lastBatteryLevel = UNKNOWN_BATTERY_LEVEL;
-        hidImplementation::reportBatteryLevel(lastBatteryLevel);
+            currentBatteryLevel = UNKNOWN_BATTERY_LEVEL;
 
-        // notifications and power-off
+        if (currentBatteryLevel != lastBatteryLevel)
+        {
+            lastBatteryLevel = currentBatteryLevel;
+            OnBatteryLevel::notify(lastBatteryLevel);
+        }
+
+        // Notifications and shutdown
         if (ok)
         {
             if ((powerOff_soc > 0) && (lastBatteryLevel <= powerOff_soc))
             {
                 // The DevKit must go to deep sleep before battery depletes, otherwise, it keeps
                 // draining current even if there is not enough voltage to turn it on.
-                power::powerOff();
+                PowerService::call::shutdown();
             }
             else if (lastBatteryLevel <= low_battery_soc)
-                notify::lowBattery();
+                OnLowBattery::notify();
         }
 
         // Delay to next sample
-        //        log_i("Sleep %lld",sampling_rate_ticks);
-        vTaskDelay(sampling_rate_ticks);
+        DELAY_MS(sampling_rate_secs * 1000);
 
     } // end while
 }
 
-// ----------------------------------------------------------------------------
-// Initialization
-// ----------------------------------------------------------------------------
+//-------------------------------------------------------------------
+// Internal service
+//-------------------------------------------------------------------
 
-void batteryMonitor_startDaemon()
+class BatteryServiceProvider : public BatteryService
 {
-    xTaskCreate(
-        batteryMonitorDaemonLoop,
-        "BattMon",
-        DAEMON_STACK_SIZE,
-        nullptr,
-        tskIDLE_PRIORITY + 1, &batteryMonitorDaemon);
-    if (batteryMonitorDaemon == nullptr)
+public:
+    virtual int getLastBatteryLevel() override
     {
-        log_e("batteryMonitor::begin(): unable to start daemon");
-        abort();
+        return lastBatteryLevel;
+    }
+};
+
+//-------------------------------------------------------------------
+
+void batteryMonitorStart()
+{
+    if ((!FirmwareService::call::isRunning()) && (configured))
+    {
+        OnBatteryLevel::notify(lastBatteryLevel);
+#if !CD_CI
+        if (_batteryREADPin == UNSPECIFIED::VALUE)
+            max1704x_quickStart();
+        TaskHandle_t batteryMonitorDaemon = nullptr;
+        xTaskCreate(
+            batteryMonitorDaemonLoop,
+            "BattMon",
+            DAEMON_STACK_SIZE,
+            nullptr,
+            tskIDLE_PRIORITY + 1, &batteryMonitorDaemon);
+        if (!batteryMonitorDaemon)
+            throw std::runtime_error("Unable to start the battery monitor daemon");
+#else
+        std::jthread daemon(batteryMonitorDaemonLoop, nullptr);
+        daemon.detach();
+#endif
     }
 }
 
 // ----------------------------------------------------------------------------
 
-void batteryMonitor::begin(gpio_num_t battENPin, gpio_num_t battREADPin)
+void internals::batteryMonitor::configureForTesting()
 {
-    if (batteryMonitorDaemon == nullptr)
-    {
-        configureBatteryMonitor(battENPin, battREADPin);
-        batteryCalibration::begin();
-        batteryMonitor_startDaemon();
-    }
+    ::batteryMonitor::setPeriod(10);
+    ::batteryMonitor::setPowerOffSoC(0);
+    ::batteryMonitor::setWarningSoC(50);
 }
 
 // ----------------------------------------------------------------------------
 
-void batteryMonitor::begin(uint8_t i2c_address)
+void internals::batteryMonitor::getReady()
 {
-    if (i2c_address != 0xFF)
-        i2c::abortOnInvalidAddress(i2c_address);
-    if (batteryMonitorDaemon == nullptr)
+    if ((!FirmwareService::call::isRunning()) && (configured))
     {
-        capabilities::setFlag(deviceCapability_t::CAP_BATTERY);
-        fg_i2c_address = (i2c_address > 127) ? MAX1704x_I2C_ADDRESS_SHIFTED : (i2c_address << 1);
-        i2c::require();
-        batteryMonitor_startDaemon();
+        BatteryService::inject(new BatteryServiceProvider());
+        OnStart::subscribe(batteryMonitorStart);
     }
 }
