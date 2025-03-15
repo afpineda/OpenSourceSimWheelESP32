@@ -80,6 +80,47 @@ and repeated every few seconds.
   You are passing a non-initialized `InputNumber` variable to
   `inputs::addRotaryEncoder()` (third or fourth parameter).
 
+- *I2C: unable to initialize bus ...*
+
+  The given pins to `inputs::initializeI2C()` are not capable for I2C operation.
+
+- *I2C: invalid address ...*
+
+  The number passed as an I2C address is not valid.
+  Valid I2C full addresses are in the range [0,127].
+  Valid I2C hardware addresses are in the range [0,7].
+  Check your calls to
+  `inputs::addMCP23017Expander()`,
+  `inputs::addPCF8574Expander()`,
+  `batteryMonitor::configure()` or
+  `ui::add()`.
+
+- *I2C: device not found, but required...*
+
+  A GPIO expander is required by the input subsystem but it was not found
+  in the I2C bus.
+  - Check your wiring first, including power lines (`3V3` and `GND`).
+  - Check that all GPIO expanders are attached to the proper I2C bus
+    using the expected `SCL` and `SDA` pins.
+  - When using the secondary bus or non-standard GPIO pins,
+    ensure there is a call to `inputs::initializeI2C()`.
+
+- *I2C: unable to detect full address...*
+
+  You specified an I2C hardware address, but the system is unable
+  to locate the corresponding full address:
+  - Check your wiring first as in the previous error message.
+  - Ensure two I2C devices are not using the same hardware address.
+  - Ensure your custom firmware is passing the hardware address
+    matching your actual hardware address configured using
+    the `A0`, `A1` and `A2` pins.
+    Beware of bit order: `A0` is the least significant bit.
+  - Use a full I2C address instead.
+
+When troubleshooting I2C error messages,
+the [I2C probe](../src/Firmware/I2C_probe/I2C_probe.ino) firmware
+will be handy.
+
 The following error messages are self-describing:
 
 - *You can not assign the same input number for the left and right clutch paddles*
