@@ -363,7 +363,7 @@ By default, the input map follows this rule:
 - If *alternate mode* is engaged,
   the user defined input number is the firmware defined input number plus 64.
 
-If have only a few buttons,
+If you have only a few buttons,
 their user-defined input numbers will be spread over 128 values.
 However, you can set **different default input map** by calling
 `inputMap::set()` with the following parameters (from left to right):
@@ -375,6 +375,37 @@ However, you can set **different default input map** by calling
 Make as many calls as you need.
 For the end user, your custom input map is considered "factory default".
 
+For example:
+
+```c++
+inputs::addButton(GPIO_NUM_20, 1);
+inputs::addButton(GPIO_NUM_21, 2);
+inputs::addButton(GPIO_NUM_22, 3);
+inputHub::altButtons::inputs({3});
+inputMap::set(1, 0, 2); // Line 1
+inputMap::set(2, 1, 3); // Line 2
+inputMap::set(3, 4, 4); // Line 3
+```
+
+When:
+
+- The user pushes the button attached to GPIO 20:
+  - The firmware defined input number 1 is detected as pushed.
+  - But the user defined input number 0 is reported to the hosting PC
+    as pushed, due to "Line 1", second parameter.
+- The user pushes the buttons attached to GPIO 21 and GPIO 22, at the same time:
+  - The firmware defined input numbers 2 and 3 are detected as pushed
+  - Since the input number 3 is the ALT button,
+    *alternate mode* is engaged and the input number 3 is ignored.
+  - The user defined input number 3 is reported to the hosting PC
+    as pushed, due to "Line 2", **third** parameter.
+- ALT buttons are configured as regular buttons
+  (using the companion app) and the button attached to GPIO 22 is pushed:
+  - The firmware defined input number 3 is detected as pushed.
+  - But the user defined input number 4 is reported to the hosting PC
+    as pushed, due to "Line 3", second parameter.
+    Note that the third parameter is useless for "ALT" buttons.
+
 ### Neutral gear ("virtual" button)
 
 This feature is optional.
@@ -383,7 +414,7 @@ The *neutral gear* is an input number that is not assigned to any input hardware
 (but this is not mandatory).
 When the end-user presses a particular combination of buttons,
 the *neutral gear* is reported instead.
-Then, the end-user must then fully release that combination for those
+The end-user must then fully release that combination for those
 buttons to behave normally.
 
 Make a call to `inputHub::neutralGear::set()`
@@ -405,6 +436,36 @@ combination is pressed *and* any of the others.
 
 The "virtual" input number is affected by the *alternate mode* and
 can be mapped to other user-defined input numbers.
+
+Example:
+
+```c++
+inputs::addButton(GPIO_NUM_20, 1); // Left shift paddle
+inputs::addButton(GPIO_NUM_21, 2); // Right shift paddle
+inputHub::neutralGear::set(3,{1,2}); // Neutral gear
+```
+
+Let's suppose this sequence of events:
+
+- The left shift paddle is pushed:
+  - Button 1 is reported as pressed (to the hosting PC)
+  - Button 2 is reported as released
+  - Button 3 is reported as released
+- The right shift paddle is pushed (both are pushed now):
+  - Button 1 is reported as released (to the hosting PC)
+  - Button 2 is reported as released
+  - Button 3 is reported as **pushed**
+- The right shift paddle is released:
+  - Button 1 is reported as **released** (to the hosting PC)
+  - Button 2 is reported as **released**
+  - Button 3 is reported as released
+- The left shift paddle is released:
+  - Button 1 is reported as **released** (to the hosting PC)
+  - Button 2 is reported as **released**
+  - Button 3 is reported as released
+
+Once both shift padles are released,
+they will be reported as buttons 1 and 2 again.
 
 ## Build your design into a perfboard
 
