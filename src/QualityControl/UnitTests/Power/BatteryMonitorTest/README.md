@@ -26,15 +26,17 @@ Output through USB serial port at 115200 bauds.
 
 ## Procedure and expected output
 
-1. Reset. Ignore output from the operating system itself.
-2. Output must match:
+1. Ensure `Battery(+)` is not wired.
+2. Reset. Ignore output from the operating system itself.
+3. Output must match:
 
    ```text
    --READY--
+   SoC: 100
    --GO--
+   SoC: 66
    ```
 
-3. Ensure `Battery(+)` is not wired.
 4. Wait for 20 seconds. No output should appear.
 5. Wire `battery(+)` to `GND`.
 6. Wait for 20 seconds. No output should appear.
