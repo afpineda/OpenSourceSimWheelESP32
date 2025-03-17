@@ -24,8 +24,8 @@ The *system* have been broken down into several *subsystems*:
 - `storage`:
   Manages long-term storage of user settings in flash memory.
 - `telemetry`:
-  Holds received telemetry data.
-- `ui`
+  Holds received telemetry data (this subsystem is trivial).
+- `ui`:
   Everything related to the user interface, if available.
 
 Each subsystem is implemented through one or more code abstractions:
@@ -225,7 +225,7 @@ classDiagram
     AnalogInput  <|-- AnalogClutchInput
 ```
 
-**Link here**
+[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNp9klFLwzAQx79KiS-KG-hUJsUX7ab0oTi2N-nL0V7bQJqU5AIbs9_dLG2lU9a8JPe_3x3hf3dkmcqRhSwTYMyKQ6mhTmXgjleCeBHFsrF07MQguCqRPjbxpyEgvL7p5HZcsuIlJxDnZbcaIf-Dj8Hg5Xs-D94skZIJkOZ7L18CXyUIVSZWEG8E7lFP0ruKF7TFkhtCbSbRrSLQh7U82TLdtFe6L1-CBvu6_BB5R3x-E70_Py0fuyZmEk2izeLh7n75n-3M6PGRPZGwlFVeZzNWo66B527WfigpowprTFnonjkW4LxMWSpbh4IltTvIjIWkLc6YbXI37H47zsV1zknpQdPKlhULCxDGRQ3IL6Xq3xg9m_QLd7raH9Yk0-4)
 
 ### Internal services
 
@@ -251,15 +251,14 @@ classDiagram
     inputs <.. inputHub: recalibrate axes (command)
     inputs <.. hid: recalibrate axes, set pulse width, reverse axes (commands)
     batteryCalibration <.. hid: restart auto-calibration algorithm (command)
-    inputMap <.. hid: current input map
     hid <.. inputHub : working modes, bite point, etc
     ui <.. inputHub: bite point
+    inputMap <.. hid: current input map
 ```
 
-**Link here**
+[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNp9k8Fu2zAMhl-F0KnFvD6A0dtaYDvkst0GXxiJjYVZokBR9Yoi7145sVvHzeaLbfLjr5-U9GosOzKtsQPm_ODxIBi6CPU5RcDHVDTD6zl2_JT6XvZLEuALx584_pjiN7dXKnrvVrBQYtF_03tUJXnZcfTKctXCjHzDwe8F1XO8iiUeSVYr576o4zFulj1j93d3k9EWFgqqqvpAXBRuLIeA0d1uKy7NXhZb8eotDgsEAz3TsNWaJz2JLZNtQcjOvRHgX8r_KTp53vINZFJIZcgEo3faNxV5JskbuTzrXRnoSjsrigIW5a92ReBw4NpiH7bupv1e9wMtjCx_fDxAqMeuutv7ajSxj9oAqT2XFb-Zwge16nqH6cObLSIU9ZyBgKmLpjGBJKB39Xif9r4z2lOgzrT109ETlkE708VjRaemfr1Ea1qVQo0pydUZzhfiMvjopi1eYsLl0Jv2CeuIG5Mw_mYO7_90YnfzHZtexzdS0iig)
 
 ## Event system
-
 
 - Initialization and load/save settings:
 
@@ -276,6 +275,8 @@ classDiagram
     storage -- notify --> OnSettingsSaved
   ```
 
+  [Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNqFUk1vwyAM_SvI5_YP5DDtsN1aTVpuExc3mAQpQASmVRTlv5ekTZd9ROXk5_eeMcYDVF4RFCCEbv2lajCwOHxKJ_L5cCVn_DqI2GBHhYiMyiQrxht_8KhKYjaujpuiEs_0VJRvuksmudrUoeu_uS74Ki6MNsFeMJDY74XzbHSfo5flCVM2plOsgjmRmplc6lHzl2nd8j_OyD5gTVvu9VSeue_gb9PraUgHO7AULBqVf2qYrBK4IUsSihwq0phaliDdmKWY2Je9q6DgkGgHqVPI9GawDmh_Jt-VyR0sueBT3UChsY0Zdei-vLcPTLP2eFuXeWvGK9BfwN8)
+
 - Battery level and shutdown:
 
   ```mermaid
@@ -291,6 +292,8 @@ classDiagram
     OnBatteryLevel -- subscribed --> hid
     OnLowBattery -- subscribed --> ui_pixels
   ```
+
+  [Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNqNkstqwzAQRX9FzNqhey9KKenOodDsgqCMrXEskDVGj7rG-N_rR52kTRqqlWY4V9K9mh4KVgQplIbbokIXRPYmrRjXq91XMWy5tU-98BU2lAofUOlYi2FFnjEEcl1GH2TuYBm33-SfUNTvjf4k489E47jwiTCYk0mFhKjFg1ggCauu4Zac2GyE5aDLbtw9Xjx9YfLl7h1bHfgavjTxL8HZzu-oJtTH3BdO56Rm_GTsVmY3-Eqr69junQsJ1ORq1Gr8x37SSggV1SRhSk1RidEECdIOI4ox8L6zBaTBRUogNgoDbTUeHdY_my9qcr_2HMdjBWmJxo9Vg_bAXJ9qmtndMkzzTA1f4nzM_w)
 
   *OnShutDown* is a notification, not a command.
   However, the *ui* subsystems translates this event into a command
@@ -311,7 +314,7 @@ classDiagram
     OnDisconnected -- subscribed --> ui_pixels
   ```
 
-**Link here**
+  [Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNqFkctqw0AMRX9FaO3QvRehkHTXUmh2ZSDIM3IsmIeZB20w_vfaDm5S-tJKVxzBvdKAOhjGGlsb3nRHMcPji_Iw1bPfBe9ZZzb3A6SOeq4hZTJSHIwrs5ek_8WKHHt5Z5uuRB-DThVYatjWoLAI3MEFUrjudWJgswEfsrTnqdvemvodufX0LctMp9IkHaVZ1PZq76dQf_FYoePoSMx0wWHeVpg7dqxwzmS4pWKzQuXHCaWSw-HsNdY5Fq6w9IYy74VOkdzX4YORHOI6i6GcOqxbsmlSPfnXENyn5oV9urxx-eb4AeOSno0)
 
 ## Save settings
 
@@ -334,7 +337,7 @@ sequenceDiagram
   end
 ```
 
-**Link here**
+[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNplUjFuwzAM_AqhqUWTD2jI1I6dsrXuwMiMI1SWXIkyYAT5eynZTuF0k0535PHEqzKhJaVVop9M3tCrxS5i33iAASNbYwf0DOinRyhxiNjRI8y2p1hAkcD-cFh5Go440pGYre-S1j6wPU9POVFcwGf4NOjcCc33VymwCLdFIvXUnygCX2yCNCtBjhzgRJVHbeOrAcfloSWHU8EAtjWr01Ixsfif3ysG-03LgoVcCeRrHRfCAMEDjRSnu4mtg4duLyUPDWVA6EQgXVAypDhaQ2AcpjRramwi2P8ZMDlGKokvjUZ0mf7Pc-cnCXpxq3ZKBurRtvLH1wI2ii-SYaO0HFs6Y3bcqMbfhIqZw3HyRmmOmXYqDy3yuhJb8K210m7FYsjdRekzuiQ32YOPEPr7nSr3fV60um-3X6lH3Co)
 
 ## Load settings
 
@@ -343,18 +346,15 @@ sequenceDiagram
   participant any
   participant storage
   any ->>+ storage: LoadSettings::notify(userSetting) [callback]
-  alt no default value
     storage ->> storage: Check if the requested setting is stored
     alt is stored
       storage ->> storage: load setting
       storage ->> any: call setter with argument save=false
     end
-  else
-    storage ->> storage: load setting or set a default value
-    storage ->> any: call setter with argument save=false
-  end
   deactivate storage
 ```
+
+[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNp1kU1OAzEMha9iZQWiXCAS3QA7WHUHw8Iknpmo-RkSp2hU9e4kmQ6ICnbJy_Pn5_goVNAkpEj0kckrejA4RHSdB5gwslFmQs-Afr6UEoeIA1W5vMLtdnuzahKeAuodMRs_JCl9YNPPVzlRPIvX8KrQ2ndU-7dKgLW0cn4w9yOpPZgeeCSINWJi0pAWCJjUrKQXBFq-lP7h2hJvpfxlLANJqAGbiSJ8Gh4B45Ad1dHxQHc92kRLMfnWThMqNgdkWmFiIxxFh0aXLz5WTyfKKI46IctRU4_Zcic6fypWzBx2s1dCcsy0EXnShXXeyG_xUZvSYdViyMMoZEu0EWU7LyG47zs17_Oy57bu0xdaGq72)
 
 ## Brief description of most relevant subsystems
 
@@ -467,12 +467,16 @@ they should be implemented in separate classes, not to mix their code.
       switchLed();
   }
 
+  uint8_t MyImpl:getMaxFPS()
+  {
+    return 1; // one frame per second
+  }
   ...
 
   void setup()
   {
       ...
-      ui::add(new MyImpl(ledPin), 1); // one frame per second
+      ui::add<MyImpl>(ledPin);
       ...
   }
   ```
@@ -516,14 +520,16 @@ A daemon computes SOC in timed intervals under this algorithm:
    - *Fuel gauge*: state of charge.
 
 2. Determine if the battery is attached or not.
-3. Compute state of charge:
+3. Compute the state of charge:
 
    - *Voltage divider* or *battery monitor*:
      the *BatteryCalibration* module translates a voltage into a state of charge.
    - *Fuel gauge*: computation is already done by the chip itself.
 
-4. Notify low battery levels.
-5. Shutdown on very low battery levels.
+4. If there is a change in the state of charge (1% or more),
+   notify the new value to the hosting PC.
+5. Notify low battery levels.
+6. Shutdown on very low battery levels.
 
 #### Fuel gauges
 
@@ -637,7 +643,7 @@ flowchart LR
   Q -- event --> IH
 ```
 
-[Render this graph at mermaid.live](https://mermaid.live/view#pako:eNpVjssOgjAQRX-lmRUk9AdYuNKEJi5Al9ZFpYM06QObqcYQ_l1AXbCbnHvuzYzQBo1QQmfDq-1VJHY8Sc-YqLNM-CERG4K1TCt0wef5EjUXswb4RE_skTDhda1U_0qfbpuGqBnnP5_zHWvWmS0TFRTgMDpl9PzPuCgSqEeHEsr51NipZEmC9NOsqkTh_PYtlBQTFpAGrQj3Rt2jclt40IZC_LLpAwzyT0k)
+[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNpVjssOgjAQRX-lmRUk9AdYuNKEJi5Al9ZFpYM06QObqcYQ_l1AXbCbnHvuzYzQBo1QQmfDq-1VJHY8Sc-YqLNM-CERG4K1TCt0wef5EjUXswb4RE_skTDhda1U_0qfbpuGqBnnP5_zHWvWmS0TFRTgMDpl9PzPuCgSqEeHEsr51NipZEmC9NOsqkTh_PYtlBQTFpAGrQj3Rt2jclt40IZC_LLpAwzyT0k)
 
 Event capture is detached from event processing at the **input hub daemon**,
 which runs most of the code. Note that such a daemon is implemented inside `inputs.cpp`,
@@ -694,7 +700,7 @@ The firmware relies in the
 [HID](https://en.wikipedia.org/wiki/Human_interface_device) standard to provide connectivity.
 The device will appear as a
 [Gamepad](https://en.wikipedia.org/wiki/Gamepad) to the hosting computer.
-The *hidImplementation* namespace is in charge of that.
+The *hid* namespace is in charge of that.
 However, this project provides several alternate implementations:
 
 - *hid_NimBLE.cpp*: BLE using the
