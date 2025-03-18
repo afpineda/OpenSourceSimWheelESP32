@@ -15,9 +15,37 @@
 
 #include "InputHardware.hpp"
 #include "HAL.hpp"
-#include "driver/i2c.h"  // For I2C operation
-#include "esp32-hal.h"   // For portSET_INTERRUPT_MASK_FROM_ISR
-#include "driver/gpio.h" // For gpio_set_level/gpio_get_level()
+#include "driver/i2c.h"    // For I2C operation
+#include "esp32-hal.h"     // For portSET_INTERRUPT_MASK_FROM_ISR
+#include "driver/gpio.h"   // For gpio_set_level/gpio_get_level()
+#include "esp32-hal-cpu.h" // For getCpuFrequencyMhz()
+
+//-------------------------------------------------------------------
+// Globals
+//-------------------------------------------------------------------
+
+// I2C
+#define I2C_TIMEOUT_TICKS pdMS_TO_TICKS(30)
+
+// MCP23017 registers
+#define MCP23017_IO_CONFIGURATION 0x0A
+#define MCP23017_IO_DIRECTION 0x00
+#define MCP23017_PULL_UP_RESISTORS 0x0C
+#define MCP23017_GPIO 0x12
+#define MCP23017_POLARITY 0x02
+#define MCP23017_INTERRUPT_ON_CHANGE 0x04
+#define MCP23017_INTERRUPT_CONTROL 0x08
+#define MCP23017_INTERRUPT_DEFAULT_VALUE 0x06
+
+#pragma optimize("", off)
+inline void signal_change_delay(uint32_t nanoseconds)
+{
+    // Note: 1 ns = 1000 MHz
+    static uint32_t instructionTimeNs = (getCpuFrequencyMhz() < 1000) ? (1000 / getCpuFrequencyMhz()) : 1;
+    for (uint32_t delay = 0; delay < nanoseconds; delay += instructionTimeNs)
+        __asm__ __volatile__(" nop\n");
+}
+#pragma optimize("", on)
 
 //-------------------------------------------------------------------
 // Single button
@@ -241,23 +269,10 @@ uint64_t RotaryEncoderInput::read(uint64_t lastState)
             return 0ULL;
     }
 }
+
 //-------------------------------------------------------------------
 // Button matrix
 //-------------------------------------------------------------------
-
-#define SIGNAL_CHANGE_DELAY_TICKS 5
-
-// MCP23017 registers
-#define MCP23017_IO_CONFIGURATION 0x0A
-#define MCP23017_IO_DIRECTION 0x00
-#define MCP23017_PULL_UP_RESISTORS 0x0C
-#define MCP23017_GPIO 0x12
-#define MCP23017_POLARITY 0x02
-#define MCP23017_INTERRUPT_ON_CHANGE 0x04
-#define MCP23017_INTERRUPT_CONTROL 0x08
-#define MCP23017_INTERRUPT_DEFAULT_VALUE 0x06
-
-#include <HardwareSerial.h>
 
 ButtonMatrixInput::ButtonMatrixInput(
     const ButtonMatrix &matrix,
@@ -288,7 +303,7 @@ uint64_t ButtonMatrixInput::read(uint64_t lastState)
     {
         GPIO_SET_LEVEL(row.first, !negativeLogic);
         // Wait for the signal to change from LOW to HIGH due to parasite capacitances.
-        vTaskDelay(SIGNAL_CHANGE_DELAY_TICKS);
+        signal_change_delay(5);
         for (auto col : row.second)
         {
             int level = GPIO_GET_LEVEL((int)col.first);
@@ -298,7 +313,7 @@ uint64_t ButtonMatrixInput::read(uint64_t lastState)
         GPIO_SET_LEVEL(row.first, negativeLogic);
         // Wait for the signal to change from HIGH to LOW.
         // Otherwise, there will be a false reading at the next iteration.
-        vTaskDelay(SIGNAL_CHANGE_DELAY_TICKS);
+        signal_change_delay(5);
     }
     return state;
 }
@@ -438,7 +453,7 @@ uint64_t AnalogMultiplexerInput::read(uint64_t lastState)
             GPIO_SET_LEVEL(selectorPins[selPinIndex], switchIndex & (1 << selPinIndex));
 
         // Wait for the signal to propagate
-        vTaskDelay(SIGNAL_CHANGE_DELAY_TICKS);
+        signal_change_delay(25);
 
         uint8_t inputPinIndex = switchIndex >> selectorPins.size();
         int level = GPIO_GET_LEVEL(inputPins[inputPinIndex]);
@@ -452,8 +467,6 @@ uint64_t AnalogMultiplexerInput::read(uint64_t lastState)
 //-------------------------------------------------------------------
 // I2C input hardware
 //-------------------------------------------------------------------
-
-#define I2C_TIMEOUT_TICKS pdMS_TO_TICKS(30)
 
 I2CInput::I2CInput(
     uint8_t address7Bits,
@@ -744,7 +757,7 @@ uint64_t ShiftRegistersInput::read(uint64_t lastState)
 
     // Parallel load
     GPIO_SET_LEVEL(loadPin, loadHighOrLow);
-    vTaskDelay(SIGNAL_CHANGE_DELAY_TICKS);
+    signal_change_delay(35);
     GPIO_SET_LEVEL(loadPin, !loadHighOrLow);
 
     // Serial output
@@ -757,7 +770,7 @@ uint64_t ShiftRegistersInput::read(uint64_t lastState)
 
         // next
         GPIO_SET_LEVEL(nextPin, !nextHighToLowOrLowToHigh);
-        vTaskDelay(SIGNAL_CHANGE_DELAY_TICKS);
+        signal_change_delay(35);
         GPIO_SET_LEVEL(nextPin, nextHighToLowOrLowToHigh);
     }
     return state;

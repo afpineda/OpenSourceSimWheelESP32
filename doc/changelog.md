@@ -44,6 +44,10 @@
 - Each UI instance runs on its own thread with its own stack size.
 - The telemetry display using RGB LED strips has been **removed**,
   as pixel control is a better option.
+- Analog multiplexers, button matrices and shift registers
+  now actively wait for signal propagation with nanosecond precision
+  and no context switching.
+  This should improve the responsiveness of the switches.
 - A [migration guide](./migrate_to_v7.md) is available.
 
 ## 6.11.4
