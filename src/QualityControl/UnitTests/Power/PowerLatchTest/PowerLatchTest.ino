@@ -9,13 +9,13 @@
  *
  */
 
- #include "SimWheel.hpp"
- #include "SimWheelInternals.hpp"
- #include "InternalServices.hpp"
- #include "Testing.hpp"
- #include "HAL.hpp"
+#include "SimWheel.hpp"
+#include "SimWheelInternals.hpp"
+#include "InternalServices.hpp"
+#include "Testing.hpp"
+#include "HAL.hpp"
 
- #include <HardwareSerial.h>
+#include <HardwareSerial.h>
 
 //-------------------------------------------------------
 // Mocks
