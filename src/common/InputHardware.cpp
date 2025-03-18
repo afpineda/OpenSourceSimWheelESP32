@@ -350,7 +350,7 @@ uint64_t *createBitmap(
         for (auto map_pair : chip)
         {
             uint8_t chipPinIndex = static_cast<uint8_t>(map_pair.first); // first is PinTags
-            // NOTE: switchIndex = (inputPinIndex * 2^selectors.size) + chipPinIndex
+            // NOTE: switchIndex = (chipIndex * 2^selectors.size) + chipPinIndex
             uint8_t switchIndex = (chipIndex << selectorCount) + chipPinIndex;
             bitmap[switchIndex] = (uint64_t)(map_pair.second); // second is InputNumber
         }
