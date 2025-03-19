@@ -37,7 +37,8 @@
 #define MCP23017_INTERRUPT_CONTROL 0x08
 #define MCP23017_INTERRUPT_DEFAULT_VALUE 0x06
 
-#pragma optimize("", off)
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
 inline void signal_change_delay(uint32_t nanoseconds)
 {
     // Note: 1 ns = 1000 MHz
@@ -45,7 +46,7 @@ inline void signal_change_delay(uint32_t nanoseconds)
     for (uint32_t delay = 0; delay < nanoseconds; delay += instructionTimeNs)
         __asm__ __volatile__(" nop\n");
 }
-#pragma optimize("", on)
+#pragma GCC pop_options
 
 //-------------------------------------------------------------------
 // Single button
