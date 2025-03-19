@@ -1,5 +1,5 @@
 /**
- * @file Inputs.cpp
+ * @file inputs.cpp
  *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2025-02-05
