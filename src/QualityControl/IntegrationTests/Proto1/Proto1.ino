@@ -13,6 +13,7 @@
 #include "Testing.hpp"
 #include "SimWheel.hpp"
 #include "SimWheelInternals.hpp"
+#include "InternalServices.hpp"
 
 //------------------------------------------------------------------
 // Globals
@@ -72,6 +73,11 @@ void setup()
     Serial.begin(115200);
     Serial.println("-- READY --");
     firmware::run(customFirmware);
+    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::CLUTCH, false);
+    InputHubService::call::setAltButtonsWorkingMode(AltButtonsWorkingMode::ALT, false);
+    InputHubService::call::setDPadWorkingMode(DPadWorkingMode::Navigation, false);
+    InputHubService::call::setBitePoint(CLUTCH_DEFAULT_VALUE, false);
+    InputHubService::call::setSecurityLock(false, false);
     Serial.println("-- GO --");
 }
 
