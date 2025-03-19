@@ -27,3 +27,5 @@ Output through USB serial port at 115200 bauds.
    -- DONE --
    (reset required)
    ```
+
+  It takes 10 to 20 seconds to run this test and obtain the previous output.
