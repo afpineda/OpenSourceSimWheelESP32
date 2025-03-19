@@ -1218,8 +1218,58 @@ private:
 
 protected:
     // Singleton pattern
+
     PixelControlNotification() {}
     virtual ~PixelControlNotification() {}
+
+    // For descendant classes
+
+    /**
+     * @brief Set the color of a single pixel
+     *
+     * @note Not displayed immediately
+     * @note Non-existing pixels will be ignored
+     *
+     * @param group The group to which the pixel is a member
+     * @param pixelIndex Index of the pixel in the LED strip
+     *                   (zero-based)
+     * @param red Red component of the pixel color
+     * @param green Green component of the pixel color
+     * @param blue Blue component of the pixel color
+     */
+    void set(PixelGroup group,
+             uint8_t pixelIndex,
+             uint8_t red,
+             uint8_t green,
+             uint8_t blue);
+
+    /**
+     * @brief Set the color of all pixels in a group
+     *
+     * @param group A group of pixels
+     * @param red Red component of the pixel color
+     * @param green Green component of the pixel color
+     * @param blue Blue component of the pixel color
+     */
+    void setAll(
+        PixelGroup group,
+        uint8_t red,
+        uint8_t green,
+        uint8_t blue);
+
+    /**
+     * @brief Shift all pixel colors to the next pixel index
+     *
+     * @param group A group of pixels
+     */
+    void shiftToNext(PixelGroup group);
+
+    /**
+     * @brief Shift all pixel colors to the previous pixel index
+     *
+     * @param group A group of pixels
+     */
+    void shiftToPrevious(PixelGroup group);
 
 public:
     /**

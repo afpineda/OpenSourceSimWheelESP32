@@ -200,6 +200,37 @@ void PixelControlNotification::pixelControl_OnStart()
 
 //---------------------------------------------------------------
 
+void PixelControlNotification::set(
+    PixelGroup group,
+    uint8_t pixelIndex,
+    uint8_t red,
+    uint8_t green,
+    uint8_t blue)
+{
+    internals::pixels::set(group, pixelIndex, red, green, blue);
+}
+
+void PixelControlNotification::setAll(
+    PixelGroup group,
+    uint8_t red,
+    uint8_t green,
+    uint8_t blue)
+{
+    internals::pixels::setAll(group, red, green, blue);
+}
+
+void PixelControlNotification::shiftToNext(PixelGroup group)
+{
+    internals::pixels::shiftToNext(group);
+}
+
+void PixelControlNotification::shiftToPrevious(PixelGroup group)
+{
+    internals::pixels::shiftToPrevious(group);
+}
+
+//---------------------------------------------------------------
+
 void PixelControlNotification::onBitePoint(uint8_t bitePoint)
 {
     if (pixelMutex.try_lock_for(WAIT_MS))
