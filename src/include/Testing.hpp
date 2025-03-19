@@ -254,13 +254,13 @@ void setDebugInputNumbers(AnalogMultiplexerGroup<Mux8Pin> &instance)
 
 void setDebugInputNumbers(ShiftRegisterChain &instance, InputNumber &SER)
 {
-    ShiftRegisterChip chip;
-    chip[SR8Pin::E] = 2;
-    chip[SR8Pin::B] = 4;
-    chip[SR8Pin::H] = 3;
-    chip[SR8Pin::C] = 5;
+    ShiftRegisterChip chip1, chip2;
+    chip1[SR8Pin::E] = 2;
+    chip1[SR8Pin::B] = 4;
+    chip2[SR8Pin::H] = 3;
+    chip2[SR8Pin::C] = 5;
     SER = 6;
-    instance = {chip};
+    instance = {chip1, chip2};
 }
 
 void setDebugInputNumbers(MCP23017Expander &instance)

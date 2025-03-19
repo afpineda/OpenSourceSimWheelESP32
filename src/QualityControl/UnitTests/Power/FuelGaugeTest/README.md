@@ -22,6 +22,7 @@ Output at 115200 bauds over the USB serial port.
 
    ```text
    --READY--
+   SoC: 100
    --GO--
    ```
 

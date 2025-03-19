@@ -2,6 +2,12 @@
 
 **You don't build this subsystem**, just buy one.
 
+> [!CAUTION]
+> Pay close attention to the wiring of any power supply (including batteries).
+> Reverse polarity connection may cause fire or irreparable damage to the circuitry.
+> If you notice a strange odor or traces of smoke,
+> immediately disconnect all power sources.
+
 ## Purpose
 
 The purpose of this subsystem is:
