@@ -207,8 +207,4 @@ for further information.
 If you go for a custom firmware and it does not work,
 your only chance to know what is happening is the *serial monitor* at Arduino IDE.
 
-However, most debug messages are **not shown by default**.
-In order to enable them, go to the "board manager" and find the "Core debug level" option.
-Configure that option to "error" or "verbose". Then, upload the firmware again.
-
 Check the guide on [troubleshooting](../Troubleshooting_en.md).

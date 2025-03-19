@@ -4,7 +4,8 @@
 
 By default, only error messages directly caused by this firmware can be viewed.
 To view these error messages, a USB serial port connection is required.
-Open the *Serial Monitor* in the Arduino IDE,
+Open the *Serial Monitor* in the Arduino IDE
+(hit `ctrl`+`shift`+`M`),
 then reset your DevKit board to avoid missing any messages.
 
 > [!IMPORTANT]
@@ -19,8 +20,6 @@ These additional error messages are caused by the operating system or system lib
 Check the internet for a description.
 
 This article focuses on **firmware-defined** error messages.
-
-This article focuses on firmware-defined error messages.
 
 If you are using USB connectivity,
 but your DevKit board does not have a second USB serial port,

@@ -285,7 +285,7 @@ This project provides several (exclusive) connectivity choices:
 
 - Bluetooth Low Energy using the NimBLE stack wrapper from the ESP32-Arduino core.
   Currently not used (except for a test unit), but available.
-  This stack requires more flash memory compared to *NimBLE* (about 500 KB).
+  This stack requires more flash memory compared to *h2zero/NimBLE-Arduino* (about 500 KB).
   If you have issues with *NimBLE*, this is a workaround.
 
 - Universal Serial Bus (USB).
