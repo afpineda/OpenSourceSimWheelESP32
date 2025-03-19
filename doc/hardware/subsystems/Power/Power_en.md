@@ -7,6 +7,9 @@
 > Reverse polarity connection may cause fire or irreparable damage to the circuitry.
 > If you notice a strange odor or traces of smoke,
 > immediately disconnect all power sources.
+> If you want to add revese polarity protection look at this article:
+> [https://www.circuits.dk/reverse-current-battery-protection-circuits/](https://www.circuits.dk/reverse-current-battery-protection-circuits/).
+> This subject is not covered here.
 
 ## Purpose
 
