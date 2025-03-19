@@ -10,7 +10,7 @@ To test that:
 This procedure is the same for all HID implementations,
 however, each implementation requires a different sketch:
 
-- [NimBLE implementation](./NimBLEImplTest/NimBLEimplTest.ino)
+- [NimBLE implementation](./NimBLEimplTest/NimBLEimplTest.ino)
 - [ESP-Arduino BLE implementation](./ESPBLEimplTest/ESPBLEimplTest.ino)
 - [USB implementation](./USBImplTest/USBImplTest.ino)
 

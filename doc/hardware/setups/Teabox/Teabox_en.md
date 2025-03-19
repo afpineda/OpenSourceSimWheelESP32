@@ -98,7 +98,7 @@ Use isolation tape to cover the welding tin.
 ## External wiring
 
 There is no circuit, just wiring.
-Open the [layout](./teabox.diy) using
+Open the [layout](./Teabox.diy) using
 [DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
 
 ![Teabox layout](./Teabox.png)
