@@ -58,38 +58,42 @@ Use the [companion app](https://github.com/afpineda/SimWheelESP32Config).
 - Locate the following API call (not to be taken literally):
 
   ```c++
-  hidImplementation::begin(
+  hid::configure(
         DEVICE_NAME,
         DEVICE_MANUFACTURER,
         ...);
   ```
 
-- Add a new parameter to the right: a non-zero 16 bits number as a custom PID.
+- Add two parameters to the right:
+  - a non-zero 16 bits number as a custom VID.
+  - a non-zero 16 bits number as a custom PID.
   Numbers 0 and FFFF (hexadecimal) are reserved and must not be used.
 
 For example, [Setup1.ino](../src/Firmware/Setup1/Setup1.ino) shows:
 
 ```c++
-hidImplementation::begin(
+hid::configure(
    DEVICE_NAME,
    DEVICE_MANUFACTURER,
    false);
 ```
 
-In order to set the custom PID number 16, substitute with:
+In order to set the custom VID 16 and the custom PID 32,
+substitute with:
 
 ```c++
-hidImplementation::begin(
+hid::configure(
    DEVICE_NAME,
    DEVICE_MANUFACTURER,
    false,
-   16);
+   16,
+   32);
 ```
 
 ## USB connectivity
 
 If your device uses USB connectivity, the display name will match your device name,
-which can be set in your custom firmware using the API call `hidImplementation::begin()`.
+which can be set in your custom firmware using the API call `hid::configure()`.
 Any custom PID will be ignored since USB uses the hardware ID
 licensed to your DevKit's manufacturer.
 

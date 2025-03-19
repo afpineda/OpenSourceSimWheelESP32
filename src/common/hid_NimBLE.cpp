@@ -167,7 +167,7 @@ public:
             esp_timer_stop(autoPowerOffTimer);
         connected = true;
         //************************************************
-        // Do not call hidImplementation::reset() here
+        // Do not call internals::hid::reset() here
         //************************************************
         // Quoting h2zero:
         //

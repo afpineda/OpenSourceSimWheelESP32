@@ -322,7 +322,7 @@ namespace internals
         /**
          * @brief Common functionality to all HID implementations
          *
-         * @note Implemented at file `hidImplementation_common.cpp`
+         * @note Implemented at file `hidCommon.cpp`
          *
          */
         namespace common

@@ -39,7 +39,7 @@ Pass the `SLPin` as parameter to the constructor.
 For example:
 
 ```c++
-auto sl = new SimpleShiftLight(GPIO_NUM_40);
+ui::add<SimpleShiftLight>(GPIO_NUM_40);
 ```
 
 See the corresponding

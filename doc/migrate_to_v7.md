@@ -26,14 +26,30 @@ Please refer to the following documentation for more details:
   usage.
 - Some data type names ending in `_t` have been renamed (case sensitive).
 
-  | Before           | Now            |
-  | ---------------- | -------------- |
-  | powerLatchMode_t | PowerLatchMode |
-  | pixelGroup_t     | PixelGroup     |
-  | pixelDriver_t    | PixelDriver    |
-  | pixelFormat_t    | PixelFormat    |
-  | telemetryData_t  | TelemetryData  |
-  | revLightsMode_t  | RevLightsMode  |
+  | Before                   | Now                    |
+  | ------------------------ | ---------------------- |
+  | gpio_num_array_t         | (see note 1)           |
+  | inputNumber_t            | InputNumber            |
+  | inputNumberCombination_t | InputNumberCombination |
+  | MCP23017_pin_t           | MCP23017Pin            |
+  | mux16_pin_t              | Mux16Pin               |
+  | mux32_pin_t              | Mux32Pin               |
+  | mux8_pin_t               | Mux8Pin                |
+  | PCF8574_pin_t            | PCF8574Pin             |
+  | pixelDriver_t            | PixelDriver            |
+  | pixelFormat_t            | PixelFormat            |
+  | pixelGroup_t             | PixelGroup             |
+  | powerLatchMode_t         | PowerLatchMode         |
+  | revLightsMode_t          | RevLightsMode          |
+  | sr8_pin_t                | SR8Pin                 |
+  | telemetryData_t          | TelemetryData          |
+
+  - *Note 1:*
+
+    GPIO arrays has been substituted by specialized types:
+    `GPIOCollection`, `InputGPIOCollection` and `OutputGPIOCollection`.
+    There is no need to declare variables of these types
+    as you can initialize them using GPIO numbers between braces.
 
 - The telemetry display using RGB LED strips has been **removed**
   as pixel control is a better option.
@@ -190,17 +206,17 @@ For example:
 void simWheelSetup()
 {
     ShiftRegisterChip chip1, chip2;
-    chip1[PISO74HC165NPin::A] = 1;
-    chip1[PISO74HC165NPin::B] = 2;
+    chip1[SR8Pin::A] = 1;
+    chip1[SR8Pin::B] = 2;
     ...
-    chip2[PISO74HC165NPin::A] = 8;
+    chip2[SR8Pin::A] = 8;
     ...
     inputs::add74HC165NChain(12,13,14, {chip1,chip2}, 55);
 }
 ```
 
 Where `12`, `13` and `14` are **GPIO pins**,
-`PISO74HC165NPin::...` are **chip tags**,
+`SR8Pin::...` are **chip tags**,
 `1`-`8` are **input numbers**, and
 `55` is the input number assigned to the `SER` tag in `chip2`.
 
@@ -249,6 +265,7 @@ This **takes more memory**, but:
 
 - Notifications are truly concurrent.
 - Each instance will run at the required FPS independently of the others.
+- Each instance can have a different stack size.
 
 ### Running
 

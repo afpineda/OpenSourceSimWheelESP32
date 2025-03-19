@@ -498,8 +498,8 @@ but it does not require any pull resistor.
 1. Declare each shift register chip with the class `ShiftRegisterChip`,
    for example: `ShiftRegisterChip chip1;`.
 2. Assign an input number to each pin tag using the array syntax.
-   For example: `chip1[PISO74HC165NPin::A] = 1;`.
-   Qualify each pin tag with `PISO74HC165NPin::`.
+   For example: `chip1[SR8Pin::A] = 1;`.
+   Qualify each pin tag with `SR8Pin::`.
 3. Group these chips between braces.
    The position of each chip in the group is its position in the chain.
    The leftmost instance is the first.
@@ -517,12 +517,12 @@ For example:
 void simWheelSetup()
 {
     ShiftRegisterChip chip1, chip2;
-    chip1[PISO74HC165NPin::A] = 1;
-    chip1[PISO74HC165NPin::B] = 2;
+    chip1[SR8Pin::A] = 1;
+    chip1[SR8Pin::B] = 2;
     ...
-    chip2[PISO74HC165NPin::A] = 8;
+    chip2[SR8Pin::A] = 8;
     ...
-    chip2[PISO74HC165NPin::H] = 16;
+    chip2[SR8Pin::H] = 16;
     inputs::add74HC165NChain(12,13,14, {chip1,chip2}, 17);
 }
 ```

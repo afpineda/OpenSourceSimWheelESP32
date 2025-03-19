@@ -44,13 +44,23 @@ Constructor parameters are:
    However, the data sheet does not seem to be respected.
    Use the [I2C probe](../../../../src/Firmware/I2C_probe/I2C_probe.ino) to learn
    the actual I2C address.
-   I found some chips using  address `38` (hexadecimal).
+   I found some chips using address `38` (hexadecimal).
 4. Display mode (left to right, right to left, center to edges, or edges to center).
    A constant in the `RevLightsMode` enumeration.
    Default is left to right.
 
+For example:
+
+```c++
+ ui::add<PCF8574RevLights>(
+    2,
+    I2CBus::SECONDARY,
+    0x38,
+    RevLightsMode::LEFT_TO_RIGHT);
+```
+
 If you are using the secondary I2C bus,
-you must first initialize it to the desired SDA and SCL pins.
+you **must** first initialize it to the desired `SDA` and `SCL` pins.
 See [Overview of telemetry](../../../telemetry_en.md).
 
 See the corresponding
