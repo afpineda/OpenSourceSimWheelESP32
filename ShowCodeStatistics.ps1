@@ -44,13 +44,27 @@ function Get-LineCount {
     return $totalLines
 }
 
+function Get-Percentage{
+    param (
+        [Parameter(Mandatory)]
+        [int]$Value,
+        [Parameter(Mandatory)]
+        [int]$Total
+    )
+    return [math]::ceiling(($Value*100) / $Total)
+}
+
 <#############################################################################
 # Main
 #############################################################################>
 
+$ErrorActionPreference = 'Stop';
+
 $includePath = Join-Path $RootPath "src/include"
 $commonPath = Join-Path $RootPath "src/common"
 $firmwarePath = Join-Path $RootPath "src/Firmware"
+$cd_ci_Path = Join-Path $RootPath "CD_CI"
+$qcPath = Join-Path $RootPath "src/QualityControl"
 
 Write-Host "🛈 Project statistics: " -ForegroundColor Blue
 
@@ -66,12 +80,12 @@ if (-not (Test-Path $firmwarePath)) {
     throw "❌ Error. '$commonPath' folder not found"
 }
 
-$allCodeLines = Get-LineCount -LiteralPath $RootPath -Filter "*.?pp"
-$allCodeLines += Get-LineCount -LiteralPath $RootPath -Filter "*.ino"
+if (-not (Test-Path $cd_ci_Path)) {
+    throw "❌ Error. '$cd_ci_Path' folder not found"
+}
 
-if ($allCodeLines -lt 1) {
-    Write-Host "⚠️ No code found"
-    exit 0
+if (-not (Test-Path $qcPath)) {
+    throw "❌ Error. '$qcPath' folder not found"
 }
 
 $systemCodeLines = Get-LineCount -LiteralPath $includePath -Filter "*.?pp"
@@ -79,20 +93,27 @@ $systemCodeLines += Get-LineCount -LiteralPath $commonPath -Filter "*.?pp"
 
 $firmwareCodeLines = Get-LineCount -LiteralPath $firmwarePath -Filter "*.ino"
 
-$qcCodeLines = $allCodeLines - ($systemCodeLines + $firmwareCodeLines)
+$cd_ci_codeLines = Get-LineCount -LiteralPath $cd_ci_Path -Filter "*.?pp"
+$cd_ci_codeLines += Get-LineCount -LiteralPath $cd_ci_Path -Filter "*.?pp"
+
+$qc_codeLines = Get-LineCount -LiteralPath $qcPath -Filter "*.ino"
+
+$allCodeLines = $systemCodeLines + $firmwareCodeLines + $cd_ci_codeLines + $qc_codeLines
+
+if ($allCodeLines -le 0)
+{
+    throw "❌ Error. No code found."
+}
 
 $shellCodeLines = Get-LineCount -LiteralPath $RootPath -Filter "*.ps1"
 $shellCodeLines += Get-LineCount -LiteralPath $RootPath -Filter "*.sh"
 
 $docStatistics = Get-LineCount -LiteralPath $RootPath -Filter "*.md"
 
-$firmwarePercentage = [math]::ceiling(($firmwareCodeLines*100) / $allCodeLines)
-$systemPercentage = [math]::ceiling(($systemCodeLines*100) / $allCodeLines)
-$qcPercentage = 100 - ($firmwarePercentage + $systemPercentage)
-
 Write-Host "Total lines of code (*.?pp, *.ino) including commentaries: $allCodeLines (100%)"
-Write-Host "- System: $systemCodeLines ($($systemPercentage)%)"
-Write-Host "- Ready-to-deploy firmware: $firmwareCodeLines ($($firmwarePercentage)%)"
-Write-Host "- Quality control: $qcCodeLines ($($qcPercentage)%)"
-Write-Host "Total lines of documentation (*.md): $docStatistics"
-Write-Host "Total lines of automation code (*.ps1, *.sh): $shellCodeLines"
+Write-Host "- System.................................................. $systemCodeLines ($(Get-Percentage $systemCodeLines $allCodeLines)%)"
+Write-Host "- Ready-to-deploy firmware................................ $firmwareCodeLines ($(Get-Percentage $firmwareCodeLines $allCodeLines)%)"
+Write-Host "- Hardware-dependent tests................................ $qc_codeLines ($(Get-Percentage $qc_codeLines $allCodeLines)%)"
+Write-Host "- Automated tests in the CD/CI chain...................... $cd_ci_codeLines ($(Get-Percentage $cd_ci_codeLines $allCodeLines)%)"
+Write-Host "Total lines of documentation (*.md):                       $docStatistics"
+Write-Host "Total lines of automation code (*.ps1, *.sh):              $shellCodeLines"

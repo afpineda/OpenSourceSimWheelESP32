@@ -235,7 +235,7 @@ try {
                 } # if (Test-Path $sourceFile)
             }
             else {
-                Write-Error "❌ ERROR. Non-existing file: '$sourceFile'"
+                throw "❌ ERROR. Non-existing file: '$sourceFile'"
             }
         }
     } # foreach ($includedFile
