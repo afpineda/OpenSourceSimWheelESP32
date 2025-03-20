@@ -398,7 +398,7 @@ Selector pins must be wired to valid output capable GPIO pins.
    The second dimension is an **input** pin.
 3. Assign an input number to both dimensions using this syntax:
    `mtx[<selector>][<input>] = <input number>`,
-   where `<selector>` and `<input>` are input pin numbers or aliases,
+   where `<selector>` and `<input>` are pin numbers or aliases,
    and `<input number>` is an input number or alias.
 4. Repeat as needed.
 5. Call `inputs::addButtonMatrix()` and pass the object (`mtx`)
