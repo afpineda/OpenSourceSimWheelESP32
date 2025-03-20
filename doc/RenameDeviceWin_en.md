@@ -90,6 +90,24 @@ hid::configure(
    32);
 ```
 
+For convenience, [CustomSetup.ino](../src/Firmware/CustomSetup/CustomSetup.ino)
+do the work in advance.
+Uncomment the following lines:
+
+```c++
+// #define BLE_CUSTOM_VID <here>
+// #define BLE_CUSTOM_PID <here>
+```
+
+And replace `<here>` with your custom numbers.
+For example (equivalent to the previous example):
+
+```c++
+#define BLE_CUSTOM_VID 16
+#define BLE_CUSTOM_PID 32
+```
+
+
 ## USB connectivity
 
 If your device uses USB connectivity, the display name will match your device name,
