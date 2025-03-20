@@ -238,7 +238,7 @@ API calls have been **renamed** according to this table (same parameters):
 | inputHub::cpWorkingMode_setInputNumbers()            | (**removed, use the companion app or the cycle command**) |
 | inputHub::cmdRecalibrateBattery_setInputNumbers      | (**removed, use the companion app**)                      |
 
-### HID
+## HID
 
 The `hidImplementation` namespace has been renamed to `hid`.
 `hidImplementation::begin()` has been renamed to `hid::configure()`.
@@ -246,7 +246,7 @@ The parameters are slightly different, as you can now specify a "factory"
 *vendor ID* now (a "factory" *product ID* was already available before).
 The "factory" hardware ID is ignored by the USB implementation (as before).
 
-### User interface
+## User interface
 
 The `notify` namespace has been renamed to `ui`.
 `notify::begin()` has been removed.
@@ -267,11 +267,31 @@ This **takes more memory**, but:
 - Each instance will run at the required FPS independently of the others.
 - Each instance can have a different stack size.
 
-### Running
+## Running
 
 `inputs::start()` is no longer necessary.
 You make a single call to `firmware::run()` to run your custom firmware.
 This method will catch firmware errors for display via the serial port.
+
+## Battery monitor subsystem (`batteryMonitor` namespace)
+
+`batteryMonitor::begin()` has been replaced by `batteryMonitor::configure()`.
+Beware that `batteryMonitor::configure()` takes parameters
+**in reverse order** compared to the old `batteryMonitor::begin()` method
+when customizing the simple voltage divider or the battery monitor.
+[CustomSetup.ino](../src/Firmware/CustomSetup/CustomSetup.ino) already
+takes this into account.
+When customizing the "fuel gauge", parameters are slightly different too:
+
+1. I2C bus where the fuel gauge is attached to.
+   Previously, only the primary bus was available.
+   By default, the primary bus is choosen.
+2. I2C address (as before).
+
+## Power subsystem (`power` namespace)
+
+`power::begin()` has been replaced by `power::configureWakeUp()` (same parameters).
+`power::setPowerLatch()` has been replaced by `power::configurePowerLatch()` (same paramters).
 
 ## New (optional) features
 

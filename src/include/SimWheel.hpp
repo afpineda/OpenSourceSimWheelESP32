@@ -130,7 +130,7 @@ namespace inputs
      * @param chip Specification of input numbers
      * @param address Full (7-bit) or hardware (3-bit) I2C address
      * @param isFullAddress If true, @p address is a full address,
-     *                      If false, @`address is a hardware address.
+     *                      If false, @p address is a hardware address.
      * @param bus I2C bus to which the chip is connected.
      *            If the secondary bus is used, manual initialization
      *            is required using inputs::initializeI2C()
@@ -147,7 +147,7 @@ namespace inputs
      * @param chip Specification of input numbers
      * @param address Full (7-bit) or hardware (3-bit) I2C address
      * @param isFullAddress If true, @p address is a full address,
-     *                      If false, @`address is a hardware address.
+     *                      If false, @p address is a hardware address.
      * @param bus I2C bus to which the chip is connected.
      *            If the secondary bus is used, manual initialization
      *            is required using inputs::initializeI2C()
@@ -404,10 +404,11 @@ namespace hid
      *
      * @param deviceName Name of this device shown to the host computer
      * @param deviceManufacturer Name of the manufacturer of this device
-     * @param enableAutoPowerOff True to power off when not connected within a certain time lapse.
-     *        Set to FALSE if there is no battery or for testing.
+     * @param enableAutoPowerOff True to shutdown when not connected within a certain time lapse.
+     *                           Set to false if there is no battery or for testing.
      * @param vendorID Factory VID. Set to zero to use a default product ID.
-     *                  Value 0xFFFF is reserved for testing.
+     *                 Value 0xFFFF is reserved for testing.
+     *                 Ignored in the USB implementation.
      * @param productID Factory PID. Set to zero to use a default product ID.
      *                  Value 0xFFFF is reserved for testing.
      *                  Ignored in the USB implementation.
@@ -442,8 +443,8 @@ namespace power
      * @brief Configure an external latch circuit for power on and off
      *
      * @param latchPin Output-capable GPIO that drives power on/off.
-     * @param mode Expected behaviour of 'latchPin' to keep power on or go to power off.
-     * @param waitMs A delay to wait for power off to happen, in milliseconds.
+     * @param mode Expected behaviour of @p latchPin to keep the power on or shutdown.
+     * @param waitMs A delay to wait for the shutdown to happen, in milliseconds.
      */
     void configurePowerLatch(
         OutputGPIO latchPin,
