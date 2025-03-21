@@ -50,6 +50,12 @@ Write-Host "🛈 Updating core index" -ForegroundColor Cyan
 
 Write-Host "🛈 Installing ESP32 core ($esp_core_version)" -ForegroundColor Cyan
 & $arduino_cli core install "esp32:esp32@$esp_core_version"
+if ($LASTEXITCODE -gt 0) {
+    throw "❌ Failed to install dependency"
+}
 
 Write-Host "🛈 Installing NimBLE-Arduino ($nimble_version)" -ForegroundColor Cyan
 & $arduino_cli lib install "NimBLE-Arduino@$nimble_version"
+if ($LASTEXITCODE -gt 0) {
+    throw "❌ Failed to install dependency"
+}
