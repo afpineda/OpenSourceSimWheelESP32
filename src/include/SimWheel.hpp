@@ -411,6 +411,17 @@ namespace inputMap
             user_defined_alt_engaged);
     }
 
+    /**
+     * @brief Set an "optimal" default input map
+     *
+     * @note When ALT mode is not engaged, the user-defined input number
+     *       is the firmware-defined input number.
+     *       When ALT mode is engaged, the user-defined input number
+     *       is the firmware-defined input number plus the highest
+     *       firmware-defined input number plus one.
+     */
+    void setOptimal();
+
 } // namespace inputMap
 
 /**

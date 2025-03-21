@@ -18,6 +18,7 @@
 #include "InternalServices.hpp"
 #include <array>
 #include <vector>
+// #include <iostream> // For testing
 
 //-------------------------------------------------------------------
 // GLOBALS
@@ -33,6 +34,7 @@ struct DefaultMap
 static std::array<uint8_t, 64> mapNoAlt;
 static std::array<uint8_t, 64> mapAlt;
 static std::vector<DefaultMap> defaultMap;
+static bool computeOptimal = false;
 
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
@@ -119,6 +121,31 @@ void internals::inputMap::clear()
 
 void internals::inputMap::getReady()
 {
+    if (computeOptimal)
+    {
+        // Compute the highest firmware-defined input number
+        uint8_t max_firmware_in;
+        for (
+            max_firmware_in = 64;
+            (max_firmware_in > 0) && !InputNumber::booked(max_firmware_in - 1);
+            max_firmware_in--)
+            ;
+        // Automatically assign a new map
+        for (uint8_t i = 0; i < 64; i++)
+            if (InputNumber::booked(i))
+            {
+                // Do not overwrite other custom settings
+                bool found = false;
+                for (auto defMap : defaultMap)
+                    if (defMap.firmware == i)
+                    {
+                        found = true;
+                        break;
+                    }
+                if (!found)
+                    ::inputMap::set(i, i, i + max_firmware_in);
+            }
+    }
     for (auto defMap : defaultMap)
         if (!InputNumber::booked(defMap.firmware))
             throw std::runtime_error(
@@ -168,4 +195,9 @@ void inputMap::set(
     defMap.noAlt = user_defined;
     defMap.alt = user_defined_alt_engaged;
     defaultMap.push_back(defMap);
+}
+
+void inputMap::setOptimal()
+{
+    computeOptimal = true;
 }

@@ -148,7 +148,6 @@ void test4()
     assert(((low == rawBitmap) && (high == 0ULL)) && "map() failed (11)");
     internals::inputMap::map(true, rawBitmap, low, high);
     assert(((low == 0ULL) && (high == rawBitmap)) && "map() failed (12)");
-
 }
 
 void test5()
@@ -175,6 +174,45 @@ void test5()
     InputMapService::call::getMap(0, noAlt, alt);
     assert((noAlt == 0) && "Default map not restored (3)");
     assert((alt == 64) && "Default map not restored (4)");
+}
+
+void test6()
+{
+    std::cout << "- Test 6 -" << std::endl;
+
+    // Set specific input numbers for this test
+    reset();
+    InputNumber::clearBook();
+    InputNumber n;
+    n = 0;
+    n.book();
+    n = 2;
+    n.book();
+    n = 3;
+    n.book();
+
+    // start
+    inputMap::setOptimal();
+    inputMap::set(3, 20, 20);
+    internals::inputMap::getReady();
+    OnStart::notify();
+
+    // Test
+    uint8_t alt, noAlt;
+    InputMapService::call::getMap(0, noAlt, alt);
+    assert((noAlt == 0) && "Optimal not set (1)");
+    assert((alt == 4) && "Optimal not set (2)");
+
+    InputMapService::call::getMap(2, noAlt, alt);
+    assert((noAlt == 2) && "Optimal not set (3)");
+    assert((alt == 6) && "Optimal not set (4)");
+
+    InputMapService::call::getMap(3, noAlt, alt);
+    assert((noAlt == 20) && "Optimal did not respect user setting (1)");
+    assert((alt == 20) && "Optimal did not respect user setting (2)");
+
+    // Restore input numbers
+    InputNumber::bookAll();
 }
 
 int main()
@@ -216,4 +254,5 @@ int main()
     test3();
     test4();
     test5();
+    test6();
 }
