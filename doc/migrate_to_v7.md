@@ -3,6 +3,7 @@
 There are important improvements starting with version 7.
 Unfortunately, any custom firmware will need to be rewritten.
 
+This is just a summary.
 Please refer to the following documentation for more details:
 
 - [Customization guide](./hardware/subsystems/CustomizeHowto_en.md)
@@ -24,7 +25,7 @@ Please refer to the following documentation for more details:
   such as GPIO pins and input number combinations.
   Please, **declare them as local** to avoid unnecessary memory
   usage.
-- Some data type names ending in `_t` have been renamed (case sensitive).
+- Some data types ending in `_t` have been renamed (case sensitive).
 
   | Before                   | Now                    |
   | ------------------------ | ---------------------- |
@@ -291,7 +292,7 @@ When customizing the "fuel gauge", parameters are slightly different too:
 ## Power subsystem (`power` namespace)
 
 `power::begin()` has been replaced by `power::configureWakeUp()` (same parameters).
-`power::setPowerLatch()` has been replaced by `power::configurePowerLatch()` (same paramters).
+`power::setPowerLatch()` has been replaced by `power::configurePowerLatch()` (same parameters).
 
 ## New (optional) features
 
@@ -303,16 +304,12 @@ if you only have a few physical buttons.
 This feature does not interfere with the ability to set a different input map
 using the *companion app*.
 
-Just call `inputMap::set()`.
-The parameters are (from left to right):
+There are several ways to customize the default input map:
 
-- A firmware-defined input number (must be assigned to the input hardware).
-- A user-defined input number (in the range [0,127])
-  to be used when ALT mode is not engaged.
-- A user-defined input number (in the range [0,127])
-  to be used when ALT mode is engaged.
+- Call `inputMap::setOptimal()` just once.
+- Call `inputMap::set()` as many times as needed.
 
-Make as many calls as you wish.
+You are allowed to call both.
 
 ### "Virtual" button
 

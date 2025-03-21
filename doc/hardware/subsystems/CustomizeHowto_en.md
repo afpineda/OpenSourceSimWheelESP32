@@ -365,16 +365,40 @@ By default, the input map follows this rule:
 
 If you have only a few buttons,
 their user-defined input numbers will be spread over 128 values.
-However, you can set **different default input map** by calling
-`inputMap::set()` with the following parameters (from left to right):
+However, you can set a **different default input map**.
+To the end user, your custom input map is considered the "factory default".
+There are several, **non-exclusive**, options.
+
+#### inputMap::setOptimal()
+
+Make a single call to `inputMap::setOptimal()` (no arguments).
+The input map will follow this rule:
+
+- If *alternate mode* is not engaged,
+  the user defined input number is the firmware defined input number.
+- If *alternate mode* is engaged,
+  the user defined input number is the firmware defined input number,
+  plus the highest firmware defined input number, plus one.
+
+For example, let's say you have the input numbers `1`, `3` and `5`
+(and no others) assigned to your input hardware.
+This method will set the following input map:
+
+| firmware-defined | user-defined | user-defined (alternate mode) |
+| :--------------: | :----------: | :---------------------------: |
+|        1         |      1       |               7               |
+|        3         |      3       |               9               |
+|        5         |      5       |              11               |
+
+#### inputMap::set() with three arguments
+
+Make calls to `inputMap::set()` with the following parameters (from left to right):
 
 1. A firmware-defined input number: must be assigned to the input hardware.
 2. A user-defined input number to be reported when *alternate mode* is **not** engaged.
 3. A user-defined input number to be reported when *alternate mode* **is** engaged.
 
 Make as many calls as you need.
-For the end user, your custom input map is considered "factory default".
-
 For example:
 
 ```c++
@@ -405,6 +429,17 @@ When:
   - But the user defined input number 4 is reported to the hosting PC
     as pushed, due to "Line 3", second parameter.
     Note that the third parameter is useless for "ALT" buttons.
+
+#### inputMap::set() with two arguments
+
+Make calls to `inputMap::set()` with the following parameters (from left to right):
+
+1. A firmware-defined input number: must be assigned to the input hardware.
+   This is also the user-defined input number to be reported
+   when *alternate mode* **is not** engaged.
+2. A user-defined input number to be reported when *alternate mode* **is** engaged.
+
+This is a shortcut. Make as many calls as you need.
 
 ### Neutral gear ("virtual" button)
 
