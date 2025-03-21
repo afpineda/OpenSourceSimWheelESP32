@@ -45,7 +45,7 @@ $ErrorActionPreference = 'Stop'
 Test-ArduinoCLI
 
 Write-Host "🛈 Updating core index" -ForegroundColor Cyan
-& $arduino_cli config init --additional-urls "https://downloads.arduino.cc/packages/package_index.json"
+& $arduino_cli config init --additional-urls "https://espressif.github.io/arduino-esp32/package_esp32_index.json"
 & $arduino_cli core update-index
 
 Write-Host "🛈 Installing ESP32 core ($esp_core_version)" -ForegroundColor Cyan
