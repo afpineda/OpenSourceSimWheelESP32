@@ -1,5 +1,8 @@
 # Troubleshooting
 
+When troubleshooting, always make sure you are using the tested versions of the
+[external dependencies](./skills_en.md) first.
+
 ## How-to
 
 By default, only error messages directly caused by this firmware can be viewed.
@@ -9,7 +12,7 @@ Open the *Serial Monitor* in the Arduino IDE
 then reset your DevKit board to avoid missing any messages.
 
 > [!IMPORTANT]
-> You must configure the serial monitor to **115.200 bauds**.
+> You must configure the serial monitor to **115200 bauds**.
 > Otherwise you will not see any error messages.
 
 Other error messages are **not** displayed by default.
