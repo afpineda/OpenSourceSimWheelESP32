@@ -181,11 +181,13 @@ int main()
 {
     LoadSetting::subscribe(loadSettingsCallback);
 
+    InputNumber::bookAll();
+
     // Basic parameter test
     try
     {
         inputMap::set(77, 0, 0);
-        assert(false && "Invalid input number was succesfully mapped (1)");
+        assert(false && "Invalid input number was successfully mapped (1)");
     }
     catch (std::runtime_error)
     {
@@ -194,7 +196,7 @@ int main()
     try
     {
         inputMap::set(0, 200, 0);
-        assert(false && "Invalid input number was succesfully mapped (2)");
+        assert(false && "Invalid input number was successfully mapped (2)");
     }
     catch (std::runtime_error)
     {
@@ -202,14 +204,12 @@ int main()
 
     try
     {
-        inputMap::set(0, 0, 254);
-        assert(false && "Invalid input number was succesfully mapped (3)");
+        inputMap::set(0, 254);
+        assert(false && "Invalid input number was successfully mapped (3)");
     }
     catch (std::runtime_error)
     {
     }
-
-    InputNumber::bookAll();
 
     test1();
     test2();

@@ -385,12 +385,32 @@ namespace inputMap
      *
      * @param firmware_defined Firmware-defined input number
      * @param user_defined User-defined input number when ALT mode is not engaged
-     * @param user_define_alt_engaged User-defined input number when ALT mode is engaged
+     * @param user_defined_alt_engaged User-defined input number when ALT mode is engaged
      */
     void set(
         InputNumber firmware_defined,
         UserInputNumber user_defined,
-        UserInputNumber user_define_alt_engaged);
+        UserInputNumber user_defined_alt_engaged);
+
+    /**
+     * @brief Set a default mapping for an input number when alternate mode is engaged
+     *
+     * @note This is just a default mapping.
+     *       The user can override this setting.
+     *
+     * @param firmware_defined Firmware-defined input number
+     * @param user_defined_alt_engaged User-defined input number when ALT mode is engaged
+     */
+    inline void set(
+        InputNumber firmware_defined,
+        UserInputNumber user_defined_alt_engaged)
+    {
+        inputMap::set(
+            firmware_defined,
+            static_cast<UserInputNumber>(firmware_defined),
+            user_defined_alt_engaged);
+    }
+
 } // namespace inputMap
 
 /**

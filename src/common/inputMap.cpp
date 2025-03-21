@@ -1,5 +1,5 @@
 /**
- * @file InputMap.cpp
+ * @file inputMap.cpp
  *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
@@ -161,11 +161,11 @@ void internals::inputMap::map(
 void inputMap::set(
     InputNumber firmware_defined,
     UserInputNumber user_defined,
-    UserInputNumber user_define_alt_engaged)
+    UserInputNumber user_defined_alt_engaged)
 {
     DefaultMap defMap;
     defMap.firmware = firmware_defined;
     defMap.noAlt = user_defined;
-    defMap.alt = user_define_alt_engaged;
+    defMap.alt = user_defined_alt_engaged;
     defaultMap.push_back(defMap);
 }
