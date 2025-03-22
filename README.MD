@@ -63,7 +63,7 @@ This project provides open hardware and software for a sim-racing wheel or butto
 - ⚙️ **Neutral gear** ("virtual" button).
   You can set a button combination to engage a "virtual" button for *neutral gear*.
 
-- 💤 **Automatic power-off** when not in use.
+- 💤 **Automatic shutdown** when not in use.
 
 - 👍 **Quality control** (you don't want your wheel to fail in the middle of a race)
 

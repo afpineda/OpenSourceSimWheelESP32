@@ -58,7 +58,7 @@ thus not requiring a translation unit.
     - `SimWheel.hpp`: declares all *public namespaces*.
     - `SimWheelTypes.hpp`:
       declares all type names required by public namespaces.
-    - `SimWheelInternals.hpp`: declares all *internal namespaces*
+    - `SimWheelInternals.hpp`: declares all *internal namespaces* (except auxiliary)
     - `InternalTypes.hpp`:
       declares all type names required by internal namespaces.
     - `InternalServices.hpp`: declares all service classes.
@@ -66,7 +66,7 @@ thus not requiring a translation unit.
   - Auxiliary:
 
     - `HAL.hpp`:
-      implements the `internals::hal` namespace.
+      declares the `internals::hal` namespace.
     - `HID_definitions.hpp`:
       required by the internal namespace `internals::hid`.
     - `InputSpecification.hpp`:
@@ -251,12 +251,11 @@ classDiagram
     inputs <.. inputHub: recalibrate axes (command)
     inputs <.. hid: recalibrate axes, set pulse width, reverse axes (commands)
     batteryCalibration <.. hid: restart auto-calibration algorithm (command)
-    hid <.. inputHub : working modes, bite point, etc
-    ui <.. inputHub: bite point
+    inputHub <.. hid  : working modes, bite point, etc
     inputMap <.. hid: current input map
 ```
 
-[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNp9k8Fu2zAMhl-F0KnFvD6A0dtaYDvkst0GXxiJjYVZokBR9Yoi7145sVvHzeaLbfLjr5-U9GosOzKtsQPm_ODxIBi6CPU5RcDHVDTD6zl2_JT6XvZLEuALx584_pjiN7dXKnrvVrBQYtF_03tUJXnZcfTKctXCjHzDwe8F1XO8iiUeSVYr576o4zFulj1j93d3k9EWFgqqqvpAXBRuLIeA0d1uKy7NXhZb8eotDgsEAz3TsNWaJz2JLZNtQcjOvRHgX8r_KTp53vINZFJIZcgEo3faNxV5JskbuTzrXRnoSjsrigIW5a92ReBw4NpiH7bupv1e9wMtjCx_fDxAqMeuutv7ajSxj9oAqT2XFb-Zwge16nqH6cObLSIU9ZyBgKmLpjGBJKB39Xif9r4z2lOgzrT109ETlkE708VjRaemfr1Ea1qVQo0pydUZzhfiMvjopi1eYsLl0Jv2CeuIG5Mw_mYO7_90YnfzHZtexzdS0iig)
+[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNp9k7Fu3DAMhl-F0JSgbh7AyNYWaIdb0q3wwpOYs1BLFCgqThDcu1e-s1uf69aLberjz18U9W4sOzKtsQPm_NnjSTB0EepziYCPqWiG92vs_NfS13JcFgE-cHzC8dsUv7vfyei9W8FCiUX_TR9RleTtwNEry66FGfmEgz8Kque4iyUeSVaVc1_U8Rg3Za_Y48PDZLSFhYKqqj4QF4U7yyFgdPfbjFuzt8lWvHqLwwLBQC80bLXmTk9iS2dbELLz3gjwlfJ_ki6et3wDmRRSGTLB6J32TUVeSPJGLs96Ow1daWdFUcCi_NGuCBxOXLfYh11304TMGgAtjCw_fTxBqHNX7R19dZrYR22A1K7yDpj-1LZFhKJeVyBgMo0JJAG9q8N7OdnOaE-BOtPWT0fPWAbtTBfPFZ0sf3-L1rQqhRpTkqsdmsf9NvjFTQe4xITLqTftM9YGNiZh_MEcfv_ThT3MN2h6nX8BATIdXw)
 
 ## Event system
 
@@ -296,7 +295,7 @@ classDiagram
   [Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNqNkstqwzAQRX9FzNqhey9KKenOodDsgqCMrXEskDVGj7rG-N_rR52kTRqqlWY4V9K9mh4KVgQplIbbokIXRPYmrRjXq91XMWy5tU-98BU2lAofUOlYi2FFnjEEcl1GH2TuYBm33-SfUNTvjf4k489E47jwiTCYk0mFhKjFg1ggCauu4Zac2GyE5aDLbtw9Xjx9YfLl7h1bHfgavjTxL8HZzu-oJtTH3BdO56Rm_GTsVmY3-Eqr69junQsJ1ORq1Gr8x37SSggV1SRhSk1RidEECdIOI4ox8L6zBaTBRUogNgoDbTUeHdY_my9qcr_2HMdjBWmJxo9Vg_bAXJ9qmtndMkzzTA1f4nzM_w)
 
   *OnShutDown* is a notification, not a command.
-  However, the *ui* subsystems translates this event into a command
+  However, the *ui* subsystem translates this event into a command
   for all user interface instances.
   To command a shutdown, the firmware needs to call
   `PowerService::call::shutdown()`.
@@ -605,21 +604,6 @@ For example, the word `00000000 ... 00000101` means that buttons 0 and 2 are pre
 and the others are released.
 
 An input can also be identified by a bitmap. For example, the button number 3 can be expressed as `...01000`.
-
-### Input masks
-
-A mask is a 64-bits word where each bit represent an input number (the same as input bitmaps),
-but a bit set to 1 means that an input is not set and *must be ignored* in the corresponding bitmap.
-Input masks are used in combination with bitmaps to build a combined state.
-For example:
-
-| State              | Bitmap   | Bitmask  |
-| ------------------ | -------- | -------- |
-| (A) previous state | 11000001 | 11111111 |
-| (B) partial state  | 00000010 | 11111100 |
-| (C) new state      | 11000010 | 11111111 |
-
-where `bitmap(C) = bitmap(B) OR (bitmask(B) AND bitmap(A))` being AND/OR bitwise operators.
 
 ### Event processing
 
