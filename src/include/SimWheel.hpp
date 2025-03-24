@@ -32,7 +32,7 @@ namespace inputs
     /**
      * @brief Add a button attached to a single pin to the hardware inputs
      *
-     * @note All buttons are assumed to be pulled-down (GND)
+     * @note The button works in negative logic
      *
      * @param pin GPIO attached to the button
      * @param inputNumber Assigned input number
@@ -73,7 +73,7 @@ namespace inputs
     /**
      * @brief Add a group of 8-channel multiplexers to the hardware inputs
      *
-     * @note All buttons are assumed to be pulled-down (GND)
+     * @note All buttons are assumed to work in negative logic
      *
      * @param selectorPin1 Least-significant selector pin
      * @param selectorPin2 Second selector pin
@@ -89,7 +89,7 @@ namespace inputs
     /**
      * @brief Add a group of 16-channel multiplexers to the hardware inputs
      *
-     * @note All buttons are assumed to be pulled-down (GND)
+     * @note All buttons are assumed to work in negative logic
      *
      * @param selectorPin1 Least-significant selector pin
      * @param selectorPin2 Second selector pin
@@ -107,7 +107,7 @@ namespace inputs
     /**
      * @brief Add a group of 32-channel multiplexers to the hardware inputs
      *
-     * @note All buttons are assumed to be pulled-down (GND)
+     * @note All buttons are assumed to work in negative logic
      *
      * @param selectorPin1 Least-significant selector pin
      * @param selectorPin2 Second selector pin
@@ -127,6 +127,8 @@ namespace inputs
     /**
      * @brief Add a MCP23017 GPIO expander to the hardware inputs
      *
+     * @note All buttons are assumed to work in negative logic
+     *
      * @param chip Specification of input numbers
      * @param address Full (7-bit) or hardware (3-bit) I2C address
      * @param isFullAddress If true, @p address is a full address,
@@ -144,6 +146,8 @@ namespace inputs
     /**
      * @brief Add a PCF8574 GPIO expander to the hardware inputs
      *
+     * @note All buttons are assumed to work in negative logic
+     *
      * @param chip Specification of input numbers
      * @param address Full (7-bit) or hardware (3-bit) I2C address
      * @param isFullAddress If true, @p address is a full address,
@@ -160,6 +164,8 @@ namespace inputs
 
     /**
      * @brief Add a chain of 74HC165N PISO shift registers to the hardware inputs
+     *
+     * @note All buttons are assumed to work in negative logic
      *
      * @param loadPin Pin attached to LOAD in the fist chip in the chain
      * @param nextPin Pin attached to NEXT in the first chip in the chain
@@ -241,7 +247,7 @@ namespace inputHub
 
         /**
          * @brief Set a combination of inputs to cycle the
-         *        working mode of clutch paddles (if any).
+         *        working mode of clutch paddles.
          *        All inputs must be activated at the same time and none of the others.
          *
          * @note Make sure all inputs can be activated at the same time.
@@ -252,7 +258,7 @@ namespace inputHub
 
         /**
          * @brief Set a combination of inputs to command a
-         *        recalibration of the analog clutch paddles (if any).
+         *        recalibration of the analog clutch paddles.
          *
          * @note Make sure all inputs can be activated at the same time.
          *
@@ -271,10 +277,10 @@ namespace inputHub
         /**
          * @brief Configure directional pad buttons
          *
-         * @param padUpNumber Input number assigned to "up" direction
-         * @param padDownNumber Input number assigned to "down" direction
-         * @param padLeftNumber Input number assigned to "left" direction
-         * @param padRightNumber Input number assigned to "right" direction
+         * @param padUpNumber Input number assigned to the "up" direction
+         * @param padDownNumber Input number assigned to the "down" direction
+         * @param padLeftNumber Input number assigned to the "left" direction
+         * @param padRightNumber Input number assigned to the "right" direction
          *
          * @note Just one pad button can be pressed at a time.
          *       The firmware will combine pressed buttons from different axes.
@@ -289,7 +295,7 @@ namespace inputHub
 
         /**
          * @brief Set a combination of inputs to cycle the
-         *        working mode of the DPAD (if any).
+         *        working mode of the DPAD.
          *        All inputs must be activated at the same time and none of the others.
          *
          * @note Make sure all inputs can be activated at the same time.
@@ -307,14 +313,14 @@ namespace inputHub
     {
         /**
          * @brief Set a list of input numbers as ALT buttons.
-         *        Any of them may engage the alternate mode.
+         *        Any of them will engage the alternate mode.
          *
          * @param inputNumbers Array of input numbers
          */
         void inputs(InputNumberCombination inputNumbers);
 
         /**
-         * @brief Set a combination of inputs to cycle the working mode of ALT buttons (if any).
+         * @brief Set a combination of inputs to cycle the working mode of ALT buttons.
          *        All inputs must be activated at the same time and none of the others.
          *
          * @note Make sure all inputs can be activated at the same time.
@@ -566,7 +572,7 @@ namespace pixels
      *                      Set to `true` when using the level
      *                      shifter in open-drain mode.
      * @param pixelType Pixel driver.
-     * @param pixelFormat  Format of color data (byte order).
+     * @param pixelFormat Format of color data (byte order).
      *                    Set to `AUTO` for auto-detection.
      * @param globalBrightness Global brightness for all pixels.
      *                         By default, the maximum brightness.
