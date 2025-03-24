@@ -63,7 +63,7 @@ void simWheelSetup()
     inputs::addRotaryEncoder(GPIO_NUM_37, GPIO_NUM_33, ROT1_CW + 12, ROT1_CCW + 12);            // ROT7
     inputs::addRotaryEncoder(GPIO_NUM_21, GPIO_NUM_16, ROT1_CW + 14, ROT1_CCW + 14, USE_FUNKY); // ROT8 or funky switch
 
-    inputs::addButton(GPIO_NUM_33, JOY_A);
+    inputs::addButton(GPIO_NUM_1, JOY_A);
     inputs::addButton(GPIO_NUM_34, NAV_LEFT);
     inputs::addButton(GPIO_NUM_17, NAV_RIGHT);
     inputs::addButton(GPIO_NUM_38, NAV_UP);

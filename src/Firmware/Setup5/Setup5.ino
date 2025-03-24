@@ -123,9 +123,9 @@ void customFirmware()
         DEVICE_MANUFACTURER);
 
 #ifdef ENABLE_BATTERY_MONITOR
-    batteryMonitor::begin(
+    batteryMonitor::configure(
         BATTERY_READ_GPIO,
-        BATTERY_ENABLE_READ_GPIO, );
+        BATTERY_ENABLE_READ_GPIO);
 #endif
 }
 

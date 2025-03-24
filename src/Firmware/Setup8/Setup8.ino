@@ -76,9 +76,9 @@ void simWheelSetup()
     chip3[SR8Pin::H] = 19;
 
     inputs::add74HC165NChain(
+        GPIO_NUM_33,
         GPIO_NUM_34,
-        GPIO_NUM_48,
-        GPIO_NUM_18,
+        GPIO_NUM_39,
         {chip1, chip2, chip3},
         23);
 
