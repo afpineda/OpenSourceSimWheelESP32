@@ -77,7 +77,7 @@ void simWheelSetup()
     chip1[Mux8Pin::A6] = 15;
     chip1[Mux8Pin::A7] = 13;
 
-    AnalogMultiplexerChip8 chip2(GPIO_NUM_16);
+    AnalogMultiplexerChip8 chip2(GPIO_NUM_22);
     chip2[Mux8Pin::A0] = JOY_Y;
     chip2[Mux8Pin::A1] = JOY_START;
     chip2[Mux8Pin::A2] = 9;

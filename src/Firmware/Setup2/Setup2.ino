@@ -52,7 +52,7 @@ void simWheelSetup()
     populateButtonMatrix(mtx, mtxSelectors, mtxInputs, 0);
     inputs::addButtonMatrix(mtx);
 
-    inputs::addRotaryEncoder(GPIO_NUM_26, GPIO_NUM_27, 56, 57);
+    inputs::addRotaryEncoder(GPIO_NUM_27, GPIO_NUM_14, 56, 57);
     inputs::addRotaryEncoder(GPIO_NUM_12, GPIO_NUM_13, 58, 59);
     inputs::addRotaryEncoder(GPIO_NUM_18, GPIO_NUM_19, 60, 61);
     inputs::addRotaryEncoder(GPIO_NUM_22, GPIO_NUM_23, 62, 63);

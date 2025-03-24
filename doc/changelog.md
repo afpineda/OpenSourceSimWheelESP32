@@ -1,5 +1,10 @@
 # Change log
 
+## 7.0.1
+
+- Important bug fixes affecting some "ready-to-deploy"
+  designs based on pure ESP32 boards.
+
 ## 7.0.0
 
 - TL;DR

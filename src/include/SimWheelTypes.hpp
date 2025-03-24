@@ -617,7 +617,8 @@ public:
         reserved = (pin >= GPIO_NUM_6) && (pin <= GPIO_NUM_11); // Flash
         reserved = reserved ||
                    ((pin >= GPIO_NUM_16) && (pin <= GPIO_NUM_17) && psramFound()); // PSRAM
-        reserved = reserved || (pin == GPIO_NUM_1) || (pin == GPIO_NUM_3);         // Serial port
+
+        // reserved = reserved || (pin == GPIO_NUM_1) || (pin == GPIO_NUM_3);         // Serial port
 #elif defined(CONFIG_IDF_TARGET_ESP32S2)
 // Not sure:
 //        reserved = (pin >= GPIO_NUM_22) && (pin <= GPIO_NUM_32) && (pin != GPIO_NUM_26);
@@ -625,10 +626,12 @@ public:
         reserved = ((pin >= GPIO_NUM_26) && (pin <= GPIO_NUM_32)); // Flash
         reserved = reserved ||
                    ((pin >= GPIO_NUM_35) && (pin <= GPIO_NUM_37) && psramFound()); // PSRAM
-        reserved = reserved || (pin == GPIO_NUM_43) || (pin == GPIO_NUM_44);       // Serial port
+
+        // reserved = reserved || (pin == GPIO_NUM_43) || (pin == GPIO_NUM_44);       // Serial port
 #elif defined(CONFIG_IDF_TARGET_ESP32C3)
         reserved = (pin >= GPIO_NUM_11) && (pin <= GPIO_NUM_17);
-        reserved = reserved || (pin == GPIO_NUM_20) || (pin == GPIO_NUM_21); // Serial port
+
+        // reserved = reserved || (pin == GPIO_NUM_20) || (pin == GPIO_NUM_21); // Serial port
 #elif CD_CI
         reserved = (pin == TEST_RESERVED_GPIO);
 #endif
@@ -757,7 +760,7 @@ public:
      */
     OutputGPIO(int pin) : GPIO(pin)
     {
-        if (!GPIO_IS_VALID_OUTPUT_GPIO(pin))
+        if ((pin >= 0) && !GPIO_IS_VALID_OUTPUT_GPIO(pin))
             throw gpio_error(pin, "Not output-capable");
     }
     /// @brief Create a "not connected" GPIO
@@ -824,7 +827,7 @@ public:
      */
     RTC_GPIO(int pin) : InputGPIO(pin)
     {
-        if (!GPIO_IS_VALID_RTC_GPIO(pin))
+        if ((pin >= 0) && !GPIO_IS_VALID_RTC_GPIO(pin))
             throw gpio_error(pin, "Not RTC-capable");
     }
 };

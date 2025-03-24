@@ -64,8 +64,8 @@ void simWheelSetup()
 
     mtx[GPIO_NUM_4][GPIO_NUM_13] = IN_ALT2;
     mtx[GPIO_NUM_16][GPIO_NUM_13] = IN_ALT1;
-    mtx[GPIO_NUM_17][GPIO_NUM_13] = JOY_RTHUMBSTICK_CLICK;
-    mtx[GPIO_NUM_1][GPIO_NUM_13] = JOY_LTHUMBSTICK_CLICK;
+    mtx[GPIO_NUM_17][GPIO_NUM_13] = JOY_RB;
+    mtx[GPIO_NUM_1][GPIO_NUM_13] = JOY_LB;
     mtx[GPIO_NUM_23][GPIO_NUM_13] = 63;
     inputs::addButtonMatrix(mtx);
 
