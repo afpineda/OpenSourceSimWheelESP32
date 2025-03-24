@@ -107,12 +107,11 @@ For example (equivalent to the previous example):
 #define BLE_CUSTOM_PID 32
 ```
 
-
 ## USB connectivity
 
 If your device uses USB connectivity, the display name will match your device name,
 which can be set in your custom firmware using the API call `hid::configure()`.
-Any custom PID will be ignored since USB uses the hardware ID
+Any custom VID/PID will be ignored since USB uses the hardware ID
 licensed to your DevKit's manufacturer.
 
 ## Why all this mess?
