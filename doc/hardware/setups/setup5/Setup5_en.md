@@ -69,7 +69,7 @@ Other notes:
 | **GPIO** | **Input** | **Output** |       **Usage**        | **Notes**                  |
 | -------- | --------- | ---------- | :--------------------: | -------------------------- |
 | **34**   | OK        | OK         |  Multiplexer input 2   |                            |
-| **33**   | OK        | OK         |         ROT1_A         |                            |
+| **33**   | OK        | OK         |  Multiplexer input 1   |                            |
 | **39**   | OK        | OK         |         ROT1_B         |                            |
 | **38**   | OK        | OK         |         ROT2_A         | outputs PWM signal at boot |
 | **37**   | OK        | OK         |         ROT2_B         | outputs PWM signal at boot |
@@ -78,7 +78,7 @@ Other notes:
 | **48**   | OK        | OK         | Multiplexer selector 1 |                            |
 | **18**   | OK        | OK         | Multiplexer selector 2 |                            |
 | **17**   | OK        | OK         | Multiplexer selector 3 | outputs PWM signal at boot |
-| **16**   | OK        | OK         |  Multiplexer input 1   |                            |
+| **16**   | OK        | OK         |         ROT1_A         |                            |
 
 ## Circuit layout
 

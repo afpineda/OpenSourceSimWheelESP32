@@ -45,7 +45,7 @@ std::string DEVICE_MANUFACTURER = "Mamandurrio";
  >>>> [ES] MODO DE SUEÑO PROFUNDO
 ------------------------------------------------------------------ */
 
-#define WAKE_UP_PIN GPIO_NUM_33
+#define WAKE_UP_PIN GPIO_NUM_16
 
 /* -----------------------------------------------------------------
  >>>> [EN] BATTERY MONITOR SUBSYSTEM
@@ -68,7 +68,7 @@ std::string DEVICE_MANUFACTURER = "Mamandurrio";
 
 void simWheelSetup()
 {
-    AnalogMultiplexerChip8 chip1(GPIO_NUM_16);
+    AnalogMultiplexerChip8 chip1(GPIO_NUM_33);
     chip1[Mux8Pin::A0] = JOY_BACK;
     chip1[Mux8Pin::A1] = JOY_LB;
     chip1[Mux8Pin::A2] = LCLUTCH;
@@ -93,7 +93,7 @@ void simWheelSetup()
         GPIO_NUM_17,
         {chip1, chip2});
 
-    inputs::addRotaryEncoder(GPIO_NUM_33, GPIO_NUM_39, ROT1_CW, ROT1_CCW);
+    inputs::addRotaryEncoder(GPIO_NUM_16, GPIO_NUM_39, ROT1_CW, ROT1_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_38, GPIO_NUM_37, ROT2_CW, ROT2_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_35, ROT3_CW, ROT3_CCW);
 

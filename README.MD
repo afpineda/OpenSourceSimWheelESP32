@@ -73,7 +73,7 @@ This project provides open hardware and software for a sim-racing wheel or butto
 
 - ✅ **Fully operational**.
 
-- 👷‍♀️State-of-the-art software-engineering (no amateur code).
+- 👷‍♀️State-of-the-art software engineering (no amateur code).
 
 There is a [companion app](https://github.com/afpineda/SimWheelESP32Config) for user preferences,
 not mandatory but needed for some features.

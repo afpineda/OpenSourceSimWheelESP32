@@ -1,5 +1,12 @@
 # Change log
 
+## 7.0.2
+
+- Important bug fixes affecting some "ready-to-deploy"
+  designs based on ESP32S3 boards.
+- Some "ready-to-deploy" hardware designs have changed:
+  "Setup5" and "Setup7".
+
 ## 7.0.1
 
 - Important bug fixes affecting some "ready-to-deploy"

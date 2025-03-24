@@ -51,7 +51,7 @@ std::string DEVICE_MANUFACTURER = "Mamandurrio";
 //      Comente la línea si no hay necesidad de entrar en sueño profundo, o bien,
 //      indique un número de GPIO con capacidad RTC para despertar del sueño.
 
-#define WAKE_UP_PIN GPIO_NUM_33
+#define WAKE_UP_PIN GPIO_NUM_18
 
 /* -----------------------------------------------------------------
  >>>> [EN] BATTERY MONITOR SUBSYSTEM
@@ -105,12 +105,12 @@ void simWheelSetup()
 
     inputs::add74HC165NChain(
         GPIO_NUM_48,
-        GPIO_NUM_18,
+        GPIO_NUM_33,
         GPIO_NUM_34,
         {chip1, chip2, chip3},
         23);
 
-    inputs::addRotaryEncoder(GPIO_NUM_33, GPIO_NUM_39, ROT1_CW, ROT1_CCW);
+    inputs::addRotaryEncoder(GPIO_NUM_18, GPIO_NUM_39, ROT1_CW, ROT1_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_38, GPIO_NUM_37, ROT2_CW, ROT2_CCW);
     inputs::addRotaryEncoder(GPIO_NUM_36, GPIO_NUM_35, ROT3_CW, ROT3_CCW);
 

@@ -69,14 +69,14 @@ Other notes:
 | **GPIO** | **Input** | **Output** | **Usage** | **Notes**                  |
 | -------- | --------- | ---------- | :-------: | -------------------------- |
 | **34**   | OK        | OK         |  SERIAL   |                            |
-| **33**   | OK        | OK         |  ROT1_A   |                            |
+| **33**   | OK        | OK         |   NEXT    |                            |
 | **39**   | OK        | OK         |  ROT1_B   |                            |
 | **38**   | OK        | OK         |  ROT2_A   | outputs PWM signal at boot |
 | **37**   | OK        | OK         |  ROT2_B   | outputs PWM signal at boot |
 | **36**   | OK        | OK         |  ROT3_A   |                            |
 | **35**   | OK        | OK         |  ROT3_B   |                            |
 | **48**   | OK        | OK         |   LOAD    |                            |
-| **18**   | OK        | OK         |   NEXT    |                            |
+| **18**   | OK        | OK         |  ROT1_A   |                            |
 | **17**   | OK        | OK         | POT2_OUT  | outputs PWM signal at boot |
 | **16**   | OK        | OK         | POT1_OUT  |                            |
 
