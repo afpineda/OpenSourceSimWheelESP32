@@ -21,7 +21,7 @@ Manual testing is required for hardware dependent quality control.
 Each test is expected to *catch bugs*,
 so they *succeed* when the expected output (or behavior)
 does *not* match the actual output (or behavior).
-Otherwise the *fail*.
+Otherwise they *fail*.
 This means that all the test have to fail in order to pass the quality control.
 
 ## Manual testing
