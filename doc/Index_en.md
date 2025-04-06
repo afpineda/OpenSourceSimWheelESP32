@@ -12,8 +12,6 @@
 - [Input hardware suitable (or not) for a sim wheel/button box](./hardware/InputHW_en.md)
 - [Know your ESP32 DevKit board](./hardware/DevKits_en.md)
 - [How to customize in order to build your own hardware and firmware setup](./hardware/subsystems/CustomizeHowto_en.md)
-  - [Migrating your custom firmware to version 4 from a previous version](./migrate_to_v4.md)
-  - [Migrating your custom firmware to version 5 from a previous version](./migrate_to_v5.md)
   - [Migrating your custom firmware to version 7 from a previous version](./migrate_to_v7.md)
 - [Troubleshooting](./Troubleshooting_en.md)
 
@@ -78,3 +76,6 @@ See [how to contribute](../.github/CONTRIBUTING.md).
 - [Companion app](https://github.com/afpineda/SimWheelESP32Config)
 - [SimHub plugin](https://github.com/afpineda/SimWheelESP32-SimHub-Plugin)
 - [Some thoughts from the author](./Thoughts_en.md)
+- Outdated migration guides:
+  - [Migrating your custom firmware to version 4 from a previous version](./migrate_to_v4.md)
+  - [Migrating your custom firmware to version 5 from a previous version](./migrate_to_v5.md)

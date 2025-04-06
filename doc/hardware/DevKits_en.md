@@ -96,14 +96,41 @@ However, we can get more specific:
 - **GPIO #36, #39, #34 and #35**:
 
   - Input only.
-  - Not suitable for bare bone rotary encoders, unless external pull-up resistors are in place.
-  - Not suitable for a button matrix, unless external pull-down resistors are in place (inputs only).
-  - Not suitable for an analog multiplexer, unless external pull-up resistors are in place (inputs only).
+  - No pull resistors.
+
+  | Intended use                    | Suitable?                           |
+  | ------------------------------- | ----------------------------------- |
+  | Battery Monitor                 | yes                                 |
+  | Fuel gauge                      | no                                  |
+  | LEDs or LED strips              | no                                  |
+  | Rotary encoder (bare bone)      | yes, with external pull-up resistor |
+  | Rotary encoder (KY-040)         | yes                                 |
+  | Button matrix selector pin      | no                                  |
+  | Button matrix input             | yes (see note 1)                    |
+  | Multiplexer selector            | no                                  |
+  | Multiplexer input               | yes, with external pull-up resistor |
+  | GPIO expander                   | no                                  |
+  | PISO shift register input       | yes                                 |
+  | PISO shift register, other pins | no                                  |
+  | Single button                   | yes, with external pull-up resistor |
+  | Wake up pin                     | yes                                 |
+  | power latch pin                 | no                                  |
+
+  *Note 1*:
+  - When using positive logic (circuit design provided in this project),
+    you must attach an external pull-down resistor.
+  - When using negative logic (circuit design not provided in this project),
+    you must attach an external pull-up resistor.
 
 - **GPIO #12**:
 
-  - Not suitable for rotary encoders (any kind).
-  - Not suitable for any pulled-up input. Boot will fail.
+  - Not suitable for any pulled-up input since boot will fail,
+    including:
+    - Single button.
+    - Rotary Encoder (any kind).
+    - Button matrix in negative logic.
+    - Multiplexers.
+    - PISO shift registers.
 
 - **GPIO #6, #7, #8, #9, #10 and #11**
 
@@ -111,23 +138,23 @@ However, we can get more specific:
 
 - **GPIO #16 and #17**
 
-  - Boards based on **ESP32-WROVER-B** requires these pins for PSRAM, so they are **not usable**.
+  - Boards based on **ESP32-WROVER-B** requires these pins for PSRAM,
+    so they are **not usable**.
   - Safe to use in other cases (ESP32-WROOM-32).
 
 - **GPIO #0**:
 
-  - Despite being described as pulled-up, it seems to work in other modes.
-  - The board will enter "bootloader mode" if this pin is set to low voltage at startup.
+  - Despite being described as pulled-up,
+    it seems to work in other modes.
+  - The board will enter "bootloader mode"
+    if this pin is set to low voltage at startup.
 
-- **GPIO #3**:
+- **GPIO #1 and #3**:
 
-  - Despite being described as input-capable, it works in pull-up mode only.
-  - Not suitable for a button matrix.
-  - Perfect for rotary encoders (any kind).
-
-- **GPIO #1**:
-
-  - Output only.
+  - These pins are used by the USB serial port.
+    They should be reserved for firmware upload and debugging via the serial monitor.
+    However, this project does not enforce this usage
+    as there are a few situations where other uses are appropriate.
 
 ### ESP32-S3 boards
 
@@ -137,6 +164,14 @@ However, we can get more specific:
   - Connected to the on-board "boot" button.
   - Avoid other uses.
 
+- **GPIO #43 and #44**
+
+  - Connected to the primary USB port header (USB to UART bridge).
+  - These pins are used by the USB serial port.
+    They should be reserved for firmware upload and debugging via the serial monitor.
+    However, this project does not enforce this usage
+    as there are a few situations where other uses are appropriate.
+
 - **GPIO #45 and #46**
 
   - Bootstrap pins better to avoid.
@@ -144,7 +179,7 @@ However, we can get more specific:
 
 - **GPIO #19 and #20**
 
-  - Connected to the USB port header.
+  - Connected to the secondary USB port header (USB data pins).
   - **NOT USABLE** if USB connectivity is required.
   - Better to avoid in any case.
 
