@@ -65,9 +65,9 @@ This project provides open hardware and software for a sim-racing wheel or butto
 
 - 💤 **Automatic shutdown** when not in use.
 
-- 👍 **Quality control** (you don't want your wheel to fail in the middle of a race)
+- 👍 **Quality control** (you don't want your wheel to fail in the middle of a race).
 
-- 🗎 **Extensive documentation**
+- 🗎 **Extensive documentation**.
 
 - 💰 **Low budget**.
 
@@ -146,12 +146,12 @@ o una caja de botones con las siguientes características:
   Puede asignar una combinación de botones para activar un botón "virtual"
   como *punto muerto* (marcha neutra).
 
-- 💤 **Apagado automático** cuando no se usa
+- 💤 **Apagado automático** cuando no se usa.
 
 - 👍 **Controles de calidad**
-  (no queremos que el volante falle en medio de una carrera)
+  (no queremos que el volante falle en medio de una carrera).
 
-- 🗎 **Documentación extensa**
+- 🗎 **Documentación extensa**.
 
 - 💰 **Costes contenidos**.
 

@@ -126,7 +126,7 @@ Current data version is 1.6.
 The "flags" field is a set of 1-bit flags.
 Flags are indexed starting from the least significant bit.
 Non indexed bits are reserved for future use.
-Current flags are enumerated in `deviceCapability_t` at file [SimWheelTypes.h][def]
+Current flags are enumerated in `DeviceCapability` at file [SimWheelTypes.hpp][def]
 This is a summary:
 
 - Digital clutch paddles
@@ -178,7 +178,7 @@ so they me be used to mask which fields to modify or not.
 ### Working mode of clutch paddles
 
 Read/write (unless locked).
-Valid values are enumerated in `clutchFunction_t` at file [SimWheelTypes.h][def].
+Valid values are enumerated in `ClutchWorkingMode` at file [SimWheelTypes.hpp][def].
 Write FF (hexadecimal) to ignore this field.
 
 ### Working mode of ALT buttons
@@ -200,7 +200,7 @@ At read:
 
 At write (unless locked):
 
-- Send a simple command. Valid commands are enumerated in `simpleCommands_t` at file [SimWheelTypes.h][def].
+- Send a simple command. Valid commands are enumerated in `SimpleCommand` at file [SimWheelTypes.hpp][def].
   This is a summary:
 
   | Simple command (decimal) | Description                                                                        |
@@ -367,7 +367,7 @@ At write (unless locked):
 
 **No changes are made if there is no match.**
 
-[def]: ../../src/include/SimWheelTypes.h
+[def]: ../../src/include/SimWheelTypes.hpp
 
 ## Telemetry (output) reports
 
@@ -486,7 +486,7 @@ Note: Invalid values will be ignored with no effect.
 
 - *Pixel group*: the group in which the pixel is to be set or a *pixel command*
   (new in data version 1.6).
-  One of the constants defined in the `pixelGroup_t` enumeration or one pixel command:
+  One of the constants defined in the `PixelGroup` enumeration or one pixel command:
   - `0xFF`: show all pixels at once
   - `0xFE`: turn off all pixels in all groups
 
@@ -505,4 +505,4 @@ Note: Invalid values will be ignored with no effect.
 > MS Window's
 > [HidD_SetFeature()](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_setfeature)
 > API call, used to send feature reports such as ID 3, has a big impact on performance.
-> This made pixel control less than "real time". Output reports do not have this problem.
+> Output reports do not have this problem.
