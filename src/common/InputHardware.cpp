@@ -18,7 +18,6 @@
 #include "driver/i2c.h"    // For I2C operation
 #include "esp32-hal.h"     // For portSET_INTERRUPT_MASK_FROM_ISR
 #include "driver/gpio.h"   // For gpio_set_level/gpio_get_level()
-#include "esp32-hal-cpu.h" // For getCpuFrequencyMhz()
 
 //-------------------------------------------------------------------
 // Globals
@@ -37,16 +36,7 @@
 #define MCP23017_INTERRUPT_CONTROL 0x08
 #define MCP23017_INTERRUPT_DEFAULT_VALUE 0x06
 
-#pragma GCC push_options
-#pragma GCC optimize ("O0")
-inline void signal_change_delay(uint32_t nanoseconds)
-{
-    // Note: 1 ns = 1000 MHz
-    static uint32_t instructionTimeNs = (getCpuFrequencyMhz() < 1000) ? (1000 / getCpuFrequencyMhz()) : 1;
-    for (uint32_t delay = 0; delay < nanoseconds; delay += instructionTimeNs)
-        __asm__ __volatile__(" nop\n");
-}
-#pragma GCC pop_options
+#define signal_change_delay(n) internals::hal::gpio::wait_propagation(n)
 
 //-------------------------------------------------------------------
 // Single button

@@ -171,6 +171,7 @@ private:
     rmt_encoder_handle_t encHandle = nullptr;
     bool changed = false;
     uint8_t brightnessWeight = 16;
+    uint32_t resetTimeNs = 280000;
 
     void normalizeColor(uint8_t &r, uint8_t &g, uint8_t &b);
     void rawPixelRGB(

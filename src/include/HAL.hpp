@@ -309,6 +309,15 @@ namespace internals
              */
             void enableISR(InputGPIO pin, ISRHandler handler, void *param = nullptr);
 
+            /**
+             * @brief Wait for signal propagation
+             *
+             * @note This is active wait with no context switching
+             *
+             * @param nanoseconds Time to wait in nanoseconds
+             */
+            void wait_propagation(uint32_t nanoseconds);
+
         } // namespace gpio
     } // namespace hal
 } // namespace internals

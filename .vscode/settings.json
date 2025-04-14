@@ -71,7 +71,9 @@
         "semaphore": "cpp",
         "stop_token": "cpp",
         "thread": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "forward_list": "cpp",
+        "iostream": "cpp"
     },
     "C_Cpp.default.compilerPath": ""
 }

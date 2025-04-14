@@ -147,6 +147,22 @@ LEDStrip::LEDStrip(
     if (!encHandle)
         abort();
 
+    // Configure reset time (to show pixels)
+    switch (pixelType)
+    {
+    case PixelDriver::WS2811:
+        this->resetTimeNs = 50000; // 50 microseconds
+        break;
+    case PixelDriver::SK6812:
+        this->resetTimeNs = 80000; // 80 microseconds
+        break;
+    case PixelDriver::UCS1903:
+        this->resetTimeNs = 24000; // 24 microseconds
+        break;
+    default:
+        this->resetTimeNs = 280000; // 280 microseconds
+    }
+
     // Initialize instance
     this->pixelCount = pixelCount;
     this->pixelFormat = pixelFormat;
@@ -182,7 +198,7 @@ void LEDStrip::show()
             rmt_tx_wait_all_done(
                 rmtHandle,
                 -1));
-        vTaskDelay(1);
+        internals::hal::gpio::wait_propagation(resetTimeNs);
     }
 }
 

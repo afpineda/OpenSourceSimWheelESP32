@@ -24,6 +24,7 @@
 #include "esp32-hal.h"           // For SDA and SCL pin definitions
 #include "driver/gpio.h"         // For gpio_set_level/gpio_get_level()
 #include "esp_intr_alloc.h"      // For gpio_isr_handler_add()
+#include "esp32-hal-cpu.h"       // For getCpuFrequencyMhz()
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -340,3 +341,14 @@ void internals::hal::gpio::enableISR(InputGPIO pin, ISRHandler handler, void *pa
     ESP_ERROR_CHECK(gpio_isr_handler_add(AS_GPIO(pin), handler, param));
     ESP_ERROR_CHECK(gpio_intr_enable(AS_GPIO(pin)));
 }
+
+#pragma GCC push_options
+#pragma GCC optimize("O0")
+void internals::hal::gpio::wait_propagation(uint32_t nanoseconds)
+{
+    // Note: 1 ns = 1000 MHz
+    static uint32_t instructionTimeNs = (getCpuFrequencyMhz() < 1000) ? (1000 / getCpuFrequencyMhz()) : 1;
+    for (uint32_t delay = 0; delay < nanoseconds; delay += instructionTimeNs)
+        __asm__ __volatile__(" nop\n");
+}
+#pragma GCC pop_options
