@@ -161,6 +161,7 @@ LEDStrip::LEDStrip(
         break;
     default:
         this->resetTimeNs = 280000; // 280 microseconds
+        break;
     }
 
     // Initialize instance
