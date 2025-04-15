@@ -54,9 +54,9 @@ but that is not the best choice due to its excessive size.
 ## Flash memory requirements
 
 At the time of writing,
-this project uses 85%-90% of the storage capacity of a "standard" ESP32 DevKit,
-which is **4 MB** of flash memory.
-This is very close to the limit and firmware size may continue to grow.
+this project requires 50%-80% of the flash memory capacity of a "standard" ESP32 DevKit,
+which is **4 MB**.
+However, the firmware size may increase further.
 In case of extreme need,
 you may still reconfigure the partition table to make more room for the firmware:
 
