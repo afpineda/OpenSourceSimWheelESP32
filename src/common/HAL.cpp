@@ -351,7 +351,7 @@ void internals::hal::gpio::wait_propagation(uint32_t nanoseconds)
     // So, each loop should take 3 CPU cycles.
     // Note: 1 ns = 1000 MHz
     static uint32_t loopTimeNs = ((getCpuFrequencyMhz() < 1000) ? (1000 / getCpuFrequencyMhz()) : 1)*3;
-    for (register uint32_t delay = 0; delay < nanoseconds; delay += loopTimeNs)
+    for (uint32_t delay = 0; delay < nanoseconds; delay += loopTimeNs)
         __asm__ __volatile__(" nop\n");
 }
 #pragma GCC pop_options
