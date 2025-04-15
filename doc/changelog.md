@@ -1,5 +1,15 @@
 # Change log
 
+## 7.1.0
+
+- The code for LED strips no longer require context switching to display all pixels.
+  Active wait is used instead with nanosecond precision.
+  This should improve performance.
+- Active wait is also more accurate,
+  improving performance a bit for button matrices,
+  analog multiplexers and shift registers.
+- Documentation updates.
+
 ## 7.0.2
 
 - Important bug fixes affecting some "ready-to-deploy"

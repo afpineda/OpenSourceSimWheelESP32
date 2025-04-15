@@ -58,7 +58,9 @@ This project provides open hardware and software for a sim-racing wheel or butto
   This feature alleviates this problem.
 
 - ⛐ **Telemetry** using [SimHub](https://www.simhubdash.com/).
-  Supported display hardware includes RGB LED strips and single color LEDs.
+  The supported hardware for display includes RGB LED strips and single-color LEDs "out-of-the-box".
+  The firmware is extensible, allowing users to develop their own display hardware.
+  The display hardware is also capable of notifying events, such as low battery.
 
 - ⚙️ **Neutral gear** ("virtual" button).
   You can set a button combination to engage a "virtual" button for *neutral gear*.
@@ -140,7 +142,9 @@ o una caja de botones con las siguientes características:
   Esta característica alivia este problema.
 
 - ⛐ **Telemetría** mediante [SimHub](https://www.simhubdash.com/).
-  El hardware de visualización incluye tiras LED RGB y LED de un único color.
+  El hardware compatible para la visualización incluye tiras LED RGB y LED monocolor «listos para usar».
+  El firmware es extensible, lo que permite a los usuarios desarrollar su propio hardware de visualización.
+  El hardware de visualización también es capaz de notificar eventos tales como batería baja.
 
 - ⚙️ **Punto muerto** (botón "virtual").
   Puede asignar una combinación de botones para activar un botón "virtual"
