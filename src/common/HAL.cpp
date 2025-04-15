@@ -346,9 +346,12 @@ void internals::hal::gpio::enableISR(InputGPIO pin, ISRHandler handler, void *pa
 #pragma GCC optimize("O0")
 void internals::hal::gpio::wait_propagation(uint32_t nanoseconds)
 {
+    // This loop should be translated to 3 assembler instructions:
+    // counter increase, no-operation and conditional jump.
+    // So, each loop should take 3 CPU cycles.
     // Note: 1 ns = 1000 MHz
-    static uint32_t instructionTimeNs = (getCpuFrequencyMhz() < 1000) ? (1000 / getCpuFrequencyMhz()) : 1;
-    for (uint32_t delay = 0; delay < nanoseconds; delay += instructionTimeNs)
+    static uint32_t loopTimeNs = ((getCpuFrequencyMhz() < 1000) ? (1000 / getCpuFrequencyMhz()) : 1)*3;
+    for (register uint32_t delay = 0; delay < nanoseconds; delay += loopTimeNs)
         __asm__ __volatile__(" nop\n");
 }
 #pragma GCC pop_options
