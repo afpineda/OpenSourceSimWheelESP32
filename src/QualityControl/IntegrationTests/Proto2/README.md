@@ -2,7 +2,7 @@
 
 ## Purpose and summary
 
-To test battery level (calibrated) and power off from the config menu.
+To test battery level (calibrated), deep sleep/wakeup and digital clutch paddles.
 
 ## Hardware setup
 
