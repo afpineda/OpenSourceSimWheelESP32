@@ -199,7 +199,8 @@ void LEDStrip::show()
             rmt_tx_wait_all_done(
                 rmtHandle,
                 -1));
-        internals::hal::gpio::wait_propagation(resetTimeNs);
+        active_wait_ns(resetTimeNs);
+        // internals::hal::gpio::wait_propagation(resetTimeNs);
     }
 }
 

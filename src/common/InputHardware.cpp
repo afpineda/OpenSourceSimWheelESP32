@@ -15,9 +15,9 @@
 
 #include "InputHardware.hpp"
 #include "HAL.hpp"
-#include "driver/i2c.h"    // For I2C operation
-#include "esp32-hal.h"     // For portSET_INTERRUPT_MASK_FROM_ISR
-#include "driver/gpio.h"   // For gpio_set_level/gpio_get_level()
+#include "driver/i2c.h"  // For I2C operation
+#include "esp32-hal.h"   // For portSET_INTERRUPT_MASK_FROM_ISR
+#include "driver/gpio.h" // For gpio_set_level/gpio_get_level()
 
 //-------------------------------------------------------------------
 // Globals
@@ -36,7 +36,8 @@
 #define MCP23017_INTERRUPT_CONTROL 0x08
 #define MCP23017_INTERRUPT_DEFAULT_VALUE 0x06
 
-#define signal_change_delay(n) internals::hal::gpio::wait_propagation(n)
+// Active wait
+#define signal_change_delay(n) active_wait_ns(n)
 
 //-------------------------------------------------------------------
 // Single button
@@ -443,8 +444,16 @@ uint64_t AnalogMultiplexerInput::read(uint64_t lastState)
         for (uint8_t selPinIndex = 0; selPinIndex < selectorPins.size(); selPinIndex++)
             GPIO_SET_LEVEL(selectorPins[selPinIndex], switchIndex & (1 << selPinIndex));
 
-        // Wait for the signal to propagate
-        signal_change_delay(25);
+        // Wait for the signal to propagate.
+        //
+        // This delay is a worst-case value.
+        // According to the 74HC4067 datasheet,
+        // "Sn to Out" delay is in the range [51,450] nanoseconds
+        // depending on air temperature, Vcc voltage and wire capacitance.
+        // This range is [48,340] nanoseconds in the 74HC4051.
+        // During tests, an empirical value of 250 nanoseconds worked,
+        // but not less.
+        signal_change_delay(450);
 
         uint8_t inputPinIndex = switchIndex >> selectorPins.size();
         int level = GPIO_GET_LEVEL(inputPins[inputPinIndex]);
@@ -748,7 +757,7 @@ uint64_t ShiftRegistersInput::read(uint64_t lastState)
 
     // Parallel load
     GPIO_SET_LEVEL(loadPin, loadHighOrLow);
-    signal_change_delay(35);
+    signal_change_delay(45);
     GPIO_SET_LEVEL(loadPin, !loadHighOrLow);
 
     // Serial output
@@ -761,7 +770,7 @@ uint64_t ShiftRegistersInput::read(uint64_t lastState)
 
         // next
         GPIO_SET_LEVEL(nextPin, !nextHighToLowOrLowToHigh);
-        signal_change_delay(35);
+        signal_change_delay(45);
         GPIO_SET_LEVEL(nextPin, nextHighToLowOrLowToHigh);
     }
     return state;

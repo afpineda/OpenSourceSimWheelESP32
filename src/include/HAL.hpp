@@ -43,6 +43,25 @@ typedef void (*ISRHandler)(void *arg);
 #define DELAY_MS(ms) std::this_thread::sleep_for(std::chrono::milliseconds(ms))
 #endif
 
+// Each CPU instruction takes 6.25 nanoseconds in an ESP32 RISC-V @ 160 Mhz
+// Each CPU instruction takes 4.16 nanoseconds in an ESP32 Xtensa @ 240 Mhz
+
+// Time per loop of active_wait_ns() computed as 4 CPU instructions
+#if defined(CONFIG_IDF_TARGET_ESP32C3)
+#define NS_PER_LOOP 25
+#else
+#define NS_PER_LOOP 17
+#endif
+
+/**
+ * @brief Active wait without context switching
+ *
+ * @note Not accurate but close
+ *
+ * @param n Time to wait in nanoseconds
+ */
+#define active_wait_ns(n) for (uint32_t i = 0; i < n; i += NS_PER_LOOP) asm("");
+
 //-------------------------------------------------------------------
 // Exceptions
 //-------------------------------------------------------------------
@@ -312,7 +331,11 @@ namespace internals
             /**
              * @brief Wait for signal propagation
              *
-             * @note This is active wait with no context switching
+             * @note This is active wait with no context switching.
+             *       A call to this function takes 6000 nanoseconds
+             *       in an ESP32 Xtensa CPU @ 240 Mhz.
+             *       Appart from that, this method is very accurate (tested).
+             *       For small delays, use active_wait_ns() instead.
              *
              * @param nanoseconds Time to wait in nanoseconds
              */

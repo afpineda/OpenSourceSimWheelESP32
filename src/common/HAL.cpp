@@ -376,7 +376,7 @@ static inline uint32_t getCpuCycleCount(void)
 
 void internals::hal::gpio::wait_propagation(uint32_t nanoseconds)
 {
-#ifdef CONFIG_IDF_TARGET_ESP32
+#if defined(CONFIG_IDF_TARGET_ESP32) || defined(CONFIG_IDF_TARGET_ESP32S2) || defined(CONFIG_IDF_TARGET_ESP32S3)
     // It takes 6000 nanoseconds to call this method
     // in a pure ESP32 at 240 Mhz. (max frequency)
     if (nanoseconds <= 6000)
