@@ -342,16 +342,54 @@ void internals::hal::gpio::enableISR(InputGPIO pin, ISRHandler handler, void *pa
     ESP_ERROR_CHECK(gpio_intr_enable(AS_GPIO(pin)));
 }
 
-#pragma GCC push_options
-#pragma GCC optimize("O0")
+// -- ACTIVE WAIT
+
+#ifdef CONFIG_IDF_TARGET_ESP32C3
+/**
+ * @brief Get the counter of CPU cycles in the RISC-V architecture
+ *
+ * @note AI-generated
+ *
+ * @return uint32_t program counter
+ */
+static inline uint32_t getCpuCycleCount(void)
+{
+    uint32_t cycles;
+    __asm__ __volatile__("rdcycle %0" : "=r"(cycles));
+    return cycles;
+}
+#else
+/**
+ * @brief Get the counter of CPU cycles in the Xtensa architecture
+ *
+ * @note AI-generated
+ *
+ * @return uint32_t program counter
+ */
+static inline uint32_t getCpuCycleCount(void)
+{
+    uint32_t ccount;
+    __asm__ __volatile__("rsr %0, ccount" : "=a"(ccount));
+    return ccount;
+}
+#endif
+
 void internals::hal::gpio::wait_propagation(uint32_t nanoseconds)
 {
-    // This loop should be translated to 3 assembler instructions:
-    // counter increase, no-operation and conditional jump.
-    // So, each loop should take 3 CPU cycles.
-    // Note: 1 ns = 1000 MHz
-    static uint32_t loopTimeNs = ((getCpuFrequencyMhz() < 1000) ? (1000 / getCpuFrequencyMhz()) : 1)*3;
-    for (uint32_t delay = 0; delay < nanoseconds; delay += loopTimeNs)
-        __asm__ __volatile__(" nop\n");
+#ifdef CONFIG_IDF_TARGET_ESP32
+    // It takes 6000 nanoseconds to call this method
+    // in a pure ESP32 at 240 Mhz. (max frequency)
+    if (nanoseconds <= 6000)
+        return;
+    else
+        nanoseconds = nanoseconds - 6000;
+#endif
+    // AI-generated code
+    // tested in an ESP32-DevKit-C
+    // against esp_timer_get_time()
+    static uint32_t cpu_freq_mhz = getCpuFrequencyMhz();
+    uint32_t cycles = (nanoseconds * cpu_freq_mhz) / 1000;
+    uint32_t start = getCpuCycleCount();
+    while ((getCpuCycleCount() - start) < cycles)
+        ; // do nothing
 }
-#pragma GCC pop_options

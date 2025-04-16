@@ -79,6 +79,7 @@
         "USBHID",
         "VLED",
         "WROOM",
+        "Xtensa",
         "amtxer",
         "autocalibrated",
         "benbaker",
@@ -99,6 +100,7 @@
         "protoboards",
         "psram",
         "pygame",
+        "rdcycle",
         "regedit",
         "simracer",
         "simracing"
