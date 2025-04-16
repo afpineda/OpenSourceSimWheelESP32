@@ -1,5 +1,10 @@
 # Change log
 
+## 7.1.1
+
+- The code for active wait has been revised for even better accuracy.
+- Documentation updates.
+
 ## 7.1.0
 
 - The code for LED strips no longer require context switching to display all pixels.
