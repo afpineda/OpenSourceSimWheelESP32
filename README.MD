@@ -11,16 +11,20 @@ This project provides open hardware and software for a sim-racing wheel or butto
 - 🛜 **Wireless connectivity** via **Bluetooth Low Energy**,
   with no configuration effort.
 
-- 🔌**Wired connectivity** is also available via **USB**.
-
-- 🤔 There are **several hardware setups** to choose from and
-  detailed instructions about how to **customize** them with **minimal effort**.
-  Support for button matrices, multiplexed switches, GPIO expanders, shift registers,
-  rotary encoders, funky switches...
+- 🔌 **Wired connectivity** is also available via **USB**.
 
 - 🗲 Powered by rechargeable **batteries**, wheel base or USB cable.
 
 - 🪫 **State of charge** (for batteries).
+
+- 🧰 Support for many types of **input hardware**:
+  button matrices, multiplexed switches, GPIO expanders, shift registers,
+  rotary encoders, funky switches...
+
+- 🧑‍🍳 Easy to adapt to your needs:
+  a range of off-the-shelf electronics designs are available
+  to cover a wide range of applications,
+  or you can build your own **custom device**.
 
 - ⎇ **Alternate mode** (mode selector).
   While engaged, any input is reported as an alternate,
@@ -96,15 +100,19 @@ o una caja de botones con las siguientes características:
 
 - 🔌 **Conectividad por cable** también disponible mediante **USB**.
 
-- 🤔 **Varias configuraciones hardware** para elegir e instrucciones detalladas
-  para **personalizarlas** con el **mínimo esfuerzo**.
-  Soporte para matrices de botones, interruptores multiplexados,
-  expansores de GPIO, registros de desplazamiento,
-  codificadores rotativos, funky switches...
-
 - 🗲 Alimentación mediante **baterías** recargables, base del volante o cable USB.
 
 - 🪫 **Estado de la carga** (para baterías).
+
+- 🧰 Soporte para muchos tipos de **hardware de entrada**:
+  matrices de botones, interruptores multiplexados,
+  expansores de GPIO, registros de desplazamiento,
+  codificadores rotativos, funky switches...
+
+- 🧑‍🍳 Fácil de adaptar a sus necesidades:
+  Se dispone de una gama de diseños electrónicos listos
+  para usar que cubren diversas aplicaciones,
+  o puede construir su propio **dispositivo personalizado**.
 
 - ⎇ **Modo alternativo** (selector de modo).
   Mientras está activado, cualquier entrada se reporta como una entrada alternativa,
