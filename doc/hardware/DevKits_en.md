@@ -124,13 +124,10 @@ However, we can get more specific:
 
 - **GPIO #12**:
 
-  - Not suitable for any pulled-up input since boot will fail,
+  - Not suitable for any **externally* pulled-up input since boot will fail,
     including:
     - Single button.
-    - Rotary Encoder (any kind).
-    - Button matrix in negative logic.
-    - Multiplexers.
-    - PISO shift registers.
+    - KY-040 rotary Encoder.
 
 - **GPIO #6, #7, #8, #9, #10 and #11**
 
