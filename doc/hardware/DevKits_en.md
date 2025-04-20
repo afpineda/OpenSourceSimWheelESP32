@@ -124,7 +124,7 @@ However, we can get more specific:
 
 - **GPIO #12**:
 
-  - Not suitable for any **externally* pulled-up input since boot will fail,
+  - Not suitable for any **externally** pulled-up input since boot will fail,
     including:
     - Single button.
     - KY-040 rotary Encoder.
