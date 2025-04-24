@@ -118,7 +118,7 @@ void commonHidStart()
     uint16_t customPID = 0;
     if (internals::hid::supportsCustomHardwareID())
     {
-        if ((_factoryVID == TEST_HARDWARE_ID) && (_factoryVID == TEST_HARDWARE_ID))
+        if ((_factoryVID == TEST_HARDWARE_ID) && (_factoryPID == TEST_HARDWARE_ID))
         {
             // For testing, do not load the custom hardware ID
             customVID = BLE_PRODUCT_ID;
