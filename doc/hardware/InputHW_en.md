@@ -242,26 +242,49 @@ This alternative is not supported by this project since *multiplexed switches* (
 
 ### Multiplexed switches
 
-This circuit is quite similar to a button matrix, but it requires a number of multiplexers. However, it requires less wiring. Two groups of pins are required:
+This circuit is quite similar to a button matrix, but it requires a number of multiplexers.
+However, it requires less wiring. Two groups of pins are required:
 
 - Selector pins: they choose a single switch from each multiplexer.
 - Input pins: they provide the state of the selected switch at each multiplexer.
 
-The idea is to scan each switch in a loop. First, the required selector pins are enabled. Second, inputs pins are read.  After a few rounds, the state of every button is collected so it is able to detect input from multiple buttons pushed at the same time, without error.
+The idea is to scan each switch in a loop.
+First, the required selector pins are enabled.
+Second, inputs pins are read.
+After a few rounds, the state of every button is collected
+so it is able to detect input from multiple buttons pushed at the same time,
+without error.
 
 There are two kinds of multiplexers:
 
-- **Analog multiplexers**: the selected switch is electrically connected to the input pin, whatever voltage it has. They work straight with switches thanks to the internal pull resistors at the DevKit board. Input pins require pull resistors, but that is not the case for each separate switch.
+- **Analog multiplexers**:
+  the selected switch is electrically connected to the input pin, whatever voltage it has.
+  They work straight with switches thanks to the internal pull resistors at the DevKit board.
+  Input pins require pull resistors, but that is not the case for each separate switch.
+  Note that the ADC is not involved here.
+  Yoy can use any GPIO pin for input despite the analog signal.
 
-- **Digital multiplexers**: the voltage at the selected switch is copied to the input pin, but they are not "electrically connected". Does not work straight with switches because they have an undetermined voltage when open. In order to work with switches, an external pull resistor is required for each separate switch, which is unpractical. Digital multiplexers are not supported by this project and will never be.
+- **Digital multiplexers**:
+  the voltage at the selected switch is copied to the input pin,
+  but they are not "electrically connected".
+  Does not work straight with switches because they have an undetermined voltage when open.
+  In order to work with switches,
+  an external pull resistor is required for each separate switch,
+  which is unpractical.
 
-This is the logical circuit for 3 selector pins and 3 input pins using analog "8 to 1" multiplexers which can hold 24 push buttons:
+This firmware works with both kinds of multiplexers,
+but the project does not contemplate any design using digital multiplexers and never will.
+In this sense, they are not supported.
+
+This is the logical circuit for 3 selector pins and 3 input pins
+using analog "8 to 1" multiplexers which can hold 24 push buttons:
 
 ![logical circuit for 3x3](./pictures/24MultiplexedButtons.png)
 
 [Test this circuit at Falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKDDwBYQUUu8rMKEPyghsLAM7dewqmBR5ZoqgDMAhgBsJdSdK7Mh8xQdER1WnVJ76O+heFvKQ57buvgMhcPbCfTzzVcrGTRje1CnF0s9bg45cLjIwOj3QW9FNLkAizcZXDtFfKScgHd0pSNweSgWMsqTesdIWvKwR3q-ZrqfP0qIrvKIvsSB4fiMjCFR8MnyouaAJXKRFao1kETsaGwnGAQWABluPEUOQi4FRQQm8Gztamaj7DQN87EX664sqIfDsQQhBwwF5sACKDczMlfgBZMScJS2RQiATQfawvBvETEezI7iolhLQj4JQIIlKdabba7fFlIkTIR0sSQL4tRm8Khs2YDNnEtkjVnE3xeHmKbmCxyMoU1WmC6qSpoCpEc2VTXQYZlMriM+a3KJqjVpTlTUR6qTqi6JPnrSE5M0G3nE-q65L6-R+SWdE0uu02LXir7O20gc1VBkq4pBYMakSM3E21zsLghkQYMG48RlS5wi4nV4ssrPKjYQiFF5xNYtLPYeGeQrwgaFjZwWRUcvSltNqj8Isl9ugwHA4TPDaDgZ4YdArzjoTF0UtRtthdvBtgyf-QHLlgADzhXg4ZAohC8lFbsRAAGU6Bo6ABjAAuAHsAE4AHQkAAcAJYAOwkb7ADDiDucTEN4e4EN4oEWiAACS37vgArne-7bsIxBeMwoHoaB8iAmecGIchEgoKhxbkACoGMggE5ngACj+dB-hIAAmdBvto143jen4AM-fv+gGkcQ+jURsxDGKSGxngAot+d5PmozFqChO4nDYWG5mAq4yXJClKW+JEFqug79mIvYDLW2bBr2s7tlW8JVuZqFgMWhj7g4R7gNpMiyfJinKRIQHgNgvRgDhtg4TwUkyARSFvuIiZVPCIjyMO6a6MwyVyPgSr+KaSX6NUYA5aGeXegVDj6CVbQBvG0SZW6GHVZ6dUZYlQwlU6qjlQ1sTZbm7IRvV7WzMVA1cl6Qa9UUY2FBq6x6nUJUpdV1SjKthjVQqS2ae0zVeOtmm9J1xKHRkgqdfyO0ZIks3cFyLR3Wkd3zASyC5itiS4q2RZUusewsLCLmOClcS5Si+xlJZ1Z2Bwdb5h2bZGD9FZlNOI4Ydg1RrqMWMDpj1S2dMIhIwoPZzt0cNWfIVNEywQA). This simulator does not feature analog multiplexers, so let's pretend digital multiplexers are analog ones. Input pins are supposed to enable an internal pull-down resistor. Actual implementation in this project uses negative logic and internal pull-up resistors.
 
-The number of required pins could be further reduced, in some cases, by placing another multiplexer for the input pins.
+The number of required pins could be further reduced,
+in some cases, by placing another multiplexer for the input pins.
 
 ### Shift registers
 

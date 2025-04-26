@@ -447,6 +447,8 @@ void simWheelSetup()
 Input pins must be wired to valid input capable GPIO pins with internal pull-up resistors.
 Otherwise, external pull-up resistors must be added to the circuit design.
 Selector pins must be wired to valid output capable GPIO pins.
+Don't be confused by the "analog" label.
+It is not necessary to use ADC-capable input pins.
 
 1. Declare each multiplexer chip,
    passing the **input pin** as a constructor parameter.
@@ -488,6 +490,15 @@ In the previous example:
 
 - `10`, `11` and `12` are selector pins.
 - `13` and `14` are input pins.
+
+#### A note on digital multiplexers
+
+Digital multiplexers are not recommended as
+they require an external pull-up resistor for each switch.
+However, the firmware will work with them.
+This project does not provide a hardware design using digital multiplexers,
+but you can reuse an existing circuit or design one yourself.
+Just configure your custom firmware as you would for analogue multiplexers.
 
 ### Shift registers
 
