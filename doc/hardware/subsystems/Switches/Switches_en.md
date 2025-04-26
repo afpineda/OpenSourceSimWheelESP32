@@ -418,6 +418,7 @@ void simWheelSetup()
     mtx[GPIO_NUM_10][GPIO_NUM_13] = 2;
     mtx[GPIO_NUM_11][GPIO_NUM_12] = 3;
     mtx[GPIO_NUM_11][GPIO_NUM_13] = 4;
+    inputs::addButtonMatrix(mtx);
     ...
 }
 ```
@@ -438,6 +439,7 @@ void simWheelSetup()
     ...
     ButtonMatrix mtx;
     populateButtonMatrix(mtx, {GPIO_NUM_10, GPIO_NUM_10}, {GPIO_NUM_12, GPIO_NUM_13}, 1);
+    inputs::addButtonMatrix(mtx);
     ...
 }
 ```
