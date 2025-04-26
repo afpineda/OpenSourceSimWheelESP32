@@ -262,7 +262,7 @@ There are two kinds of multiplexers:
   They work straight with switches thanks to the internal pull resistors at the DevKit board.
   Input pins require pull resistors, but that is not the case for each separate switch.
   Note that the ADC is not involved here.
-  Yoy can use any GPIO pin for input despite the analog signal.
+  You can use any GPIO pin for input despite the analog signal.
 
 - **Digital multiplexers**:
   the voltage at the selected switch is copied to the input pin,
