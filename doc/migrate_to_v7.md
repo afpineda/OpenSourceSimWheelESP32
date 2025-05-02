@@ -130,9 +130,9 @@ mtx[13][15] = 4;
    Qualify each pin tag with `Mux8Pin::`, `Mux16Pin::` or `Mux32Pin::`
    for 8, 16 and 32 channel chips respectively.
 3. Call `inputs::addAnalogMultiplexerGroup()`:
-   - The first 3, 4 or 5 parameters are **selector pins**,
-     depending on the number of channels
-     (8, 16 or 32 channels).
+   - The first 3, 4 or 5 parameters,
+     depending on the number of channels (8, 16 or 32 channels),
+     are **selector pins**.
    - You cannot mix 8, 16 and 32 channel chips.
      There is no room for error.
    - In the last parameter, group the chip instances
