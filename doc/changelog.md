@@ -1,5 +1,14 @@
 # Change log
 
+## 7.1.2
+
+- Button matrices configured for negative logic,
+  now use open drain mode for the selector pins.
+  This prevents a short circuit when the diodes are removed
+  which is unfortunately a common use case among users.
+  Note that **short circuits cannot be avoided** in a button matrix
+  without diodes configured for positive logic.
+
 ## 7.1.1
 
 - The code for active wait has been revised for even better accuracy.

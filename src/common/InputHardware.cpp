@@ -277,7 +277,7 @@ ButtonMatrixInput::ButtonMatrixInput(
     // Compute mask and initialize GPIO pins
     for (auto row : this->matrix)
     {
-        internals::hal::gpio::forOutput(row.first, negativeLogic, false);
+        internals::hal::gpio::forOutput(row.first, negativeLogic, negativeLogic);
         for (auto col : row.second)
         {
             internals::hal::gpio::forInput(col.first, !negativeLogic, negativeLogic);

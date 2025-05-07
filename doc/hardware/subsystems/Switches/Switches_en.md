@@ -43,6 +43,10 @@ You should be able to extrapolate those designs to your needs.
 Button matrices in this project work in *positive logic*
 (inputs are internally pulled down).
 
+> [!CAUTION]
+> Do not remove the diodes from these designs.
+> Otherwise this firmware will cause a **short circuit**.
+
 ### Button Matrix (25 inputs)
 
 Needed parts (not counting input hardware like push buttons nor a perfboard):
@@ -77,7 +81,7 @@ This [circuit design](./BtnMatrix16Inputs.diy) requires no wiring but takes more
 
 The purpose of this circuit is to transform analog potentiometers
 into "on/off" switches that can be wired to a button matrix.
-**Usefull for clutch paddles if no ADC-capable pins are available**.
+**Useful for clutch paddles if no ADC-capable pins are available**.
 Another soldered potentiometer (called "trimmer")
 will calibrate the position where on/off switching happens.
 Please, **follow this calibration procedure in order to minimize battery drainage**:
@@ -406,6 +410,13 @@ Selector pins must be wired to valid output capable GPIO pins.
 6. Optionally, set the second parameter to `true` if your button matrix uses negative logic.
    Such a hardware design is not in this project,
    but this option allows you to use a recycled button matrix from another project.
+
+> [!CAUTION]
+> If, despite my advice, your button matrix does not have diodes,
+> configure your custom firmware to work with negative logic
+> by setting the second parameter to `true`.
+> Otherwise, you will have a **short circuit**.
+> Either way, you will have ghost inputs.
 
 For example:
 
