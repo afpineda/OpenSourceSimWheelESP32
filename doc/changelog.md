@@ -7,7 +7,7 @@
   This prevents a short circuit when the diodes are removed
   which is unfortunately a common use case among users.
   Note that **short circuits cannot be avoided** in a button matrix
-  without diodes configured for positive logic.
+  configured for positive logic without diodes.
 
 ## 7.1.1
 
