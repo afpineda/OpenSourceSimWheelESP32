@@ -97,31 +97,43 @@ Depending on user preferences:
 
 ## Rotary Potentiometers
 
-They are similar in shape to rotary encoders and absolute rotary switches, but they are a completely different thing:
+They are similar in shape to rotary encoders and absolute rotary switches,
+but they are a completely different thing:
 
 - There is no "on" and "off" position because they provide a continuous analog output.
 - Can not rotate 360 degrees.
 - Current is drained at all times, which is bad for batteries.
 - Prone to failure after 10.000 usage cycles or so.
 
-As a result, rotary potentiometers are discouraged. However, some wheel cases are equipped with potentiometers at the clutch paddles, so we have to live with it. For example, the [GT2 steering wheel kit from 3DRap](https://www.3drap.it/product/gt2-steering-wheel-kit-by-3drap-thrustmaster-logitech-and-osw-adapters/). Potentiometers are supported by this project in two ways:
+Some wheel cases are equipped with potentiometers at the clutch paddles,
+for example,
+the [GT2 steering wheel kit from 3DRap](https://www.3drap.it/product/gt2-steering-wheel-kit-by-3drap-thrustmaster-logitech-and-osw-adapters/).
+
+Potentiometers are supported by this project in two ways:
 
 - As an analog axis for each clutch paddle, attached to an ADC pin.
 - As a replacement for switch buttons, in case you are short of ADC pins.
 
-### Substitutes for potentiometers
+### Substitutes for potentiometers: linear Hall-effect (HE) sensors
 
-Please, note that rotary potentiometers may be replaced by any other device which behalves just the same:
+**Unipolar** ratiometric linear HE sensors can directly replace a potentiometer,
+as long as it supports a 3.3V power supply.
+For example, the [DRV5056](https://www.ti.com/lit/ds/symlink/drv5056.pdf?ts=1746283703720)
+from Texas Instruments.
 
-- Some kinds of (so called) *digital potentiometers*
-- Some kinds of Hall-Effect sensors
-
-This project will work with them, but still refer to them as "potentiometers".
+Bipolar ratiometric linear HE sensor may work,
+but **not properly**,
+as they can provide a negative voltage at the output,
+while the positive voltage only reaches
+50% of the resolution of the analog-to-digital converter (ADC),
+more or less.
 
 ## Directional pads (DPADs) and 4-way joysticks
 
-They are just 4 (sometimes 8) push buttons arranged as a cross. Note that one and only one of them can be closed at a time, or none of them.
-Do not confuse 4-way joysticks with 2-axis joysticks, the later are just two potentiometers that drain current at all times (not suitable for this project).
+They are just 4 (sometimes 8) push buttons arranged as a cross.
+Note that one and only one of them can be closed at a time, or none of them.
+Do not confuse 4-way joysticks with 2-axis joysticks,
+the later are just two potentiometers that drain current at all times (not suitable for this project).
 DPADs are supported by this project.
 
 ## Funky switches
