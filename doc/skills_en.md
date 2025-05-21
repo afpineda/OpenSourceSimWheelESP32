@@ -9,11 +9,11 @@ Indispensable:
   This project has been successfully compiled with **version 2.3.2**.
 - Official [Arduino-ESP32 support package](https://docs.espressif.com/projects/arduino-esp32/en/latest/getting_started.html).
   Follow [this link](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html) for installation instructions.
-  This project has been successfully tested with **version 3.1.3**.
+  This project has been successfully tested with **version 3.2.0**.
 - Indispensable [Arduino libraries](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries) for this project.
   Install their dependencies as well.
   - [NimBLE-Arduino](https://www.arduino.cc/reference/en/libraries/nimble-arduino/).
-    This project has been successfully tested with **version 2.2.1**.
+    This project has been successfully tested with **version 2.3.0**.
     Any version prior to version 2.2.0 will not work.
 - [Powershell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.2).
   Already installed in Windows.
