@@ -73,15 +73,15 @@ Use this board configuration in Arduino IDE:
 Not applicable to the USB implementation.
 
 1. Reset
-2. Output must match:
+2. Output must show:
 
    ```text
-   --START--
-   *** DISCOVERING ***
+   --GO--
+   (Waiting for connection)
    ```
 
 3. Wait for a minute or so.
-4. Output must match:
+4. Output must show:
 
    ```text
    *** POWER OFF ***
@@ -94,8 +94,8 @@ Not applicable to the USB implementation.
 2. Output must match:
 
    ```text
-   --START--
-   *** DISCOVERING ***
+   --GO--
+   (Waiting for connection)
    ```
 
 3. Before a minute elapses, pair and connect with the device using the Bluetooth controls in your computer.
@@ -152,7 +152,7 @@ You should see continuous report lines starting with `RD 01`.
 Ignore them. Click on `Clear` from time to time.
 
 **Just check there are no error messages** in *SimpleHidWriter*.
-The behaviour of these HID reports is not part of this tests.
+The behavior of these HID reports is not part of this tests.
 That is the subject of another automated test.
 
 1. Enter `02` at field `ReportID`.

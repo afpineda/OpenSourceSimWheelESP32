@@ -121,7 +121,7 @@ void commonHidStart()
         if ((_factoryVID == TEST_HARDWARE_ID) && (_factoryPID == TEST_HARDWARE_ID))
         {
             // For testing, do not load the custom hardware ID
-            customVID = BLE_PRODUCT_ID;
+            customVID = BLE_VENDOR_ID;
             customPID = BLE_PRODUCT_ID;
         }
         else
