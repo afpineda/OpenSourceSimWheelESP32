@@ -93,7 +93,8 @@ LEDStrip::LEDStrip(
             .invert_out = 0,
             .with_dma = 0,
             .io_loop_back = 0,
-            .io_od_mode = 0}};
+            .io_od_mode = 0,
+            .allow_pd = 0}};
     if (useLevelShift)
     {
         tx_config.flags.io_od_mode = 1;

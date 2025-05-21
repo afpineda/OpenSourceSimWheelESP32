@@ -254,7 +254,9 @@ int internals::hal::gpio::getADCreading(ADC_GPIO pin, int sampleCount)
         adc_oneshot_unit_init_cfg_t unitCfg =
             {
                 .unit_id = adc_unit,
-                .ulp_mode = ADC_ULP_MODE_DISABLE,
+                // From ESP-IDF doc: If set to 0, the driver will fall back to using a default clock source
+                .clk_src = static_cast<adc_oneshot_clk_src_t>(0),
+                .ulp_mode = ADC_ULP_MODE_DISABLE
             };
         adc_oneshot_chan_cfg_t channelCfg =
             {

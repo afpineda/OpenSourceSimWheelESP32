@@ -118,7 +118,7 @@ void enterDeepSleep()
 #else
         // NOTE: NOT TESTED
         ESP_ERROR_CHECK(esp_deep_sleep_enable_gpio_wakeup(
-            BITMAP(_wakeupPin),
+            (1ULL << _wakeupPin),
             ESP_GPIO_WAKEUP_GPIO_LOW));
 #endif
     } // else reset is required for wake up
