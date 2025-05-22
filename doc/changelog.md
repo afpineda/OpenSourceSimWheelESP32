@@ -1,5 +1,15 @@
 # Change log
 
+## 7.1.3
+
+- External dependencies have been updated and tested:
+  - Arduino-ESP32 support package: version **3.2.0**
+  - NimBLE-Arduino: version **2.3.0**
+- Development dependencies have been updated and tested:
+  - Arduino IDE: version **2.3.6**
+  - Arduino CLI (optional): version **1.2.2**
+- Minor documentation changes.
+
 ## 7.1.2
 
 - Button matrices configured for negative logic,
@@ -114,7 +124,7 @@
 ## 6.11.0
 
 - For better host-side detection of rotation events,
-  the behaviour of rotary encoders has been improved.
+  the behavior of rotary encoders has been improved.
 - The default *pulse width* of the rotary encoders
   has been increased to 100 ms pressed and 100 ms released.
 - The *pulse width* of all encoders can now be set as a time multiplier

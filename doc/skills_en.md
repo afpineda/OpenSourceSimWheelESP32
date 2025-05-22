@@ -6,7 +6,7 @@ Indispensable:
 
 - [Arduino IDE](https://www.arduino.cc/en/software).
   Choose a stable release and follow instructions.
-  This project has been successfully compiled with **version 2.3.2**.
+  This project has been successfully compiled with **version 2.3.6**.
 - Official [Arduino-ESP32 support package](https://docs.espressif.com/projects/arduino-esp32/en/latest/getting_started.html).
   Follow [this link](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html) for installation instructions.
   This project has been successfully tested with **version 3.2.0**.
