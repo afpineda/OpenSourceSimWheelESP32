@@ -207,6 +207,8 @@ classDiagram
 
 ### Hardware inputs
 
+Each box represents a C++ class.
+
 ```mermaid
 classDiagram
     class I2CInput{
@@ -229,6 +231,8 @@ classDiagram
 [Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNp9klFLwzAQx79KiS-KG-hUJsUX7ab0oTi2N-nL0V7bQJqU5AIbs9_dLG2lU9a8JPe_3x3hf3dkmcqRhSwTYMyKQ6mhTmXgjleCeBHFsrF07MQguCqRPjbxpyEgvL7p5HZcsuIlJxDnZbcaIf-Dj8Hg5Xs-D94skZIJkOZ7L18CXyUIVSZWEG8E7lFP0ruKF7TFkhtCbSbRrSLQh7U82TLdtFe6L1-CBvu6_BB5R3x-E70_Py0fuyZmEk2izeLh7n75n-3M6PGRPZGwlFVeZzNWo66B527WfigpowprTFnonjkW4LxMWSpbh4IltTvIjIWkLc6YbXI37H47zsV1zknpQdPKlhULCxDGRQ3IL6Xq3xg9m_QLd7raH9Yk0-4)
 
 ### Internal services
+
+Each box represents a subsystem (not a class).
 
 ```mermaid
 classDiagram
@@ -273,9 +277,10 @@ classDiagram
     any -- notify --> SaveSettings -- subscribed --> storage
     any -- notify --> LoadSettings -- subscribed --> storage
     storage -- notify --> OnSettingsSaved
+    OnSettingsSaved -- subscribed --> ui
   ```
 
-  [Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNqFUk1vwyAM_SvI5_YP5DDtsN1aTVpuExc3mAQpQASmVRTlv5ekTZd9ROXk5_eeMcYDVF4RFCCEbv2lajCwOHxKJ_L5cCVn_DqI2GBHhYiMyiQrxht_8KhKYjaujpuiEs_0VJRvuksmudrUoeu_uS74Ki6MNsFeMJDY74XzbHSfo5flCVM2plOsgjmRmplc6lHzl2nd8j_OyD5gTVvu9VSeue_gb9PraUgHO7AULBqVf2qYrBK4IUsSihwq0phaliDdmKWY2Je9q6DgkGgHqVPI9GawDmh_Jt-VyR0sueBT3UChsY0Zdei-vLcPTLP2eFuXeWvGK9BfwN8)
+  [Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNqFUslugzAQ_RVrziQiAprgQ1Wp7S1VpXKruDh4AEvBRl6aUsS_15ClaZsoPs3y3pvF00OhOAIFQsqt2hU105as33JJ_HuVmfX-Q09MzVqkxFjGhWvIsM-vFeMZWitkZa6CMvaBN0G-0gEywvlVHJPdT67VqjDHTCl0s2MayWxGpLKi7Lx1fxxhjBq3MYUWG-RTxkudNP-Qzlu-wDRWaVbhNfb5Vm6xD87_ps-3cXFFF5SdyCUE0KBumOD-T_uRmYOtscEcqDc5lsxtbQ65HDyUOauyThZArXYYgGs5s_gkWKVZ8zv4zIXv9RjTylU10JJtjfdaJt-VOhFwgr7s72o6L09AyVE_Kict0GSiAO3hE2iazqNlnMarJIpWYZSmAXRA4zCdJ-ndIknCZRQukjAeAviaioTz1dIrVHqccaw4fAPImedh)
 
 - Battery level and shutdown:
 
