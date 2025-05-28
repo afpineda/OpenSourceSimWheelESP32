@@ -16,7 +16,7 @@ Indispensable:
     This project has been successfully tested with **version 2.3.0**.
     Any version prior to version 2.2.0 will not work.
 - [Powershell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.2).
-  Already installed in Windows.
+  Already installed in Windows. Not strictly needed in Linux.
 
 > [!IMPORTANT]
 > This project is not guaranteed to work with untested version dependencies.
@@ -33,22 +33,30 @@ Recommended:
 
 - [DIY layout creator](https://bancika.github.io/diy-layout-creator/).
   [Alternate link](https://github.com/bancika/diy-layout-creator/releases).
+  This is a design tool for the physical layout of hand made circuit boards.
+
 - Any joystick test application able to display 128 buttons:
+
   - [Planet pointy's joystick test application](http://www.planetpointy.co.uk/joystick-test-application/) (for Windows 10).
     **Does not work in Windows 11**.
-  - [pygame-joystick-test](https://github.com/denilsonsa/pygame-joystick-test). Requires Python.
+
+  - [pygame-joystick-test](https://github.com/denilsonsa/pygame-joystick-test).
+    Works in any operating system, but requires Python.
+
   - [Multi-joystick tester](https://github.com/EDDiscovery/MultiJoyStickTest/releases/tag/Release_1_2_0).
     Works in Windows 11.
     Best choice for now, but be aware
     that this app may miss some rotation events from rotary encoders
-    due to its own polling interval.
+    due to its own polling interval (not a firmware's fault).
 
 - [Visual Studio Code](https://code.visualstudio.com/), as an alternative to Arduino IDE.
   Requires [Arduino Community Edition for VSCode](https://marketplace.visualstudio.com/items?itemName=vscode-arduino.vscode-arduino-community).
   Installable from VSCode itself.
   **Note**: The official Arduino extension was deprecated.
+
 - SimpleHIDWrite.exe: available at [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm).
   There is a modern clone here: [benbaker76/SimpleHIDWrite](https://github.com/benbaker76/SimpleHIDWrite/tree/master/BIN).
+  This tool is used in this project to test custom HID reports.
 
 ## Hardware tools
 
@@ -74,7 +82,7 @@ Indispensable:
 
 - Basic soldering for electronics.
 - Compile, upload and run Arduino's *sketches* using *Arduino IDE*.
-- Run powershell scripts.
+- Run powershell scripts (for Windows users only).
 
 Recommended:
 
@@ -82,5 +90,3 @@ Recommended:
 - Basics of switches, resistors, diodes and transistors.
 - Role of [pull-up](https://en.wikipedia.org/wiki/Pull-up_resistor) and pull-down resistors.
 - Basics of C and C++ programming languages.
-- [Digital circuits](https://en.wikipedia.org/wiki/Digital_electronics).
-- [System on a chip](https://en.wikipedia.org/wiki/System_on_a_chip) development boards (Arduino-compatible).
