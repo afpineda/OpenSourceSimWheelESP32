@@ -1,5 +1,10 @@
 # Change log
 
+## 7.2.0
+
+- A new notification has been implemented for the user interface
+  when user settings are saved to flash memory.
+
 ## 7.1.3
 
 - External dependencies have been updated and tested:
