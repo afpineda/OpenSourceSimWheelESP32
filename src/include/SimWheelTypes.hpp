@@ -1191,6 +1191,12 @@ public:
     virtual void onLowBattery() {};
 
     /**
+     * @brief Notify that user settings have been saved to flash memory
+     *
+     */
+    virtual void onSaveSettings() {};
+
+    /**
      * @brief Cut power to the UI hardware.
      *
      * @note This is a command, not a notification.
@@ -1215,6 +1221,7 @@ private:
     virtual void onConnected() override;
     virtual void onBLEdiscovering() override;
     virtual void onLowBattery() override;
+    virtual void onSaveSettings() override;
     virtual void serveSingleFrame(uint32_t elapsedMs) override {};
     virtual uint8_t getMaxFPS() override { return 0; }
     virtual void shutdown() override {};
@@ -1318,6 +1325,12 @@ public:
      * @note Not called in the USB implementation.
      */
     virtual void pixelControl_OnBLEdiscovering();
+
+    /**
+     * @brief Notify that user settings have been saved to flash memory
+     *
+     */
+    virtual void pixelControl_OnSaveSettings();
 
     /**
      * @brief Notify low battery.

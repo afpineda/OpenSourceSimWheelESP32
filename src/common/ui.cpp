@@ -90,6 +90,7 @@ static std::atomic<size_t> shutdownCounter;
 #define EVENT_CONNECTED 2
 #define EVENT_BLE_DISCOVERING 3
 #define EVENT_LOW_BATTERY 4
+#define EVENT_SAVE_SETTINGS 5
 #define EVENT_SHUTDOWN 255
 
 //-------------------------------------------------------------------
@@ -145,6 +146,9 @@ void notificationDaemonLoop(void *param)
                     break;
                 case EVENT_LOW_BATTERY:
                     eventQueue->ui->onLowBattery();
+                    break;
+                case EVENT_SAVE_SETTINGS:
+                    eventQueue->ui->onSaveSettings();
                     break;
                 case EVENT_SHUTDOWN:
                     shutdownRequest = true;
@@ -214,6 +218,12 @@ void notify_lowBattery()
 {
     for (auto q : _ui_queues)
         q->enqueue(EVENT_LOW_BATTERY);
+}
+
+void notify_saved()
+{
+    for (auto q : _ui_queues)
+        q->enqueue(EVENT_SAVE_SETTINGS);
 }
 
 void notify_shutdown()
@@ -309,6 +319,7 @@ void internals::ui::getReady()
     OnConnected::subscribe(notify_connected);
     OnDisconnected::subscribe(notify_BLEdiscovering);
     OnLowBattery::subscribe(notify_lowBattery);
+    OnSettingsSaved::subscribe(notify_saved);
     OnShutdown::subscribe(notify_shutdown);
 
     // Inject the service class

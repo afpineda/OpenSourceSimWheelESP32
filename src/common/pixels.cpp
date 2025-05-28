@@ -329,3 +329,35 @@ void PixelControlNotification::pixelControl_OnLowBattery()
     internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 0, 0, 0);
     internals::pixels::show();
 }
+
+//---------------------------------------------------------------
+
+void PixelControlNotification::onSaveSettings()
+{
+    if (pixelMutex.try_lock_for(WAIT_MS))
+    {
+        pixelControl_OnSaveSettings();
+        pixelMutex.unlock();
+    }
+}
+
+void PixelControlNotification::pixelControl_OnSaveSettings()
+{
+    // All green
+    internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 0, 85, 0);
+    internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 0, 85, 0);
+    internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 0, 85, 0);
+    internals::pixels::show();
+    DELAY_MS(150);
+    // All off
+    internals::pixels::reset();
+    DELAY_MS(150);
+    // All green
+    internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 0, 85, 0);
+    internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 0, 85, 0);
+    internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 0, 85, 0);
+    internals::pixels::show();
+    DELAY_MS(150);
+    // All off
+    internals::pixels::reset();
+}

@@ -59,12 +59,13 @@ ui::addPixelControlNotifications();
 
 Events are notified in this way:
 
-- *Startup*: all LEDs light up white for one second.
-- *BLE advertising*: all LEDs light up purple until the host computer is connected.
-- *Connection*: all LEDS will go out.
-- *Low battery*: all LEDs will show a red and blue animation for one second.
+- *Startup*: all the LEDs light up white for one second.
+- *BLE advertising*: all the LEDs light up purple until the host computer is connected.
+- *Connection*: all the LEDs will go out.
+- *Low battery*: all the LEDs will show a red and blue animation for one second.
 - *Bite point calibration*:
-  The telemetry segment (exclusively) will briefly show a yellow bar.
+  the telemetry segment (exclusively) will briefly show a yellow bar.
+- *Saved settings*: all the LEDs will flash green twice.
 
 ## Custom event notifications
 
@@ -78,6 +79,7 @@ you can customize them:
    - `pixelControl_OnConnected()`
    - `pixelControl_OnBLEdiscovering()`
    - `pixelControl_OnLowBattery()`
+   - `pixelControl_OnSaveSettings()`
 3. Use the following inherited methods to display custom colors:
    - `set()`
    - `setAll()`

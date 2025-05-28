@@ -73,6 +73,7 @@ void loop()
         {
             OnLowBattery::notify();
             OnBitePoint::notify(CLUTCH_DEFAULT_VALUE);
+            OnSettingsSaved::notify();
         }
     }
     delay(250);

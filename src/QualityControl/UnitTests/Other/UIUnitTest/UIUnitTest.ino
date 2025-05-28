@@ -34,6 +34,7 @@ public:
     bool BLEdiscovering = false;
     bool lowBatt = false;
     bool shutdownWitness = false;
+    bool saved = false;
     uint64_t frameCount = 0;
     uint64_t telemetryCount = 0;
 
@@ -62,6 +63,10 @@ public:
     {
         lowBatt = true;
     }
+    virtual void onSaveSettings() override
+    {
+        saved = true;
+    }
     virtual void onTelemetryData(const TelemetryData *data) override
     {
         telemetryCount++;
@@ -69,7 +74,7 @@ public:
     virtual void serveSingleFrame(uint32_t elapsedMs) override
     {
         frameCount++;
-    };
+    }
     virtual uint8_t getMaxFPS() override { return 5; }
     virtual uint16_t getStackSize() { return 2048; }
     virtual void shutdown() override
@@ -96,6 +101,8 @@ void check_instance(const TestUI &instance)
         Serial.println("ERROR: connection event failed");
     if (!instance.lowBatt)
         Serial.println("ERROR: low battery event failed");
+    if (!instance.saved)
+        Serial.println("ERROR: save settings event failed");
     if (instance.frameCount == 0)
         Serial.println("ERROR: frame server failed");
     if (instance.telemetryCount != 1)
@@ -124,6 +131,7 @@ void setup()
     telemetry::data.frameID = 2;
     OnConnected::notify();
     OnDisconnected::notify();
+    OnSettingsSaved::notify();
     DELAY_MS(2000);
     check_instance(test1);
     check_instance(test2);

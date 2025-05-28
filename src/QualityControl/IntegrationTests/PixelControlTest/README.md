@@ -58,10 +58,11 @@ In the test computer:
 18. Type "x" in the serial monitor and press `enter`.
 19. All pixels must show an animated blue-red pattern for a second.
 20. For a short time, the first 4 pixels must light up yellow, and the rest must go out.
-21. All pixels must go out.
-22. Type "s" in the serial monitor and press `enter`.
-23. Type "x" in the serial monitor and press `enter`.
-24. **No pixel should light up**.
+21. All pixels must blink green twice briefly.
+22. All pixels must go out.
+23. Type "s" in the serial monitor and press `enter`.
+24. Type "x" in the serial monitor and press `enter`.
+25. **No pixel should light up**.
 
 If anything is missed, a reset is required
 before restarting this test procedure.
