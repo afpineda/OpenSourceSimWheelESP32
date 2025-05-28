@@ -177,9 +177,10 @@ Three kinds of dependency injections are found in this project:
 Only **most relevant information** is shown below.
 A solid arrow means a static dependency.
 A dotted arrow means a dynamic dependency through a service class.
-Each box represents a subsystem (not a class).
 
 ### Core
+
+Each box represents a subsystem (not a class).
 
 ```mermaid
 classDiagram
