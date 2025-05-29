@@ -672,8 +672,6 @@ void simWheelSetup()
 
 ### Rotary coded switch
 
-Note that rotary coded switches **were not tested**.
-
 1. Declare each rotary switch using the class `RotaryCodedSwitch`.
 2. Assign an input number to each switch position using the array syntax.
    Each position is indexed starting with zero.

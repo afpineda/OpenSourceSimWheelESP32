@@ -93,8 +93,8 @@ but the outputs are binary encoded in order to **save on pin requirements**.
 A N-position coded rotary switch requires $\sqrt{N}$ pins.
 See some of them at [mouser.com](https://mou.sr/4dzSt5o).
 
-This project supports rotary coded switches.
-However, they have not been tested.
+This project supports rotary coded switches using "BCD" output code,
+complementary or not.
 
 ### A note about *"mode selectors"*
 
