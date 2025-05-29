@@ -223,13 +223,14 @@ classDiagram
     DigitalInput <|-- ShiftRegistersInput
     DigitalInput <|-- RotaryEncoderInput
     DigitalInput <|-- DigitalButton
+    DigitalInput <|-- RotaryCodedSwitchInput
     DigitalInput <|-- I2CInput
     I2CInput     <|-- PCF8574ButtonsInput
     I2CInput     <|-- MCP23017ButtonsInput
     AnalogInput  <|-- AnalogClutchInput
 ```
 
-[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNp9klFLwzAQx79KiS-KG-hUJsUX7ab0oTi2N-nL0V7bQJqU5AIbs9_dLG2lU9a8JPe_3x3hf3dkmcqRhSwTYMyKQ6mhTmXgjleCeBHFsrF07MQguCqRPjbxpyEgvL7p5HZcsuIlJxDnZbcaIf-Dj8Hg5Xs-D94skZIJkOZ7L18CXyUIVSZWEG8E7lFP0ruKF7TFkhtCbSbRrSLQh7U82TLdtFe6L1-CBvu6_BB5R3x-E70_Py0fuyZmEk2izeLh7n75n-3M6PGRPZGwlFVeZzNWo66B527WfigpowprTFnonjkW4LxMWSpbh4IltTvIjIWkLc6YbXI37H47zsV1zknpQdPKlhULCxDGRQ3IL6Xq3xg9m_QLd7raH9Yk0-4)
+[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNp9kl9vgjAUxb8KuXvZMjQoMP5kLxtuiw9kRt8WXhqp2ARbUm4zneO7rxZZcIvwUjj5nR56eo-wFjmFGNYlqesZI4Uku4xb-jGKNZ8mc14pPLaiZd0UFN8W8_caCdLbu1Zu-pYZKxiS8tJ2LynJ_-B90Hr8Ho2sZ4UoeEpQsr2Rr4FPnJSiSFWJrCrpnspBerVlG1zSgtVIZT2ILgUSeXjhp1qGNz0r7S9fg7r6huMSHZavPhmutz2685r-DL1IXkM_8NrIehBNk8XUdSbBf7at7oz3ykxK1eWDDTsqd4TlejLMFWaAW7qjGcT6NacbopvPIOONRolCsTrwNcQoFbVBVbkejfMsXYovOUMhO00KVWwh3pCy1l8V4R9C_BqoQdPzdJ4WbaBc30oiFEeIfWOB-Ah7iKNo7AZe5IW-64aOG0U2HCD2nGjsRw8T33cCXYbveI0NXybEGYeB3qGQpzOeEpsfJRj8-w)
 
 ### Internal services
 

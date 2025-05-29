@@ -2,8 +2,11 @@
 
 ## 7.2.0
 
-- A new notification has been implemented for the user interface
-  when user settings are saved to flash memory.
+- A new notification is triggered whenever a user setting is saved to memory.
+  The 'Pixel control' and 'PCF8574-driven rev lights' features
+  implement a handler for this notification.
+- Support has now been added for rotary coded switches with a BCD output.
+- Minor documentation updates and errata fixes.
 
 ## 7.1.3
 
