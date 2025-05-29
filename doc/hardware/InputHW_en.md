@@ -136,12 +136,8 @@ as long as it supports a 3.3V power supply.
 For example, the [DRV5056](https://www.ti.com/lit/ds/symlink/drv5056.pdf?ts=1746283703720)
 from Texas Instruments.
 
-Bipolar ratiometric linear HE sensor may work,
-but **not properly**,
-as they can provide a negative voltage at the output,
-while the positive voltage only reaches
-50% of the resolution of the analog-to-digital converter (ADC),
-more or less.
+Bipolar ratiometric linear HE sensors may work, but **not properly**,
+as only half of the output voltage corresponds to the detection of one pole of the magnet.
 
 ## Directional pads (DPADs) and 4-way joysticks
 
