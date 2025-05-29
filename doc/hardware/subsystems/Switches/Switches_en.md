@@ -11,13 +11,15 @@ including (when required):
 - Directional pads, directional joysticks and funky switches
   (except for rotation, which behaves like any other
   [rotary encoder](../RelativeRotaryEncoder/RelativeRotaryEncoder_en.md)).
+- Rotary coded switches.
 
 And also **potentiometers** as digital clutch paddles, in case you are short of GPIO pins.
 If not, potentiometers as
 [analog clutch paddles](../AnalogClutchPaddles/AnalogClutchPaddles_en.md)
 are a better option.
 
-There are several, non-exclusive, **implementation** choices:
+Except for rotary coded switches,
+there are several, non-exclusive, **implementation** choices:
 
 - Button matrix.
 - Analog Multiplexers.
@@ -374,6 +376,25 @@ Attach the other terminal to `GND`.
 An internal pull-up resistor is required since we are using negative logic.
 If not available, add an external pull-up resistor.
 
+## Implementation of rotary coded switches
+
+There is no circuit involved here, just wiring.
+
+There is a *common pole* pin in your rotary coded switch,
+which is usually tagged as `C`.
+Sometimes this pin is duplicated, but the two pins are electrically connected.
+You can therefore use either pin.
+
+If you attach `C` to `GND`, you are said to be using *complementary code*.
+This is the recommended way and what the firmware expects by default.
+However, you can also connect `C` to `3V3`.
+
+The position of the rotary switch is encoded in binary ("BCD" output code).
+Each bit is assigned to a pin, typically labelled `1`, `2`, `4`, `8` or `16`,
+depending on how many bits are used for encoding.
+'1' is always the least significant bit.
+Attach those pins to input-capable GPIO pins on your DevKit board.
+
 ## Firmware customization
 
 Customization takes place at the body of `simWheelSetup()` inside
@@ -640,7 +661,7 @@ Place a call to `inputs::addButton()`:
 
 For example:
 
-```c
+```c++
 void simWheelSetup()
 {
    ...
@@ -648,3 +669,51 @@ void simWheelSetup()
    ...
 }
 ```
+
+### Rotary coded switch
+
+Note that rotary coded switches **were not tested**.
+
+1. Declare each rotary switch using the class `RotaryCodedSwitch`.
+2. Assign an input number to each switch position using the array syntax.
+   Each position is indexed starting with zero.
+3. Place a call to `inputs::addRotaryCodedSwitch()` and pass the following parameters
+   from left to right:
+
+   1. The `RotaryCodedSwitch` instance.
+   2. GPIO pin attached to `1`.
+   3. GPIO pin attached to `2`.
+   4. GPIO pin attached to `4`.
+   5. GPIO pin attached to `8` (omit this parameter if the pin does not exist).
+   6. GPIO pin attached to `16` (omit this parameter if the pin does not exist).
+   7. Optionally, `true` to use *complemetary code* (the default), `false` otherwise.
+
+For example,
+let's say you have a 12-position binary-coded rotary switch,
+having `C`, `1`, `2`, `4` and `8` pins,
+and `C` attached to `GND`:
+
+```c++
+void simWheelSetup()
+{
+   ...
+   RotaryCodedSwitch sw;
+   sw[0] = 10;
+   sw[1] = 11;
+   sw[2] = 12;
+   sw[3] = 13;
+   sw[4] = 14;
+   sw[5] = 15;
+   sw[6] = 16;
+   sw[7] = 17;
+   sw[8] = 18;
+   sw[9] = 19;
+   sw[10] = 20;
+   sw[11] = 21;
+   inputs::addRotaryCodedSwitch(sw, GPIO_NUM_10, GPIO_NUM_11, GPIO_NUM_12, GPIO_NUM_13);
+   ...
+}
+```
+
+Where `sw[7] = 17;` means the input number `17` is assigned
+to the position index `7` in the rotary switch.

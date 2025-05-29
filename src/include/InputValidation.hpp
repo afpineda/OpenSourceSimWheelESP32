@@ -128,7 +128,7 @@ namespace internals
             {
                 uint64_t previousInputNumbers = InputNumber::booked();
                 for (auto i = chip.begin(); i != chip.end(); i++)
-                        (i->second).book();
+                    (i->second).book();
                 if (previousInputNumbers == InputNumber::booked())
                     throw empty_input_number_set("GPIO expander");
             }
@@ -150,11 +150,11 @@ namespace internals
                 ccw.book();
                 if (previousInputNumbers == InputNumber::booked())
                     throw empty_input_number_set("rotary encoder");
-                if (cw==UNSPECIFIED::VALUE)
+                if (cw == UNSPECIFIED::VALUE)
                     throw std::runtime_error("Useless rotary encoder: no input number for clockwise rotation");
-                if (ccw==UNSPECIFIED::VALUE)
+                if (ccw == UNSPECIFIED::VALUE)
                     throw std::runtime_error("Useless rotary encoder: no input number for counter-clockwise rotation");
-                if (cw==ccw)
+                if (cw == ccw)
                     throw std::runtime_error("Useless rotary encoder: same input numbers for clockwise and counter-clockwise");
             }
 
@@ -170,6 +170,32 @@ namespace internals
                 if (inputNumber == UNSPECIFIED::VALUE)
                     throw empty_input_number_set("single button");
                 inputNumber.book();
+            }
+
+            /**
+             * @brief Validate a coded rotary switch
+             *
+             * @param spec Specification of input numbers attached to the rotary switch
+             * @param inputs Collection of input pins.
+             */
+            void codedRotarySwitch(const RotaryCodedSwitch &spec, const InputGPIOCollection &inputs)
+            {
+                uint8_t pinCount = inputs.size();
+                if ((pinCount < 2) || (pinCount > 8))
+                    throw std::runtime_error("Wrong count of input pins in a coded rotary switch");
+                reserve<InputGPIO>(inputs);
+                uint8_t maxIndex = (1 << pinCount); // = 2^pinCount
+                for (RotaryCodedSwitch::const_iterator i = spec.begin(); i != spec.end(); i++)
+                {
+                    if (i->first >= maxIndex)
+                        throw std::runtime_error(
+                            "Invalid position ()" +
+                            std::to_string(i->first) +
+                            ") in a coded rotary switch. Valid range is [0," +
+                            std::to_string(maxIndex) +
+                            ")");
+                    (i->second).book();
+                }
             }
         } // namespace validate
     } // namespace inputs

@@ -272,6 +272,31 @@ private:
     void initializeMux();
 };
 
+
+//-------------------------------------------------------------------
+// Coded rotary switch
+//-------------------------------------------------------------------
+
+/**
+ * @brief Class for coded rotary switches
+ *
+ */
+class RotaryCodedSwitchInput : public DigitalInput
+{
+private:
+    InputGPIOCollection inputPins;
+    uint64_t *bitmap = nullptr;
+    bool complementaryCode;
+
+public:
+    RotaryCodedSwitchInput(
+        const RotaryCodedSwitch &spec,
+        const InputGPIOCollection &pins,
+        bool complementaryCode);
+    ~RotaryCodedSwitchInput();
+    virtual uint64_t read(uint64_t lastState) override;
+};
+
 //-------------------------------------------------------------------
 // I2C input hardware
 //-------------------------------------------------------------------

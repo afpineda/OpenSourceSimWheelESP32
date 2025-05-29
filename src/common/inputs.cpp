@@ -286,6 +286,65 @@ void inputs::add74HC165NChain(
 
 //-------------------------------------------------------------------
 
+void inputs::addRotaryCodedSwitch(
+    const RotaryCodedSwitch &spec,
+    InputGPIO pin0,
+    InputGPIO pin1,
+    InputGPIO pin2,
+    bool complementaryCode)
+{
+    InputGPIOCollection pins = {pin0, pin1, pin2};
+    internals::inputs::validate::codedRotarySwitch(spec, pins);
+#if !CD_CI
+    digitalInputsChain.push_front(
+        new RotaryCodedSwitchInput(
+            spec,
+            pins,
+            complementaryCode));
+#endif
+}
+
+void inputs::addRotaryCodedSwitch(
+    const RotaryCodedSwitch &spec,
+    InputGPIO pin0,
+    InputGPIO pin1,
+    InputGPIO pin2,
+    InputGPIO pin3,
+    bool complementaryCode)
+{
+    InputGPIOCollection pins = {pin0, pin1, pin2, pin3};
+    internals::inputs::validate::codedRotarySwitch(spec, pins);
+#if !CD_CI
+    digitalInputsChain.push_front(
+        new RotaryCodedSwitchInput(
+            spec,
+            pins,
+            complementaryCode));
+#endif
+}
+
+void inputs::addRotaryCodedSwitch(
+    const RotaryCodedSwitch &spec,
+    InputGPIO pin0,
+    InputGPIO pin1,
+    InputGPIO pin2,
+    InputGPIO pin3,
+    InputGPIO pin4,
+    bool complementaryCode)
+{
+    InputGPIOCollection pins = {pin0, pin1, pin2, pin3, pin4};
+    internals::inputs::validate::codedRotarySwitch(spec, pins);
+#if !CD_CI
+    digitalInputsChain.push_front(
+        new RotaryCodedSwitchInput(
+            spec,
+            pins,
+            complementaryCode));
+#endif
+}
+
+//-------------------------------------------------------------------
+
 void inputs::setAnalogClutchPaddles(
     ADC_GPIO leftClutchPin,
     ADC_GPIO rightClutchPin)

@@ -119,6 +119,26 @@ and repeated every few seconds.
     Beware of bit order: `A0` is the least significant bit.
   - Use a full I2C address instead.
 
+- *Invalid position (...) in a coded rotary switch. Valid range is [0,...)*
+
+  Either:
+
+  - You specified a position index out of the range of available positions
+    in a coded rotary switch.
+  - You are missing one or more input pins.
+
+  For example:
+
+  ```c++
+  RotaryCodedSwitch rotsw;
+  ...
+  rotsw[8] = 16;
+  inputs::addRotaryCodedSwitch(rotsw, GPIO_NUM_3, GPIO_NUM_4, GPIO_NUM_5);
+  ```
+
+  Since there are 3 input pins, your rotary switch has 8 positions
+  in the range [0,7]. Thus, `rotsw[8]` is out of range.
+
 When troubleshooting I2C error messages,
 the [I2C probe](../src/Firmware/I2C_probe/I2C_probe.ino) firmware
 will be handy.
@@ -155,6 +175,7 @@ Please, open an
 - Unable to create polling task
 - Unknown pixel driver in LED strip
 - Unable to create UI daemon
+- Wrong count of input pins in a coded rotary switch
 
 ## Non-error messages
 

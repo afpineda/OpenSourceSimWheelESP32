@@ -99,7 +99,10 @@
         "syncstream": "cpp",
         "text_encoding": "cpp",
         "typeindex": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "rope": "cpp",
+        "slist": "cpp"
     },
-    "C_Cpp.default.compilerPath": ""
+    "C_Cpp.default.compilerPath": "",
+    "cSpell.enabled": true
 }

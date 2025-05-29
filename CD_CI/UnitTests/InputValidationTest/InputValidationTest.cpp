@@ -254,6 +254,66 @@ void ButtonTest()
     }
 }
 
+void RotaryCodedSwitchTest()
+{
+    std::cout << "- Coded rotary switch -" << std::endl;
+    GPIO::clearReservations();
+    InputNumber::clearBook();
+
+    RotaryCodedSwitch sw1;
+    sw1[0] = 0;
+    sw1[7] = 1;
+    validate::codedRotarySwitch(sw1, {1, 2, 3});
+
+    GPIO::clearReservations();
+    InputNumber::clearBook();
+    sw1[8] = 2;
+    try
+    {
+        validate::codedRotarySwitch(sw1, {1, 2, 3});
+        assert(false && "Invalid switch position accepted");
+    }
+    catch (std::runtime_error)
+    {
+    }
+
+    GPIO::clearReservations();
+    InputNumber::clearBook();
+    RotaryCodedSwitch sw2;
+    sw2[0] = 5;
+    sw2[1] = 6;
+    sw2[2] = 8;
+    sw2[3] = 9;
+    validate::codedRotarySwitch(sw2, {1, 2});
+    assert((InputNumber::booked() == 0b1101100000) && "Wrong booked I.N.");
+
+    GPIO::clearReservations();
+    InputNumber::clearBook();
+    RotaryCodedSwitch sw3;
+    try
+    {
+        validate::codedRotarySwitch(sw3, {});
+        assert(false && "Empty input pin collection accepted");
+    }
+    catch (std::runtime_error)
+    {
+    }
+
+    try
+    {
+        validate::codedRotarySwitch(sw3, {1, 2, 3, 4, 5, 6, 7, 8, 9});
+        assert(false && "Too large input pin collection accepted");
+    }
+    catch (std::runtime_error)
+    {
+    }
+
+    validate::codedRotarySwitch(sw3, {1,2,3});
+    checkReservation(1,"GPIO pin 1 not reserved");
+    checkReservation(2,"GPIO pin 2 not reserved");
+    checkReservation(3,"GPIO pin 3 not reserved");
+}
+
 int main()
 {
     BtnMtxTest();
@@ -262,4 +322,5 @@ int main()
     GPIOExpanderTest();
     RotaryEncoderTest();
     ButtonTest();
+    RotaryCodedSwitchTest();
 }

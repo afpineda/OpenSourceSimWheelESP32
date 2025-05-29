@@ -67,10 +67,20 @@ void ShiftRegisterTest()
     ShiftRegisterChain chain = { firstSR, secondSR, thirdSR };
 }
 
+void RotaryCodedSwitchTest()
+{
+    RotaryCodedSwitch sw;
+    sw[0] = 5;
+    sw[1] = 6;
+    sw[2] = 8;
+    sw[3] = 9;
+}
+
 int main()
 {
     BtnMtxTest();
     MuxTest();
     ExpanderTest();
     ShiftRegisterTest();
+    RotaryCodedSwitchTest();
 }

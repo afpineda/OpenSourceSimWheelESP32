@@ -272,7 +272,7 @@ typedef GPIOExpanderChip<MCP23017Pin> MCP23017Expander;
 typedef GPIOExpanderChip<PCF8574Pin> PCF8574Expander;
 
 //-------------------------------------------------------------------
-// PISO Shift registers
+// Input specification: PISO Shift registers
 //-------------------------------------------------------------------
 
 /**
@@ -307,3 +307,13 @@ typedef std::map<SR8Pin, InputNumber> ShiftRegisterChip;
  *       the SER pin.
  */
 typedef std::vector<ShiftRegisterChip> ShiftRegisterChain;
+
+//-------------------------------------------------------------------
+// Input specification: coded rotary switch
+//-------------------------------------------------------------------
+
+/**
+ * @brief Coded rotary switch
+ *
+ */
+typedef std::map<uint8_t, InputNumber> RotaryCodedSwitch;

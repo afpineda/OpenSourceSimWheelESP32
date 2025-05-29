@@ -777,6 +777,63 @@ uint64_t ShiftRegistersInput::read(uint64_t lastState)
 }
 
 //-------------------------------------------------------------------
+// Coded rotary switch
+//-------------------------------------------------------------------
+
+RotaryCodedSwitchInput::RotaryCodedSwitchInput(
+    const RotaryCodedSwitch &spec,
+    const InputGPIOCollection &pins,
+    bool complementaryCode) : DigitalInput()
+{
+    // Copy parameters to private fields
+    inputPins = pins;
+
+    // Initialize input GPIO pins
+    for (auto pin : pins)
+        internals::hal::gpio::forInput(pin, !complementaryCode, complementaryCode);
+
+    // Initialize input bitmap
+    uint8_t positionCount = (1 << pins.size());
+    bitmap = (uint64_t *)malloc(sizeof(uint64_t) * positionCount);
+    for (int i = 0; i < positionCount; i++)
+        bitmap[i] = 0ULL;
+
+    // Copy the input specification to the input bitmap
+    for (auto pair : spec)
+    {
+        uint64_t inputBmp = (1ULL << pair.second);
+        addToMask(inputBmp);
+        uint8_t index;
+        if (complementaryCode)
+            index = ~(pair.first) & (positionCount - 1);
+        else
+            index = pair.first;
+        bitmap[index] = inputBmp;
+    }
+}
+
+//-------------------------------------------------------------------
+
+RotaryCodedSwitchInput::~RotaryCodedSwitchInput()
+{
+    if (bitmap != nullptr)
+        free(bitmap);
+}
+
+//-------------------------------------------------------------------
+
+uint64_t RotaryCodedSwitchInput::read(uint64_t lastState)
+{
+    uint8_t switchPosition = 0;
+    for (uint8_t pinIndex = 0; pinIndex < inputPins.size(); pinIndex++)
+    {
+        if (GPIO_GET_LEVEL(inputPins[pinIndex]))
+            switchPosition |= (1 << pinIndex);
+    }
+    return bitmap[switchPosition];
+}
+
+//-------------------------------------------------------------------
 // Analog clutch paddle
 //-------------------------------------------------------------------
 

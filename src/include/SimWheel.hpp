@@ -183,6 +183,60 @@ namespace inputs
         InputNumber SER_inputNumber = UNSPECIFIED::VALUE);
 
     /**
+     * @brief Add a binary coded rotary switch up to 8 positions
+     *
+     * @param spec Specification of input numbers for each switch position
+     * @param pin0 Input pin for the least-significant bit
+     * @param pin1 Input pin
+     * @param pin2 Input pin for the most-significant bit
+     * @param complementaryCode Set to true if your rotary switch uses complementary binary code
+     */
+    void addRotaryCodedSwitch(
+        const RotaryCodedSwitch &spec,
+        InputGPIO pin0,
+        InputGPIO pin1,
+        InputGPIO pin2,
+        bool complementaryCode = true);
+
+    /**
+     * @brief Add a binary coded rotary switch up to 16 positions
+     *
+     * @param spec Specification of input numbers for each switch position
+     * @param pin0 Input pin for the least-significant bit
+     * @param pin1 Input pin
+     * @param pin2 Input pin
+     * @param pin3 Input pin for the most-significant bit
+     * @param complementaryCode Set to true if your rotary switch uses complementary binary code
+     */
+    void addRotaryCodedSwitch(
+        const RotaryCodedSwitch &spec,
+        InputGPIO pin0,
+        InputGPIO pin1,
+        InputGPIO pin2,
+        InputGPIO pin3,
+        bool complementaryCode = true);
+
+    /**
+     * @brief Add a binary coded rotary switch up to 32 positions
+     *
+     * @param spec Specification of input numbers for each switch position
+     * @param pin0 Input pin for the least-significant bit
+     * @param pin1 Input pin
+     * @param pin2 Input pin
+     * @param pin3 Input pin
+     * @param pin4 Input pin for the most-significant bit
+     * @param complementaryCode Set to true if your rotary switch uses complementary binary code
+     */
+    void addRotaryCodedSwitch(
+        const RotaryCodedSwitch &spec,
+        InputGPIO pin0,
+        InputGPIO pin1,
+        InputGPIO pin2,
+        InputGPIO pin3,
+        InputGPIO pin4,
+        bool complementaryCode = true);
+
+    /**
      * @brief Initialize an I2C bus to certain pins
      *
      * @param sclPin SCL or SCK pin

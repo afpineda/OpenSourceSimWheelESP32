@@ -86,14 +86,15 @@ However, the simulator will never know what such a position is at first.
 In this sense, there is **no specific support** to absolute rotary switches in this project.
 They do work, but they are not recommended.
 
-### Coded rotary switches
+### Rotary coded switches
 
 This is an absolute rotary switch (non-momentary),
 but the outputs are binary encoded in order to **save on pin requirements**.
 A N-position coded rotary switch requires $\sqrt{N}$ pins.
-See some of them at [mouser.com](https://mou.sr/3FdQIyf).
+See some of them at [mouser.com](https://mou.sr/4dzSt5o).
 
-This project does not support coded rotary switches right now.
+This project supports rotary coded switches.
+However, they have not been tested.
 
 ### A note about *"mode selectors"*
 
