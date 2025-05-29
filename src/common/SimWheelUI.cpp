@@ -284,6 +284,42 @@ void PCF8574RevLights::onBitePoint(uint8_t bitePoint)
     timer = 0;
 }
 
+void PCF8574RevLights::onLowBattery()
+{
+    driver->setState(0b01010101);
+    driver->show();
+    DELAY_MS(150);
+    driver->setState(0b10101010);
+    driver->show();
+    DELAY_MS(150);
+    driver->setState(0b01010101);
+    driver->show();
+    DELAY_MS(150);
+    driver->setState(0b10101010);
+    driver->show();
+    DELAY_MS(150);
+    driver->setState(0x00);
+    driver->show();
+}
+
+void PCF8574RevLights::onSaveSettings()
+{
+    driver->setState(0b10000001);
+    driver->show();
+    DELAY_MS(100);
+    driver->setState(0b01000010);
+    driver->show();
+    DELAY_MS(100);
+    driver->setState(0b00100100);
+    driver->show();
+    DELAY_MS(100);
+    driver->setState(0b00011000);
+    driver->show();
+    DELAY_MS(100);
+    driver->setState(0x00);
+    driver->show();
+}
+
 void PCF8574RevLights::shutdown()
 {
     driver->setState(0);

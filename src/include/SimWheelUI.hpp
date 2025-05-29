@@ -104,6 +104,8 @@ public:
     virtual void onTelemetryData(const TelemetryData *pTelemetryData) override;
     virtual void serveSingleFrame(uint32_t elapsedMs) override;
     virtual void onBitePoint(uint8_t bitePoint) override;
+    virtual void onLowBattery() override;
+    virtual void onSaveSettings() override;
     virtual void shutdown() override;
     virtual uint8_t getMaxFPS() override { return 40; }
     virtual uint16_t getStackSize() override { return 2048; }
