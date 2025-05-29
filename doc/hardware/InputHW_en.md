@@ -74,11 +74,26 @@ to have rotary encoders with high detent force
 
 ## Absolute rotary switches
 
-They are similar in shape to rotary encoders, but they work in a complete different way. A N-position rotary switch is just the same as N **non-momentary** switches where one and only one of them is closed at all times. **This makes them unpractical**, since the PC side will detect a button as "always on". When trying to configure another button in the simulator, that one will get in the way.
+They are similar in shape to rotary encoders, but they work in a complete different way.
+A N-position rotary switch is just the same as N **non-momentary** switches
+where one and only one of them is closed at all times.
+**This makes them unpractical**, since the PC side will detect a button as "always on".
+When trying to configure another button in the simulator, that one will get in the way.
 
-We could alleviate the situation by instructing the firmware to report a button press only if there is a change in the position of the rotary switch. However, the simulator will never know what such a position is at first.
+We could alleviate the situation by instructing the firmware to report a button press
+only if there is a change in the position of the rotary switch.
+However, the simulator will never know what such a position is at first.
 In this sense, there is **no specific support** to absolute rotary switches in this project.
 They do work, but they are not recommended.
+
+### Coded rotary switches
+
+This is an absolute rotary switch (non-momentary),
+but the outputs are binary encoded in order to **save on pin requirements**.
+A N-position coded rotary switch requires $\sqrt{N}$ pins.
+See some of them at [mouser.com](https://mou.sr/3FdQIyf).
+
+This project does not support coded rotary switches right now.
 
 ### A note about *"mode selectors"*
 
