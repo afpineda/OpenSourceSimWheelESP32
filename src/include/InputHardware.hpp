@@ -289,11 +289,20 @@ private:
     bool complementaryCode;
 
 public:
+
+    /**
+     * @brief Construct a new Rotary Coded Switch Input object
+     *
+     * @param spec Specification of input numbers assigned to switch positions
+     * @param pins Collection of input pins for the binary encoding
+     * @param complementaryCode If true, the input pins work in complementary binary encoding
+     */
     RotaryCodedSwitchInput(
         const RotaryCodedSwitch &spec,
         const InputGPIOCollection &pins,
         bool complementaryCode);
     ~RotaryCodedSwitchInput();
+
     virtual uint64_t read(uint64_t lastState) override;
 };
 

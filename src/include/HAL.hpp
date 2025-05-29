@@ -48,8 +48,10 @@ typedef void (*ISRHandler)(void *arg);
 
 // Time per loop of active_wait_ns() computed as 4 CPU instructions
 #if defined(CONFIG_IDF_TARGET_ESP32C3)
+/// @brief Time per loop of active_wait_ns() computed as 4 CPU instructions
 #define NS_PER_LOOP 25
 #else
+/// @brief Time per loop of active_wait_ns() computed as 4 CPU instructions
 #define NS_PER_LOOP 17
 #endif
 
