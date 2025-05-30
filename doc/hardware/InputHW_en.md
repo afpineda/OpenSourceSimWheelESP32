@@ -90,7 +90,7 @@ They do work, but they are not recommended.
 
 This is an absolute rotary switch (non-momentary),
 but the outputs are binary encoded in order to **save on pin requirements**.
-A N-position coded rotary switch requires $\sqrt{N}$ pins.
+A N-position coded rotary switch requires $\log{_2}{N}$ pins.
 See some of them at [mouser.com](https://mou.sr/4dzSt5o).
 
 This project supports rotary coded switches using "BCD" output code,
