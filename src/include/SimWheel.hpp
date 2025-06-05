@@ -165,8 +165,6 @@ namespace inputs
     /**
      * @brief Add a chain of 74HC165N PISO shift registers to the hardware inputs
      *
-     * @note All buttons are assumed to work in negative logic
-     *
      * @param loadPin Pin attached to LOAD in the fist chip in the chain
      * @param nextPin Pin attached to NEXT in the first chip in the chain
      * @param inputPin Pin attached to INPUT in the fist chip in the chain
