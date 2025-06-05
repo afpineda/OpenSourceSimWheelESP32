@@ -272,7 +272,6 @@ private:
     void initializeMux();
 };
 
-
 //-------------------------------------------------------------------
 // Coded rotary switch
 //-------------------------------------------------------------------
@@ -289,7 +288,6 @@ private:
     bool complementaryCode;
 
 public:
-
     /**
      * @brief Construct a new Rotary Coded Switch Input object
      *
@@ -410,6 +408,7 @@ private:
     const uint64_t *bitmap;
     bool loadHighOrLow;
     bool nextHighToLowOrLowToHigh;
+    bool negativeLogic;
 
 public:
     /**
@@ -426,6 +425,8 @@ public:
      * @param nextHighToLowOrLowToHigh If true, next bit is selected when an high-to-low
      *                                 pulse is detected at `nextPin`. If false, next bit
      *                                 is selected when a low-to-high pulse is detected.
+     * @param negativeLogic If true, all switches must be pulled down (the default),
+     *                      If false, all switches must be pulled up (positive logic).
      */
     ShiftRegistersInput(
         OutputGPIO loadPin,
@@ -434,7 +435,8 @@ public:
         const ShiftRegisterChain &chain,
         InputNumber SER_inputNumber = UNSPECIFIED::VALUE,
         const bool loadHighOrLow = false,
-        const bool nextHighToLowOrLowToHigh = false);
+        const bool nextHighToLowOrLowToHigh = false,
+        const bool negativeLogic = true);
 
     virtual uint64_t read(uint64_t lastState) override;
 };

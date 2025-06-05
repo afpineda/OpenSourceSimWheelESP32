@@ -555,6 +555,10 @@ but it does not require any pull resistor.
    - Group of chip instances.
    - Optionally, the input number assigned to the `SER`
      tag in the last chip in the chain.
+   - Optionally, `false` if your switches uses positive logic (pulled up).
+     Such a hardware design is not in this project,
+     but this option allows you to recycle hardware from another project.
+     This parameter is `true` by default (pulled down).
 
 For example:
 

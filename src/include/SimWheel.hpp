@@ -174,13 +174,16 @@ namespace inputs
      * @param SER_inputNumber Input number for the switch attached to the SER
      *                        pin in the last chip. Set to UNSPECIFIED::VALUE
      *                        to ignore.
+     * @param negativeLogic If true, all switches must be pulled down (the default),
+     *                      If false, all switches must be pulled up (positive logic).
      */
     void add74HC165NChain(
         OutputGPIO loadPin,
         OutputGPIO nextPin,
         InputGPIO inputPin,
         const ShiftRegisterChain &chain,
-        InputNumber SER_inputNumber = UNSPECIFIED::VALUE);
+        InputNumber SER_inputNumber = UNSPECIFIED::VALUE,
+        const bool negativeLogic = true);
 
     /**
      * @brief Add a binary coded rotary switch up to 8 positions

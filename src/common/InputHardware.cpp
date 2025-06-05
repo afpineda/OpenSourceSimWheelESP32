@@ -732,13 +732,15 @@ ShiftRegistersInput::ShiftRegistersInput(
     const ShiftRegisterChain &chain,
     InputNumber SER_inputNumber,
     const bool loadHighOrLow,
-    const bool nextHighToLowOrLowToHigh)
+    const bool nextHighToLowOrLowToHigh,
+    const bool negativeLogic)
 {
     this->serialPin = inputPin;
     this->loadPin = loadPin;
     this->nextPin = nextPin;
     this->loadHighOrLow = loadHighOrLow;
     this->nextHighToLowOrLowToHigh = nextHighToLowOrLowToHigh;
+    this->negativeLogic = negativeLogic;
     this->bitmap = createBitmap(chain, SER_inputNumber, switchCount);
     for (size_t i = 0; i < switchCount; i++)
         addToMask(bitmap[i]);
@@ -764,8 +766,7 @@ uint64_t ShiftRegistersInput::read(uint64_t lastState)
     for (size_t switchIndex = 0; switchIndex < switchCount; switchIndex++)
     {
         int level = GPIO_GET_LEVEL(serialPin);
-        if (!level)
-            // negative logic
+        if (level ^ negativeLogic)
             state = state | bitmap[switchIndex];
 
         // next

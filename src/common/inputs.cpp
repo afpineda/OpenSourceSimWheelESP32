@@ -265,7 +265,8 @@ void inputs::add74HC165NChain(
     OutputGPIO nextPin,
     InputGPIO inputPin,
     const ShiftRegisterChain &chain,
-    InputNumber SER_inputNumber)
+    InputNumber SER_inputNumber,
+    const bool negativeLogic)
 {
     abortIfStarted();
     internals::inputs::validate::shiftRegisterChain(
@@ -280,7 +281,8 @@ void inputs::add74HC165NChain(
             loadPin,
             nextPin,
             inputPin,
-            chain));
+            chain,
+            negativeLogic));
 #endif
 }
 

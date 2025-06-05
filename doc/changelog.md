@@ -1,5 +1,11 @@
 # Change log
 
+## 7.3.0
+
+- In response to popular demand,
+  a new parameter has been added to the `inputs::add74HC165NChain()` function
+  that allows the switches to be configured to work in positive logic.
+
 ## 7.2.0
 
 - A new notification is triggered whenever a user setting is saved to memory.
