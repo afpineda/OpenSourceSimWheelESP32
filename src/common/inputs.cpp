@@ -282,6 +282,9 @@ void inputs::add74HC165NChain(
             nextPin,
             inputPin,
             chain,
+            SER_inputNumber,
+            false, // loadHighOrLow
+            false, // nextHighToLowOrLowToHigh
             negativeLogic));
 #endif
 }

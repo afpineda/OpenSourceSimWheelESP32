@@ -1,5 +1,12 @@
 # Change log
 
+## 7.3.1
+
+- Fixes a bug in `inputs::add74HC165NChain()` reported in the Discord server.
+  There are no integration tests regarding shift registers
+  (there is just a unit test),
+  so this API call is not tested in this project.
+
 ## 7.3.0
 
 - In response to popular demand,
