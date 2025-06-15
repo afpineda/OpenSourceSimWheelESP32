@@ -555,6 +555,7 @@ but it does not require any pull resistor.
    - Group of chip instances.
    - Optionally, the input number assigned to the `SER`
      tag in the last chip in the chain.
+     Pass `UNSPECIFIED::VALUE` (the default) if there is no switch attached to `SER`.
    - Optionally, `false` if your switches uses positive logic (pulled up).
      Such a hardware design is not in this project,
      but this option allows you to recycle hardware from another project.
