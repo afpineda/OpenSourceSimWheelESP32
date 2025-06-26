@@ -39,7 +39,7 @@ There are three choices:
 
    - [Open sim racing](https://opensimracing.com/collections/race-wheel-plans)
 
-   - [Pokornyi Engineering](hhttps://pokornyiengineering.com/collections/diy-designs)
+   - [Pokornyi Engineering](https://pokornyiengineering.com/collections/diy-designs)
 
    - [AM Studio projects](https://amstudioprojects.com/steering-wheels/)
 
