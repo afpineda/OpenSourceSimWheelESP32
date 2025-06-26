@@ -8,9 +8,9 @@
 
 - [Overview](./overview_en.md)
 - [Required skills and tools](./skills_en.md)
-- [Prepare the source code for compilation and uploading](./firmware/sourcesSetup_en.md)
 - [Input hardware suitable (or not) for a sim wheel/button box](./hardware/InputHW_en.md)
 - [Know your ESP32 DevKit board](./hardware/DevKits_en.md)
+- [Prepare the source code for compilation and uploading](./firmware/sourcesSetup_en.md)
 - [How to customize in order to build your own hardware and firmware setup](./hardware/subsystems/CustomizeHowto_en.md)
   - [Migrating your custom firmware to version 7 from a previous version](./migrate_to_v7.md)
 - [Troubleshooting](./Troubleshooting_en.md)
@@ -41,6 +41,10 @@
   - [Working with LEDs and RGB LED strips](./LEDs_en.md)
   - [Firmware customization in the *pixel control* approach](./hardware/ui/PixelControl_en.md)
   - [Firmware customization in the *telemetry data* approach](./hardware/ui/TelemetryData_en.md)
+
+- Printed circuit board (PCB) designs:
+
+  - [Auxiliary module for 24 switches (through hole mounting)](./pcb/Module24sw_TH/Module24Switches_TH_2025.md)
 
 ## Known issues
 

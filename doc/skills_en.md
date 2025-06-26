@@ -58,6 +58,16 @@ Recommended:
   There is a modern clone here: [benbaker76/SimpleHIDWrite](https://github.com/benbaker76/SimpleHIDWrite/tree/master/BIN).
   This tool is used in this project to test custom HID reports.
 
+- PCB design tools:
+
+  - [EasyEDA Pro](https://pro.easyeda.com/editor).
+    This is a free tool and very easy to learn.
+    You can install it locally or run it online (a free account may be required).
+    From this tool, you can order a PCB (and optional assembly) to [JLCPCB](https://jlcpcb.com/).
+
+  - [KiCAD](https://www.kicad.org/).
+    Free and open source.
+
 ## Hardware tools
 
 Indispensable:
