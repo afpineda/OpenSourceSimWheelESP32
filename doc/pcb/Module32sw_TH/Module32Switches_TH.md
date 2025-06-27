@@ -124,3 +124,9 @@ In case of need, wire (externally) an additional resistor between these terminal
 
 Use any impedance between 1K-ohm and 10K-ohm.
 2K-ohm is recommended.
+
+## Pin out
+
+The pin out should be printed in the back of the board.
+
+![Pin out, 32 switches module](./Module32Switches_TH_pinout.png)
