@@ -1,6 +1,6 @@
 # Module for 24 switches
 
-![Module for 24 switches (through-hole)](Module24Switches_TH_2025.png)
+![Module for 24 switches (through-hole)](./Module24Switches_TH_2025.png)
 
 > [!WARNING]
 > This board has not been manufactured or tested.
@@ -18,7 +18,7 @@
 
 - [Easy EDA Pro](./Module24Switches_TH_2025.epro)
 
-  Parts designed, but not included in the BOM (see notes below).
+  Parts designed but not included in the BOM (see notes below).
   *Note:* you can import this file to *KiCAD 9* or later.
 
 - [Schematic](./Module24Switches_TH_2025.pdf)
@@ -28,14 +28,10 @@
 
 This PCB is designed to assemble the components yourself using basic tools.
 Thus, you only need to order the fabrication of the board as the price is much lower.
-Pay close attention to the correct orientation of the chips.
-There is a small circle next to the first pin.
-This is also marked on the PCB with a square pad, a small dot or a circle.
-Ensure that these match.
 
 - MCP23017 in though-hole packaging: x1
 - PCF8574 in though-hole packaging: x1
-- Diodes (optional but recommended): x2
+- Diodes: x2
 
   - You can omit the diodes **only** if you do not need to make use of the `WAKE UP` pin.
   - Pay attention to the orientation of the diodes.
@@ -51,7 +47,7 @@ Ensure that these match.
   - Use any impedance between 1K-ohm and 10K-ohm.
     2K-ohm is recommended.
 
-- Double row bended male Dupond headers (optional but recommended)
+- Double row bended male Dupond headers (**optional**)
 
   You can also solder the wires directly to the board.
 
@@ -72,12 +68,19 @@ If you opt for their assembly service,
 you will receive an error message regarding the screws.
 They can simply be chosen not to be assembled.
 
+### Assembly
+
+Pay close attention to the correct orientation of the chips.
+There is a small circle next to the first pin.
+This is also marked on the PCB with a square pad, a small dot or a circle.
+Ensure that these match.
+
 ### Usage
 
 Only **one** module can be attached to a DevKit board,
 as the I2C hardware addresses are fixed:
 
-- MCP23017: hardware address 3 (decimal)
+- MCP23017: hardware address 7 (decimal)
 - PCF8574: hardware address 0 (decimal)
 
 To enable this module in your custom firmware:

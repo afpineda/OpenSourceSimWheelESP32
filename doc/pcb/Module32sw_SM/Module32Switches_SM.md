@@ -53,7 +53,7 @@ and solder them yourself.
 ### Usage
 
 Only **one** module can be attached to a DevKit board,
-as the I2C hardware addresses are fixed to 3 and 0 (decimal).
+as the I2C hardware addresses are fixed to 7 and 0 (decimal).
 To enable this module in your custom firmware:
 
 ```c++
@@ -72,9 +72,9 @@ void simWheelSetup()
     ...
     chip1[MCP23017Pin::GPB7]=15;
     ...
-    chip2[MCP23017Expander::GPA0]=16;
+    chip2[MCP23017Pin::GPA0]=16;
     ...
-    chip2[MCP23017Expander::GPA7]=22;
+    chip2[MCP23017Pin::GPA7]=22;
     chip2[MCP23017Pin::GPB0]=24;
     ...
     chip2[MCP23017Pin::GPB7]=31;
