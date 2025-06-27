@@ -20,7 +20,7 @@
 
   *Note:* you can import this file to *KiCAD 9* or later.
 
-- [Schematic](./Module24Switches_SM.pdf)
+- [Schematic](./Module32Switches_SM.pdf)
 - [GERBER](./Module32Switches_SM_GERBER.zip)
 - [Bill of materials (BOM)](./Module32Switches_SM_BOM.csv)
 - [Pick & place](./Module32Switches_SM_PickAndPlace.csv)
