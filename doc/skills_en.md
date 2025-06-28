@@ -100,3 +100,4 @@ Recommended:
 - Basics of switches, resistors, diodes and transistors.
 - Role of [pull-up](https://en.wikipedia.org/wiki/Pull-up_resistor) and pull-down resistors.
 - Basics of C and C++ programming languages.
+- [How to order a custom PCB](https://duckduckgo.com/?q=how+to+order+a+custom+pcb&ia=web)

@@ -44,6 +44,7 @@
 
 - Printed circuit board (PCB) designs:
 
+  - [Overview of PCBs](./pcb/PCB_overview.md)
   - [Auxiliary module for 24 switches (through hole mounting)](./pcb/Module24sw_TH/Module24Switches_TH_2025.md)
   - [Auxiliary module for 32 switches (through hole mounting)](./pcb/Module32sw_TH/Module32Switches_TH.md)
   - [Auxiliary module for 32 switches (surface mounting)](./pcb/Module32sw_SM/Module32Switches_SM.md)
