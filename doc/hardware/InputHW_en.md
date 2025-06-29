@@ -1,6 +1,7 @@
 # Input hardware suitable (or not) for a sim wheel or button box
 
-This article discuss different options to provide enough inputs to a sim wheel or button box, taking into account the limitations of a DevKit board:
+This article discuss different options to provide enough inputs to a sim wheel or button box,
+taking into account the limitations of a DevKit board:
 
 - Limited number of input pins.
 - Noise in analog readings.
@@ -18,14 +19,15 @@ Depending on how they are activated, may be classified as:
   once activated, they keep that state, and have to be manually reversed to the previous state.
   They also come in several shapes.
   They are suitable for this project, however,
-  they offer no advantage over momentary switches and requires more complex software,
-  so they are not used in this project.
+  they offer no advantage over momentary switches.
 
-Depending on how the circuit is closed, momentary switches may be classified as:
+Depending on how the circuit is closed, switches may be classified as:
 
-- **Normally closed** (NC): the switch is closed if not pressed, letting current flow. This is not recommended to prevent battery drain.
+- **Normally closed** (NC): the switch is closed if not pressed, letting current flow.
+  This is not recommended to prevent battery drain.
 - **Normally open** (NO): the switch is open if not pressed.
-- **NO-NC** (both): they have 3 or 4 terminals and may be used both as NO and NC at the same time. Note that NC terminals are closed while NO terminals are open, and vice versa. This has an interesting application with voltage dividers (see below).
+- **NO-NC** (both): they have 3 or 4 terminals and may be used both as NO and NC at the same time.
+  Note that NC terminals are closed while NO terminals are open, and vice versa.
 
 Switches are prone to
 [bouncing](https://circuitdigest.com/electronic-circuits/what-is-switch-bouncing-and-how-to-prevent-it-using-debounce-circuit)
@@ -41,7 +43,8 @@ This project provides debouncing by software means.
 
 You may use them, but they are not recommended for battery-based systems.
 
-- *Single-color backlit switches*: there is no need for specific firmware support. All you need is wiring.
+- *Single-color backlit switches*: there is no need for specific firmware support.
+  All you need is wiring.
 - *Programable RGB backlit switches*: this project support them via RGB LED strips.
   You could build a LED strip using RGB+IC switches.
   See the [ZLS67-ZLS70](https://www.shanpu.com.tw/en/product/series/ZLS67-ZLS70)
@@ -49,22 +52,41 @@ You may use them, but they are not recommended for battery-based systems.
 
 ## Incremental Rotary Encoders
 
-Most rotary encoders feature a *built-in* push button. Those are the ones described here.
+Most rotary encoders feature a *built-in* push button.
+Those are the ones described here.
 However, you may choose a rotary encoder without a push button.
 
 They come in three flavors:
 
-- **Bare-bone**: just a mechanical device with no pull resistors. They have 5 terminals: `common GND`, `A` and `B` (related to rotation) plus `SW GND` (sometimes `SW COM`) and `SW` (related to the built in push button). Those terminals are floating when idle. In this case, the label `GND` means nothing: it is just one of the two terminals of a switch.
-- **KY-040**: a bare-bone rotary encoder with pull-up resistors. They have 5 terminals: `Vcc` and `Gnd`, related to the power source, `CLK` (or `A`) and `DT` (or `B`), related to rotation, and `SW`, related to the integrated push button. `CLK`, `DT` and `SW` terminals are set to high voltage when idle.
-- **I2C** or "chainable": a bare-bone rotary encoder with additional circuitry in order to offer an *I2C* serial interface.
-  A reasonable number of them can be chained together, using just two GPIO pins. An example is the [Adafruit I2C QT Rotary Encoder](https://learn.adafruit.com/adafruit-i2c-qt-rotary-encoder/overview).
-  You could even build your own (see [https://github.com/wagiminator/ATtiny412-I2C-Rotary-Encoder](https://github.com/wagiminator/ATtiny412-I2C-Rotary-Encoder)).
+- **Bare-bone**: just a mechanical device with no pull resistors.
+  They have 5 terminals: `common GND`, `A` and `B` (related to rotation)
+  plus `SW GND` (sometimes `SW COM`) and `SW` (related to the built in push button).
+  Those terminals are floating when idle.
+  In this case, the label `GND` means nothing: it is just one of the two terminals of a switch.
 
-See pin-out at [pinterest.com (thanks to Abhishek Ghosh)](https://in.pinterest.com/pin/436145545160682538/)
+- **KY-040**: a bare-bone rotary encoder with pull-up resistors.
+  They have 5 terminals: `Vcc` and `Gnd`, related to the power source,
+  `CLK` (or `A`) and `DT` (or `B`), related to rotation,
+  and `SW`, related to the integrated push button.
+  `CLK`, `DT` and `SW` terminals are set to high voltage when idle.
 
-*Bare-bone* and *KY-040* encoders are supported by this project, as long as the proper input pins are used.
+- **I2C** or "chainable": a bare-bone rotary encoder
+  with additional circuitry in order to offer an *I2C* serial interface.
+  A reasonable number of them can be chained together, using just two GPIO pins.
+  An example is the
+  [Adafruit I2C QT Rotary Encoder](https://learn.adafruit.com/adafruit-i2c-qt-rotary-encoder/overview).
+  You could even build your own
+  (see [https://github.com/wagiminator/ATtiny412-I2C-Rotary-Encoder](https://github.com/wagiminator/ATtiny412-I2C-Rotary-Encoder)).
 
-Rotary encoders can be very noisy. Despite debouncing techniques, some rotations may be missed. This project has eradicated this problem, as far as I know.
+See the pin-out at
+[pinterest.com (thanks to Abhishek Ghosh)](https://in.pinterest.com/pin/436145545160682538/)
+
+*Bare-bone* and *KY-040* encoders are supported by this project,
+as long as the proper input pins are used.
+
+Rotary encoders can be very noisy.
+Despite debouncing techniques, some rotations may be missed.
+This project has eradicated this problem, as far as I know.
 
 Tactile feedback is very relevant to sim-racing equipment.
 Bourns
