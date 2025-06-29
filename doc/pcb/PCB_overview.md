@@ -10,6 +10,7 @@ There are a number of companies that provide this service **online**,
 both locally and globally.
 All you have to do is upload some files,
 pay and wait for the postman.
+To name some:
 
 - [JLC PCB](https://jlcpcb.com/?href=easyeda-home)
 - [PCB way](https://www.pcbway.com)
@@ -19,6 +20,10 @@ pay and wait for the postman.
 - [PCB Cart](https://www.pcbcart.com/quote/prototype-pcb)
 - [Elecrow](https://www.elecrow.com/pcb-manufacturing.html)
 - [PCB Gogo](https://www.pcbgogo.com/pcb-fabrication-quote.html)
+- [Proto-electronics](https://www.proto-electronics.com/)
+- [Euro circuits](https://www.eurocircuits.com/)
+
+[PCB shopper](https://pcbshopper.com/) provides a price comparison among several online services.
 
 A **minimum order** is required, which is usually five units.
 Optionally, you can order component assembly and soldering service,

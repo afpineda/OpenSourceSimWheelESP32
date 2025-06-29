@@ -59,6 +59,11 @@ or split them into several perfboards at the cost of extra wiring.
    You may also start from a predefined setup.
 3. Re-arrange the components to fit your needs.
 
+This project includes some
+[PCB modules](../../pcb/PCB_overview.md)
+that you can benefit from.
+These will help to reduce build time and effort.
+
 ## Configure your custom firmware
 
 Arduino's sketch named
