@@ -98,7 +98,10 @@ complementary or not.
 
 ### A note about *"mode selectors"*
 
-You may find absolute rotary switches in some commercial SIM wheels that do not report input to the host computer. Instead, they allow the user to choose a behavior for other inputs (typically, a pair of rotary encoders). This project features *mode selectors*, but in another way:
+You may find absolute rotary switches in some commercial SIM wheels that do not report input to the host computer.
+Instead, they allow the user to choose a behavior for other inputs
+(typically, a pair of rotary encoders).
+This project features *mode selectors*, but in another way:
 
 - Assigned to simple on/off switches only, which are called **"ALT" buttons**.
 - There are just two modes: *regular* and *"alternate"*.
@@ -110,6 +113,12 @@ Depending on user preferences:
 
 - "ALT buttons" may work as independent regular buttons as well.
 - Clutch paddles may work as "ALT buttons" as well.
+
+With the help of the
+[SimHub](https://prosimracingteam.com/simhub/)'s *control mapper*,
+this project can also reproduce the exact behavior of a *mode selector* rotary switch,
+as shown in [this video](https://www.youtube.com/watch?v=nCPfdtqrILo).
+In fact, it works with any *non-momentary* switch.
 
 ## Rotary Potentiometers
 
