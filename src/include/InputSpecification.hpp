@@ -316,23 +316,24 @@ typedef std::vector<ShiftRegisterChip> ShiftRegisterChain;
 /**
  * @brief Rotary coded switch
  *
+ * @deprecated Use CodedSwitch8, CodedSwitch16 or CodedSwitch32
  */
 typedef std::map<uint8_t, InputNumber> RotaryCodedSwitch;
 
 /**
- * @brief Generic binary-coded switch up to 8 positions
+ * @brief Rotary coded switch up to 8 positions
  *
  */
 typedef std::array<InputNumber, 8> CodedSwitch8;
 
 /**
- * @brief Generic binary-coded switch up to 16 positions
+ * @brief Rotary coded switch up to 16 positions
  *
  */
 typedef std::array<InputNumber, 16> CodedSwitch16;
 
 /**
- * @brief Generic binary-coded switch up to 32 positions
+ * @brief Rotary coded switch up to 32 positions
  *
  */
 typedef std::array<InputNumber, 32> CodedSwitch32;

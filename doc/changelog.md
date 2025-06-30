@@ -1,5 +1,16 @@
 # Change log
 
+## 7.4.0
+
+- There is a new API that allows to wire
+  rotary coded switches to any supported input hardware
+  (not just the GPIO pins at the DevKit board).
+- The API introduced in version 7.2.0 continues to work
+  but is marked for deprecation.
+- A bunch of PCB designs are introduced for
+  auxiliary modules in the switches subsystem.
+- Minor documentation updates and errata fixes.
+
 ## 7.3.1
 
 - Fixes a bug in `inputs::add74HC165NChain()` reported in the Discord server.
