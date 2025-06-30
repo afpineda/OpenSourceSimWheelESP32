@@ -26,7 +26,7 @@ Follow the links to get a detailed description of each subsystem:
 - [Relative rotary encoder subsystem](./RelativeRotaryEncoder/RelativeRotaryEncoder_en.md):
   provides input from rotation of rotary encoders.
 - [Switches subsystem](./Switches/Switches_en.md):
-  provides input from normally-open momentary switches (push buttons, paddles, etc.)
+  provides input from normally-open switches (push buttons, paddles, etc.)
   and potentiometers (as on/off inputs, only).
 - [Analog clutch subsystem](./AnalogClutchPaddles/AnalogClutchPaddles_en.md):
   provides input from two potentiometers attached to clutch paddles as analog axes.

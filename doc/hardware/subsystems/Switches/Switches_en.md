@@ -12,14 +12,15 @@ including (when required):
   (except for rotation, which behaves like any other
   [rotary encoder](../RelativeRotaryEncoder/RelativeRotaryEncoder_en.md)).
 - Rotary coded switches.
+  Now they can be attached to **any** supported input hardware.
+  Instructions below.
 
 And also **potentiometers** as digital clutch paddles, in case you are short of GPIO pins.
 If not, potentiometers as
 [analog clutch paddles](../AnalogClutchPaddles/AnalogClutchPaddles_en.md)
 are a better option.
 
-Except for rotary coded switches,
-there are several, non-exclusive, **implementation** choices:
+There are several, non-exclusive, **implementation** choices:
 
 - Button matrix.
 - Analog Multiplexers.
@@ -32,9 +33,9 @@ there are several, non-exclusive, **implementation** choices:
 Take a look at the article on [input hardware](../../InputHW_en.md) for an introduction.
 
 > [!CAUTION]
-> It has been reported that some ALPS funky switches shows erroneusly swapped
+> It has been reported that some ALPS funky switches shows erroneously swapped
 > `Push` and `COM` tags, at least, in their datasheet.
-> You can check this with the help of a basic polimeter/multimeter.
+> You can check this with the help of a basic multimeter.
 
 ![Misleading ALPS datasheet](./ALPS_sheet_mistake.png)
 
@@ -376,25 +377,6 @@ Attach the other terminal to `GND`.
 An internal pull-up resistor is required since we are using negative logic.
 If not available, add an external pull-up resistor.
 
-## Implementation of rotary coded switches
-
-There is no circuit involved here, just wiring.
-
-There is a *common pole* pin in your rotary coded switch,
-which is usually tagged as `C`.
-Sometimes this pin is duplicated, but the two pins are electrically connected.
-You can therefore use either pin.
-
-If you attach `C` to `GND`, you are said to be using *complementary code*.
-This is the recommended way and what the firmware expects by default.
-However, you can also connect `C` to `3V3`.
-
-The position of the rotary switch is encoded in binary ("BCD" output code).
-Each bit is assigned to a pin, typically labelled `1`, `2`, `4`, `8` or `16`,
-depending on how many bits are used for encoding.
-'1' is always the least significant bit.
-Attach those pins to input-capable GPIO pins on your DevKit board.
-
 ## Firmware customization
 
 Customization takes place at the body of `simWheelSetup()` inside
@@ -675,48 +657,88 @@ void simWheelSetup()
 }
 ```
 
-### Rotary coded switch
+### Rotary coded switches
 
-1. Declare each rotary switch using the class `RotaryCodedSwitch`.
-2. Assign an input number to each switch position using the array syntax.
+There is a *common pole* pin in your rotary coded switch,
+which is usually tagged as `C`.
+Sometimes this pin is duplicated, but the two pins are electrically connected.
+You can therefore use either pin.
+
+When you attach `C` to `GND`, you are said to be using *complementary code*,
+which is most common and required for input hardware working in negative logic.
+In a button matrix, attach `C` to a single input pin.
+
+The position of the rotary switch is encoded in binary ("BCD" output code).
+Each bit is assigned to a pin, typically labelled `1`, `2`, `4`, `8` or `16`,
+depending on how many bits are used for encoding.
+`1` is always the least significant bit.
+Attach those pins to any input hardware in the *switches subsystem*.
+In a button matrix, attach each bit pin to a selector pin.
+
+1. Declare the input hardware where the bit pins are attached.
+   You have to assign valid input numbers to those pins and
+   all of them **must be different**
+   (taking into account other coded switches as well).
+
+2. Declare each coded switch instance using one of these classes:
+
+   - `CodedSwitch8` for switches having 3 bit pins (up to 8 positions).
+   - `CodedSwitch16` for switches having 4 bit pins (up to 16 positions).
+   - `CodedSwitch32` for switches having 5 bit pins (up to 32 positions).
+
+3. Assign an input number to each switch position using the array syntax.
    Each position is indexed starting with zero.
-3. Place a call to `inputs::addRotaryCodedSwitch()` and pass the following parameters
-   from left to right:
+   To detect and prevent out of boundary indexes, use the operator `at()` instead of `[]`.
+   You **can reuse** the input numbers assigned to the bit pins.
 
-   1. The `RotaryCodedSwitch` instance.
-   2. GPIO pin attached to `1`.
-   3. GPIO pin attached to `2`.
-   4. GPIO pin attached to `4`.
-   5. GPIO pin attached to `8` (omit this parameter if the pin does not exist).
-   6. GPIO pin attached to `16` (omit this parameter if the pin does not exist).
-   7. Optionally, `true` to use *complemetary code* (the default), `false` otherwise.
+4. Place a call to `inputHub::codedSwitch::add()`
+   and pass the following parameters from left to right:
+
+   1. Input number assigned to `1`.
+   2. Input number assigned to `2`.
+   3. Input number assigned to `4`.
+   4. Input number assigned to `8` (omit this parameter if the bit pin does not exist).
+   5. Input number assigned to `16` (omit this parameter if the bit pin does not exist).
+   6. The `CodedSwitch8`/`CodedSwitch16`/`CodedSwitch32` instance.
 
 For example,
-let's say you have a 12-position binary-coded rotary switch,
-having `C`, `1`, `2`, `4` and `8` pins,
-and `C` attached to `GND`:
+let's say you have a 12-position binary-coded rotary switch
+(having `C`, `1`, `2`, `4` and `8` pins),
+`C` attached to `GND` and the others
+directly attached to the GPIO pins 10, 11 and 12.
 
 ```c++
 void simWheelSetup()
 {
    ...
-   RotaryCodedSwitch sw;
-   sw[0] = 10;
-   sw[1] = 11;
-   sw[2] = 12;
-   sw[3] = 13;
-   sw[4] = 14;
-   sw[5] = 15;
-   sw[6] = 16;
-   sw[7] = 17;
-   sw[8] = 18;
-   sw[9] = 19;
-   sw[10] = 20;
-   sw[11] = 21;
-   inputs::addRotaryCodedSwitch(sw, GPIO_NUM_10, GPIO_NUM_11, GPIO_NUM_12, GPIO_NUM_13);
+   // Create the input hardware for the rotary coded switch
+   inputs::addButton(GPIO_NUM_11, 10);
+   inputs::addButton(GPIO_NUM_12, 11);
+   inputs::addButton(GPIO_NUM_13, 12);
+
+   // Create the input numbers for the decoded positions
+   // Note that we can reuse the input numbers 10, 11 and 12
+   CodedSwitch16 sw;
+   sw[0] = 10; // array syntax
+   sw.at(1) = 11; // Preferred syntax to detect out of bound indexes
+   sw.at(2) = 12;
+   sw.at(3) = 13;
+   sw.at(4) = 14;
+   sw.at(5) = 15;
+   sw.at(6) = 16;
+   sw.at(7) = 17;
+   sw.at(8) = 18;
+   sw.at(9) = 19;
+   sw.at(10) = 20;
+   sw.at(11) = 21;
+
+   // Create the coded switch
+   // having the bit pins `1`, `2` and `4` attached to GPIO_NUM_11, GPIO_NUM_12, GPIO_NUM_13
+   // as the input numbers 10, 11 and 12 are assigned to them (respectively)
+   inputHub::codedSwitch::add(10,11,12,sw);
    ...
 }
 ```
 
-Where `sw[7] = 17;` means the input number `17` is assigned
+Where `sw.at(7) = 17;` means the input number `17` is assigned
 to the position index `7` in the rotary switch.
