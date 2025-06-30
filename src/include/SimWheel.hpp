@@ -186,6 +186,8 @@ namespace inputs
     /**
      * @brief Add a binary coded rotary switch up to 8 positions
      *
+     * @deprecated Use inputHub::codedSwitch::add() instead
+     *
      * @param spec Specification of input numbers for each switch position
      * @param pin0 Input pin for the least-significant bit
      * @param pin1 Input pin
@@ -201,6 +203,8 @@ namespace inputs
 
     /**
      * @brief Add a binary coded rotary switch up to 16 positions
+     *
+     * @deprecated Use inputHub::codedSwitch::add() instead
      *
      * @param spec Specification of input numbers for each switch position
      * @param pin0 Input pin for the least-significant bit
@@ -219,6 +223,8 @@ namespace inputs
 
     /**
      * @brief Add a binary coded rotary switch up to 32 positions
+     *
+     * @deprecated Use inputHub::codedSwitch::add() instead
      *
      * @param spec Specification of input numbers for each switch position
      * @param pin0 Input pin for the least-significant bit
