@@ -15,14 +15,16 @@ Run order:
 ```mermaid
 flowchart LR
     DigitalInputsTest --> InputHubTest
+    DigitalInputsTest --> GenericCodedSwitchTest
     PixelControlTest --> Proto2
     InputHubTest --> Proto1
+    GenericCodedSwitchTest --> Proto1
     Proto1 --> Proto2
     TelemetryIntegrationTest --> Proto2
 ```
 
 Render this graph at
-[mermaid.live](https://mermaid.live/view#pako:eNpljr0OgkAMgF-FdJZBRwYXGTRxMMpkbqlQ4JK7Kzl6UWN4d0_Bn2in_nxf2xuUXBFkUBs-ly16SbZ75ZIYuW60oNm4LkhfUC9Jmi6TZ7kOp0dj5Hb6QmbFTjybN7bzLLwYgW_lM5xP9jP_cwoyZEn8deOEGo-i2f0shxlY8hZ1Fd-_PTQF0kZLQRbTimoMRhQoN0QUg_Dh6krIxAeagefQtJDVaPpYha5CoVxjPGVfSIfuyGwnaLgDPf5kfQ)
+[mermaid.live](https://mermaid.live/view#pako:eNp9kctuwjAQRX8lmnVAoUkK9qIbqFqkVkKFVZWNGw-JJcdGZiygiH-vk6hAS1Wv5nHPHdtzhNJKBA5rbXdlLRxFL2-FicKZqUqR0HOz8bRd4ZaiweAh6tJn_9EW_tM9oUGnymlwl8udorK-EAu1Rz21hpzVZ2DhLNm7XnA95NIc9c2_nW9kfXxjvUKNDZI7zA1h5QQpa37dAWJo0DVCyfAvxxYrgOpAFcBDKHEtvKYCCnMKUuHJLg-mBE7OYwx-IwXhTIlg3vwsPkpF1n3XnPVVDXwt9DZkG2HerT0D2Elf-910KwoAGoluar0h4HmHAD_CHjhjw3ScsWySp-kkSRmL4QA8S9gwZ_ejPE_GaTLKk-wUw2c3JBlOgv76xFC59sHt-NMXB6ms0Q)
 
 ## *Test name*: [TelemetryIntegrationTest](./TelemetryIntegrationTest/README.md)
 
@@ -54,6 +56,12 @@ Render this graph at
 - inputs
 - **inputMap**
 - **inputHub**
+
+## *Test name*: [GenericCodedSwitchTest](./GenericCodedSwitchTest/README.md)
+
+- inputs
+- **inputHub**
+  (only binary coded switches)
 
 ## *Test name*: [Proto1](./Proto1/README.md)
 
