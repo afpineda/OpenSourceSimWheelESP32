@@ -2,7 +2,7 @@
 
 ## Purpose
 
-To provide a number of **normally-open momentary switches** to the system,
+To provide a number of **switches** to the system,
 including (when required):
 
 - Push buttons.
@@ -703,9 +703,8 @@ In a button matrix, attach each bit pin to a selector pin.
 
 For example,
 let's say you have a 12-position binary-coded rotary switch
-(having `C`, `1`, `2`, `4` and `8` pins),
-`C` attached to `GND` and the others
-directly attached to the GPIO pins 10, 11 and 12.
+having `C` attached to `GND`, and `1`, `2`, `4` and `8`
+directly attached to the GPIO pins 11, 12, 13 and 14 respectively.
 
 ```c++
 void simWheelSetup()
@@ -715,9 +714,10 @@ void simWheelSetup()
    inputs::addButton(GPIO_NUM_11, 10);
    inputs::addButton(GPIO_NUM_12, 11);
    inputs::addButton(GPIO_NUM_13, 12);
+   inputs::addButton(GPIO_NUM_14, 13);
 
    // Create the input numbers for the decoded positions
-   // Note that we can reuse the input numbers 10, 11 and 12
+   // Note that we can reuse the input numbers 10 to 14
    CodedSwitch16 sw;
    sw[0] = 10; // array syntax
    sw.at(1) = 11; // Preferred syntax to detect out of bound indexes
@@ -733,9 +733,8 @@ void simWheelSetup()
    sw.at(11) = 21;
 
    // Create the coded switch
-   // having the bit pins `1`, `2` and `4` attached to GPIO_NUM_11, GPIO_NUM_12, GPIO_NUM_13
-   // as the input numbers 10, 11 and 12 are assigned to them (respectively)
-   inputHub::codedSwitch::add(10,11,12,sw);
+   // as the input numbers 10, 11, 12 and 13 are already assigned to the bit pins
+   inputHub::codedSwitch::add(10,11,12,13,sw);
    ...
 }
 ```
