@@ -133,7 +133,7 @@ public:
 /**
  * @brief Exception for unknown input numbers
  *
- * @note Unkown input numbers are used but no assigned
+ * @note Unknown input numbers are used but not assigned
  *       to a hardware input
  */
 class unknown_input_number : public std::runtime_error
@@ -363,6 +363,16 @@ public:
     {
         if (_value < 64)
             _registered |= (1ULL << _value);
+    }
+
+    /**
+     * @brief Unbook
+     *
+     */
+    void unbook() const
+    {
+        if (_value < 64)
+            _registered &= ~(1ULL << _value);
     }
 
     /**

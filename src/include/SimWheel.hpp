@@ -426,6 +426,67 @@ namespace inputHub
                 {JOY_LSHIFT_PADDLE, JOY_RSHIFT_PADDLE});
     } // namespace neutral
 
+    /**
+     * @brief Support for binary-coded switches attached to any input hardware
+     *
+     */
+    namespace codedSwitch
+    {
+        /**
+         * @brief Add a binary-coded switch up to 8 positions
+         *
+         * @param bit1 Input number assigned to pin `1`
+         * @param bit2 Input number assigned to pin `2`
+         * @param bit4 Input number assigned to pin `4`
+         * @param spec Input numbers assigned to each decoded position
+         * @param complementaryCode Set to true if your coded switch uses complementary binary code
+         */
+        void add(
+            InputNumber bit1,
+            InputNumber bit2,
+            InputNumber bit4,
+            CodedSwitch8 spec,
+            bool complementaryCode = true);
+
+        /**
+         * @brief Add a binary-coded switch up to 16 positions
+         *
+         * @param bit1 Input number assigned to pin `1`
+         * @param bit2 Input number assigned to pin `2`
+         * @param bit4 Input number assigned to pin `4`
+         * @param bit8 Input number assigned to pin `8`
+         * @param spec Input numbers assigned to each decoded position
+         * @param complementaryCode Set to true if your coded switch uses complementary binary code
+         */
+        void add(
+            InputNumber bit1,
+            InputNumber bit2,
+            InputNumber bit4,
+            InputNumber bit8,
+            CodedSwitch16 spec,
+            bool complementaryCode = true);
+
+        /**
+         * @brief Add a binary-coded switch up to 32 positions
+         *
+         * @param bit1 Input number assigned to pin `1`
+         * @param bit2 Input number assigned to pin `2`
+         * @param bit4 Input number assigned to pin `4`
+         * @param bit8 Input number assigned to pin `8`
+         * @param bit16 Input number assigned to pin `16`
+         * @param spec Input numbers assigned to each decoded position
+         * @param complementaryCode Set to true if your coded switch uses complementary binary code
+         */
+        void add(
+            InputNumber bit1,
+            InputNumber bit2,
+            InputNumber bit4,
+            InputNumber bit8,
+            InputNumber bit16,
+            CodedSwitch32 spec,
+            bool complementaryCode = true);
+    } // namespace codedSwitch
+
 } // namespace inputHub
 
 //-------------------------------------------------------------------

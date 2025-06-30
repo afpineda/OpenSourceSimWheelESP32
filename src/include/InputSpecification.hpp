@@ -23,6 +23,7 @@
 #include <vector>
 #include <map>
 #include <cstring> // For memset()
+#include <array>
 
 //-------------------------------------------------------------------
 // Input specification: Button matrix
@@ -309,11 +310,29 @@ typedef std::map<SR8Pin, InputNumber> ShiftRegisterChip;
 typedef std::vector<ShiftRegisterChip> ShiftRegisterChain;
 
 //-------------------------------------------------------------------
-// Input specification: coded rotary switch
+// Input specification: binary-coded switches
 //-------------------------------------------------------------------
 
 /**
- * @brief Coded rotary switch
+ * @brief Rotary coded switch
  *
  */
 typedef std::map<uint8_t, InputNumber> RotaryCodedSwitch;
+
+/**
+ * @brief Generic binary-coded switch up to 8 positions
+ *
+ */
+typedef std::array<InputNumber, 8> CodedSwitch8;
+
+/**
+ * @brief Generic binary-coded switch up to 16 positions
+ *
+ */
+typedef std::array<InputNumber, 16> CodedSwitch16;
+
+/**
+ * @brief Generic binary-coded switch up to 32 positions
+ *
+ */
+typedef std::array<InputNumber, 32> CodedSwitch32;

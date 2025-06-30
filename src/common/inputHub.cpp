@@ -18,6 +18,8 @@
 #include "InternalServices.hpp"
 #include "SimWheel.hpp"
 
+// #include <iostream> // For debug
+
 //-------------------------------------------------------------------
 // Globals
 //-------------------------------------------------------------------
@@ -61,9 +63,27 @@ static uint64_t dpadMask = ~0ULL;
 
 // Related to the neutral gear
 
-static bool neutralWasEnagaged = false;
+static bool neutralWasEngaged = false;
 static uint64_t neutralSwitchBitmap = 0ULL;
 static uint64_t neutralCombinationBitmap = 0ULL;
+
+// Related to coded switches
+
+struct CodedSwitch
+{
+    bool complementaryCode = false;
+    const InputNumber *decodedIN = nullptr;
+    size_t size;
+    InputNumber bit1 = UNSPECIFIED::VALUE;
+    InputNumber bit2 = UNSPECIFIED::VALUE;
+    InputNumber bit4 = UNSPECIFIED::VALUE;
+    InputNumber bit8 = UNSPECIFIED::VALUE;
+    InputNumber bit16 = UNSPECIFIED::VALUE;
+    uint64_t mask = ~0ULL;
+    uint64_t decodedMask = ~0ULL;
+};
+
+static std::vector<CodedSwitch> _codedSwitches;
 
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
@@ -185,6 +205,137 @@ void inputHub::neutralGear::set(
     neutral.book();
     neutralSwitchBitmap = (uint64_t)neutral;
     neutralCombinationBitmap = (uint64_t)combination;
+}
+
+//-------------------------------------------------------------------
+
+InputNumber *copyCodedSwitchSpec(InputNumber *source, size_t count)
+{
+    size_t size = sizeof(InputNumber) * count;
+    InputNumber *dest = static_cast<InputNumber *>(malloc(size));
+    if (dest == nullptr)
+        std::runtime_error("Not enough memory to create a coded switch");
+    memcpy(dest, source, size);
+    return dest;
+}
+
+void throw_repeated_input_number()
+{
+    throw std::runtime_error("input numbers used in all coded switches must be unique");
+}
+
+void inputHub::codedSwitch::add(
+    InputNumber bit1,
+    InputNumber bit2,
+    InputNumber bit4,
+    CodedSwitch8 spec,
+    bool complementaryCode)
+{
+    if ((bit1 == UNSPECIFIED::VALUE) ||
+        (bit2 == UNSPECIFIED::VALUE) ||
+        (bit4 == UNSPECIFIED::VALUE))
+        throw invalid_input_number();
+
+    if ((bit1 == bit2) || (bit1 == bit4) || (bit2 == bit4))
+        throw_repeated_input_number();
+
+    for (auto sw : _codedSwitches)
+    {
+        if ((bit1 == sw.bit1) || (bit1 == sw.bit2) || (bit1 == sw.bit4) || (bit1 == sw.bit8) || (bit1 == sw.bit16) ||
+            (bit2 == sw.bit1) || (bit2 == sw.bit2) || (bit2 == sw.bit4) || (bit2 == sw.bit8) || (bit2 == sw.bit16) ||
+            (bit4 == sw.bit1) || (bit4 == sw.bit2) || (bit4 == sw.bit4) || (bit4 == sw.bit8) || (bit4 == sw.bit16))
+            throw_repeated_input_number();
+    }
+
+    CodedSwitch another;
+    another.complementaryCode = complementaryCode;
+    another.bit1 = bit1;
+    another.bit2 = bit2;
+    another.bit4 = bit4;
+    another.size = spec.size();
+    another.decodedIN = copyCodedSwitchSpec(spec.data(), spec.size());
+    _codedSwitches.push_back(another);
+}
+
+void inputHub::codedSwitch::add(
+    InputNumber bit1,
+    InputNumber bit2,
+    InputNumber bit4,
+    InputNumber bit8,
+    CodedSwitch16 spec,
+    bool complementaryCode)
+{
+    if ((bit1 == UNSPECIFIED::VALUE) ||
+        (bit2 == UNSPECIFIED::VALUE) ||
+        (bit4 == UNSPECIFIED::VALUE) ||
+        (bit8 == UNSPECIFIED::VALUE))
+        throw invalid_input_number();
+
+    if ((bit1 == bit2) || (bit1 == bit4) || (bit1 == bit8) ||
+        (bit2 == bit4) || (bit2 == bit8) || (bit4 == bit8))
+        throw_repeated_input_number();
+
+    for (auto sw : _codedSwitches)
+    {
+        if ((bit1 == sw.bit1) || (bit1 == sw.bit2) || (bit1 == sw.bit4) || (bit1 == sw.bit8) || (bit1 == sw.bit16) ||
+            (bit2 == sw.bit1) || (bit2 == sw.bit2) || (bit2 == sw.bit4) || (bit2 == sw.bit8) || (bit2 == sw.bit16) ||
+            (bit4 == sw.bit1) || (bit4 == sw.bit2) || (bit4 == sw.bit4) || (bit4 == sw.bit8) || (bit4 == sw.bit16) ||
+            (bit8 == sw.bit1) || (bit8 == sw.bit2) || (bit8 == sw.bit4) || (bit8 == sw.bit8) || (bit8 == sw.bit16))
+            throw_repeated_input_number();
+    }
+
+    CodedSwitch another;
+    another.complementaryCode = complementaryCode;
+    another.bit1 = bit1;
+    another.bit2 = bit2;
+    another.bit4 = bit4;
+    another.bit8 = bit8;
+    another.size = spec.size();
+    another.decodedIN = copyCodedSwitchSpec(spec.data(), spec.size());
+    _codedSwitches.push_back(another);
+}
+
+void inputHub::codedSwitch::add(
+    InputNumber bit1,
+    InputNumber bit2,
+    InputNumber bit4,
+    InputNumber bit8,
+    InputNumber bit16,
+    CodedSwitch32 spec,
+    bool complementaryCode)
+{
+    if ((bit1 == UNSPECIFIED::VALUE) ||
+        (bit2 == UNSPECIFIED::VALUE) ||
+        (bit4 == UNSPECIFIED::VALUE) ||
+        (bit8 == UNSPECIFIED::VALUE) ||
+        (bit16 == UNSPECIFIED::VALUE))
+        throw invalid_input_number();
+
+    if ((bit1 == bit2) || (bit1 == bit4) || (bit1 == bit8) || (bit1 == bit16) ||
+        (bit2 == bit4) || (bit2 == bit8) || (bit2 == bit16) ||
+        (bit4 == bit8) || (bit4 == bit16) || (bit8 == bit16))
+        throw_repeated_input_number();
+
+    for (auto sw : _codedSwitches)
+    {
+        if ((bit1 == sw.bit1) || (bit1 == sw.bit2) || (bit1 == sw.bit4) || (bit1 == sw.bit8) || (bit1 == sw.bit16) ||
+            (bit2 == sw.bit1) || (bit2 == sw.bit2) || (bit2 == sw.bit4) || (bit2 == sw.bit8) || (bit2 == sw.bit16) ||
+            (bit4 == sw.bit1) || (bit4 == sw.bit2) || (bit4 == sw.bit4) || (bit4 == sw.bit8) || (bit4 == sw.bit16) ||
+            (bit8 == sw.bit1) || (bit8 == sw.bit2) || (bit8 == sw.bit4) || (bit8 == sw.bit8) || (bit8 == sw.bit16) ||
+            (bit16 == sw.bit1) || (bit16 == sw.bit2) || (bit16 == sw.bit4) || (bit16 == sw.bit8) || (bit8 == sw.bit16))
+            throw_repeated_input_number();
+    }
+
+    CodedSwitch another;
+    another.complementaryCode = complementaryCode;
+    another.bit1 = bit1;
+    another.bit2 = bit2;
+    another.bit4 = bit4;
+    another.bit8 = bit8;
+    another.bit16 = bit16;
+    another.size = spec.size();
+    another.decodedIN = copyCodedSwitchSpec(spec.data(), spec.size());
+    _codedSwitches.push_back(another);
 }
 
 //-------------------------------------------------------------------
@@ -368,6 +519,32 @@ void inputHubStart()
 
 void internals::inputHub::getReady()
 {
+    for (CodedSwitch &csw : _codedSwitches)
+    {
+        abortOnUnknownIN((uint64_t)csw.bit1, "Coded switch");
+        abortOnUnknownIN((uint64_t)csw.bit2, "Coded switch");
+        abortOnUnknownIN((uint64_t)csw.bit4, "Coded switch");
+        abortOnUnknownIN((uint64_t)csw.bit8, "Coded switch");
+        abortOnUnknownIN((uint64_t)csw.bit16, "Coded switch");
+        csw.bit1.unbook();
+        csw.bit2.unbook();
+        csw.bit4.unbook();
+        csw.bit8.unbook();
+        csw.bit16.unbook();
+        csw.mask = (uint64_t)csw.bit1 | (uint64_t)csw.bit2 | (uint64_t)csw.bit4 |
+                   (uint64_t)csw.bit8 | (uint64_t)csw.bit16;
+        csw.mask = ~csw.mask;
+    }
+    for (CodedSwitch &csw : _codedSwitches)
+    {
+        csw.decodedMask = ~0ULL;
+        for (uint8_t i = 0; i < csw.size; i++)
+        {
+            csw.decodedIN[i].book();
+            csw.decodedMask &= ~(uint64_t)csw.decodedIN[i];
+        }
+    }
+
     abortOnUnknownIN(calibrateUpBitmap, "bite point (+) calibration");
     abortOnUnknownIN(calibrateDownBitmap, "bite point (-) calibration");
     abortOnUnknownIN(cycleClutchWorkingModeBitmap, "cycle clutch working mode");
@@ -415,6 +592,47 @@ void internals::inputHub::getReady()
 
 //-------------------------------------------------------------------
 // Input processing
+//-------------------------------------------------------------------
+
+/**
+ * @brief Decode binary-coded switches
+ *
+ * @example 0b111 -> 0b01000000
+ */
+void inputHub_decode_bin_coded_switches(
+    uint64_t &globalState,
+    uint64_t &changes)
+{
+    if (_codedSwitches.size() == 0)
+        return;
+    for (auto sw : _codedSwitches)
+    {
+        uint8_t positionIndex = 0;
+        if ((uint64_t)sw.bit1 & globalState)
+            positionIndex = 1;
+        if ((uint64_t)sw.bit2 & globalState)
+            positionIndex += 2;
+        if ((uint64_t)sw.bit4 & globalState)
+            positionIndex += 4;
+        if ((sw.size > 15) && ((uint64_t)sw.bit8 & globalState))
+            positionIndex += 8;
+        if ((sw.size > 31) && ((uint64_t)sw.bit16 & globalState))
+            positionIndex += 16;
+        if (sw.complementaryCode)
+            positionIndex = sw.size - 1 - positionIndex;
+
+        // std::cout << "SW index: " << (int)positionIndex << std::endl;
+
+        uint64_t bitmap = (uint64_t)sw.decodedIN[positionIndex];
+        globalState &= sw.mask & sw.decodedMask;
+        globalState |= bitmap;
+        bool changed = (changes & ~sw.mask);
+        changes &= sw.mask & sw.decodedMask;
+        if (changed)
+            changed |= bitmap;
+    }
+}
+
 //-------------------------------------------------------------------
 
 /**
@@ -717,13 +935,13 @@ void inputHub_neutralGear_filter(uint64_t &rawInputBitmap)
     if (neutralSwitchBitmap)
     {
         bool combinationPressed = ((~rawInputBitmap & neutralCombinationBitmap) == 0ULL);
-        if (neutralWasEnagaged && ((rawInputBitmap & neutralCombinationBitmap) == 0ULL))
+        if (neutralWasEngaged && ((rawInputBitmap & neutralCombinationBitmap) == 0ULL))
             // all buttons in the combination are now released at the same time
-            neutralWasEnagaged = false;
-        else if (!neutralWasEnagaged && combinationPressed)
+            neutralWasEngaged = false;
+        else if (!neutralWasEngaged && combinationPressed)
             // all buttons in the combination are now pressed at the same time
-            neutralWasEnagaged = true;
-        if (neutralWasEnagaged)
+            neutralWasEngaged = true;
+        if (neutralWasEngaged)
         {
             // Remove the button combination
             rawInputBitmap &= ~neutralCombinationBitmap;
@@ -738,6 +956,9 @@ void inputHub_neutralGear_filter(uint64_t &rawInputBitmap)
 
 void internals::inputHub::onRawInput(DecouplingEvent &input)
 {
+
+    // Decode binary-coded switches when required
+    inputHub_decode_bin_coded_switches(input.rawInputBitmap, input.rawInputChanges);
 
     // Step 1: Execute user commands if any
     if (inputHub_commands_filter(input.rawInputBitmap, input.rawInputChanges))
