@@ -115,14 +115,14 @@ int main()
     CodedSwitch32 spec3;
 
     // Create valid coded switches
-    inputHub::codedSwitch::add(A1, A2, A4, spec1, true);
-    inputHub::codedSwitch::add(B1, B2, B4, B8, spec2, false);
+    inputHub::codedSwitch::add(A1, A2, A4, spec1);
+    inputHub::codedSwitch::add(B1, B2, B4, B8, spec2);
     std::cout << ("- Create coded switches -") << std::endl;
 
     // Try to create invalid coded switches due to repeated binary-coded input numbers
     try
     {
-        inputHub::codedSwitch::add(30, 31, 31, spec1, false);
+        inputHub::codedSwitch::add(30, 31, 31, spec1);
         assert(false && "repeated input number accepted (1)");
     }
     catch (std::runtime_error)
@@ -130,7 +130,7 @@ int main()
     }
     try
     {
-        inputHub::codedSwitch::add(30, 31, 32, 32, spec2, false);
+        inputHub::codedSwitch::add(30, 31, 32, 32, spec2);
         assert(false && "repeated input number accepted (2)");
     }
     catch (std::runtime_error)
@@ -138,7 +138,7 @@ int main()
     }
     try
     {
-        inputHub::codedSwitch::add(30, 31, 32, 30, 34, spec3, false);
+        inputHub::codedSwitch::add(30, 31, 32, 30, 34, spec3);
         assert(false && "repeated input number accepted (3)");
     }
     catch (std::runtime_error)
@@ -148,7 +148,7 @@ int main()
     // Try to create invalid coded switches due to binary-coded input numbers already used
     try
     {
-        inputHub::codedSwitch::add(30, 31, A4, spec1, false);
+        inputHub::codedSwitch::add(30, 31, A4, spec1);
         assert(false && "reused input number accepted (1)");
     }
     catch (std::runtime_error)
@@ -156,7 +156,7 @@ int main()
     }
     try
     {
-        inputHub::codedSwitch::add(30, 31, B1, 32, spec2, false);
+        inputHub::codedSwitch::add(30, 31, B1, 32, spec2);
         assert(false && "reused input number accepted (2)");
     }
     catch (std::runtime_error)
@@ -164,7 +164,7 @@ int main()
     }
     try
     {
-        inputHub::codedSwitch::add(B4, 30, 31, 32, 33, spec3, false);
+        inputHub::codedSwitch::add(B4, 30, 31, 32, 33, spec3);
         assert(false && "reused input number accepted (3)");
     }
     catch (std::runtime_error)
@@ -174,7 +174,7 @@ int main()
     // Try to create invalid coded switches due to unknown input numbers
     try
     {
-        inputHub::codedSwitch::add(UNSPECIFIED::VALUE, 30, 31, spec1, false);
+        inputHub::codedSwitch::add(UNSPECIFIED::VALUE, 30, 31, spec1);
         assert(false && "unknown input number accepted (1)");
     }
     catch (std::runtime_error)
@@ -182,7 +182,7 @@ int main()
     }
     try
     {
-        inputHub::codedSwitch::add(30, UNSPECIFIED::VALUE, 30, 31, spec2, false);
+        inputHub::codedSwitch::add(30, UNSPECIFIED::VALUE, 30, 31, spec2);
         assert(false && "unknown input number accepted (2)");
     }
     catch (std::runtime_error)
@@ -190,7 +190,7 @@ int main()
     }
     try
     {
-        inputHub::codedSwitch::add(30, 31, 32, 33, UNSPECIFIED::VALUE, spec3, false);
+        inputHub::codedSwitch::add(30, 31, 32, 33, UNSPECIFIED::VALUE, spec3);
         assert(false && "unknown input number accepted (3)");
     }
     catch (std::runtime_error)
@@ -215,16 +215,16 @@ int main()
     assert(InputNumber::booked(44) && "Input number 44 should be booked");
 
     // Check input in binary code
-    std::cout << ("- Check coded switch A (8 positions, complementary binary coded) -") << std::endl;
+    std::cout << ("- Check coded switch A (8 positions) -") << std::endl;
     send(0);
     for (uint8_t posA = 0; posA < 8; posA++)
     {
-        // std::cout << (int)posA << " -> " << (int)(0b111 & ~posA) << std::endl;
-        send(0b111 & ~posA); // note: complementary code
+        // std::cout << (int)posA << std::endl;
+        send(posA);
         assert<uint64_t>::equals("decoded switch A", (uint64_t)spec1.at(posA) | (uint64_t)spec2.at(0), currentLow);
     }
 
-    std::cout << ("- Check coded switch B (16 positions, binary coded) -") << std::endl;
+    std::cout << ("- Check coded switch B (16 positions) -") << std::endl;
     send(0);
     for (uint8_t posB = 0; posB < 16; posB++)
     {
@@ -236,12 +236,12 @@ int main()
 
         // std::cout << (int)posB << " -> " << (input) << std::endl;
         send(input);
-        assert<uint64_t>::equals("decoded switch B", (uint64_t)spec2.at(posB) | (uint64_t)spec1.at(7), currentLow);
+        assert<uint64_t>::equals("decoded switch B", (uint64_t)spec2.at(posB) | (uint64_t)spec1.at(0), currentLow);
     }
 
     // Check that unrelated inputs are not removed
     std::cout << ("- Check unrelated inputs -") << std::endl;
-    uint64_t base = 0b111;
+    uint64_t base = 0;
     uint64_t expected_base = (uint64_t)spec1.at(0) | (uint64_t)spec2.at(0);
     InputNumber ur1 = 11;
     InputNumber ur2 = 3;
@@ -253,7 +253,7 @@ int main()
     send(base | (uint64_t)ur3);
     assert<uint64_t>::equals("3", expected_base | (uint64_t)ur3, currentLow);
     base = 0b1011000000001;
-    expected_base = (uint64_t)spec1.at(6) | (uint64_t)spec2.at(14);
+    expected_base = (uint64_t)spec1.at(1) | (uint64_t)spec2.at(14);
     send(base | (uint64_t)ur1 | (uint64_t)ur2 | (uint64_t)ur3);
     assert<uint64_t>::equals("4", expected_base | (uint64_t)ur1 | (uint64_t)ur2 | (uint64_t)ur3, currentLow);
 }

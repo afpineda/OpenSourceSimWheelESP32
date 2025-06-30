@@ -71,7 +71,6 @@ static uint64_t neutralCombinationBitmap = 0ULL;
 
 struct CodedSwitch
 {
-    bool complementaryCode = false;
     const InputNumber *decodedIN = nullptr;
     size_t size;
     InputNumber bit1 = UNSPECIFIED::VALUE;
@@ -228,8 +227,7 @@ void inputHub::codedSwitch::add(
     InputNumber bit1,
     InputNumber bit2,
     InputNumber bit4,
-    CodedSwitch8 spec,
-    bool complementaryCode)
+    CodedSwitch8 spec)
 {
     if ((bit1 == UNSPECIFIED::VALUE) ||
         (bit2 == UNSPECIFIED::VALUE) ||
@@ -248,7 +246,6 @@ void inputHub::codedSwitch::add(
     }
 
     CodedSwitch another;
-    another.complementaryCode = complementaryCode;
     another.bit1 = bit1;
     another.bit2 = bit2;
     another.bit4 = bit4;
@@ -262,8 +259,7 @@ void inputHub::codedSwitch::add(
     InputNumber bit2,
     InputNumber bit4,
     InputNumber bit8,
-    CodedSwitch16 spec,
-    bool complementaryCode)
+    CodedSwitch16 spec)
 {
     if ((bit1 == UNSPECIFIED::VALUE) ||
         (bit2 == UNSPECIFIED::VALUE) ||
@@ -285,7 +281,6 @@ void inputHub::codedSwitch::add(
     }
 
     CodedSwitch another;
-    another.complementaryCode = complementaryCode;
     another.bit1 = bit1;
     another.bit2 = bit2;
     another.bit4 = bit4;
@@ -301,8 +296,7 @@ void inputHub::codedSwitch::add(
     InputNumber bit4,
     InputNumber bit8,
     InputNumber bit16,
-    CodedSwitch32 spec,
-    bool complementaryCode)
+    CodedSwitch32 spec)
 {
     if ((bit1 == UNSPECIFIED::VALUE) ||
         (bit2 == UNSPECIFIED::VALUE) ||
@@ -327,7 +321,6 @@ void inputHub::codedSwitch::add(
     }
 
     CodedSwitch another;
-    another.complementaryCode = complementaryCode;
     another.bit1 = bit1;
     another.bit2 = bit2;
     another.bit4 = bit4;
@@ -618,8 +611,6 @@ void inputHub_decode_bin_coded_switches(
             positionIndex += 8;
         if ((sw.size > 31) && ((uint64_t)sw.bit16 & globalState))
             positionIndex += 16;
-        if (sw.complementaryCode)
-            positionIndex = sw.size - 1 - positionIndex;
 
         // std::cout << "SW index: " << (int)positionIndex << std::endl;
 
