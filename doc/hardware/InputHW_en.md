@@ -105,18 +105,22 @@ When trying to configure another button in the simulator, that one will get in t
 We could alleviate the situation by instructing the firmware to report a button press
 only if there is a change in the position of the rotary switch.
 However, the simulator will never know what such a position is at first.
-In this sense, there is **no specific support** to absolute rotary switches in this project.
-They do work, but they are not recommended.
+In this sense, there is **no specific support** to absolute rotary switches in this project,
+but they do work.
 
 ### Rotary coded switches
 
 This is an absolute rotary switch (non-momentary),
 but the outputs are binary encoded in order to **save on pin requirements**.
 A N-position coded rotary switch requires $\log{_2}{N}$ pins.
+Rotary coded switches are the **preferred and recommended option**
+over regular rotary switches for this reason.
 See some of them at [mouser.com](https://mou.sr/4dzSt5o).
 
 This project supports rotary coded switches using "BCD" output code,
 complementary or not.
+They can be connected to any of the supported circuits for switch inputs,
+which are detailed below.
 
 ### A note about *"mode selectors"*
 
