@@ -59,7 +59,14 @@ ui::addPixelControlNotifications();
 
 Events are notified in this way:
 
-- *Startup*: all the LEDs light up white for one second.
+- *Startup* (shown for one second and a half)
+
+  - If there is no battery all the LEDs light up white.
+  - If there is a battery, the state of charge is shown as follows:
+    - Telemetry group: the length of a light-blue bar reflects the battery level.
+    - Other groups: a color gradient reflects the battery level in all pixels,
+      bright green for 100%, bright red for 0%.
+
 - *BLE advertising*: all the LEDs light up purple until the host computer is connected.
 - *Connection*: all the LEDs will go out.
 - *Low battery*: all the LEDs will show a red and blue animation for one second.

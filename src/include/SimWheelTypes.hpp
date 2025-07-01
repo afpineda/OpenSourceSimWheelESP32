@@ -1291,6 +1291,25 @@ protected:
      */
     void shiftToPrevious(PixelGroup group);
 
+    /**
+     * @brief Macro to render the current battery SoC
+     *
+     * @note Does nothing if there is no battery.
+     *       Pixels are rendered, but not shown yet.
+     *
+     * @param group A group of pixels
+     * @param colorGradientOrPercentage If true, show SoC as a color gradient from green to red
+     *        If false, show SoC as a percentage bar
+     * @param barColor Packed RGB color to use in the percentage bar.
+     *
+     * @return True if there is a battery.
+     * @return False if there is no battery.
+     */
+    virtual bool renderBatteryLevel(
+        PixelGroup group,
+        bool colorGradientOrPercentage,
+        uint32_t barColor = 0x00ACFA70);
+
 public:
     /**
      * @brief Get the singleton instance

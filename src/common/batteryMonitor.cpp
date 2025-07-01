@@ -314,29 +314,36 @@ bool batteryMonitor_getSoC(int &batteryLevel)
 // SoC daemon
 //-------------------------------------------------------------------
 
+bool getSoC(int &currentBatteryLevel)
+{
+    bool ok;
+    if (_batteryREADPin == UNSPECIFIED::VALUE)
+    {
+        // Use fuel gauge
+        ok = max1704x_getSoC(currentBatteryLevel);
+    }
+    else
+    {
+        // Use battery monitor
+        ok = batteryMonitor_getSoC(currentBatteryLevel);
+    }
+
+    if (!ok)
+        currentBatteryLevel = UNKNOWN_BATTERY_LEVEL;
+
+    return ok;
+}
+
 void batteryMonitorDaemonLoop(void *arg)
 {
     while (true)
     {
-        bool ok;
         int currentBatteryLevel;
-        if (_batteryREADPin == UNSPECIFIED::VALUE)
-        {
-            // Use fuel gauge
-            ok = max1704x_getSoC(currentBatteryLevel);
-        }
-        else
-        {
-            // Use battery monitor
-            ok = batteryMonitor_getSoC(currentBatteryLevel);
-        }
-
-        // Report battery level
-        if (!ok)
-            currentBatteryLevel = UNKNOWN_BATTERY_LEVEL;
+        bool ok = getSoC(currentBatteryLevel);
 
         if (currentBatteryLevel != lastBatteryLevel)
         {
+            // Report battery level
             lastBatteryLevel = currentBatteryLevel;
             OnBatteryLevel::notify(lastBatteryLevel);
         }
@@ -370,6 +377,10 @@ public:
     virtual int getLastBatteryLevel() override
     {
         return lastBatteryLevel;
+    }
+    virtual bool hasBattery() override
+    {
+        return configured;
     }
 };
 
@@ -415,6 +426,8 @@ void internals::batteryMonitor::getReady()
     if ((!FirmwareService::call::isRunning()) && (configured))
     {
         BatteryService::inject(new BatteryServiceProvider());
+        // Ensure there is a first reading available before the OnStart event
+        getSoC(lastBatteryLevel);
         OnStart::subscribe(batteryMonitorStart);
     }
 }

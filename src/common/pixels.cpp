@@ -15,6 +15,7 @@
 
 #include "SimWheel.hpp"
 #include "SimWheelInternals.hpp"
+#include "InternalServices.hpp"
 #include "OutputHardware.hpp"
 
 #include <mutex>
@@ -179,6 +180,36 @@ void internals::pixels::show()
 //---------------------------------------------------------------
 //---------------------------------------------------------------
 
+bool PixelControlNotification::renderBatteryLevel(
+    PixelGroup group,
+    bool colorGradientOrPercentage,
+    uint32_t barColor)
+{
+    if (BatteryService::call::hasBattery())
+    {
+        int soc = BatteryService::call::getLastBatteryLevel();
+        if (colorGradientOrPercentage)
+        {
+            // Color gradient
+            uint8_t green = (255 * soc) / 100;
+            internals::pixels::setAll(group, 255 - green, green, 0);
+        }
+        else
+        {
+            // Percentage bar
+            uint8_t pixelCount = internals::pixels::getCount(group);
+            uint8_t litCount = (soc * pixelCount) / 100;
+            uint8_t blue = barColor;
+            uint8_t green = (barColor >> 8);
+            uint8_t red = (barColor >> 16);
+            for (uint8_t pixelIndex = 0; pixelIndex < litCount; pixelIndex++)
+                internals::pixels::set(group, pixelIndex, red, green, blue);
+        }
+        return true;
+    }
+    return false;
+}
+
 void PixelControlNotification::onStart()
 {
     if (pixelMutex.try_lock_for(WAIT_MS))
@@ -190,12 +221,22 @@ void PixelControlNotification::onStart()
 
 void PixelControlNotification::pixelControl_OnStart()
 {
-    // All white
-    internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 85, 85, 85);
-    internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 85, 85, 85);
-    internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 85, 85, 85);
+    if (renderBatteryLevel(PixelGroup::GRP_TELEMETRY, false))
+    {
+        // Show battery level
+        renderBatteryLevel(PixelGroup::GRP_BUTTONS, true);
+        renderBatteryLevel(PixelGroup::GRP_INDIVIDUAL, true);
+    }
+    else
+    {
+        // There is no battery
+        // All white
+        internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 85, 85, 85);
+        internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 85, 85, 85);
+        internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 85, 85, 85);
+    }
     internals::pixels::show();
-    DELAY_MS(1000);
+    DELAY_MS(1500);
 }
 
 //---------------------------------------------------------------

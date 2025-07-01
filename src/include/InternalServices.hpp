@@ -454,9 +454,11 @@ class SERVICE(BatteryService)
 {
 public:
     virtual int getLastBatteryLevel() MOCK_R(UNKNOWN_BATTERY_LEVEL);
+    virtual bool hasBattery() MOCK_R(false);
     struct call
     {
         SINGLETON_INVOKER(int, getLastBatteryLevel(), getLastBatteryLevel())
+        SINGLETON_INVOKER(bool, hasBattery(), hasBattery())
     };
 };
 
