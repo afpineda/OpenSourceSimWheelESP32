@@ -139,6 +139,22 @@ and repeated every few seconds.
   Since there are 3 input pins, your rotary switch has 8 positions
   in the range [0,7]. Thus, `rotsw[8]` is out of range.
 
+- *"Input numbers used in all coded switches must be unique*
+
+  All calls to `inputHub::codedSwitch::add()` must specify unique
+  input numbers in their parameters.
+
+  For example:
+
+  ```c++
+  ...
+  inputHub::codedSwitch::add(10,11,12,13,sw1);
+  inputHub::codedSwitch::add(13,14,15,16,sw2);
+  ...
+  ```
+
+  is wrong because the input number `13` can not be shared.
+
 When troubleshooting I2C error messages,
 the [I2C probe](../src/Firmware/I2C_probe/I2C_probe.ino) firmware
 will be handy.
