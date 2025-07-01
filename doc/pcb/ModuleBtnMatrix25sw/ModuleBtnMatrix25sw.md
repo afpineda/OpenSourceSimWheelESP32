@@ -65,7 +65,7 @@ The pin out should be printed in the back of the board.
 - Selector pins are tagged as `S<n>`.
 - Input pins are tagged as `I<n>`.
 - Each switch is tagged as `S<a>I<b>`,
-  which means that it is attached to `S<s>` and `I<b>`.
+  which means that it is attached to `S<a>` and `I<b>`.
 
 ![Pin out, 32 switches module](./ModuleBtnMatrix25sw_pinout.png)
 
