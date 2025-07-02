@@ -1,5 +1,11 @@
 # Change log
 
+## 7.4.1
+
+- The battery level will now be shown briefly on startup
+  in all user interfaces where available.
+  Thanks to Discord user *Darinho23* for the suggestion.
+
 ## 7.4.0
 
 - There is a new API that allows to wire
