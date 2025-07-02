@@ -15,6 +15,7 @@
 
 #include "SimWheelUI.hpp"
 #include "HAL.hpp"
+#include "InternalServices.hpp"
 
 //-------------------------------------------------------------------
 // GLOBALS
@@ -65,17 +66,24 @@ SimpleShiftLight::~SimpleShiftLight()
 
 void SimpleShiftLight::onStart()
 {
-    led->set(true);
-    led->show();
-    DELAY_MS(100);
-    led->set(false);
-    led->show();
-    DELAY_MS(100);
-    led->set(true);
-    led->show();
-    DELAY_MS(100);
-    led->set(false);
-    led->show();
+    int soc;
+    if (BatteryService::call::hasBattery())
+        soc = BatteryService::call::getLastBatteryLevel();
+    else
+        soc = 100;
+
+    int blinkCount = ((100 - soc) / 10) + 1;
+    int blinkTimeMs = 1500 / blinkCount;
+
+    for (int i = 0; i < blinkCount; i++)
+    {
+        led->set(true);
+        led->show();
+        DELAY_MS(blinkTimeMs);
+        led->set(false);
+        led->show();
+        DELAY_MS(100);
+    }
 }
 
 void SimpleShiftLight::onConnected()
@@ -183,15 +191,17 @@ PCF8574RevLights::~PCF8574RevLights()
 
 void PCF8574RevLights::onStart()
 {
-    driver->setState(0xFF);
-    driver->show();
-    DELAY_MS(100);
+    int soc;
+    if (BatteryService::call::hasBattery())
+        soc = BatteryService::call::getLastBatteryLevel();
+    else
+        soc = 100;
+
     driver->setState(0x00);
+    for (int i = 0; i < soc / 8; i++)
+        driver->setLed(i, true);
     driver->show();
-    DELAY_MS(100);
-    driver->setState(0xFF);
-    driver->show();
-    DELAY_MS(200);
+    DELAY_MS(1500);
     driver->setState(0x00);
     driver->show();
 }

@@ -45,7 +45,7 @@ Consider [contributing](../../../.github/CONTRIBUTING.md) to this project.
    - `requiresECUTelemetry`
    - `requiresRaceControlTelemetry`
    - `requiresGaugeTelemetry`
-9.  When using the I2C bus, in the class constructor
+9. When using the I2C bus, in the class constructor
    place a call to `internals::hal::i2c::require()` to ensure the
    bus is initialized.
 10. Override `AbstractUserInterface::getMaxFPS()` to

@@ -45,3 +45,15 @@ ui::add<SimpleShiftLight>(GPIO_NUM_40);
 See the corresponding
 [integration test](../../../../src/QualityControl/IntegrationTests/TelemetryIntegrationTest/TelemetryIntegrationTest.ino)
 for an example.
+
+## Notifications
+
+- On startup:
+
+  The LED will flash faster and more times the lower the battery charge for one and a half seconds.
+  If there is no battery or the battery is fully charged,
+  it will light up without flashing.
+
+- On connection:
+
+  The LED will flash twice.

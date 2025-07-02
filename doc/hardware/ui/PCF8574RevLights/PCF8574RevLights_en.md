@@ -66,3 +66,26 @@ See [Overview of telemetry](../../../telemetry_en.md).
 See the corresponding
 [integration test](../../../../src/QualityControl/IntegrationTests/TelemetryIntegrationTest/TelemetryIntegrationTest.ino)
 for an example.
+
+## Notifications
+
+- On startup:
+
+  The length of the LED bar will show the battery charge for one and a half seconds.
+  If there is no battery all LEDs will light up.
+
+- On connection:
+
+  All LEDs will flash twice.
+
+- On bite point:
+
+  The length of the LED bar will show the bite point for a short moment.
+
+- On low battery
+
+  The LEDs will glow alternately in a momentary animation.
+
+- On save settings
+
+  Two lights will move from the ends to the centre.
