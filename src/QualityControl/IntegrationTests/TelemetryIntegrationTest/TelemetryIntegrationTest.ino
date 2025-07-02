@@ -14,10 +14,24 @@
 #include "SimWheelUI.hpp"
 #include "SimWheelInternals.hpp"
 #include "HAL.hpp"
+#include "InternalServices.hpp"
 
 #include <exception>
 
 #include <HardwareSerial.h>
+
+//------------------------------------------------------------------
+// Mocks
+//------------------------------------------------------------------
+
+// Uncomment to test notifications involving battery SoC
+
+class BatteryServiceMock: public BatteryService
+{
+public:
+    virtual int getLastBatteryLevel() override { return 25; }
+    virtual bool hasBattery() override { return true; }
+};
 
 //------------------------------------------------------------------
 // Arduino entry point
@@ -49,6 +63,10 @@ void setup()
 
         internals::hid::common::getReady();
         internals::ui::getReady();
+
+        // Uncomment to test notifications involving battery SoC
+        BatteryService::inject(new BatteryServiceMock());
+
         OnStart::notify();
 
         Serial.println("-- GO --");

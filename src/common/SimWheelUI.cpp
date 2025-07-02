@@ -84,6 +84,7 @@ void SimpleShiftLight::onStart()
         led->show();
         DELAY_MS(100);
     }
+    DELAY_MS(400);
 }
 
 void SimpleShiftLight::onConnected()
@@ -204,6 +205,7 @@ void PCF8574RevLights::onStart()
     DELAY_MS(1500);
     driver->setState(0x00);
     driver->show();
+    DELAY_MS(500);
 }
 
 void PCF8574RevLights::onConnected()

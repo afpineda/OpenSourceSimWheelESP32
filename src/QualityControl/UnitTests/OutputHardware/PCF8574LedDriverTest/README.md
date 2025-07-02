@@ -16,10 +16,10 @@ to know the proper `SDA` and `SCL` pins.
 
 ## Procedure and expected output
 
-To prevent any misundersanding, the sketch will list all
+To prevent any misunderstanding, the sketch will list all
 I2C devices in the secondary bus and print their addresses.
 Check you are using the correct one.
-The sketck uses the I2C hardware address `2`
+The sketch uses the I2C hardware address `2`
 combined with the I2C factory address `38` (hexadecimal).
 Yo must modify the sketch if your PCF8574 uses another address.
 
