@@ -19,6 +19,7 @@
 #include "SimWheelInternals.hpp"
 #include "InternalServices.hpp"
 #include "HID_definitions.hpp"
+#include "esp_mac.h" // For esp_efuse_mac_get_default()
 // #include <Arduino.h> // For debugging
 
 // ----------------------------------------------------------------------------
@@ -82,6 +83,13 @@ void internals::hid::begin(
         USB.manufacturerName(deviceManufacturer.c_str());
         USB.usbClass(0x03); // HID device class
         USB.usbSubClass(0); // No subclass
+        uint64_t serialNumber;
+        if (esp_efuse_mac_get_default((uint8_t *)(&serialNumber)) == ESP_OK)
+        {
+            char serialAsStr[9];
+            snprintf(serialAsStr,9,"%08llX",serialNumber);
+            USB.serialNumber(serialAsStr);
+        }
         hidDevice.addDevice(&simWheelHID, sizeof(hid_descriptor));
         hidDevice.begin();
         USB.begin();
