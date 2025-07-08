@@ -98,6 +98,8 @@
 #define BLE_PRODUCT_ID 0xffff
 /// @brief Flag not to load the stored hardware ID
 #define TEST_HARDWARE_ID 0xffff
+/// @brief Assigned Number to the "Serial Number String" characteristic
+#define BLE_SERIAL_NUMBER_CHR_UUID 0x2A25
 
 // See https://devzone.nordicsemi.com/nordic/nordic-blog/b/blog/posts/one-minute-to-understand-ble-mtu-data-package
 // BLE_MTU_SIZE must be greater than 23 bytes
