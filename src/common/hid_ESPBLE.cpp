@@ -25,6 +25,7 @@
 #include "SimWheelInternals.hpp"
 #include "InternalServices.hpp"
 #include "HID_definitions.hpp"
+#include "esp_mac.h" // For esp_efuse_mac_get_default()
 // #include <Arduino.h> // For debugging
 
 // ----------------------------------------------------------------------------
@@ -40,6 +41,7 @@ static BLEHIDDeviceFix *hidDevice = nullptr;
 static BLECharacteristic *inputGamePad = nullptr;
 static BLEServer *pServer = nullptr;
 static bool notifyConfigChanges = false;
+static constexpr uint16_t serialNumberChrUuid = BLE_SERIAL_NUMBER_CHR_UUID;
 
 // ----------------------------------------------------------------------------
 // BLEHIDDeviceFix
@@ -278,6 +280,27 @@ void internals::hid::begin(
         hidDevice->pnp(BLE_VENDOR_SOURCE, debugged_vid, debugged_pid, PRODUCT_REVISION);
         hidDevice->hidInfo(0x00, 0x01);
         hidDevice->reportMap((uint8_t *)hid_descriptor, sizeof(hid_descriptor));
+
+        // Add the serial number to the "Device Information" service
+        uint64_t serialNumber;
+        if (esp_efuse_mac_get_default((uint8_t *)(&serialNumber)) == ESP_OK)
+        {
+            BLEService *deviceInfo = hidDevice->deviceInfo();
+            if (deviceInfo)
+            {
+                BLECharacteristic *serialNumChr = deviceInfo->getCharacteristic(serialNumberChrUuid);
+                if (!serialNumChr)
+                    serialNumChr =
+                        deviceInfo->createCharacteristic(serialNumberChrUuid, BLECharacteristic::PROPERTY_READ);
+                if (serialNumChr)
+                {
+                    char serialAsStr[9];
+                    memset(serialAsStr, 0, 9);
+                    snprintf(serialAsStr, 9, "%08llX", serialNumber);
+                    serialNumChr->setValue(serialAsStr);
+                }
+            }
+        }
 
         // Create HID reports
         inputGamePad = hidDevice->inputReport(RID_INPUT_GAMEPAD);
