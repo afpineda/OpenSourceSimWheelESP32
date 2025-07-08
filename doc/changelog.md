@@ -1,5 +1,11 @@
 # Change log
 
+## 7.4.2
+
+- A unique serial number has been added to the device information
+  for all HID implementations.
+  This is not currently useful, but it may be in the future.
+
 ## 7.4.1
 
 - The battery level will now be shown briefly on startup
