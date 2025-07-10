@@ -36,6 +36,9 @@ Thus, you only need to order the fabrication of the board as the price is much l
   - Pay attention to the orientation of the diodes.
   - Any Schottky type diode with low forward voltage can be used.
     The 1N4148 brand is recommended.
+  - The positive pole is very close to another soldering pad.
+    Don't worry. It does not matter if you solder them together
+    as they are already connected by a trace.
 
 - Bended male Dupond headers (**optional**)
 
