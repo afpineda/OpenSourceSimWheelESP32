@@ -115,6 +115,12 @@ void simWheelSetup()
   Wire one of each to the DevKit board and
   use the others as a pass-through to other modules.
 
+> [!CAUTION]
+> The power supply pins are designed for low current demand,
+> **maximum 400 mA**.
+> Do not attempt to power power-hungry devices
+> through these pins or they will melt.
+
 ### I2C bus
 
 The I2C bus is internally pulled up by the DevKit board.

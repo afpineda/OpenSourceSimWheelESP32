@@ -111,3 +111,9 @@ In case of need, wire (externally) an additional resistor between these terminal
 
 Use any impedance between 1K-ohm and 10K-ohm.
 2K-ohm is recommended.
+
+> [!CAUTION]
+> The power supply pins are designed for low current demand,
+> **maximum 400 mA**.
+> Do not attempt to power power-hungry devices
+> through these pins or they will melt.

@@ -125,3 +125,9 @@ void simWheelSetup()
 
 - Wire the switches in columns.
   There are printed tags in the back of the board to know which is which.
+
+> [!CAUTION]
+> The power supply pins are designed for low current demand,
+> **maximum 400 mA**.
+> Do not attempt to power power-hungry devices
+> through these pins or they will melt.
