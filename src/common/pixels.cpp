@@ -27,11 +27,31 @@
 //---------------------------------------------------------------
 
 static LEDStrip *pixelData[3] = {nullptr};
-static std::recursive_timed_mutex pixelMutex;
 #define DELAY_MS(ms) std::this_thread::sleep_for(std::chrono::milliseconds(ms))
 #define WAIT_MS std::chrono::milliseconds(80)
 #define INT(N) ((uint8_t)N)
 #define CEIL_DIV(dividend, divisor) (dividend + divisor - 1) / divisor
+
+//---------------------------------------------------------------
+// The mutex issue
+//---------------------------------------------------------------
+// DEVELOPMENT NOTE 2025/07/13:
+// When using a recursive timed mutex
+// an "unable to allocate buffer" error shows up repeatedly
+// leading to a system crash.
+// This happens both with std::recursive_timed_mutex (c++ stdlib)
+// and xSemaphoreCreateRecursiveMutexStatic (FreeRTOS).
+// Current implementation uses std::recursive_mutex instead,
+// which seems bug-free.
+// Some macros are defined for easy rework in case the
+// mutex implementation has to change in the future.
+//---------------------------------------------------------------
+
+static std::recursive_mutex pixelMutex;
+thread_local bool notificationInProgress = false;
+#define CAN_TAKE_MUTEX pixelMutex.try_lock()
+#define TAKE_MUTEX pixelMutex.lock()
+#define GIVE_MUTEX pixelMutex.unlock()
 
 //---------------------------------------------------------------
 //---------------------------------------------------------------
@@ -69,7 +89,7 @@ void pixelsShutdown()
 {
     // NOTE: no timeouts here.
     // Shutdown is mandatory.
-    pixelMutex.lock();
+    TAKE_MUTEX;
     for (int i = 0; i < 3; i++)
         if (pixelData[i])
         {
@@ -78,7 +98,7 @@ void pixelsShutdown()
             delete pixelData[i];
             pixelData[i] = nullptr;
         }
-    pixelMutex.unlock();
+    GIVE_MUTEX;
 }
 
 //---------------------------------------------------------------
@@ -109,10 +129,10 @@ void internals::pixels::set(
     uint8_t green,
     uint8_t blue)
 {
-    if (pixelData[INT(group)] && pixelMutex.try_lock_for(WAIT_MS))
+    if (pixelData[INT(group)] && CAN_TAKE_MUTEX)
     {
         pixelData[INT(group)]->pixelRGB(pixelIndex, red, green, blue);
-        pixelMutex.unlock();
+        GIVE_MUTEX;
     }
 }
 
@@ -122,34 +142,34 @@ void internals::pixels::setAll(
     uint8_t green,
     uint8_t blue)
 {
-    if (pixelData[INT(group)] && pixelMutex.try_lock_for(WAIT_MS))
+    if (pixelData[INT(group)] && CAN_TAKE_MUTEX)
     {
         pixelData[INT(group)]->pixelRangeRGB(0, 255, red, green, blue);
-        pixelMutex.unlock();
+        GIVE_MUTEX;
     }
 }
 
 void internals::pixels::shiftToNext(PixelGroup group)
 {
-    if (pixelData[INT(group)] && pixelMutex.try_lock_for(WAIT_MS))
+    if (pixelData[INT(group)] && CAN_TAKE_MUTEX)
     {
         pixelData[INT(group)]->shiftToNext();
-        pixelMutex.unlock();
+        GIVE_MUTEX;
     }
 }
 
 void internals::pixels::shiftToPrevious(PixelGroup group)
 {
-    if (pixelData[INT(group)] && pixelMutex.try_lock_for(WAIT_MS))
+    if (pixelData[INT(group)] && CAN_TAKE_MUTEX)
     {
         pixelData[INT(group)]->shiftToPrevious();
-        pixelMutex.unlock();
+        GIVE_MUTEX;
     }
 }
 
 void internals::pixels::reset()
 {
-    if (pixelMutex.try_lock_for(WAIT_MS))
+    if (CAN_TAKE_MUTEX)
     {
         for (int i = 0; i < 3; i++)
             if (pixelData[i])
@@ -157,20 +177,20 @@ void internals::pixels::reset()
                 pixelData[i]->pixelRangeRGB(0, 255, 0, 0, 0);
                 pixelData[i]->show();
             }
-        pixelMutex.unlock();
+        GIVE_MUTEX;
     }
 }
 
 void internals::pixels::show()
 {
-    if (pixelMutex.try_lock_for(WAIT_MS))
+    if (CAN_TAKE_MUTEX)
     {
         for (int i = 0; i < 3; i++)
             if (pixelData[i])
             {
                 pixelData[i]->show();
             }
-        pixelMutex.unlock();
+        GIVE_MUTEX;
     }
 }
 
@@ -212,10 +232,10 @@ bool PixelControlNotification::renderBatteryLevel(
 
 void PixelControlNotification::onStart()
 {
-    if (pixelMutex.try_lock_for(WAIT_MS))
+    if (CAN_TAKE_MUTEX)
     {
         pixelControl_OnStart();
-        pixelMutex.unlock();
+        GIVE_MUTEX;
     }
 }
 
@@ -274,10 +294,10 @@ void PixelControlNotification::shiftToPrevious(PixelGroup group)
 
 void PixelControlNotification::onBitePoint(uint8_t bitePoint)
 {
-    if (pixelMutex.try_lock_for(WAIT_MS))
+    if (CAN_TAKE_MUTEX)
     {
         pixelControl_OnBitePoint(bitePoint);
-        pixelMutex.unlock();
+        GIVE_MUTEX;
     }
 }
 
@@ -299,10 +319,10 @@ void PixelControlNotification::pixelControl_OnBitePoint(uint8_t bitePoint)
 
 void PixelControlNotification::onConnected()
 {
-    if (pixelMutex.try_lock_for(WAIT_MS))
+    if (CAN_TAKE_MUTEX)
     {
         pixelControl_OnConnected();
-        pixelMutex.unlock();
+        GIVE_MUTEX;
     }
 }
 
@@ -315,10 +335,10 @@ void PixelControlNotification::pixelControl_OnConnected()
 
 void PixelControlNotification::onBLEdiscovering()
 {
-    if (pixelMutex.try_lock_for(WAIT_MS))
+    if (CAN_TAKE_MUTEX)
     {
         pixelControl_OnBLEdiscovering();
-        pixelMutex.unlock();
+        GIVE_MUTEX;
     }
 }
 
@@ -336,10 +356,10 @@ void PixelControlNotification::pixelControl_OnBLEdiscovering()
 
 void PixelControlNotification::onLowBattery()
 {
-    if (pixelMutex.try_lock_for(WAIT_MS))
+    if (CAN_TAKE_MUTEX)
     {
         pixelControl_OnLowBattery();
-        pixelMutex.unlock();
+        GIVE_MUTEX;
     }
 }
 
@@ -375,10 +395,10 @@ void PixelControlNotification::pixelControl_OnLowBattery()
 
 void PixelControlNotification::onSaveSettings()
 {
-    if (pixelMutex.try_lock_for(WAIT_MS))
+    if (CAN_TAKE_MUTEX)
     {
         pixelControl_OnSaveSettings();
-        pixelMutex.unlock();
+        GIVE_MUTEX;
     }
 }
 
