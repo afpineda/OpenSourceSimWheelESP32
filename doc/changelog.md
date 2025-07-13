@@ -1,5 +1,12 @@
 # Change log
 
+## 7.4.3
+
+- Fixed a bug in the pixel control feature which caused a system crash
+  when using notifications.
+  The bug only manifested itself in the low battery event.
+  Thanks to Discord user *Darinho23* for reporting.
+
 ## 7.4.2
 
 - A unique serial number has been added to the device information
