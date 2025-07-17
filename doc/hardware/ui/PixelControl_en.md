@@ -33,13 +33,13 @@ Place up to three calls to `pixels::configure()` with the following parameters
    The default and recommended value is 255 (maximum brightness).
    Do not set to zero (no brightness).
 
-> [!TIP]
-> **Brightness workaround:**
-> If a 5V power supply is required but not available for the LED strip,
-> use a 3.3V power supply, no level shifter and set the global brightness to 16.
-> This is **not optimal** as some colors will be approximate.
+## Brightness workaround
 
-Example:
+If a 5V power supply is required but not available for the LED strip,
+use a 3.3V power supply, no level shifter and set the global brightness to **128** or lower.
+This is **not optimal** as some colors will be approximate, but it works pretty well.
+
+## Example
 
 ```c++
   // 8 pixels for telemetry display in GPIO #8 working in 3.3V logic

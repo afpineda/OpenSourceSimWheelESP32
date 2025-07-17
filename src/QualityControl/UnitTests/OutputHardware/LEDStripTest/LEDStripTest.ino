@@ -30,7 +30,7 @@ void setup()
 {
     Serial.begin(115200);
     strip = new LEDStrip(TEST_D_OUT, LED_COUNT, TEST_LEVEL_SHIFTER);
-    strip->brightness(16);
+    strip->brightness(128);
     Serial.println("--GO--");
 }
 

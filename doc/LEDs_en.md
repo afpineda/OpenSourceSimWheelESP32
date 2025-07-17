@@ -70,7 +70,7 @@ you will need a small "level shifter" circuit, which is described below.
 
 - **No level shifter (3.3V logic)**
 
-  Wire `Dout` to `Din` in the first pixel via a 300 to 500 ohm resistor.
+  Wire `Dout` to `Din` in the first pixel via a 300 to 1000 ohm resistor.
   The resistor should be at the end of the wire closest to the LED strip,
   not the DevKit board.
   This resistor can be omitted **only**
@@ -120,5 +120,6 @@ This project supports the following:
 > [!NOTE]
 > The popular RGB LED strips based on the **WS2812B** driver require
 > a 5V power supply and a level shifter.
-> However, I made it work with the brightness workaround,
+> However, I made it work with the
+> [brightness workaround](./hardware/ui/PixelControl_en.md)
 > no level shifter and a 3.3V power supply.
