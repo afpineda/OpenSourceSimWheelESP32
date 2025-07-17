@@ -48,7 +48,6 @@ static LEDStrip *pixelData[3] = {nullptr};
 //---------------------------------------------------------------
 
 static std::recursive_mutex pixelMutex;
-thread_local bool notificationInProgress = false;
 #define CAN_TAKE_MUTEX pixelMutex.try_lock()
 #define TAKE_MUTEX pixelMutex.lock()
 #define GIVE_MUTEX pixelMutex.unlock()
@@ -200,6 +199,11 @@ void internals::pixels::show()
 //---------------------------------------------------------------
 //---------------------------------------------------------------
 
+uint8_t PixelControlNotification::getPixelCount(PixelGroup group)
+{
+    return internals::pixels::getCount(group);
+}
+
 bool PixelControlNotification::renderBatteryLevel(
     PixelGroup group,
     bool colorGradientOrPercentage,
@@ -232,11 +236,9 @@ bool PixelControlNotification::renderBatteryLevel(
 
 void PixelControlNotification::onStart()
 {
-    if (CAN_TAKE_MUTEX)
-    {
-        pixelControl_OnStart();
-        GIVE_MUTEX;
-    }
+    TAKE_MUTEX;
+    pixelControl_OnStart();
+    GIVE_MUTEX;
 }
 
 void PixelControlNotification::pixelControl_OnStart()
@@ -294,11 +296,9 @@ void PixelControlNotification::shiftToPrevious(PixelGroup group)
 
 void PixelControlNotification::onBitePoint(uint8_t bitePoint)
 {
-    if (CAN_TAKE_MUTEX)
-    {
-        pixelControl_OnBitePoint(bitePoint);
-        GIVE_MUTEX;
-    }
+    TAKE_MUTEX;
+    pixelControl_OnBitePoint(bitePoint);
+    GIVE_MUTEX;
 }
 
 void PixelControlNotification::pixelControl_OnBitePoint(uint8_t bitePoint)
@@ -319,11 +319,9 @@ void PixelControlNotification::pixelControl_OnBitePoint(uint8_t bitePoint)
 
 void PixelControlNotification::onConnected()
 {
-    if (CAN_TAKE_MUTEX)
-    {
-        pixelControl_OnConnected();
-        GIVE_MUTEX;
-    }
+    TAKE_MUTEX;
+    pixelControl_OnConnected();
+    GIVE_MUTEX;
 }
 
 void PixelControlNotification::pixelControl_OnConnected()
@@ -335,11 +333,9 @@ void PixelControlNotification::pixelControl_OnConnected()
 
 void PixelControlNotification::onBLEdiscovering()
 {
-    if (CAN_TAKE_MUTEX)
-    {
-        pixelControl_OnBLEdiscovering();
-        GIVE_MUTEX;
-    }
+    TAKE_MUTEX;
+    pixelControl_OnBLEdiscovering();
+    GIVE_MUTEX;
 }
 
 void PixelControlNotification::pixelControl_OnBLEdiscovering()
@@ -356,11 +352,9 @@ void PixelControlNotification::pixelControl_OnBLEdiscovering()
 
 void PixelControlNotification::onLowBattery()
 {
-    if (CAN_TAKE_MUTEX)
-    {
-        pixelControl_OnLowBattery();
-        GIVE_MUTEX;
-    }
+    TAKE_MUTEX;
+    pixelControl_OnLowBattery();
+    GIVE_MUTEX;
 }
 
 void PixelControlNotification::pixelControl_OnLowBattery()
@@ -395,11 +389,9 @@ void PixelControlNotification::pixelControl_OnLowBattery()
 
 void PixelControlNotification::onSaveSettings()
 {
-    if (CAN_TAKE_MUTEX)
-    {
-        pixelControl_OnSaveSettings();
-        GIVE_MUTEX;
-    }
+    TAKE_MUTEX;
+    pixelControl_OnSaveSettings();
+    GIVE_MUTEX;
 }
 
 void PixelControlNotification::pixelControl_OnSaveSettings()

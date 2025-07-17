@@ -25,12 +25,12 @@
 
 // Uncomment to test notifications involving battery SoC
 
-// class BatteryServiceMock: public BatteryService
-// {
-// public:
-//     virtual int getLastBatteryLevel() override { return 25; }
-//     virtual bool hasBattery() override { return true; }
-// };
+class BatteryServiceMock: public BatteryService
+{
+public:
+    virtual int getLastBatteryLevel() override { return 25; }
+    virtual bool hasBattery() override { return true; }
+};
 
 //------------------------------------------------------------------
 // Arduino entry point
@@ -58,7 +58,7 @@ void setup()
         internals::ui::getReady();
 
         // Uncomment to test notifications involving battery SoC
-        // BatteryService::inject(new BatteryServiceMock());
+        BatteryService::inject(new BatteryServiceMock());
 
         OnStart::notify();
 

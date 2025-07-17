@@ -1,5 +1,10 @@
 # Change log
 
+## 7.4.4
+
+- Pixel control notifications are prioritized over SimHub commands.
+- Documentation updates regarding RGB LED strips without level shifter.
+
 ## 7.4.3
 
 - Fixed a bug in the pixel control feature which caused a system crash
