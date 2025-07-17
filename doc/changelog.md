@@ -1,9 +1,10 @@
 # Change log
 
-## 7.4.4
+## 7.5.0
 
 - Pixel control notifications are prioritized over SimHub commands.
 - Documentation updates regarding RGB LED strips without level shifter.
+- Added a protected method to get the pixel count in `PixelControlNotification`.
 
 ## 7.4.3
 
