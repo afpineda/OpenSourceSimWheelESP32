@@ -22,6 +22,8 @@
 #include <chrono>
 #include <thread>
 
+#include <HardwareSerial.h> // For debug
+
 //---------------------------------------------------------------
 // Globals
 //---------------------------------------------------------------
@@ -199,69 +201,14 @@ void internals::pixels::show()
 //---------------------------------------------------------------
 //---------------------------------------------------------------
 
+//---------------------------------------------------------------
+// Protected methods available to descendant classes
+//---------------------------------------------------------------
+
 uint8_t PixelControlNotification::getPixelCount(PixelGroup group)
 {
     return internals::pixels::getCount(group);
 }
-
-bool PixelControlNotification::renderBatteryLevel(
-    PixelGroup group,
-    bool colorGradientOrPercentage,
-    uint32_t barColor)
-{
-    if (BatteryService::call::hasBattery())
-    {
-        int soc = BatteryService::call::getLastBatteryLevel();
-        if (colorGradientOrPercentage)
-        {
-            // Color gradient
-            uint8_t green = (255 * soc) / 100;
-            internals::pixels::setAll(group, 255 - green, green, 0);
-        }
-        else
-        {
-            // Percentage bar
-            uint8_t pixelCount = internals::pixels::getCount(group);
-            uint8_t litCount = (soc * pixelCount) / 100;
-            uint8_t blue = barColor;
-            uint8_t green = (barColor >> 8);
-            uint8_t red = (barColor >> 16);
-            for (uint8_t pixelIndex = 0; pixelIndex < litCount; pixelIndex++)
-                internals::pixels::set(group, pixelIndex, red, green, blue);
-        }
-        return true;
-    }
-    return false;
-}
-
-void PixelControlNotification::onStart()
-{
-    TAKE_MUTEX;
-    pixelControl_OnStart();
-    GIVE_MUTEX;
-}
-
-void PixelControlNotification::pixelControl_OnStart()
-{
-    if (renderBatteryLevel(PixelGroup::GRP_TELEMETRY, false))
-    {
-        // Show battery level
-        renderBatteryLevel(PixelGroup::GRP_BUTTONS, true);
-        renderBatteryLevel(PixelGroup::GRP_INDIVIDUAL, true);
-    }
-    else
-    {
-        // There is no battery
-        // All white
-        internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 85, 85, 85);
-        internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 85, 85, 85);
-        internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 85, 85, 85);
-    }
-    internals::pixels::show();
-    DELAY_MS(1500);
-}
-
-//---------------------------------------------------------------
 
 void PixelControlNotification::set(
     PixelGroup group,
@@ -292,17 +239,128 @@ void PixelControlNotification::shiftToPrevious(PixelGroup group)
     internals::pixels::shiftToPrevious(group);
 }
 
+bool PixelControlNotification::renderBatteryLevel(
+    PixelGroup group,
+    bool colorGradientOrPercentage,
+    uint32_t barColor)
+{
+    if (BatteryService::call::isBatteryPresent())
+    {
+        int soc = BatteryService::call::getLastBatteryLevel();
+        if (colorGradientOrPercentage)
+        {
+            // Color gradient
+            uint8_t green = (255 * soc) / 100;
+            internals::pixels::setAll(group, 255 - green, green, 0);
+        }
+        else
+        {
+            // Percentage bar
+            uint8_t pixelCount = internals::pixels::getCount(group);
+            uint8_t litCount = (soc * pixelCount) / 100;
+            uint8_t blue = barColor;
+            uint8_t green = (barColor >> 8);
+            uint8_t red = (barColor >> 16);
+            for (uint8_t pixelIndex = 0; pixelIndex < litCount; pixelIndex++)
+                internals::pixels::set(group, pixelIndex, red, green, blue);
+        }
+        return true;
+    }
+    return false;
+}
+
 //---------------------------------------------------------------
+// Inherited virtual method implementation
+//---------------------------------------------------------------
+
+void PixelControlNotification::onStart()
+{
+    notConnectedYet = true;
+    Serial.println("onStart");
+    TAKE_MUTEX;
+    pixelControl_OnStart();
+    GIVE_MUTEX;
+}
 
 void PixelControlNotification::onBitePoint(uint8_t bitePoint)
 {
+    Serial.println("onBitePoint");
     TAKE_MUTEX;
     pixelControl_OnBitePoint(bitePoint);
+    if (notConnectedYet)
+        pixelControl_OnBLEdiscovering();
     GIVE_MUTEX;
+}
+
+void PixelControlNotification::onConnected()
+{
+    notConnectedYet = false;
+    Serial.println("onConnected");
+    TAKE_MUTEX;
+    pixelControl_OnConnected();
+    GIVE_MUTEX;
+}
+
+void PixelControlNotification::onBLEdiscovering()
+{
+    notConnectedYet = true;
+    Serial.println("onBLEdiscovering");
+    TAKE_MUTEX;
+    pixelControl_OnBLEdiscovering();
+    GIVE_MUTEX;
+}
+
+void PixelControlNotification::onLowBattery()
+{
+    TAKE_MUTEX;
+    pixelControl_OnLowBattery();
+    if (notConnectedYet)
+        pixelControl_OnBLEdiscovering();
+    GIVE_MUTEX;
+}
+
+void PixelControlNotification::onSaveSettings()
+{
+    Serial.println("onSaveSettings");
+    TAKE_MUTEX;
+    pixelControl_OnSaveSettings();
+    if (notConnectedYet)
+        pixelControl_OnBLEdiscovering();
+    GIVE_MUTEX;
+}
+
+//---------------------------------------------------------------
+// Default implementation of pixel control notifications
+//---------------------------------------------------------------
+
+void PixelControlNotification::pixelControl_OnStart()
+{
+    if (renderBatteryLevel(PixelGroup::GRP_TELEMETRY, false))
+    {
+        // Show battery level
+        renderBatteryLevel(PixelGroup::GRP_BUTTONS, true);
+        renderBatteryLevel(PixelGroup::GRP_INDIVIDUAL, true);
+    }
+    else
+    {
+        // There is no battery
+        // All white
+        internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 85, 85, 85);
+        internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 85, 85, 85);
+        internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 85, 85, 85);
+    }
+    internals::pixels::show();
+    DELAY_MS(1500);
 }
 
 void PixelControlNotification::pixelControl_OnBitePoint(uint8_t bitePoint)
 {
+    if (notConnectedYet)
+        // Ignore the bite point event if not connected yet.
+        // On startup, a single bite point event is always triggered
+        // from the storage subsystem.
+        return;
+
     uint8_t pixelCount = internals::pixels::getCount(PixelGroup::GRP_TELEMETRY);
     uint8_t litCount = CEIL_DIV(bitePoint * pixelCount, CLUTCH_FULL_VALUE);
     internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 0, 0, 0);
@@ -315,27 +373,10 @@ void PixelControlNotification::pixelControl_OnBitePoint(uint8_t bitePoint)
     internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 0, 0, 0);
     internals::pixels::show();
 }
-//---------------------------------------------------------------
-
-void PixelControlNotification::onConnected()
-{
-    TAKE_MUTEX;
-    pixelControl_OnConnected();
-    GIVE_MUTEX;
-}
 
 void PixelControlNotification::pixelControl_OnConnected()
 {
     internals::pixels::reset();
-}
-
-//---------------------------------------------------------------
-
-void PixelControlNotification::onBLEdiscovering()
-{
-    TAKE_MUTEX;
-    pixelControl_OnBLEdiscovering();
-    GIVE_MUTEX;
 }
 
 void PixelControlNotification::pixelControl_OnBLEdiscovering()
@@ -346,15 +387,6 @@ void PixelControlNotification::pixelControl_OnBLEdiscovering()
     internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 85, 0, 85);
     internals::pixels::show();
     DELAY_MS(250);
-}
-
-//---------------------------------------------------------------
-
-void PixelControlNotification::onLowBattery()
-{
-    TAKE_MUTEX;
-    pixelControl_OnLowBattery();
-    GIVE_MUTEX;
 }
 
 void PixelControlNotification::pixelControl_OnLowBattery()
@@ -383,15 +415,6 @@ void PixelControlNotification::pixelControl_OnLowBattery()
     internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 0, 0, 0);
     internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 0, 0, 0);
     internals::pixels::show();
-}
-
-//---------------------------------------------------------------
-
-void PixelControlNotification::onSaveSettings()
-{
-    TAKE_MUTEX;
-    pixelControl_OnSaveSettings();
-    GIVE_MUTEX;
 }
 
 void PixelControlNotification::pixelControl_OnSaveSettings()

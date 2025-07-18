@@ -146,6 +146,33 @@ void batteryMonitor::setPowerOffSoC(uint8_t percentage)
 //-------------------------------------------------------------------
 
 //-------------------------------------------------------------------
+// Internal service
+//-------------------------------------------------------------------
+
+class BatteryServiceProvider : public BatteryService
+{
+public:
+    static bool _isBatteryPresent;
+
+    virtual int getLastBatteryLevel() override
+    {
+        return lastBatteryLevel;
+    }
+
+    virtual bool hasBattery() override
+    {
+        return configured;
+    }
+
+    virtual bool isBatteryPresent() override
+    {
+        return configured && _isBatteryPresent;
+    }
+};
+
+bool BatteryServiceProvider::_isBatteryPresent = false;
+
+//-------------------------------------------------------------------
 // Fuel gauge commands
 //-------------------------------------------------------------------
 
@@ -341,10 +368,12 @@ void batteryMonitorDaemonLoop(void *arg)
         int currentBatteryLevel;
         bool ok = getSoC(currentBatteryLevel);
 
-        if (currentBatteryLevel != lastBatteryLevel)
+        if ((currentBatteryLevel != lastBatteryLevel) ||
+            (ok != BatteryServiceProvider::_isBatteryPresent))
         {
             // Report battery level
             lastBatteryLevel = currentBatteryLevel;
+            BatteryServiceProvider::_isBatteryPresent = ok;
             OnBatteryLevel::notify(lastBatteryLevel);
         }
 
@@ -366,23 +395,6 @@ void batteryMonitorDaemonLoop(void *arg)
 
     } // end while
 }
-
-//-------------------------------------------------------------------
-// Internal service
-//-------------------------------------------------------------------
-
-class BatteryServiceProvider : public BatteryService
-{
-public:
-    virtual int getLastBatteryLevel() override
-    {
-        return lastBatteryLevel;
-    }
-    virtual bool hasBattery() override
-    {
-        return configured;
-    }
-};
 
 //-------------------------------------------------------------------
 

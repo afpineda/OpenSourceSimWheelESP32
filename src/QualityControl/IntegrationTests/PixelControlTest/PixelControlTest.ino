@@ -30,6 +30,7 @@ class BatteryServiceMock: public BatteryService
 public:
     virtual int getLastBatteryLevel() override { return 25; }
     virtual bool hasBattery() override { return true; }
+    virtual bool isBatteryPresent() override { return true; }
 };
 
 //------------------------------------------------------------------

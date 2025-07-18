@@ -1,5 +1,10 @@
 # Change log
 
+## 7.6.0
+
+- Fixed inconsistent handling of pixel control notifications on startup and before connection.
+- Battery presence is now available to the system in the `BatteryService` class.
+
 ## 7.5.0
 
 - Pixel control notifications are prioritized over SimHub commands.

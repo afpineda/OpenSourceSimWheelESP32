@@ -453,12 +453,39 @@ public:
 class SERVICE(BatteryService)
 {
 public:
+    /**
+     * @brief Get the last known battery level (SoC)
+     *
+     */
     virtual int getLastBatteryLevel() MOCK_R(UNKNOWN_BATTERY_LEVEL);
+
+    /**
+     * @brief Check if the device can be powered by a battery
+     *
+     * @note This method should always return the same value on each call
+     *
+     * @return true if this device can be powered by a battery
+     * @return false if this device is always powered by a external power supply
+     */
     virtual bool hasBattery() MOCK_R(false);
+
+    /**
+     * @brief Check if the battery is detected
+     *
+     * @note If this method returns false, the battery level is unknown
+     *
+     * @return true if this device has a battery and was detected
+     * @return false if this device has no battery or the battery is not detected
+     *         (and the device is powered by a external power supply right now)
+     *
+     */
+    virtual bool isBatteryPresent() MOCK_R(false);
+
     struct call
     {
         SINGLETON_INVOKER(int, getLastBatteryLevel(), getLastBatteryLevel())
         SINGLETON_INVOKER(bool, hasBattery(), hasBattery())
+        SINGLETON_INVOKER(bool, isBatteryPresent(), isBatteryPresent())
     };
 };
 

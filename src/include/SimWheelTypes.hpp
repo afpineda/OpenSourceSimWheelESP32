@@ -1244,6 +1244,15 @@ protected:
 
     // For descendant classes
 
+     /**
+     * @brief Flag to indicate host connection
+     *
+     * @note True on startup or connection loss.
+     *       False after a connection is established.
+     *       For read only. Do not overwrite.
+     */
+    bool notConnectedYet = true;
+
     /**
      * @brief Get the count of pixels in a pixel group
      *
