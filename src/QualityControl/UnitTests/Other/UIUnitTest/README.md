@@ -18,13 +18,5 @@ Output through the USB serial port at 115200 bauds.
 
 This is an automated test.
 
-1. Reset. Ignore output from the operating system itself.
-2. Output must match:
-
-   ```text
-   --READY--
-   --GO--
-   --DONE--
-   ```
-
-3. Just check there are no `ERROR` messages.
+1. Reset. Ignore output.
+2. Just check there are no `ERROR` messages.

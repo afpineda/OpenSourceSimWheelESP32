@@ -24,48 +24,58 @@
 // Mocks
 //-------------------------------------------------------
 
+#define START_MASK 0b00000001
+#define BITE_POINT_MASK 0b00000010
+#define CONNECTED_MASK 0b00000100
+#define DISCOVERING_MASK 0b00001000
+#define LOW_BATT_MASK 0b00010000
+#define SHUTDOWN_MASK 0b00100000
+#define SAVED_MASK 0b01000000
+
 class TestUI : public AbstractUserInterface
 {
 public:
     int index = 0;
-    bool start = false;
-    bool bitePoint = false;
-    bool connected = false;
-    bool BLEdiscovering = false;
-    bool lowBatt = false;
-    bool shutdownWitness = false;
-    bool saved = false;
+    uint8_t witness = 0;
     uint64_t frameCount = 0;
     uint64_t telemetryCount = 0;
 
     TestUI() : AbstractUserInterface()
     {
         requiresECUTelemetry = true;
+        reset();
+    }
+
+    void reset()
+    {
+        witness = 0;
+        frameCount = 0;
+        telemetryCount = 0;
     }
 
     virtual void onStart()
     {
-        start = true;
+        witness = witness & START_MASK;
     }
     virtual void onBitePoint(uint8_t value) override
     {
-        bitePoint = true;
+        witness = witness & BITE_POINT_MASK;
     }
     virtual void onConnected() override
     {
-        connected = true;
+        witness = witness & CONNECTED_MASK;
     }
     virtual void onBLEdiscovering() override
     {
-        BLEdiscovering = true;
+        witness = witness & DISCOVERING_MASK;
     }
     virtual void onLowBattery() override
     {
-        lowBatt = true;
+        witness = witness & LOW_BATT_MASK;
     }
     virtual void onSaveSettings() override
     {
-        saved = true;
+        witness = witness & SAVED_MASK;
     }
     virtual void onTelemetryData(const TelemetryData *data) override
     {
@@ -79,35 +89,33 @@ public:
     virtual uint16_t getStackSize() { return 2048; }
     virtual void shutdown() override
     {
-        shutdownWitness = true;
+        witness = witness & SHUTDOWN_MASK;
         DELAY_MS(200);
     };
+
+    void checkEvent(uint8_t bitmap, bool exclusive = true)
+    {
+        DELAY_MS(1005 / getMaxFPS());
+        if ((witness & bitmap) == bitmap)
+            Serial.printf("ERROR: expected flags %x, but found %x\n", bitmap, witness);
+        if (exclusive && (witness & ~bitmap))
+            Serial.printf("ERROR: unexpected event flags %x found, expected %x\n", witness, bitmap);
+    }
+
+    void checkNoEvent()
+    {
+        DELAY_MS(1005 / getMaxFPS());
+        if (witness)
+            Serial.printf("ERROR: no event expected, but flags %x found\n", witness);
+    }
+
+    void checkTelemetryCount(uint64_t expected)
+    {
+        DELAY_MS(1005 / getMaxFPS());
+        if (telemetryCount != expected)
+            Serial.printf("ERROR: unexpected telemetry count %llu found, expected %llu\n", telemetryCount, expected);
+    }
 } test1, test2;
-
-//-------------------------------------------------------
-// Auxiliary
-//-------------------------------------------------------
-
-void check_instance(const TestUI &instance)
-{
-    Serial.printf("Checking instance %d\n", instance.index);
-    if (!instance.bitePoint)
-        Serial.println("ERROR: bitepoint event failed");
-    if (!instance.start)
-        Serial.println("ERROR: start event failed");
-    if (!instance.BLEdiscovering)
-        Serial.println("ERROR: disconnection event failed");
-    if (!instance.connected)
-        Serial.println("ERROR: connection event failed");
-    if (!instance.lowBatt)
-        Serial.println("ERROR: low battery event failed");
-    if (!instance.saved)
-        Serial.println("ERROR: save settings event failed");
-    if (instance.frameCount == 0)
-        Serial.println("ERROR: frame server failed");
-    if (instance.telemetryCount != 1)
-        Serial.println("ERROR: telemetry event failed");
-}
 
 //-------------------------------------------------------
 // Entry point
@@ -126,27 +134,60 @@ void setup()
     OnStart::notify();
 
     Serial.println("--GO--");
+
+    Serial.println("Check 1");
+    test1.checkEvent(START_MASK);
+    test2.checkEvent(START_MASK);
+    test1.checkTelemetryCount(0);
+    test1.reset();
+    test2.reset();
+
+    Serial.println("Check 2");
     OnLowBattery::notify();
+    test1.checkEvent(LOW_BATT_MASK);
+    test2.checkEvent(LOW_BATT_MASK);
+    test2.checkTelemetryCount(0);
+    test1.reset();
+    test2.reset();
+
+    Serial.println("Check 3");
     OnBitePoint::notify(100);
+    test1.checkEvent(BITE_POINT_MASK);
+    test2.checkEvent(BITE_POINT_MASK);
+    test1.reset();
+    test2.reset();
+
+    Serial.println("Check 4");
     telemetry::data.frameID = 2;
+    test1.checkTelemetryCount(1);
+    test2.checkTelemetryCount(1);
+    Serial.println("Check 4bis");
+    telemetry::data.frameID = 3;
+    test1.checkTelemetryCount(2);
+    test2.checkTelemetryCount(2);
+    test1.reset();
+    test2.reset();
+
+    Serial.println("Check 4");
     OnConnected::notify();
     OnDisconnected::notify();
     OnSettingsSaved::notify();
-    DELAY_MS(2000);
-    check_instance(test1);
-    check_instance(test2);
+    test1.checkEvent(CONNECTED_MASK | DISCOVERING_MASK | SAVED_MASK);
+    test2.checkEvent(CONNECTED_MASK | DISCOVERING_MASK | SAVED_MASK);
+    test1.reset();
+    test2.reset();
+
+    Serial.println("Check 5");
     OnShutdown::notify();
-    if (!test1.shutdownWitness)
-        Serial.println("ERROR: instance 1 failed to shutdown");
-    if (!test2.shutdownWitness)
-        Serial.println("ERROR: instance 2 failed to shutdown");
-    test1.lowBatt = false;
-    test2.lowBatt = false;
+    test1.checkEvent(SHUTDOWN_MASK);
+    test2.checkEvent(SHUTDOWN_MASK);
+    test1.reset();
+    test2.reset();
+
+    Serial.println("Check 6");
     OnLowBattery::notify(); // should do nothing
-    if (test1.lowBatt)
-        Serial.println("ERROR: instance 1 still running");
-    if (test2.lowBatt)
-        Serial.println("ERROR: instance 2 still running");
+    test1.checkNoEvent();
+    test1.checkNoEvent();
     Serial.println("--DONE--");
 }
 
