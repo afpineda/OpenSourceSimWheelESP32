@@ -22,8 +22,6 @@
 #include <chrono>
 #include <thread>
 
-#include <HardwareSerial.h> // For debug
-
 //---------------------------------------------------------------
 // Globals
 //---------------------------------------------------------------
@@ -258,6 +256,10 @@ bool PixelControlNotification::renderBatteryLevel(
             // Percentage bar
             uint8_t pixelCount = internals::pixels::getCount(group);
             uint8_t litCount = (soc * pixelCount) / 100;
+            if (litCount == 0)
+                // At least, one pixel must be shown, otherwise
+                // there is no SoC notification at all
+                litCount = 1;
             uint8_t blue = barColor;
             uint8_t green = (barColor >> 8);
             uint8_t red = (barColor >> 16);
@@ -276,7 +278,6 @@ bool PixelControlNotification::renderBatteryLevel(
 void PixelControlNotification::onStart()
 {
     notConnectedYet = true;
-    Serial.println("onStart");
     TAKE_MUTEX;
     pixelControl_OnStart();
     GIVE_MUTEX;
@@ -284,18 +285,14 @@ void PixelControlNotification::onStart()
 
 void PixelControlNotification::onBitePoint(uint8_t bitePoint)
 {
-    Serial.println("onBitePoint");
     TAKE_MUTEX;
     pixelControl_OnBitePoint(bitePoint);
-    if (notConnectedYet)
-        pixelControl_OnBLEdiscovering();
     GIVE_MUTEX;
 }
 
 void PixelControlNotification::onConnected()
 {
     notConnectedYet = false;
-    Serial.println("onConnected");
     TAKE_MUTEX;
     pixelControl_OnConnected();
     GIVE_MUTEX;
@@ -304,7 +301,6 @@ void PixelControlNotification::onConnected()
 void PixelControlNotification::onBLEdiscovering()
 {
     notConnectedYet = true;
-    Serial.println("onBLEdiscovering");
     TAKE_MUTEX;
     pixelControl_OnBLEdiscovering();
     GIVE_MUTEX;
@@ -314,18 +310,13 @@ void PixelControlNotification::onLowBattery()
 {
     TAKE_MUTEX;
     pixelControl_OnLowBattery();
-    if (notConnectedYet)
-        pixelControl_OnBLEdiscovering();
     GIVE_MUTEX;
 }
 
 void PixelControlNotification::onSaveSettings()
 {
-    Serial.println("onSaveSettings");
     TAKE_MUTEX;
     pixelControl_OnSaveSettings();
-    if (notConnectedYet)
-        pixelControl_OnBLEdiscovering();
     GIVE_MUTEX;
 }
 
@@ -370,8 +361,14 @@ void PixelControlNotification::pixelControl_OnBitePoint(uint8_t bitePoint)
         internals::pixels::set(PixelGroup::GRP_TELEMETRY, i, 85, 85, 0);
     internals::pixels::show();
     DELAY_MS(250);
-    internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 0, 0, 0);
-    internals::pixels::show();
+
+    if (notConnectedYet)
+        pixelControl_OnBLEdiscovering();
+    else
+    {
+        internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 0, 0, 0);
+        internals::pixels::show();
+    }
 }
 
 void PixelControlNotification::pixelControl_OnConnected()
@@ -411,10 +408,11 @@ void PixelControlNotification::pixelControl_OnLowBattery()
         internals::pixels::show();
     }
     DELAY_MS(200);
-    internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 0, 0, 0);
-    internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 0, 0, 0);
-    internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 0, 0, 0);
-    internals::pixels::show();
+
+    if (notConnectedYet)
+        pixelControl_OnBLEdiscovering();
+    else
+        internals::pixels::reset();
 }
 
 void PixelControlNotification::pixelControl_OnSaveSettings()
@@ -436,4 +434,9 @@ void PixelControlNotification::pixelControl_OnSaveSettings()
     DELAY_MS(150);
     // All off
     internals::pixels::reset();
+
+    if (notConnectedYet)
+        pixelControl_OnBLEdiscovering();
+    else
+        internals::pixels::reset();
 }

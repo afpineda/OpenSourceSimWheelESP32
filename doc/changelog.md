@@ -4,6 +4,8 @@
 
 - Fixed inconsistent handling of pixel control notifications on startup and before connection.
 - Battery presence is now available to the system in the `BatteryService` class.
+- The `OnSettingsSaved` event is no longer triggered on the battery autocalibration setting,
+  as that is not explicitly changed by the user.
 
 ## 7.5.0
 

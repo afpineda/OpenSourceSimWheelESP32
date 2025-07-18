@@ -402,7 +402,13 @@ void autoSaveCallback(void *param)
                 }
             }
         prefs.end();
-        OnSettingsSaved::notify();
+
+        // Do not notify the save event on certain user settings
+        // pendingSettingsToBeSaved &= ~(1ULL << (uint8_t)UserSetting::AXIS_CALIBRATION);
+        pendingSettingsToBeSaved &= ~(1ULL << (uint8_t)UserSetting::BATTERY_AUTO_CALIBRATION);
+        // Notify the save event
+        if (_pendingSettingsToBeSaved)
+            OnSettingsSaved::notify();
     }
 }
 

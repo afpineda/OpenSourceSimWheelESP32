@@ -1244,7 +1244,7 @@ protected:
 
     // For descendant classes
 
-     /**
+    /**
      * @brief Flag to indicate host connection
      *
      * @note True on startup or connection loss.
