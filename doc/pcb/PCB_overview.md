@@ -66,9 +66,6 @@ This tool is associated to the
 [JLC PCB factory](https://jlcpcb.com/).
 You can upload the project files (.epro) provided here to *EasyEDA PRO*,
 then directly place an order to their manufacturing services from this tool.
-Some designs are also published to their
-[Open source hardware lab](./https://oshwlab.com/),
-so all you have to do is click on the link to open the project file in EasyEDA Pro.
 
 If you require assembly services from JLC,
 take into account that the minimum PCB order is 5 units,
