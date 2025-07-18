@@ -48,7 +48,7 @@
   - [Auxiliary module for 24 switches (through hole mounting)](./pcb/Module24sw_TH/Module24Switches_TH_2025.md)
   - [Auxiliary module for 32 switches (through hole mounting)](./pcb/Module32sw_TH/Module32Switches_TH.md)
   - [Auxiliary module for 25 switches (button matrix)](./pcb/ModuleBtnMatrix25sw/ModuleBtnMatrix25sw.md)
-  - [Auxiliary module for 32 switches (surface mounting)](./pcb/Module32sw_SM/Module32Switches_SM.md)
+  - [Auxiliary module for play and charge (32 switches, battery charger and fuel gauge)](./pcb/ModulePlayAndCharge/ModulePlayAndCharge.md)
 
 ## Known issues
 
