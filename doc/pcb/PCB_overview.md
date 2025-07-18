@@ -44,12 +44,32 @@ eliminating the need for assembly services.
 You can obtain the components from a local supplier or buy them online.
 Then all you have to do is solder them to the printed circuit board yourself.
 
+## License
+
+All PCB designs in this project are *open source hardware* adhered to the
+[CERN Open Hardware License Version 2 - Permissive](./LICENSE.txt)
+
 ## Constraints
 
 Each supplier of printed circuit boards imposes design rules
 that depend on its manufacturing technology.
 The designs included in this project are based on the
-[JCL PCB](https://jlcpcb.com/capabilities/pcb-capabilities) manufacturing capabilities.
+[JLC PCB](https://jlcpcb.com/capabilities/pcb-capabilities) manufacturing capabilities.
 If your supplier does not accept them,
 you will need to edit the designs,
 adjust the constraints and redesign the traces.
+
+## JLC manufacturing and assembly services
+
+[EasyEDA PRO](https://pro.easyeda.com/editor) is the main design tool for these PCBs.
+This tool is associated to the
+[JLC PCB factory](https://jlcpcb.com/).
+You can upload the project files (.epro) provided here to *EasyEDA PRO*,
+then directly place an order to their manufacturing services from this tool.
+Some designs are also published to their
+[Open source hardware lab](./https://oshwlab.com/),
+so all you have to do is click on the link to open the project file in EasyEDA Pro.
+
+If you require assembly services from JLC,
+take into account that the minimum PCB order is 5 units,
+but you can choose the mounting of only two boards, thus saving some money.
