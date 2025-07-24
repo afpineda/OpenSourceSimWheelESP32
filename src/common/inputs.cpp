@@ -366,6 +366,16 @@ void inputs::setAnalogClutchPaddles(
 
 //-------------------------------------------------------------------
 
+void inputs::initializeI2C(GPIO sclPin,
+        GPIO sdaPin,
+        I2CBus bus,
+        bool enableInternalPullup)
+{
+    internals::hal::i2c::initialize(sdaPin,sclPin,bus,enableInternalPullup);
+}
+
+//-------------------------------------------------------------------
+
 void internals::inputs::addFakeInput(FakeInput *instance)
 {
     abortIfStarted();

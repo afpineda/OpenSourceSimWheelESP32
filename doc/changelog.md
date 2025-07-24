@@ -1,5 +1,13 @@
 # Change log
 
+## 7.6.1
+
+- Added the missing implementation of `inputs::initializeI2C()`.
+  Surprisingly, no sketch is using it so it went unnoticed.
+- Now the internal pull-up resistors in the I2C bus can be disabled thanks to
+  another `inputs::initializeI2C()` parameter.
+- Additional advice and explanations are given regarding pull-up resistors in the I2C bus.
+
 ## 7.6.0
 
 - Fixed inconsistent handling of pixel control notifications on startup and before connection.

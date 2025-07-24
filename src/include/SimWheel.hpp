@@ -246,14 +246,22 @@ namespace inputs
     /**
      * @brief Initialize an I2C bus to certain pins
      *
+     * @note When external pull-up resistors are installed,
+     *       their effective impedance will be reduced because the internal resistors are in parallel (enabled by default).
+     *       This also reduces the capacitance of the bus.
+     *
      * @param sclPin SCL or SCK pin
      * @param sdaPin SDA pin
      * @param bus I2C bus to initialize
+     * @param enableInternalPullup If true (default), the bus is pulled up using internal resistors.
+     *                             If false, **external** pullup resistors must be in place as the internal ones are not enabled.
+     *                             Otherwise, the bus won't work.
      */
     void initializeI2C(
         GPIO sclPin,
         GPIO sdaPin,
-        I2CBus bus = I2CBus::PRIMARY);
+        I2CBus bus = I2CBus::PRIMARY,
+        bool enableInternalPullup = true);
 
     /**
      * @brief Set two potentiometers as clutch paddles.

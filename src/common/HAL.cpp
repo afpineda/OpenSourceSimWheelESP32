@@ -36,6 +36,7 @@
 #define STANDARD_CLOCK_SPEED 100000
 static gpio_num_t sdaPin[] = {(gpio_num_t)SDA, GPIO_NUM_NC};
 static gpio_num_t sclPin[] = {(gpio_num_t)SCL, GPIO_NUM_NC};
+static bool internalPullup[] = {true, true};
 static bool isInitialized[] = {false, false};
 static uint8_t max_speed_x[] = {4, 4};
 
@@ -53,14 +54,15 @@ bool doInitializeI2C(
     gpio_num_t sda,
     gpio_num_t scl,
     uint8_t clock_multiplier,
-    i2c_port_t _bus)
+    i2c_port_t _bus,
+    bool enablePullup)
 {
     i2c_config_t conf = {};
     conf.mode = I2C_MODE_MASTER;
     conf.sda_io_num = sda;
     conf.scl_io_num = scl;
-    conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
-    conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
+    conf.sda_pullup_en = enablePullup;
+    conf.scl_pullup_en = enablePullup;
     conf.master.clk_speed = STANDARD_CLOCK_SPEED * clock_multiplier;
     if (i2c_param_config(_bus, &conf) == ESP_OK)
         if (i2c_driver_install(_bus, I2C_MODE_MASTER, 0, 0, 0) == ESP_OK)
@@ -117,7 +119,7 @@ void internals::hal::i2c::probe(std::vector<uint8_t> &result, I2CBus bus)
         ESP_ERROR_CHECK(i2c_driver_delete(_bus));
 
     // Initialize to minimum speed
-    if (!doInitializeI2C(sdaPin[_bus], sclPin[_bus], 1, _bus))
+    if (!doInitializeI2C(sdaPin[_bus], sclPin[_bus], 1, _bus, internalPullup[_bus]))
         i2cError(sdaPin[_bus], sclPin[_bus], 1, _bus);
 
     // Probe
@@ -132,7 +134,7 @@ void internals::hal::i2c::probe(std::vector<uint8_t> &result, I2CBus bus)
 
     if (isInitialized[_bus])
         // Reinitialize
-        if (!doInitializeI2C(sdaPin[_bus], sclPin[_bus], max_speed_x[_bus], _bus))
+        if (!doInitializeI2C(sdaPin[_bus], sclPin[_bus], max_speed_x[_bus], _bus, internalPullup[_bus]))
             i2cError(sdaPin[_bus], sclPin[_bus], max_speed_x[_bus], _bus);
 }
 
@@ -140,17 +142,22 @@ void internals::hal::i2c::probe(std::vector<uint8_t> &result, I2CBus bus)
 // I2C: bus initialization
 // ----------------------------------------------------------------------------
 
-void internals::hal::i2c::initialize(GPIO sda, GPIO scl, I2CBus bus)
+void internals::hal::i2c::initialize(
+    GPIO sda,
+    GPIO scl,
+    I2CBus bus,
+    bool enableInternalPullup)
 {
     auto _bus = static_cast<i2c_port_t>(bus);
     sdaPin[_bus] = static_cast<gpio_num_t>((int)sda);
     sclPin[_bus] = static_cast<gpio_num_t>((int)scl);
+    internalPullup[_bus] = enableInternalPullup;
     if (isInitialized[_bus])
     {
         // Deinitialize
         ESP_ERROR_CHECK(i2c_driver_delete(_bus));
         // Initialize again with new pins
-        isInitialized[_bus] = doInitializeI2C(sdaPin[_bus], sclPin[_bus], max_speed_x[_bus], _bus);
+        isInitialized[_bus] = doInitializeI2C(sdaPin[_bus], sclPin[_bus], max_speed_x[_bus], _bus, enableInternalPullup);
         if (!isInitialized[_bus])
             i2cError(sdaPin[_bus], sclPin[_bus], max_speed_x[_bus], _bus);
     }
@@ -173,7 +180,7 @@ void internals::hal::i2c::require(uint8_t max_speed_multiplier, I2CBus bus)
             return;
     }
     // Initialize
-    if (doInitializeI2C(sdaPin[_bus], sclPin[_bus], max_speed_multiplier, _bus))
+    if (doInitializeI2C(sdaPin[_bus], sclPin[_bus], max_speed_multiplier, _bus, internalPullup[_bus]))
     {
         isInitialized[_bus] = true;
         max_speed_x[_bus] = max_speed_multiplier;
@@ -256,8 +263,7 @@ int internals::hal::gpio::getADCreading(ADC_GPIO pin, int sampleCount)
                 .unit_id = adc_unit,
                 // From ESP-IDF doc: If set to 0, the driver will fall back to using a default clock source
                 .clk_src = static_cast<adc_oneshot_clk_src_t>(0),
-                .ulp_mode = ADC_ULP_MODE_DISABLE
-            };
+                .ulp_mode = ADC_ULP_MODE_DISABLE};
         adc_oneshot_chan_cfg_t channelCfg =
             {
                 .atten = adc_atten_t::ADC_ATTEN_DB_12,

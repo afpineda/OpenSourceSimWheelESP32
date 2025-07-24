@@ -185,14 +185,22 @@ namespace internals
              *
              * @note If required, must be called before using any I2C hardware.
              *
+             * @note If external pullup resistors are in place, the internal ones will
+             *       reduce wire capacitance as there are two resistors in parallel.
+             *       This is good or bad depending on the case.
+             *
              * @param sda SDA pin for the I2C bus.
              * @param scl SCL pin for the I2C bus.
              * @param bus I2C bus to initialize.
+             * @param enableInternalPullup If true (default), the bus is pulled up using internal pullup resistors.
+             *                             If false, **external** pullup resistors must be in place as the internal ones are not enabled.
+             *                             Otherwise, the bus won't work.
              */
             void initialize(
                 GPIO sda,
                 GPIO scl,
-                I2CBus bus);
+                I2CBus bus,
+                bool enableInternalPullup = true);
 
             /**
              * @brief Ensure the I2C bus is initialized

@@ -291,10 +291,6 @@ This implementation is based on any of the following widely available GPIO expan
 
 All chips must share the `SCL` and `SDA` pins with the DevKit board.
 Note that sometimes `SCL` is tagged as `SCK` (they are equivalent).
-Additional **external** pull-up resistors may be needed at those pins
-depending on wire capacitance, but that is unusual.
-Follow [Expressif's advice](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/i2c.html)
-on the matter.
 
 The `RESET` pin at the *MCP23017* must be wired to `3V3`, otherwise operation is unreliable.
 
@@ -319,6 +315,33 @@ Needed parts (not counting input hardware like push buttons):
 - MCP23017 GPIO expander: x2.
 - Dupond pin headers (male or female): x50.
 - Thin wire.
+
+### Important note on I2C bus capacitance
+
+Additional **external** pull-up resistors may be needed at `SDA` and `SCL`
+depending on wire capacitance.
+Higher wire capacitance requires lower pull-up impedance.
+The firmware enables internal pull-up resistors by default and no issues were found.
+However, according to Expressif documentation:
+
+*This is not strong enough to pull-up buses under high-speed frequency. A suitable external pull-up is recommended.*
+
+Note that too strong pull-up resistors are as bad as too weak ones.
+Follow [Expressif's advice](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/i2c.html)
+on the matter.
+
+You can also disable the internal pull-up resistors in your custom firmware (see below).
+So, there are four possible situations:
+
+| Internal PU | External PU | Result                                                                                                       |
+| ----------- | ------------|--------------------------------------------------------------------------------------------------------------|
+| disabled    | missing     | **Does not work**                                                                                            |
+| enabled     | missing     | Effective PU impedance is unknown but weak                                                                   |
+| disabled    | in place    | Effective PU impedance matches the external resistor impedance                                               |
+| enabled     | in place    | Effective PU impedance is unknown but lower than the external resistor and higher than the internal resistor |
+
+For further information read
+[this article](https://es.magellancircuits.com/does-i2c-require-length-matching/).
 
 ### External wiring for the GPIO expanders
 
@@ -630,12 +653,19 @@ while *full addresses* are in the range from 0 to 127 (inclusive).
 The firmware will use the default `SDA` and `SCL` pins on your DevKit board.
 If you prefer to use other pins,
 you must **explicitly** place a call to
-`inputs::initializeI2C()` with two parameters:
+`inputs::initializeI2C()` and pass the following parameters:
 
 - The first parameter is the desired `SDA` pin.
 - The second parameter is the desired `SCL` pin.
+- The third parameter (**optional**) is the bus to initialize,
+  either `I2CBus::PRIMARY` (the default) or `I2CBus::SECONDARY`.
+- The fourth parameter (**optional**) enables or disables the internal pull-up resistors.
+  Pass `true` (the default) to enable them.
+  Pass `false` to disable them.
+  In such a case, external pull-up resistors are mandatory.
 
-Both pins **must** support input, output and pull-up resistors.
+Both pins **must** support input, output and pull-up resistors
+(unless the fourth parameter is set to `false`).
 This API function must be called **before**
 `inputs::addPCF8574Expander()` or `inputs::addMCP23017Expander()`.
 
