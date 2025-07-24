@@ -320,7 +320,7 @@ Needed parts (not counting input hardware like push buttons):
 
 Additional **external** pull-up resistors may be needed at `SDA` and `SCL`
 depending on wire capacitance.
-Higher wire capacitance requires lower pull-up impedance.
+Higher wire capacitance requires lower pull-up impedance (stronger).
 The firmware enables internal pull-up resistors by default and no issues were found.
 However, according to Expressif documentation:
 
@@ -333,12 +333,12 @@ on the matter.
 You can also disable the internal pull-up resistors in your custom firmware (see below).
 So, there are four possible situations:
 
-| Internal PU | External PU | Result                                                                                                       |
-| ----------- | ------------|--------------------------------------------------------------------------------------------------------------|
-| disabled    | missing     | **Does not work**                                                                                            |
-| enabled     | missing     | Effective PU impedance is unknown but weak                                                                   |
-| disabled    | in place    | Effective PU impedance matches the external resistor impedance                                               |
-| enabled     | in place    | Effective PU impedance is unknown but lower than the external resistor and higher than the internal resistor |
+| Internal PU | External PU | Result                                                                              |
+| ----------- | ----------- | ----------------------------------------------------------------------------------- |
+| disabled    | missing     | **Does not work**                                                                   |
+| enabled     | missing     | Effective PU impedance is unknown but weak                                          |
+| disabled    | in place    | Effective PU impedance matches the external resistor impedance                      |
+| enabled     | in place    | Effective PU impedance is unknown but it lies between the internal and the external |
 
 For further information read
 [this article](https://es.magellancircuits.com/does-i2c-require-length-matching/).
