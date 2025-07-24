@@ -53,7 +53,7 @@ void internals::hal::i2c::probe(std::vector<uint8_t> &result, I2CBus bus)
 // I2C: _bus initialization
 // ----------------------------------------------------------------------------
 
-void internals::hal::i2c::initialize(GPIO sda, GPIO scl, I2CBus bus,bool enableInternalPullup)
+void internals::hal::i2c::initialize(GPIO sda, GPIO scl, I2CBus bus, bool enableInternalPullup)
 {
 }
 

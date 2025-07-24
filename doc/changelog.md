@@ -1,6 +1,6 @@
 # Change log
 
-## 7.6.1
+## 7.7.0
 
 - Added the missing implementation of `inputs::initializeI2C()`.
   Surprisingly, no sketch is using it so it went unnoticed.
