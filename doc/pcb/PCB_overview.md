@@ -71,3 +71,15 @@ then directly place an order to their manufacturing services from this tool.
 If you require assembly services from JLC,
 take into account that the minimum PCB order is 5 units,
 but you can choose the mounting of only two boards, thus saving some money.
+
+## Non-profit
+
+**The author of this project does not sell or market these boards.**
+**Nor does he receive commissions for manufacturing orders.**
+
+## Disclaimer
+
+When you order the manufacture of a board,
+you are not purchasing a product with guarantees and certifications.
+Board  manufactured in this way are **for personal use only**.
+Their sale may be illegal depending on your local legislation.
