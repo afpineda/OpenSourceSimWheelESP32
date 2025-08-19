@@ -20,8 +20,9 @@
 #if !CD_CI
 
 #include <exception>
-#include "HardwareSerial.h"
 #include "freertos/FreeRTOS.h"
+#include <HardwareSerial.h>
+#include "USBCDC.h"
 
 #endif
 
@@ -77,10 +78,18 @@ void firmware::run(void (*func)())
     {
         Serial.end();
         Serial.begin(115200);
+#ifdef USB_SERIAL_IS_DEFINED
+        USBSerial.end();
+        USBSerial.begin(115200);
+#endif
         for (;;)
         {
             Serial.println("**CUSTOM FIRMWARE ERROR**");
             Serial.println(e.what());
+#ifdef USB_SERIAL_IS_DEFINED
+            USBSerial.println("**CUSTOM FIRMWARE ERROR**");
+            USBSerial.println(e.what());
+#endif
             vTaskDelay(pdMS_TO_TICKS(2000));
         }
     }
