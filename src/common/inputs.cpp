@@ -142,6 +142,7 @@ void inputs::addRotaryEncoder(
             ccwInputNumber,
             useAlternateEncoding));
 #endif
+    DeviceCapabilities::setFlag(DeviceCapability::ROTARY_ENCODERS);
 }
 
 //-------------------------------------------------------------------
