@@ -52,6 +52,7 @@ static bool _reverseRightAxis = false;
 #define DEBOUNCE_MS 30
 #define POLLING_TASK_STACK_SIZE 2 * 1024
 static bool forceUpdate;
+#define MAX_VOID_LOOP_COUNT (15000 / DEBOUNCE_MS)
 
 // Hub daemon
 #define HUB_STACK_SIZE 4 * 1024
@@ -368,11 +369,11 @@ void inputs::setAnalogClutchPaddles(
 //-------------------------------------------------------------------
 
 void inputs::initializeI2C(GPIO sclPin,
-        GPIO sdaPin,
-        I2CBus bus,
-        bool enableInternalPullup)
+                           GPIO sdaPin,
+                           I2CBus bus,
+                           bool enableInternalPullup)
 {
-    internals::hal::i2c::initialize(sdaPin,sclPin,bus,enableInternalPullup);
+    internals::hal::i2c::initialize(sdaPin, sclPin, bus, enableInternalPullup);
 }
 
 //-------------------------------------------------------------------
@@ -498,6 +499,7 @@ void inputPollingLoop(void *param)
     bool leftAxisAutocalibrated = false;
     bool rightAxisAutocalibrated = false;
     bool stateChanged;
+    uint16_t voidLoopCount = 0;
     currentState.leftAxisValue = CLUTCH_NONE_VALUE;
     currentState.rightAxisValue = CLUTCH_NONE_VALUE;
     currentState.rawInputBitmap = 0ULL;
@@ -518,6 +520,7 @@ void inputPollingLoop(void *param)
         }
         currentState.rawInputChanges = currentState.rawInputBitmap ^ previousState.rawInputBitmap;
         stateChanged = forceUpdate || (currentState.rawInputChanges);
+        forceUpdate = false;
 
         // Read analog inputs
         if (leftAxis)
@@ -541,16 +544,19 @@ void inputPollingLoop(void *param)
                 (currentState.rightAxisValue != previousState.rightAxisValue);
         }
 
-        // Check for a state change
-        if (stateChanged)
+        // Check for a state change and
+        // prevent device inactivity which may cause
+        // disconnection by the host computer for power savings
+        // on USB HID implementations
+        if (stateChanged || (voidLoopCount > MAX_VOID_LOOP_COUNT))
         {
             // Push state into the decoupling queue
             internals::inputs::notifyInputEvent(currentState);
             previousState = currentState;
+            voidLoopCount = 0;
         }
-
-        // Prepare for the next iteration
-        forceUpdate = false;
+        else
+            voidLoopCount++;
 
         // wait for the next sampling interval
         DELAY_MS(DEBOUNCE_MS * 2);
