@@ -76,16 +76,16 @@ void firmware::run(void (*func)())
     }
     catch (std::exception &e)
     {
-        Serial.end();
-        Serial.begin(115200);
+        Serial0.end();
+        Serial0.begin(115200);
 #ifdef USB_SERIAL_IS_DEFINED
         USBSerial.end();
         USBSerial.begin(115200);
 #endif
         for (;;)
         {
-            Serial.println("**CUSTOM FIRMWARE ERROR**");
-            Serial.println(e.what());
+            Serial0.println("**CUSTOM FIRMWARE ERROR**");
+            Serial0.println(e.what());
 #ifdef USB_SERIAL_IS_DEFINED
             USBSerial.println("**CUSTOM FIRMWARE ERROR**");
             USBSerial.println(e.what());

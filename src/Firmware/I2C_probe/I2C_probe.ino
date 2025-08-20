@@ -10,13 +10,8 @@
  */
 
 #include "HAL.hpp"
-
-#if (ARDUINO_USB_MODE == 1)
-#include "USBCDC.h"
-#define Serial USBSerial
-#else
 #include <HardwareSerial.h>
-#endif
+#include "USBCDC.h"
 
 //------------------------------------------------------------------
 // GLOBALS
@@ -37,17 +32,29 @@
 void dump_results(std::vector<uint8_t> &addressList)
 {
     size_t count = addressList.size();
-    Serial.printf("Auto-discovery finished. %d device(s) found:\n", count);
+    Serial0.printf("Auto-discovery finished. %d device(s) found:\n", count);
+#ifdef USB_SERIAL_IS_DEFINED
+    USBSerial.printf("Auto-discovery finished. %d device(s) found:\n", count);
+#endif
     for (int idx = 0; idx < count; idx++)
     {
         uint8_t addr = addressList.at(idx);
-        Serial.printf("- Device found at address %x (hexadecimal), %d (decimal)\n",
+        Serial0.printf("- Device found at address %x (hexadecimal), %d (decimal)\n",
                       addr,
                       addr);
-        Serial.printf("  - Hardware address (3 bits) is %d\n",
+        Serial0.printf("  - Hardware address (3 bits) is %d\n",
                       (addr & 0b00000111));
-        Serial.printf("  - Factory address (7 bits) is %x (hexadecimal), %d (decimal)\n",
+        Serial0.printf("  - Factory address (7 bits) is %x (hexadecimal), %d (decimal)\n",
                       (addr & 0b11111000), (addr & 0b11111000));
+#ifdef USB_SERIAL_IS_DEFINED
+        USBSerial.printf("- Device found at address %x (hexadecimal), %d (decimal)\n",
+                         addr,
+                         addr);
+        USBSerial.printf("  - Hardware address (3 bits) is %d\n",
+                         (addr & 0b00000111));
+        USBSerial.printf("  - Factory address (7 bits) is %x (hexadecimal), %d (decimal)\n",
+                         (addr & 0b11111000), (addr & 0b11111000));
+#endif
     }
 }
 
@@ -57,11 +64,19 @@ void dump_results(std::vector<uint8_t> &addressList)
 
 void setup()
 {
-    Serial.begin(115200);
-    Serial.println("=================================");
-    Serial.println(" I2C slave device auto-discovery");
-    Serial.println("=================================");
-    Serial.println("");
+    Serial0.begin(115200);
+    Serial0.println("=================================");
+    Serial0.println(" I2C slave device auto-discovery");
+    Serial0.println("=================================");
+    Serial0.println("");
+
+#ifdef USB_SERIAL_IS_DEFINED
+    USBSerial.begin(115200);
+    USBSerial.println("=================================");
+    USBSerial.println(" I2C slave device auto-discovery");
+    USBSerial.println("=================================");
+    USBSerial.println("");
+#endif
 
 #if defined(SECONDARY_SDA) && defined(SECONDARY_SCL)
     internals::hal::i2c::initialize(
@@ -74,23 +89,40 @@ void setup()
 void loop()
 {
     std::vector<uint8_t> addressList;
-    Serial.printf("SDA = #%d. SCL = #%d. Please, wait ...\n\n", SDA, SCL);
+    Serial0.printf("SDA = #%d. SCL = #%d. Please, wait ...\n\n", SDA, SCL);
+#ifdef USB_SERIAL_IS_DEFINED
+    USBSerial.printf("SDA = #%d. SCL = #%d. Please, wait ...\n\n", SDA, SCL);
+#endif
     internals::hal::i2c::probe(addressList);
     dump_results(addressList);
-    Serial.println("");
-    Serial.println("");
+    Serial0.println("");
+    Serial0.println("");
 
 #if defined(SECONDARY_SDA) && defined(SECONDARY_SCL)
-    Serial.printf("SDA = #%d. SCL = #%d. Please, wait ...\n\n", SECONDARY_SDA, SECONDARY_SCL);
+    Serial0.printf("SDA = #%d. SCL = #%d. Please, wait ...\n\n", SECONDARY_SDA, SECONDARY_SCL);
+#ifdef USB_SERIAL_IS_DEFINED
+    USBSerial.printf("SDA = #%d. SCL = #%d. Please, wait ...\n\n", SECONDARY_SDA, SECONDARY_SCL);
+#endif
     addressList.clear();
     internals::hal::i2c::probe(addressList, I2CBus::SECONDARY);
     dump_results(addressList);
-    Serial.println("");
-    Serial.println("");
+    Serial0.println("");
+    Serial0.println("");
+#ifdef USB_SERIAL_IS_DEFINED
+    USBSerial.println("");
+    USBSerial.println("");
 #endif
 
-    Serial.println("Done. Repeating autodiscovery in 30 seconds...");
-    Serial.println("");
-    Serial.println("");
+#endif
+
+    Serial0.println("Done. Repeating autodiscovery in 30 seconds...");
+    Serial0.println("");
+    Serial0.println("");
+#ifdef USB_SERIAL_IS_DEFINED
+    USBSerial.println("Done. Repeating autodiscovery in 30 seconds...");
+    USBSerial.println("");
+    USBSerial.println("");
+#endif
+
     vTaskDelay(pdMS_TO_TICKS(30 * 1000));
 }
