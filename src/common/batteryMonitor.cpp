@@ -34,7 +34,7 @@
 // Global parameters
 #define DEFAULT_SAMPLING_SECONDS (2 * 60)
 static uint8_t low_battery_soc = 10;
-static uint8_t powerOff_soc = 4;
+static uint8_t powerOff_soc = 0;
 int lastBatteryLevel = 100;
 bool configured = false;
 uint32_t sampling_rate_secs = DEFAULT_SAMPLING_SECONDS;
