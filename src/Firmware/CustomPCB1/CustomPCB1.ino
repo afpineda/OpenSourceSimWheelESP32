@@ -13,6 +13,44 @@
 #include "SimWheelUI.hpp"
 
 //------------------------------------------------------------------
+// Hardware input and outputs (depends on board revision)
+//------------------------------------------------------------------
+
+// [EN] Assign your board revision number.
+// [ES] Asigne el número de revisión de su placa.
+
+#define BOARD_REVISION 2
+
+//------------------------------------------------------------------
+
+#if (BOARD_REVISION == 2)
+
+#define ROT1A GPIO_NUM_4
+#define ROT1B GPIO_NUM_5
+#define ROT2A GPIO_NUM_7
+#define ROT2B GPIO_NUM_6
+#define ROT3A GPIO_NUM_11
+#define ROT3B GPIO_NUM_10
+#define ROT4A GPIO_NUM_13
+#define ROT4B GPIO_NUM_12
+#define ROT5A GPIO_NUM_17
+#define ROT5B GPIO_NUM_18
+#define ROT6A GPIO_NUM_16
+#define ROT6B GPIO_NUM_21
+#define ROT7A GPIO_NUM_15
+#define ROT7B GPIO_NUM_33
+#define ROT8A GPIO_NUM_14
+#define ROT8B GPIO_NUM_34
+#define DIN1 GPIO_NUM_40
+#define DIN2 GPIO_NUM_38
+#define LEFT_CLUTCH_GPIO GPIO_NUM_2
+#define RIGHT_CLUTCH_GPIO GPIO_NUM_1
+#define EXPANDER_Y_HW_ADDRESS 0
+#define EXPANDER_X_HW_ADDRESS 7
+
+#endif
+
+//------------------------------------------------------------------
 // Global customization
 //------------------------------------------------------------------
 
@@ -36,14 +74,13 @@ std::string DEVICE_MANUFACTURER = "Me";
  >>>> [ES] MODO DE SUEÑO PROFUNDO
 ------------------------------------------------------------------ */
 
-// [EN] Substitute false with true when using a BLE implementation
-//      and no external on/off switch
-// [ES] Sustituya false con true cuando use una implementación BLE
+// [EN] Assign true if you have BLE and no
+//      external power on/off switch
+// [ES] Asigne true cuando use una implementación BLE
 //      y no tenga un interruptor externo de apagado/encendido
 
 // #define SHUTDOWN_ON_DISCONNECTION true
 #define SHUTDOWN_ON_DISCONNECTION false
-
 
 // [EN] Set a GPIO number for "wake up".
 //      Comment out if not required, or set an RTC-capable GPIO number for wake up.
@@ -51,7 +88,7 @@ std::string DEVICE_MANUFACTURER = "Me";
 //      Comente la línea si no hay necesidad de entrar en sueño profundo, o bien,
 //      indique un número de GPIO con capacidad RTC para despertar del sueño.
 
-#define WAKE_UP_PIN GPIO_NUM_4
+#define WAKE_UP_PIN ROT1A
 
 /* -----------------------------------------------------------------
  >>>> [EN] POWER LATCH SUBSYSTEM
@@ -109,17 +146,26 @@ std::string DEVICE_MANUFACTURER = "Me";
 #define LED_STRIP1_COUNT 8
 #define LED_STRIP2_COUNT 0
 
-
 /* -----------------------------------------------------------------
- >>>> [EN] BATTERY
- >>>> [ES] BATERÍA
+ >>>> [EN] BATTERY SETTINGS
+ >>>> [ES] AJUSTES DE BATERÍA
 ------------------------------------------------------------------ */
+
+// [EN] Assign true if your device is powered by a battery
+// [ES] Asigne true si su dispositivo está alimentado por una batería
 
 #define ENABLE_BATTERY true
 //#define ENABLE_BATTERY false
 
+// [EN] Assign true if you want to shutdown before the battery depletes
+// [ES] Asigne true si desea apagar el dispositivo antes de que
+//      se agote la batería por completo
+
+// #define SHUTDOWN_ON_LOW_BATTERY true
+#define SHUTDOWN_ON_LOW_BATTERY false
+
 //------------------------------------------------------------------
-// Globals (optional customization)
+// Global input numbers (optional customization)
 //------------------------------------------------------------------
 
 #define GPIO_EXP_1ST 0
@@ -137,7 +183,7 @@ void simWheelSetup()
 #if LED_STRIP1_COUNT > 0
     pixels::configure(
         PixelGroup::GRP_TELEMETRY,
-        GPIO_NUM_40,
+        DIN1,
         LED_STRIP1_COUNT,
         true,
         PixelDriver::WS2812,
@@ -148,7 +194,7 @@ void simWheelSetup()
 #if LED_STRIP2_COUNT > 0
     pixels::configure(
         PixelGroup::GRP_TELEMETRY,
-        GPIO_NUM_38,
+        DIN2,
         LED_STRIP2_COUNT,
         true,
         PixelDriver::WS2812,
@@ -158,18 +204,18 @@ void simWheelSetup()
 
     // Configure rotary encoders
 
-    inputs::addRotaryEncoder(GPIO_NUM_4, GPIO_NUM_5, ROTARY_1ST + 0, ROTARY_1ST + 1);
-    inputs::addRotaryEncoder(GPIO_NUM_7, GPIO_NUM_6, ROTARY_1ST + 2, ROTARY_1ST + 3);
-    inputs::addRotaryEncoder(GPIO_NUM_11, GPIO_NUM_10, ROTARY_1ST + 4, ROTARY_1ST + 5);
-    inputs::addRotaryEncoder(GPIO_NUM_13, GPIO_NUM_12, ROTARY_1ST + 6, ROTARY_1ST + 7);
-    inputs::addRotaryEncoder(GPIO_NUM_17, GPIO_NUM_18, ROTARY_1ST + 8, ROTARY_1ST + 9);
-    inputs::addRotaryEncoder(GPIO_NUM_16, GPIO_NUM_21, ROTARY_1ST + 10, ROTARY_1ST + 11);
-    inputs::addRotaryEncoder(GPIO_NUM_15, GPIO_NUM_33, ROTARY_1ST + 12, ROTARY_1ST + 13);
-    inputs::addRotaryEncoder(GPIO_NUM_14, GPIO_NUM_34, ROTARY_1ST + 14, ROTARY_1ST + 15);
+    inputs::addRotaryEncoder(ROT1A, ROT1B, ROTARY_1ST + 0, ROTARY_1ST + 1);
+    inputs::addRotaryEncoder(ROT2A, ROT2B, ROTARY_1ST + 2, ROTARY_1ST + 3);
+    inputs::addRotaryEncoder(ROT3A, ROT3B, ROTARY_1ST + 4, ROTARY_1ST + 5);
+    inputs::addRotaryEncoder(ROT4A, ROT4B, ROTARY_1ST + 6, ROTARY_1ST + 7);
+    inputs::addRotaryEncoder(ROT5A, ROT5B, ROTARY_1ST + 8, ROTARY_1ST + 9);
+    inputs::addRotaryEncoder(ROT6A, ROT6B, ROTARY_1ST + 10, ROTARY_1ST + 11);
+    inputs::addRotaryEncoder(ROT7A, ROT7B, ROTARY_1ST + 12, ROTARY_1ST + 13);
+    inputs::addRotaryEncoder(ROT8A, ROT8B, ROTARY_1ST + 14, ROTARY_1ST + 15);
 
     // Configure GPIO expanders
-    MCP23017Expander exp0, exp7;
 
+    MCP23017Expander exp0, exp7;
     exp0[MCP23017Pin::GPA0] = GPIO_EXP_1ST;
     exp0[MCP23017Pin::GPA1] = GPIO_EXP_1ST + 1;
     exp0[MCP23017Pin::GPA2] = GPIO_EXP_1ST + 2;
@@ -204,13 +250,12 @@ void simWheelSetup()
     exp7[MCP23017Pin::GPB6] = GPIO_EXP_1ST + 16 + 14;
     exp7[MCP23017Pin::GPB7] = GPIO_EXP_1ST + 16 + 15;
 
-    // inputs::initializeI2C(GPIO_NUM_9, GPIO_NUM_8, I2CBus::PRIMARY, false);
-    inputs::addMCP23017Expander(exp0, 0);
-    inputs::addMCP23017Expander(exp7, 7);
+    inputs::addMCP23017Expander(exp0, EXPANDER_Y_HW_ADDRESS);
+    inputs::addMCP23017Expander(exp7, EXPANDER_X_HW_ADDRESS);
 
     // Configure clutch paddles
 
-    inputs::setAnalogClutchPaddles(GPIO_NUM_2, GPIO_NUM_1);
+    inputs::setAnalogClutchPaddles(LEFT_CLUTCH_GPIO, RIGHT_CLUTCH_GPIO);
     inputHub::clutch::inputs(CLUTCH_1ST, CLUTCH_1ST + 1);
     inputHub::clutch::bitePointInputs(ROTARY_1ST, ROTARY_1ST + 1);
 
@@ -225,7 +270,7 @@ void customFirmware()
 {
 
 #ifdef WAKE_UP_PIN
-    power::configureWakeUp(WAKE_UP_PIN);
+    power::configureWakeUp(ROT1A);
 #endif
 
 #ifdef POWER_LATCH
@@ -250,9 +295,11 @@ void customFirmware()
 #endif
     );
 
-#ifdef ENABLE_BATTERY
+#if ENABLE_BATTERY
     batteryMonitor::configure();
-    batteryMonitor::setPowerOffSoC(4);
+#if !SHUTDOWN_ON_LOW_BATTERY
+    batteryMonitor::setPowerOffSoC(0);
+#endif
     batteryMonitor::setWarningSoC(15);
 #endif
 }
