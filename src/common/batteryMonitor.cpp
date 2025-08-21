@@ -233,16 +233,39 @@ bool max1704x_quickStart()
 bool max1704x_getSoC(int &batteryLevel)
 {
 #if !CD_CI
+
+    // NOTE: due to the presence of a battery charger
+    // the following algorithm has to figure out if the battery is charging.
+    // We take several readings, one each 100 ms.
+    // Any reading above 100% means the battery is charging.
+    // Any failed reading means there is no battery or the battery charger is interfering.
+
     uint16_t value;
-    bool result = max1704x_read(MAX1704x_REG_SoC, value);
-    if (result)
+    uint8_t worstBatteryLevel = 100;
+    bool seemsToBeCharging = false;
+    bool success = false;
+    for (uint8_t i = 0; i < 10; i++)
     {
-        uint8_t *data = (uint8_t *)&value;
-        batteryLevel = data[1];
-        if (data[0] >= 127)
-            batteryLevel++;
+        // Serial.printf("=== %d ===\n", i);
+        if (max1704x_read(MAX1704x_REG_SoC, value))
+        {
+            success = true;
+            uint8_t *data = (uint8_t *)&value;
+            uint8_t currentSoC = data[1];
+            if (data[0] >= 127)
+                currentSoC++;
+            seemsToBeCharging = seemsToBeCharging || (currentSoC > 101);
+            // Serial.printf("soc %d charging %d\n", currentSoC, seemsToBeCharging);
+            if (currentSoC < worstBatteryLevel)
+                worstBatteryLevel = currentSoC;
+        }
+        DELAY_MS(100);
     }
-    return result;
+    if (seemsToBeCharging)
+        batteryLevel = 100;
+    else if (success)
+        batteryLevel = worstBatteryLevel;
+    return success;
 #else
     return false;
 #endif
@@ -439,7 +462,8 @@ void internals::batteryMonitor::getReady()
     {
         BatteryService::inject(new BatteryServiceProvider());
         // Ensure there is a first reading available before the OnStart event
-        getSoC(lastBatteryLevel);
+        if (!getSoC(lastBatteryLevel))
+            lastBatteryLevel = UNKNOWN_BATTERY_LEVEL;
         OnStart::subscribe(batteryMonitorStart);
     }
 }

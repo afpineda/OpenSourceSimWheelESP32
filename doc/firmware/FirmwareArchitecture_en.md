@@ -544,6 +544,19 @@ Fuel gauges from Maxim/Analog Devices are powered from the battery itself.
 As a result, they don't respond to I2C commands if the battery is not attached.
 This way, we know there is no battery.
 
+Typically, a battery charger is also attached to the battery.
+When the battery is charging, the chip can read voltages above expected
+thus reporting a state of charge higher than 100%.
+
+Additionally, some battery chargers do not provide a constant charging voltage,
+but a varying voltage wave.
+For example,
+[BQ2407x](../../doc/hardware/esp32reference/BQ24074_datasheet.pdf) battery chargers
+provide three charging phases: conditioning, constant current, and constant voltage.
+
+For those reasons, the firmware takes several readings from the chip
+trying to figure out what the situation is.
+
 ### BatteryCalibration
 
 Provides an estimation of the "state of charge" given an indirect battery voltage.
