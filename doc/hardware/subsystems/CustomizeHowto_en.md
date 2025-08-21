@@ -323,7 +323,12 @@ In order to use any of them:
 
 If you go for a purely wired USB implementation:
 
-- Set USB-Mode to "USB-OTG (TinyUSB)" in Arduino-IDE (board configuration).
+- Set *USB-Mode* to "USB-OTG (TinyUSB)" in Arduino-IDE (board configuration).
+- This implementation **won't work** if you set *USB-Mode* to "Hardware CDC and JTAG"
+  and *USB CDC on Boot* to "Enabled".
+  However, this is the only way to redirect serial output to the USB serial interface.
+  Use this configuration if you need to see error messages and
+  your board doesn't have a secondary USB-to-UART connector.
 - There is no sense in using a battery-operated design if you have USB power available.
   For this reason, automatic shutdown is not available within this implementation.
 - Note that you can not have both Bluetooth and USB at the same time in the same device.
