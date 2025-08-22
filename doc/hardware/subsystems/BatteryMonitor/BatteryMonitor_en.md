@@ -296,7 +296,7 @@ The first parameter is a time interval in seconds.
 By default, this is set to 180 seconds (3 minutes).
 It sets the time interval between measurements.
 
-### Power off on critical battery levels
+### Shutdown on critical battery levels
 
 Place a call to `batteryMonitor::setPowerOffSoC()`.
 The first parameter is a percentage of battery charge (0% to 100%).
@@ -304,10 +304,13 @@ If the measured state of charge is below the given parameter,
 the system will go into deep sleep or power off before it stops working.
 This prevents the system from depleting the battery even if there is not enough power
 to keep it working.
-By default, this is set to 4%.
 Do not set too high.
 
-Call `batteryMonitor::setPowerOffSoC(0)` to disable this feature.
+Call `batteryMonitor::setPowerOffSoC(0)` to disable this feature,
+which is the default.
+
+*Advice*:
+Do not enable this feature if your battery monitor is not reasonably accurate.
 
 ## Unknown state of charge
 
