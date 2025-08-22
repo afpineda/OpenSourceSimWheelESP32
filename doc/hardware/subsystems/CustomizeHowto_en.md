@@ -509,7 +509,7 @@ Let's suppose this sequence of events:
   - Button 2 is reported as **released**
   - Button 3 is reported as released
 
-Once both shift padles are released,
+Once both shift paddles are released,
 they will be reported as buttons 1 and 2 again.
 
 ## Build your design into a perfboard
