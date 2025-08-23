@@ -103,25 +103,26 @@ thus not requiring a translation unit.
 
 ## Principle of single responsibility
 
-| Code artifact            | Reason to change                                                       |
-| ------------------------ | ---------------------------------------------------------------------- |
-| batteryCalibration.cpp   | SOC algorithm                                                          |
-| batteryMonitor.cpp       | Battery management capabilities                                        |
-| firmware.cpp             | Firmware initialization                                                |
-| HAL.cpp                  | Underlying ESP-IDF API                                                 |
-| hid_«implementation».cpp | Underlying HID stack                                                   |
-| hidCommon.cpp            | Features available through the companion app or SimHub                 |
-| InputHardware.cpp        | Input hardware design                                                  |
-| inputHub.cpp             | Device operation through specific button press combinations            |
-| inputMap.cpp             | Firmware-defined or user-defined input numbers                         |
-| inputs.cpp               | Input hardware settings                                                |
-| OutputHardware.cpp       | Output hardware design                                                 |
-| pixels.cpp               | Pixel control capabilities or available UI notifications               |
-| power.cpp                | Underlying power management capabilities                               |
-| SimWheelUI.cpp           | Out-of-the-box user interfaces for telemetry display and notifications |
-| storage.cpp              | User settings that require long-term storage                           |
-| telemetry.cpp            | Telemetry data                                                         |
-| ui.cpp                   | Support for custom user interfaces                                     |
+| Code artifact              | Reason to change                                                       |
+| -------------------------- | ---------------------------------------------------------------------- |
+| batteryCalibration.cpp     | SOC algorithm                                                          |
+| batteryMonitor.cpp         | Battery management capabilities                                        |
+| BatteryMonitorHardware.cpp | Battery management hardware design                                     |
+| firmware.cpp               | Firmware initialization                                                |
+| HAL.cpp                    | Underlying ESP-IDF API                                                 |
+| hid_«implementation».cpp   | Underlying HID stack                                                   |
+| hidCommon.cpp              | Features available through the companion app or SimHub                 |
+| InputHardware.cpp          | Input hardware design                                                  |
+| inputHub.cpp               | Device operation through specific button press combinations            |
+| inputMap.cpp               | Firmware-defined or user-defined input numbers                         |
+| inputs.cpp                 | Input hardware settings                                                |
+| OutputHardware.cpp         | Output hardware design                                                 |
+| pixels.cpp                 | Pixel control capabilities or available UI notifications               |
+| power.cpp                  | Underlying power management capabilities                               |
+| SimWheelUI.cpp             | Out-of-the-box user interfaces for telemetry display and notifications |
+| storage.cpp                | User settings that require long-term storage                           |
+| telemetry.cpp              | Telemetry data                                                         |
+| ui.cpp                     | Support for custom user interfaces                                     |
 
 ## Approach to dependency injection
 
@@ -544,8 +545,10 @@ Fuel gauges from Maxim/Analog Devices are powered from the battery itself.
 As a result, they don't respond to I2C commands if the battery is not attached.
 This way, we know there is no battery.
 
+#### Battery chargers
+
 Typically, a battery charger is also attached to the battery.
-When the battery is charging, the chip can read voltages above expected
+When the battery is charging, the battery monitor can read voltages above expected
 thus reporting a state of charge higher than 100%.
 
 Additionally, some battery chargers do not provide a constant charging voltage,
@@ -554,7 +557,7 @@ For example,
 [BQ2407x](../../doc/hardware/esp32reference/BQ24074_datasheet.pdf) battery chargers
 provide three charging phases: conditioning, constant current, and constant voltage.
 
-For those reasons, the firmware takes several readings from the chip
+For those reasons, the firmware takes several readings from the battery monitor
 trying to figure out what the situation is.
 
 ### BatteryCalibration

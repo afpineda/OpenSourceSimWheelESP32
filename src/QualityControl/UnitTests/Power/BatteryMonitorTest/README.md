@@ -32,9 +32,8 @@ Output through USB serial port at 115200 bauds.
 
    ```text
    --READY--
-   SoC: 100
-   --GO--
    SoC: 66
+   --GO--
    ```
 
 4. Wait for 20 seconds. No output should appear.

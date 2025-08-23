@@ -1,2 +1,3 @@
 batteryMonitor.cpp
+BatteryMonitorHardware.cpp
 HAL.cpp

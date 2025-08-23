@@ -1,5 +1,6 @@
 batteryCalibration.cpp
 batteryMonitor.cpp
+BatteryMonitorHardware.cpp
 firmware.cpp
 HAL.cpp
 hid_NimBLE.cpp

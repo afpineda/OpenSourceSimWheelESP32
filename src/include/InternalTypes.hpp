@@ -22,6 +22,7 @@
 #include <stdexcept>
 #include <semaphore>
 #include <chrono>
+#include <optional>
 
 #if !CD_CI
 /// @brief For tesing
@@ -676,3 +677,20 @@ typedef enum
     CMD_RESET_PIXELS = 8,
     _MAX_VALUE = 8
 } SimpleCommand;
+
+//-------------------------------------------------------------------
+// Battery Management
+//-------------------------------------------------------------------
+
+struct BatteryStatus
+{
+public:
+    /// @brief Measured battery level in the range from 0% to 100%
+    std::optional<uint8_t> stateOfCharge;
+    /// @brief  True if the battery is being charged
+    std::optional<bool> isCharging;
+    /// @brief False if the battery is not connected but there is external power
+    std::optional<bool> isBatteryPresent;
+    /// @brief True if there is wired power
+    std::optional<bool> usingExternalPower;
+};

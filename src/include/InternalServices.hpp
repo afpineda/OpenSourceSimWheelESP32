@@ -481,11 +481,21 @@ public:
      */
     virtual bool isBatteryPresent() MOCK_R(false);
 
+    /**
+     * @brief Get the full battery status
+     *
+     * @param status Current battery status
+     */
+    virtual void getStatus(BatteryStatus &status) MOCK;
+
     struct call
     {
         SINGLETON_INVOKER(int, getLastBatteryLevel(), getLastBatteryLevel())
         SINGLETON_INVOKER(bool, hasBattery(), hasBattery())
         SINGLETON_INVOKER(bool, isBatteryPresent(), isBatteryPresent())
+        VOID_SINGLETON_INVOKER(
+            getStatus(BatteryStatus &status),
+            getStatus(status))
     };
 };
 
