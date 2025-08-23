@@ -2,7 +2,7 @@
  * @file BatteryMonitorTest.cpp
  *
  * @author Ángel Fernández Pineda. Madrid. Spain.
- * @date 2025-02-23
+ * @date 2025-08-23
  * @brief Unit test
  *
  * @copyright Licensed under the EUPL

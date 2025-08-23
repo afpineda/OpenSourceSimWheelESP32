@@ -1,0 +1,4 @@
+VoltageDividerMonitorTest.cpp
+batteryMonitor.cpp
+BatteryMonitorHardware.cpp
+HAL_dummy.cpp
