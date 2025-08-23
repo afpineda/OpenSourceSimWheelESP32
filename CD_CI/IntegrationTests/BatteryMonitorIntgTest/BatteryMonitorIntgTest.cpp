@@ -2,91 +2,167 @@
  * @file BatteryMonitorIntgTest.cpp
  *
  * @author Ángel Fernández Pineda. Madrid. Spain.
- * @date 2025-03-06
+ * @date 2025-08-23
  * @brief Integration test
  *
  * @copyright Licensed under the EUPL
  *
  */
 
-//-------------------------------------------------------------------
+//------------------------------------------------------------------
 // Imports
-//-------------------------------------------------------------------
+//------------------------------------------------------------------
 
 #include "SimWheel.hpp"
 #include "SimWheelInternals.hpp"
+#include "InternalTypes.hpp"
 #include "InternalServices.hpp"
-#include "cd_ci_assertions.hpp"
 #include "HAL.hpp"
-#include <cinttypes>
-#include <cassert>
+#include "cd_ci_assertions.hpp"
 #include <iostream>
+#include <semaphore>
+#include <chrono>
 
-//-------------------------------------------------------------------
-// Mocks
-//-------------------------------------------------------------------
+//------------------------------------------------------------------
+// Globals
+//------------------------------------------------------------------
 
-class PowerMock : public PowerService
+BatteryStatus currentStatus;
+int receivedBatteryLevel;
+bool lowBattWitness = false;
+bool shutdownWitness = false;
+std::counting_semaphore<1> received{1};
+
+//------------------------------------------------------------------
+// MOCKS
+//------------------------------------------------------------------
+
+class PowerServiceMock : public PowerService
 {
 public:
-    bool powerOff = false;
     virtual void shutdown() override
     {
-        powerOff = true;
+        OnShutdown::notify();
     }
-} powerMock;
+};
 
-class BatteryCalMock : public BatteryCalibrationService
+//------------------------------------------------------------------
+// Auxiliary
+//------------------------------------------------------------------
+
+void reset()
 {
-public:
-    virtual int getBatteryLevel(int reading) override
-    {
-        return reading / 41;
-    }
-} battCalMock;
-
-bool lowBattWarning = false;
-
-void lowBattCallback()
-{
-    lowBattWarning = true;
+    currentStatus.isBatteryPresent.reset();
+    currentStatus.isCharging.reset();
+    currentStatus.stateOfCharge.reset();
+    currentStatus.isBatteryPresent.reset();
+    lowBattWitness = false;
+    shutdownWitness = false;
 }
 
-//-------------------------------------------------------------------
-//-------------------------------------------------------------------
+void waitFor(std::string message = "")
+{
+    if (!received.try_acquire_for(std::chrono::milliseconds(2000)))
+    {
+        std::cout << "Input event not received at: " << message << std::endl;
+        assert(false && "Input event not received");
+    }
+}
+
+//------------------------------------------------------------------
+// Auxiliary (event handlers)
+//------------------------------------------------------------------
+
+void get_current_battery_level(int level)
+{
+    // std::cout << "get_current_battery_level" << std::endl;
+    receivedBatteryLevel = level;
+    received.release();
+}
+
+void on_low_battery()
+{
+    lowBattWitness = true;
+    received.release();
+}
+
+void on_shutdown()
+{
+    shutdownWitness = true;
+    received.release();
+}
+
+//------------------------------------------------------------------
+//------------------------------------------------------------------
+// Test groups
+//------------------------------------------------------------------
+//------------------------------------------------------------------
+
+void test1()
+{
+    std::cout << "- test 1 -" << std::endl;
+
+    reset();
+    currentStatus.stateOfCharge = 9;
+    DELAY_MS(1500);
+    waitFor("low battery warning");
+    assert<bool>::equals("low battery witness (1)", true, lowBattWitness);
+
+    reset();
+    currentStatus.stateOfCharge = 1;
+    DELAY_MS(1500);
+    waitFor("critical battery level");
+    assert<bool>::equals("shutdown on low battery (1)", true, shutdownWitness);
+
+    reset();
+    currentStatus.stateOfCharge = 99;
+    DELAY_MS(1500);
+    waitFor("fully charged battery");
+    assert<bool>::equals("low battery witness (2)", false, lowBattWitness);
+    assert<bool>::equals("shutdown on low battery (2)", false, shutdownWitness);
+
+    reset();
+    DELAY_MS(1500);
+    waitFor("State of charge unknown");
+    assert<bool>::equals("low battery witness (3)", false, lowBattWitness);
+    assert<bool>::equals("shutdown on low battery (3)", false, shutdownWitness);
+}
+
+void test2()
+{
+    std::cout << "- test 2 -" << std::endl;
+
+    reset();
+    currentStatus.stateOfCharge = 33;
+    DELAY_MS(1500);
+    waitFor("State of charge 33");
+    assert<bool>::equals("state of charge (1)", 33, BatteryService::call::getLastBatteryLevel());
+
+    reset();
+    DELAY_MS(1500);
+    waitFor("State of charge unknown");
+    assert<bool>::equals("state of charge (2)", UNKNOWN_BATTERY_LEVEL, BatteryService::call::getLastBatteryLevel());
+}
+
+//------------------------------------------------------------------
+//------------------------------------------------------------------
 // Entry point
-//-------------------------------------------------------------------
-//-------------------------------------------------------------------
+//------------------------------------------------------------------
+//------------------------------------------------------------------
 
 int main()
 {
-    PowerService::inject(&powerMock);
-    BatteryCalibrationService::inject(&battCalMock);
-    OnLowBattery::subscribe(lowBattCallback);
-    batteryMonitor::configure(0);
+    PowerService::inject(new PowerServiceMock);
+    OnBatteryLevel::subscribe(get_current_battery_level);
+    OnLowBattery::subscribe(on_low_battery);
+    OnShutdown::subscribe(on_shutdown);
+    internals::batteryMonitor::configureFakeMonitor(&currentStatus);
     batteryMonitor::setPeriod(1);
-    batteryMonitor::setPowerOffSoC(20);
-    batteryMonitor::setWarningSoC(50);
-    internals::hal::gpio::fakeADCreading = 4096;
+    batteryMonitor::setWarningSoC(10);
+    batteryMonitor::setPowerOffSoC(4);
     internals::batteryMonitor::getReady();
     OnStart::notify();
 
-    // Check initial state
-    DELAY_MS(1100);
-    uint8_t batteryLevel = BatteryService::call::getLastBatteryLevel();
-    assert<uint8_t>::equals("InitialState", 99, batteryLevel);
-
-    // Low battery reading
-    internals::hal::gpio::fakeADCreading = 1800;
-    DELAY_MS(1100);
-    batteryLevel = BatteryService::call::getLastBatteryLevel();
-    assert<int>::equals("Low battery state", 43, batteryLevel);
-    assert<bool>::equals("Low battery notification", true, lowBattWarning);
-
-    // Critical battery level
-    internals::hal::gpio::fakeADCreading = 300;
-    DELAY_MS(1100);
-    batteryLevel = BatteryService::call::getLastBatteryLevel();
-    assert<int>::equals("Critical battery state", 7, batteryLevel);
-    assert<bool>::equals("Automatic shutdown", true, powerMock.powerOff);
+    test1();
+    test2();
 }
