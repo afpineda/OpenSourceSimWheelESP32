@@ -76,11 +76,40 @@ void test1()
 {
 
     std::cout << "- test 1 -" << std::endl;
-    internals::hal::gpio::fakeADCreading = 2000;
+    internals::hal::gpio::setFakeADCReading({2000});
     DELAY_MS(2000);
     waitFor("1");
     assert<int>::equals("A", 2000, hardware->lastBatteryReading);
     assert<int>::equals("B", 20, receivedBatteryLevel);
+}
+
+void test2()
+{
+    BatteryStatus status;
+    std::cout << "- test 2 (constant current charging simulation) -" << std::endl;
+    internals::hal::gpio::setFakeADCReading({0, 1000, 2000, 3000, 4000, 4095, 4000, 3000, 2000, 1000});
+    DELAY_MS(2000);
+    waitFor("2");
+    BatteryService::call::getStatus(status);
+    assert<bool>::equals("known charging state", true, status.isCharging.has_value());
+    assert<bool>::equals("charging state", true, status.isCharging.value());
+    assert<bool>::equals("known wired power state", true, status.usingExternalPower.has_value());
+    assert<bool>::equals("wired power state", true, status.usingExternalPower.value());
+}
+
+void test3()
+{
+    BatteryStatus status;
+    std::cout << "- test 3 (no battery) -" << std::endl;
+    internals::hal::gpio::setFakeADCReading({20});
+    DELAY_MS(2000);
+    waitFor("3");
+    BatteryService::call::getStatus(status);
+    assert<bool>::equals("known charging state", true, status.isCharging.has_value());
+    assert<bool>::equals("charging state", false, status.isCharging.value());
+    assert<bool>::equals("known wired power state", true, status.usingExternalPower.has_value());
+    assert<bool>::equals("wired power state", true, status.usingExternalPower.value());
+    assert<bool>::equals("unknown SoC state", false, status.stateOfCharge.has_value());
 }
 
 //------------------------------------------------------------------
@@ -91,7 +120,6 @@ void test1()
 
 int main()
 {
-    internals::hal::gpio::fakeADCreading = 0;
     BatteryCalibrationService::inject(new BatteryCalibrationMock());
     OnBatteryLevel::subscribe(get_current_battery_level);
     batteryMonitor::configure(TEST_RTC_GPIO1);
@@ -102,4 +130,6 @@ int main()
     OnStart::notify();
 
     test1();
+    test2();
+    test3();
 }

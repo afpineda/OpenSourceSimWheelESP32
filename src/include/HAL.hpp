@@ -323,10 +323,15 @@ namespace internals
 
 #if CD_CI
             /**
-             * @brief Inject a fake reading to getADCreading() for testing
+             * @brief Inject a sequence of fake ADC readings
              *
+             * @note On each call to getADCreading() an injected value is retrieved
+             *       in strict order. After the last value is retrieved,
+             *       the first one is retrieved again and so on.
+             *
+             * @param injectedADCValues Values to be injected
              */
-            extern int fakeADCreading;
+            void setFakeADCReading(const std::vector<int> &injectedADCValues);
 #endif
 
             /**

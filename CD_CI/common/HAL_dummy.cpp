@@ -21,7 +21,8 @@
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-int internals::hal::gpio::fakeADCreading;
+std::vector<int> fakeADCreadings;
+size_t fakeADCIndex = 0;
 
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
@@ -90,9 +91,20 @@ uint8_t internals::hal::i2c::findFullAddress(
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
+void internals::hal::gpio::setFakeADCReading(const std::vector<int> &injectedADCValues)
+{
+    assert(injectedADCValues.size() > 0);
+    fakeADCreadings = injectedADCValues;
+    fakeADCIndex = 0;
+}
+
 int internals::hal::gpio::getADCreading(ADC_GPIO pin, int sampleCount)
 {
-    return internals::hal::gpio::fakeADCreading;
+    if (fakeADCreadings.size() < 1)
+        return 0;
+    if (fakeADCIndex >= fakeADCreadings.size())
+        fakeADCIndex = 0;
+    return fakeADCreadings.at(fakeADCIndex++);
 }
 
 void internals::hal::gpio::forOutput(
