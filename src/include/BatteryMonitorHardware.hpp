@@ -46,6 +46,31 @@ public:
 };
 
 //-------------------------------------------------------------------
+// Testing
+//-------------------------------------------------------------------
+
+/**
+ * @brief Fake battery monitor for testing
+ *
+ */
+class FakeBatteryMonitor : public BatteryMonitorInterface
+{
+public:
+    BatteryStatus *status = nullptr;
+public:
+    FakeBatteryMonitor(BatteryStatus *fakeStatus)
+    {
+        this->status = fakeStatus;
+    }
+
+    virtual void getStatus(BatteryStatus &currentStatus)
+    {
+        if (status!=nullptr)
+            currentStatus = *status;
+    }
+};
+
+//-------------------------------------------------------------------
 // MAX1704x hardware
 //-------------------------------------------------------------------
 

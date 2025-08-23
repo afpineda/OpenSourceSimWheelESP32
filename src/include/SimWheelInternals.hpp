@@ -42,6 +42,23 @@ namespace internals
          */
         void configureForTesting();
 
+        /**
+         * @brief Configure a fake monitor for testing
+         *
+         * @param fakeStatus Pointer to variable holding the fake battery status
+         */
+        void configureFakeMonitor(BatteryStatus *fakeStatus);
+
+
+        /**
+         * @brief Get the Hardware Instance object
+         *
+         * @note For testing
+         *
+         * @return void* Untyped hardware instance (must be type-casted)
+         */
+        void *getHardwareInstance();
+
     } // namespace batteryMonitor
 
     namespace batteryCalibration

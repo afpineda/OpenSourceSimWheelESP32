@@ -238,3 +238,20 @@ void internals::batteryMonitor::getReady()
         OnStart::subscribe(batteryMonitorStart);
     }
 }
+
+// ----------------------------------------------------------------------------
+
+void internals::batteryMonitor::configureFakeMonitor(BatteryStatus *fakeStatus)
+{
+    abortIfStarted();
+    abortIfConfigured();
+    batteryMonitorhardware = new FakeBatteryMonitor(fakeStatus);
+    DeviceCapabilities::setFlag(DeviceCapability::BATTERY);
+}
+
+// ----------------------------------------------------------------------------
+
+void *internals::batteryMonitor::getHardwareInstance()
+{
+    return static_cast<void*>(batteryMonitorhardware);
+}

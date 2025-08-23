@@ -13,7 +13,10 @@
 #include "InternalServices.hpp"
 #include "SimWheel.hpp"
 #include "HAL.hpp"
+
+#if !CD_CI
 #include "driver/i2c.h" // For I2C operation
+#endif
 
 //-------------------------------------------------------------------
 // MAX1704x hardware
@@ -29,6 +32,7 @@
 
 bool MAX1704x::read(uint8_t regAddress, uint16_t &value)
 {
+#if !CD_CI
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, fg_i2c_address | I2C_MASTER_WRITE, true);
@@ -41,10 +45,14 @@ bool MAX1704x::read(uint8_t regAddress, uint16_t &value)
     bool result = (i2c_master_cmd_begin(I2C_NUM_0, cmd, I2C_WAIT_TICKS) == ESP_OK);
     i2c_cmd_link_delete(cmd);
     return result;
+#else
+    return false;
+#endif
 }
 
 bool MAX1704x::write(uint8_t regAddress, uint16_t value)
 {
+#if !CD_CI
     uint8_t *data = (uint8_t *)&value;
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
@@ -56,6 +64,9 @@ bool MAX1704x::write(uint8_t regAddress, uint16_t value)
     bool result = (i2c_master_cmd_begin(I2C_NUM_0, cmd, I2C_WAIT_TICKS) == ESP_OK);
     i2c_cmd_link_delete(cmd);
     return result;
+#else
+    return false;
+#endif
 }
 
 bool MAX1704x::quickStart()
@@ -137,18 +148,24 @@ void MAX1704x::getStatus(BatteryStatus &currentStatus)
 
 int VoltageDividerMonitor::read()
 {
+#if !CD_CI
     // Enable circuit when required
     if (_batteryENPin != UNSPECIFIED::VALUE)
     {
         GPIO_SET_LEVEL(_batteryENPin, 1);
         DELAY_TICKS(200);
     }
+#endif
+
     // Get ADC reading
     lastBatteryReading = internals::hal::gpio::getADCreading(_batteryREADPin, VOLTAGE_SAMPLES_COUNT);
 
+#if !CD_CI
     // Disable circuit when required
     if (_batteryENPin != UNSPECIFIED::VALUE)
         GPIO_SET_LEVEL(_batteryENPin, 0);
+#endif
+
     return lastBatteryReading;
 }
 

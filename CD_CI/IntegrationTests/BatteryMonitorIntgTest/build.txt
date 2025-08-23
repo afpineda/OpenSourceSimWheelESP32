@@ -1,3 +1,4 @@
 BatteryMonitorIntgTest.cpp
+BatteryMonitorHardware.cpp
 batteryMonitor.cpp
 HAL_dummy.cpp

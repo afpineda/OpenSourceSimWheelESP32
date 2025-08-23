@@ -27,33 +27,37 @@
 // Globals
 //------------------------------------------------------------------
 
-extern int lastBatteryReading;
-int receivedBatteryLevel = 999;
+BatteryStatus currentStatus;
+int receivedBatteryLevel;
+bool lowBattWitness = false;
+bool shutdownWitness = false;
 std::counting_semaphore<1> received{1};
 
 //------------------------------------------------------------------
 // MOCKS
 //------------------------------------------------------------------
 
-class BatteryCalibrationMock : public BatteryCalibrationService
+class PowerServiceMock : public PowerService
 {
 public:
-    virtual int getBatteryLevel(int reading) override
+    virtual void shutdown() override
     {
-        // std::cout << "getBatteryLevel" << std::endl;
-        return reading / 100;
+        OnShutdown::notify();
     }
 };
 
 //------------------------------------------------------------------
-// Auxiliray
+// Auxiliary
 //------------------------------------------------------------------
 
-void get_current_battery_level(int level)
+void reset()
 {
-    // std::cout << "get_current_battery_level" << std::endl;
-    receivedBatteryLevel = level;
-    received.release();
+    currentStatus.isBatteryPresent.reset();
+    currentStatus.isCharging.reset();
+    currentStatus.stateOfCharge.reset();
+    currentStatus.isBatteryPresent.reset();
+    lowBattWitness = false;
+    shutdownWitness = false;
 }
 
 void waitFor(std::string message = "")
@@ -66,6 +70,29 @@ void waitFor(std::string message = "")
 }
 
 //------------------------------------------------------------------
+// Auxiliary (event handlers)
+//------------------------------------------------------------------
+
+void get_current_battery_level(int level)
+{
+    // std::cout << "get_current_battery_level" << std::endl;
+    receivedBatteryLevel = level;
+    received.release();
+}
+
+void on_low_battery()
+{
+    lowBattWitness = true;
+    received.release();
+}
+
+void on_shutdown()
+{
+    shutdownWitness = true;
+    received.release();
+}
+
+//------------------------------------------------------------------
 //------------------------------------------------------------------
 // Test groups
 //------------------------------------------------------------------
@@ -74,11 +101,41 @@ void waitFor(std::string message = "")
 void test1()
 {
     std::cout << "- test 1 -" << std::endl;
-    internals::hal::gpio::fakeADCreading = 2000;
-    DELAY_MS(2000);
-    waitFor("1");
-    assert<int>::equals("A", 2000, lastBatteryReading);
-    assert<int>::equals("B", 20, receivedBatteryLevel);
+
+    reset();
+    currentStatus.stateOfCharge = 9;
+    DELAY_MS(1500);
+    waitFor("low battery warning");
+    assert<bool>::equals("low battery witness (1)", true, lowBattWitness);
+
+    reset();
+    currentStatus.stateOfCharge = 1;
+    DELAY_MS(1500);
+    waitFor("critical battery level");
+    assert<bool>::equals("shutdown on low battery (1)", true, shutdownWitness);
+
+    reset();
+    currentStatus.stateOfCharge = 99;
+    DELAY_MS(1500);
+    waitFor("fully charged battery");
+    assert<bool>::equals("low battery witness (2)", false, lowBattWitness);
+    assert<bool>::equals("shutdown on low battery (2)", false, shutdownWitness);
+}
+
+void test2()
+{
+    std::cout << "- test 2 -" << std::endl;
+
+    reset();
+    currentStatus.stateOfCharge = 33;
+    DELAY_MS(1500);
+    waitFor("State of charge 33");
+    assert<bool>::equals("state of charge (1)", 33, BatteryService::call::getLastBatteryLevel());
+
+    reset();
+    DELAY_MS(1500);
+    waitFor("State of charge unknown");
+    assert<bool>::equals("state of charge (2)", UNKNOWN_BATTERY_LEVEL, BatteryService::call::getLastBatteryLevel());
 }
 
 //------------------------------------------------------------------
@@ -89,13 +146,17 @@ void test1()
 
 int main()
 {
-    internals::hal::gpio::fakeADCreading = 0;
-    BatteryCalibrationService::inject(new BatteryCalibrationMock());
+    PowerService::inject(new PowerServiceMock);
     OnBatteryLevel::subscribe(get_current_battery_level);
-    batteryMonitor::configure(TEST_RTC_GPIO1);
+    OnLowBattery::subscribe(on_low_battery);
+    OnShutdown::subscribe(on_shutdown);
+    internals::batteryMonitor::configureFakeMonitor(&currentStatus);
     batteryMonitor::setPeriod(1);
+    batteryMonitor::setWarningSoC(10);
+    batteryMonitor::setPowerOffSoC(4);
     internals::batteryMonitor::getReady();
     OnStart::notify();
 
     test1();
+    test2();
 }
