@@ -2,7 +2,11 @@
 
 ## Purpose and summary
 
-To test that the battery monitor daemon runs in the background asking the fuel gauge for state of charge.
+To test that the fuel gauge works:
+
+- Battery presence is detected.
+- Battery charging is detected.
+- A SoC estimation is reported.
 
 ## Hardware setup
 
@@ -12,44 +16,67 @@ Wire a MAX17043 module as described in the
 [battery monitor subsystem](../../../../../doc/hardware/subsystems/BatteryMonitor/BatteryMonitor_en.md),
 including the battery itself.
 However, this test will get power from the USB cable alone.
+Do not attach the battery to a powerboost module during this test.
+If the battery is charging, you will get altered results,
+thus invalidating this procedure.
 
 Output at 115200 bauds over the USB serial port.
 
 ## Procedure
 
-1. Reset. Ignore output from the operating system itself.
-2. Output must match:
+Ignore repeated output during this procedure.
+
+1. Make sure the battery is not connected to the fuel gauge.
+2. Reset. Ignore output from the operating system itself.
+3. Wait for output. Must show:
 
    ```text
-   --READY--
-   SoC: 100
-   --GO--
+   Getting battery status...
+   Battery presence: false
+   Charging: false
+   Wired power: true
+   SoC: unknown
+   Done.
    ```
 
-3. Wait for **ten minutes** or so. It takes time for the fuel gauge to profile the battery.
-4. Last output line show (not to be taken literally):
+4. Attach `Battery(+)` from the fuel gauge to the `3V3` output.
+5. Wait for output. Must show (not literally):
 
    ```text
-   SoC: 86%
+   Getting battery status...
+   Battery presence: true
+   Charging: false
+   Wired power: unknown
+   SoC: 0
+   Done.
    ```
 
-   or any other percentage. Take note of that percentage.
-
-5. Unplug the battery from the circuit.
-6. Output must show (literally):
+6. The number next to `SoC:` may be different, but close.
+7. Attach the battery to the fuel gauge.
+8. Wait for 20 seconds ignoring output.
+9. Wait for output. Must show (not literally):
 
    ```text
-   SoC: 66%
+   Getting battery status...
+   Battery presence: true
+   Charging: false
+   Wired power: unknown
+   SoC: 66
+   Done.
    ```
 
-7. Plug the battery to the circuit again.
-8. Last output line must show another percentage **very close** to the first percentage (above or below). For example:
+10. The number next to `SoC:` must be anything not close to zero.
+    Note: this number is not meaningful as it takes up to 10 minutes
+    to profile the battery.
+11. Detach the battery from the fuel gauge.
+12. Wire `Battery(+)` to `5V`.
+13. Wait for output. Must show (literally):
 
    ```text
-   SoC: 89%
+   Getting battery status...
+   Battery presence: unknown
+   Charging: true
+   Wired power: true
+   SoC: unknown
+   Done.
    ```
-
-9. Wait for two minutes.
-10. No further output must show.
-    However, a new percentage may appear, 1% lesser than the previous one.
-    That is OK, too.

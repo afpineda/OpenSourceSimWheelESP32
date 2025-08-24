@@ -10,10 +10,10 @@
  */
 
 #include "Testing.hpp"
-#include "SimWheel.hpp"
-#include "SimWheelInternals.hpp"
+#include "BatteryMonitorHardware.hpp"
 #include "InternalServices.hpp"
 #include "HAL.hpp"
+#include <optional>
 
 #include <HardwareSerial.h>
 
@@ -21,35 +21,46 @@
 // Globals
 //-------------------------------------------------------
 
-uint8_t compensation = 0;
+MAX1704x *hw;
 
 //-------------------------------------------------------
 // Mocks
 //-------------------------------------------------------
 
-int currentSoC = -100;
-
-void reportBatteryLevel(int level)
+class BatteryCalibrationMock : public BatteryCalibrationService
 {
-    if (currentSoC != level)
+public:
+    virtual int getBatteryLevel(int reading) override
     {
-        currentSoC = level;
-        Serial.printf("SoC: %d\n", level);
+        return reading / 41; // 0-4096 <=> 0-99 linear
     }
-}
-
+} calMock;
 
 //-------------------------------------------------------
 // Auxiliary
 //-------------------------------------------------------
 
-// void printCompensation()
-// {
-//     if (max1704x_getCompensation(compensation))
-//         Serial.printf("ModelGauge compensation: %d (dec).\n", compensation);
-//     else
-//         Serial.printf("ModelGauge compensation not available.\n");
-// }
+void printStatusBool(const std::string header, const std::optional<bool> &opt)
+{
+    Serial.print(header.c_str());
+    Serial.print(": ");
+    if (opt.has_value())
+        Serial.printf("%s", opt.value() ? "true" : "false");
+    else
+        Serial.print("unknown");
+    Serial.println("");
+}
+
+void printStatusUint8(const std::string header, const std::optional<uint8_t> &opt)
+{
+    Serial.print(header.c_str());
+    Serial.print(": ");
+    if (opt.has_value())
+        Serial.printf("%u", opt.value());
+    else
+        Serial.print("unknown");
+    Serial.println("");
+}
 
 //-------------------------------------------------------
 // Entry point
@@ -59,33 +70,24 @@ void setup()
 {
     Serial.begin(115200);
     Serial.println("--READY--");
-    OnBatteryLevel::subscribe(reportBatteryLevel);
-    internals::batteryMonitor::configureForTesting();
-    batteryMonitor::configure();
-    internals::batteryMonitor::getReady();
-    OnStart::notify();
+    BatteryCalibrationService::inject(&calMock);
+
+    hw = new MAX1704x();
+
     Serial.println("--GO--");
 }
 
 void loop()
 {
-    // if (Serial.available())
-    // {
-    //     char ch = Serial.read();
-    //     if (ch = 'c')
-    //         printCompensation();
-    //     else if ((ch = '+') && (compensation < 255))
-    //     {
-    //         compensation++;
-    //         if (max1704x_setCompensation(compensation))
-    //             printCompensation();
-    //     }
-    //     else if ((ch = '-') && (compensation > 0))
-    //     {
-    //         compensation--;
-    //         if (max1704x_setCompensation(compensation))
-    //             printCompensation();
-    //     }
-    // }
-    DELAY_MS(250);
+    Serial.println("Getting battery status...");
+    BatteryStatus status;
+    hw->getStatus(status);
+
+    printStatusBool("Battery presence", status.isBatteryPresent);
+    printStatusBool("Charging", status.isCharging);
+    printStatusBool("Wired power", status.usingExternalPower);
+    printStatusUint8("SoC", status.stateOfCharge);
+
+    Serial.println("Done.");
+    DELAY_MS(5000);
 }

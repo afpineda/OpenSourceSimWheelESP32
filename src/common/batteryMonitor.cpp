@@ -160,14 +160,8 @@ void batteryMonitorDaemonLoop(void *arg)
     while (true)
     {
         batteryMonitorhardware->getStatus(newBatteryStatus);
-        uint8_t previousSoC =
-            currentStatus.stateOfCharge.has_value()
-                ? currentStatus.stateOfCharge.value()
-                : UNKNOWN_BATTERY_LEVEL;
-        uint8_t newSoC =
-            newBatteryStatus.stateOfCharge.has_value()
-                ? newBatteryStatus.stateOfCharge.value()
-                : UNKNOWN_BATTERY_LEVEL;
+        uint8_t previousSoC = currentStatus.stateOfCharge.value_or(UNKNOWN_BATTERY_LEVEL);
+        uint8_t newSoC = newBatteryStatus.stateOfCharge.value_or(UNKNOWN_BATTERY_LEVEL);
 
         if (previousSoC != newSoC)
             OnBatteryLevel::notify(newSoC);
@@ -253,5 +247,5 @@ void internals::batteryMonitor::configureFakeMonitor(BatteryStatus *fakeStatus)
 
 void *internals::batteryMonitor::getHardwareInstance()
 {
-    return static_cast<void*>(batteryMonitorhardware);
+    return static_cast<void *>(batteryMonitorhardware);
 }

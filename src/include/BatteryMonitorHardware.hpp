@@ -126,9 +126,10 @@ public:
      * @brief Construct a new MAX1704x object
      *
      * @param bus I2C bus where the chip is attached
-     * @param i2c_address 7-bit full I2C address
+     * @param i2c_address 7-bit full I2C address.
+     *                    Set to 0xFF to use a default address.
      */
-    MAX1704x(I2CBus bus, uint8_t i2c_address);
+    MAX1704x(I2CBus bus = I2CBus::PRIMARY, uint8_t i2c_address = 0xFF);
 
     virtual void getStatus(BatteryStatus &currentStatus) override;
 
