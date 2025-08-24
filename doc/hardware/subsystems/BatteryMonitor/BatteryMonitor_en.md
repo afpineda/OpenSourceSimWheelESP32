@@ -3,7 +3,7 @@
 This subsystem is for **battery-operated** systems, only.
 
 > [!CAUTION]
-> This subsystem is designed to work with batteries below 5 volts ("1S" Lithium-Polymer or LiPo batteries).
+> This subsystem is designed to work with batteries below 5 volts.
 > Higher voltages may damage your DevKit board.
 
 ## Purpose
@@ -316,10 +316,9 @@ Do not enable this feature if your battery monitor is not reasonably accurate.
 
 The firmware will be unable to compute a proper state of charge in the following situations:
 
-- The battery is not linked to the battery monitor/voltage divider/fuel gauge,
-  and the system is powered by a different source.
-- The battery monitor/voltage divider/fuel gauge is not properly wired to the DevKit board.
+- The battery is not properly wired to the battery monitor, voltage divider or fuel gauge.
 - The actual I2C address of the fuel gauge is not what this firmware expects.
 - The fuel gauge is not compatible with this firmware.
+- **The battery is being charged**.
 
 In those cases, you will get a constant state of charge of 66% at the host computer.

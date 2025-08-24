@@ -122,6 +122,12 @@ protected:
     bool read_SoC(uint8_t &currentSoC);
 
 public:
+    /**
+     * @brief Construct a new MAX1704x object
+     *
+     * @param bus I2C bus where the chip is attached
+     * @param i2c_address 7-bit full I2C address
+     */
     MAX1704x(I2CBus bus, uint8_t i2c_address);
 
     virtual void getStatus(BatteryStatus &currentStatus) override;
@@ -146,6 +152,7 @@ class VoltageDividerMonitor : public BatteryMonitorInterface
 protected:
     OutputGPIO _batteryENPin;
     ADC_GPIO _batteryREADPin;
+    int CHARGING_ADC_READING = 3442;
 
 public:
     // NOTE: these public members are for testing. Do not tamper with them.
@@ -157,7 +164,28 @@ public:
     int read();
 
 public:
-    VoltageDividerMonitor(ADC_GPIO battREADPin, OutputGPIO battENPin);
+    /**
+     * @brief Construct a new Voltage Divider Monitor object
+     *
+     * @note The parameters @p resistorToGND and @p resistorToBattery
+     *       are used to determine the expected voltage in the ADC pin
+     *       when charging, and nothing else.
+     *       Incoherent values are ignored.
+     *
+     * @param battREADPin ADC-capable GPIO for reading
+     * @param battENPin Output GPIO to enable or disable the circuit.
+     *                  Set to -1 (GPIO_NUM_NC) if the NPN-PNP pair is not used.
+     * @param resistorToGND Impedance of the resistor connected to GND.
+     *                      Use any impedance unit, but the same as @p resistorToBattery
+     * @param resistorToBattery Impedance of the resistor connected to the battery positive pole.
+     *                          Use any impedance unit, but the same as @p resistorToGND .
+     *                          Must be lower than @p resistorToGND.
+     */
+    VoltageDividerMonitor(
+        ADC_GPIO battREADPin,
+        OutputGPIO battENPin,
+        uint32_t resistorToGND = 200,
+        uint32_t resistorToBattery = 110);
 
     /**
      * @brief Translate a battery reading to a state of charge
