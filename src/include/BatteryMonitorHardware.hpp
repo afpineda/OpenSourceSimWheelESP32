@@ -58,6 +58,7 @@ class FakeBatteryMonitor : public BatteryMonitorInterface
 public:
     /// @brief Pointer to variable that holds fake battery status
     BatteryStatus *status = nullptr;
+
 public:
     /**
      * @brief Construct a new Fake Battery Monitor object
@@ -71,7 +72,7 @@ public:
 
     virtual void getStatus(BatteryStatus &currentStatus)
     {
-        if (status!=nullptr)
+        if (status != nullptr)
             currentStatus = *status;
     }
 };

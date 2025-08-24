@@ -1,5 +1,25 @@
 # Change log
 
+## 7.7.1
+
+- The battery monitor subsystem has been reimplemented.
+  This was done for extensibility, testability and testing.
+- The firmware now detects whether the battery is charging
+  so as not to report an inconsistent state of charge.
+  Works with non-constant voltage battery chargers.
+- It also detects whether the system is operating with wired power.
+- Therefore, four parameters of the battery status are collected:
+  charging status, battery presence, cable presence, and charge level.
+  In the future, it may be possible for this information to be reported to the host computer.
+- No changes are required in your custom firmware,
+  but you must run the
+  [sources setup procedure](./firmware/sourcesSetup_en.md) **again**.
+- If available, firmware-defined error messages are reported
+  in both the UART and USB serial interfaces.
+- A new custom firmware sketch has been created for the upcoming custom PCB DevKit,
+  which is still under development.
+- Minor documentation updates.
+
 ## 7.7.0
 
 - Added the missing implementation of `inputs::initializeI2C()`.

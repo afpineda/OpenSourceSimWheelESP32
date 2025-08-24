@@ -233,6 +233,29 @@ classDiagram
 
 [Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNp9kl9vgjAUxb8KuXvZMjQoMP5kLxtuiw9kRt8WXhqp2ARbUm4zneO7rxZZcIvwUjj5nR56eo-wFjmFGNYlqesZI4Uku4xb-jGKNZ8mc14pPLaiZd0UFN8W8_caCdLbu1Zu-pYZKxiS8tJ2LynJ_-B90Hr8Ho2sZ4UoeEpQsr2Rr4FPnJSiSFWJrCrpnspBerVlG1zSgtVIZT2ILgUSeXjhp1qGNz0r7S9fg7r6huMSHZavPhmutz2685r-DL1IXkM_8NrIehBNk8XUdSbBf7at7oz3ykxK1eWDDTsqd4TlejLMFWaAW7qjGcT6NacbopvPIOONRolCsTrwNcQoFbVBVbkejfMsXYovOUMhO00KVWwh3pCy1l8V4R9C_BqoQdPzdJ4WbaBc30oiFEeIfWOB-Ah7iKNo7AZe5IW-64aOG0U2HCD2nGjsRw8T33cCXYbveI0NXybEGYeB3qGQpzOeEpsfJRj8-w)
 
+### Battery monitoring hardware
+
+Each box represents a C++ class.
+
+```mermaid
+classDiagram
+    class BatteryMonitorInterface{
+      #getStatus()
+    }
+    class MAX1704x{
+    }
+    class VoltageDividerMonitor{
+    }
+    class BatteryStatus {
+
+    }
+    BatteryMonitorInterface .. BatteryStatus
+    BatteryMonitorInterface <|-- MAX1704x
+    BatteryMonitorInterface <|-- VoltageDividerMonitor
+```
+
+[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNqNkVFPgzAQx78KOV80YWQFRqXxRZ0PPuxpiTGGlwZujATapVzNJvLd7RhZtgSN7UPbu9-_92-vg1wXCALyWrbtspKlkU2mPDeGiPckidAcVlpVpM2rcoeNzLE7MZ53UyKtSZJtb-9Osf5Svnp8Z3we77uJ3JuuSZa4rD6rAs1YYQocPZzKeI64Yn5x6AXBtfBv-uF7Nju7_Qc6aR58aNA0sircjw4vyYC22GAGwm0L3EhbUwaZ6h0qLen1QeUgyFj0we4KSTj24Dr4UgzXjzGjbbkFsZF16047qT60PgtwQFdjV4-LE6ByJp-1VQRiMUhAdLAHEbEg5XMW8pAlfMGSJPLhACJmaRCx-5CncRhGbvY-fA1F5kEaRylf8NixLHFZH0pzfPCxfP8DeavBRg)
+
 ### Internal services
 
 Each box represents a subsystem (not a class).
