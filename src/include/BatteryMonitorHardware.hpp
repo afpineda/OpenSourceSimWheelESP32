@@ -56,8 +56,14 @@ public:
 class FakeBatteryMonitor : public BatteryMonitorInterface
 {
 public:
+    /// @brief Pointer to variable that holds fake battery status
     BatteryStatus *status = nullptr;
 public:
+    /**
+     * @brief Construct a new Fake Battery Monitor object
+     *
+     * @param fakeStatus Pointer to variable that holds fake battery status
+     */
     FakeBatteryMonitor(BatteryStatus *fakeStatus)
     {
         this->status = fakeStatus;
@@ -151,8 +157,11 @@ public:
 class VoltageDividerMonitor : public BatteryMonitorInterface
 {
 protected:
+    /// @brief ADC-capable GPIO for reading
     OutputGPIO _batteryENPin;
+    /// @brief output GPIO to enable/disable the circuitry
     ADC_GPIO _batteryREADPin;
+    /// @brief Minimum expected ADC reading when the battery is charging
     int CHARGING_ADC_READING = 3442;
 
 public:
