@@ -172,7 +172,7 @@ int VoltageDividerMonitor::read()
 
 uint8_t VoltageDividerMonitor::readingToSoC(int reading)
 {
-    uint8_t batteryLevel = BatteryCalibrationService::call::getBatteryLevel(reading);
+    int batteryLevel = BatteryCalibrationService::call::getBatteryLevel(reading);
     if (batteryLevel < 0)
     {
         // Battery calibration is *not* available
