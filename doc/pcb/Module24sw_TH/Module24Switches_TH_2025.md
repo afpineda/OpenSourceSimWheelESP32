@@ -1,18 +1,17 @@
 # Module for 24 switches
 
-![Module for 24 switches (through-hole)](./Module24Switches_TH_2025.png)
+![Module for 24 switches (through-hole)](./Module24Switches_TH_2025-3D.png)
 
-> [!WARNING]
-> This board has not been manufactured or tested.
-> It may contain design flaws.
-> If you build it, please, give feedback.
+> [!NOTE]
+> This board has been manufactured and tested (REV1).
+> It works.
 
 ## Features
 
-- 24 external switches
-- Through-hole mounting
-- Pulled up switches (common pole to `GND`)
-- Based on GPIO expanders in the I2C bus
+- 24 external switches.
+- Through-hole mounting.
+- Pulled up switches (common pole to `GND`).
+- Based on GPIO expanders in the I2C bus.
 
 ## Files
 
@@ -21,16 +20,25 @@
   Parts designed but not included in the BOM (see notes below).
   *Note:* you can import this file to *KiCAD 9* or later.
 
+- [Bill of materials](./Module24Switches_TH_2025-BOM.csv)
+
+  *Note:* not needed unless you want to order components to the manufacturer.
+
+- [Pick and place](./Module24Switches_TH_2025-PickAndPlace.csv)
+
+  *Note:* not need unless you want to order mounting to the manufacturer.
+
 - [Schematic](./Module24Switches_TH_2025.pdf)
-- [GERBER](./Module24Switches_TH_2025_GERBER.zip)
+
+- [GERBER](./Module24Switches_TH_2025-Gerber.zip)
 
 ## Parts
 
 This PCB is designed to assemble the components yourself using basic tools.
 Thus, you only need to order the fabrication of the board as the price is much lower.
 
-- MCP23017 in though-hole packaging: x1
-- PCF8574 in though-hole packaging: x1
+- MCP23017 in though-hole packaging (MCP23017-E/SP): x1
+- PCF8574 in though-hole packaging (PCF8574AP): x1
 - Diodes: x2
 
   - You can omit the diodes **only** if you do not need to make use of the `WAKE UP` pin.
@@ -49,14 +57,12 @@ Thus, you only need to order the fabrication of the board as the price is much l
 
 - Double row bended male Dupond headers (**optional**)
 
-  You can also solder the wires directly to the board.
+  You can also solder the wires directly to the board (recommended).
 
   - 2x12P (24 pins total): x2
   - 2x6P (12 pins total): x1
 
-## Notes
-
-### Manufacturing
+## Manufacturing
 
 This PCB was designed using *Easy EDA Pro*.
 If you want to order a PCB to their
@@ -68,14 +74,25 @@ If you opt for their assembly service,
 you will receive an error message regarding the screws.
 They can simply be chosen not to be assembled.
 
-### Assembly
+PCB manufacturing details:
+
+- 2 layers.
+- Default physical stacking (there are no choices).
+- FR-4 base material (the cheapest, but you may choose another).
+- Vias:
+  - Minimum hole size is 0.3 mm.
+  - Minimum ring diameter is 0.4 mm.
+  - Use the cheapest covering.
+- Copper weight: 1oz.
+
+## Assembly
 
 Pay close attention to the correct orientation of the chips.
 There is a small circle next to the first pin.
 This is also marked on the PCB with a square pad, a small dot or a circle.
 Ensure that these match.
 
-### Usage
+## Usage
 
 Only **one** module can be attached to a DevKit board,
 as the I2C hardware addresses are fixed:
@@ -112,7 +129,7 @@ void simWheelSetup()
 }
 ```
 
-### External wiring
+## External wiring
 
 - There are three `3V3`/`GND` pairs.
   Attach one pair to the power supply,
@@ -125,6 +142,8 @@ void simWheelSetup()
 
 - Wire the switches in columns.
   There are printed tags in the back of the board to know which is which.
+
+![Pinout](./Module24Switches_TH_2025-back.png)
 
 > [!CAUTION]
 > The power supply pins are designed for low current demand,
