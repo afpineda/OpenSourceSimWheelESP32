@@ -229,12 +229,9 @@ inline void debugPrintBool(uint64_t state, uint8_t bitCount = 0)
 
 void setDebugInputNumbers(ButtonMatrix &instance)
 {
-    instance[TEST_BTNMTX_ROW1][TEST_BTNMTX_COL3] = 2;
-    instance[TEST_BTNMTX_ROW2][TEST_BTNMTX_COL3] = 3;
-    instance[TEST_BTNMTX_ROW2][TEST_BTNMTX_COL2] = 4;
-    instance[TEST_BTNMTX_ROW1][TEST_BTNMTX_COL2] = 5;
-    instance[TEST_BTNMTX_ROW1][TEST_BTNMTX_COL1] = 6;
-    instance[TEST_BTNMTX_ROW2][TEST_BTNMTX_COL1] = 7;
+    const OutputGPIOCollection selectors = {TEST_BTNMTX_ROW1, TEST_BTNMTX_ROW2};
+    const InputGPIOCollection inputs = {TEST_BTNMTX_COL1, TEST_BTNMTX_COL2, TEST_BTNMTX_COL3};
+    populateButtonMatrix(instance, selectors, inputs, 2);
 }
 
 OutputGPIOCollection getDebugMuxSelectors()
