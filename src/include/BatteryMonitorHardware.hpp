@@ -9,6 +9,8 @@
  *
  */
 
+#pragma once
+
 #include "InternalTypes.hpp"
 #include "SimWheelTypes.hpp"
 
