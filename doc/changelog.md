@@ -1,5 +1,13 @@
 # Change log
 
+## 7.7.2
+
+- Two PCB modules have been tested and they work.
+- Documentation on PCB modules has been updated accordingly.
+- Minor documentation updates.
+- No code changes except for an irrelevant header file.
+  For this reason, there is no release for this version.
+
 ## 7.7.1
 
 - The battery monitor subsystem has been reimplemented.
