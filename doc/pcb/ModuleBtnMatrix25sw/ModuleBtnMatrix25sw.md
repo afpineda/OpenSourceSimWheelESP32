@@ -62,6 +62,17 @@ Link to project in *Open Source Hardware Labs*:
 [https://oshwlab.com/afpineda/module25switches_th_matrix](https://oshwlab.com/afpineda/module25switches_th_matrix).
 You can one-click order manufacturing from that site.
 
+PCB manufacturing details:
+
+- 2 layers.
+- Default physical stacking (there are no choices).
+- FR-4 base material (the cheapest, but you may choose another).
+- Vias:
+  - Minimum hole size is 0.3 mm.
+  - Minimum ring diameter is 0.4 mm.
+  - Use the cheapest covering.
+- Copper weight: 1oz.
+
 ## Assembly
 
 Pay attention to the orientation of the diodes,

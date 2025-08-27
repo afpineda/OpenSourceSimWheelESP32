@@ -21,7 +21,16 @@
   Parts designed but not included in the BOM (see notes below).
   *Note:* you can import this file to *KiCAD 9* or later.
 
+- [Bill of materials](./Module32Switches_TH_BOM.csv)
+
+  *Note:* not needed unless you want to order components to the manufacturer.
+
+- [Pick and place](./Module32Switches_TH_PickAndPlace.csv)
+
+  *Note:* not need unless you want to order mounting to to the manufacturer.
+
 - [Schematic](./Module32Switches_TH.pdf)
+
 - [GERBER](./Module32Switches_TH_GERBER.zip)
 
 ## Parts
@@ -42,7 +51,7 @@ Thus, you only need to order the fabrication of the board as the price is much l
 
 - Bended male Dupond headers (**optional**)
 
-  You can also solder the wires directly to the board.
+  You can also solder the wires directly to the board (recommended).
 
   - 1x8P (8 pins): x6
 
@@ -57,6 +66,21 @@ take into account that the components are not included in the *bill of materials
 You will receive an error message regarding those.
 To include them, edit the *schematic*, select a component (grayed out) and
 set the property "Add into BOM" to "true".
+
+Link to project in *Open Source Hardware Labs*:
+[https://oshwlab.com/afpineda/module32switches_th](https://oshwlab.com/afpineda/module32switches_th).
+You can one-click order manufacturing from that site.
+
+PCB manufacturing details:
+
+- 2 layers.
+- Default physical stacking (there are no choices).
+- FR-4 base material (the cheapest, but you may choose another).
+- Vias:
+  - Minimum hole size is 0.3 mm.
+  - Minimum ring diameter is 0.4 mm.
+  - Use the cheapest covering.
+- Copper weight: 1oz.
 
 ### Assembly
 

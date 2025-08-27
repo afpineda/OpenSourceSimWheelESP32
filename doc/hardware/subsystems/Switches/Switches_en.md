@@ -69,6 +69,10 @@ Inputs are externally wired to the light-blue pin header in columns.
 
 ![Circuit design 25 inputs](./BtnMatrix25Inputs.png)
 
+You can order the manufacturing of a
+[PCB module](../../../pcb/ModuleBtnMatrix25sw/ModuleBtnMatrix25sw.md)
+for this circuit.
+
 ### Button Matrix (16 inputs)
 
 Needed parts (not counting input hardware like push buttons nor a perfboard):
@@ -316,10 +320,16 @@ Needed parts (not counting input hardware like push buttons):
 - Dupond pin headers (male or female): x50.
 - Thin wire.
 
+You can order the manufacturing of a PCB module for this circuit:
+
+- [24 switches](../../../pcb/Module24sw_TH/Module24Switches_TH_2025.md)
+- [32 switches](../../../pcb/Module32sw_TH/Module32Switches_TH.md)
+
 ### Important note on I2C bus capacitance
 
 Additional **external** pull-up resistors may be needed at `SDA` and `SCL`
 depending on wire capacitance.
+Capacitance also increases when adding chips to the bus.
 Higher wire capacitance requires lower pull-up impedance (stronger).
 The firmware enables internal pull-up resistors by default and no issues were found.
 However, according to Expressif documentation:
@@ -333,12 +343,12 @@ on the matter.
 You can also disable the internal pull-up resistors in your custom firmware (see below).
 So, there are four possible situations:
 
-| Internal PU | External PU | Result                                                                              |
-| ----------- | ----------- | ----------------------------------------------------------------------------------- |
-| disabled    | missing     | **Does not work**                                                                   |
-| enabled     | missing     | Effective PU impedance is unknown but weak                                          |
-| disabled    | in place    | Effective PU impedance matches the external resistor impedance                      |
-| enabled     | in place    | Effective PU impedance is unknown but it lies between the internal and the external |
+| Internal PU | External PU | Result                                                                               |
+| ----------- | ----------- | ------------------------------------------------------------------------------------ |
+| disabled    | missing     | **Does not work**                                                                    |
+| enabled     | missing     | Effective PU impedance is unknown but weak (close to 10K)                            |
+| disabled    | in place    | Effective PU impedance matches the external resistor impedance $R_{PU}=R_{external}$ |
+| enabled     | in place    | Effective impedance is close to $R_{PU}=(10K*R_{external})/(10K+R_{external})$       |
 
 For further information read
 [this article](https://es.magellancircuits.com/does-i2c-require-length-matching/).
@@ -747,7 +757,7 @@ void simWheelSetup()
    inputs::addButton(GPIO_NUM_14, 13);
 
    // Create the input numbers for the decoded positions
-   // Note that we can reuse the input numbers 10 to 14
+   // Note that we can reuse the input numbers 10 to 13
    CodedSwitch16 sw;
    sw[0] = 10; // array syntax
    sw.at(1) = 11; // Preferred syntax to detect out of bound indexes

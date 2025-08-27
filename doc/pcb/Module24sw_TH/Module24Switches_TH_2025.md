@@ -74,6 +74,10 @@ If you opt for their assembly service,
 you will receive an error message regarding the screws.
 They can simply be chosen not to be assembled.
 
+Link to project in *Open Source Hardware Labs*:
+[https://oshwlab.com/afpineda/module24switches_th_2025](https://oshwlab.com/afpineda/module24switches_th_2025).
+You can one-click order manufacturing from that site.
+
 PCB manufacturing details:
 
 - 2 layers.
