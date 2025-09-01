@@ -192,6 +192,8 @@ Please, open an
 - Unknown pixel driver in LED strip
 - Unable to create UI daemon
 - Wrong count of input pins in a coded rotary switch
+- LEDStrip: rmt_new_tx_channel() failed
+- LEDStrip: rmt_new_bytes_encoder() failed
 
 ## Non-error messages
 

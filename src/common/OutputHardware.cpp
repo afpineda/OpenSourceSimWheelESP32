@@ -36,7 +36,6 @@
 // ----------------------------------------------------------------------------
 
 // LED Strips
-#define PIXEL_TO_SYMBOL_COUNT(pixelCount) pixelCount * 3 * 8
 static const rmt_transmit_config_t rmt_transmit_config = {
     .loop_count = 0,
     .flags = {
@@ -72,36 +71,23 @@ LEDStrip::LEDStrip(
         }
     }
 
-    // Compute buffer size
-    size_t rawDataCount = PIXEL_TO_SYMBOL_COUNT(pixelCount);
-    // The API requires an even number of block symbols
-    if (rawDataCount % 2)
-        rawDataCount++;
-    // The API requires 64 bytes minimum
-    if (rawDataCount < 64)
-        rawDataCount = 64;
-
     // Configure RMT channel
     rmt_tx_channel_config_t tx_config = {
         .gpio_num = AS_GPIO(dataPin),
         .clk_src = RMT_CLK_SRC_DEFAULT,
         .resolution_hz = 10000000, // 10MHz resolution, 1 tick = 0.1us
-        .mem_block_symbols = rawDataCount,
-        .trans_queue_depth = 4,
+        .mem_block_symbols = 128,
+        .trans_queue_depth = 1,
         .intr_priority = 0,
         .flags{
             .invert_out = 0,
-            .with_dma = 0,
+            .with_dma = 1,
             .io_loop_back = 0,
-            .io_od_mode = 0,
+            .io_od_mode = (useLevelShift) ? 1 : 0,
             .allow_pd = 0}};
-    if (useLevelShift)
-    {
-        tx_config.flags.io_od_mode = 1;
-    }
     ESP_ERROR_CHECK(rmt_new_tx_channel(&tx_config, &rmtHandle));
     if (!rmtHandle)
-        abort();
+        throw std::runtime_error("LEDStrip: rmt_new_tx_channel() failed");
     ESP_ERROR_CHECK(rmt_enable(rmtHandle));
 
     // Configure byte encoder
@@ -146,7 +132,7 @@ LEDStrip::LEDStrip(
     }
     ESP_ERROR_CHECK(rmt_new_bytes_encoder(&byte_enc_config, &encHandle));
     if (!encHandle)
-        abort();
+        throw std::runtime_error("LEDStrip: rmt_new_bytes_encoder() failed");
 
     // Configure reset time (to show pixels)
     switch (pixelType)
@@ -174,10 +160,15 @@ LEDStrip::LEDStrip(
 
 LEDStrip::~LEDStrip()
 {
-    ESP_ERROR_CHECK(rmt_disable(rmtHandle));
-    ESP_ERROR_CHECK(rmt_del_encoder(encHandle));
-    ESP_ERROR_CHECK(rmt_del_channel(rmtHandle));
-    delete this->pixelData;
+    if (rmtHandle)
+    {
+        ESP_ERROR_CHECK(rmt_disable(rmtHandle));
+        ESP_ERROR_CHECK(rmt_del_channel(rmtHandle));
+    }
+    if (encHandle)
+        ESP_ERROR_CHECK(rmt_del_encoder(encHandle));
+    if (pixelData)
+        delete pixelData;
 }
 
 //-----------------------------------------------------------------------------
