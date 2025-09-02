@@ -83,8 +83,10 @@ LEDStrip::LEDStrip(
             .invert_out = 0,
             .with_dma = 1,
             .io_loop_back = 0,
-            .io_od_mode = (useLevelShift) ? 1 : 0,
+            .io_od_mode = 0,
             .allow_pd = 0}};
+    if (useLevelShift)
+        tx_config.flags.io_od_mode = 1;
     ESP_ERROR_CHECK(rmt_new_tx_channel(&tx_config, &rmtHandle));
     if (!rmtHandle)
         throw std::runtime_error("LEDStrip: rmt_new_tx_channel() failed");
