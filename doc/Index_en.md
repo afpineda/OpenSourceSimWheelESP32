@@ -49,6 +49,7 @@
   - [Auxiliary module for 32 switches (through hole mounting)](./pcb/Module32sw_TH/Module32Switches_TH.md)
   - [Auxiliary module for 25 switches (button matrix)](./pcb/ModuleBtnMatrix25sw/ModuleBtnMatrix25sw.md)
   - [Auxiliary module for play and charge (32 switches, battery charger and fuel gauge)](./pcb/ModulePlayAndCharge/ModulePlayAndCharge.md)
+  - [**All-in-one custom DevKit (ESP32-S3) for simracing**](./pcb/CustomDevKit/CustomDevKit.md)
 
 ## Known issues
 

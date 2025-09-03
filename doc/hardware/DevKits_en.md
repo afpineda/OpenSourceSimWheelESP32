@@ -51,6 +51,13 @@ This project makes extensive use of the official "ESP32-DevKit-C" and "ESP32S3-D
 for testing and development purposes,
 but that is not the best choice due to its excessive size.
 
+> ♨️
+>
+> This project features a [custom DevKit board](../pcb/CustomDevKit/CustomDevKit.md)
+> having all you need for simracing (except for the external antenna).
+>
+> ![custom board](../pcb/CustomDevKit/CustomDevKit_small.jpg)
+
 ## Flash memory requirements
 
 At the time of writing,

@@ -73,6 +73,7 @@ You may want to make a copy first to prevent your customized code from being del
 To make a working copy:
 
 - Copy the entire folder under a different name.
+  Place that copy in the `src/Firmware` folder.
 - Make sure that both the folder and the ".ino" file inside it have exactly the same name.
 
 Then, there are a few steps:

@@ -81,7 +81,8 @@ This project provides open hardware and software for a sim-racing wheel or butto
 
 - 👷‍♀️State-of-the-art software engineering (no amateur code).
 
-- 🛤️ Printed circuit board designs (not tested, work in progress).
+- 🛤️ **Printed circuit board** designs including an **all-in-one custom DevKit** (ESP32-S3)
+  and cheap auxiliary modules for switches.
 
 There is a [companion app](https://github.com/afpineda/SimWheelESP32Config) for user preferences,
 not mandatory but needed for some features.
@@ -173,7 +174,8 @@ o una caja de botones con las siguientes características:
 
 - 👷‍♀️Ingeniería software según el estado de la cuestión (nada de código de aficionado).
 
-- 🛤️ Diseños de placa de circuitos (sin probar, trabajo en curso).
+- 🛤️ **Diseños de circuitos integrados** incluyendo una **placa de de desarrollo con todo-en-uno**
+  (ESP32-S3) y módulos auxiliares baratos para los interruptores.
 
 Existe una [aplicación auxiliar](https://github.com/afpineda/SimWheelESP32Config) para las preferencias de usuario,
 no obligatoria, pero necesaria para algunas funcionalidades.

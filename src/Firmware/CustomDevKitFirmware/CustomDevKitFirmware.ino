@@ -1,5 +1,5 @@
 /**
- * @file CustomPCB1.ino
+ * @file CustomDevKitFirmware.ino
  *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2025-08-19
@@ -91,33 +91,6 @@ std::string DEVICE_MANUFACTURER = "Me";
 #define WAKE_UP_PIN ROT1A
 
 /* -----------------------------------------------------------------
- >>>> [EN] POWER LATCH SUBSYSTEM
- >>>> [ES] SUBSISTEMA DE CERROJO DE ENERGÍA
------------------------------------------------------------------- */
-
-// [EN] Set an output-capable GPIO number for the "POWER_LATCH" pin.
-//      Comment out if there is no external power latch circuit.
-// [ES] Indique el número de GPIO para la señal "POWER_LATCH"
-//      Comente la línea si no hay circuito externo de power latch.
-
-// #define POWER_LATCH <here>
-
-// [EN] Substitute <here> with a GPIO number or alias
-// [ES] Sustituya <here> con un número de pin o su alias
-
-// [EN] Set a latch mode
-// [ES] Ajuste un mode de activación
-
-#define LATCH_MODE PowerLatchMode::POWER_OPEN_DRAIN
-
-// [EN] Set a delay (in milliseconds) to wait for the latch circuit
-//      to do its magic (optional)
-// [ES] Ajuste un retardo (en milisegundos) a esperar para
-//      que el circuito haga su magia
-
-#define LATCH_POWEROFF_DELAY 3000
-
-/* -----------------------------------------------------------------
  >>>> [EN] DEVICE IDENTIFICATION
  >>>> [ES] IDENTIFICATION DEL DISPOSITIVO
 ------------------------------------------------------------------ */
@@ -193,7 +166,7 @@ void simWheelSetup()
 
 #if LED_STRIP2_COUNT > 0
     pixels::configure(
-        PixelGroup::GRP_TELEMETRY,
+        PixelGroup::GRP_BUTTONS,
         DIN2,
         LED_STRIP2_COUNT,
         true,
@@ -271,13 +244,6 @@ void customFirmware()
 
 #ifdef WAKE_UP_PIN
     power::configureWakeUp(ROT1A);
-#endif
-
-#ifdef POWER_LATCH
-    power::configurePowerLatch(
-        POWER_LATCH,
-        LATCH_MODE,
-        LATCH_POWEROFF_DELAY);
 #endif
 
     simWheelSetup();
