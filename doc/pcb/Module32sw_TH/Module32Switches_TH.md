@@ -65,7 +65,7 @@ PCB manufacturing details:
 
 - [Easy EDA Pro](./Module32Switches_TH.epro)
 
-  Parts designed but not included in the BOM (see notes below).
+  Some parts designed but not included in the BOM.
   *Note:* you can import this file to *KiCAD 9* or later.
 
 - [Bill of materials](./Module32Switches_TH_BOM.csv)

@@ -74,7 +74,7 @@ PCB manufacturing details:
 
 - [Easy EDA Pro](./Module24Switches_TH_2025.epro)
 
-  Parts designed but not included in the BOM (see notes below).
+  Some parts designed but not included in the BOM.
   *Note:* you can import this file to *KiCAD 9* or later.
 
 - [Bill of materials](./Module24Switches_TH_2025-BOM.csv)

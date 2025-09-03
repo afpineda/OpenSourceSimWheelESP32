@@ -59,7 +59,7 @@ PCB manufacturing details:
 
 - [Easy EDA Pro](./ModuleBtnMatrix25sw.epro)
 
-  Parts designed but not included in the BOM (see notes below).
+  Some parts designed but not included in the BOM.
   *Note:* you can import this file to *KiCAD 9* or later.
 
 - [Bill of materials](./ModuleBtnMatrix25sw_BOM.csv)
