@@ -1,5 +1,14 @@
 # Change log
 
+## 7.7.3
+
+- A custom DevKit PCB design has been added to the project,
+  including customizable firmware and documentation.
+- Performance tweaks for LED strips, including DMA mode and
+  less memory consumption.
+- Minor documentation updates.
+- The *NimBLE-Arduino* dependency has been updated to version 2.3.5
+
 ## 7.7.2
 
 - Two PCB modules have been tested and they work.

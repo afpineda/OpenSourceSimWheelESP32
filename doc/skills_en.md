@@ -13,7 +13,7 @@ Indispensable:
 - Indispensable [Arduino libraries](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries) for this project.
   Install their dependencies as well.
   - [NimBLE-Arduino](https://www.arduino.cc/reference/en/libraries/nimble-arduino/).
-    This project has been successfully tested with **version 2.3.0**.
+    This project has been successfully tested with **version 2.3.5**.
     Any version prior to version 2.2.0 will not work.
 - [Powershell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.2).
   Already installed in Windows. Not strictly needed in Linux.
