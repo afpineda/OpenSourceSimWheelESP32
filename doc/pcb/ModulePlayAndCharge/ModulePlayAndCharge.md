@@ -15,18 +15,6 @@
 - MAX17048 *fuel gauge* in the I2C bus.
 - 3V3 power output for your DevKit board.
 
-## Files
-
-- [Easy EDA Pro](./ModulePlayAndCharge.epro)
-
-  *Note:* you can import this file to *KiCAD 9* or later.
-
-- [Schematic](./ModulePlayAndCharge_schematic.pdf)
-- [GERBER](./ModulePlayAndCharge_GERBER.zip)
-- [Bill of materials (BOM)](./ModulePlayAndCharge_BOM.csv)
-- [Pick and place](./ModulePlayAndCharge_PickAndPlace.csv)
-- [Layer manager](./ModulePlayAndCharge_layers.json)
-
 ## Manufacturing and assembly
 
 You must order assembly for this board as it requires SMD mounting.
@@ -43,6 +31,18 @@ The minimum order is 5 units,
 but you can choose to assembly only two boards in order to save money.
 
 The manufacturing process is JLC04161H-3313 (4 layers).
+
+### Files
+
+- [Easy EDA Pro](./ModulePlayAndCharge.epro)
+
+  *Note:* you can import this file to *KiCAD 9* or later.
+
+- [Schematic](./ModulePlayAndCharge_schematic.pdf)
+- [GERBER](./ModulePlayAndCharge_GERBER.zip)
+- [Bill of materials (BOM)](./ModulePlayAndCharge_BOM.csv)
+- [Pick and place](./ModulePlayAndCharge_PickAndPlace.csv)
+- [Layer manager](./ModulePlayAndCharge_layers.json)
 
 ## Usage
 
@@ -124,8 +124,6 @@ void customFirmware()
 
 - It is advised not to use pin headers for the battery and external power wires.
   Solder the wires to the pads instead.
-
-## Pin out
 
 The pin out should be printed in the back of the board.
 

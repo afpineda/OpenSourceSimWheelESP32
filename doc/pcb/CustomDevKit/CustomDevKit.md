@@ -62,7 +62,7 @@ There are **three** power plugs in the board:
 - `5V` and `GND` pads (for short, "external power").
 
   **Take care not to swap those terminals**.
-  There is no inverse polarity protection.
+  There is no reverse polarity protection.
   Connect this plug to the quick release if available
   or to a power connector housed in the casing.
   If you have a Simagic QR, `GND` is the yellow wire and `5V` is the green one.
@@ -240,7 +240,7 @@ Take this information into account when ordering:
 
 - [Easy EDA Pro](./CustomDevKit.epro)
 
-  Some parts are designed but not included in the BOM (see notes below).
+  Some parts are designed but not included in the BOM (see notes above).
   *Note:* you can import this file to *KiCAD 9* or later.
 
 - [Bill of materials](./CustomDevKit_BOM.csv)

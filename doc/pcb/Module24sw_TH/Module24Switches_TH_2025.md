@@ -13,25 +13,6 @@
 - Pulled up switches (common pole to `GND`).
 - Based on GPIO expanders in the I2C bus.
 
-## Files
-
-- [Easy EDA Pro](./Module24Switches_TH_2025.epro)
-
-  Parts designed but not included in the BOM (see notes below).
-  *Note:* you can import this file to *KiCAD 9* or later.
-
-- [Bill of materials](./Module24Switches_TH_2025-BOM.csv)
-
-  *Note:* not needed unless you want to order components to the manufacturer.
-
-- [Pick and place](./Module24Switches_TH_2025-PickAndPlace.csv)
-
-  *Note:* not need unless you want to order mounting to the manufacturer.
-
-- [Schematic](./Module24Switches_TH_2025.pdf)
-
-- [GERBER](./Module24Switches_TH_2025-Gerber.zip)
-
 ## Parts
 
 This PCB is designed to assemble the components yourself using basic tools.
@@ -88,6 +69,25 @@ PCB manufacturing details:
   - Minimum ring diameter is 0.4 mm.
   - Use the cheapest covering.
 - Copper weight: 1oz.
+
+### Files
+
+- [Easy EDA Pro](./Module24Switches_TH_2025.epro)
+
+  Parts designed but not included in the BOM (see notes below).
+  *Note:* you can import this file to *KiCAD 9* or later.
+
+- [Bill of materials](./Module24Switches_TH_2025-BOM.csv)
+
+  *Note:* not needed unless you want to order components to the manufacturer.
+
+- [Pick and place](./Module24Switches_TH_2025-PickAndPlace.csv)
+
+  *Note:* not need unless you want to order mounting to the manufacturer.
+
+- [Schematic](./Module24Switches_TH_2025.pdf)
+
+- [GERBER](./Module24Switches_TH_2025-Gerber.zip)
 
 ## Assembly
 

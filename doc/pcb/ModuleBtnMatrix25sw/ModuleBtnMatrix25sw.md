@@ -13,24 +13,6 @@
 - **No common pole for switches**.
 - Based on a button matrix: 5 selector and 5 input pins.
 
-## Files
-
-- [Easy EDA Pro](./ModuleBtnMatrix25sw.epro)
-
-  Parts designed but not included in the BOM (see notes below).
-  *Note:* you can import this file to *KiCAD 9* or later.
-
-- [Bill of materials](./ModuleBtnMatrix25sw_BOM.csv)
-
-  *Note:* not needed unless you want to order parts to the manufacturer.
-
-- [Pick and place](./ModuleBtnMatrix25sw_PickAndPlace.csv)
-
-  *Note:* not needed unless you want to order mounting to the manufacturer.
-
-- [Schematic](./ModuleBtnMatrix25sw.pdf)
-- [GERBER](./ModuleBtnMatrix25sw_GERBER.zip)
-
 ## Parts
 
 This PCB is designed to assemble the components yourself using basic tools.
@@ -73,23 +55,30 @@ PCB manufacturing details:
   - Use the cheapest covering.
 - Copper weight: 1oz.
 
+### Files
+
+- [Easy EDA Pro](./ModuleBtnMatrix25sw.epro)
+
+  Parts designed but not included in the BOM (see notes below).
+  *Note:* you can import this file to *KiCAD 9* or later.
+
+- [Bill of materials](./ModuleBtnMatrix25sw_BOM.csv)
+
+  *Note:* not needed unless you want to order parts to the manufacturer.
+
+- [Pick and place](./ModuleBtnMatrix25sw_PickAndPlace.csv)
+
+  *Note:* not needed unless you want to order mounting to the manufacturer.
+
+- [Schematic](./ModuleBtnMatrix25sw.pdf)
+- [GERBER](./ModuleBtnMatrix25sw_GERBER.zip)
+
 ## Assembly
 
 Pay attention to the orientation of the diodes,
 which is printed in the front side.
 Place the diodes in vertical position,
 so they lay in a minimal surface of the board.
-
-## Pin out
-
-The pin out should be printed in the back of the board.
-
-- Selector pins are tagged as `S<n>`.
-- Input pins are tagged as `I<n>`.
-- Each switch is tagged as `S<a>I<b>`,
-  which means that it is attached to `S<a>` and `I<b>`.
-
-![Pin out](./ModuleBtnMatrix25sw_pinout.png)
 
 ## External wiring
 
@@ -101,6 +90,15 @@ The pin out should be printed in the back of the board.
 
 - The button matrix is designed to work in *positive logic*.
   If you swap the selector and input pins, it works in *negative logic*.
+
+The pin out should be printed in the back of the board.
+
+- Selector pins are tagged as `S<n>`.
+- Input pins are tagged as `I<n>`.
+- Each switch is tagged as `S<a>I<b>`,
+  which means that it is attached to `S<a>` and `I<b>`.
+
+![Pin out](./ModuleBtnMatrix25sw_pinout.png)
 
 ## Usage
 

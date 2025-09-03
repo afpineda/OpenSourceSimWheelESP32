@@ -14,25 +14,6 @@
 - Pulled up switches (common pole to `GND`)
 - Based on GPIO expanders in the I2C bus
 
-## Files
-
-- [Easy EDA Pro](./Module32Switches_TH.epro)
-
-  Parts designed but not included in the BOM (see notes below).
-  *Note:* you can import this file to *KiCAD 9* or later.
-
-- [Bill of materials](./Module32Switches_TH_BOM.csv)
-
-  *Note:* not needed unless you want to order components to the manufacturer.
-
-- [Pick and place](./Module32Switches_TH_PickAndPlace.csv)
-
-  *Note:* not need unless you want to order mounting to to the manufacturer.
-
-- [Schematic](./Module32Switches_TH.pdf)
-
-- [GERBER](./Module32Switches_TH_GERBER.zip)
-
 ## Parts
 
 This PCB is designed to assemble the components yourself using basic tools.
@@ -55,9 +36,7 @@ Thus, you only need to order the fabrication of the board as the price is much l
 
   - 1x8P (8 pins): x6
 
-## Notes
-
-### Manufacturing
+## Manufacturing
 
 This PCB was designed using *Easy EDA Pro*.
 If you want to order a PCB to their
@@ -82,14 +61,33 @@ PCB manufacturing details:
   - Use the cheapest covering.
 - Copper weight: 1oz.
 
-### Assembly
+### Files
+
+- [Easy EDA Pro](./Module32Switches_TH.epro)
+
+  Parts designed but not included in the BOM (see notes below).
+  *Note:* you can import this file to *KiCAD 9* or later.
+
+- [Bill of materials](./Module32Switches_TH_BOM.csv)
+
+  *Note:* not needed unless you want to order components to the manufacturer.
+
+- [Pick and place](./Module32Switches_TH_PickAndPlace.csv)
+
+  *Note:* not need unless you want to order mounting to to the manufacturer.
+
+- [Schematic](./Module32Switches_TH.pdf)
+
+- [GERBER](./Module32Switches_TH_GERBER.zip)
+
+## Assembly
 
 Pay close attention to the correct orientation of the chips.
 There is a small circle next to the first pin.
 This is also marked on the PCB with a square pad, a small dot or a circle.
 Ensure that these match.
 
-### Usage
+## Usage
 
 Only **one** module can be attached to a DevKit board,
 as the I2C hardware addresses are fixed to 7 and 0 (decimal).
@@ -126,7 +124,7 @@ void simWheelSetup()
 }
 ```
 
-### External wiring
+## External wiring
 
 - There are redundant `3V3` and `GND` terminals.
   Attach one pair to the power supply,
@@ -145,7 +143,11 @@ void simWheelSetup()
 > Do not attempt to power power-hungry devices
 > through these pins or they will melt.
 
-### I2C bus
+The pin out should be printed in the back of the board.
+
+![Pin out, 32 switches module](./Module32Switches_TH_pinout.png)
+
+## I2C bus
 
 The I2C bus is internally pulled up by the DevKit board.
 Due to wire capacitance, I2C operation could fail.
@@ -157,9 +159,3 @@ In case of need, wire (externally) an additional resistor between these terminal
 
 Use any impedance between 1K-ohm and 10K-ohm.
 2K-ohm is recommended.
-
-## Pin out
-
-The pin out should be printed in the back of the board.
-
-![Pin out, 32 switches module](./Module32Switches_TH_pinout.png)
