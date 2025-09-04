@@ -212,7 +212,7 @@ or attach an external push button to the `Reset` pads.
 ## Manufacturing
 
 Link to project in *Open Source Hardware Labs*:
-PENDING.
+[https://oshwlab.com/afpineda/simwheelkit_esp32_unified](https://oshwlab.com/afpineda/simwheelkit_esp32_unified).
 You can one-click order manufacturing from that site.
 
 Take this information into account when ordering:
@@ -339,7 +339,7 @@ There a few things to customize as noted in the sketch file:
   leave `ENABLE_BATTERY` unmodified:
 
   ```c++
-  #define ENABLE_BATTERY false
+  #define ENABLE_BATTERY true
   ```
 
   and choose whether you want the system to shutdown on very low battery levels:
