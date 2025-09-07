@@ -9,17 +9,11 @@
  *
  */
 
-// Implementation inspired by
-// https://github.com/espressif/arduino-esp32/blob/master/libraries/BLE/examples/Server/Server.ino
-
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 #include <BLEServer.h>
 #include <BLEHIDDevice.h>
-#include "HIDTypes.h"
-#include "HIDKeyboardTypes.h"
-#include "sdkconfig.h"
-#include "esp_gap_ble_api.h"
+#include <BLESecurity.h>
 
 #include "SimWheel.hpp"
 #include "SimWheelInternals.hpp"
@@ -42,6 +36,19 @@ static BLECharacteristic *inputGamePad = nullptr;
 static BLEServer *pServer = nullptr;
 static bool notifyConfigChanges = false;
 static constexpr uint16_t serialNumberChrUuid = BLE_SERIAL_NUMBER_CHR_UUID;
+
+#if defined(CONFIG_NIMBLE_ENABLED)
+// Workaround for core version 3.3.0 missing these constants
+#ifndef ESP_LE_AUTH_REQ_SC_MITM_BOND
+#define ESP_LE_AUTH_REQ_SC_MITM_BOND (BLE_SM_PAIR_AUTHREQ_MITM | BLE_SM_PAIR_AUTHREQ_SC | BLE_SM_PAIR_AUTHREQ_BOND)
+#endif
+#ifndef ESP_BLE_ENC_KEY_MASK
+#define ESP_BLE_ENC_KEY_MASK BLE_HS_KEY_DIST_ENC_KEY
+#endif
+#ifndef ESP_BLE_ID_KEY_MASK
+#define ESP_BLE_ID_KEY_MASK  BLE_HS_KEY_DIST_ID_KEY
+#endif
+#endif
 
 // ----------------------------------------------------------------------------
 // BLEHIDDeviceFix
@@ -76,22 +83,6 @@ public:
 
     BLEHIDDeviceFix(BLEServer *pServer) : BLEHIDDevice(pServer) {}
 };
-
-// ----------------------------------------------------------------------------
-// PHY configuration
-// ----------------------------------------------------------------------------
-
-bool setDefaultPhy(
-    esp_ble_gap_prefer_phy_options_t txPhyMask,
-    esp_ble_gap_prefer_phy_options_t rxPhyMask)
-{
-#if defined(CONFIG_IDF_TARGET_ESP32S3)
-    esp_err_t rc = esp_ble_gap_set_preferred_default_phy(txPhyMask, rxPhyMask);
-    return rc == ESP_OK;
-#else
-    return true;
-#endif
-}
 
 // ----------------------------------------------------------------------------
 // Utility
@@ -259,7 +250,6 @@ void internals::hid::begin(
         // Stack initialization
         BLEDevice::init(String(deviceName.c_str()));
         BLEDevice::setMTU(BLE_MTU_SIZE);
-        setDefaultPhy(ESP_BLE_GAP_PHY_2M_PREF_MASK, ESP_BLE_GAP_PHY_2M_PREF_MASK);
         pServer = BLEDevice::createServer();
         pServer->setCallbacks(&connectionStatus);
         BLESecurity *pSecurity = new BLESecurity();
