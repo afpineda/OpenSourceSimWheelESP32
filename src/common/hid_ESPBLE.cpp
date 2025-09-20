@@ -30,25 +30,13 @@
 static esp_timer_handle_t autoPowerOffTimer = nullptr;
 
 // Related to HID device
-class BLEHIDDeviceFix;
+using BLEHIDDeviceFix = BLEHIDDevice;
+// class BLEHIDDeviceFix;
 static BLEHIDDeviceFix *hidDevice = nullptr;
 static BLECharacteristic *inputGamePad = nullptr;
 static BLEServer *pServer = nullptr;
 static bool notifyConfigChanges = false;
 static constexpr uint16_t serialNumberChrUuid = BLE_SERIAL_NUMBER_CHR_UUID;
-
-#if defined(CONFIG_NIMBLE_ENABLED)
-// Workaround for core version 3.3.0 missing these constants
-#ifndef ESP_LE_AUTH_REQ_SC_MITM_BOND
-#define ESP_LE_AUTH_REQ_SC_MITM_BOND (BLE_SM_PAIR_AUTHREQ_MITM | BLE_SM_PAIR_AUTHREQ_SC | BLE_SM_PAIR_AUTHREQ_BOND)
-#endif
-#ifndef ESP_BLE_ENC_KEY_MASK
-#define ESP_BLE_ENC_KEY_MASK BLE_HS_KEY_DIST_ENC_KEY
-#endif
-#ifndef ESP_BLE_ID_KEY_MASK
-#define ESP_BLE_ID_KEY_MASK  BLE_HS_KEY_DIST_ID_KEY
-#endif
-#endif
 
 // ----------------------------------------------------------------------------
 // BLEHIDDeviceFix
@@ -58,31 +46,31 @@ static constexpr uint16_t serialNumberChrUuid = BLE_SERIAL_NUMBER_CHR_UUID;
 // notifications get randomly disabled in the input report.
 // ----------------------------------------------------------------------------
 
-class BLEHIDDeviceFix : public BLEHIDDevice
-{
-public:
-    BLECharacteristic *inputReport(uint8_t reportID)
-    {
-        BLECharacteristic *inputReportCharacteristic =
-            hidService()->createCharacteristic((uint16_t)0x2a4d, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY);
-        BLEDescriptor *inputReportDescriptor = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
-        BLE2902 *p2902 = new BLE2902();
-        inputReportCharacteristic->setAccessPermissions(ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
-        inputReportDescriptor->setAccessPermissions(ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
-        p2902->setAccessPermissions(ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
-        p2902->setNotifications(true);
-        p2902->setIndications(true);
+// class BLEHIDDeviceFix : public BLEHIDDevice
+// {
+// public:
+//     BLECharacteristic *inputReport(uint8_t reportID)
+//     {
+//         BLECharacteristic *inputReportCharacteristic =
+//             hidService()->createCharacteristic((uint16_t)0x2a4d, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY);
+//         BLEDescriptor *inputReportDescriptor = new BLEDescriptor(BLEUUID((uint16_t)0x2908));
+//         BLE2902 *p2902 = new BLE2902();
+//         inputReportCharacteristic->setAccessPermissions(ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
+//         inputReportDescriptor->setAccessPermissions(ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
+//         p2902->setAccessPermissions(ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
+//         p2902->setNotifications(true);
+//         p2902->setIndications(true);
 
-        uint8_t desc1_val[] = {reportID, 0x01};
-        inputReportDescriptor->setValue((uint8_t *)desc1_val, 2);
-        inputReportCharacteristic->addDescriptor(p2902);
-        inputReportCharacteristic->addDescriptor(inputReportDescriptor);
+//         uint8_t desc1_val[] = {reportID, 0x01};
+//         inputReportDescriptor->setValue((uint8_t *)desc1_val, 2);
+//         inputReportCharacteristic->addDescriptor(p2902);
+//         inputReportCharacteristic->addDescriptor(inputReportDescriptor);
 
-        return inputReportCharacteristic;
-    }
+//         return inputReportCharacteristic;
+//     }
 
-    BLEHIDDeviceFix(BLEServer *pServer) : BLEHIDDevice(pServer) {}
-};
+//     BLEHIDDeviceFix(BLEServer *pServer) : BLEHIDDevice(pServer) {}
+// };
 
 // ----------------------------------------------------------------------------
 // Utility
