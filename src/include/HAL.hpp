@@ -3,7 +3,7 @@
  *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2025-02-11
- * @brief Hardware abstration and low-level utilities
+ * @brief Hardware abstraction and low-level utilities
  *
  * @copyright Licensed under the EUPL
  *
@@ -46,14 +46,8 @@ typedef void (*ISRHandler)(void *arg);
 // Each CPU instruction takes 6.25 nanoseconds in an ESP32 RISC-V @ 160 Mhz
 // Each CPU instruction takes 4.16 nanoseconds in an ESP32 Xtensa @ 240 Mhz
 
-// Time per loop of active_wait_ns() computed as 4 CPU instructions
-#if defined(CONFIG_IDF_TARGET_ESP32C3)
 /// @brief Time per loop of active_wait_ns() computed as 4 CPU instructions
-#define NS_PER_LOOP 25
-#else
-/// @brief Time per loop of active_wait_ns() computed as 4 CPU instructions
-#define NS_PER_LOOP 17
-#endif
+#define NS_PER_LOOP ((4000 + CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ - 1) / CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ)
 
 /**
  * @brief Active wait without context switching
@@ -62,14 +56,16 @@ typedef void (*ISRHandler)(void *arg);
  *
  * @param n Time to wait in nanoseconds
  */
-#define active_wait_ns(n) for (uint32_t i = 0; i < n; i += NS_PER_LOOP) asm("");
+#define active_wait_ns(n)                         \
+    for (uint32_t i = 0; i < n; i += NS_PER_LOOP) \
+        asm("");
 
 //-------------------------------------------------------------------
 // Exceptions
 //-------------------------------------------------------------------
 
 /**
- * @brief Exception for I2C bus initializaiton failure
+ * @brief Exception for I2C bus initialization failure
  *
  */
 class i2c_error : public std::runtime_error
@@ -342,19 +338,6 @@ namespace internals
              * @param param Parameter to @p handler
              */
             void enableISR(InputGPIO pin, ISRHandler handler, void *param = nullptr);
-
-            /**
-             * @brief Wait for signal propagation
-             *
-             * @note This is active wait with no context switching.
-             *       A call to this function takes 6000 nanoseconds
-             *       in an ESP32 Xtensa CPU @ 240 Mhz.
-             *       Appart from that, this method is very accurate (tested).
-             *       For small delays, use active_wait_ns() instead.
-             *
-             * @param nanoseconds Time to wait in nanoseconds
-             */
-            void wait_propagation(uint32_t nanoseconds);
 
         } // namespace gpio
     } // namespace hal

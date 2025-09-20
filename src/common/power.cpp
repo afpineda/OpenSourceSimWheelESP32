@@ -112,10 +112,19 @@ void enterDeepSleep()
         }
 #ifndef CONFIG_IDF_TARGET_ESP32C3
         ESP_ERROR_CHECK(rtc_gpio_pullup_en(_wakeupPin));
-
         ESP_ERROR_CHECK(esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_PERIPH, ESP_PD_OPTION_ON));
-        ESP_ERROR_CHECK(esp_sleep_enable_ext0_wakeup(_wakeupPin, 0));
+
+#if CONFIG_IDF_TARGET_ESP32C6
+        // ESP32C6 does not support the EXT0 wakeup source
+        // NOTE: NOT TESTED
+        ESP_ERROR_CHECK(esp_sleep_enable_ext1_wakeup(1UL << _wakeupPin, ESP_EXT1_WAKEUP_ANY_LOW));
 #else
+        // The EXT0 wakeup source is available on ESP32 and ESP32S3 boards
+        ESP_ERROR_CHECK(esp_sleep_enable_ext0_wakeup(_wakeupPin, 0));
+#endif
+
+#else
+        // ESP32C3 does not support the EXT0 and EXT1 wakeup sources
         // NOTE: NOT TESTED
         ESP_ERROR_CHECK(esp_deep_sleep_enable_gpio_wakeup(
             (1ULL << _wakeupPin),

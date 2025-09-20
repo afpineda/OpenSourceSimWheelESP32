@@ -65,6 +65,8 @@ thus not requiring a translation unit.
 
   - Auxiliary:
 
+    - `BatteryMonitorHardware.hpp`:
+      required by the `batteryMonitor` subsystem.
     - `HAL.hpp`:
       declares the `internals::hal` namespace.
     - `HID_definitions.hpp`:
@@ -75,6 +77,8 @@ thus not requiring a translation unit.
       required by the internal namespace `internals::inputs`.
     - `OutputHardware.hpp`:
       required by the `pixels` subsystem and `SimWheelUI.hpp`.
+    - `ServiceMocks.hpp`:
+      Fake/mock *service classes* available for unit testing.
     - `SimWheelUI.hpp`:
       declares out-of-the-box user interfaces for telemetry display
       and notifications.

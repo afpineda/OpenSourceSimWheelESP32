@@ -13,6 +13,8 @@
 
 - **BLE**: Bluetooth Low Energy.
 
+- **BOM**: Bill of materials (for _PCB_ manufacturing orders).
+
 - **Button**: a momentary switch.
 
 - **Clutch**: a joystick/gamepad axis that simulates the position of a clutch pedal.
@@ -26,17 +28,29 @@
   For example: 4 push buttons arranged in a cross
   or a single lever that can move in two axis.
 
+- **Firmware-defined input number**:
+  an _Input number_ in the range [0,63].
+
 - **Frame**: a graphic that fills the whole display.
 
 - **Frame server**:
   a perpetual task that computes _frames_
   and then shows them in a display, in quick succession.
 
+- **Fuel gauge**:
+  a chip able to compute the _state of charge_ accurately.
+
+- **GERBER**:
+  an open file format for the manufacturing of a _PCB_.
+
 - **HID**:
   Human Interface Device.
 
 - **HID reports**:
   data sent to a computer (or received from) using the standard HID protocol.
+
+- **I2C**
+  inter-integrated circuit, an standard serial bus.
 
 - **Input**:
   any hardware able to generate _input events_ caused by user interactions.
@@ -60,25 +74,43 @@
 - **Input number**:
   a non-negative number assigned to a hardware input.
 
+- **LED strip**:
+  a circuit composed by _pixel drivers_ connected in series and having a single control wire.
+
 - **LiPo** (battery):
   Lithium-polymer battery.
 
+- **Notification**:
+  a condition or state change the user should be aware of, thanks to the _UI_ (if available).
+
 - **Paddle**:
   a momentary switch or a potentiometer shaped as a lever.
+
+- **PCB**:
+  printed circuit board.
 
 - **PISO**:
   Parallel-In Serial-Out (shift register).
 
 - **Pixel**:
-  a small dot that emits light of any colour.
+  a small dot that emits light of any color.
 
 - **Pixel control**:
   the ability to adjust the color of individual pixels and
   display them all at once.
 
+- **Pixel driver**:
+  a very small device having a control chip and three LEDs (red, green and blue).
+
+- **Pixel format**:
+  the way pixel color data is organized for serial transmission.
+
 - **Polling loop**:
   a perpetual task that reads the state of some inputs
   and generates input events from state changes.
+
+- **Power latch**:
+  a circuit able to turn the _system_ on or off automatically.
 
 - **Quantum**:
   talking about battery charge,
@@ -94,8 +126,11 @@
 - **State of charge (SOC)**:
   an estimation of available battery charge in the range from 0% to 100%.
 
-- **Telemetery data**:
+- **Telemetry data**:
   collection of measurements or other data
   from a simulated vehicle on the host computer.
 
 - **UI**: User Interface.
+
+- **User-defined input number**:
+  an _Input number_ in the range [0,127].

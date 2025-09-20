@@ -120,8 +120,3 @@ void internals::hal::gpio::forInput(
     bool enablePullUp)
 {
 }
-
-void internals::hal::gpio::wait_propagation(uint32_t nanoseconds)
-{
-    std::this_thread::sleep_for(std::chrono::nanoseconds(nanoseconds));
-}
