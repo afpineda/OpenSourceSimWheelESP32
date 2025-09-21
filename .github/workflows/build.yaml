@@ -44,6 +44,10 @@ jobs:
         shell: pwsh
         run: ${{ github.workspace }}/CD_CI/Run.ps1 -RootPath ${{ github.workspace }}
 
+      - name: Show test coverage
+        shell: pwsh
+        run: ${{ github.workspace }}/CD_CI/ComputeTestCoverage.ps1 -RootPath ${{ github.workspace }}
+
       - name: Create symbolic links for Arduino build
         shell: pwsh
         run: ${{ github.workspace }}/src/MakeSymLinks.ps1 -RootPath ${{ github.workspace }}
