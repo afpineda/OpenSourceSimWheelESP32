@@ -33,6 +33,7 @@ $_cd_ci_includes_path = Join-Path $RootPath "/CD_CI/include"
 $_compiler_args = @(
     "-fdiagnostics-color=always", # colored output
     "-std=c++20", # C++ standard revision 20
+    "--coverage", # Generate test coverage data
     "-iquote",
     $_arduino_includes_path, # Includes path
     "-iquote",
@@ -218,7 +219,7 @@ function Invoke-Linker {
         $fileList = $fileList + $FullName
     }
     end {
-        & $_compiler -o $ExeFileName -flinker-output=exec $fileList
+        & $_compiler -o $ExeFileName --coverage -flinker-output=exec $fileList
         if ($LASTEXITCODE -eq 0) {
             Write-SuccessMessage
         }

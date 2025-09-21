@@ -36,3 +36,9 @@ $toDelete = Get-ChildItem -Recurse -Filter "*.exe" -Path $RootPath
 $toDelete | ForEach-Object { $_.Delete() }
 $toDelete = Get-ChildItem -Recurse -Filter "*.o" -Path $RootPath
 $toDelete | ForEach-Object { $_.Delete() }
+$toDelete = Get-ChildItem -Recurse -Filter "*.gcov" -Path $RootPath
+$toDelete | ForEach-Object { $_.Delete() }
+$toDelete = Get-ChildItem -Recurse -Filter "*.gcda" -Path $RootPath
+$toDelete | ForEach-Object { $_.Delete() }
+$toDelete = Get-ChildItem -Recurse -Filter "*.gcno" -Path $RootPath
+$toDelete | ForEach-Object { $_.Delete() }
