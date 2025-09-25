@@ -194,6 +194,7 @@ Please, open an
 - Wrong count of input pins in a coded rotary switch
 - LEDStrip: rmt_new_tx_channel() failed
 - LEDStrip: rmt_new_bytes_encoder() failed
+- getADCreading: adc_oneshot_new_unit() failed
 
 ## Non-error messages
 

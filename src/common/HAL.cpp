@@ -251,10 +251,7 @@ int internals::hal::gpio::getADCreading(ADC_GPIO pin, int sampleCount)
     adc_channel_t channel;
     adc_unit_t adc_unit;
     if (adc_oneshot_io_to_channel(pin, &adc_unit, &channel) != ESP_OK)
-    {
-        log_e("getADCreading: GPIO %u is not ADC", pin);
-        abort();
-    }
+        throw gpio_error(pin, "not ADC-capable");
     else if (sampleCount > 0)
     {
         adc_oneshot_unit_handle_t handle;
@@ -269,7 +266,10 @@ int internals::hal::gpio::getADCreading(ADC_GPIO pin, int sampleCount)
                 .atten = adc_atten_t::ADC_ATTEN_DB_12,
                 .bitwidth = ADC_BITWIDTH_12,
             };
+        handle = nullptr;
         ESP_ERROR_CHECK(adc_oneshot_new_unit(&unitCfg, &handle));
+        if (!handle)
+            throw std::runtime_error("getADCreading: adc_oneshot_new_unit() failed");
         ESP_ERROR_CHECK(adc_oneshot_config_channel(handle, channel, &channelCfg));
         int result = 0;
         for (int i = 0; i < sampleCount; i++)
