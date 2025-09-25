@@ -18,6 +18,7 @@
 //-------------------------------------------------------------------
 
 #include "HAL.hpp"
+#include <array>
 #include "driver/i2c.h"          // For I2C operation
 #include "esp32-hal-log.h"       // For log_e()
 #include "esp_adc/adc_oneshot.h" // For ADC operation
@@ -39,6 +40,9 @@ static gpio_num_t sclPin[] = {(gpio_num_t)SCL, GPIO_NUM_NC};
 static bool internalPullup[] = {true, true};
 static bool isInitialized[] = {false, false};
 static uint8_t max_speed_x[] = {4, 4};
+
+// ADC
+static std::array<adc_oneshot_unit_handle_t, SOC_ADC_PERIPH_NUM> adc_handler{nullptr};
 
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
@@ -254,32 +258,54 @@ int internals::hal::gpio::getADCreading(ADC_GPIO pin, int sampleCount)
         throw gpio_error(pin, "not ADC-capable");
     else if (sampleCount > 0)
     {
-        adc_oneshot_unit_handle_t handle;
-        adc_oneshot_unit_init_cfg_t unitCfg =
-            {
-                .unit_id = adc_unit,
-                // From ESP-IDF doc: If set to 0, the driver will fall back to using a default clock source
-                .clk_src = static_cast<adc_oneshot_clk_src_t>(0),
-                .ulp_mode = ADC_ULP_MODE_DISABLE};
-        adc_oneshot_chan_cfg_t channelCfg =
-            {
-                .atten = adc_atten_t::ADC_ATTEN_DB_12,
-                .bitwidth = ADC_BITWIDTH_12,
-            };
-        handle = nullptr;
-        ESP_ERROR_CHECK(adc_oneshot_new_unit(&unitCfg, &handle));
-        if (!handle)
-            throw std::runtime_error("getADCreading: adc_oneshot_new_unit() failed");
-        ESP_ERROR_CHECK(adc_oneshot_config_channel(handle, channel, &channelCfg));
+        if (!adc_handler[adc_unit])
+        {
+            // Initialize the required ADC unit
+            adc_oneshot_unit_handle_t handle;
+            adc_oneshot_unit_init_cfg_t unitCfg =
+                {
+                    .unit_id = adc_unit,
+                    // From ESP-IDF doc: If set to 0, the driver will fall back to using a default clock source
+                    .clk_src = static_cast<adc_oneshot_clk_src_t>(0),
+                    .ulp_mode = ADC_ULP_MODE_DISABLE};
+            handle = nullptr;
+            ESP_ERROR_CHECK(adc_oneshot_new_unit(&unitCfg, &handle));
+            if (!handle)
+                throw std::runtime_error("getADCreading: adc_oneshot_new_unit() failed");
+            adc_handler[adc_unit] = handle;
+
+            // Configure all channels in the ADC unit
+            adc_oneshot_chan_cfg_t channelCfg =
+                {
+                    .atten = adc_atten_t::ADC_ATTEN_DB_12,
+                    .bitwidth = ADC_BITWIDTH_12,
+                };
+            for (int ch = ADC_CHANNEL_0; ch <= ADC_CHANNEL_9; ch++)
+                adc_oneshot_config_channel(
+                    handle,
+                    static_cast<adc_channel_t>(ch),
+                    &channelCfg);
+            // Note: adc_oneshot_del_unit(handle) is never called
+        }
         int result = 0;
         for (int i = 0; i < sampleCount; i++)
         {
             int reading;
-            ESP_ERROR_CHECK(adc_oneshot_read(handle, channel, &reading));
-            result += reading;
+            esp_err_t err = adc_oneshot_read(adc_handler[adc_unit], channel, &reading);
+            // DEV NOTE: in Arduino-ESP32 core version 3.2.1 and a "pure" ESP32 board,
+            // adc_oneshot_read() returns ESP_ERR_TIMEOUT from time to time.
+            // According to GitHub Copilot, the cause is the ADC2 unit being
+            // shared with the BLE hardware.
+            // Uncomment the following line for proof:
+            // ESP_ERROR_CHECK_WITHOUT_ABORT(err);
+            if (err == ESP_OK)
+                result += reading;
+            else
+                // DEV NOTE: The following line could lead to an infinite loop in the worst case.
+                // However, the result could be wrong if not executed.
+                i--;
         }
         result = result / sampleCount;
-        ESP_ERROR_CHECK(adc_oneshot_del_unit(handle));
         return result;
     }
     return -1;

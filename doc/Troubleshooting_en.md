@@ -205,6 +205,7 @@ You can ignore them:
 - *E (15) gpio: gpio_install_isr_service(500): GPIO isr service already installed*
 - *E NimBLEAdvertisementData: Cannot add UUID, data length exceeded!*
 - *E (67) rmt: rmt_new_tx_channel(265): DMA not supported*
+- *E (77) adc_oneshot: adc_oneshot_config_channel(180): invalid channel*
 
 ## USB not recognized error (ESP32S3 boards)
 
