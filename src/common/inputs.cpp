@@ -50,7 +50,7 @@ static bool _reverseRightAxis = false;
 
 // Polling daemon
 #define DEBOUNCE_MS 30
-#define POLLING_TASK_STACK_SIZE 2 * 1024
+#define POLLING_TASK_STACK_SIZE (2 * 1024) + 512
 static bool forceUpdate;
 #define MAX_VOID_LOOP_COUNT (15000 / DEBOUNCE_MS)
 
