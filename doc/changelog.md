@@ -1,5 +1,20 @@
 # Change log
 
+## 7.7.4
+
+- Documentation updates.
+- Now the CD/CI chain computes code coverage for automated tests (only).
+- Fixed a bug in the LED strips caused by "pure" ESP32 boards not having DMA support.
+  This was a blocking issue.
+- Fixed a bug in the ADC readings caused by the ADC2 unit being shared
+  with the Bluetooth radio (only on "pure" ESP32 boards).
+  This was a blocking issue.
+  This patch should improve the ADC performance a bit, too.
+- Increased stack size for the input polling daemon.
+  This was a blocking issue depending on the particular custom firmware.
+- Unused code has been removed.
+- **Upgrading is highly recommended.**
+
 ## 7.7.3
 
 - A custom DevKit PCB design has been added to the project,
