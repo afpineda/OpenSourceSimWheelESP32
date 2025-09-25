@@ -76,6 +76,11 @@ void firmware::run(void (*func)())
     }
     catch (std::exception &e)
     {
+        // Delay to allow log_e() to print text
+        // (may be running in another thread)
+        vTaskDelay(pdMS_TO_TICKS(500));
+
+        // Initialize UARTs
         Serial0.end();
         Serial0.begin(115200);
 #ifdef USB_SERIAL_IS_DEFINED
