@@ -87,7 +87,14 @@ LEDStrip::LEDStrip(
             .allow_pd = 0}};
     if (useLevelShift)
         tx_config.flags.io_od_mode = 1;
-    ESP_ERROR_CHECK(rmt_new_tx_channel(&tx_config, &rmtHandle));
+    rmtHandle = nullptr;
+    esp_err_t err = rmt_new_tx_channel(&tx_config, &rmtHandle);
+    if (err == ESP_ERR_NOT_SUPPORTED)
+    {
+        tx_config.flags.with_dma = 0;
+        err = rmt_new_tx_channel(&tx_config, &rmtHandle);
+    }
+    ESP_ERROR_CHECK_WITHOUT_ABORT(err);
     if (!rmtHandle)
         throw std::runtime_error("LEDStrip: rmt_new_tx_channel() failed");
     ESP_ERROR_CHECK(rmt_enable(rmtHandle));
