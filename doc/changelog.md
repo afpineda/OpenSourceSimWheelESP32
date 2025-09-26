@@ -13,6 +13,8 @@
 - Increased stack size for the input polling daemon.
   This was a blocking issue depending on the particular custom firmware.
 - Unused code has been removed.
+- A potential bug has been fixed regarding UI notifications.
+  The task watchdog timer is reset between calls to event handlers.
 - **Upgrading is highly recommended.**
 
 ## 7.7.3
