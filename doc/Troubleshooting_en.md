@@ -206,6 +206,7 @@ You can ignore them:
 - *E NimBLEAdvertisementData: Cannot add UUID, data length exceeded!*
 - *E (67) rmt: rmt_new_tx_channel(265): DMA not supported*
 - *E (77) adc_oneshot: adc_oneshot_config_channel(180): invalid channel*
+- *E (173310) task_wdt: esp_task_wdt_reset(705): task not found*
 
 ## USB not recognized error (ESP32S3 boards)
 
