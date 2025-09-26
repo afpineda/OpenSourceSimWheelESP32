@@ -53,6 +53,26 @@ static std::recursive_mutex pixelMutex;
 #define GIVE_MUTEX pixelMutex.unlock()
 
 //---------------------------------------------------------------
+// The task watchdog timer issue
+//---------------------------------------------------------------
+// DEVELOPMENT NOTE 2025/09/26:
+// When using pixel control notifications, the
+// system triggers the task watchdog timer at
+// PixelControlNotification::onConnected()
+// when the device is first paired (and only in such a situation).
+// This causes a system reset when the device is about to be
+// paired and the computer gets crazy.
+// The reason is unknown but probably is due to another task
+// being starved, so an explicit call to
+// esp_task_wdt_reset() does not help.
+// A small task delay (and context swap) do the trick.
+// The following macro is defined for easy rework and
+// better semantics.
+//---------------------------------------------------------------
+
+#define PREVENT_STARVATION vTaskDelay(10)
+
+//---------------------------------------------------------------
 //---------------------------------------------------------------
 // Public
 //---------------------------------------------------------------
@@ -170,11 +190,13 @@ void internals::pixels::reset()
 {
     if (CAN_TAKE_MUTEX)
     {
+        PREVENT_STARVATION;
         for (int i = 0; i < 3; i++)
             if (pixelData[i])
             {
-                pixelData[i]->pixelRangeRGB(0, 255, 0, 0, 0);
+                pixelData[i]->pixelRangeRGB(0, pixelData[i]->getPixelCount(), 0, 0, 0);
                 pixelData[i]->show();
+                PREVENT_STARVATION;
             }
         GIVE_MUTEX;
     }

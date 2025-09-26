@@ -34,9 +34,11 @@ In the test computer:
 
 *Note*: do not confuse `Set Report` with `Set Feature`.
 
-1. On reset or power on, all pixels must light up white for a second.
+1. On reset or power on, 25% of the pixels must light up white for a second
+   (as battery level is set to 25).
 2. All pixels must light up purple (BLE advertising)
-   until the device connects to the host computer (less than a second).
+   until the device connects to the host computer
+   (less than a second if previously paired).
 3. Then, all pixels must go out.
 4. Open "SimpleHidWriter.exe". Locate this test device in the top area, and click on it.
    Look for `Device VID= ... PID= ...`.
