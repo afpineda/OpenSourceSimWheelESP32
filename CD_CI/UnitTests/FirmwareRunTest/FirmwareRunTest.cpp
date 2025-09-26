@@ -89,7 +89,7 @@ int main()
     OnStart::subscribe(onStart);
     firmware::run(customFirmware);
 
-    // Check that all subsystems where initialized and started
+    // Check that all subsystems were initialized and started
     assert(customFirmwareReady);
     assert(batteryMonitorReady);
     assert(batteryCalibrationReady);
