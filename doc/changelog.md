@@ -15,6 +15,8 @@
 - Unused code has been removed.
 - A potential bug has been fixed regarding UI notifications.
   The task watchdog timer is reset between calls to event handlers.
+- Fixed a bug causing the system to crash and reboot just on the
+  first pairing (BLE) when having pixel control notifications.
 - **Upgrading is highly recommended.**
 
 ## 7.7.3
