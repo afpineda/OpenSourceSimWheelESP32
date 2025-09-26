@@ -27,6 +27,7 @@
 #if !CD_CI
 /// @brief For tesing
 #define PRIVATE private
+#include "esp_task_wdt.h" // For  esp_task_wdt_reset()
 /// @brief For tesing
 #define PROTECTED protected
 #else
@@ -476,6 +477,9 @@ struct InternalEvent
     /**
      * @brief Subscribe to this event
      *
+     * @note The subscribed callback may need to invoke
+     *       esp_task_wdt_reset()
+     *
      * @param callback Event callback
      */
     static void subscribe(Callback callback)
@@ -492,7 +496,12 @@ struct InternalEvent
     static void notify(_Args... __args)
     {
         for (auto callback : _callbacks)
+        {
+#if !CD_CI
+            esp_task_wdt_reset();
+#endif
             callback(std::forward<_Args>(__args)...);
+        }
     }
 
 private:
