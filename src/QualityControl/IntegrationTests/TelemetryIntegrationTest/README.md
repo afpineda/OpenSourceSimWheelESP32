@@ -44,11 +44,10 @@ We are using pre-recorded telemetry data found in the
 2. **From now on**, just check there are **no error messages**
    in the serial monitor,
    in particular, `Stack canary watchpoint triggered (UI)`.
-   The firmware must be running for a while before this kind
-   of error is triggered.
-3. A never-ending loop of telemetry data should be displayed.
-4. Check that shown telemetry data is coherent.
-5. In doubt, open the `available properties` menu in SimHub.
+   The firmware has to be running for a while before this kind of error
+   has a chance of being triggered.
+3. Check that shown telemetry data is coherent.
+   In doubt, open the `available properties` menu in SimHub.
    Search for a property to display the value sent.
 
 The pre-recorded telemetry data must reflect the following car behavior:

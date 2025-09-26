@@ -37,6 +37,7 @@
         "unpair",
         "unwire",
         "unwired",
+        "watchpoint",
         "Wemos"
     ],
     "ignoreWords": [
