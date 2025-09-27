@@ -43,6 +43,7 @@ static uint8_t max_speed_x[] = {4, 4};
 
 // ADC
 static std::array<adc_oneshot_unit_handle_t, SOC_ADC_PERIPH_NUM> adc_handler{nullptr};
+static uint64_t initialized_adc_pins = 0ULL; // A bitmap
 
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
@@ -274,19 +275,26 @@ int internals::hal::gpio::getADCreading(ADC_GPIO pin, int sampleCount)
                 throw std::runtime_error("getADCreading: adc_oneshot_new_unit() failed");
             adc_handler[adc_unit] = handle;
 
-            // Configure all channels in the ADC unit
+            // Note: adc_oneshot_del_unit(handle) is never called
+        }
+
+        if (~initialized_adc_pins & (1ULL << (uint8_t)pin))
+        {
+            // Configure this channel in the ADC unit
+            // (only once)
             adc_oneshot_chan_cfg_t channelCfg =
                 {
                     .atten = adc_atten_t::ADC_ATTEN_DB_12,
                     .bitwidth = ADC_BITWIDTH_12,
                 };
-            for (int ch = ADC_CHANNEL_0; ch <= ADC_CHANNEL_9; ch++)
+            ESP_ERROR_CHECK(
                 adc_oneshot_config_channel(
-                    handle,
-                    static_cast<adc_channel_t>(ch),
-                    &channelCfg);
-            // Note: adc_oneshot_del_unit(handle) is never called
+                    adc_handler[adc_unit],
+                    static_cast<adc_channel_t>(channel),
+                    &channelCfg));
+            initialized_adc_pins |= (1ULL << pin);
         }
+
         int result = 0;
         for (int i = 0; i < sampleCount; i++)
         {
