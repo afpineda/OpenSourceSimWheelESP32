@@ -50,19 +50,21 @@ void customFirmware()
 {
     ButtonMatrix mtx;
     setDebugInputNumbers(mtx);
-
     inputs::addButtonMatrix(mtx);
     inputs::addButton(TEST_ROTARY_SW, ALT_IN);
     inputs::addRotaryEncoder(TEST_ROTARY_CLK, TEST_ROTARY_DT, CW_IN, CCW_IN, false);
     inputs::setAnalogClutchPaddles(TEST_ANALOG_PIN1, TEST_ANALOG_PIN2);
 
     inputHub::altButtons::inputs({ALT_IN});
-    inputHub::securityLock::cycleWorkingModeInputs({(COMMAND_IN), RIGHT});
     inputHub::altButtons::cycleWorkingModeInputs({(COMMAND_IN), (CYCLE_ALT_IN)});
+
+    inputHub::securityLock::cycleWorkingModeInputs({(COMMAND_IN), RIGHT});
+
     inputHub::clutch::cycleWorkingModeInputs({(COMMAND_IN), (CYCLE_CLUTCH_IN)});
-    inputHub::dpad::cycleWorkingModeInputs({(COMMAND_IN), (CYCLE_DPAD_IN)});
     inputHub::clutch::inputs(LEFT_CLUTCH_IN, RIGHT_CLUTCH_IN);
     inputHub::clutch::bitePointInputs(CW_IN, CCW_IN);
+
+    inputHub::dpad::cycleWorkingModeInputs({(COMMAND_IN), (CYCLE_DPAD_IN)});
     inputHub::dpad::inputs(UP, DOWN, LEFT, RIGHT);
 
     hid::configure("Proto1", "Mamandurrio", false);
