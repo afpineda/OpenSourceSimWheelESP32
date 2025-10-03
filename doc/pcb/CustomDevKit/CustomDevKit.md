@@ -362,12 +362,19 @@ and Arduino IDE recognizing the board.
 To enter *bootloader mode*, press and hold `BOOT`,
 then press and release `RESET`, then release `BOOT`.
 
-In Arduino IDE, configure your board in this way (board configuration):
+In Arduino IDE, configure your board in this way ("Tools" menu):
 
-- *Board*: ESP32S3 Dev Module (esp32).
-- *Upload mode*: USB-OTG CDC (TinyUSB).
+- Having **BLE connectivity**:
 
-If you have USB connectivity do **not** set *USB CDC on Boot* to "Enabled".
+  - *Board*: ESP32S3 Dev Module (esp32).
+  - *USB CDC on Boot*: "Enabled".
+  - *Upload mode*: USB-OTG CDC (TinyUSB).
+
+- Having **USB connectivity**:
+
+  - *Board*: ESP32S3 Dev Module (esp32).
+  - *USB CDC on Boot*: **"Disabled"**.
+  - *Upload mode*: USB-OTG CDC (TinyUSB).
 
 **You must click on the `Reset` button after uploading**.
 
