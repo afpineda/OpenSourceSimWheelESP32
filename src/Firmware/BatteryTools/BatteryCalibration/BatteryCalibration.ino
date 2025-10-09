@@ -109,6 +109,7 @@ void erasePreviousCalibrationData()
     Serial.println("2. Ensure the battery is wired to the battery monitor circuit.");
     Serial.println("3. Remove the USB cable or any wired power supply.");
     Serial.println("4. Power the DevKit using the battery alone.");
+    Serial.println("5. Open the Bluetooth control panel and pair the device (if not done yet).");
     Serial.println("The battery calibration procedure will then start immediately.");
     Serial.println("Just wait for the battery to deplete.");
     Serial.println("No human supervision is required.");
@@ -179,6 +180,13 @@ void setup()
             internals::hid::common::getReady();
             OnStart::notify();
             internals::batteryCalibration::clear();
+
+            // Wait for BLE connection
+            while (!internals::hid::isConnected())
+            {
+                Serial.println("Waiting for Bluetooth connection...");
+                DELAY_MS(5000);
+            }
 
             Serial.println("===================================");
             Serial.println("The battery calibration procedure has started.");
