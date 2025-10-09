@@ -41,7 +41,7 @@ function Get-Hyperlinks {
         $pattern_matches = $_link_pattern.Matches($line)
         foreach ($match in $pattern_matches) {
             $link = $match.Groups[1].Value
-            if ($link -notlike "http*") {
+            if (($link -notlike "http*") -and ($link -notlike "#*")) {
                 if ([System.IO.Path]::IsPathRooted($link)) {
                     $link
                 }
