@@ -80,15 +80,13 @@ Please, pay attention to the following instructions.
    5. Go to the Bluetooth control panel and pair the device.
       It should be listed as **"Battery calibration"**.
       **IF YOUR DEVICE DOES NOT SHOW UP** (in a reasonable time lapse),
-      follow to the [Data removal procedure](#data-removal-procedure) below,
+      follow to the [data removal procedure](#data-removal-procedure) below,
       then repeat this battery calibration procedure.
       This is a precaution to prevent previous calibration data
       from being accidentally deleted.
 
-   6. Battery calibration will start as soon as your device is paired.
-      You can turn your computer off if you wont,
-      but you will get better battery levels if it is turned on
-      during this procedure.
+   6. Battery calibration will start as soon as your device is connected to the computer.
+      Afterwards, you can turn your computer off if you want.
    7. **Wait for the battery to deplete**. The onboard LED will go off.
       The calibration data is now saved to flash memory and ready to use.
 
