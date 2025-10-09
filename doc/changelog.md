@@ -1,5 +1,15 @@
 # Change log
 
+## 7.7.5
+
+- The battery calibration procedure has been simplified.
+  The annoying 3 minutes countdown has been removed and
+  explicit user action is required to delete the previously
+  stored battery calibration data.
+  Now the procedure will start as soon as there is a BLE connection.
+  This way, there is no chance to overwrite the calibration data by accident.
+- Documentation updates.
+
 ## 7.7.4
 
 - Documentation updates.
