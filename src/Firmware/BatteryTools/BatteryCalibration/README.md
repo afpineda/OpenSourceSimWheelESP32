@@ -50,6 +50,10 @@ to estimate how long will it take to deplete the battery.
 
 ### Calibration procedure (and backup)
 
+> [!NOTE]
+> No real battery level will be reported to the host computer
+> during this procedure. Yoy will get a constant 66% battery level.
+
 Please, pay attention to the following instructions.
 
 1. Sketch uploading:

@@ -214,6 +214,9 @@ void loop()
     {
         internals::batteryCalibration::addSample(reading);
         SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+        // The user does not see this message,
+        // but can see the light in the TX LED (if available)
+        Serial.println("running");
     } // else BATT_READ_PIN is not connected
     DELAY_MS(SAMPLING_MILLIS);
 }
