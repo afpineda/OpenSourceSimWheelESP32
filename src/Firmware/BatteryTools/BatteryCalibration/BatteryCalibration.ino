@@ -31,6 +31,8 @@
 // ----------------------------------------------------------------------------
 
 #define SAMPLING_MILLIS (60 * 1000) // 1 minute
+ADC_GPIO batteryREADPin = BATT_READ_PIN;
+OutputGPIO battENPin = BATT_EN_PIN;
 
 // ----------------------------------------------------------------------------
 // Auxiliary
@@ -53,7 +55,7 @@ void dumpCalibrationData()
     Serial.println(" };");
 }
 
-int getBatteryReading(ADC_GPIO batteryREADPin, OutputGPIO battENPin)
+int getBatteryReading()
 {
     if (battENPin != UNSPECIFIED::VALUE)
     {
@@ -68,71 +70,128 @@ int getBatteryReading(ADC_GPIO batteryREADPin, OutputGPIO battENPin)
     return reading;
 }
 
+bool isBatteryPresent()
+{
+    return (getBatteryReading() < 150);
+}
+
+bool isBatteryAlreadyCalibrated()
+{
+    // If getBatteryLevel() returns -1, there is no calibration data stored
+    // in flash memory
+    return (BatteryCalibrationService::call::getBatteryLevel(4090) >= 0);
+}
+
+void erasePreviousCalibrationData()
+{
+    Serial.println("===================================");
+    Serial.println("CALIBRATION PROCEDURE NOT STARTING");
+    Serial.println("===================================");
+    Serial.println("You have to EXPLICITLY erase the previous calibration data.");
+    Serial.println("TO ERASE it, type any character in the serial monitor and hit ENTER.");
+    while (!Serial.available())
+    {
+        Serial.println("Waiting for user input...");
+        DELAY_MS(2000);
+    }
+    Serial.println("Erasing calibration data...");
+
+    for (uint8_t i = 0; i < BatteryCalibrationService::call::getCalibrationDataCount(); i++)
+        BatteryCalibrationService::call::setCalibrationData(i, 0, true);
+
+    Serial.println("===================================");
+    Serial.println("NEXT STEPS");
+    Serial.println("===================================");
+    Serial.println("1. Ensure your battery is fully charged.");
+    Serial.println("2. Ensure the battery is wired to the battery monitor circuit.");
+    Serial.println("3. Remove the USB cable or any wired power supply.");
+    Serial.println("4. Power the DevKit using the battery alone.");
+    Serial.println("The battery calibration procedure will then start immediately.");
+    Serial.println("Just wait for the battery to deplete.");
+    Serial.println("No human supervision is required.");
+    Serial.println("===================================");
+    while (!isBatteryPresent())
+    {
+        Serial.println("Note: Battery not detected...");
+        DELAY_MS(10000);
+    }
+    Serial.println("Note: Battery detected (you are good to go)...");
+    Serial.println("Now stopped until reset or power removal.");
+    for (;;)
+        DELAY_MS(10000);
+}
+
 // ----------------------------------------------------------------------------
 // Mocks
 // ----------------------------------------------------------------------------
-
 
 // ----------------------------------------------------------------------------
 // Arduino entry point
 // ----------------------------------------------------------------------------
 
-ADC_GPIO battRead;
-OutputGPIO battEN;
-
 void setup()
 {
-    int countdown = 3 * 60;
-    // int countdown = 10;
     Serial.begin(115200);
-
-    battRead = BATT_READ_PIN;
-    battEN = BATT_EN_PIN;
-    batteryMonitor::configure(battRead, battEN);
-    hid::configure("Battery calibration", "Mamandurrio", false);
-    internals::hid::common::getReady();
-    internals::storage::getReady();
-    internals::batteryCalibration::getReady();
-    OnStart::notify();
-
-    if (getBatteryReading(battRead, battEN) < 150)
+    try
     {
-        Serial.println("Note: No battery detected.");
+
+        Serial.println("===================================");
+        Serial.println("=  Battery calibration procedure  =");
+        Serial.println("===================================");
+        Serial.print("Battery presence: ");
+        if (isBatteryPresent())
+            Serial.println("yes");
+        else
+            Serial.println("no");
+
+        hid::configure("Battery calibration", "Mamandurrio", false);
+        internals::hid::common::getReady();
+        internals::storage::getReady();
+        internals::batteryCalibration::getReady();
+        OnStart::notify(); // Stored calibration data is loaded from flash memory here
+
+        if (isBatteryAlreadyCalibrated())
+        {
+            Serial.println("yes");
+            Serial.println("===================================");
+            Serial.println("Current calibration data follows. Write down for backup:");
+            Serial.println("");
+            dumpCalibrationData();
+            Serial.println("");
+            erasePreviousCalibrationData(); // Does not return
+        }
+        else
+        {
+            Serial.println("no");
+            // Wait for battery presence
+            while (!isBatteryPresent())
+            {
+                Serial.println("Battery not present. Waiting...");
+                DELAY_MS(5000);
+            }
+            Serial.println("===================================");
+            Serial.println("The battery calibration procedure has started.");
+            internals::batteryCalibration::clear();
+        }
     }
+    catch (std::exception &e)
+    {
+        // Delay to allow log_e() to print text
+        // (may be running in another thread)
+        vTaskDelay(pdMS_TO_TICKS(500));
 
-    Serial.println("Waiting...");
-    while ((!Serial.available()) && (countdown > 0))
-    {
-        countdown--;
-        DELAY_MS(1000);
-    }
-
-    if (countdown <= 0)
-    {
-        Serial.println("Running...");
-        Serial.println("If you can see this message, unplug the USB cable,");
-        Serial.println("plug a fully charged battery and reset.");
-        internals::batteryCalibration::clear();
-        SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
-        Serial.println("Calibration data has been cleared.");
-    }
-    else
-    {
-        Serial.println("[EN] Current battery calibration data:");
-        Serial.println("[ES] Datos actuales de calibracion de bateria:");
-        Serial.println("----------------------------------------------");
-        dumpCalibrationData();
-        Serial.println("----------------------------------------------");
-        Serial.println("--END--FIN--");
-        Serial.end();
         for (;;)
-            DELAY_MS(1000);
+        {
+            Serial.println("**FIRMWARE ERROR**");
+            Serial.println(e.what());
+            vTaskDelay(pdMS_TO_TICKS(2000));
+        }
     }
 }
 
 void loop()
 {
-    int reading = getBatteryReading(battRead, battEN);
+    int reading = getBatteryReading();
     if (reading >= 150)
     {
         internals::batteryCalibration::addSample(reading);

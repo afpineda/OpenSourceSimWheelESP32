@@ -1,8 +1,6 @@
 batteryCalibration.cpp
 hid_ESPBLE.cpp
 hidCommon.cpp
-batteryMonitor.cpp
-BatteryMonitorHardware.cpp
 telemetry.cpp
 pixels_dummy.cpp
 HAL.cpp
