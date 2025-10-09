@@ -96,8 +96,11 @@ void erasePreviousCalibrationData()
     }
     Serial.println("Erasing calibration data...");
 
-    for (uint8_t i = 0; i < BatteryCalibrationService::call::getCalibrationDataCount(); i++)
-        BatteryCalibrationService::call::setCalibrationData(i, 0, true);
+    uint8_t calCount = BatteryCalibrationService::call::getCalibrationDataCount();
+    for (uint8_t i = 0; i < calCount; i++)
+        BatteryCalibrationService::call::setCalibrationData(i, 0, false);
+    SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+    DELAY_MS(200);
 
     Serial.println("===================================");
     Serial.println("NEXT STEPS");
@@ -134,22 +137,24 @@ void setup()
     Serial.begin(115200);
     try
     {
-
         Serial.println("===================================");
         Serial.println("=  Battery calibration procedure  =");
         Serial.println("===================================");
+
+        // Inform about battery detection
         Serial.print("Battery presence: ");
         if (isBatteryPresent())
             Serial.println("yes");
         else
             Serial.println("no");
 
-        hid::configure("Battery calibration", "Mamandurrio", false);
-        internals::hid::common::getReady();
+        // Initialize required firmware subsystems
         internals::storage::getReady();
         internals::batteryCalibration::getReady();
         OnStart::notify(); // Stored calibration data is loaded from flash memory here
 
+        // Look for previously stored calibration data
+        Serial.print("Battery calibration data already stored: ");
         if (isBatteryAlreadyCalibrated())
         {
             Serial.println("yes");
@@ -169,9 +174,14 @@ void setup()
                 Serial.println("Battery not present. Waiting...");
                 DELAY_MS(5000);
             }
+
+            hid::configure("Battery calibration", "Mamandurrio", false);
+            internals::hid::common::getReady();
+            OnStart::notify();
+            internals::batteryCalibration::clear();
+
             Serial.println("===================================");
             Serial.println("The battery calibration procedure has started.");
-            internals::batteryCalibration::clear();
         }
     }
     catch (std::exception &e)
