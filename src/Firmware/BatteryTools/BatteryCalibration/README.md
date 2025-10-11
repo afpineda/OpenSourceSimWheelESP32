@@ -80,7 +80,7 @@ Please, pay attention to the following instructions.
    5. Go to the Bluetooth control panel and pair the device.
       It should be listed as **"Battery calibration"**.
       **IF YOUR DEVICE DOES NOT SHOW UP** (in a reasonable time lapse),
-      follow to the [data removal procedure](#data-removal-procedure) below,
+      jump to the [data removal procedure](#data-removal-procedure) below,
       then repeat this battery calibration procedure.
       This is a precaution to prevent previous calibration data
       from being accidentally deleted.
