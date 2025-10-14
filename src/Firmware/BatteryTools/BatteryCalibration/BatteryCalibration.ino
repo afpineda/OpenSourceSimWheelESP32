@@ -213,6 +213,7 @@ void loop()
     int reading = getBatteryReading();
     if (reading >= 150)
     {
+        internals::hid::reset();
         internals::batteryCalibration::addSample(reading);
         SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
         // The user does not see this message,
