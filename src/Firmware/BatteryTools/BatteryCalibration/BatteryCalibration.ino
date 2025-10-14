@@ -72,7 +72,7 @@ int getBatteryReading()
 
 bool isBatteryPresent()
 {
-    return (getBatteryReading() < 150);
+    return (getBatteryReading() >= 150);
 }
 
 bool isBatteryAlreadyCalibrated()
@@ -120,7 +120,8 @@ void erasePreviousCalibrationData()
         DELAY_MS(10000);
     }
     Serial.println("Note: Battery detected (you are good to go)...");
-    Serial.println("Now stopped until reset or power removal.");
+    Serial.println("Now stopped until power removal.");
+    Serial.println("Remove any wired power supply to proceed to battery calibration.");
     for (;;)
         DELAY_MS(10000);
 }
