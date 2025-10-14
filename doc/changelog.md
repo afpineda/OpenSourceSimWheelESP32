@@ -1,5 +1,10 @@
 # Change log
 
+## 7.7.6
+
+- Bug fix affecting the battery calibration sketch.
+- Errata fixes.
+
 ## 7.7.5
 
 - The battery calibration procedure has been simplified.
