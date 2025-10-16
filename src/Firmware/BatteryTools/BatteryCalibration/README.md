@@ -35,7 +35,8 @@ Look for a data sheet to know which one and set `BATT_READ_PIN` properly.
 
 > [!NOTE]
 > Completing this procedure may take hours or days, however,
-> no human supervision is required. This procedure is **optional**, but highly recommended.
+> no human supervision is required. This procedure is **optional**,
+> but highly recommended.
 > Please, read from start to end before proceeding.
 
 Due to non-linearity of battery charge versus battery voltage,
@@ -51,10 +52,11 @@ to estimate how long will it take to deplete the battery.
 ### Calibration procedure (and backup)
 
 > [!NOTE]
-> No real battery level will be reported to the host computer
-> during this procedure. Yoy will get a constant 66% battery level.
-
-Please, pay attention to the following instructions.
+> The battery level reported to the host computer during this procedure
+> is not real.
+> The reported battery level, between 30% and 100%,
+> will change by 1% at a rate of once per minute.
+> This way, you have evidence that the procedure is running.
 
 1. Sketch uploading:
 

@@ -154,7 +154,7 @@ int VoltageDividerMonitor::read()
     if (_batteryENPin != UNSPECIFIED::VALUE)
     {
         GPIO_SET_LEVEL(_batteryENPin, 1);
-        DELAY_TICKS(200);
+        DELAY_TICKS(100);
     }
 #endif
 

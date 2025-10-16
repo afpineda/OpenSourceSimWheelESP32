@@ -1,5 +1,13 @@
 # Change log
 
+## 7.7.7
+
+- During the calibration procedure,
+  the reported battery level will change by 1%
+  once per minute.
+  This way, you have evidence that the procedure is running.
+- Bug fix for battery monitors using the `batt_en` pin.
+
 ## 7.7.6
 
 - Bug fix affecting the battery calibration sketch.

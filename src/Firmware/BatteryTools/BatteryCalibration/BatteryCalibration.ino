@@ -12,6 +12,7 @@
 #include "SimWheel.hpp"
 #include "SimWheelInternals.hpp"
 #include "InternalServices.hpp"
+#include "BatteryMonitorHardware.hpp"
 #include "HAL.hpp"
 
 #include <HardwareSerial.h>
@@ -31,8 +32,10 @@
 // ----------------------------------------------------------------------------
 
 #define SAMPLING_MILLIS (60 * 1000) // 1 minute
-ADC_GPIO batteryREADPin = BATT_READ_PIN;
-OutputGPIO battENPin = BATT_EN_PIN;
+VoltageDividerMonitor voltageDivider(
+    BATT_READ_PIN,
+    BATT_EN_PIN);
+uint8_t fakeBatteryLevel = 30;
 
 // ----------------------------------------------------------------------------
 // Auxiliary
@@ -55,24 +58,11 @@ void dumpCalibrationData()
     Serial.println(" };");
 }
 
-int getBatteryReading()
-{
-    if (battENPin != UNSPECIFIED::VALUE)
-    {
-        GPIO_SET_LEVEL(battENPin, 1);
-        DELAY_TICKS(200);
-    }
-    int reading = internals::hal::gpio::getADCreading(batteryREADPin, 100);
-    if (battENPin != UNSPECIFIED::VALUE)
-    {
-        GPIO_SET_LEVEL(battENPin, 0);
-    }
-    return reading;
-}
-
 bool isBatteryPresent()
 {
-    return (getBatteryReading() >= 150);
+    BatteryStatus status;
+    voltageDivider.getStatus(status);
+    return status.isBatteryPresent.value_or(false);
 }
 
 bool isBatteryAlreadyCalibrated()
@@ -210,15 +200,17 @@ void setup()
 
 void loop()
 {
-    int reading = getBatteryReading();
-    if (reading >= 150)
+    if (isBatteryPresent())
     {
-        internals::hid::reset();
-        internals::batteryCalibration::addSample(reading);
+        internals::batteryCalibration::addSample(voltageDivider.lastBatteryReading);
         SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+        internals::hid::reset();
+        internals::hid::reportBatteryLevel(fakeBatteryLevel);
+        if (++fakeBatteryLevel > 100)
+            fakeBatteryLevel = 30;
         // The user does not see this message,
         // but can see the light in the TX LED (if available)
-        Serial.println("running");
+        Serial.printf("Voltage reading: %d\n", voltageDivider.lastBatteryReading);
     } // else BATT_READ_PIN is not connected
     DELAY_MS(SAMPLING_MILLIS);
 }

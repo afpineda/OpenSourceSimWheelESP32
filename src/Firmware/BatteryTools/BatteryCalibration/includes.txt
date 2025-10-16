@@ -1,4 +1,5 @@
 batteryCalibration.cpp
+BatteryMonitorHardware.cpp
 hid_ESPBLE.cpp
 hidCommon.cpp
 telemetry.cpp
