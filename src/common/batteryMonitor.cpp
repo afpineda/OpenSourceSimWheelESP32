@@ -122,12 +122,7 @@ class BatteryServiceProvider : public BatteryService
 public:
     virtual int getLastBatteryLevel() override
     {
-        if (currentStatus.stateOfCharge.has_value())
-        {
-            return (int)currentStatus.stateOfCharge.value();
-        }
-        else
-            return UNKNOWN_BATTERY_LEVEL;
+        return (int)currentStatus.stateOfCharge.value_or(UNKNOWN_BATTERY_LEVEL);
     }
 
     virtual bool hasBattery() override
@@ -138,9 +133,7 @@ public:
     virtual bool isBatteryPresent() override
     {
         return (batteryMonitorhardware != nullptr) &&
-               (currentStatus.isBatteryPresent.has_value()
-                    ? currentStatus.isBatteryPresent.value()
-                    : false);
+               currentStatus.isBatteryPresent.value_or(false);
     }
 
     virtual void getStatus(BatteryStatus &status) override
