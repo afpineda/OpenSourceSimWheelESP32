@@ -1,5 +1,10 @@
 # Change log
 
+## 7.7.8
+
+- Fix bug at `HidServiceProvider` regarding the custom VID/PID.
+- Unused code removed.
+
 ## 7.7.7
 
 - During the calibration procedure,
