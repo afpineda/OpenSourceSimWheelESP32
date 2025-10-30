@@ -215,13 +215,6 @@ public:
         if (save)
             SaveSetting::notify(UserSetting::CUSTOM_HARDWARE_ID);
     }
-
-    virtual void setFactoryDefaultHardwareID()
-    {
-        _customVID = 0;
-        _customPID = 0;
-        SaveSetting::notify(UserSetting::CUSTOM_HARDWARE_ID);
-    }
 };
 
 //-------------------------------------------------------------------

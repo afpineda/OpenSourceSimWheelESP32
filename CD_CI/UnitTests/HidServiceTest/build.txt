@@ -1,0 +1,5 @@
+HidServiceTest.cpp
+hidCommon.cpp
+hid_dummy.cpp
+pixels_dummy.cpp
+telemetry.cpp

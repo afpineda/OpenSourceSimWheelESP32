@@ -85,7 +85,7 @@ public:
     virtual void getCustomHardwareID(uint16_t &customVID, uint16_t &customPID) override
     {
         customVID = _customVID;
-        customPID = _customVID;
+        customPID = _customPID;
     }
 
     virtual void setCustomHardwareID(uint16_t customVID, uint16_t customPID, bool save) override
@@ -94,13 +94,6 @@ public:
         _customPID = customPID;
         if (save)
             SaveSetting::notify(UserSetting::CUSTOM_HARDWARE_ID);
-    }
-
-    virtual void setFactoryDefaultHardwareID()
-    {
-        _customVID = 0;
-        _customPID = 0;
-        SaveSetting::notify(UserSetting::CUSTOM_HARDWARE_ID);
     }
 
 private:
