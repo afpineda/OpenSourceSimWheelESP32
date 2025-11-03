@@ -27,6 +27,7 @@ extern uint16_t _factoryVID;
 extern uint16_t _factoryPID;
 
 uint32_t lastFrameID = 0;
+BatteryStatus battStatus;
 
 //------------------------------------------------------------------
 // Mocks
@@ -214,6 +215,95 @@ void checkAndPrintTelemetryData()
 #endif
 }
 
+void printBatteryStatus()
+{
+    Serial.println("Current battery status:");
+    Serial.print(" State of charge: ");
+    if (!battStatus.stateOfCharge.has_value())
+        Serial.println("unknown");
+    else
+        Serial.println("yes");
+
+    Serial.print(" Wired power: ");
+    if (!battStatus.usingExternalPower.has_value())
+        Serial.println("unknown");
+    else if (battStatus.usingExternalPower.value())
+        Serial.println("yes");
+    else
+        Serial.println("no");
+
+    Serial.print(" Charging: ");
+    if (!battStatus.isCharging.has_value())
+        Serial.println("unknown");
+    else if (battStatus.isCharging.value())
+        Serial.println("yes");
+    else
+        Serial.println("no");
+
+    Serial.print(" Battery presence: ");
+    if (!battStatus.isBatteryPresent.has_value())
+        Serial.println("unknown");
+    else if (battStatus.isBatteryPresent.value())
+        Serial.println("yes");
+    else
+        Serial.println("no");
+}
+
+void executeSerialCommands()
+{
+#if (ARDUINO_USB_MODE == 1) || defined(CONFIG_IDF_TARGET_ESP32)
+    int chr = Serial.read();
+    if (chr == 'l' || chr == 'L')
+    {
+        if (battStatus.stateOfCharge.has_value())
+            battStatus.stateOfCharge.reset();
+        else
+            battStatus.stateOfCharge = 99;
+        printBatteryStatus();
+    }
+    else if (chr == 'w' || chr == 'W')
+    {
+        if (battStatus.usingExternalPower.has_value())
+        {
+            if (battStatus.usingExternalPower.value())
+                battStatus.usingExternalPower = false;
+            else
+                battStatus.usingExternalPower.reset();
+        }
+        else
+            battStatus.usingExternalPower = true;
+        printBatteryStatus();
+    }
+    else if (chr == 'c' || chr == 'C')
+    {
+        if (battStatus.isCharging.has_value())
+        {
+            if (battStatus.isCharging.value())
+                battStatus.isCharging = false;
+            else
+                battStatus.isCharging.reset();
+        }
+        else
+            battStatus.isCharging = true;
+        printBatteryStatus();
+    }
+    else if (chr == 'b' || chr == 'B')
+    {
+        if (battStatus.isBatteryPresent.has_value())
+        {
+            if (battStatus.isBatteryPresent.value())
+                battStatus.isBatteryPresent = false;
+            else
+                battStatus.isBatteryPresent.reset();
+        }
+        else
+            battStatus.isBatteryPresent = true;
+        printBatteryStatus();
+    }
+
+#endif
+}
+
 //------------------------------------------------------------------
 // Arduino entry point
 //------------------------------------------------------------------
@@ -224,6 +314,8 @@ void setup()
     Serial.begin(115200);
     Serial.println("--START--");
 #endif
+    battStatus.stateOfCharge = 99;
+    battStatus.isBatteryPresent = true;
     DeviceCapabilities::setFlag(DeviceCapability::CLUTCH_ANALOG);
     DeviceCapabilities::setFlag(DeviceCapability::DPAD);
     DeviceCapabilities::setFlag(DeviceCapability::ALT);
@@ -265,7 +357,6 @@ void setup()
 
 uint8_t btnIndex = 0;
 uint8_t axis = CLUTCH_NONE_VALUE;
-uint8_t battery = 99;
 uint8_t POV = 0;
 
 void loop()
@@ -311,10 +402,13 @@ void loop()
         }
 
         // Update battery info
-        battery--;
-        if (battery < 50)
-            battery = 100;
-        internals::hid::reportBatteryLevel(battery);
+        if (battStatus.stateOfCharge.has_value())
+        {
+            battStatus.stateOfCharge = battStatus.stateOfCharge.value() - 1;
+            if (battStatus.stateOfCharge.value() < 50)
+                battStatus.stateOfCharge = 100;
+        }
+        internals::hid::reportBatteryLevel(battStatus);
 
         // Update analog axis values
         axis = axis + 5;
@@ -324,6 +418,9 @@ void loop()
         // Print telemetry data (if any)
         checkAndPrintTelemetryData();
     }
+
+    // Execute commands placed in the UART (if any)
+    executeSerialCommands();
 
     // Wait a second
     delay(1000);

@@ -37,6 +37,8 @@
 #include "esp_mac.h" // For esp_efuse_mac_get_default()
 // #include <Arduino.h> // For debugging
 
+#include <cassert>
+
 // ----------------------------------------------------------------------------
 // Globals
 // ----------------------------------------------------------------------------
@@ -49,9 +51,11 @@ static esp_timer_handle_t autoPowerOffTimer = nullptr;
 #define NimBLEHIDDeviceFix NimBLEHIDDevice
 static NimBLEHIDDeviceFix *hidDevice = nullptr;
 static NimBLECharacteristic *inputGamePad = nullptr;
+static NimBLECharacteristic *battStatusChr = nullptr;
 static NimBLEServer *pServer = nullptr;
 static bool notifyConfigChanges = false;
 static constexpr uint16_t serialNumberChrUuid = BLE_SERIAL_NUMBER_CHR_UUID;
+static constexpr uint16_t batteryStatusChrUuid = BLE_BATTERY_STATUS_CHR_UUID;
 
 // ----------------------------------------------------------------------------
 // NimBLEHIDDeviceFix
@@ -344,11 +348,7 @@ void internals::hid::begin(
 
         // HID initialization
         hidDevice = new NimBLEHIDDeviceFix(pServer);
-        if (!hidDevice)
-        {
-            log_e("Unable to create HID device");
-            abort();
-        }
+        assert(hidDevice && "Unable to create HID device");
         hidDevice->setManufacturer(deviceManufacturer);
         hidDevice->setPnp(BLE_VENDOR_SOURCE, vendorID, productID, PRODUCT_REVISION);
         hidDevice->setHidInfo(0x00, 0x01);
@@ -375,6 +375,15 @@ void internals::hid::begin(
             }
         }
 
+        // Expand the battery service with a "battery level status" characteristic
+        NimBLEService *battService = hidDevice->getBatteryService();
+        assert(battService && "BLE: hidDevice->getBatteryService() failed");
+        battStatusChr = battService->createCharacteristic(
+            batteryStatusChrUuid,
+            NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY,
+            7);
+        assert(battStatusChr && "BLE: Unable to create the battery level status characteristic");
+
         // Create HID reports
         inputGamePad = hidDevice->getInputReport(RID_INPUT_GAMEPAD);
         FeatureReport::attachTo(hidDevice, RID_FEATURE_CAPABILITIES, CAPABILITIES_REPORT_SIZE);
@@ -396,7 +405,8 @@ void internals::hid::begin(
 
         // Start services
         hidDevice->startServices();
-        hidDevice->setBatteryLevel(UNKNOWN_BATTERY_LEVEL);
+        BatteryStatus defaultBatteryStatus;
+        internals::hid::reportBatteryLevel(defaultBatteryStatus);
         startBLEAdvertising();
     }
 }
@@ -453,9 +463,25 @@ void internals::hid::reportBatteryLevel(int level)
     }
 }
 
+void internals::hid::reportBatteryLevel(const BatteryStatus &status)
+{
+    // Battery level
+    int level = status.stateOfCharge.value_or(0);
+    if (level > 100)
+        level = 100;
+    else if (level < 0)
+        level = 0;
+    hidDevice->setBatteryLevel(level, true);
+
+    // Battery level status
+    uint8_t statusData[3];
+    status.bleValue(statusData);
+    battStatusChr->notify(statusData, 3);
+}
+
 void internals::hid::reportChangeInConfig()
 {
-    notifyConfigChanges = true; // Will be reported in next input report
+    notifyConfigChanges = true; // Will be reported in the next input report
 }
 
 bool internals::hid::supportsCustomHardwareID() { return true; }

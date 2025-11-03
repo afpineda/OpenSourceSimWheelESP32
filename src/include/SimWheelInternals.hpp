@@ -305,11 +305,21 @@ namespace internals
         /**
          * @brief Report current battery level to the host computer
          *
+         * @deprecated Use the BatteryStatus parameter
          * @warning May be called before internals::hid::begin()
          *
          * @param batteryLevel Remaining battery charge as a percentage (0-100)
          */
         void reportBatteryLevel(int batteryLevel);
+
+        /**
+         * @brief Report current battery level and status to the host computer
+         *
+         * @warning May be called before internals::hid::begin()
+         *
+         * @param status Battery status
+         */
+        void reportBatteryLevel(const BatteryStatus &status);
 
         /**
          * @brief Report HID inputs

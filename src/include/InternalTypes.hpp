@@ -695,11 +695,54 @@ struct BatteryStatus
 {
 public:
     /// @brief Measured battery level in the range from 0% to 100%
-    std::optional<uint8_t> stateOfCharge;
+    std::optional<uint8_t> stateOfCharge{};
     /// @brief  True if the battery is being charged
-    std::optional<bool> isCharging;
+    std::optional<bool> isCharging{};
     /// @brief False if the battery is not connected but there is external power
-    std::optional<bool> isBatteryPresent;
+    std::optional<bool> isBatteryPresent{};
     /// @brief True if there is wired power
-    std::optional<bool> usingExternalPower;
+    std::optional<bool> usingExternalPower{};
+
+    constexpr bool operator==(const BatteryStatus &other) const noexcept
+    {
+        return (stateOfCharge == other.stateOfCharge) &&
+               (isCharging == other.isCharging) &&
+               (isBatteryPresent == other.isBatteryPresent) &&
+               (usingExternalPower == other.usingExternalPower);
+    }
+
+    /**
+     * @brief Compute the value of the "Battery level status" BLE characteristic
+     *
+     * @param[out] statusData 3 bytes long buffer. Not null.
+     */
+    void bleValue(uint8_t *statusData) const
+    {
+        assert(statusData && "BatteryStatus.bleValue(): statusData is null");
+        statusData[0] = 0;
+        statusData[1] = 0;
+        statusData[2] = 0;
+
+        // Battery presence
+        if (isBatteryPresent.value_or(false))
+            statusData[1] |= 0b00000001;
+
+        // Wired power
+        if (usingExternalPower.has_value())
+        {
+            if (usingExternalPower.value())
+                statusData[1] |= 0b00000010;
+        }
+        else
+            statusData[1] |= 0b00000100;
+
+        // Charging status
+        if (isCharging.has_value())
+        {
+            if (isCharging.value())
+                statusData[1] |= 0b00100000;
+            else
+                statusData[1] |= 0b01000000;
+        }
+    }
 };

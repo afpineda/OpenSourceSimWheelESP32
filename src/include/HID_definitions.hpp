@@ -100,6 +100,8 @@
 #define TEST_HARDWARE_ID 0xffff
 /// @brief Assigned Number to the "Serial Number String" characteristic
 #define BLE_SERIAL_NUMBER_CHR_UUID 0x2A25
+/// @brief Assigned Number to the "Battery level status" characteristic
+#define BLE_BATTERY_STATUS_CHR_UUID 0x2BED
 
 // See https://devzone.nordicsemi.com/nordic/nordic-blog/b/blog/posts/one-minute-to-understand-ble-mtu-data-package
 // BLE_MTU_SIZE must be greater than 23 bytes
