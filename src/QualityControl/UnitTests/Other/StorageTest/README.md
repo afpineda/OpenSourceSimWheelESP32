@@ -24,7 +24,7 @@ Nothing required. Serial output at 115200 bauds.
 3. Reset.
 4. Select option `1`.
 5. **Before 20 seconds elapse**, reset.
-6. Select option `3`
+6. Select option `3`.
 7. Output must match (this is **OK**):
 
     ```text
@@ -50,7 +50,7 @@ Nothing required. Serial output at 115200 bauds.
 13. The message `NO MATCH ...` must **not** show up.
 14. Reset.
 15. Select option `2`.
-16. The message  `Saved!` must show up inmediately.
+16. The message  `Saved!` must show up immediately.
 17. Reset.
 18. Select option `4`.
 19. The message `NO MATCH ...` must **not** show up.
