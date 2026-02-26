@@ -480,6 +480,36 @@ void internals::hid::common::onOutput(
             buffer[2]);
         return;
     }
+    else if ((report_id == RID_OUTPUT_PIXEL) &&
+             (len >= 3) &&
+             (len <= RID_OUTPUT_SIMHUB_HID_PROTOCOL))
+    {
+        uint8_t command = buffer[2];
+        if (command == 3)
+        {
+            internals::pixels::reset();
+            return;
+        }
+        uint8_t start_index = buffer[0];
+        uint8_t led_count = buffer[1];
+        if (len >= ((led_count * 3) + 3))
+            while (led_count > 0)
+            {
+                uint8_t pixel_index = led_count + start_index;
+                const uint8_t *pixel_data = buffer + pixel_index + 3;
+                internals::pixels::set(
+                    PixelGroup::GRP_TELEMETRY,
+                    pixel_index,
+                    pixel_data[0],
+                    pixel_data[1],
+                    pixel_data[2]);
+                led_count--;
+            }
+        if (command == 1)
+            internals::pixels::show();
+        return;
+    }
+
     telemetry::data.frameID = telemetry::data.frameID + 1;
     // log_d("frame id: %u", telemetry::data.frameID);
 }

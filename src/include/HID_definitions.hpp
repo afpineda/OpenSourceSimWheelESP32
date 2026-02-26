@@ -44,6 +44,8 @@
 #define RID_OUTPUT_GAUGES 0x17 // 23 dec
 /// @brief Pixel control report ID
 #define RID_OUTPUT_PIXEL 0x1E // 30 dec
+/// @brief Pixel control report ID using SimHub protocol
+#define RID_OUTPUT_SIMHUB_HID_PROTOCOL 0x1F // 31 dec
 
 //-------------------------------------------------------------------
 // Report sizes (bytes)
@@ -69,6 +71,8 @@
 #define GAUGES_REPORT_SIZE 12
 /// @brief Pixel control report size
 #define PIXEL_REPORT_SIZE 6
+/// @brief SimHub protocol report size
+#define SIMHUB_HID_PROTOCOL_REPORT_SIZE 27
 
 //-------------------------------------------------------------------
 // GAME CONTROLLER APPEARANCES
@@ -108,7 +112,7 @@
 // BLE_MTU_SIZE = max report size + report ID + payload metadata
 
 /// @brief MTU size for BLE
-#define BLE_MTU_SIZE GAMEPAD_REPORT_SIZE + 1 + 14
+#define BLE_MTU_SIZE SIMHUB_HID_PROTOCOL_REPORT_SIZE + 1 + 14
 
 //-------------------------------------------------------------------
 // Hardware revision
@@ -122,9 +126,9 @@
 //-------------------------------------------------------------------
 
 /// @brief Major version of the data exchange protocol
-#define DATA_MAJOR_VERSION 1
+#define DATA_MAJOR_VERSION 2
 /// @brief Minor version of the data exchange protocol
-#define DATA_MINOR_VERSION 6
+#define DATA_MINOR_VERSION 0
 
 //-------------------------------------------------------------------
 // Magic number, do not change
@@ -258,6 +262,13 @@ static const uint8_t hid_descriptor[] = {
     0x75, 0x08,              // Report Size (8)
     0x95, PIXEL_REPORT_SIZE, // Report count
     0x91, 0x22,              // OUTPUT (Data,var,abs,Nprf)
+
+    // ___ PIXEL CONTROL (OUTPUT) REPORT ___
+    0x09, 0x00,                            // USAGE (undefined)
+    0x85, RID_OUTPUT_SIMHUB_HID_PROTOCOL,  // REPORT ID
+    0x75, 0x08,                            // Report Size (8)
+    0x95, SIMHUB_HID_PROTOCOL_REPORT_SIZE, // Report count
+    0x91, 0x22,                            // OUTPUT (Data,var,abs,Nprf)
 
     // END APPLICATION
     0xC0 // EndCollection()
