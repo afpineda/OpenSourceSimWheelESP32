@@ -234,5 +234,6 @@ You can ignore them:
 - MS Windows "USB not recognized" error" message (ESP32S3 boards)
 
   If your host computer shows an "USB not recognized" error message,
-  you **forgot to enable the USB implementation**.
+  you **forgot to enable USB connectivity**
+  but *USB mode* is set to "USB-OTG (TinyUSB)".
   See ["Connectivity"](./hardware/subsystems/CustomizeHowto_en.md#connectivity).

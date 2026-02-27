@@ -79,5 +79,5 @@ if any source file is modified inside folders
 
 Look for error messages when running this procedure.
 If you have them, edit the involved "includes.txt" file.
-Probably, some files has been renamed or removed from the project.
+Probably, some files have been renamed or removed from the project.
 Check the [release notes](../changelog.md).

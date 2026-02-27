@@ -5,8 +5,7 @@ You will find details later.
 
 ## Supported DevKits
 
-Any DevKit based on the ESP32 architecture having BLE
-or full USB connectivity.
+Any DevKit based on the ESP32 architecture having BLE and/or USB-OTG.
 
 ## Supported input devices
 

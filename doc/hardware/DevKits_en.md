@@ -263,7 +263,7 @@ Most times, you only need to select the correct board and
 go with the default parameters.
 Most times, those boards are "ESP32 Dev Module" or "ESP32S3 Dev Module".
 However, check the manufacturer's data sheet.
-When using the USB implementation, set USB-Mode to "USB-OTG (TinyUSB)".
+When using USB connectivity, set USB-Mode to "USB-OTG (TinyUSB)".
 
 ### Entering bootloader mode
 
