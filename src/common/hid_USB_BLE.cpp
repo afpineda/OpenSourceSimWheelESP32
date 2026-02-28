@@ -141,7 +141,8 @@ class SimWheelUsbHid : public USBHIDDevice
     {
         // Note: for unknown reasons, output reports trigger this callback
         // instead of _onOutput()
-        if (report_id >= RID_OUTPUT_POWERTRAIN)
+        if ((report_id >= RID_OUTPUT_POWERTRAIN) &&
+            (current_connectivity == Connectivity::USB))
             // Output report
             internals::hid::common::onOutput(report_id, buffer, len);
         else

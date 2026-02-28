@@ -965,7 +965,8 @@ const ble_gatt_svc_def BLEHIDService::definition()
     chr_set[index++] = race_control_report.definition();
     chr_set[index++] = gauges_report.definition();
     chr_set[index++] = pixel_report.definition();
-    chr_set[index] = EMPTY_ble_gatt_chr_def;
+    chr_set[index++] = simhub_hid_protocol_report.definition();
+    chr_set[index++] = EMPTY_ble_gatt_chr_def;
     assert(
         ((sizeof(chr_set) / sizeof(ble_gatt_chr_def)) == index + 1) &&
         "Invalid size of BLEHIDService::chr_set array ");
