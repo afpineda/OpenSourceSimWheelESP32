@@ -316,12 +316,8 @@ public:
 class I2CInput : public DigitalInput // : public I2CInput
 {
 protected:
-    /// @brief I2C address in 8 bits format (no need to shift left),
-    ///        ready to overlap the R/W bit. By default, the R/W bit is set to "write".
-    uint8_t deviceAddress;
-
-    /// @brief Configured I2C bus
-    I2CBus bus;
+    /// @brief Slave device in the I2C API (must be type-casted)
+    void *device = nullptr;
 
 public:
     /**
@@ -335,6 +331,8 @@ public:
         uint8_t address7Bits,
         I2CBus bus = I2CBus::PRIMARY,
         uint8_t max_speed_mult = 1);
+
+    virtual ~I2CInput();
 };
 
 /**

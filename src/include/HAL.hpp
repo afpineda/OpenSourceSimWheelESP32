@@ -18,6 +18,11 @@
 #include "InternalTypes.hpp"
 #include "SimWheelTypes.hpp"
 
+#if !CD_CI
+#include "driver/i2c_types.h"  // For I2C operation
+#include "driver/i2c_master.h" // For I2C operation
+#endif
+
 //-------------------------------------------------------------------
 // GLOBALS
 //-------------------------------------------------------------------
@@ -25,9 +30,11 @@
 /// @brief Cast GPIO to an ESP32 pin number
 #define AS_GPIO(pin) static_cast<gpio_num_t>((int)(pin))
 /// @brief Cast I2CBus to an ESP32 port number
-#define AS_PORT(bus) static_cast<i2c_port_t>(bus)
+#define AS_PORT(bus) static_cast<i2c_port_num_t>(bus)
 /// @brief Macro to write a logic level in a GPIO pin
 #define GPIO_SET_LEVEL(pin, level) gpio_set_level(static_cast<gpio_num_t>((int)(pin)), (level))
+/// @brief Cast to an I2C slave device handle
+#define I2C_SLAVE(dev) static_cast<i2c_master_dev_handle_t>(dev)
 /// @brief Macro to read the logic level in a GPIO pin
 #define GPIO_GET_LEVEL(pin) gpio_get_level(static_cast<gpio_num_t>((int)(pin)))
 /// @brief Interrupt Service Routine
@@ -77,18 +84,15 @@ public:
      * @param sda SDA pin number
      * @param scl SCL pin number
      * @param bus I2C bus
-     * @param clock_mult Bus clock multiplier
      */
-    i2c_error(int sda, int scl, int bus, int clock_mult)
+    i2c_error(int sda, int scl, int bus)
         : std::runtime_error(
               "I2C: unable to initialize bus. SDA=" +
               std::to_string(sda) +
               " SCL=" +
               std::to_string(scl) +
               " BUS=" +
-              std::to_string(bus) +
-              " CLOCK=x" +
-              std::to_string(clock_mult)) {}
+              std::to_string(bus)) {}
 
     /**
      * @brief Invalid I2C address exception
@@ -181,8 +185,9 @@ namespace internals
              *
              * @note If required, must be called before using any I2C hardware.
              *
-             * @note If external pullup resistors are in place, the internal ones will
-             *       reduce wire capacitance as there are two resistors in parallel.
+             * @note If external pullup resistors are in place,
+             *       the internal ones will reduce wire capacitance
+             *       as there are two resistors in parallel.
              *       This is good or bad depending on the case.
              *
              * @param sda SDA pin for the I2C bus.
@@ -203,13 +208,34 @@ namespace internals
              *
              * @note Called from other namespaces. No need to call in user code.
              *
-             * @param max_speed_multiplier Maximum clock speed multiplier
-             *                             supported in the range from 1 to 4.
              * @param bus I2C bus required.
              */
             void require(
-                uint8_t max_speed_multiplier = 4,
                 I2CBus bus = I2CBus::PRIMARY);
+
+#if !CD_CI
+            /**
+             * @brief Add an slave device ensuring the bus is initialized
+             *
+             * @param address7bits Full address in 7 bit format
+             * @param max_speed_multiplier A bus speed multiplier in the range
+             *                             [1,4]
+             * @param bus I2C bus required
+             * @return i2c_master_dev_handle_t Device handle to be used in
+             *                                 the ESP-IDF API
+             */
+            i2c_master_dev_handle_t add_device(
+                uint8_t address7bits,
+                uint8_t max_speed_multiplier,
+                I2CBus bus);
+
+            /**
+             * @brief Remove an slave device
+             *
+             * @param i2c_device Device handle
+             */
+            void remove_device(i2c_master_dev_handle_t i2c_device);
+#endif
 
             /**
              * @brief Check slave device availability on an I2C bus.
@@ -228,10 +254,6 @@ namespace internals
 
             /**
              * @brief Retrieve all devices available on an I2C bus.
-             *
-             * @note No need to call require().
-             *       The bus will be initialized to minimum speed temporarily,
-             *       then reinitialized to previous parameters (if any).
              *
              * @param[out] result List of addresses found,
              *                    in 7-bit format.

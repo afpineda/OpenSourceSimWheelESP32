@@ -36,6 +36,9 @@ void setup()
     std::vector<uint8_t> fullAddressList;
     internals::hal::i2c::probe(fullAddressList);
     Serial.printf("%d device(s) found.\n", fullAddressList.size());
+    // For debuging:
+    // for (uint8_t addr: fullAddressList)
+    //     Serial.printf("Address: %x\n",addr);
 
     uint8_t pcf8574FullAddress =
         internals::hal::i2c::findFullAddress(fullAddressList, PCF8574_I2C_ADDR3);

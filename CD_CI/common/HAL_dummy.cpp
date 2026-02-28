@@ -58,7 +58,7 @@ void internals::hal::i2c::initialize(GPIO sda, GPIO scl, I2CBus bus, bool enable
 {
 }
 
-void internals::hal::i2c::require(uint8_t max_speed_multiplier, I2CBus bus)
+void internals::hal::i2c::require(I2CBus bus)
 {
 }
 

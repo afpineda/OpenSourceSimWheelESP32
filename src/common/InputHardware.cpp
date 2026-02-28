@@ -15,7 +15,6 @@
 
 #include "InputHardware.hpp"
 #include "HAL.hpp"
-#include "driver/i2c.h"  // For I2C operation
 #include "esp32-hal.h"   // For portSET_INTERRUPT_MASK_FROM_ISR
 #include "driver/gpio.h" // For gpio_set_level/gpio_get_level()
 
@@ -24,7 +23,7 @@
 //-------------------------------------------------------------------
 
 // I2C
-#define I2C_TIMEOUT_TICKS pdMS_TO_TICKS(30)
+#define I2C_TIMEOUT_MS 30
 
 // MCP23017 registers
 #define MCP23017_IO_CONFIGURATION 0x0A
@@ -485,11 +484,18 @@ I2CInput::I2CInput(
     uint8_t max_speed_mult)
 {
     internals::hal::i2c::abortOnInvalidAddress(address7Bits);
-    this->deviceAddress = (address7Bits << 1);
-    this->bus = bus;
-    internals::hal::i2c::require(max_speed_mult, bus);
     if (!internals::hal::i2c::probe(address7Bits, bus))
         throw i2c_device_not_found(address7Bits, (int)bus);
+    device = static_cast<void *>(
+        internals::hal::i2c::add_device(
+            address7Bits,
+            max_speed_mult,
+            bus));
+}
+
+I2CInput::~I2CInput()
+{
+    internals::hal::i2c::remove_device(I2C_SLAVE(device));
 }
 
 //-------------------------------------------------------------------
@@ -517,17 +523,16 @@ PCF8574ButtonsInput::PCF8574ButtonsInput(
 
 bool PCF8574ButtonsInput::getGPIOstate(uint64_t &state)
 {
-    state = 0ULL;
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, deviceAddress | I2C_MASTER_READ, true);
-    i2c_master_read_byte(cmd, (unsigned char *)&state, I2C_MASTER_NACK);
-    i2c_master_stop(cmd);
-    bool result = (i2c_master_cmd_begin(AS_PORT(bus), cmd, I2C_TIMEOUT_TICKS) == ESP_OK);
-    i2c_cmd_link_delete(cmd);
-    state = ~state; // convert to positive logic
-    return result;
+    esp_err_t err = i2c_master_receive(
+        I2C_SLAVE(device),
+        (uint8_t *)&state,
+        1,
+        I2C_TIMEOUT_MS);
+    if (err == ESP_OK)
+        state = ~state; // convert to positive logic
+    return (err == ESP_OK);
 }
+
 //-------------------------------------------------------------------
 
 uint64_t PCF8574ButtonsInput::read(uint64_t lastState)
@@ -571,7 +576,7 @@ MCP23017ButtonsInput::MCP23017ButtonsInput(
 
 void MCP23017ButtonsInput::configure()
 {
-    i2c_cmd_handle_t cmd;
+    uint8_t buffer[3];
 
     // Configure IOCON register:
     // - Registers are in the same bank
@@ -579,80 +584,53 @@ void MCP23017ButtonsInput::configure()
     // - Sequential operation
     // - Active driver output for interrupt pins
     // - Interrupt pins active low
-    cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, deviceAddress, true);
-    i2c_master_write_byte(cmd, MCP23017_IO_CONFIGURATION, true);
-    i2c_master_write_byte(cmd, 0b01000000, true);
-    i2c_master_stop(cmd);
-    ESP_ERROR_CHECK(i2c_master_cmd_begin(AS_PORT(bus), cmd, I2C_TIMEOUT_TICKS));
-    i2c_cmd_link_delete(cmd);
+    buffer[0] = MCP23017_IO_CONFIGURATION;
+    buffer[1] = 0b01000000;
+    ESP_ERROR_CHECK(
+        i2c_master_transmit(I2C_SLAVE(device), buffer, 2, I2C_TIMEOUT_MS));
 
     // Set mode to "input"
-    cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, deviceAddress, true);
-    i2c_master_write_byte(cmd, MCP23017_IO_DIRECTION, true);
-    i2c_master_write_byte(cmd, 0xFF, true);
-    i2c_master_write_byte(cmd, 0xFF, true);
-    i2c_master_stop(cmd);
-    ESP_ERROR_CHECK(i2c_master_cmd_begin(AS_PORT(bus), cmd, I2C_TIMEOUT_TICKS));
-    i2c_cmd_link_delete(cmd);
+    buffer[0] = MCP23017_IO_DIRECTION;
+    buffer[1] = 0xFF;
+    buffer[2] = 0xFF;
+    ESP_ERROR_CHECK(
+        i2c_master_transmit(I2C_SLAVE(device), buffer, 3, I2C_TIMEOUT_MS));
 
     // Enable pull-up resistors
-    cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, deviceAddress, true);
-    i2c_master_write_byte(cmd, MCP23017_PULL_UP_RESISTORS, true);
-    i2c_master_write_byte(cmd, 0xFF, true);
-    i2c_master_write_byte(cmd, 0xFF, true);
-    i2c_master_stop(cmd);
-    ESP_ERROR_CHECK(i2c_master_cmd_begin(AS_PORT(bus), cmd, I2C_TIMEOUT_TICKS));
-    i2c_cmd_link_delete(cmd);
+    buffer[0] = MCP23017_PULL_UP_RESISTORS;
+    // buffer[1] = 0xFF;
+    // buffer[2] = 0xFF;
+    ESP_ERROR_CHECK(
+        i2c_master_transmit(I2C_SLAVE(device), buffer, 3, I2C_TIMEOUT_MS));
 
     // Automatically convert negative logic to positive logic
-    cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, deviceAddress, true);
-    i2c_master_write_byte(cmd, MCP23017_POLARITY, true);
-    i2c_master_write_byte(cmd, 0xFF, true);
-    i2c_master_write_byte(cmd, 0xFF, true);
-    i2c_master_stop(cmd);
-    ESP_ERROR_CHECK(i2c_master_cmd_begin(AS_PORT(bus), cmd, I2C_TIMEOUT_TICKS));
-    i2c_cmd_link_delete(cmd);
+    buffer[0] = MCP23017_POLARITY;
+    // buffer[1] = 0xFF;
+    // buffer[2] = 0xFF;
+    ESP_ERROR_CHECK(
+        i2c_master_transmit(I2C_SLAVE(device), buffer, 3, I2C_TIMEOUT_MS));
 
     // Enable interrupts at all GPIO pins
-    cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, deviceAddress, true);
-    i2c_master_write_byte(cmd, MCP23017_INTERRUPT_ON_CHANGE, true);
-    i2c_master_write_byte(cmd, 0xFF, true);
-    i2c_master_write_byte(cmd, 0xFF, true);
-    i2c_master_stop(cmd);
-    ESP_ERROR_CHECK(i2c_master_cmd_begin(AS_PORT(bus), cmd, I2C_TIMEOUT_TICKS));
-    i2c_cmd_link_delete(cmd);
+    buffer[0] = MCP23017_INTERRUPT_ON_CHANGE;
+    // buffer[1] = 0xFF;
+    // buffer[2] = 0xFF;
+    ESP_ERROR_CHECK(
+        i2c_master_transmit(I2C_SLAVE(device), buffer, 3, I2C_TIMEOUT_MS));
 
     // Trigger interrupts by comparison with DEFVAL registers
-    cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, deviceAddress, true);
-    i2c_master_write_byte(cmd, MCP23017_INTERRUPT_CONTROL, true);
-    i2c_master_write_byte(cmd, 0xFF, true);
-    i2c_master_write_byte(cmd, 0xFF, true);
-    i2c_master_stop(cmd);
-    ESP_ERROR_CHECK(i2c_master_cmd_begin(AS_PORT(bus), cmd, I2C_TIMEOUT_TICKS));
-    i2c_cmd_link_delete(cmd);
+
+    buffer[0] = MCP23017_INTERRUPT_CONTROL;
+    // buffer[1] = 0xFF;
+    // buffer[2] = 0xFF;
+    ESP_ERROR_CHECK(
+        i2c_master_transmit(I2C_SLAVE(device), buffer, 3, I2C_TIMEOUT_MS));
 
     // Set DEFVAL registers for interrupts
-    cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, deviceAddress, true);
-    i2c_master_write_byte(cmd, MCP23017_INTERRUPT_DEFAULT_VALUE, true);
-    i2c_master_write_byte(cmd, 0, true); // Note: negative logic
-    i2c_master_write_byte(cmd, 0, true);
-    i2c_master_stop(cmd);
-    ESP_ERROR_CHECK(i2c_master_cmd_begin(AS_PORT(bus), cmd, I2C_TIMEOUT_TICKS));
-    i2c_cmd_link_delete(cmd);
+    buffer[0] = MCP23017_INTERRUPT_DEFAULT_VALUE;
+    buffer[1] = 0; // Note: negative logic
+    buffer[2] = 0;
+    ESP_ERROR_CHECK(
+        i2c_master_transmit(I2C_SLAVE(device), buffer, 3, I2C_TIMEOUT_MS));
 }
 
 //-------------------------------------------------------------------
@@ -660,17 +638,15 @@ void MCP23017ButtonsInput::configure()
 bool MCP23017ButtonsInput::getGPIOstate(uint64_t &state)
 {
     state = 0ULL;
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, deviceAddress, true);
-    i2c_master_write_byte(cmd, MCP23017_GPIO, true);
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, deviceAddress | I2C_MASTER_READ, true);
-    i2c_master_read(cmd, (uint8_t *)&state, 2, I2C_MASTER_LAST_NACK);
-    i2c_master_stop(cmd);
-    bool result = (i2c_master_cmd_begin(AS_PORT(bus), cmd, I2C_TIMEOUT_TICKS) == ESP_OK);
-    i2c_cmd_link_delete(cmd);
-    return result;
+    static uint8_t cmd = MCP23017_GPIO;
+    esp_err_t err = i2c_master_transmit_receive(
+        I2C_SLAVE(device),
+        &cmd,
+        1,
+        (uint8_t *)&state,
+        2,
+        I2C_TIMEOUT_MS);
+    return (err == ESP_OK);
 }
 
 //-------------------------------------------------------------------
