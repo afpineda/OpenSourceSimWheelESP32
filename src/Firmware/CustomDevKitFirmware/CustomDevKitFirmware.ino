@@ -267,9 +267,6 @@ void customFirmware()
 
 #if ENABLE_BATTERY
     batteryMonitor::configure();
-
-    batteryMonitor::setPeriod(15); // For testing
-
 #if SHUTDOWN_ON_LOW_BATTERY
     batteryMonitor::setPowerOffSoC(5);
 #else
