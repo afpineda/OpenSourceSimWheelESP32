@@ -76,6 +76,10 @@
 #define TEST_D_OUT GPIO_NUM_21
 #define TEST_LEVEL_SHIFTER true
 
+// Secondary I2C bus
+#define TEST_SECONDARY_SDA SDA
+#define TEST_SECONDARY_SCL SCL
+
 // -------------------------------------------------------------
 #elif defined(CONFIG_IDF_TARGET_ESP32S3)
 // -------------------------------------------------------------

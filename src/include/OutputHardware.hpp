@@ -17,7 +17,6 @@
 
 #include "SimWheelTypes.hpp"
 #include "driver/rmt_tx.h" // For rmt_channel_handle_t & rmt_encoder_handle_t
-#include "driver/i2c.h"    // For I2C operation
 
 //---------------------------------------------------------------
 // Led strip encoder
@@ -269,9 +268,11 @@ public:
     }
 
 private:
+    /// @brief Current state of the LEDs
     uint8_t _state = 0;
-    uint8_t _address8bit;
-    I2CBus _bus;
+
+    /// @brief Slave device in the I2C API (must be type-casted)
+    void *device = nullptr;
 };
 
 //---------------------------------------------------------------

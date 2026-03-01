@@ -26,8 +26,7 @@
 // GLOBALS
 //-------------------------------------------------------------------
 
-// #define AS_GPIO(pin) static_cast<gpio_num_t>((int)(pin))
-#define I2C_TIMEOUT_TICKS pdMS_TO_TICKS(30)
+#define I2C_TIMEOUT_MS 30
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -368,10 +367,12 @@ PCF8574LedDriver::PCF8574LedDriver(
     uint8_t address7bits)
 {
     internals::hal::i2c::abortOnInvalidAddress(address7bits);
-    internals::hal::i2c::require(1, bus); // PCF8574 requires x1 speed
-    _address8bit = address7bits << 1;
+    device = static_cast<void *>(
+        internals::hal::i2c::add_device(
+            address7bits,
+            1,
+            bus));
     _state = 0;
-    _bus = bus;
     show();
 }
 
@@ -414,13 +415,7 @@ void PCF8574LedDriver::shiftLeft()
 void PCF8574LedDriver::show() const
 {
     uint8_t state = ~_state; // use negative logic
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, _address8bit | I2C_MASTER_WRITE, true);
-    i2c_master_write_byte(cmd, state, I2C_MASTER_NACK);
-    i2c_master_stop(cmd);
-    i2c_master_cmd_begin(AS_PORT(_bus), cmd, I2C_TIMEOUT_TICKS);
-    i2c_cmd_link_delete(cmd);
+    i2c_master_transmit(I2C_SLAVE(device), &state, 1, I2C_TIMEOUT_MS);
 }
 
 // ----------------------------------------------------------------------------
