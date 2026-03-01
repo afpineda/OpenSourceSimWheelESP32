@@ -163,7 +163,7 @@ i2c_master_dev_handle_t internals::hal::i2c::add_device(
     i2c_device_config_t cfg{
         .dev_addr_length = I2C_ADDR_BIT_LEN_7,
         .device_address = address7bits,
-        .scl_speed_hz = 100000 * max_speed_multiplier,
+        .scl_speed_hz = 100000 * (uint32_t)max_speed_multiplier,
         .scl_wait_us = 0, // use default
         .flags{
             .disable_ack_check = false,
