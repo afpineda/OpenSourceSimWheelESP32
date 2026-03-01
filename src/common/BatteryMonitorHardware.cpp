@@ -76,6 +76,8 @@ void BatteryCharger::update(BatteryStatus &status)
 void BatteryMonitorInterface::getStatus(BatteryStatus &currentStatus)
 {
     // Take advantage of the charging witness if available
+    currentStatus.reset();
+    BatteryCharger::update(currentStatus);
     bool seemsToBeCharging = currentStatus.isCharging.value_or(false);
 
     // Guess whether the battery is charging

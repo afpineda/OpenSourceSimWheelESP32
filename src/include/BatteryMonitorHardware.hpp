@@ -141,6 +141,8 @@ public:
         if (status != nullptr)
             currentStatus = *status;
     }
+
+    virtual bool read_soc(uint8_t &soc) override { return false; }
 };
 
 //-------------------------------------------------------------------

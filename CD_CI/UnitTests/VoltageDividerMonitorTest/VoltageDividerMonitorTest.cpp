@@ -77,7 +77,7 @@ void test1()
 
     std::cout << "- test 1 (ADC value injection)-" << std::endl;
     internals::hal::gpio::setFakeADCReading({2000});
-    DELAY_MS(2000);
+    DELAY_MS(2500);
     waitFor("1");
     assert<int>::equals("A", 2000, hardware->lastBatteryReading);
     assert<int>::equals("B", 20, receivedBatteryLevel);
@@ -88,7 +88,7 @@ void test2()
     BatteryStatus status;
     std::cout << "- test 2 (constant current charging simulation) -" << std::endl;
     internals::hal::gpio::setFakeADCReading({0, 1000, 2000, 3000, 4000, 4095, 4000, 3000, 2000, 1000});
-    DELAY_MS(2000);
+    DELAY_MS(2500);
     waitFor("2");
     BatteryService::call::getStatus(status);
     assert<bool>::equals("known charging state", true, status.isCharging.has_value());
@@ -104,7 +104,7 @@ void test3()
     BatteryStatus status;
     std::cout << "- test 3 (no battery) -" << std::endl;
     internals::hal::gpio::setFakeADCReading({20});
-    DELAY_MS(2000);
+    DELAY_MS(2500);
     waitFor("3");
     BatteryService::call::getStatus(status);
     assert<bool>::equals("known charging state", true, status.isCharging.has_value());
@@ -121,7 +121,7 @@ void test4()
     BatteryStatus status;
     std::cout << "- test 4 (constant voltage charging simulation) -" << std::endl;
     internals::hal::gpio::setFakeADCReading({3500, 3560, 3540, 3520});
-    DELAY_MS(2000);
+    DELAY_MS(2500);
     waitFor("4");
     BatteryService::call::getStatus(status);
     assert<bool>::equals("known charging state", true, status.isCharging.has_value());
@@ -137,7 +137,7 @@ void test5()
     BatteryStatus status;
     std::cout << "- test 5 (discharging simulation) -" << std::endl;
     internals::hal::gpio::setFakeADCReading({2000, 2020, 1990, 2005});
-    DELAY_MS(2000);
+    DELAY_MS(2500);
     waitFor("4");
     BatteryService::call::getStatus(status);
     assert<bool>::equals("known charging state", true, status.isCharging.has_value());
