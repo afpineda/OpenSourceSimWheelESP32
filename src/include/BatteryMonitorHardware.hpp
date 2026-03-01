@@ -44,7 +44,7 @@ protected:
     /**
      * @brief Retrieve the current state of charge
      *
-     * @param[out] soc State of charge. Higher than 100 if the battery
+     * @param[out] soc State of charge. Higher than 101 if the battery
      *                 is charging at constant voltage.
      * @return true If @p soc was retrieved with success
      * @return false If there is no battery or @p soc is unknown

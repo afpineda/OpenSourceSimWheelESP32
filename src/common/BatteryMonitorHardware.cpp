@@ -71,16 +71,51 @@ void BatteryCharger::update(BatteryStatus &status)
 // Abstract hardware interface
 //-------------------------------------------------------------------
 
-#define MAX_ATTEMPTS 10
+#define MAX_ATTEMPTS 20
+#define CONSTANT_CURRENT_SOC_DELTA 25
 
 void BatteryMonitorInterface::getStatus(BatteryStatus &currentStatus)
 {
     // Take advantage of the charging witness if available
     currentStatus.reset();
     BatteryCharger::update(currentStatus);
-    bool seemsToBeCharging = currentStatus.isCharging.value_or(false);
+    if (currentStatus.isCharging.has_value())
+    {
+        if (currentStatus.isCharging.value())
+        {
+            // The battery is charging for sure.
+            // SoC is unknown. No need to guess.
+            currentStatus.isCharging = true;
+            currentStatus.stateOfCharge.reset();
+            currentStatus.isBatteryPresent.reset();
+            if (!currentStatus.usingExternalPower.has_value())
+                currentStatus.usingExternalPower = true;
+        }
+        else
+        {
+            // The battery is not charging for sure.
+            // No need to guess.
+            uint8_t soc;
+            if (read_soc(soc))
+            {
+                currentStatus.isCharging = false;
+                currentStatus.isBatteryPresent = true;
+                currentStatus.stateOfCharge = soc;
+            }
+            else
+            {
+                // No battery
+                currentStatus.isBatteryPresent = false;
+                currentStatus.isCharging = false;
+                if (!currentStatus.usingExternalPower.has_value())
+                    currentStatus.usingExternalPower = true;
+            }
+        }
+        return;
+    }
 
-    // Guess whether the battery is charging
+    // Guess whether the battery is charging or not
+    bool seemsToBeCharging = false;
     uint8_t worstBatteryLevel = 255;
     uint8_t bestBatteryLevel = 0;
     uint8_t failureCount = 0;
@@ -100,7 +135,7 @@ void BatteryMonitorInterface::getStatus(BatteryStatus &currentStatus)
         }
         else
             failureCount++;
-        DELAY_MS(100);
+        DELAY_MS(50);
     }
 
     if (failureCount == MAX_ATTEMPTS)
@@ -116,7 +151,8 @@ void BatteryMonitorInterface::getStatus(BatteryStatus &currentStatus)
     // Guess constant current charging
     seemsToBeCharging = seemsToBeCharging || (failureCount > 0) ||
                         ((bestBatteryLevel > worstBatteryLevel) &&
-                         (bestBatteryLevel - worstBatteryLevel) >= 3);
+                         (bestBatteryLevel - worstBatteryLevel) >=
+                             CONSTANT_CURRENT_SOC_DELTA);
 
     if (seemsToBeCharging)
     {
