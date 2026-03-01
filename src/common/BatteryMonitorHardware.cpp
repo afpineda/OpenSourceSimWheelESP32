@@ -50,19 +50,17 @@ void BatteryCharger::update(BatteryStatus &status)
 {
 #if !CD_CI
     bool level;
-    if (BatteryCharger::_powerSensePin)
+    if (BatteryCharger::_powerSensePin != UNSPECIFIED::VALUE)
     {
         level = GPIO_GET_LEVEL(BatteryCharger::_powerSensePin);
         status.usingExternalPower =
             level ^ BatteryCharger::_powerSenseNegativeLogic;
     }
-    if (BatteryCharger::_chargingSensePin)
+    if (BatteryCharger::_chargingSensePin != UNSPECIFIED::VALUE)
     {
         level = GPIO_GET_LEVEL(BatteryCharger::_chargingSensePin);
         status.isCharging =
             level ^ BatteryCharger::_chargingSenseNegativeLogic;
-        if (status.isCharging.value_or(false))
-            status.usingExternalPower = true;
     }
 #endif
 }
@@ -124,7 +122,7 @@ void BatteryMonitorInterface::getStatus(BatteryStatus &currentStatus)
         (attempt < MAX_ATTEMPTS) && !seemsToBeCharging;
         attempt++)
     {
-        uint8_t soc;
+        uint8_t soc = 0;
         if (read_soc(soc))
         {
             seemsToBeCharging = (soc > 101);
@@ -193,6 +191,12 @@ bool MAX1704x::read(uint8_t regAddress, uint16_t &value)
         (uint8_t *)&value,
         2,
         I2C_TIMEOUT_MS);
+    if (err == ESP_OK)
+    {
+        // swap bytes because the MSB was transmitted first
+        uint8_t aux = value >> 8;
+        value = (value << 8) | aux;
+    }
     return (err == ESP_OK);
 #else
     return false;
