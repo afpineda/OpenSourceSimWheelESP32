@@ -15,8 +15,6 @@
 #include "HAL.hpp"
 #include <optional>
 
-#include <HardwareSerial.h>
-
 //-------------------------------------------------------
 // Globals
 //-------------------------------------------------------
@@ -42,24 +40,22 @@ public:
 
 void printStatusBool(const std::string header, const std::optional<bool> &opt)
 {
-    Serial.print(header.c_str());
-    Serial.print(": ");
+    debugPrintf("%s: ", header.c_str());
     if (opt.has_value())
-        Serial.printf("%s", opt.value() ? "true" : "false");
+        debugPrintf("%s", opt.value() ? "true" : "false");
     else
-        Serial.print("unknown");
-    Serial.println("");
+        debugPrintf("unknown");
+    debugPrintf("\n");
 }
 
 void printStatusUint8(const std::string header, const std::optional<uint8_t> &opt)
 {
-    Serial.print(header.c_str());
-    Serial.print(": ");
+    debugPrintf("%s: ", header.c_str());
     if (opt.has_value())
-        Serial.printf("%u", opt.value());
+        debugPrintf("%u", opt.value());
     else
-        Serial.print("unknown");
-    Serial.println("");
+        debugPrintf("unknown");
+    debugPrintf("\n");
 }
 
 //-------------------------------------------------------
@@ -68,8 +64,8 @@ void printStatusUint8(const std::string header, const std::optional<uint8_t> &op
 
 void setup()
 {
-    Serial.begin(115200);
-    Serial.println("--READY--");
+    debugPrintBegin();
+    debugPrintf("--READY--\n");
     BatteryCalibrationService::inject(&calMock);
 
     hw = new VoltageDividerMonitor(
@@ -87,12 +83,12 @@ void setup()
     //     1,
     //     1);
 
-    Serial.println("--GO--");
+    debugPrintf("--GO--\n");
 }
 
 void loop()
 {
-    Serial.println("Getting battery status...");
+    debugPrintf("Getting battery status...\n");
     BatteryStatus status;
     hw->getStatus(status);
 
@@ -100,8 +96,8 @@ void loop()
     printStatusBool("Charging", status.isCharging);
     printStatusBool("Wired power", status.usingExternalPower);
     printStatusUint8("SoC", status.stateOfCharge);
-    // Serial.printf("ADC reading: %d\n", hw->lastBatteryReading);
+    // debugPrintf("ADC reading: %d\n", hw->lastBatteryReading);
 
-    Serial.println("Done.");
+    debugPrintf("Done.\n");
     DELAY_MS(5000);
 }

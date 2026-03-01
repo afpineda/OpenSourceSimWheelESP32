@@ -14,10 +14,6 @@
 #include "SimWheel.hpp"
 #include "HAL.hpp"
 
-#if !CD_CI
-#include "driver/i2c.h" // For I2C operation
-#endif
-
 //-------------------------------------------------------------------
 // Hardware witnesses
 //-------------------------------------------------------------------
@@ -72,52 +68,78 @@ void BatteryCharger::update(BatteryStatus &status)
 }
 
 //-------------------------------------------------------------------
-// Internal macros
+// Abstract hardware interface
 //-------------------------------------------------------------------
 
-/**
- * @brief Guess the battery status
- *
- * @param[in,out] currentStatus Battery status
- * @param[in] seemsToBeCharging True if the battery seems to be charging
- * @param[in] success True if the SoC was successfully read
- * @param[in] soc State of charge
- */
-void guessBatteryStatus(
-    BatteryStatus &currentStatus,
-    bool seemsToBeCharging,
-    bool success,
-    uint8_t soc)
+#define MAX_ATTEMPTS 10
+
+void BatteryMonitorInterface::getStatus(BatteryStatus &currentStatus)
 {
-    if (seemsToBeCharging)
+    // Take advantage of the charging witness if available
+    bool seemsToBeCharging = currentStatus.isCharging.value_or(false);
+
+    // Guess whether the battery is charging
+    uint8_t worstBatteryLevel = 255;
+    uint8_t bestBatteryLevel = 0;
+    uint8_t failureCount = 0;
+    for (
+        uint8_t attempt = 0;
+        (attempt < MAX_ATTEMPTS) && !seemsToBeCharging;
+        attempt++)
     {
-        // The battery is charging, so SoC is unreliable
-        currentStatus.isCharging = true;
-        currentStatus.usingExternalPower = true;
+        uint8_t soc;
+        if (read_soc(soc))
+        {
+            seemsToBeCharging = (soc > 101);
+            if (soc < worstBatteryLevel)
+                worstBatteryLevel = soc;
+            if (soc > bestBatteryLevel)
+                bestBatteryLevel = soc;
+        }
+        else
+            failureCount++;
+        DELAY_MS(100);
     }
-    else if (success)
-    {
-        // There is a battery and is not charging
-        currentStatus.isCharging = false;
-        currentStatus.isBatteryPresent = true;
-        currentStatus.stateOfCharge = soc;
-    }
-    else
+
+    if (failureCount == MAX_ATTEMPTS)
     {
         // There is no battery
         currentStatus.isBatteryPresent = false;
         currentStatus.isCharging = false;
-        currentStatus.usingExternalPower = true;
+        if (!currentStatus.usingExternalPower.has_value())
+            currentStatus.usingExternalPower = true;
+        return;
     }
+
+    // Guess constant current charging
+    seemsToBeCharging = seemsToBeCharging || (failureCount > 0) ||
+                        ((bestBatteryLevel > worstBatteryLevel) &&
+                         (bestBatteryLevel - worstBatteryLevel) >= 3);
+
+    if (seemsToBeCharging)
+    {
+        // There is no reliable SoC
+        currentStatus.isCharging = true;
+        currentStatus.stateOfCharge.reset();
+        currentStatus.isBatteryPresent.reset();
+        if (!currentStatus.usingExternalPower.has_value())
+            currentStatus.usingExternalPower = true;
+        return;
+    }
+
+    // There is a battery and is not charging
+    currentStatus.isCharging = false;
+    currentStatus.isBatteryPresent = true;
+    currentStatus.stateOfCharge = worstBatteryLevel;
 }
 
 //-------------------------------------------------------------------
 // MAX1704x hardware
 //-------------------------------------------------------------------
 
-#define I2C_WAIT_TICKS pdMS_TO_TICKS(150)
+#define I2C_TIMEOUT_MS 150
 
-#define MAX1704x_I2C_ADDRESS_SHIFTED 0x6c
+#define MAX1704x_I2C_ADDRESS 0x36
 #define MAX1704x_REG_SoC 0x04
 #define MAX1704x_REG_MODE 0x06
 #define MAX1704x_REG_VERSION 0x08
@@ -126,19 +148,14 @@ void guessBatteryStatus(
 bool MAX1704x::read(uint8_t regAddress, uint16_t &value)
 {
 #if !CD_CI
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, fg_i2c_address | I2C_MASTER_WRITE, true);
-    i2c_master_write_byte(cmd, regAddress, true);
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, fg_i2c_address | I2C_MASTER_READ, true);
-    i2c_master_read_byte(cmd, ((uint8_t *)&value) + 1, I2C_MASTER_ACK);
-    i2c_master_read_byte(cmd, ((uint8_t *)&value), I2C_MASTER_LAST_NACK);
-    i2c_master_stop(cmd);
-    bool result =
-        (i2c_master_cmd_begin(I2C_NUM_0, cmd, I2C_WAIT_TICKS) == ESP_OK);
-    i2c_cmd_link_delete(cmd);
-    return result;
+    esp_err_t err = i2c_master_transmit_receive(
+        I2C_SLAVE(device),
+        &regAddress,
+        1,
+        (uint8_t *)&value,
+        2,
+        I2C_TIMEOUT_MS);
+    return (err == ESP_OK);
 #else
     return false;
 #endif
@@ -147,18 +164,16 @@ bool MAX1704x::read(uint8_t regAddress, uint16_t &value)
 bool MAX1704x::write(uint8_t regAddress, uint16_t value)
 {
 #if !CD_CI
-    uint8_t *data = (uint8_t *)&value;
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, fg_i2c_address | I2C_MASTER_WRITE, true);
-    i2c_master_write_byte(cmd, regAddress, true);
-    i2c_master_write_byte(cmd, data[1], true);
-    i2c_master_write_byte(cmd, data[0], true);
-    i2c_master_stop(cmd);
-    bool result =
-        (i2c_master_cmd_begin(I2C_NUM_0, cmd, I2C_WAIT_TICKS) == ESP_OK);
-    i2c_cmd_link_delete(cmd);
-    return result;
+    uint8_t buffer[3];
+    buffer[0] = regAddress;
+    buffer[1] = value >> 8; // MSB first
+    buffer[2] = value;
+    esp_err_t err = i2c_master_transmit(
+        I2C_SLAVE(device),
+        buffer,
+        3,
+        I2C_TIMEOUT_MS);
+    return (err == ESP_OK);
 #else
     return false;
 #endif
@@ -169,7 +184,7 @@ bool MAX1704x::quickStart()
     return write(MAX1704x_REG_MODE, 0x4000);
 }
 
-bool MAX1704x::read_SoC(uint8_t &currentSoC)
+bool MAX1704x::read_soc(uint8_t &currentSoC)
 {
     uint16_t value;
     if (read(MAX1704x_REG_SoC, value))
@@ -186,42 +201,20 @@ bool MAX1704x::read_SoC(uint8_t &currentSoC)
 MAX1704x::MAX1704x(I2CBus bus, uint8_t i2c_address)
 {
     if (i2c_address < 128)
-    {
         internals::hal::i2c::abortOnInvalidAddress(i2c_address);
-        fg_i2c_address = (i2c_address << 1);
-    }
     else
-        fg_i2c_address = MAX1704x_I2C_ADDRESS_SHIFTED;
-    internals::hal::i2c::require(4, bus);
+        i2c_address = MAX1704x_I2C_ADDRESS;
+#if !CD_CI
+    device = static_cast<void *>(
+        internals::hal::i2c::add_device(i2c_address, 4, bus));
+#endif
 }
 
-void MAX1704x::getStatus(BatteryStatus &currentStatus)
+MAX1704x::~MAX1704x()
 {
-    // initialize
-    BatteryMonitorInterface::getStatus(currentStatus);
-    // Use witnesses if available
-    BatteryCharger::update(currentStatus);
-
-    uint8_t worstBatteryLevel = 100;
-    bool seemsToBeCharging = currentStatus.isCharging.value_or(false);
-    bool success = false;
-    for (uint8_t i = 0; i < 10; i++)
-    {
-        uint8_t currentSoC;
-        if (read_SoC(currentSoC))
-        {
-            success = true;
-            seemsToBeCharging = seemsToBeCharging || (currentSoC > 101);
-            if (currentSoC < worstBatteryLevel)
-                worstBatteryLevel = currentSoC;
-        }
-        DELAY_MS(100);
-    }
-    guessBatteryStatus(
-        currentStatus,
-        seemsToBeCharging,
-        success,
-        worstBatteryLevel);
+#if !CD_CI
+    internals::hal::i2c::remove_device(I2C_SLAVE(device));
+#endif
 }
 
 //-------------------------------------------------------------------
@@ -302,41 +295,18 @@ VoltageDividerMonitor::VoltageDividerMonitor(
     }
 }
 
-void VoltageDividerMonitor::getStatus(BatteryStatus &currentStatus)
+bool VoltageDividerMonitor::read_soc(uint8_t &soc)
 {
-    // Initialize
-    BatteryMonitorInterface::getStatus(currentStatus);
-    // Use witnesses if available
-    BatteryCharger::update(currentStatus);
-
-    uint8_t worstBatteryLevel = 100;
-    bool seemsToBeCharging = currentStatus.isCharging.value_or(false);
-    bool success = false;
-    for (uint8_t i = 0; i < 10; i++)
+    int reading = read();
+    if (reading <= NO_BATTERY_ADC_READING)
+        return false;
+    if (reading >= CHARGING_ADC_READING)
     {
-        int reading = read();
-        if (reading >= NO_BATTERY_ADC_READING)
-        {
-            success = true;
-            seemsToBeCharging = seemsToBeCharging ||
-                                (reading >= CHARGING_ADC_READING);
-            // Note: we do not call readingToSoC() when the battery is charging
-            // to keep the autocalibration algorithm
-            // from using the charging voltage as reference
-            if (!seemsToBeCharging)
-            {
-                uint8_t currentSoC = readingToSoC(reading);
-                if (currentSoC < worstBatteryLevel)
-                    worstBatteryLevel = currentSoC;
-            }
-        }
-        DELAY_MS(100);
+        soc = 255;
+        return true;
     }
-    guessBatteryStatus(
-        currentStatus,
-        seemsToBeCharging,
-        success,
-        worstBatteryLevel);
+    soc = readingToSoC(reading);
+    return true;
 }
 
 //-------------------------------------------------------------------

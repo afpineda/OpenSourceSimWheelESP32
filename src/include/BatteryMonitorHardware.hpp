@@ -32,16 +32,24 @@ public:
      *
      * @param[out] currentStatus Current battery status
      */
-    virtual void getStatus(BatteryStatus &currentStatus)
-    {
-        currentStatus.reset();
-    }
+    virtual void getStatus(BatteryStatus &currentStatus);
 
     /**
      * @brief Called once when the battery monitor daemon is started
      *
      */
     virtual void onStart() {};
+
+protected:
+    /**
+     * @brief Retrieve the current state of charge
+     *
+     * @param[out] soc State of charge. Higher than 100 if the battery
+     *                 is charging at constant voltage.
+     * @return true If @p soc was retrieved with success
+     * @return false If there is no battery or @p soc is unknown
+     */
+    virtual bool read_soc(uint8_t &soc) = 0;
 };
 
 //-------------------------------------------------------------------
@@ -70,8 +78,7 @@ public:
     static void setExternalPowerWitness(
         InputGPIO sensePin,
         bool negativeLogic,
-        bool enableInternalPullResistor
-    );
+        bool enableInternalPullResistor);
 
     /**
      * @brief Set a GPIO pin to sense if the battery is being charged
@@ -129,7 +136,7 @@ public:
         this->status = fakeStatus;
     }
 
-    virtual void getStatus(BatteryStatus &currentStatus)
+    virtual void getStatus(BatteryStatus &currentStatus) override
     {
         if (status != nullptr)
             currentStatus = *status;
@@ -147,8 +154,8 @@ public:
 class MAX1704x : public BatteryMonitorInterface
 {
 protected:
-    /// @brief Configured I2C address in 8 bit format
-    uint8_t fg_i2c_address = 0xFF;
+    /// @brief I2C slave device (must be type-casted)
+    void *device = nullptr;
 
     /**
      * @brief Read from a register
@@ -178,14 +185,7 @@ protected:
      */
     bool quickStart();
 
-    /**
-     * @brief Read the state-of-charge register
-     *
-     * @param currentSoC Current state of charge
-     * @return true On success
-     * @return false On failure
-     */
-    bool read_SoC(uint8_t &currentSoC);
+    virtual bool read_soc(uint8_t &currentSoC) override;
 
 public:
     /**
@@ -197,7 +197,8 @@ public:
      */
     MAX1704x(I2CBus bus = I2CBus::PRIMARY, uint8_t i2c_address = 0xFF);
 
-    virtual void getStatus(BatteryStatus &currentStatus) override;
+    /// @brief Destroy the MAX1704x object
+    virtual ~MAX1704x();
 
     virtual void onStart() override
     {
@@ -223,6 +224,8 @@ protected:
     ADC_GPIO _batteryREADPin;
     /// @brief Minimum expected ADC reading when the battery is charging
     int CHARGING_ADC_READING = 3442;
+
+    virtual bool read_soc(uint8_t &currentSoC) override;
 
 public:
     // NOTE: these public members are for testing. Do not tamper with them.
@@ -265,7 +268,6 @@ public:
      */
     static uint8_t readingToSoC(int reading);
 
-    virtual void getStatus(BatteryStatus &currentStatus) override;
 }; // class VoltageDividerMonitor
 
 //-------------------------------------------------------------------
