@@ -39,7 +39,7 @@ uint8_t selectedInput = 0xFF;
 
 static uint16_t _factoryVID = BLE_VENDOR_ID;
 static uint16_t _factoryPID = BLE_PRODUCT_ID;
-static Connectivity _connectivity = Connectivity::USB_BLE;
+static Connectivity _connectivity = Connectivity::_DEFAULT;
 
 #define MAX_INPUT_NUMBER 63
 

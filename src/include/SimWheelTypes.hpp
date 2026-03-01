@@ -902,16 +902,17 @@ enum class PowerLatchMode : uint8_t
 enum class Connectivity : uint8_t
 {
     /// @brief Combined USB and BLE connectivity if available
-    /// @note This is the default
     USB_BLE = 0,
     /// @brief Combined USB and BLE connectivity with forced connection drop
-    USB_BLE_EXCLUSIVE,
+    USB_BLE_EXCLUSIVE = 1,
     /// @brief USB connectivity only, if available
-    USB,
+    USB = 2,
     /// @brief BLE connectivity only, if available
-    BLE,
+    BLE = 3,
     /// @brief No connectivity at all (for troubleshooting)
-    DUMMY
+    DUMMY = 4,
+    /// @brief Default connectivity
+    _DEFAULT = USB_BLE
 };
 
 //-------------------------------------------------------------------
