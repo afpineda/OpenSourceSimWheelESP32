@@ -1,5 +1,16 @@
 # Change log (and release notes)
 
+## 7.9.1
+
+- In preparation for the upcoming Arduino-ESP32 version 4.0.0,
+  the code using I2C has been updated to no longer rely on a deprecated API
+  (which is set to be removed).
+
+- The algorithm for detecting the battery charging status has been improved,
+  and a bug that prevented it from working correctly has been fixed.
+
+- Other minor bugs were fixed.
+
 ## 7.9.0
 
 - A new API call, `hid::connectivity()`, allows you to choose a
