@@ -435,3 +435,193 @@ void SingleLED::show()
 {
     GPIO_SET_LEVEL(_pin, !_state); // negative logic
 }
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// OLEDBase
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+OLEDBase::OLEDBase(I2CBus bus, uint8_t address7bits)
+{
+    internals::hal::i2c::require(bus);
+    device = static_cast<void *>(
+        internals::hal::i2c::add_device(address7bits, 4, bus));
+}
+
+OLEDBase::~OLEDBase()
+{
+    internals::hal::i2c::remove_device(I2C_SLAVE(device));
+}
+
+bool OLEDBase::write_cmd(uint8_t command)
+{
+    uint8_t buffer[2];
+    buffer[0] = 0x00; // CONTROL_COMMAND
+    buffer[1] = command;
+    esp_err_t err =
+        i2c_master_transmit(I2C_SLAVE(device), buffer, 2, I2C_TIMEOUT_MS);
+    last_i2c_result = (err == ESP_OK);
+    return (err == ESP_OK);
+}
+
+bool OLEDBase::write_cmd(uint8_t command, uint8_t arg)
+{
+    uint8_t buffer[3];
+    buffer[0] = 0x00; // CONTROL_COMMAND
+    buffer[1] = command;
+    buffer[2] = arg;
+    esp_err_t err =
+        i2c_master_transmit(I2C_SLAVE(device), buffer, 3, I2C_TIMEOUT_MS);
+    last_i2c_result = (err == ESP_OK);
+    return (err == ESP_OK);
+}
+
+bool OLEDBase::write_cmd(uint8_t command, uint8_t arg1, uint8_t arg2)
+{
+    uint8_t buffer[4];
+    buffer[0] = 0x00; // CONTROL_COMMAND
+    buffer[1] = command;
+    buffer[2] = arg1;
+    buffer[4] = arg2;
+    esp_err_t err =
+        i2c_master_transmit(I2C_SLAVE(device), buffer, 4, I2C_TIMEOUT_MS);
+    last_i2c_result = (err == ESP_OK);
+    return (err == ESP_OK);
+}
+
+bool OLEDBase::write_cmd(const uint8_t *buffer, ::std::size_t size)
+{
+    static const uint8_t CONTROL_COMMAND = 0x00;
+    i2c_master_transmit_multi_buffer_info_t info[2]{
+        {
+            .write_buffer = (uint8_t *)&CONTROL_COMMAND,
+            .buffer_size = 1,
+        },
+        {
+            .write_buffer = const_cast<uint8_t *>(buffer),
+            .buffer_size = size,
+        }};
+    esp_err_t err =
+        i2c_master_multi_buffer_transmit(
+            I2C_SLAVE(device),
+            info,
+            2,
+            I2C_TIMEOUT_MS);
+    last_i2c_result = (err == ESP_OK);
+    return (err == ESP_OK);
+}
+
+bool OLEDBase::write_gdd_ram(const uint8_t *buffer, ::std::size_t size)
+{
+    static const uint8_t CONTROL_DATA = 0x40;
+    i2c_master_transmit_multi_buffer_info_t info[2]{
+        {
+            .write_buffer = (uint8_t *)&CONTROL_DATA,
+            .buffer_size = 1,
+        },
+        {
+            .write_buffer = const_cast<uint8_t *>(buffer),
+            .buffer_size = size,
+        }};
+    esp_err_t err =
+        i2c_master_multi_buffer_transmit(
+            I2C_SLAVE(device),
+            info,
+            2,
+            I2C_TIMEOUT_MS);
+    last_i2c_result = (err == ESP_OK);
+    return (err == ESP_OK);
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// SSD1306
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+SSD1306::SSD1306(I2CBus bus, uint8_t address7bits)
+    : OLEDBase(bus, address7bits)
+{
+    init();
+}
+
+void SSD1306::init()
+{
+    // static const uint8_t oled64_init[] =
+    //     {0x00, 0xae, 0xa8, 0x3f, 0xd3, 0x00, 0x40, 0xa1, 0xc8,
+    //      0xda, 0x12, 0x81, 0xff, 0xa4, 0xa6, 0xd5, 0x80, 0x8d, 0x14,
+    //      0xaf, 0x20, 0x02};
+    // write_cmd((uint8_t *)oled64_init, sizeof(oled64_init));
+    // static const unsigned char oled128_init[] =
+    //     {0x00, 0xae, 0xdc, 0x00, 0x81, 0x40,
+    //      0xa1, 0xc8, 0xa8, 0x7f, 0xd5, 0x50,
+    //      0xd9, 0x22, 0xdb, 0x35, 0xb0, 0xda,
+    //      0x12, 0xa4, 0xa6, 0xaf};
+    // write_cmd((uint8_t *)oled128_init, sizeof(oled128_init));
+    write_cmd(0x20, 00);     // Set horizontal addresing mode
+    write_cmd(0x21, 0, 127); // Set start and end columns
+    write_cmd(0x22, 0, 7);   // Set start and end pages
+    write_cmd(0x40);         // Set start line
+    write_cmd(0xDA, 0);      // Set COM pins config
+    contrast(0x7F);
+    enable_display(true);
+    write_cmd(0xD5, 0x80); // Set display clock
+    write_cmd(0x8D, 0x14); // Enable charge pump
+    turn(true);
+}
+
+void SSD1306::inverse_display(bool yesOrNo)
+{
+    uint8_t cmd = 0xA4;
+    if (yesOrNo)
+        cmd++;
+    write_cmd(cmd);
+}
+
+void SSD1306::contrast(uint8_t value)
+{
+    write_cmd(0x81, value);
+}
+
+void SSD1306::turn(bool onOrOff)
+{
+    if (onOrOff)
+        // turn on
+        write_cmd(0xAF);
+    else
+        // turn off
+        write_cmd(0xAE);
+}
+
+void SSD1306::enable_display(bool yesOrNo)
+{
+    if (yesOrNo)
+        // Display RAM contents
+        write_cmd(0xA4);
+    else
+        // Do not display RAM contents
+        write_cmd(0xA5);
+}
+
+void SSD1306::clear(bool color)
+{
+    uint8_t buffer[128];
+    for (uint8_t i = 0; i < 128; i++)
+        if (color)
+            buffer[i] = 0;
+        else
+            buffer[i] = 0xFF;
+    write_cmd(0x21, 0, 127); // Set column start,end = 0,127
+    for (uint8_t page = 0; (page < 8); page++)
+    {
+        write_cmd(0x22, page, page); // Set page start, end
+        write_gdd_ram(buffer, sizeof(buffer));
+    }
+}
+
+void SSD1306::display(uint8_t *buffer)
+{
+    if (buffer)
+        write_gdd_ram(buffer, 1024);
+}

@@ -330,3 +330,42 @@ private:
     OutputGPIO _pin;
     bool _state = false;
 };
+
+//---------------------------------------------------------------
+// OLED
+//---------------------------------------------------------------
+
+struct OLEDBase
+{
+    OLEDBase(I2CBus bus, uint8_t address7bits);
+    virtual ~OLEDBase();
+
+    bool available() { return last_i2c_result; }
+
+    // protected:
+    bool write_cmd(uint8_t command);
+    bool write_cmd(uint8_t command, uint8_t arg);
+    bool write_cmd(uint8_t command, uint8_t arg1, uint8_t arg2);
+    bool write_cmd(const uint8_t *buffer, ::std::size_t size);
+    bool write_gdd_ram(const uint8_t *buffer, ::std::size_t size);
+
+private:
+    void *device = nullptr;
+    bool last_i2c_result = false;
+};
+
+struct SSD1306 : public OLEDBase
+{
+    static constexpr const uint8_t _address7bits = 0b0111100;
+
+    SSD1306(I2CBus bus, uint8_t address7bits);
+    void init();
+
+    void inverse_display(bool yesOrNo);
+    void contrast(uint8_t value);
+    void turn(bool onOrOff);
+    void enable_display(bool yesOrNo);
+
+    void clear(bool color = false);
+    void display(uint8_t *buffer);
+};
