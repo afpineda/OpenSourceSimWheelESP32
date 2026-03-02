@@ -30,8 +30,9 @@
 
 VoltageDividerMonitor *hardware = nullptr;
 int receivedBatteryLevel = 999;
-std::counting_semaphore<1> received{1};
-bool waiting;
+bool running = false;
+std::binary_semaphore producer{0};
+std::binary_semaphore consumer{0};
 
 //------------------------------------------------------------------
 // MOCKS
@@ -53,17 +54,18 @@ public:
 
 void get_current_battery_level(const BatteryStatus &status)
 {
+    if(!running)
+        return;
+    producer.acquire();
     // std::cout << "get_current_battery_level" << std::endl;
     receivedBatteryLevel = status.stateOfCharge.value_or(0);
-    received.release();
-    waiting = false;
+    consumer.release();
 }
 
 void waitFor(std::string message = "")
 {
-    waiting = true;
-    while (waiting)
-        received.acquire();
+    producer.release();
+    consumer.acquire();
 }
 
 //------------------------------------------------------------------
@@ -74,7 +76,6 @@ void waitFor(std::string message = "")
 
 void test1()
 {
-
     std::cout << "- test 1 (ADC value injection)-" << std::endl;
     internals::hal::gpio::setFakeADCReading({2000});
 
@@ -166,6 +167,7 @@ int main()
     batteryMonitor::setPeriod(1);
     internals::batteryMonitor::getReady();
     OnStart::notify();
+    running = true;
 
     test1();
     test2();
