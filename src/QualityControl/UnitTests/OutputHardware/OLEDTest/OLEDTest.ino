@@ -14,7 +14,7 @@
 #include "esp32-hal.h"
 #include "HAL.hpp"
 
-SSD1306 *hw = nullptr;
+OLED *hw = nullptr;
 
 uint8_t test_buffer[] = {0xFF, 0xFF, 0xFF, 0xFF};
 
@@ -22,28 +22,34 @@ void setup()
 {
     debugPrintBegin();
     debugPrintf("SCL: %u, SDA: %u\n", SCL, SDA);
-    hw = new SSD1306(I2CBus::PRIMARY, SSD1306::_address7bits);
+    hw = new OLED(I2CBus::PRIMARY);
     if (!hw->available())
         debugPrintf("Device not found\n");
     debugPrintf("--GO--\n");
-    hw->clear(true);
-    // hw->write_buffer(test_buffer,sizeof(test_buffer));
+
+    uint8_t st;
+    if (hw->read_status(st))
+    {
+        debugPrintf("Status %x: \n", st);
+    }
+    else
+        debugPrintf("No status \n");
+
+    hw->write_cmd(0x20, 0);      // horizontal addresing
+    hw->write_cmd(0x21, 0, 127); // Set column range
+    hw->write_cmd(0x22, 0, 7);   // Set page range
+    hw->setPixel(0, 0, true);
+    hw->setPixel(1, 1, true);
+    hw->setPixel(2, 2, true);
+    hw->setPixel(3, 3, true);
+    hw->setPixel(0, 1, true);
+    hw->setPixel(0, 2, true);
+    hw->setPixel(0, 3, true);
+    hw->write_gdd_ram(hw->_frame, 127);
 }
 
 uint8_t contrast = 0xFF;
 
 void loop()
 {
-    // DELAY_MS(1000);
-    // hw->inverse_display(true);
-    // DELAY_MS(1000);
-    // hw->inverse_display(false);
-
-    hw->contrast(contrast--);
-    DELAY_MS(50);
-
-    // hw->turn(false);
-    // DELAY_MS(1000);
-    // hw->turn(true);
-    // DELAY_MS(1000);
 }

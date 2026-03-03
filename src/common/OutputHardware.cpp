@@ -21,6 +21,7 @@
 #include "HAL.hpp"
 #include "freertos/FreeRTOS.h" // for vTaskDelay()
 #include <cstring>             // For memset()
+#include "esp32-hal-log.h"     // For log_e()
 
 //-------------------------------------------------------------------
 // GLOBALS
@@ -442,11 +443,25 @@ void SingleLED::show()
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-OLEDBase::OLEDBase(I2CBus bus, uint8_t address7bits)
+OLEDBase::OLEDBase(uint8_t address7bits, I2CBus bus)
 {
     internals::hal::i2c::require(bus);
     device = static_cast<void *>(
         internals::hal::i2c::add_device(address7bits, 4, bus));
+}
+
+OLEDBase::OLEDBase(::std::initializer_list<uint8_t> &&try_addresses, I2CBus bus)
+{
+    internals::hal::i2c::require(bus);
+    for (uint8_t address7bits : try_addresses)
+        if (internals::hal::i2c::probe(address7bits, bus))
+        {
+            device = static_cast<void *>(
+                internals::hal::i2c::add_device(address7bits, 4, bus));
+            return;
+        }
+    if (device == nullptr)
+        log_e("Unable to auto-detect OLED I2C address");
 }
 
 OLEDBase::~OLEDBase()
@@ -492,99 +507,228 @@ bool OLEDBase::write_cmd(uint8_t command, uint8_t arg1, uint8_t arg2)
 
 bool OLEDBase::write_cmd(const uint8_t *buffer, ::std::size_t size)
 {
-    static const uint8_t CONTROL_COMMAND = 0x00;
-    i2c_master_transmit_multi_buffer_info_t info[2]{
-        {
-            .write_buffer = (uint8_t *)&CONTROL_COMMAND,
-            .buffer_size = 1,
-        },
-        {
-            .write_buffer = const_cast<uint8_t *>(buffer),
-            .buffer_size = size,
-        }};
-    esp_err_t err =
-        i2c_master_multi_buffer_transmit(
-            I2C_SLAVE(device),
-            info,
-            2,
-            I2C_TIMEOUT_MS);
-    last_i2c_result = (err == ESP_OK);
-    return (err == ESP_OK);
+    if (buffer && size)
+    {
+        uint8_t CONTROL_COMMAND = 0x00;
+        i2c_master_transmit_multi_buffer_info_t info[2]{
+            {
+                .write_buffer = (uint8_t *)&CONTROL_COMMAND,
+                .buffer_size = 1,
+            },
+            {
+                .write_buffer = const_cast<uint8_t *>(buffer),
+                .buffer_size = size,
+            }};
+        esp_err_t err =
+            i2c_master_multi_buffer_transmit(
+                I2C_SLAVE(device),
+                info,
+                2,
+                I2C_TIMEOUT_MS);
+        last_i2c_result = (err == ESP_OK);
+        return (err == ESP_OK);
+    }
+    return false;
 }
 
 bool OLEDBase::write_gdd_ram(const uint8_t *buffer, ::std::size_t size)
 {
-    static const uint8_t CONTROL_DATA = 0x40;
-    i2c_master_transmit_multi_buffer_info_t info[2]{
-        {
-            .write_buffer = (uint8_t *)&CONTROL_DATA,
-            .buffer_size = 1,
-        },
-        {
-            .write_buffer = const_cast<uint8_t *>(buffer),
-            .buffer_size = size,
-        }};
+    if (buffer && size)
+    {
+        uint8_t CONTROL_DATA = 0x40;
+        i2c_master_transmit_multi_buffer_info_t info[2]{
+            {
+                .write_buffer = (uint8_t *)&CONTROL_DATA,
+                .buffer_size = 1,
+            },
+            {
+                .write_buffer = const_cast<uint8_t *>(buffer),
+                .buffer_size = size,
+            }};
+        esp_err_t err =
+            i2c_master_multi_buffer_transmit(
+                I2C_SLAVE(device),
+                info,
+                2,
+                I2C_TIMEOUT_MS);
+        last_i2c_result = (err == ESP_OK);
+        return (err == ESP_OK);
+    }
+    return false;
+}
+
+bool OLEDBase::read_status(uint8_t &status)
+{
+    uint8_t CONTROL_COMMAND = 0x00;
     esp_err_t err =
-        i2c_master_multi_buffer_transmit(
+        i2c_master_transmit_receive(
             I2C_SLAVE(device),
-            info,
-            2,
+            (uint8_t *)&CONTROL_COMMAND,
+            1,
+            (uint8_t *)&status,
+            1,
             I2C_TIMEOUT_MS);
     last_i2c_result = (err == ESP_OK);
     return (err == ESP_OK);
 }
 
+OLEDBase::Controller OLEDBase::guess_controller()
+{
+    // Characterize the display controller
+    uint8_t status;
+    if (read_status(status))
+    {
+        status &= 0x0F;
+        if (status == 0x08)
+            // Note: 132 segments
+            return OLEDBase::Controller::SH1106;
+        else if (status == 3 || status == 6)
+            // Note: 128 segments
+            return OLEDBase::Controller::SSD1306;
+        else if (status == 0x07 || status == 0x0F)
+            // Note: 128 segments
+            return OLEDBase::Controller::SH1107;
+    }
+    return OLEDBase::Controller::UNKNOWN;
+}
+
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-// SSD1306
+// OLED
+//
+// Implementation heavily inspired by SS_OLED:
+// https://github.com/bitbank2/ss_oled
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-SSD1306::SSD1306(I2CBus bus, uint8_t address7bits)
-    : OLEDBase(bus, address7bits)
+OLED::OLED(
+    I2CBus bus,
+    OLED_resolution res)
+    : OLEDBase({0b0111100, 0b0111101}, bus),
+      _resolution{res}
 {
     init();
 }
 
-void SSD1306::init()
+OLED::OLED(
+    uint8_t address7bits,
+    I2CBus bus,
+    OLED_resolution res)
+    : OLEDBase(address7bits, bus),
+      _resolution{res}
 {
-    // static const uint8_t oled64_init[] =
-    //     {0x00, 0xae, 0xa8, 0x3f, 0xd3, 0x00, 0x40, 0xa1, 0xc8,
-    //      0xda, 0x12, 0x81, 0xff, 0xa4, 0xa6, 0xd5, 0x80, 0x8d, 0x14,
-    //      0xaf, 0x20, 0x02};
-    // write_cmd((uint8_t *)oled64_init, sizeof(oled64_init));
-    // static const unsigned char oled128_init[] =
-    //     {0x00, 0xae, 0xdc, 0x00, 0x81, 0x40,
-    //      0xa1, 0xc8, 0xa8, 0x7f, 0xd5, 0x50,
-    //      0xd9, 0x22, 0xdb, 0x35, 0xb0, 0xda,
-    //      0x12, 0xa4, 0xa6, 0xaf};
-    // write_cmd((uint8_t *)oled128_init, sizeof(oled128_init));
-    write_cmd(0x20, 00);     // Set horizontal addresing mode
-    write_cmd(0x21, 0, 127); // Set start and end columns
-    write_cmd(0x22, 0, 7);   // Set start and end pages
-    write_cmd(0x40);         // Set start line
-    write_cmd(0xDA, 0);      // Set COM pins config
-    contrast(0x7F);
-    enable_display(true);
-    write_cmd(0xD5, 0x80); // Set display clock
-    write_cmd(0x8D, 0x14); // Enable charge pump
-    turn(true);
+    init();
 }
 
-void SSD1306::inverse_display(bool yesOrNo)
+void OLED::init()
 {
-    uint8_t cmd = 0xA4;
+    // Characterize the display controller
+    _controller = guess_controller();
+    if (_controller == OLEDBase::Controller::UNKNOWN)
+        // Fail early
+        return;
+    else if (_controller == OLED::Controller::SH1107)
+        inverse_display(true);
+
+    // Send the initialization sequence
+    switch (_resolution)
+    {
+    case OLED_resolution::_128x128:
+    {
+        uint8_t init_seq[] = {0x00, 0xae, 0xdc, 0x00, 0x81, 0x40,
+                              0xa1, 0xc8, 0xa8, 0x7f, 0xd5, 0x50,
+                              0xd9, 0x22, 0xdb, 0x35, 0xb0, 0xda,
+                              0x12, 0xa4, 0xa6, 0xaf};
+        write_cmd(init_seq, sizeof(init_seq));
+    }
+    break;
+    case OLED_resolution::_128x32:
+    case OLED_resolution::_96x16:
+    {
+        uint8_t init_seq[] = {0x00, 0xae, 0xd5, 0x80, 0xa8, 0x1f,
+                              0xd3, 0x00, 0x40, 0x8d, 0x14, 0xa1,
+                              0xc8, 0xda, 0x02, 0x81, 0x7f, 0xd9,
+                              0xf1, 0xdb, 0x40, 0xa4, 0xa6, 0xaf};
+        write_cmd(init_seq, sizeof(init_seq));
+    }
+    break;
+    case OLED_resolution::_72x40:
+    {
+        uint8_t init_seq[] = {0x00, 0xae, 0xa8, 0x3f, 0xd3, 0x00,
+                              0x40, 0xa1, 0xc8, 0xda, 0x12, 0x81,
+                              0xff, 0xad, 0x30, 0xd9, 0xf1, 0xa4,
+                              0xa6, 0xd5, 0x80, 0x8d, 0x14, 0xaf,
+                              0x20, 0x02};
+        write_cmd(init_seq, sizeof(init_seq));
+    }
+    break;
+    default:
+    {
+        uint8_t init_seq[] = {0x00, 0xae, 0xa8, 0x3f, 0xd3, 0x00,
+                              0x40, 0xa1, 0xc8, 0xda, 0x12, 0x81,
+                              0xff, 0xa4, 0xa6, 0xd5, 0x80, 0x8d,
+                              0x14, 0xaf, 0x20, 0x02};
+        write_cmd(init_seq, sizeof(init_seq));
+    }
+    break;
+    } // switch
+
+    // Compute width
+    switch (_resolution)
+    {
+    case OLED_resolution::_64x32:
+        _width = 64;
+        break;
+    case OLED_resolution::_96x16:
+        _width = 96;
+        break;
+    case OLED_resolution::_72x40:
+        _width = 72;
+        break;
+    default:
+        _width = 128;
+        break;
+    } // switch
+
+    // Compute height
+    switch (_resolution)
+    {
+    case OLED_resolution::_128x128:
+        _height = 128;
+        break;
+    case OLED_resolution::_128x32:
+    case OLED_resolution::_64x32:
+        _height = 32;
+        break;
+    case OLED_resolution::_96x16:
+        _height = 16;
+        break;
+    case OLED_resolution::_72x40:
+        _height = 40;
+        break;
+    default:
+        _height = 64;
+        break;
+    } // switch
+
+    // Initialize frame buffer
+    clear();
+} // OLED::init()
+
+void OLED::inverse_display(bool yesOrNo)
+{
+    uint8_t cmd = 0xA6;
     if (yesOrNo)
         cmd++;
     write_cmd(cmd);
 }
 
-void SSD1306::contrast(uint8_t value)
+void OLED::contrast(uint8_t value)
 {
     write_cmd(0x81, value);
 }
 
-void SSD1306::turn(bool onOrOff)
+void OLED::turn(bool onOrOff)
 {
     if (onOrOff)
         // turn on
@@ -594,7 +738,7 @@ void SSD1306::turn(bool onOrOff)
         write_cmd(0xAE);
 }
 
-void SSD1306::enable_display(bool yesOrNo)
+void OLED::enable_display(bool yesOrNo)
 {
     if (yesOrNo)
         // Display RAM contents
@@ -604,24 +748,64 @@ void SSD1306::enable_display(bool yesOrNo)
         write_cmd(0xA5);
 }
 
-void SSD1306::clear(bool color)
+void OLED::locate(uint8_t x, uint8_t y)
 {
-    uint8_t buffer[128];
-    for (uint8_t i = 0; i < 128; i++)
-        if (color)
-            buffer[i] = 0;
-        else
-            buffer[i] = 0xFF;
-    write_cmd(0x21, 0, 127); // Set column start,end = 0,127
-    for (uint8_t page = 0; (page < 8); page++)
+    _screen_offset = (y * 128) + x;
+    switch (_resolution)
     {
-        write_cmd(0x22, page, page); // Set page start, end
-        write_gdd_ram(buffer, sizeof(buffer));
-    }
+    case OLED_resolution::_128x64:
+        if (_controller == OLED::Controller::SH1106)
+            // 128 pixels centered in 132 segments
+            x += 2;
+        break;
+    case OLED_resolution::_96x16:
+        // Display starts at line 2
+        //    if (_flip)
+        //         x += 32;
+        //     else
+        y += 2;
+        break;
+    case OLED_resolution::_72x40:
+        // Display starts at 28,3
+        x += 28;
+        // if (_flip)
+        // {
+        //     y += 3;
+        // }
+        break;
+    case OLED_resolution::_64x32:
+        // visible display starts at column 32, row 4
+        x += 32;
+        // if (!_flip)
+        //     non-flipped display starts from line 4
+        //     y += 4;
+        break;
+    default:
+        break;
+    } // switch
+    write_cmd((0xb0 | y), (x & 0xf), (0x10 | (x >> 4)));
 }
 
-void SSD1306::display(uint8_t *buffer)
+void OLED::clear()
 {
-    if (buffer)
-        write_gdd_ram(buffer, 1024);
+    memset(_frame, 0, sizeof(_frame));
+}
+
+void OLED::show()
+{
+
+} // OLED::show()
+
+void OLED::setPixel(uint8_t x, uint8_t y, bool color)
+{
+    if ((x < _width) && (y < _height))
+    {
+        uint8_t page_index = (y >> 3); // = y/8;
+        uint8_t bit_index = (y % 8);
+        uint8_t byte_index = (page_index * _width) + x;
+        if (color)
+            _frame[byte_index] |= (1 << bit_index);
+        else
+            _frame[byte_index] &= ~(1 << bit_index);
+    }
 }

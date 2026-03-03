@@ -180,7 +180,8 @@ i2c_master_dev_handle_t internals::hal::i2c::add_device(
 
 void internals::hal::i2c::remove_device(i2c_master_dev_handle_t i2c_device)
 {
-    ESP_ERROR_CHECK(i2c_master_bus_rm_device(i2c_device));
+    if (i2c_device)
+        ESP_ERROR_CHECK(i2c_master_bus_rm_device(i2c_device));
 }
 
 // ----------------------------------------------------------------------------
