@@ -334,164 +334,63 @@ private:
     bool _state = false;
 };
 
-//---------------------------------------------------------------
-// OLED
-//---------------------------------------------------------------
+//------------------------------------------------------------------------------
+// Monochrome OLED
+//------------------------------------------------------------------------------
 
 /**
- * @brief OLED resolution (width x heigh)
- *
+ * @brief Monochrome OLED working parameters
+ * @note For details, refer to the SSD1306 data sheet:
+ *       https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf
  */
-enum class OLED_resolution : uint8_t
+struct OLEDParameters
 {
-    /// @brief 132 x 64 pixels
-    // _132x64 = 0,
-    /// @brief 128 x 128 pixels
-    _128x128 = 0,
-    /// @brief 128 x 64 pixels
-    _128x64,
-    /// @brief 128 x 32 pixels
-    _128x32,
-    /// @brief 64 x 32 pixels
-    _64x32,
-    /// @brief 96 x 16 pixels
-    _96x16,
-    /// @brief 72 x 40 pixels
-    _72x40,
-    /// @brief Default resolution
-    _DEFAULT = _128x64
-};
+    /// @brief True to flip horizontally
+    bool flip_horizontal = false;
+    /// @brief True to flip vertically
+    bool flip_vertical = false;
+    /// @brief True to swap black and white pixels
+    bool inverted_display = false;
+    /// @brief Screen width resolution in pixels
+    uint8_t screen_width = 128;
+    /// @brief Screen height resolution in pixels
+    uint8_t screen_height = 64;
+    /// @brief Row pixel index where display starts
+    uint8_t start_row = 0;
+    /// @brief Column pixel index where display starts
+    uint8_t start_col = 0;
+    /// @brief Row offset where the physical display meets the logical display
+    uint8_t display_offset = 0;
+    /// @brief Display contrast (higher value means higher contrast)
+    uint8_t contrast = 127;
+    /**
+     * @brief COM pins value as required by the controller,
+     *        bit[4] = COM pin configuration,
+     *        bit[5] = COM left/right remap.
+     */
+    uint8_t COMpins = 0x12;
+    /// @brief Display clock divide ratio/oscillator frequency
+    uint8_t oscillator_frequency = 0x80;
 
-// /// @brief Physical orientation of the OLED display
-// enum class OLEDOrientation : uint8_t
-// {
-//     /// @brief Normal orientation
-//     degrees0 = 0,
-//     /// @brief Rotate view 90 degrees
-//     degrees90,
-//     /// @brief Rotate view 180 degrees
-//     degrees180,
-//     /// @brief Rotate view 2700 degrees
-//     degrees270,
-//     /// @brief Default orientation
-//     DEFAULT = degrees0
-// };
+public:
+    /// @brief Base parameters for 128x64 displays having a 132x64 controller
+    /// @return OLED parameters
+    static OLEDParameters for132x64()
+    {
+        OLEDParameters result;
+        result.start_col = 1;
+        return result;
+    }
+};
 
 /**
  * @brief Base class for all displays compatible with SSD1306 (I2C interface)
  *
+ * @note Protected methods return false if the device is not responding
+ *       in the i2C bus
  */
 struct OLEDBase
 {
-
-    // protected:
-    /**
-     * @brief Create an OLED base object
-     *
-     * @param address7bits Full address in 7 bit format
-     * @param bus I2C bus
-     */
-    OLEDBase(uint8_t address7bits, I2CBus bus);
-
-    /**
-     * @brief Create an OLED base object
-     *
-     * @details This constructor will probe each I2C address in @p try_address
-     *          and use the first available in the I2C @p bus .
-     *
-     * @param try_addresses List of ordered I2C full addresses to try
-     *                      (7 bit format).
-     * @param bus I2C bus
-     */
-    OLEDBase(::std::initializer_list<uint8_t> &&try_addresses, I2CBus bus);
-
-    /// @brief Destructor
-    virtual ~OLEDBase();
-
-    /// @brief Copy-constructor (default)
-    /// @param other Instance to be copied
-    OLEDBase(const OLEDBase &other) noexcept = default;
-
-    /// @brief Move-constructor (default)
-    /// @param other Instance to be moved
-    OLEDBase(OLEDBase &&other) noexcept = default;
-
-    /// @brief Copy-Assignment (default)
-    /// @param other Instance to be copied
-    OLEDBase &operator=(const OLEDBase &other) noexcept = default;
-
-    /// @brief Move-Assignment (default)
-    /// @param other Instance to be moved
-    OLEDBase &operator=(OLEDBase &&other) noexcept = default;
-
-    /**
-     * @brief Check if there was a device response
-     *        to the last I2C command issued
-     *
-     * @return true If the device was responding
-     * @return false If not
-     */
-    bool available() { return last_i2c_result; }
-
-    /**
-     * @brief Write a command with no arguments
-     *
-     * @param command Command
-     * @return true On success
-     * @return false On failure
-     */
-    bool write_cmd(uint8_t command);
-
-    /**
-     * @brief Write a command with one argument
-     *
-     * @param command Command
-     * @param arg First argument
-     * @return true On success
-     * @return false On failure
-     */
-    bool write_cmd(uint8_t command, uint8_t arg);
-
-    /**
-     * @brief Write a command with two argument
-     *
-     * @param command Command
-     * @param arg1 First argument
-     * @param arg2 Second argument
-     * @return true On success
-     * @return false On failure
-     */
-    bool write_cmd(uint8_t command, uint8_t arg1, uint8_t arg2);
-
-    /**
-     * @brief Write any sequence of commands and arguments
-     *
-     * @param buffer Pointer to command sequence
-     * @param size Size of the command sequence
-     * @return true On success
-     * @return false On failure
-     */
-    bool write_cmd(const uint8_t *buffer, ::std::size_t size);
-
-    /**
-     * @brief Write to GDD RAM
-     *
-     * @param buffer Pointer to graphics display data
-     * @param size Size of the graphics display data
-     * @return true On success
-     * @return false On failure
-     */
-    bool write_gdd_ram(const uint8_t *buffer, ::std::size_t size);
-
-    /**
-     * @brief Read the status register
-     *
-     * @param[out] status Status register if the return value is true
-     * @return true On success
-     * @return false On failure
-     */
-    bool read_status(uint8_t &status);
-
     /// @brief OLED controllers that can be automatically detected
     enum class Controller : uint8_t
     {
@@ -510,24 +409,154 @@ struct OLEDBase
      *
      * @return Controller Automatically-detected controller
      */
-    Controller guess_controller();
+    Controller guess_controller() const noexcept;
+
+    /**
+     * @brief Check if the OLED was found in the I2C bus
+     *
+     * @return true If the device was responding
+     * @return false If not
+     */
+    bool available() const noexcept { return (device); }
+
+protected:
+    /// @brief Create an uninitialized OLED base object
+    constexpr OLEDBase() noexcept : device{nullptr} {}
+
+    /**
+     * @brief Create an OLED base object
+     *
+     * @details This constructor will probe each I2C address in @p try_address
+     *          and use the first available in the I2C @p bus .
+     *
+     * @param try_addresses List of ordered I2C full addresses to try
+     *                      (7 bit format).
+     * @param bus I2C bus
+     */
+    OLEDBase(
+        ::std::initializer_list<uint8_t> &&try_addresses,
+        I2CBus bus) noexcept;
+
+    /// @brief Destructor
+    virtual ~OLEDBase() noexcept;
+
+    /// @brief Copy-constructor (default)
+    /// @param other Instance to be copied
+    OLEDBase(const OLEDBase &other) noexcept = default;
+
+    /// @brief Move-constructor
+    /// @param other Instance to be moved
+    OLEDBase(OLEDBase &&other) noexcept;
+
+    /// @brief Copy-Assignment (default)
+    /// @param other Instance to be copied
+    OLEDBase &operator=(const OLEDBase &other) noexcept = default;
+
+    /// @brief Move-Assignment
+    /// @param other Instance to be moved
+    OLEDBase &operator=(OLEDBase &&other) noexcept;
+
+    /**
+     * @brief Raw write
+     *
+     * @param buffer Pointer to commands or data
+     * @param size Size of @p buffer
+     * @return true On success
+     * @return false On failure
+     */
+    bool write(const uint8_t *buffer, ::std::size_t size) const noexcept;
+
+    /**
+     * @brief Write a command with no arguments
+     *
+     * @param command Command
+     * @return true On success
+     * @return false On failure
+     */
+    bool write_cmd(uint8_t command) const noexcept;
+
+    /**
+     * @brief Write a command with one argument
+     *
+     * @param command Command
+     * @param arg First argument
+     * @return true On success
+     * @return false On failure
+     */
+    bool write_cmd(uint8_t command, uint8_t arg) const noexcept;
+
+    /**
+     * @brief Write a command with two argument
+     *
+     * @param command Command
+     * @param arg1 First argument
+     * @param arg2 Second argument
+     * @return true On success
+     * @return false On failure
+     */
+    bool write_cmd(uint8_t command, uint8_t arg1, uint8_t arg2) const noexcept;
+
+    /**
+     * @brief Write to GDD RAM
+     *
+     * @param buffer Pointer to graphics display data
+     * @param size Size of the graphics display data
+     * @return true On success
+     * @return false On failure
+     */
+    bool write_gdd_ram(
+        const uint8_t *buffer,
+        ::std::size_t size) const noexcept;
+
+    /**
+     * @brief Read the status register
+     *
+     * @param[out] status Status register if the return value is true
+     * @return true On success
+     * @return false On failure
+     */
+    bool read_status(uint8_t &status) const noexcept;
 
 private:
     /// @brief I2C device handler in the ESP-IDF API (must be type-casted)
     void *device = nullptr;
-    /// @brief Result of last I2C operation
-    bool last_i2c_result = false;
 };
 
+/**
+ * @brief Monochrome OLED
+ *
+ */
 struct OLED : public OLEDBase
 {
+
+    /// @brief Create an uninitialized OLED
+    constexpr OLED() : OLEDBase(), _params{}, width_b{0}, height_b{0}
+    {
+        _params.screen_width = 0;
+        _params.screen_height = 0;
+    }
+
+    /**
+     * @brief Create an OLED using any of the default I2C addresses
+     *
+     * @param params OLED parameters
+     * @param bus I2C Bus
+     */
     OLED(
-        I2CBus bus,
-        OLED_resolution res = OLED_resolution::_DEFAULT);
+        const OLEDParameters &params,
+        I2CBus bus);
+
+    /**
+     * @brief Create an OLED using a specific I2C address
+     *
+     * @param params OLED parameters
+     * @param address7bits Full 7-bit I2C address
+     * @param bus I2C Bus
+     */
     OLED(
+        const OLEDParameters &params,
         uint8_t address7bits,
-        I2CBus bus,
-        OLED_resolution res = OLED_resolution::_DEFAULT);
+        I2CBus bus);
 
     /// @brief Copy-constructor (default)
     /// @param other Instance to be copied
@@ -545,56 +574,71 @@ struct OLED : public OLEDBase
     /// @param other Instance to be moved
     OLED &operator=(OLED &&other) noexcept = default;
 
-    /**
-     * @brief Get the auto-detected display controller
-     *
-     * @return Controller Display controller
-     */
-    Controller controller() { return _controller; }
+    /// @brief Get the OLED parameters passed in the constructor
+    /// @return OLED parameters
+    OLEDParameters parameters() const noexcept { return _params; }
 
-    /**
-     * @brief Get the configured display resolution
-     *
-     * @return OLED_resolution Display resolution
-     */
-    OLED_resolution resolution() { return _resolution; }
+    /// @brief Get the frame size in bytes
+    ::std::size_t frame_size() const noexcept
+    {
+        return width_b * height_b * 8;
+    }
 
-    /**
-     * @brief Get the display width
-     *
-     * @return uint8_t Width in pixels
-     */
-    uint8_t width() { return _width; }
-
-    /**
-     * @brief Get the display height
-     *
-     * @return uint8_t Height in pixels
-     */
-    uint8_t height() { return _height; }
-
-    // Fundamental commands
-
+    /// @brief Set the display contrast
+    /// @param value Contrast. Higher means more contrast.
     void contrast(uint8_t value);
+
+    /// @brief Enable/Disable GDD RAM display
+    /// @param yesOrNo True to enable, false to Disable
     void enable_display(bool yesOrNo);
+
+    /// @brief Turn display on/off
+    /// @param onOrOff True to turn on, false to turn off.
     void turn(bool onOrOff);
 
-    // Frame buffer
-
-    void setPixel(uint8_t x, uint8_t y, bool color);
-    void clear();
-    void show();
-
-    // protected:
-    OLED_resolution _resolution;
-    Controller _controller = OLED::Controller::UNKNOWN;
-    uint8_t _frame[2048] = {0}; // Size for the worst case: 128x128
-    unsigned int _screen_offset = 0;
-    uint8_t _width;
-    uint8_t _height;
-
-    void init();
+    /// @brief Switch pixel colors
     void inverse_display(bool yesOrNo);
 
-    void locate(uint8_t x, uint8_t y);
+    /// @brief Clear the display
+    /// @param inverted True for white, false for black.
+    void clear(bool inverted = false);
+
+    /// @brief Display a frame at once
+    /// @param frame Pointer to a frame buffer.
+    void show(const uint8_t *frame);
+
+protected:
+    /// @brief OLED parameters given in the constructor
+    OLEDParameters _params;
+    /// @brief Screen width in bytes
+    uint8_t width_b;
+    /// @brief Screen height in bytes
+    uint8_t height_b;
+
+    /// @brief Initialize the display (called from the constructor)
+    void init();
+
+    /**
+     * @brief Set the start page and start column before display
+     * @note The controller is configured in "page" mode
+     *
+     * @param x Column (or segment) index
+     * @param page Page index
+     */
+    void locate(uint8_t x, uint8_t page);
+
+    /**
+     * @brief Utility function to translate a row-major vector graphic
+     *        to the column-major format used by OLED screens
+     *
+     * @param bit_index Column index in a single byte, range [0,7]
+     * @param from Pointer to the frame buffer's first row and column
+     * @param row_count Number of rows to translate, range [0,8]
+     * @return uint8_t byte representing an 1x8 chunk
+     *         (one segment in one page)
+     */
+    inline uint8_t row2col(
+        uint8_t bit_index,
+        const uint8_t *from,
+        uint8_t row_count);
 };

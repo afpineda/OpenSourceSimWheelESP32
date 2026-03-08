@@ -11,45 +11,56 @@
 
 #include "OutputHardware.hpp"
 #include "Testing.hpp"
-#include "esp32-hal.h"
-#include "HAL.hpp"
+// #include "esp32-hal.h"
+#include "HAL.hpp" // For DELAY_MS()
+#include "Adafruit_GFX.h"
 
-OLED *hw = nullptr;
+//------------------------------------------------------------------
+// Globals
+//------------------------------------------------------------------
 
-uint8_t test_buffer[] = {0xFF, 0xFF, 0xFF, 0xFF};
+OLED hw;
+
+//------------------------------------------------------------------
+// Auxiliary
+//------------------------------------------------------------------
+
+GFXcanvas1 test_frame()
+{
+    GFXcanvas1 result(128, 64);
+    result.drawRoundRect(0, 0, 128, 64, 3, 0xFF);
+    result.drawLine(0, 0, 127, 63, 0xFF);
+    result.drawLine(127, 0, 0, 63, 0xFF);
+    result.drawEllipse(64, 32, 64, 32, 0xFF);
+    return result;
+}
+
+//------------------------------------------------------------------
+// Arduino entry point
+//------------------------------------------------------------------
 
 void setup()
 {
     debugPrintBegin();
     debugPrintf("SCL: %u, SDA: %u\n", SCL, SDA);
-    hw = new OLED(I2CBus::PRIMARY);
-    if (!hw->available())
-        debugPrintf("Device not found\n");
-    debugPrintf("--GO--\n");
+    hw = OLED(
+        OLEDParameters::for132x64(),
+        I2CBus::PRIMARY);
 
-    uint8_t st;
-    if (hw->read_status(st))
+    if (hw.available())
     {
-        debugPrintf("Status %x: \n", st);
+        debugPrintf("--GO--\n");
+        hw.clear();
+        hw.show(test_frame().getBuffer());
     }
     else
-        debugPrintf("No status \n");
-
-    hw->write_cmd(0x20, 0);      // horizontal addresing
-    hw->write_cmd(0x21, 0, 127); // Set column range
-    hw->write_cmd(0x22, 0, 7);   // Set page range
-    hw->setPixel(0, 0, true);
-    hw->setPixel(1, 1, true);
-    hw->setPixel(2, 2, true);
-    hw->setPixel(3, 3, true);
-    hw->setPixel(0, 1, true);
-    hw->setPixel(0, 2, true);
-    hw->setPixel(0, 3, true);
-    hw->write_gdd_ram(hw->_frame, 127);
+        debugPrintf("Device not found. Test cancelled\n");
 }
-
-uint8_t contrast = 0xFF;
 
 void loop()
 {
+    DELAY_MS(3000);
+    hw.inverse_display(true);
+    DELAY_MS(3000);
+    hw.inverse_display(false);
 }
