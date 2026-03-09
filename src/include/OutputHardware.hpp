@@ -381,6 +381,25 @@ public:
         result.start_col = 1;
         return result;
     }
+
+    /**
+     * @brief Force a specific graphics resolution
+     *
+     * @param width Screen width in pixels
+     * @param height Screen height in pixels
+     * @param params Other parameters
+     * @return OLEDParameters Resulting parameters
+     */
+    static OLEDParameters withResolution(
+        uint8_t width,
+        uint8_t height,
+        const OLEDParameters &params)
+    {
+        OLEDParameters result{params};
+        result.screen_width = width;
+        result.screen_height = height;
+        return result;
+    }
 };
 
 /**

@@ -6,3 +6,4 @@ pixels_dummy.cpp
 HAL.cpp
 OutputHardware.cpp
 SimWheelUI.cpp
+SimWheelUI_gfx.cpp

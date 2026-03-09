@@ -16,6 +16,7 @@
 //-------------------------------------------------------------------
 
 #include "OutputHardware.hpp"
+#include <memory> // For std::unique_ptr
 
 //-------------------------------------------------------------------
 // Auxiliary types
@@ -118,4 +119,41 @@ private:
     bool blink;
     bool blinkState;
     RevLightsMode displayMode;
-};
+}; // class PCF8574RevLights
+
+//-----------------------------------------------------------------------------
+// OLED UI 128x64
+//-----------------------------------------------------------------------------
+
+class OledTelemetry128x64 : public AbstractUserInterface
+{
+private:
+    /// @brief Private implementation type
+    struct Implementation; // https://cpppatterns.com/patterns/pimpl.html
+    /// @brief Private implementation instance
+    ::std::unique_ptr<Implementation> _impl;
+    OLED _display;
+
+    void display_battery_level(uint8_t value);
+public:
+
+    OledTelemetry128x64(
+        const OLEDParameters &params,
+        I2CBus bus = I2CBus::SECONDARY);
+
+    OledTelemetry128x64(
+        const OLEDParameters &params,
+        uint8_t address7bits,
+        I2CBus bus = I2CBus::SECONDARY);
+
+    virtual void onStart() override;
+    virtual void onConnected() override;
+    virtual void onTelemetryData(const TelemetryData *pTelemetryData) override;
+    virtual void serveSingleFrame(uint32_t elapsedMs) override;
+    virtual void onBitePoint(uint8_t bitePoint) override;
+    virtual void onLowBattery() override;
+    virtual void onSaveSettings() override;
+    virtual void shutdown() override;
+    virtual uint8_t getMaxFPS() override { return 26; }
+    virtual uint16_t getStackSize() override { return 2048; }
+}; // class OledTelemetry128x64
