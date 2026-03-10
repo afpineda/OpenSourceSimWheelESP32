@@ -256,15 +256,18 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
 
 void OledTelemetry128x64::serveSingleFrame(uint32_t elapsedMs)
 {
+    if (_impl->showBitePoint &&
+        (frameTimer(_impl->bitePointTimer, elapsedMs, 2000) > 0))
+    {
+        clearFrameBuffer();
+        _impl->showBitePoint = false;
+    }
+
     if (_impl->updated)
     {
         _impl->updated = false;
         _display.show(_impl->frame.getBuffer());
     }
-
-    if (_impl->showBitePoint &&
-        (frameTimer(_impl->bitePointTimer, elapsedMs, 2000) > 0))
-        _impl->showBitePoint = false;
 
     if (_enableFlashing && _impl->flash)
     {
@@ -281,9 +284,10 @@ void OledTelemetry128x64::onBitePoint(uint8_t bitePoint)
         _impl->bitePointTimer = 0;
         _impl->showBitePoint = true;
 
+        _impl->frame.fillScreen(0);
         _impl->frame.drawRoundRect(0, 0, 128, 64, 4, 0xFFFF);
         _impl->frame.fillRoundRect(0, 0, 128, 20, 4, 0xFFFF);
-        // frame.setTextSize(1);
+        _impl->frame.setTextSize(1);
         _impl->frame.setTextColor(0);
         _impl->frame.setCursor(34, 6);
         _impl->frame.print("Bite point");
