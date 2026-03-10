@@ -132,19 +132,47 @@ private:
     struct Implementation; // https://cpppatterns.com/patterns/pimpl.html
     /// @brief Private implementation instance
     ::std::unique_ptr<Implementation> _impl;
+    /// @brief Display hardware
     OLED _display;
+    /// @brief Whether to allow screen flashing or not
+    bool _enableFlashing{true};
 
+    /// @brief Draw the battery level into the internal frame buffer
+    /// @param value Battery level
     void display_battery_level(uint8_t value);
-public:
 
+    /// @brief Stop flashing
+    void stopFlashing();
+
+    /// @brief Clear the internal frame buffer
+    void clearFrameBuffer();
+
+public:
+    /**
+     * @brief Create an Oled Telemetry display (128x64)
+     *
+     * @param params OLED hardware parameters
+     * @param bus I2C bus
+     * @param enableFlashing Whether to allow screen flashing or not
+     */
     OledTelemetry128x64(
         const OLEDParameters &params,
-        I2CBus bus = I2CBus::SECONDARY);
+        I2CBus bus = I2CBus::SECONDARY,
+        bool enableFlashing = true);
 
+    /**
+     * @brief Create an Oled Telemetry display (128x64)
+     *
+     * @param params OLED hardware parameters
+     * @param address7bits Full I2C address in 7 bit format
+     * @param bus I2C bus
+     * @param enableFlashing Whether to allow screen flashing or not
+     */
     OledTelemetry128x64(
         const OLEDParameters &params,
         uint8_t address7bits,
-        I2CBus bus = I2CBus::SECONDARY);
+        I2CBus bus = I2CBus::SECONDARY,
+        bool enableFlashing = true);
 
     virtual void onStart() override;
     virtual void onConnected() override;
@@ -155,6 +183,6 @@ public:
     virtual void onLowBattery() override;
     virtual void onSaveSettings() override;
     virtual void shutdown() override;
-    virtual uint8_t getMaxFPS() override { return 26; }
+    virtual uint8_t getMaxFPS() override { return 30; }
     virtual uint16_t getStackSize() override { return 2048; }
 }; // class OledTelemetry128x64

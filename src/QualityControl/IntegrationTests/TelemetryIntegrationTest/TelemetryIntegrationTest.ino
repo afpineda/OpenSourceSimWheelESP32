@@ -32,6 +32,11 @@ public:
     virtual int getLastBatteryLevel() override { return 25; }
     virtual bool hasBattery() override { return true; }
     virtual bool isBatteryPresent() override { return true; }
+    virtual void getStatus(BatteryStatus &status) override
+    {
+        status.stateOfCharge = 25;
+        status.isBatteryPresent = true;
+    }
 };
 
 //------------------------------------------------------------------

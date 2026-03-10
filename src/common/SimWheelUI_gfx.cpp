@@ -21,15 +21,7 @@
 
 // DEVELOPER NOTE:
 // You must uninstall the NeoPixel library in Arduino IDE
-// because there is
-
-//-----------------------------------------------------------------------------
-// Auxiliary
-//-----------------------------------------------------------------------------
-
-#define OLED_CLEAR              \
-    _impl->frame.fillScreen(0); \
-    _impl->updated = true
+// if there is a compilation conflict with Adafruit_GFX
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -61,9 +53,11 @@ struct OledTelemetry128x64::Implementation
 
 OledTelemetry128x64::OledTelemetry128x64(
     const OLEDParameters &params,
-    I2CBus bus)
-    : _display(OLEDParameters::withResolution(128, 64, params), bus),
-      _impl{::std::make_unique<Implementation>()}
+    I2CBus bus,
+    bool enableFlashing)
+    : _impl{::std::make_unique<Implementation>()},
+      _display(OLEDParameters::withResolution(128, 64, params), bus),
+      _enableFlashing{enableFlashing}
 {
     _display.clear();
     requiresPowertrainTelemetry = true;
@@ -73,9 +67,11 @@ OledTelemetry128x64::OledTelemetry128x64(
 OledTelemetry128x64::OledTelemetry128x64(
     const OLEDParameters &params,
     uint8_t address7bits,
-    I2CBus bus)
-    : _display(OLEDParameters::withResolution(128, 64, params), bus),
-      _impl{::std::make_unique<Implementation>()}
+    I2CBus bus,
+    bool enableFlashing)
+    : _impl{::std::make_unique<Implementation>()},
+      _display(OLEDParameters::withResolution(128, 64, params), bus),
+      _enableFlashing{enableFlashing}
 {
     _display.clear();
     requiresPowertrainTelemetry = true;
@@ -83,7 +79,7 @@ OledTelemetry128x64::OledTelemetry128x64(
 }
 
 //-----------------------------------------------------------------------------
-// Notifications
+// Protected methods
 //-----------------------------------------------------------------------------
 
 void OledTelemetry128x64::display_battery_level(uint8_t value)
@@ -103,8 +99,28 @@ void OledTelemetry128x64::display_battery_level(uint8_t value)
     _display.show(_impl->frame.getBuffer());
 }
 
+void OledTelemetry128x64::stopFlashing()
+{
+    if (_impl->flash)
+    {
+        _impl->flash = false;
+        _display.inverse_display(false);
+    }
+}
+
+void OledTelemetry128x64::clearFrameBuffer()
+{
+    _impl->frame.fillScreen(0);
+    _impl->updated = true;
+}
+
+//-----------------------------------------------------------------------------
+// Notifications
+//-----------------------------------------------------------------------------
+
 void OledTelemetry128x64::onStart()
 {
+    stopFlashing();
     BatteryStatus status;
     BatteryService::call::getStatus(status);
     if (BatteryService::call::hasBattery() &&
@@ -123,17 +139,19 @@ void OledTelemetry128x64::onStart()
         _display.show(_impl->frame.getBuffer());
     }
     DELAY_MS(2000);
-    OLED_CLEAR;
+    clearFrameBuffer();
 }
 
 void OledTelemetry128x64::onConnected()
 {
+    stopFlashing();
     _impl->connected = true;
-    OLED_CLEAR;
+    clearFrameBuffer();
 }
 
 void OledTelemetry128x64::onBLEdiscovering()
 {
+    stopFlashing();
     _impl->connected = false;
     _impl->frame.fillScreen(0);
     _impl->frame.drawRoundRect(0, 0, 128, 64, 4, 0xFFFF);
@@ -151,7 +169,14 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
 
     if (pTelemetryData)
     {
-        _impl->flash = pTelemetryData->powertrain.shiftLight2;
+        if (_impl->flash && !pTelemetryData->powertrain.shiftLight2)
+        {
+            // Stop flashing
+            _impl->flash = false;
+            _display.inverse_display(false);
+        }
+        else
+            _impl->flash = pTelemetryData->powertrain.shiftLight2;
         uint8_t aux;
 
         _impl->frame.fillScreen(0);
@@ -215,16 +240,16 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
         _impl->frame.setCursor(1, 26);
         _impl->frame.printf(
             "%02.2u",
-             pTelemetryData->ecu.tcLevel);
+            pTelemetryData->ecu.tcLevel);
 
         // Draw fuel warning
-        if ( pTelemetryData->ecu.lowFuelAlert)
+        if (pTelemetryData->ecu.lowFuelAlert)
             _impl->frame.drawChar(61, 10, 'F', 0xFF, 0, 1);
     }
     else
     {
         _impl->frame.fillScreen(0);
-        _impl->flash = false;
+        stopFlashing();
     }
     _impl->updated = true;
 } // OledTelemetry128x64::onTelemetryData()
@@ -240,12 +265,19 @@ void OledTelemetry128x64::serveSingleFrame(uint32_t elapsedMs)
     if (_impl->showBitePoint &&
         (frameTimer(_impl->bitePointTimer, elapsedMs, 2000) > 0))
         _impl->showBitePoint = false;
+
+    if (_enableFlashing && _impl->flash)
+    {
+        _impl->flashing = !(_impl->flashing);
+        _display.inverse_display(_impl->flashing);
+    }
 }
 
 void OledTelemetry128x64::onBitePoint(uint8_t bitePoint)
 {
     if (_impl->connected)
     {
+        stopFlashing();
         _impl->bitePointTimer = 0;
         _impl->showBitePoint = true;
 
@@ -266,6 +298,7 @@ void OledTelemetry128x64::onBitePoint(uint8_t bitePoint)
 
 void OledTelemetry128x64::onLowBattery()
 {
+    stopFlashing();
     _impl->frame.fillScreen(0);
     _impl->frame.drawRoundRect(4, 16, 72, 32, 4, 0xFFFF);
     _impl->frame.drawRect(76, 24, 8, 16, 0xFFFF);
@@ -273,11 +306,12 @@ void OledTelemetry128x64::onLowBattery()
     _impl->frame.drawLine(24, 56, 56, 8, 0xFFFF);
     _display.show(_impl->frame.getBuffer());
     DELAY_MS(3000);
-    OLED_CLEAR;
+    clearFrameBuffer();
 }
 
 void OledTelemetry128x64::onSaveSettings()
 {
+    stopFlashing();
     _impl->frame.fillScreen(0);
 
     // Draw frame rect
@@ -298,10 +332,11 @@ void OledTelemetry128x64::onSaveSettings()
     // Display
     _display.show(_impl->frame.getBuffer());
     DELAY_MS(1500);
-    OLED_CLEAR;
+    clearFrameBuffer();
 }
 
 void OledTelemetry128x64::shutdown()
 {
+    stopFlashing();
     _display.turn(false);
 }
