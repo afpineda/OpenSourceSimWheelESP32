@@ -12,6 +12,11 @@ Follow the links for an in-depth explanation:
   A display composed by eight single-color LEDS and
   a PFC8574 GPIO expander chip.
 
+- [Monochrome OLED 128x64 telemetry display](./MonochromeOLED/MonochromeOLED_en.md)
+
+  A monochrome OLED with 128x64 pixels showing RPM bar,
+  gear, TC, ABS and brake bias.
+
 Any telemetry display is potentially able to display notifications
 (such as connection or low battery),
 but it depends on the particular implementation.

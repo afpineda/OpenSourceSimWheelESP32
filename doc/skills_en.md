@@ -33,6 +33,9 @@ May be needed:
     Any version prior to version 2.2.0 will not work.
     This optional library is a caution against bugs.
     How to use it will be explained later.
+  - [Adafruit GFX](https://docs.arduino.cc/libraries/adafruit-gfx-library/).
+    Required only for telemetry display via OLED hardware.
+    This project has been successfully tested with **version 1.12.5**.
 
 Recommended:
 
