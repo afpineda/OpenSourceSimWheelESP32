@@ -19,6 +19,7 @@ $arduino_cli = "arduino-cli"
 
 $esp_core_version = "3.3.4"
 $nimble_version = "2.3.7"
+$gfx_version = "1.12.5"
 
 <#############################################################################
 # Auxiliary functions
@@ -56,6 +57,12 @@ if ($LASTEXITCODE -gt 0) {
 
 Write-Host "🛈 Installing NimBLE-Arduino ($nimble_version)" -ForegroundColor Cyan
 & $arduino_cli lib install "NimBLE-Arduino@$nimble_version"
+if ($LASTEXITCODE -gt 0) {
+    throw "❌ Failed to install dependency"
+}
+
+Write-Host "🛈 Installing Adafruit GFX ($gfx_version)" -ForegroundColor Cyan
+& $arduino_cli lib install "`"Adafruit GFX Library@$gfx_version`""
 if ($LASTEXITCODE -gt 0) {
     throw "❌ Failed to install dependency"
 }
