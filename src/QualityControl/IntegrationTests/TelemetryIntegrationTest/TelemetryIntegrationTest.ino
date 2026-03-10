@@ -57,7 +57,9 @@ void setup()
             I2CBus::SECONDARY);
         uint8_t hwAddress = 2;
         uint8_t factoryAddress = 0x38;
-        Serial.printf("Using PCF8574 address %x (hexadecimal)\n", factoryAddress | hwAddress);
+        Serial.printf(
+            "Using PCF8574 address %x (hexadecimal)\n",
+            factoryAddress | hwAddress);
 
         hid::configure("UITest", "Mamandurrio", false);
         ui::add<SimpleShiftLight>(TEST_SIMPLE_SHIFT_LIGHT_PIN);
@@ -66,8 +68,11 @@ void setup()
             I2CBus::SECONDARY,
             factoryAddress,
             RevLightsMode::LEFT_TO_RIGHT);
+        OLEDParameters oled_params = OLEDParameters::for132x64();
+        oled_params.flip_vertical = true;
+        oled_params.flip_horizontal = true;
         ui::add<OledTelemetry128x64>(
-            OLEDParameters::for132x64(),
+            oled_params,
             I2CBus::SECONDARY);
 
         internals::hid::common::getReady();
