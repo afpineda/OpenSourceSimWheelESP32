@@ -1,5 +1,17 @@
 # Change log (and release notes)
 
+## 7.10.0
+
+- There is a new "out-of-the-box" telemetry display based on monochrome OLED
+  (128x64 pixels). See
+  [MonochromeOLED_en.md](./hardware/ui/MonochromeOLED/MonochromeOLED_en.md)
+  for instructions.
+- The *Adafruit GFX library* must be installed in Arduino IDE to make them work.
+  This is a new external dependency, but optional.
+  Existing custom firmwares are not affected by this change.
+- There is a new unit test for OLED displays (*OLEDTest.ino*).
+- The telemetry integration test has been updated to include OLED displays.
+
 ## 7.9.1
 
 - In preparation for the upcoming Arduino-ESP32 version 4.0.0,
