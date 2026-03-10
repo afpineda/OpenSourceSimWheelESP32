@@ -106,6 +106,9 @@ thus not requiring a translation unit.
     Provide implementation for the matching header file.
     For example, `InputHardware.cpp` implements all declarations
     found in `InputHardware.hpp`.
+    There is an exception:
+    `SimWheelUI.cpp` and `SimWheelUI_gfx.cpp` share
+    the implementation of `SimWheelUI.hpp`.
 
 ### Exceptions to this rule
 
@@ -114,26 +117,27 @@ thus not requiring a translation unit.
 
 ## Principle of single responsibility
 
-| Code artifact              | Reason to change                                                       |
-| -------------------------- | ---------------------------------------------------------------------- |
-| batteryCalibration.cpp     | SOC algorithm                                                          |
-| batteryMonitor.cpp         | Battery management capabilities                                        |
-| BatteryMonitorHardware.cpp | Battery management hardware design                                     |
-| firmware.cpp               | Firmware initialization                                                |
-| HAL.cpp                    | Underlying ESP-IDF API                                                 |
-| hid_«implementation».cpp   | Underlying HID stack or wrapper                                        |
-| hidCommon.cpp              | Features available through the companion app or SimHub (see note)      |
-| InputHardware.cpp          | Input hardware design                                                  |
-| inputHub.cpp               | Device operation through specific button press combinations            |
-| inputMap.cpp               | Firmware-defined or user-defined input numbers                         |
-| inputs.cpp                 | Input hardware settings                                                |
-| OutputHardware.cpp         | Output hardware design                                                 |
-| pixels.cpp                 | Pixel control capabilities or available UI notifications               |
-| power.cpp                  | Underlying power management capabilities                               |
-| SimWheelUI.cpp             | Out-of-the-box user interfaces for telemetry display and notifications |
-| storage.cpp                | User settings that require long-term storage                           |
-| telemetry.cpp              | Telemetry data                                                         |
-| ui.cpp                     | Support for custom user interfaces                                     |
+| Code artifact              | Reason to change                                                                          |
+| -------------------------- | ----------------------------------------------------------------------------------------- |
+| batteryCalibration.cpp     | SOC algorithm                                                                             |
+| batteryMonitor.cpp         | Battery management capabilities                                                           |
+| BatteryMonitorHardware.cpp | Battery management hardware design                                                        |
+| firmware.cpp               | Firmware initialization                                                                   |
+| HAL.cpp                    | Underlying ESP-IDF API                                                                    |
+| hid_«implementation».cpp   | Underlying HID stack or wrapper                                                           |
+| hidCommon.cpp              | Features available through the companion app or SimHub (see note)                         |
+| InputHardware.cpp          | Input hardware design                                                                     |
+| inputHub.cpp               | Device operation through specific button press combinations                               |
+| inputMap.cpp               | Firmware-defined or user-defined input numbers                                            |
+| inputs.cpp                 | Input hardware settings                                                                   |
+| OutputHardware.cpp         | Output hardware design                                                                    |
+| pixels.cpp                 | Pixel control capabilities or available UI notifications                                  |
+| power.cpp                  | Underlying power management capabilities                                                  |
+| SimWheelUI.cpp             | Out-of-the-box user interfaces for telemetry display and notifications not using graphics |
+| SimWheelUI_gfx.cpp         | Out-of-the-box user interfaces for telemetry display and notifications using graphics     |
+| storage.cpp                | User settings that require long-term storage                                              |
+| telemetry.cpp              | Telemetry data                                                                            |
+| ui.cpp                     | Support for custom user interfaces                                                        |
 
 Note:
 
