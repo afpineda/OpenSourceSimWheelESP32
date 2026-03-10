@@ -86,6 +86,8 @@ display controllers. *SSD1306* was tested.
      **Omit this parameter** to use the factory-defined address,
      which should work in most cases.
    - The I2C bus. The default and **recommended** value is `I2CBus::SECONDARY`.
+     The secondary bus must be explicitly initialized to the proper pins
+     (call `inputs::initializeI2C()` first).
    - Enable screen flashing.
      This defaults to `true`.
      Set it to `false` if you think it might cause you to have epileptic fits
@@ -94,11 +96,14 @@ display controllers. *SSD1306* was tested.
 ### Example
 
 ```c++
+...
 OLEDParameters my_oled_params;
 my_oled_params.flip_horizontal = true;
 my_oled_params.flip_vertical = true;
 my_oled_params.start_col = 1;
+inputs::initializeI2C(SECONDARY_SCL, SECONDARY_SDA, I2CBus::SECONDARY);
 ui::add<OledTelemetry128x64>(my_oled_params, I2CBus::SECONDARY, false);
+...
 ```
 
 ## Notifications
