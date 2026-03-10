@@ -305,9 +305,9 @@ This project provides several connectivity choices:
 
 - Universal Serial Bus (USB).
 
-  > [!WARNING]
+  > ⚠️ Warning ⚠️
+  >
   > For this to work you must **NOT** configure
-  > *USB mode* to "USB-OTG (TinyUSB)" and
   > *USB CDC On Boot* to "Enabled"
   > in Arduino IDE (*Tools* menu).
 
