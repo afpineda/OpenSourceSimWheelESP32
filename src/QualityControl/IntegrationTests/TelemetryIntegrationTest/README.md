@@ -7,10 +7,11 @@ then properly displayed by the frame server.
 
 ## Hardware setup
 
-We are using two display devices:
+We are using several display devices:
 
-- A simple (LED) shift light
+- A simple (LED) shift light.
 - A PCF8574-based LED driver with 8 LEDs.
+- A monochrome OLED 128x64.
 
 Refer to their unit tests to see the wiring.
 
