@@ -62,7 +62,7 @@ if ($LASTEXITCODE -gt 0) {
 }
 
 Write-Host "🛈 Installing Adafruit GFX ($gfx_version)" -ForegroundColor Cyan
-& $arduino_cli lib install "`"Adafruit GFX Library@$gfx_version`""
+& $arduino_cli lib install "Adafruit GFX Library@$gfx_version"
 if ($LASTEXITCODE -gt 0) {
     throw "❌ Failed to install dependency"
 }
