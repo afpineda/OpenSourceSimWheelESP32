@@ -44,7 +44,7 @@
 // Constants
 //------------------------------------------------------------------------------
 
-#define HID_REPORT_COUNT 10
+#define NIMBLE_HID_REPORT_COUNT 10
 
 #define EMPTY_ble_gatt_cpfd { \
     .format = 0,              \
@@ -816,7 +816,7 @@ struct BLEHIDService
     }
 
 private:
-    inline static ble_gatt_chr_def chr_set[4 + HID_REPORT_COUNT + 1]{};
+    inline static ble_gatt_chr_def chr_set[4 + NIMBLE_HID_REPORT_COUNT + 1]{};
     static int report_access_fn(
         uint16_t conn_handle,
         uint16_t attr_handle,
