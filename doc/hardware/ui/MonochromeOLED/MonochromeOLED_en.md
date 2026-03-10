@@ -13,6 +13,8 @@ It will show the following information thanks to SimHub:
 - Current TC and ABS settings.
 - Current brake bias (BB).
 
+![OLED display example](MonochromeOLED.jpg)
+
 ## Requirements
 
 - Install the
