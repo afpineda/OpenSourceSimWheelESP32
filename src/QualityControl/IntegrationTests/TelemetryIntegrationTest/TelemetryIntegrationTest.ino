@@ -26,7 +26,7 @@
 
 // Uncomment to test notifications involving battery SoC
 
-class BatteryServiceMock: public BatteryService
+class BatteryServiceMock : public BatteryService
 {
 public:
     virtual int getLastBatteryLevel() override { return 25; }
@@ -45,7 +45,7 @@ void setup()
     {
         Serial.println("-- READY --");
 
-        // Configure I2C address
+        // PCF8574RevLights: Configure I2C address
         internals::hal::i2c::initialize(
             TEST_SECONDARY_SDA,
             TEST_SECONDARY_SCL,
@@ -61,6 +61,9 @@ void setup()
             I2CBus::SECONDARY,
             factoryAddress,
             RevLightsMode::LEFT_TO_RIGHT);
+        ui::add<OledTelemetry128x64>(
+            OLEDParameters::for132x64(),
+            I2CBus::SECONDARY);
 
         internals::hid::common::getReady();
         internals::ui::getReady();

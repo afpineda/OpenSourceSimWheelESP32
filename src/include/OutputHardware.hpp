@@ -459,17 +459,17 @@ protected:
     /// @brief Destructor
     virtual ~OLEDBase() noexcept;
 
-    /// @brief Copy-constructor (default)
+    /// @brief Copy-constructor (deleted)
     /// @param other Instance to be copied
-    OLEDBase(const OLEDBase &other) noexcept = default;
+    OLEDBase(const OLEDBase &other) noexcept = delete;
 
     /// @brief Move-constructor
     /// @param other Instance to be moved
     OLEDBase(OLEDBase &&other) noexcept;
 
-    /// @brief Copy-Assignment (default)
+    /// @brief Copy-Assignment (deleted)
     /// @param other Instance to be copied
-    OLEDBase &operator=(const OLEDBase &other) noexcept = default;
+    OLEDBase &operator=(const OLEDBase &other) noexcept = delete;
 
     /// @brief Move-Assignment
     /// @param other Instance to be moved
@@ -577,17 +577,17 @@ struct OLED : public OLEDBase
         uint8_t address7bits,
         I2CBus bus);
 
-    /// @brief Copy-constructor (default)
+    /// @brief Copy-constructor (deleted)
     /// @param other Instance to be copied
-    OLED(const OLED &other) noexcept = default;
+    OLED(const OLED &other) noexcept = delete;
 
     /// @brief Move-constructor (default)
     /// @param other Instance to be moved
     OLED(OLED &&other) noexcept = default;
 
-    /// @brief Copy-Assignment (default)
+    /// @brief Copy-Assignment (deleted)
     /// @param other Instance to be copied
-    OLED &operator=(const OLED &other) noexcept = default;
+    OLED &operator=(const OLED &other) noexcept = delete;
 
     /// @brief Move-Assignment (default)
     /// @param other Instance to be moved

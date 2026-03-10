@@ -148,6 +148,7 @@ public:
 
     virtual void onStart() override;
     virtual void onConnected() override;
+    virtual void onBLEdiscovering() override;
     virtual void onTelemetryData(const TelemetryData *pTelemetryData) override;
     virtual void serveSingleFrame(uint32_t elapsedMs) override;
     virtual void onBitePoint(uint8_t bitePoint) override;

@@ -40,7 +40,7 @@
 struct OledTelemetry128x64::Implementation
 {
     /// @brief Frame buffer
-    GFXcanvas1 frame(128, 64);
+    GFXcanvas1 frame{128, 64};
     /// @brief Timer to hide the bite point bar
     uint32_t bitePointTimer = 0;
     /// @brief True if currently flashing
@@ -89,24 +89,24 @@ OledTelemetry128x64::OledTelemetry128x64(
 void OledTelemetry128x64::display_battery_level(uint8_t value)
 {
     _impl->frame.fillScreen(0);
-    _impl->fframe.drawRoundRect(4, 16, 72, 32, 4, 0xFFFF);
+    _impl->frame.drawRoundRect(4, 16, 72, 32, 4, 0xFFFF);
     _impl->frame.drawRect(76, 24, 8, 16, 0xFFFF);
     uint8_t w = map_value(value, 0, 100, 0, 72);
     _impl->frame.fillRoundRect(4, 16, w, 32, 4, 0xFFFF);
     _impl->frame.setCursor(90, 25);
     _impl->frame.setTextSize(2);
     _impl->frame.setTextColor(0xFF, 0);
-    if (percent < 100)
-        frame.printf("%02.2u%%", value);
+    if (value < 100)
+        _impl->frame.printf("%02.2u%%", value);
     else
-        frame.print("100");
+        _impl->frame.print("100");
     _display.show(_impl->frame.getBuffer());
 }
 
-OledTelemetry128x64::onStart()
+void OledTelemetry128x64::onStart()
 {
     BatteryStatus status;
-    BatteryService::call::getStatus(&status);
+    BatteryService::call::getStatus(status);
     if (BatteryService::call::hasBattery() &&
         status.stateOfCharge.has_value())
         display_battery_level(status.stateOfCharge.value());
@@ -162,19 +162,26 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
 
         // Draw gear
         _impl->frame.setTextSize(3);
-        aux = shiftLight1 ? 0 : 0xFF;
-        if (shiftLight1)
+        aux = (pTelemetryData->powertrain.shiftLight1) ? 0 : 0xFF;
+        if (pTelemetryData->powertrain.shiftLight1)
             _impl->frame.fillRect(52, 25, 21, 27, 0xFFFF);
-        _impl->frame.drawChar(55, 28, gear, aux, !aux, 3);
+        _impl->frame.drawChar(
+            55,
+            28,
+            pTelemetryData->powertrain.gear,
+            aux,
+            !aux, 3);
 
         // Draw brake bias
         _impl->frame.setTextSize(1);
         _impl->frame.setTextColor(0xFFFF);
         _impl->frame.setCursor(43, 56);
-        _impl->frame.printf("BB: %02.2u%%", brakeBias);
+        _impl->frame.printf(
+            "BB: %02.2u%%",
+            pTelemetryData->ecu.brakeBias);
 
         // Draw ABS
-        if (absEngaged)
+        if (pTelemetryData->ecu.absEngaged)
         {
             _impl->frame.fillRect(107, 15, 19, 8, 0xFFFF);
             aux = 0;
@@ -188,10 +195,12 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
         _impl->frame.setTextSize(2);
         _impl->frame.setTextColor(0xFFFF, 0);
         _impl->frame.setCursor(103, 26);
-        _impl->frame.printf("%02.2u", absLevel);
+        _impl->frame.printf(
+            "%02.2u",
+            pTelemetryData->ecu.absLevel);
 
         // Draw TC
-        if (tcEngaged)
+        if (pTelemetryData->ecu.tcEngaged)
         {
             _impl->frame.fillRect(0, 15, 18, 9, 0xFFFF);
             _impl->frame.drawChar(1, 16, 'T', 0, 0xFFFF, 1);
@@ -204,10 +213,12 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
         }
         // frame.setTextSize(2);
         _impl->frame.setCursor(1, 26);
-        _impl->frame.printf("%02.2u", tcLevel);
+        _impl->frame.printf(
+            "%02.2u",
+             pTelemetryData->ecu.tcLevel);
 
         // Draw fuel warning
-        if (lowFuelAlert)
+        if ( pTelemetryData->ecu.lowFuelAlert)
             _impl->frame.drawChar(61, 10, 'F', 0xFF, 0, 1);
     }
     else
@@ -285,7 +296,7 @@ void OledTelemetry128x64::onSaveSettings()
     _impl->frame.drawLine(80, 56, 88, 48, 0xFFFF);
 
     // Display
-    hw->show(frame.getBuffer());
+    _display.show(_impl->frame.getBuffer());
     DELAY_MS(1500);
     OLED_CLEAR;
 }
