@@ -507,6 +507,7 @@ bool OLEDBase::write_cmd(uint8_t command) const noexcept
             i2c_master_transmit(I2C_SLAVE(device), buffer, 2, I2C_TIMEOUT_MS);
         return (err == ESP_OK);
     }
+    return false;
 }
 
 bool OLEDBase::write_cmd(uint8_t command, uint8_t arg) const noexcept
@@ -535,7 +536,7 @@ bool OLEDBase::write_cmd(
         buffer[0] = 0x00; // CONTROL_COMMAND
         buffer[1] = command;
         buffer[2] = arg1;
-        buffer[4] = arg2;
+        buffer[3] = arg2;
         esp_err_t err =
             i2c_master_transmit(I2C_SLAVE(device), buffer, 4, I2C_TIMEOUT_MS);
         return (err == ESP_OK);
@@ -709,12 +710,18 @@ void OLED::locate(uint8_t x, uint8_t page)
     x = x + _params.start_col;
     uint8_t transmit_buffer[] =
         {
-            0x80,                  // Control byte
-            0xB0 | (page & 0b111), // set page
-            0x80,                  // Control byte
-            x & 0b1111,            // Set column : lower 4 bits
-            0x00,                  // Control byte
-            (x >> 4) | 0x10,       // Set column : higher 4 bits
+            // Control byte
+            0x80,
+            // set page
+            static_cast<uint8_t>(0xB0 | (page & 0b111)),
+            // Control byte
+            0x80,
+            // Set column : lower 4 bits
+            static_cast<uint8_t>(x & 0b1111),
+            // Control byte
+            0x00,
+            // Set column : higher 4 bits
+            static_cast<uint8_t>((x >> 4) | 0x10),
         };
     write(transmit_buffer, sizeof(transmit_buffer));
 }
@@ -753,7 +760,6 @@ void OLED::show(const uint8_t *frame)
     {
         uint8_t aux[_params.screen_width];
         const uint8_t *frame_pos = frame;
-        const uint8_t *aux_pos = aux;
         const uint8_t last_page = height_b - 1;
         for (uint8_t page = 0; page <= last_page; page++)
         {
