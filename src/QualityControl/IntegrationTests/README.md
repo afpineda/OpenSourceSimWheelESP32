@@ -33,6 +33,7 @@ Render this graph at
 - ui:
   - SimpleShiftLight
   - PCF8574RevLights
+  - OledTelemetry128x64
 
 ## *Test name*: [DigitalInputsTest](./DigitalInputsTest/README.md)
 

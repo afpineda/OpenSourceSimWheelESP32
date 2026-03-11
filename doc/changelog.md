@@ -1,5 +1,9 @@
 # Change log (and release notes)
 
+## 7.10.1
+
+- Bug fixes to OLED displays.
+
 ## 7.10.0
 
 - There is a new "out-of-the-box" telemetry display based on monochrome OLED
