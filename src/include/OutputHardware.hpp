@@ -378,7 +378,7 @@ public:
     static OLEDParameters for132x64()
     {
         OLEDParameters result;
-        result.start_col = 1;
+        result.start_col = 2;
         return result;
     }
 

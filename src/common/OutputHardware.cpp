@@ -675,7 +675,7 @@ void OLED::init()
 void OLED::inverse_display(bool yesOrNo)
 {
     uint8_t cmd = 0xA6;
-    if (yesOrNo)
+    if (yesOrNo ^ _params.inverted_display)
         cmd++;
     write_cmd(cmd);
 }
@@ -687,7 +687,7 @@ void OLED::contrast(uint8_t value)
 
 void OLED::turn(bool onOrOff)
 {
-    if (onOrOff ^ _params.inverted_display)
+    if (onOrOff)
         // turn on
         write_cmd(0xAF);
     else
@@ -707,7 +707,6 @@ void OLED::enable_display(bool yesOrNo)
 
 void OLED::locate(uint8_t x, uint8_t page)
 {
-    x = x + _params.start_col;
     uint8_t transmit_buffer[] =
         {
             // Control byte
@@ -733,7 +732,7 @@ void OLED::clear(bool inverted)
     uint8_t page_cnt = _params.screen_height >> 3;
     for (uint8_t pIndex = 0; pIndex < page_cnt; pIndex++)
     {
-        locate(0, pIndex);
+        locate(_params.start_col, pIndex);
         write_gdd_ram(aux, sizeof(aux));
     }
 }

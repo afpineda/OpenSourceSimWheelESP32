@@ -66,7 +66,7 @@ display controllers. *SSD1306* was tested.
    The most relevant fields are:
    - `flip_horizontal` and `flip_vertical` to match the physical orientation
      of the screen.
-   - `start_col`: set to `1` if your display controller is 132x64.
+   - `start_col`: set to `2` if your display controller is 132x64.
    - `display_offset`: physical row where the first logical row should be
      displayed. Some screens are wired in a such a way that the top row
      is not the first row. Do some trial and error.
@@ -100,7 +100,7 @@ display controllers. *SSD1306* was tested.
 OLEDParameters my_oled_params;
 my_oled_params.flip_horizontal = true;
 my_oled_params.flip_vertical = true;
-my_oled_params.start_col = 1;
+my_oled_params.start_col = 2;
 inputs::initializeI2C(SECONDARY_SCL, SECONDARY_SDA, I2CBus::SECONDARY);
 ui::add<OledTelemetry128x64>(my_oled_params, I2CBus::SECONDARY, false);
 ...
