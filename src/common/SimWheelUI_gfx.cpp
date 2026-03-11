@@ -93,7 +93,7 @@ void OledTelemetry128x64::display_battery_level(uint8_t value)
     _impl->frame.setTextSize(2);
     _impl->frame.setTextColor(0xFF, 0);
     if (value < 100)
-        _impl->frame.printf("%02.2u%%", value);
+        _impl->frame.printf("%2.2u%%", value);
     else
         _impl->frame.print("100");
     _display.show(_impl->frame.getBuffer());
@@ -202,7 +202,7 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
         _impl->frame.setTextColor(0xFFFF);
         _impl->frame.setCursor(43, 56);
         _impl->frame.printf(
-            "BB: %02.2u%%",
+            "BB: %02u%%",
             pTelemetryData->ecu.brakeBias);
 
         // Draw ABS
@@ -221,7 +221,7 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
         _impl->frame.setTextColor(0xFFFF, 0);
         _impl->frame.setCursor(103, 26);
         _impl->frame.printf(
-            "%02.2u",
+            "%2.2u",
             pTelemetryData->ecu.absLevel);
 
         // Draw TC
@@ -239,7 +239,7 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
         // frame.setTextSize(2);
         _impl->frame.setCursor(1, 26);
         _impl->frame.printf(
-            "%02.2u",
+            "%2.2u",
             pTelemetryData->ecu.tcLevel);
 
         // Draw fuel warning
@@ -295,7 +295,7 @@ void OledTelemetry128x64::onBitePoint(uint8_t bitePoint)
         _impl->frame.setTextSize(2);
         _impl->frame.setTextColor(0xFFFF);
         _impl->frame.setCursor(48, 30);
-        _impl->frame.printf("%02.2u%%", percent);
+        _impl->frame.printf("%02u%%", percent);
         _impl->updated = true;
     }
 }
