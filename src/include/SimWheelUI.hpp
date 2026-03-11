@@ -184,5 +184,5 @@ public:
     virtual void onSaveSettings() override;
     virtual void shutdown() override;
     virtual uint8_t getMaxFPS() override { return 30; }
-    virtual uint16_t getStackSize() override { return 2048; }
+    virtual uint16_t getStackSize() override { return 2560; }
 }; // class OledTelemetry128x64
