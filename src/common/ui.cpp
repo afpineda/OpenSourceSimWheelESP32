@@ -18,9 +18,7 @@
 #include "InternalServices.hpp"
 
 #include <vector>
-#include <atomic>
-
-#include "freertos/FreeRTOS.h"
+#include <latch>
 
 //-------------------------------------------------------------------
 // Event queue
@@ -67,7 +65,10 @@ private:
     uint8_t eventBuffer[EVENT_QUEUE_SIZE];
     uint8_t queueHead = 0;
     uint8_t queueTail = 0;
-    inline void incQueuePointer(uint8_t &pointer) { pointer = (pointer + 1) % EVENT_QUEUE_SIZE; }
+    inline void incQueuePointer(uint8_t &pointer)
+    {
+        pointer = (pointer + 1) % EVENT_QUEUE_SIZE;
+    }
 };
 
 //-------------------------------------------------------------------
@@ -78,9 +79,7 @@ private:
 static std::vector<EventQueue *> _ui_queues;
 static std::vector<AbstractUserInterface *> _ui_instances;
 #define DEFAULT_STACK_SIZE 4 * 1024
-static SemaphoreHandle_t shutdownSemaphore = nullptr;
-static StaticSemaphore_t shutdownSemaphoreBuffer;
-static std::atomic<size_t> shutdownCounter;
+static std::latch *_shutdownLatch{nullptr};
 
 // Frame server and telemetry
 #define NO_TELEMETRY_TICKS pdMS_TO_TICKS(2000)
@@ -112,7 +111,6 @@ void notificationDaemonLoop(void *param)
     uint8_t eventID;
     uint32_t lastFrameID = 0;
     bool telemetryReceived = false;
-    bool shutdownRequest = false;
     TickType_t previousTelemetryTimestamp = 0;
     TickType_t currentTelemetryTimestamp = 0;
 
@@ -127,7 +125,7 @@ void notificationDaemonLoop(void *param)
     eventQueue->ui->onStart();
 
     TickType_t frameTimestamp = xTaskGetTickCount();
-    while (!shutdownRequest)
+    while (true)
     {
         if (ulTaskNotifyTake(pdTRUE, frameServerPeriod))
         {
@@ -136,7 +134,8 @@ void notificationDaemonLoop(void *param)
                 switch (eventID)
                 {
                 case EVENT_BITE_POINT:
-                    eventQueue->ui->onBitePoint(InputHubService::call::getBitePoint());
+                    eventQueue->ui->onBitePoint(
+                        InputHubService::call::getBitePoint());
                     break;
                 case EVENT_BLE_DISCOVERING:
                     eventQueue->ui->onBLEdiscovering();
@@ -151,7 +150,10 @@ void notificationDaemonLoop(void *param)
                     eventQueue->ui->onSaveSettings();
                     break;
                 case EVENT_SHUTDOWN:
-                    shutdownRequest = true;
+                    eventQueue->ui->shutdown();
+                    _shutdownLatch->count_down();
+                    // Shutdown is not reversible
+                    vTaskDelay(portMAX_DELAY);
                     break;
                 default:
                     break;
@@ -167,7 +169,8 @@ void notificationDaemonLoop(void *param)
                     telemetryReceived = true;
                     lastFrameID = telemetry::data.frameID;
                     previousTelemetryTimestamp = currentTelemetryTimestamp;
-                    eventQueue->ui->onTelemetryData((const TelemetryData *)&telemetry::data);
+                    eventQueue->ui->onTelemetryData(
+                        (const TelemetryData *)&telemetry::data);
                 }
                 else if (telemetryReceived &&
                          ((currentTelemetryTimestamp - previousTelemetryTimestamp) >= NO_TELEMETRY_TICKS))
@@ -176,20 +179,12 @@ void notificationDaemonLoop(void *param)
                     eventQueue->ui->onTelemetryData(nullptr);
                 }
             }
-            uint32_t elapsedMs = (xTaskGetTickCount() - frameTimestamp) / portTICK_RATE_MS;
+            uint32_t elapsedMs =
+                (xTaskGetTickCount() - frameTimestamp) / portTICK_RATE_MS;
             eventQueue->ui->serveSingleFrame(elapsedMs);
         }
         frameTimestamp = xTaskGetTickCount();
     }
-
-    // Shutdown
-    eventQueue->ui->shutdown();
-    if (shutdownCounter.fetch_sub(1) == 1)
-        xSemaphoreGive(shutdownSemaphore);
-    vTaskDelete(eventQueue->reader);
-    // should not enter here
-    for (;;)
-        ;
 }
 
 //-------------------------------------------------------------------
@@ -232,8 +227,9 @@ void notify_shutdown()
     {
         for (auto q : _ui_queues)
             q->enqueue(EVENT_SHUTDOWN);
-        // Wait for the notification daemon to stop
-        xSemaphoreTake(shutdownSemaphore, portMAX_DELAY);
+        // Wait for the shutdown command to finish execution in
+        // all UI threads
+        _shutdownLatch->wait();
     }
 }
 
@@ -246,9 +242,11 @@ void notify_shutdown()
 void ui::add(AbstractUserInterface *instance)
 {
     if (instance == nullptr)
-        throw std::runtime_error("User interface instance is null");
+        throw std::runtime_error(
+            "User interface instance is null");
     if (FirmwareService::call::isRunning())
-        throw std::runtime_error("Unable to add a user interface instance while running");
+        throw std::runtime_error(
+            "Unable to add a user interface instance while running");
     addIfNotExists<AbstractUserInterface *>(instance, _ui_instances);
 }
 
@@ -309,10 +307,18 @@ void internals::ui::getReady()
     }
 
     // Set new device capabilities
-    DeviceCapabilities::setFlag(DeviceCapability::TELEMETRY_POWERTRAIN, requiresPowertrainTelemetry);
-    DeviceCapabilities::setFlag(DeviceCapability::TELEMETRY_ECU, requiresECUTelemetry);
-    DeviceCapabilities::setFlag(DeviceCapability::TELEMETRY_RACE_CONTROL, requiresRaceControlTelemetry);
-    DeviceCapabilities::setFlag(DeviceCapability::TELEMETRY_GAUGES, requiresGaugeTelemetry);
+    DeviceCapabilities::setFlag(
+        DeviceCapability::TELEMETRY_POWERTRAIN,
+        requiresPowertrainTelemetry);
+    DeviceCapabilities::setFlag(
+        DeviceCapability::TELEMETRY_ECU,
+        requiresECUTelemetry);
+    DeviceCapabilities::setFlag(
+        DeviceCapability::TELEMETRY_RACE_CONTROL,
+        requiresRaceControlTelemetry);
+    DeviceCapabilities::setFlag(
+        DeviceCapability::TELEMETRY_GAUGES,
+        requiresGaugeTelemetry);
 
     // Subscribe to internal events
     OnBitePoint::subscribe(notify_bitePoint);
@@ -325,11 +331,8 @@ void internals::ui::getReady()
     // Inject the service class
     UIService::inject(new UIServiceProvider(max_fps));
 
-    // Create a binary semaphore for shutdown
-    shutdownSemaphore = xSemaphoreCreateBinaryStatic(&shutdownSemaphoreBuffer);
-    if (shutdownSemaphore == nullptr)
-        throw std::runtime_error("Unable to create UI daemon (0)");
-    shutdownCounter.store(_ui_instances.size());
+    // Create a latch for shutdown
+    _shutdownLatch = new std::latch(_ui_instances.size());
 
     // Create all frameserver daemons
     TaskHandle_t task;
