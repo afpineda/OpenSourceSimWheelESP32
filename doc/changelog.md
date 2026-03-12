@@ -1,5 +1,10 @@
 # Change log (and release notes)
 
+## 7.10.2
+
+- Better screen layout in telemetry display via monochrome OLED,
+  adding a pit limiter alert.
+
 ## 7.10.1
 
 - Bug fixes to OLED displays.
