@@ -169,6 +169,7 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
 
     if (pTelemetryData)
     {
+        // Determine flashing
         if (_impl->flash && !pTelemetryData->powertrain.shiftLight2)
         {
             // Stop flashing
@@ -179,7 +180,13 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
             _impl->flash = pTelemetryData->powertrain.shiftLight2;
         uint8_t aux;
 
+        // Clear the frame buffer
         _impl->frame.fillScreen(0);
+
+        // Create 3 vertical sections
+        _impl->frame.drawFastVLine(38, 8, 56, 0xFFFF);
+        _impl->frame.drawFastVLine(89, 8, 56, 0xFFFF);
+
         // Draw RPM bar
         aux = map(pTelemetryData->powertrain.rpmPercent, 0, 100, 0, 128);
         _impl->frame.drawRect(0, 0, 128, 7, 0xFFFF);
@@ -189,10 +196,10 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
         _impl->frame.setTextSize(3);
         aux = (pTelemetryData->powertrain.shiftLight1) ? 0 : 0xFF;
         if (pTelemetryData->powertrain.shiftLight1)
-            _impl->frame.fillRect(52, 25, 21, 27, 0xFFFF);
+            _impl->frame.fillRect(53, 17, 22, 27, 0xFFFF);
         _impl->frame.drawChar(
-            55,
-            28,
+            56,
+            20,
             pTelemetryData->powertrain.gear,
             aux,
             !aux, 3);
@@ -244,9 +251,19 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
 
         // Draw fuel warning
         if (pTelemetryData->ecu.lowFuelAlert)
-            _impl->frame.drawChar(61, 10, 'F', 0xFF, 0, 1);
+        {
+            // Text size: 1
+            _impl->frame.drawChar(11, 49, 'F', 0xFF, 0, 1);
+        }
+
+        // Draw pit limiter witness
+        if (pTelemetryData->ecu.pitLimiter)
+        {
+            // Text size: 1
+            _impl->frame.drawChar(116, 49, 'P', 0xFF, 0, 1);
+        }
     }
-    else
+    else if (_impl->connected) // && !pTelemetryData
     {
         _impl->frame.fillScreen(0);
         stopFlashing();

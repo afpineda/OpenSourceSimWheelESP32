@@ -9,6 +9,7 @@ It will show the following information thanks to SimHub:
 - RPM bar.
 - Current gear.
 - Low fuel alert.
+- Pit limiter alert.
 - TC and ABS engagement alerts.
 - Current TC and ABS settings.
 - Current brake bias (BB).

@@ -15,7 +15,7 @@ Follow the links for an in-depth explanation:
 - [Monochrome OLED 128x64 telemetry display](./MonochromeOLED/MonochromeOLED_en.md)
 
   A monochrome OLED with 128x64 pixels showing RPM bar,
-  gear, TC, ABS and brake bias.
+  gear, TC, ABS, brake bias, fuel and pit limiter alerts.
 
 Any telemetry display is potentially able to display notifications
 (such as connection or low battery),
