@@ -1,4 +1,4 @@
-# Changing your device's display name (Windows only) or Hardware ID (BLE only)
+# Changing your device's display name (Windows only) or Hardware ID
 
 Once your BLE sim-wheel/button box is paired
 and connected to your host computer,
