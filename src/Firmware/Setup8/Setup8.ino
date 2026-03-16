@@ -97,6 +97,7 @@ void simWheelSetup()
 void customFirmware()
 {
     simWheelSetup();
+    hid::connectivity(Connectivity::USB);
     hid::configure(
         DEVICE_NAME,
         DEVICE_MANUFACTURER,
