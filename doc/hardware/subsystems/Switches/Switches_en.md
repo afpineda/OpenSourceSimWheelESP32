@@ -6,7 +6,8 @@ To provide a number of **switches** to the system,
 including (when required):
 
 - Push buttons.
-- Push levers and roller levers (suitable for shift paddles and "digital" clutch paddles).
+- Push levers and roller levers
+  (suitable for shift paddles and "digital" clutch paddles).
 - Built in push buttons of rotary encoders (both KY-040 and bare bone).
 - Directional pads, directional joysticks and funky switches
   (except for rotation, which behaves like any other
@@ -15,7 +16,8 @@ including (when required):
   Now they can be attached to **any** supported input hardware.
   Instructions below.
 
-And also **potentiometers** as digital clutch paddles, in case you are short of GPIO pins.
+And also **potentiometers** as digital clutch paddles,
+in case you are short of GPIO pins.
 If not, potentiometers as
 [analog clutch paddles](../AnalogClutchPaddles/AnalogClutchPaddles_en.md)
 are a better option.
@@ -30,7 +32,9 @@ There are several, non-exclusive, **implementation** choices:
   size, pin expenditure, and overall simplicity.
 - Single switch (or button) attached to a single pin.
 
-Take a look at the article on [input hardware](../../InputHW_en.md) for an introduction.
+Take a look at the article on
+[input hardware](../../InputHW_en.md)
+for an introduction.
 
 > [!CAUTION]
 > It has been reported that some ALPS funky switches shows erroneously swapped
@@ -54,9 +58,10 @@ Button matrices in this project work in *positive logic*
 
 Needed parts (not counting input hardware like push buttons nor a perfboard):
 
-- *Schottky diodes*: x25. Any kind should work but choose low forward voltage ( $V_F$ ).
-  Suggested: [1N4148](https://www.alldatasheet.com/datasheet-pdf/pdf/15021/PHILIPS/1N4148.html)
-  ( $V_F=0.6V$ ).
+- *Schottky diodes*: x25.
+  Any kind should work but choose low forward voltage ( $V_F$ ). Suggested:
+  [1N4148](https://www.alldatasheet.com/datasheet-pdf/pdf/15021/PHILIPS/1N4148.html)
+  $(V_F=0.6V)$.
 - *Dupond pin headers* (male or female):
   - 25x2 (=50) for external inputs.
   - 5x1 (=5) for input pins.
@@ -80,7 +85,8 @@ Needed parts (not counting input hardware like push buttons nor a perfboard):
 - *Schottky diodes*: x16. Same as above.
 - *Dupond pin headers* (male or female): x40.
 
-This [circuit design](./BtnMatrix16Inputs.diy) requires no wiring but takes more space:
+This [circuit design](./BtnMatrix16Inputs.diy)
+requires no wiring but takes more space:
 
 ![Circuit design 16 inputs](./BtnMatrix16Inputs.png)
 
@@ -91,11 +97,17 @@ into "on/off" switches that can be wired to a button matrix.
 **Useful for clutch paddles if no ADC-capable pins are available**.
 Another soldered potentiometer (called "trimmer")
 will calibrate the position where on/off switching happens.
-Please, **follow this calibration procedure in order to minimize battery drainage**:
+Please,
+**follow this calibration procedure in order to minimize battery drainage**:
 
-1. Move the trimmer to an end where the switch is always on, no matter which position the clutch paddle is.
-2. Move and hold the clutch paddle to the desired position where it should switch on/off.
-3. Slowly move the trimmer towards the other end until switch happens, but no more. If switch does not happen, swap left and right terminals of the clutch's potentiometer, then start again.
+1. Move the trimmer to an end where the switch is always on,
+   no matter which position the clutch paddle is.
+2. Move and hold the clutch paddle to the desired position
+   where it should switch on/off.
+3. Slowly move the trimmer towards the other end until switch happens,
+   but no more. If switch does not happen,
+   swap left and right terminals of the clutch's potentiometer,
+   then start again.
 4. Forget. No further adjustment is required.
 
 Since clutch paddles come in pairs, the following
@@ -109,7 +121,8 @@ but it will work with anything up to 50K-ohms.
 Needed parts (not counting the potentiometer) for one clutch paddle:
 
 - A "vertically operated" 100K-ohms trimmer linear potentiometer.
-  Any impedance, higher than 3 times that of the clutch's potentiometer, should work.
+  Any impedance higher than 3 times that of the clutch's potentiometer
+  should work.
   These are some examples of trimmer potentiometers:
   [https://www.bourns.com/docs/technical-documents/technical-library/trimmers/publications/trimpot_handout.pdf](https://www.bourns.com/docs/technical-documents/technical-library/trimmers/publications/trimpot_handout.pdf)
   ![Trimmer potentiometers](./TrimmerPotentiometers.png)
@@ -117,10 +130,13 @@ Needed parts (not counting the potentiometer) for one clutch paddle:
 
 Needed parts (not counting the potentiometers) for two clutch paddles:
 
-- A "vertically operated" 100K-ohms trimmer linear potentiometer. Any impedance, higher than 3 times that of the clutch's potentiometer, should work.
+- A "vertically operated" 100K-ohms trimmer linear potentiometer.
+  Any impedance higher than 3 times that of the clutch's potentiometer
+  should work.
 - Four *Schottky diodes* : the same as for the button matrix.
 
-Open this [circuit layout](./PotentiometerAsSwitch.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
+Open this [circuit layout](./PotentiometerAsSwitch.diy)
+using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
 
 ![Potentiometer as a switch](./PotentiometerAsSwitch_diy.png)
 
@@ -136,7 +152,12 @@ This hack is an alternative to this circuit: [https://www.instructables.com/Supe
 >[!NOTE]
 > A bare bone rotary encoder is a better option since no satellite circuit is required.
 
-The purpose of this circuit is to avoid the expenditure of a single GPIO pin for a single rotary encoder. Such an input is connected to the button matrix instead. This is the [electrical circuit at falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKACdxiUQUUAWTtzB8BteJBYBnQT34zco8CAAubAK50WAc3mQBYLiGzZCUKCwBKM4QMxCRZqnyrZo2R1GgIWAdxm8BQls5FHYzAJAg2UUwcW0QBj48IxMEpKM8RQkAI3A+CGZTbBRk7BxzAA9wAxA8CGwEAUyQfWSLAHtlAEM2AE8AHUk6ADsAY3aAEzo2Qey1AEsAG2VB+eHZtWVlduGWKoxbBHcwYp4EU1aQAGUAdUGABzWWABk05LAShOYhT6oIADMuoshkY3OYALJfBz8KgMNDJGHhLx7BLYMDvNFfU4nAT6JBXOiLOijbYzSSPdaSLorSRzLY7QYAW2pbHmFRRDDRxHAlASdR57jxIAACmtBkMiST2mSRoNFl0mSz5gAvQZTWadHZ0SQc4rckpIBgYbglZJC0WU9VDYaqLoTBXWuUO5mqFVquga7bDbUclBkHhRJiQchEchCgCSw3umweYqpNOUAAsPbTNl7Fa72X5EgjnG8eHh3iiPgVIEVCH9INzLgAhToAZ8thMG4wm83+81GdulgzYnWp0vm7V8UNseZzPDzoQ4E9N+eMpkr8BYynCclnIS+oL9pFIxrw4hQ7jhsGwu7I-AwkGYfAwjHIsRAU0BamWI4nH2Ss-w4BYQA), which is a simple logic inverter, not counting the rectangle at the right side.
+The purpose of this circuit is to avoid the expenditure
+of a single GPIO pin for a single rotary encoder.
+Such an input is connected to the button matrix instead.
+This is the
+[electrical circuit at falstad.com](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgoqoQFMBaMMAKACdxiUQUUAWTtzB8BteJBYBnQT34zco8CAAubAK50WAc3mQBYLiGzZCUKCwBKM4QMxCRZqnyrZo2R1GgIWAdxm8BQls5FHYzAJAg2UUwcW0QBj48IxMEpKM8RQkAI3A+CGZTbBRk7BxzAA9wAxA8CGwEAUyQfWSLAHtlAEM2AE8AHUk6ADsAY3aAEzo2Qey1AEsAG2VB+eHZtWVlduGWKoxbBHcwYp4EU1aQAGUAdUGABzWWABk05LAShOYhT6oIADMuoshkY3OYALJfBz8KgMNDJGHhLx7BLYMDvNFfU4nAT6JBXOiLOijbYzSSPdaSLorSRzLY7QYAW2pbHmFRRDDRxHAlASdR57jxIAACmtBkMiST2mSRoNFl0mSz5gAvQZTWadHZ0SQc4rckpIBgYbglZJC0WU9VDYaqLoTBXWuUO5mqFVquga7bDbUclBkHhRJiQchEchCgCSw3umweYqpNOUAAsPbTNl7Fa72X5EgjnG8eHh3iiPgVIEVCH9INzLgAhToAZ8thMG4wm83+81GdulgzYnWp0vm7V8UNseZzPDzoQ4E9N+eMpkr8BYynCclnIS+oL9pFIxrw4hQ7jhsGwu7I-AwkGYfAwjHIsRAU0BamWI4nH2Ss-w4BYQA),
+which is a simple logic inverter, not counting the rectangle at the right side.
 
 ![Satellite circuit for a KY-040](./LogicInverter_falstad.png)
 
@@ -156,18 +177,26 @@ Open this [circuit layout](./LogicInverter.diy) using
 
 ### External wiring for the button matrix
 
-- **Push buttons, push levers or roller levers**. They have two interchangeable terminals. If there are three terminals, choose the two terminals for the NO (normally open) switch. There is no common pole.
+- **Push buttons, push levers or roller levers**.
+  They have two interchangeable terminals.
+  If there are three terminals,
+  choose the two terminals for the NO (normally open) switch.
+  There is no common pole.
 
   - One terminal wired to a selector pin header at the button matrix.
   - Other terminal wired to an input pin header at the button matrix.
 
 - **Built-in push button of a rotary encoder**:
-  - **Barebone**: They are wired to the button matrix as any other push button, being `SW` and `SW GND` the involved terminals.
+  - **Barebone**:
+    They are wired to the button matrix as any other push button,
+    being `SW` and `SW GND` the involved terminals.
   - **KY-040**. Use the satellite circuit shown above.
 
-- **Directional pads (DPADs) and funky switches (except for rotation)**. Terminals are **not** interchangeable:
+- **Directional pads (DPADs) and funky switches (except for rotation)**.
+  Terminals are **not** interchangeable:
 
-  - The common terminal (`COM`) must be wired to a single input pin header at the button matrix.
+  - The common terminal (`COM`) must be wired to
+    a single input pin header at the button matrix.
   - Each other terminal (`A`, `B`, `C`, `D` and `Push`)
     wired to a different selector pin header at the button matrix.
     Be careful with the misleading tags in the datasheet.
@@ -177,21 +206,25 @@ Open this [circuit layout](./LogicInverter.diy) using
 
 ## Analog multiplexer implementation
 
-This implementation works with *any* analog multiplexer in the market (8, 16 or 32 channels).
+This implementation works with *any* analog multiplexer in the market
+(8, 16 or 32 channels).
 If you have two or more chips in the circuit, all of them must be identical.
 
-All switches work in *negative logic*, so their common pole must be attached to `GND`. See below.
+All switches work in *negative logic*,
+so their common pole must be attached to `GND`. See below.
 
 ### Circuit design using 16-channel multiplexers
 
 The following circuit design is based on the widely available
 [CD74HC4067E](../../esp32reference/CD74HC4067_datasheet.pdf)
 analog multiplexer: an *16 to 1* multiplexer (16 channels).
-Provides 32 inputs using 6 pins, which should be enough for most steering wheels.
+Provides 32 inputs using 6 pins,
+which should be enough for most steering wheels.
 
 ![Multiplexed switches design (16-channel)](./MultiplexedSwitchesX32.png)
 
-Open this [circuit layout](./MultiplexedSwitchesX32.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
+Open this [circuit layout](./MultiplexedSwitchesX32.diy)
+using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
 
 Needed parts (not counting input hardware like push buttons):
 
@@ -205,11 +238,13 @@ Needed parts (not counting input hardware like push buttons):
 The following circuit design is based on the widely available
 [74HC4051N](../../esp32reference/75HC4051_datasheet.pdf)
 analog multiplexer: an *8 to 1* multiplexer (8 channels).
-Provides 24 inputs using 6 pins, which should be enough for most steering wheels.
+Provides 24 inputs using 6 pins,
+which should be enough for most steering wheels.
 However, this design can be extended easily:
 
 - Add another analog multiplexer.
-- Wire `S0`, `S1` and `S2` (selector pins) to the same pin tags at another multiplexer.
+- Wire `S0`, `S1` and `S2` (selector pins) to the same pin tags
+  at another multiplexer.
 - Add a new input pin wired to `(A)`.
 
 > [!NOTE]
@@ -218,7 +253,8 @@ However, this design can be extended easily:
 
 ![Multiplexed switches design (8-channel)](./MultiplexedSwitchesX24.png)
 
-Open this [circuit layout](./MultiplexedSwitchesX24.diy) using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
+Open this [circuit layout](./MultiplexedSwitchesX24.diy)
+using [DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
 
 Needed parts (not counting input hardware like push buttons):
 
@@ -232,10 +268,12 @@ Needed parts (not counting input hardware like push buttons):
 - There are many redundant `3V3` and `GND` pin headers.
   Attach one of each to the power source.
   Use the others as you wish, or leave unattached.
-- Use at least one of the `GND` pin headers as a common pole for all switches *in a chain*
-  (as shown in the picture above).
-- Wire the other terminal of each push button (or switch) to one of the light-blue pins.
-- Bare bone rotary encoders: their built-in push button must be wired like any other push button,
+- Use at least one of the `GND` pin headers as a common pole
+  for all switches *in a chain* (as shown in the picture above).
+- Wire the other terminal of each push button (or switch)
+  to one of the light-blue pins.
+- Bare bone rotary encoders:
+  their built-in push button must be wired like any other push button,
   being `SW` and `SW GND` the involved terminals.
 - KY-040 rotary encoders: wire `SW` to any light-blue pin.
 - Funky switches (except for rotation): wire `COM` to `GND`.
@@ -244,7 +282,7 @@ Needed parts (not counting input hardware like push buttons):
 
 - Potentiometers as digital clutch paddles:
   build this [satellite circuit](https://falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWEBmAHAJmgdgGzoRmACzICcpkORICkNNdCApgLRhgBQA5jeqiOkj8EfAUToSOAJRq4QRYXIlR5dZNGQqJ0BBwCy81HVI4UkaiZWZdBnFnQhLqBY9N1rHMFmp5qLuw5gonRg8NoI5GFR8BAAwgA2AK4ALgDGABacAO68-C4Ici6QHDm+hrKmRZ7eueUKIUTUIWFQ0HzoDgkpGejV1CL8gvxlxNQQofCtyOhgRtFRmgAq6QBOTADO6QD28QAmJSAjjRXgx8U5BaajtdfFAB4gWLTgXiCoCJpBdGN0i1sAOut4gBLLjpZKAgBGSSYgIADsCAHaA9JMACGuyYKw4D3QpCwLwJ4hCgnk4F+AKBoPBUJh8KRKPRmOxDwQYFM6CoNDQAjsZNCIAA4gA5AAiOJoBAEeMO+IE035vxWoK4WMByVWG22e3hW2STERyWBWwAtkx9SzDshNDhSI8pfZFSAuml0vCMbt4rD1nC9QajabzViJWQCRFeA48E6XRl3btPd7ffrDcazRaOEA)
-  which is quite simillar to that of the button matrix.
+  which is quite similar to that of the button matrix.
   All three potentiometers must have the same impedance.
   The higher, the better.
   The trigger threshold potentiometer is a trimmer one.
@@ -284,22 +322,25 @@ See above.
 
 ## GPIO expanders implementation
 
-This implementation is based on any of the following widely available GPIO expanders
-(*I2C* interface):
+This implementation is based on any of the following widely available
+GPIO expanders (*I2C* interface):
 
 - [PCF8574](../../esp32reference/PCF8574_datasheet.pdf):
   8 additional switches per chip.
 - [MCP23017](../../esp32reference/MCP23017_datasheet.pdf):
   16 additional switches per chip (**recommended**).
-  Do not confuse *MCP23017* with *MCP23S17*, which exposes a different interface.
+  Do not confuse *MCP23017* with *MCP23S17*,
+  which exposes a different interface.
 
 All chips must share the `SCL` and `SDA` pins with the DevKit board.
 Note that sometimes `SCL` is tagged as `SCK` (they are equivalent).
 
-The `RESET` pin at the *MCP23017* must be wired to `3V3`, otherwise operation is unreliable.
+The `RESET` pin at the *MCP23017* must be wired to `3V3`,
+otherwise operation is unreliable.
 
 All switches must work in negative logic.
-Thus, one terminal must be wired to `GND` and the other terminal to one GPIO pin at each chip.
+Thus, one terminal must be wired to `GND`
+and the other terminal to one GPIO pin at each chip.
 Those GPIO pins are tagged `Pn`, `GPAn` or `GPBn` on the chip's datasheet.
 
 Make sure to configure a unique I2C address for each chip (more on this below).
@@ -331,7 +372,8 @@ Additional **external** pull-up resistors may be needed at `SDA` and `SCL`
 depending on wire capacitance.
 Capacitance also increases when adding chips to the bus.
 Higher wire capacitance requires lower pull-up impedance (stronger).
-The firmware enables internal pull-up resistors by default and no issues were found.
+The firmware enables internal pull-up resistors by default
+and no issues were found.
 However, according to Expressif documentation:
 
 *This is not strong enough to pull-up buses under high-speed frequency. A suitable external pull-up is recommended.*
@@ -340,7 +382,8 @@ Note that too strong pull-up resistors are as bad as too weak ones.
 Follow [Expressif's advice](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/i2c.html)
 on the matter.
 
-You can also disable the internal pull-up resistors in your custom firmware (see below).
+You can also disable the internal pull-up resistors
+in your custom firmware (see below).
 So, there are four possible situations:
 
 | Internal PU | External PU | Result                                                                               |
@@ -355,7 +398,8 @@ For further information read
 
 ### External wiring for the GPIO expanders
 
-- Attach `SCL` and `SCA` to the corresponding pins at the DevKit board (same tag).
+- Attach `SCL` and `SCA` to the corresponding pins at the DevKit board
+  (same tag).
 - There are many redundant `GND` (ground) and `3V3` pin headers.
   Attach one of each to the DevKit board (same tag).
   Use the others as you wish, or leave unattached. A suggestion:
@@ -368,7 +412,8 @@ For further information read
 - The `wake-up` pin is related to the
   [power latch subsystem](../PowerLatch/PowerLatch_en.md).
   For simplification,
-  just the buttons attached to the left GPIO expander will wake up the system from deep sleep.
+  just the buttons attached to the left GPIO expander
+  will wake up the system from deep sleep.
   This pin can be left unwired.
 
 ### I2C Addressing
@@ -387,8 +432,10 @@ The chip's datasheet shows the value of those bits.
 (I have proof of that).
 This could be caused by after-market changes or cloned (non-genuine) chips.
 The firmware will **automatically** detect those 4 bits,
-but **you must ensure** that all hardware addresses on the I2C bus are also **unique**.
-Otherwise, you have to manually provide a full I2C address to the firmware (see below).
+but **you must ensure** that all hardware addresses on the I2C bus
+are also **unique**.
+Otherwise, you have to manually provide a full I2C address to the firmware
+(see below).
 
 ```mermaid
 ---
@@ -418,17 +465,20 @@ Customization takes place at the body of `simWheelSetup()` inside
 **Important notes:**
 
 - You should assign an "**input number**" to each switch.
-- Valid input numbers are in the range of 0 to 63 (inclusive).
+- Valid input numbers are in the range of 0 to 127 (inclusive).
   The **firmware will not boot** if an invalid input number is detected.
-- Any switch with no assigned input number **will be ignored** by the firmware without notice.
+- Any switch with no assigned input number **will be ignored**
+  by the firmware without notice.
 - Input numbers should be unique for each switch.
-  You are allowed to assign the same input number to two or more different switches,
+  You are allowed to assign the same input number to
+  two or more different switches,
   but **there is no point in that**.
   By default, the firmware does not enforce unique input numbers.
 
 ### Button matrix
 
-Input pins must be wired to valid input capable GPIO pins with internal pull-down resistors.
+Input pins must be wired to valid input capable GPIO pins
+with internal pull-down resistors.
 Otherwise, external pull-down resistors must be added to the circuit design.
 Selector pins must be wired to valid output capable GPIO pins.
 
@@ -443,9 +493,11 @@ Selector pins must be wired to valid output capable GPIO pins.
 4. Repeat as needed.
 5. Call `inputs::addButtonMatrix()` and pass the object (`mtx`)
    as the first parameter.
-6. Optionally, set the second parameter to `true` if your button matrix uses negative logic.
+6. Optionally, set the second parameter to `true`
+   if your button matrix uses negative logic.
    Such a hardware design is not in this project,
-   but this option allows you to use a recycled button matrix from another project.
+   but this option allows you to use a recycled button matrix
+   from another project.
 
 > [!CAUTION]
 > If, despite my advice, your button matrix does not have diodes,
@@ -493,7 +545,8 @@ void simWheelSetup()
 
 ### Analog multiplexers
 
-Input pins must be wired to valid input capable GPIO pins with internal pull-up resistors.
+Input pins must be wired to valid input capable GPIO pins
+with internal pull-up resistors.
 Otherwise, external pull-up resistors must be added to the circuit design.
 Selector pins must be wired to valid output capable GPIO pins.
 Don't be confused by the "analog" label.
@@ -502,8 +555,8 @@ It is not necessary to use ADC-capable input pins.
 1. Declare each multiplexer chip,
    passing the **input pin** as a constructor parameter.
    Use the classes
-   `AnalogMultiplexerChip8`, `AnalogMultiplexerChip16` or `AnalogMultiplexerChip32`
-   for 8, 16 and 32 channel chips respectively.
+   `AnalogMultiplexerChip8`, `AnalogMultiplexerChip16` or
+   `AnalogMultiplexerChip32` for 8, 16 and 32 channel chips respectively.
    For example: `AnalogMultiplexerChip8 chip1(GPIO_NUM_10);`
 2. Assign input numbers to pin tags on each chip using the array syntax.
    For example: `chip1[Mux8Pin::A0] = 1;`.
@@ -570,7 +623,8 @@ but it does not require any pull resistor.
    - Group of chip instances.
    - Optionally, the input number assigned to the `SER`
      tag in the last chip in the chain.
-     Pass `UNSPECIFIED::VALUE` (the default) if there is no switch attached to `SER`.
+     Pass `UNSPECIFIED::VALUE` (the default)
+     if there is no switch attached to `SER`.
    - Optionally, `false` if your switches uses positive logic (pulled up).
      Such a hardware design is not in this project,
      but this option allows you to recycle hardware from another project.
@@ -594,7 +648,8 @@ void simWheelSetup()
 
 ### GPIO expanders
 
-`SCL/SCK` and `SDA` pins must be wired to the corresponding pins at the DevKit board.
+`SCL/SCK` and `SDA` pins must be wired
+to the corresponding pins at the DevKit board.
 
 1. Declare each GPIO expander chip using the classes
    `MCP23017Expander` or `PCF8574Expander`.
@@ -602,13 +657,14 @@ void simWheelSetup()
 2. Assign an input number to each pin tag using the array syntax.
    For example: `chip1[PCF8574Pin::P0] = 1;`.
    Qualify each pin tag with `PCF8574Pin::` or `MCP23017Pin::`.
-3. Place a call to `inputs::addPCF8574Expander()` or `inputs::addMCP23017Expander()`
-   depending on the chip.
+3. Place a call to `inputs::addPCF8574Expander()` or
+   `inputs::addMCP23017Expander()` depending on the chip.
    Make as many calls as needed.
    The parameters are as follows:
    - A chip instance,
    - An I2C (full or hardware) address.
-   - Optionally, `true` for a full address, or `false` for a hardware address (default).
+   - Optionally, `true` for a full address, or `false`
+     for a hardware address (default).
    - Optionally, an I2C bus (the default is the primary bus).
 
 The following code will enable the example circuit above:
@@ -669,7 +725,8 @@ you must **explicitly** place a call to
 - The second parameter is the desired `SCL` pin.
 - The third parameter (**optional**) is the bus to initialize,
   either `I2CBus::PRIMARY` (the default) or `I2CBus::SECONDARY`.
-- The fourth parameter (**optional**) enables or disables the internal pull-up resistors.
+- The fourth parameter (**optional**) enables or
+  disables the internal pull-up resistors.
   Pass `true` (the default) to enable them.
   Pass `false` to disable them.
   In such a case, external pull-up resistors are mandatory.
@@ -728,7 +785,8 @@ In a button matrix, attach each bit pin to a selector pin.
 
 3. Assign an input number to each switch position using the array syntax.
    Each position is indexed starting with zero.
-   To detect and prevent out of boundary indexes, use the operator `at()` instead of `[]`.
+   To detect and prevent out of boundary indexes,
+   use the operator `at()` instead of `[]`.
    You **can reuse** the input numbers assigned to the bit pins.
 
 4. Place a call to `inputHub::codedSwitch::add()`
@@ -737,8 +795,10 @@ In a button matrix, attach each bit pin to a selector pin.
    1. Input number assigned to `1`.
    2. Input number assigned to `2`.
    3. Input number assigned to `4`.
-   4. Input number assigned to `8` (omit this parameter if the bit pin does not exist).
-   5. Input number assigned to `16` (omit this parameter if the bit pin does not exist).
+   4. Input number assigned to `8`
+      (omit this parameter if the bit pin does not exist).
+   5. Input number assigned to `16`
+      (omit this parameter if the bit pin does not exist).
    6. The `CodedSwitch8`/`CodedSwitch16`/`CodedSwitch32` instance.
 
 For example,

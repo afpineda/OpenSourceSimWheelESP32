@@ -91,8 +91,8 @@ Then, there are a few steps:
 
    As shown for each subsystem, a call to a
    function in the `inputs` namespace will enable them.
-   You must also assign a unique "input number" to each input,
-   **in the range from 0 to 63**.
+   You must also assign a unique "**input number**" to each input,
+   **in the range from 0 to 127**.
    If you fail to provide valid input numbers,
    the firmware will not boot up.
    Each input number corresponds to a certain position
@@ -441,14 +441,13 @@ This feature is optional.
 
 Regardless of the input numbers assigned to each input hardware,
 the end user can set up a custom input map using the companion application.
-Unlike firmware defined input numbers,
-user defined input numbers are in the range [0,127].
 By default, the input map follows this rule:
 
 - If *alternate mode* is not engaged,
-  the user defined input number is the firmware defined input number.
+  the user-defined input number is the firmware-defined input number.
 - If *alternate mode* is engaged,
-  the user defined input number is the firmware defined input number plus 64.
+  the user-defined input number is the firmware-defined
+  input number plus 64 modulo 128.
 
 If you have only a few buttons,
 their user-defined input numbers will be spread over 128 values.
@@ -462,10 +461,11 @@ Make a single call to `inputMap::setOptimal()` (no arguments).
 The input map will follow this rule:
 
 - If *alternate mode* is not engaged,
-  the user defined input number is the firmware defined input number.
+  the user-defined input number is the firmware-defined input number.
 - If *alternate mode* is engaged,
-  the user defined input number is the firmware defined input number,
-  plus the highest firmware defined input number, plus one.
+  the user-defined input number is the firmware defined input number,
+  plus the highest firmware defined input number, plus one,
+  modulo 128.
 
 For example, let's say you have the input numbers `1`, `3` and `5`
 (and no others) assigned to your input hardware.

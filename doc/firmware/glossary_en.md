@@ -29,7 +29,7 @@
   or a single lever that can move in two axis.
 
 - **Firmware-defined input number**:
-  an _Input number_ in the range [0,63].
+  an _Input number_ in the range [0,127].
 
 - **Frame**: a graphic that fills the whole display.
 

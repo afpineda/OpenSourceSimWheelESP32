@@ -47,14 +47,6 @@ and repeated every few seconds.
 
 ### Error messages caused by your custom code
 
-- *std::bad_cast*
-
-  You are using a non-initialized variable of
-  type `InputNumber` or `UserInputNumber`,
-  or passing an invalid value to an input number parameter.
-  Valid values are in the range [0,64] for firmware-defined input numbers,
-  and [0,127] for user-defined input numbers.
-
 - *Battery monitor already started*
 
   You called `batteryMonitor::configure()` while
@@ -179,6 +171,7 @@ The following error messages are self-describing:
 
 - *You can not assign the same input number for the left and right clutch paddles*
 - *You can not assign the same input number for increase and decrease bite point*
+- *You can not assign the same input number to two DPAD inputs*
 - *For neutral gear, a combination of two or more hardware inputs is required*
 - *You have analog clutch paddles, but you forgot to call inputHub::clutch::inputs()*
 - *There are no analog clutch paddles, but you called cmdRecalibrateAxisInputs()*
