@@ -1,5 +1,5 @@
 /**
- * @file BitQueueTest.cpp
+ * @file InputNumberTest.cpp
  *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2025-02-10
@@ -22,8 +22,8 @@ void test1()
 
     try
     {
-        InputNumber x = 64;
-        assert(false && "64 assignment was valid");
+        InputNumber x = 128;
+        assert(false && "128 assignment was valid");
     }
     catch (const invalid_input_number e)
     {
@@ -31,55 +31,63 @@ void test1()
 
     try
     {
-        InputNumber x = 120;
-        assert(false && "120 assignment was valid");
+        InputNumber x = 240;
+        assert(false && "240 assignment was valid");
     }
     catch (const invalid_input_number e)
     {
     }
 
-    i1 = 0;  // No exception expected
-    i1 = 63; // No exception expected
+    i1 = 0;   // No exception expected
+    i1 = 127; // No exception expected
 
     InputNumber i2 = i1;
     assert((i1 == i2) && "Copy operator failed");
 
     uint8_t asByte = i1;
-    assert((asByte == 63) && "Implicit typecast failed");
+    assert((asByte == 127) && "Implicit typecast failed");
 }
 
 void test2()
 {
     std::cout << "- Test 2-" << std::endl;
     InputNumber i1 = 0;
-    uint64_t mask = (uint64_t)i1;
-    assert((mask == 1) && "Explicit typecast 1 failed");
+    uint128_t mask = (uint128_t)i1;
+    assert((mask.low == 1) && "Explicit typecast 1 failed");
     i1 = 63;
-    mask = (uint64_t)i1;
-    assert((mask == 0x8000000000000000) && "Explicit typecast 2 failed");
+    mask = (uint128_t)i1;
+    assert((mask.low == 0x8000000000000000) && "Explicit typecast 2 failed");
 }
 
 void test3()
 {
     std::cout << "- Test 3-" << std::endl;
-    InputNumberCombination i1 = {63,0};
+    InputNumberCombination i1 = {127, 63, 0};
+    assert((i1.low == 0x8000000000000001));
+    assert((i1.high == 0x8000000000000000));
 
-    uint64_t mask = (uint64_t)i1;
-    assert((mask == 0x8000000000000001) && "Explicit typecast 3 failed");
+    InputNumberCombination i2(uint128_t::neg());
+    assert(i2.low == 0xFFFFFFFFFFFFFFFF);
+    assert(i2.high == 0xFFFFFFFFFFFFFFFF);
+
+    InputNumberCombination i3;
+    i3 = uint128_t::neg();
+    assert(i3.low == 0xFFFFFFFFFFFFFFFF);
+    assert(i3.high == 0xFFFFFFFFFFFFFFFF);
 }
 
 void test4()
 {
     std::cout << "- Test 4-" << std::endl;
-    InputNumber i1=0;
-    InputNumber i2=63;
+    InputNumber i1 = 0;
+    InputNumber i2 = 63;
     i1.book();
     assert(InputNumber::booked(0) && "book(0) failed");
     i2.book();
     assert(InputNumber::booked(63) && "book(63) failed");
 
-    uint64_t mask = InputNumber::booked();
-    assert((mask == 0x8000000000000001) && "Wrong booked I.N.");
+    uint128_t mask = InputNumber::booked();
+    assert((mask.low == 0x8000000000000001) && "Wrong booked I.N.");
 }
 
 int main()

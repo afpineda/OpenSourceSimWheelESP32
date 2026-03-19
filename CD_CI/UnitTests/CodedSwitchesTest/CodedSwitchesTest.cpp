@@ -26,12 +26,14 @@
 void send(uint64_t bitmap)
 {
     DecouplingEvent event;
-    event.rawInputBitmap = bitmap;
-    event.rawInputChanges = bitmap;
+    event.rawInputBitmap.low = bitmap;
+    event.rawInputBitmap.high = 0ULL;
     event.leftAxisValue = 0;
     event.rightAxisValue = 0;
     internals::inputHub::onRawInput(event);
 }
+
+#define BMP(a) (1ULL << ((uint8_t)a))
 
 //------------------------------------------------------------------
 // MOCKS (static)
@@ -45,33 +47,29 @@ void internals::hid::reset()
 }
 
 void internals::hid::reportInput(
-    uint64_t inputsLow,
-    uint64_t inputsHigh,
+    const uint128_t &inputs,
     uint8_t POVstate,
     uint8_t leftAxis,
     uint8_t rightAxis,
     uint8_t clutchAxis)
 {
-    currentLow = inputsLow;
+    currentLow = inputs.low;
 }
 
 //------------------------------------------------------------------
 
 void internals::inputMap::map(
     bool isAltModeEngaged,
-    uint64_t firmware_bitmap,
-    uint64_t &low,
-    uint64_t &high)
+    uint128_t &bitmap)
 {
     if (isAltModeEngaged)
     {
-        low = 0ULL;
-        high = firmware_bitmap;
+        bitmap.high = bitmap.low;
+        bitmap.low = 0ULL;
     }
     else
     {
-        low = firmware_bitmap;
-        high = 0ULL;
+        bitmap.high = 0ULL;
     }
 }
 
@@ -221,7 +219,9 @@ int main()
     {
         // std::cout << (int)posA << std::endl;
         send(posA);
-        assert<uint64_t>::equals("decoded switch A", (uint64_t)spec1.at(posA) | (uint64_t)spec2.at(0), currentLow);
+        uint128_t bitmap = (uint128_t)spec1.at(posA) | (uint128_t)spec2.at(0);
+        assert<uint64_t>::equals(
+            "decoded switch A", bitmap.low, currentLow);
     }
 
     std::cout << ("- Check coded switch B (16 positions) -") << std::endl;
@@ -236,26 +236,42 @@ int main()
 
         // std::cout << (int)posB << " -> " << (input) << std::endl;
         send(input);
-        assert<uint64_t>::equals("decoded switch B", (uint64_t)spec2.at(posB) | (uint64_t)spec1.at(0), currentLow);
+        uint128_t bitmap = (uint128_t)spec2.at(posB) | (uint128_t)spec1.at(0);
+        assert<uint64_t>::equals(
+            "decoded switch B",
+            bitmap.low,
+            currentLow);
     }
 
     // Check that unrelated inputs are not removed
     std::cout << ("- Check unrelated inputs -") << std::endl;
     uint64_t base = 0;
-    uint64_t expected_base = (uint64_t)spec1.at(0) | (uint64_t)spec2.at(0);
+    uint128_t expected_base = (uint128_t)spec1.at(0) | (uint128_t)spec2.at(0);
     InputNumber ur1 = 11;
     InputNumber ur2 = 3;
     InputNumber ur3 = 63;
-    send(base | (uint64_t)ur1);
-    assert<uint64_t>::equals("1", expected_base | (uint64_t)ur1, currentLow);
-    send(base | (uint64_t)ur2);
-    assert<uint64_t>::equals("2", expected_base | (uint64_t)ur2, currentLow);
-    send(base | (uint64_t)ur3);
-    assert<uint64_t>::equals("3", expected_base | (uint64_t)ur3, currentLow);
-    base = 0b1011000000001;
-    expected_base = (uint64_t)spec1.at(1) | (uint64_t)spec2.at(14);
-    send(base | (uint64_t)ur1 | (uint64_t)ur2 | (uint64_t)ur3);
-    assert<uint64_t>::equals("4", expected_base | (uint64_t)ur1 | (uint64_t)ur2 | (uint64_t)ur3, currentLow);
-
+    {
+        send(base | BMP(ur1));
+        uint128_t bitmap = expected_base | (uint128_t)ur1;
+        assert<uint64_t>::equals("1", bitmap.low, currentLow);
+    }
+    {
+        send(base | BMP(ur2));
+        uint128_t bitmap = expected_base | (uint128_t)ur2;
+        assert<uint64_t>::equals("2", bitmap.low, currentLow);
+    }
+    {
+        send(base | BMP(ur3));
+        uint128_t bitmap = expected_base | (uint128_t)ur3;
+        assert<uint64_t>::equals("3", bitmap.low, currentLow);
+    }
+    {
+        base = 0b1011000000001;
+        expected_base = (uint128_t)spec1.at(1) | (uint128_t)spec2.at(14);
+        send(base | BMP(ur1) | BMP(ur2) | BMP(ur3));
+        uint128_t bitmap = expected_base |
+                           (uint128_t)ur1 | (uint128_t)ur2 | (uint128_t)ur3;
+        assert<uint64_t>::equals("4", bitmap.low, currentLow);
+    }
     return 0;
 }

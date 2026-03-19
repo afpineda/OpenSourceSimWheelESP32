@@ -35,7 +35,7 @@ void MuxTest()
     chip2[Mux8Pin::A1] = 6;
     chip1.reserve_and_book();
     chip2.reserve_and_book();
-    assert((InputNumber::booked() == 0b11000011) && "Mux: wrong booked inputs");
+    assert((InputNumber::booked().low == 0b11000011) && "Mux: wrong booked inputs");
     try
     {
         GPIO n(0);
@@ -67,22 +67,12 @@ void ShiftRegisterTest()
     ShiftRegisterChain chain = { firstSR, secondSR, thirdSR };
 }
 
-void RotaryCodedSwitchTest()
-{
-    RotaryCodedSwitch sw;
-    sw[0] = 5;
-    sw[1] = 6;
-    sw[2] = 8;
-    sw[3] = 9;
-}
-
 int main()
 {
     BtnMtxTest();
     MuxTest();
     ExpanderTest();
     ShiftRegisterTest();
-    RotaryCodedSwitchTest();
 
     return 0;
 }

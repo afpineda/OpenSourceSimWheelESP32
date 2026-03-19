@@ -83,28 +83,29 @@ void internals::inputMap::clear() {}
 void internals::inputMap::getReady() {}
 
 size_t mapWitnessCount = 0;
-uint64_t mapBitmapWitness = 0ULL;
+uint128_t mapBitmapWitness{};
 
 void internals::inputMap::map(
     bool isAltModeEngaged,
-    uint64_t firmware_bitmap,
-    uint64_t &low,
-    uint64_t &high)
+    uint128_t &bitmap)
 {
     mapWitnessCount++;
-    mapBitmapWitness = firmware_bitmap;
-    low = 0ULL;
-    high = 0ULL;
-    if (firmware_bitmap < 64)
-        low = firmware_bitmap;
+    mapBitmapWitness = bitmap;
+    if (isAltModeEngaged)
+    {
+        bitmap.high = bitmap.low;
+        bitmap.low = 0ULL;
+    }
     else
-        high = firmware_bitmap;
+    {
+        bitmap.high = 0ULL;
+    }
 }
 
 void inputMap::set(
     InputNumber firmware_defined,
-    UserInputNumber user_defined,
-    UserInputNumber user_define_alt_engaged) {}
+    InputNumber user_defined,
+    InputNumber user_define_alt_engaged) {}
 
 //-------------------------------------------------------------------
 
@@ -115,8 +116,7 @@ bool internals::hid::supportsCustomHardwareID() { return true; }
 void internals::hid::reportChangeInConfig() {}
 void internals::hid::reportBatteryLevel(const BatteryStatus &status) {}
 void internals::hid::reportInput(
-    uint64_t inputsLow,
-    uint64_t inputsHigh,
+    const uint128_t &input,
     uint8_t POVstate,
     uint8_t leftAxis,
     uint8_t rightAxis,
@@ -149,40 +149,33 @@ void internals::hid::begin(
  */
 void TG_axis_recalibration()
 {
-    DecouplingEvent evt;
-    evt.leftAxisValue = 0;
-    evt.rightAxisValue = 0;
-    evt.rawInputBitmap = BMP(RECALIBRATE1);
-    evt.rawInputChanges = evt.rawInputBitmap;
+    DecouplingEvent evt{};
+    evt.rawInputBitmap.low = BMP(RECALIBRATE1);
     internals::inputHub::onRawInput(evt);
     assert<bool>::equals("Unwanted axis recalibration 1", false, inputMock.recalibrateWitness);
 
     evt.leftAxisValue = 0;
     evt.rightAxisValue = 0;
-    evt.rawInputBitmap = BMP(RECALIBRATE2);
-    evt.rawInputChanges = evt.rawInputBitmap;
+    evt.rawInputBitmap.low = BMP(RECALIBRATE2);
     internals::inputHub::onRawInput(evt);
     assert<bool>::equals("Unwanted axis recalibration 2", false, inputMock.recalibrateWitness);
 
     evt.leftAxisValue = 0;
     evt.rightAxisValue = 0;
-    evt.rawInputBitmap = BMP2(RECALIBRATE1, RECALIBRATE2);
-    evt.rawInputChanges = evt.rawInputBitmap;
+    evt.rawInputBitmap.low = BMP2(RECALIBRATE1, RECALIBRATE2);
     internals::inputHub::onRawInput(evt);
     assert<bool>::equals("Recalibration request", true, inputMock.recalibrateWitness);
 
     evt.leftAxisValue = 0;
     evt.rightAxisValue = 0;
-    evt.rawInputBitmap = BMP2(RECALIBRATE1, RECALIBRATE2);
-    evt.rawInputChanges = 0;
+    evt.rawInputBitmap.low = BMP2(RECALIBRATE1, RECALIBRATE2);
     inputMock.recalibrateWitness = false;
     internals::inputHub::onRawInput(evt);
     assert<bool>::equals("Recalibration request retrigger", false, inputMock.recalibrateWitness);
 
     evt.leftAxisValue = 0;
     evt.rightAxisValue = 0;
-    evt.rawInputBitmap = 0b0000;
-    evt.rawInputChanges = BMP2(RECALIBRATE1, RECALIBRATE2);
+    evt.rawInputBitmap.low = 0b0000;
     internals::inputHub::onRawInput(evt);
     assert<bool>::equals("Unwanted axis recalibration 3", false, inputMock.recalibrateWitness);
 }
@@ -193,29 +186,25 @@ void TG_axis_recalibration()
  */
 void TG_bite_point()
 {
-    DecouplingEvent evt;
+    DecouplingEvent evt{};
     bitePointWitness = 0;
     InputHubService::call::setBitePoint(CLUTCH_DEFAULT_VALUE);
     assert<int>::equals("Bite point initial state and callback", CLUTCH_DEFAULT_VALUE, bitePointWitness);
 
     evt.leftAxisValue = 254;
     evt.rightAxisValue = 0;
-    evt.rawInputBitmap = BMP(BITE_POINT_UP); // Btn 4 press
-    evt.rawInputChanges = evt.rawInputBitmap;
+    evt.rawInputBitmap.low = BMP(BITE_POINT_UP); // Btn 4 press
     internals::inputHub::onRawInput(evt);
-    evt.rawInputBitmap = 0ULL;
-    evt.rawInputChanges = BMP(BITE_POINT_UP); // Btn 4 release
+    evt.rawInputBitmap.low = 0ULL;
     internals::inputHub::onRawInput(evt);
     assert<int>::more("Bite point up callback", CLUTCH_DEFAULT_VALUE, bitePointWitness);
 
     InputHubService::call::setBitePoint(CLUTCH_DEFAULT_VALUE);
     evt.leftAxisValue = 254;
     evt.rightAxisValue = 0;
-    evt.rawInputBitmap = BMP(BITE_POINT_DOWN); // Btn 5 press
-    evt.rawInputChanges = evt.rawInputBitmap;
+    evt.rawInputBitmap.low = BMP(BITE_POINT_DOWN); // Btn 5 press
     internals::inputHub::onRawInput(evt);
-    evt.rawInputBitmap = 0ULL;
-    evt.rawInputChanges = BMP(BITE_POINT_DOWN); // Btn 5 release
+    evt.rawInputBitmap.low = 0ULL;
     internals::inputHub::onRawInput(evt);
     assert<int>::less("Bite point down callback", CLUTCH_DEFAULT_VALUE, bitePointWitness);
 }
@@ -226,37 +215,39 @@ void TG_bite_point()
  */
 void TG_map()
 {
-    DecouplingEvent evt;
-    evt.leftAxisValue = 0;
-    evt.rightAxisValue = 0;
-    evt.rawInputBitmap = 0;
-    evt.rawInputChanges = 0;
+    DecouplingEvent evt{};
     mapWitnessCount = 0;
     internals::inputHub::onRawInput(evt);
     assert<size_t>::equals("map() call 1", 1, mapWitnessCount);
 
     evt.leftAxisValue = 0;
     evt.rightAxisValue = 0;
-    evt.rawInputBitmap = BMP(BUTTON1);
-    evt.rawInputChanges = evt.rawInputBitmap;
+    evt.rawInputBitmap.low = BMP(BUTTON1);
     internals::inputHub::onRawInput(evt);
     assert<size_t>::equals("map() call 2", 2, mapWitnessCount);
-    assert<uint64_t>::equals("map() call 2 parameter", BMP(BUTTON1), mapBitmapWitness);
+    assert<uint64_t>::equals(
+        "map() call 2 parameter",
+        BMP(BUTTON1),
+        mapBitmapWitness.low);
 
     evt.leftAxisValue = 0;
     evt.rightAxisValue = 0;
-    evt.rawInputBitmap = BMP(ALT);
-    evt.rawInputChanges = evt.rawInputBitmap;
+    evt.rawInputBitmap.low = BMP(ALT);
     internals::inputHub::onRawInput(evt);
     assert<size_t>::equals("map() call 3", 3, mapWitnessCount);
-    assert<uint64_t>::equals("map() call 3 parameter", 0ULL, mapBitmapWitness);
+    assert<uint64_t>::equals(
+        "map() call 3 parameter",
+        0ULL,
+        mapBitmapWitness.low);
 
     evt.leftAxisValue = 0;
     evt.rightAxisValue = 0;
-    evt.rawInputBitmap = BMP(CYCLE);
-    evt.rawInputChanges = evt.rawInputBitmap;
+    evt.rawInputBitmap.low = BMP(CYCLE);
     internals::inputHub::onRawInput(evt);
-    assert<size_t>::equals("unexpected map() call", 3, mapWitnessCount); // not called
+    assert<size_t>::equals(
+        "unexpected map() call",
+        3,
+        mapWitnessCount); // not called
 }
 
 /**
@@ -265,34 +256,43 @@ void TG_map()
  */
 void TG_hid()
 {
-    DecouplingEvent evt;
-    evt.leftAxisValue = 0;
-    evt.rightAxisValue = 0;
-    evt.rawInputBitmap = 0;
-    evt.rawInputChanges = 0;
     reportWitness = 0;
-    internals::inputHub::onRawInput(evt);
-    assert<size_t>::equals("reportInput() call 1", 1, reportWitness);
-
-    evt.leftAxisValue = 100;
-    internals::inputHub::onRawInput(evt);
-    assert<size_t>::equals("reportInput() call 2", 2, reportWitness);
-
-    evt.rightAxisValue = 99;
-    internals::inputHub::onRawInput(evt);
-    assert<size_t>::equals("reportInput() call 3", 3, reportWitness);
-
-    evt.leftAxisValue = 0;
-    evt.rightAxisValue = 0;
-    evt.rawInputBitmap = BMP2(ALT,BUTTON1);
-    evt.rawInputChanges = evt.rawInputBitmap;
-    internals::inputHub::onRawInput(evt);
-    assert<size_t>::equals("reportInput() call 4", 4, reportWitness);
-
-    evt.rawInputBitmap = BMP(CYCLE);
-    evt.rawInputChanges = evt.rawInputBitmap;
-    internals::inputHub::onRawInput(evt);
-    assert<size_t>::equals("unexpected reportInput() call", 4, reportWitness); // not called
+    {
+        DecouplingEvent evt{};
+        internals::inputHub::onRawInput(evt);
+        assert<size_t>::equals("reportInput() call 1", 1, reportWitness);
+    }
+    {
+        DecouplingEvent evt{};
+        evt.leftAxisValue = 100;
+        internals::inputHub::onRawInput(evt);
+        assert<size_t>::equals("reportInput() call 2", 2, reportWitness);
+    }
+    {
+        DecouplingEvent evt{};
+        evt.rightAxisValue = 99;
+        internals::inputHub::onRawInput(evt);
+        assert<size_t>::equals("reportInput() call 3", 3, reportWitness);
+    }
+    {
+        DecouplingEvent evt{};
+        evt.rawInputBitmap.low = BMP2(ALT, BUTTON1);
+        internals::inputHub::onRawInput(evt);
+        assert<size_t>::equals("reportInput() call 4", 4, reportWitness);
+    }
+    {
+        // Release ALT+Button1
+        DecouplingEvent evt{};
+        internals::inputHub::onRawInput(evt);
+    }
+    reportWitness = 0;
+    {
+        DecouplingEvent evt{};
+        evt.rawInputBitmap.low = BMP(CYCLE);
+        internals::inputHub::onRawInput(evt);
+        assert<size_t>::equals(
+            "unexpected reportInput() call", 0, reportWitness); // not called
+    }
 }
 
 //-------------------------------------------------------------------

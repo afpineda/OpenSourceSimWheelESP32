@@ -20,6 +20,8 @@
 #include <iostream>
 #include <functional>
 
+using namespace std;
+
 //------------------------------------------------------------------
 // Globals
 //------------------------------------------------------------------
@@ -74,8 +76,7 @@
 uint8_t currentPOV = 0;
 bool currentALTEnabled = false;
 uint64_t currentState = 0ULL;
-uint64_t currentLow = 0ULL;
-uint64_t currentHigh = 0ULL;
+uint128_t currentInputs{};
 uint8_t currentClutch = CLUTCH_NONE_VALUE;
 uint8_t currentLeftAxis = CLUTCH_NONE_VALUE;
 uint8_t currentRightAxis = CLUTCH_NONE_VALUE;
@@ -88,40 +89,35 @@ void internals::hid::reset()
 }
 
 void internals::hid::reportInput(
-    uint64_t inputsLow,
-    uint64_t inputsHigh,
+    const uint128_t &inputs,
     uint8_t POVstate,
     uint8_t leftAxis,
     uint8_t rightAxis,
     uint8_t clutchAxis)
 {
-    currentLow = inputsLow;
-    currentHigh = inputsHigh;
+    currentInputs = inputs;
     currentPOV = POVstate;
     currentClutch = clutchAxis;
     currentLeftAxis = leftAxis;
     currentRightAxis = rightAxis;
-    currentALTEnabled = (inputsLow == 0ULL) && (inputsHigh != 0ULL);
-    currentState = currentALTEnabled ? inputsHigh : inputsLow;
+    currentALTEnabled = (inputs.low == 0ULL) && (inputs.high != 0ULL);
+    currentState = currentALTEnabled ? inputs.high : inputs.low;
 }
 
 //------------------------------------------------------------------
 
 void internals::inputMap::map(
     bool isAltModeEngaged,
-    uint64_t firmware_bitmap,
-    uint64_t &low,
-    uint64_t &high)
+    uint128_t &bitmap)
 {
     if (isAltModeEngaged)
     {
-        low = 0ULL;
-        high = firmware_bitmap;
+        bitmap.high = bitmap.low;
+        bitmap.low = 0ULL;
     }
     else
     {
-        low = firmware_bitmap;
-        high = 0ULL;
+        bitmap.high = 0ULL;
     }
 }
 
@@ -136,15 +132,15 @@ class InputSimulator
 public:
     void push(uint8_t btnNumber);
     void pushSeveral(uint64_t bmp);
-    void release(uint8_t btnNumber = 0xFF);
+    void release(uint8_t btnNumber);
+    void release();
     void send();
     void repeat();
     void axis(uint8_t left, uint8_t right);
 
     InputSimulator()
     {
-        event.rawInputBitmap = 0ULL;
-        event.rawInputChanges = 0ULL;
+        event.rawInputBitmap = {};
         event.leftAxisValue = CLUTCH_NONE_VALUE;
         event.rightAxisValue = CLUTCH_NONE_VALUE;
     };
@@ -154,25 +150,25 @@ public:
 
 void InputSimulator::push(uint8_t btnNumber)
 {
-    pushSeveral(BITMAP(btnNumber));
+    event.rawInputBitmap.set_bit(btnNumber, true);
+    send();
 }
 
 void InputSimulator::pushSeveral(uint64_t bmp)
 {
-    auto oldBitmap = event.rawInputBitmap;
-    event.rawInputBitmap |= bmp;
-    event.rawInputChanges = event.rawInputBitmap ^ oldBitmap;
+    event.rawInputBitmap.low |= bmp;
     send();
 }
 
 void InputSimulator::release(uint8_t btnNumber)
 {
-    auto oldBitmap = event.rawInputBitmap;
-    if (btnNumber >= 64)
-        event.rawInputBitmap = 0ULL;
-    else
-        event.rawInputBitmap &= ~BITMAP(btnNumber);
-    event.rawInputChanges = event.rawInputBitmap ^ oldBitmap;
+    event.rawInputBitmap.set_bit(btnNumber, false);
+    send();
+}
+
+void InputSimulator::release()
+{
+    event.rawInputBitmap = {};
     send();
 }
 
@@ -184,7 +180,6 @@ void InputSimulator::send()
 
 void InputSimulator::repeat()
 {
-    event.rawInputChanges = 0ULL;
     send();
 }
 
@@ -236,40 +231,40 @@ void TG_altEngagement()
 
     // With ALT button
     input.push(ALT_IN);
-    assert<uint64_t>::equals("ALT, inputs state low", 0ULL, currentLow);
-    assert<uint64_t>::equals("ALT, inputs state high", 0ULL, currentHigh);
+    assert<uint64_t>::equals("ALT, inputs state low", 0ULL, currentInputs.low);
+    assert<uint64_t>::equals("ALT, inputs state high", 0ULL, currentInputs.high);
     input.push(OTHER);
-    assert<uint64_t>::equals("ALT+OTHER, inputs state low", 0ULL, currentLow);
-    assert<uint64_t>::equals("ALT+OTHER, inputs state high", BITMAP(OTHER), currentHigh);
+    assert<uint64_t>::equals("ALT+OTHER, inputs state low", 0ULL, currentInputs.low);
+    assert<uint64_t>::equals("ALT+OTHER, inputs state high", BITMAP(OTHER), currentInputs.high);
     input.release();
-    assert<uint64_t>::equals("ALT release, inputs state low", 0ULL, currentLow);
-    assert<uint64_t>::equals("ALT release, inputs state high", 0ULL, currentHigh);
+    assert<uint64_t>::equals("ALT release, inputs state low", 0ULL, currentInputs.low);
+    assert<uint64_t>::equals("ALT release, inputs state high", 0ULL, currentInputs.high);
 
     // With analog clutch paddles
     input.axis(CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
-    assert<uint64_t>::equals("Analog paddle, inputs state low", 0ULL, currentLow);
-    assert<uint64_t>::equals("Analog paddle, inputs state high", 0ULL, currentHigh);
+    assert<uint64_t>::equals("Analog paddle, inputs state low", 0ULL, currentInputs.low);
+    assert<uint64_t>::equals("Analog paddle, inputs state high", 0ULL, currentInputs.high);
     assert<uint8_t>::equals("Analog paddle, left axis", CLUTCH_NONE_VALUE, currentLeftAxis);
     input.push(OTHER);
 
-    assert<uint64_t>::equals("Analog paddle+OTHER, inputs state low", 0ULL, currentLow);
-    assert<uint64_t>::equals("Analog paddle+OTHER, inputs state high", BITMAP(OTHER), currentHigh);
+    assert<uint64_t>::equals("Analog paddle+OTHER, inputs state low", 0ULL, currentInputs.low);
+    assert<uint64_t>::equals("Analog paddle+OTHER, inputs state high", BITMAP(OTHER), currentInputs.high);
     input.release();
-    assert<uint64_t>::equals("Analog release, inputs state low", 0ULL, currentLow);
-    assert<uint64_t>::equals("Analog release, inputs state high", 0ULL, currentHigh);
+    assert<uint64_t>::equals("Analog release, inputs state low", 0ULL, currentInputs.low);
+    assert<uint64_t>::equals("Analog release, inputs state high", 0ULL, currentInputs.high);
 
     // With digital clutch paddles
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     clutchPaddleType(false);
     input.push(LCLUTCH);
-    assert<uint64_t>::equals("Digital paddle, inputs state low", 0ULL, currentLow);
-    assert<uint64_t>::equals("Digital paddle, inputs state high", 0ULL, currentHigh);
+    assert<uint64_t>::equals("Digital paddle, inputs state low", 0ULL, currentInputs.low);
+    assert<uint64_t>::equals("Digital paddle, inputs state high", 0ULL, currentInputs.high);
     input.push(OTHER);
-    assert<uint64_t>::equals("Digital paddle+OTHER, inputs state low", 0ULL, currentLow);
-    assert<uint64_t>::equals("Digital paddle+OTHER, inputs state high", BITMAP(OTHER), currentHigh);
+    assert<uint64_t>::equals("Digital paddle+OTHER, inputs state low", 0ULL, currentInputs.low);
+    assert<uint64_t>::equals("Digital paddle+OTHER, inputs state high", BITMAP(OTHER), currentInputs.high);
     input.release();
-    assert<uint64_t>::equals("Digital release, inputs state low", 0ULL, currentLow);
-    assert<uint64_t>::equals("Digital release, inputs state high", 0ULL, currentHigh);
+    assert<uint64_t>::equals("Digital release, inputs state low", 0ULL, currentInputs.low);
+    assert<uint64_t>::equals("Digital release, inputs state high", 0ULL, currentInputs.high);
 }
 
 void TG_altInButtonsMode()
@@ -280,14 +275,14 @@ void TG_altInButtonsMode()
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     InputHubService::call::setAltButtonsWorkingMode(AltButtonsWorkingMode::Regular);
     input.push(ALT_IN);
-    assert<uint64_t>::equals("ALT push, buttons mode, low", ALT_B, currentLow);
-    assert<uint64_t>::equals("ALT push, buttons mode, high", 0ULL, currentHigh);
+    assert<uint64_t>::equals("ALT push, buttons mode, low", ALT_B, currentInputs.low);
+    assert<uint64_t>::equals("ALT push, buttons mode, high", 0ULL, currentInputs.high);
     input.push(OTHER);
-    assert<uint64_t>::equals("ALT+OTHER, buttons mode, low", ALT_B | BITMAP(OTHER), currentLow);
-    assert<uint64_t>::equals("ALT+OTHER, buttons mode, high", 0ULL, currentHigh);
+    assert<uint64_t>::equals("ALT+OTHER, buttons mode, low", ALT_B | BITMAP(OTHER), currentInputs.low);
+    assert<uint64_t>::equals("ALT+OTHER, buttons mode, high", 0ULL, currentInputs.high);
     input.release();
-    assert<uint64_t>::equals("release, buttons mode, low", 0ULL, currentLow);
-    assert<uint64_t>::equals("release, buttons mode, high", 0ULL, currentHigh);
+    assert<uint64_t>::equals("release, buttons mode, low", 0ULL, currentInputs.low);
+    assert<uint64_t>::equals("release, buttons mode, high", 0ULL, currentInputs.high);
 }
 
 void TG_POV_validInput()
@@ -362,13 +357,13 @@ void TG_POV_ButtonsMode()
     InputHubService::call::setDPadWorkingMode(DPadWorkingMode::Regular);
     input.release();
     input.push(UP);
-    assert<uint64_t>::equals("UP, bitmap", UP_B, currentLow);
+    assert<uint64_t>::equals("UP, bitmap", UP_B, currentInputs.low);
     assert<uint8_t>::equals("UP, pov", 0, currentPOV);
     input.push(RIGHT);
-    assert<uint64_t>::equals("UP+RIGHT, bitmap", UP_B | RIGHT_B, currentLow);
+    assert<uint64_t>::equals("UP+RIGHT, bitmap", UP_B | RIGHT_B, currentInputs.low);
     assert<uint8_t>::equals("UP+RIGHT, pov", 0, currentPOV);
     input.release();
-    assert<uint64_t>::equals("release, bitmap", 0ULL, currentLow);
+    assert<uint64_t>::equals("release, bitmap", 0ULL, currentInputs.low);
     assert<uint8_t>::equals("release, pov", 0, currentPOV);
     InputHubService::call::setDPadWorkingMode(DPadWorkingMode::Navigation);
 }
@@ -785,32 +780,32 @@ void TG_neutralGear()
 {
     // initialize
     input.release();
-    assert<uint64_t>::equals("initialization", 0ULL, currentLow);
-    assert<uint64_t>::equals("initialization", 0ULL, currentHigh);
+    assert<uint64_t>::equals("initialization", 0ULL, currentInputs.low);
+    assert<uint64_t>::equals("initialization", 0ULL, currentInputs.high);
 
     // press left shift paddle and check
     input.push(LSHIFT);
-    assert<uint64_t>::equals("Lshift on", BITMAP(LSHIFT), currentLow);
+    assert<uint64_t>::equals("Lshift on", BITMAP(LSHIFT), currentInputs.low);
     // press right shift paddle and check
     input.push(RSHIFT);
-    assert<uint64_t>::equals("Rshift on", BITMAP(NEUTRAL), currentLow);
+    assert<uint64_t>::equals("Rshift on", BITMAP(NEUTRAL), currentInputs.low);
     // release right shift paddle and check
     input.release(RSHIFT);
-    assert<uint64_t>::equals("Rshift off", 0ULL, currentLow);
+    assert<uint64_t>::equals("Rshift off", 0ULL, currentInputs.low);
     // release left shift paddle and check
     input.release(LSHIFT);
-    assert<uint64_t>::equals("Lshift off", 0ULL, currentLow);
+    assert<uint64_t>::equals("Lshift off", 0ULL, currentInputs.low);
 
     // press left shift paddle again and check
     input.push(LSHIFT);
-    assert<uint64_t>::equals("Lshift on + RShift off", BITMAP(LSHIFT), currentLow);
+    assert<uint64_t>::equals("Lshift on + RShift off", BITMAP(LSHIFT), currentInputs.low);
     // release left shift paddle, press right shift paddle and check
     input.release(LSHIFT);
     input.push(RSHIFT);
-    assert<uint64_t>::equals("Rshift on + LShift off", BITMAP(RSHIFT), currentLow);
+    assert<uint64_t>::equals("Rshift on + LShift off", BITMAP(RSHIFT), currentInputs.low);
     // release all and check
     input.release(RSHIFT);
-    assert<uint64_t>::equals("Lshift off + RShift off", 0ULL, currentLow);
+    assert<uint64_t>::equals("Lshift off + RShift off", 0ULL, currentInputs.low);
 }
 
 //------------------------------------------------------------------

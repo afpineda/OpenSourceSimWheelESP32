@@ -52,6 +52,12 @@ void test1()
     InputMapService::call::getMap(63, noAlt, alt);
     assert((noAlt == 63) && "default map not set (3)");
     assert((alt == 63 + 64) && "default map not set (4)");
+    InputMapService::call::getMap(64, noAlt, alt);
+    assert((noAlt == 64) && "default map not set (5)");
+    assert((alt == 0) && "default map not set (6)");
+    InputMapService::call::getMap(127, noAlt, alt);
+    assert((noAlt == 127) && "default map not set (7)");
+    assert((alt == 63) && "default map not set (8)");
 }
 
 void test2()
@@ -61,15 +67,25 @@ void test2()
 
     reset();
     inputMap::set(0, 1, 2);
+    inputMap::set(64, 1, 2);
     internals::inputMap::getReady();
     OnStart::notify();
 
     InputMapService::call::getMap(0, noAlt, alt);
     assert((noAlt == 1) && "custom firmware-defined map not respected (1)");
     assert((alt == 2) && "custom firmware-defined map not respected (2)");
+
     InputMapService::call::getMap(7, noAlt, alt);
     assert((noAlt == 7) && "default map not set (1)");
     assert((alt == 7 + 64) && "default map not set (2)");
+
+    InputMapService::call::getMap(64, noAlt, alt);
+    assert((noAlt == 1) && "custom firmware-defined map not respected (3)");
+    assert((alt == 2) && "custom firmware-defined map not respected (4)");
+
+    InputMapService::call::getMap(65, noAlt, alt);
+    assert((noAlt == 65) && "default map not set (3)");
+    assert((alt == 1) && "default map not set (4)");
 }
 
 void test3()
@@ -81,19 +97,30 @@ void test3()
     internals::inputMap::getReady();
     OnStart::notify();
 
-    InputMapService::call::setMap(99, 0, 1); // no exception should arise
+    alt = noAlt = 0;
+    InputMapService::call::setMap(200, 0, 1); // no exception should arise
     InputMapService::call::setMap(0, 128, 0);
     InputMapService::call::getMap(0, noAlt, alt);
     assert((noAlt == 0) && "setMap failed (1)");
     assert((alt == 64) && "setMap failed (2)");
+
+    alt = noAlt = 0;
     InputMapService::call::setMap(0, 0, 220);
     InputMapService::call::getMap(0, noAlt, alt);
     assert((noAlt == 0) && "setMap failed (3)");
     assert((alt == 64) && "setMap failed (4)");
+
+    alt = noAlt = 0;
     InputMapService::call::setMap(0, 63, 127);
     InputMapService::call::getMap(0, noAlt, alt);
     assert((noAlt == 63) && "setMap failed (5)");
     assert((alt == 127) && "setMap failed (6)");
+
+    alt = noAlt = 0;
+    InputMapService::call::setMap(127, 63, 127);
+    InputMapService::call::getMap(127, noAlt, alt);
+    assert((noAlt == 63) && "setMap failed (7)");
+    assert((alt == 127) && "setMap failed (8)");
 }
 
 #define BMPL(n) (1ULL << (n))
@@ -103,7 +130,6 @@ void test4()
 {
     std::cout << "- Test 4 -" << std::endl;
     uint8_t alt, noAlt;
-    uint64_t rawBitmap, low, high;
 
     reset();
     inputMap::set(0, 64, 127);
@@ -112,49 +138,114 @@ void test4()
     internals::inputMap::getReady();
     OnStart::notify();
 
-    rawBitmap = 0ULL;
-    internals::inputMap::map(false, rawBitmap, low, high);
-    // std::cout << low << "-" << high << std::endl;
-    assert(((low == 0ULL) && (high == 0ULL)) && "map() failed (1)");
-    internals::inputMap::map(true, rawBitmap, low, high);
-    assert(((low == 0ULL) && (high == 0ULL)) && "map() failed (2)");
-
-    rawBitmap = 0b001;
-    internals::inputMap::map(false, rawBitmap, low, high);
-    assert(((low == 0ULL) && (high == BMPH(64))) && "map() failed (3)");
-    internals::inputMap::map(true, rawBitmap, low, high);
-    assert(((low == 0ULL) && (high == BMPH(127))) && "map() failed (4)");
-
-    rawBitmap = 0b011;
-    internals::inputMap::map(false, rawBitmap, low, high);
-    assert(((low == 0ULL) && (high == BMPH(64))) && "map() failed (5)");
-    internals::inputMap::map(true, rawBitmap, low, high);
-    assert(((low == 0ULL) && (high == BMPH(127))) && "map() failed (6)");
-
-    rawBitmap = 0b100;
-    internals::inputMap::map(false, rawBitmap, low, high);
-    assert(((low == BMPL(0)) && (high == 0ULL)) && "map() failed (7)");
-    internals::inputMap::map(true, rawBitmap, low, high);
-    assert(((low == BMPL(1)) && (high == 0ULL)) && "map() failed (8)");
-
-    rawBitmap = 0b111;
-    internals::inputMap::map(false, rawBitmap, low, high);
-    assert(((low == BMPL(0)) && (high == BMPH(64))) && "map() failed (9)");
-    internals::inputMap::map(true, rawBitmap, low, high);
-    assert(((low == BMPL(1)) && (high == BMPH(127))) && "map() failed (10)");
-
-    rawBitmap = 0b1000;
-    internals::inputMap::map(false, rawBitmap, low, high);
-    assert(((low == rawBitmap) && (high == 0ULL)) && "map() failed (11)");
-    internals::inputMap::map(true, rawBitmap, low, high);
-    assert(((low == 0ULL) && (high == rawBitmap)) && "map() failed (12)");
+    {
+        uint128_t rawBitmap{};
+        internals::inputMap::map(false, rawBitmap);
+        assert(((rawBitmap.low == 0ULL) && (rawBitmap.high == 0ULL)) &&
+               "map() failed (1)");
+    }
+    {
+        uint128_t rawBitmap{};
+        internals::inputMap::map(true, rawBitmap);
+        assert(((rawBitmap.low == 0ULL) && (rawBitmap.high == 0ULL)) &&
+               "map() failed (2)");
+    }
+    {
+        uint128_t rawBitmap{
+            .low = 0b001,
+            .high = 0ULL,
+        };
+        internals::inputMap::map(false, rawBitmap);
+        assert(((rawBitmap.low == 0ULL) && (rawBitmap.high == BMPH(64))) &&
+               "map() failed (3)");
+    }
+    {
+        uint128_t rawBitmap{
+            .low = 0b001,
+            .high = 0ULL,
+        };
+        internals::inputMap::map(true, rawBitmap);
+        assert(((rawBitmap.low == 0ULL) && (rawBitmap.high == BMPH(127))) &&
+               "map() failed (4)");
+    }
+    {
+        uint128_t rawBitmap{
+            .low = 0b011,
+            .high = 0ULL,
+        };
+        internals::inputMap::map(false, rawBitmap);
+        assert(((rawBitmap.low == 0ULL) && (rawBitmap.high == BMPH(64))) &&
+               "map() failed (5)");
+    }
+    {
+        uint128_t rawBitmap{
+            .low = 0b011,
+            .high = 0ULL,
+        };
+        internals::inputMap::map(true, rawBitmap);
+        assert(((rawBitmap.low == 0ULL) && (rawBitmap.high == BMPH(127))) &&
+               "map() failed (6)");
+    }
+    {
+        uint128_t rawBitmap{
+            .low = 0b100,
+            .high = 0ULL,
+        };
+        internals::inputMap::map(false, rawBitmap);
+        assert(((rawBitmap.low == BMPL(0)) && (rawBitmap.high == 0ULL)) &&
+               "map() failed (7)");
+    }
+    {
+        uint128_t rawBitmap{
+            .low = 0b100,
+            .high = 0ULL,
+        };
+        internals::inputMap::map(true, rawBitmap);
+        assert(((rawBitmap.low == BMPL(1)) && (rawBitmap.high == 0ULL)) &&
+               "map() failed (8)");
+    }
+    {
+        uint128_t rawBitmap{
+            .low = 0b111,
+            .high = 0ULL,
+        };
+        internals::inputMap::map(false, rawBitmap);
+        assert(((rawBitmap.low == BMPL(0)) && (rawBitmap.high == BMPH(64))) &&
+               "map() failed (9)");
+    }
+    {
+        uint128_t rawBitmap{
+            .low = 0b111,
+            .high = 0ULL,
+        };
+        internals::inputMap::map(true, rawBitmap);
+        assert(((rawBitmap.low == BMPL(1)) && (rawBitmap.high == BMPH(127))) &&
+               "map() failed (10)");
+    }
+    {
+        uint128_t rawBitmap{
+            .low = 0b1000,
+            .high = 0ULL,
+        };
+        internals::inputMap::map(false, rawBitmap);
+        assert(((rawBitmap.low == 0b1000) && (rawBitmap.high == 0ULL)) &&
+               "map() failed (11)");
+    }
+    {
+        uint128_t rawBitmap{
+            .low = 0b1000,
+            .high = 0ULL,
+        };
+        internals::inputMap::map(true, rawBitmap);
+        assert(((rawBitmap.low == 0ULL) && (rawBitmap.high == 0b1000)) &&
+               "map() failed (12)");
+    }
 }
 
 void test5()
 {
     std::cout << "- Test 5 -" << std::endl;
     uint8_t alt, noAlt;
-    uint64_t rawBitmap, low, high;
 
     reset();
     // Custom defaults
@@ -215,6 +306,34 @@ void test6()
     InputNumber::bookAll();
 }
 
+void test7()
+{
+    std::cout << "- Test 7 -" << std::endl;
+
+    // Set specific input numbers for this test
+    reset();
+    InputNumber::clearBook();
+    InputNumber n;
+    n = 0;
+    n.book();
+    n = 2;
+    n.book();
+    n = 3;
+    n.book();
+
+    // start
+    inputMap::set(1, 20, 20);
+    internals::inputMap::getReady();
+    try
+    {
+        OnStart::notify();
+        assert(false && "Non-existing input number was successfully mapped");
+    }
+    catch (std::runtime_error)
+    {
+    }
+}
+
 int main()
 {
     LoadSetting::subscribe(loadSettingsCallback);
@@ -224,7 +343,7 @@ int main()
     // Basic parameter test
     try
     {
-        inputMap::set(77, 0, 0);
+        inputMap::set(200, 0, 0);
         assert(false && "Invalid input number was successfully mapped (1)");
     }
     catch (std::runtime_error)
@@ -249,12 +368,40 @@ int main()
     {
     }
 
+    try
+    {
+        inputMap::set(UNSPECIFIED::VALUE, 0, 0);
+        assert(false && "Invalid input number was successfully mapped (4)");
+    }
+    catch (std::runtime_error)
+    {
+    }
+
+    try
+    {
+        inputMap::set(0, UNSPECIFIED::VALUE, 0);
+        assert(false && "Invalid input number was successfully mapped (5)");
+    }
+    catch (std::runtime_error)
+    {
+    }
+
+    try
+    {
+        inputMap::set(0, 0, UNSPECIFIED::VALUE);
+        assert(false && "Invalid input number was successfully mapped (6)");
+    }
+    catch (std::runtime_error)
+    {
+    }
+
     test1();
     test2();
     test3();
     test4();
     test5();
     test6();
+    test7();
 
     return 0;
 }
