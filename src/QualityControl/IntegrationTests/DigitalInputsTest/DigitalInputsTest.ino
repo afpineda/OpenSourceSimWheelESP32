@@ -30,10 +30,7 @@
 void internals::inputHub::onRawInput(DecouplingEvent &input)
 {
     Serial.print("STATE : ");
-    debugPrintBool(input.rawInputBitmap);
-    Serial.println("");
-    Serial.print("CHANGE: ");
-    debugPrintBool(input.rawInputChanges);
+    debugPrintBool(input.rawInputBitmap.low);
     Serial.println("");
 }
 

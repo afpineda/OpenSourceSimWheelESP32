@@ -20,7 +20,7 @@
 //------------------------------------------------------------------
 
 AnalogMultiplexerInput *buttons;
-uint64_t state = 0;
+uint128_t oldState{};
 
 //------------------------------------------------------------------
 // Mocks
@@ -37,7 +37,7 @@ void setup()
 
     AnalogMultiplexerGroup<Mux8Pin> spec;
     setDebugInputNumbers(spec);
-    OutputGPIOCollection selectors = getDebugMuxSelectors();
+    std::vector<OutputGPIO> selectors = getDebugMuxSelectors();
 
     buttons = new AnalogMultiplexerInput(
         selectors[0],
@@ -45,19 +45,17 @@ void setup()
         selectors[2],
         spec);
 
-    Serial.println("MASK:");
-    debugPrintBool(buttons->mask);
-    Serial.println("");
     Serial.println("-- GO --");
 }
 
 void loop()
 {
-    uint64_t newState = buttons->read(state);
-    if (state != newState)
+    uint128_t newState{};
+    buttons->read(newState);
+    if (oldState != newState)
     {
-        state = newState;
-        debugPrintBool(state);
+        oldState = newState;
+        debugPrintBool(newState.low);
         Serial.println("");
     }
     DELAY_MS(60);

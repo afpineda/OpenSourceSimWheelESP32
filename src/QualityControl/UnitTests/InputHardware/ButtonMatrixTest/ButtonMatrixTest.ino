@@ -20,7 +20,7 @@
 //------------------------------------------------------------------
 
 ButtonMatrixInput *buttons;
-uint64_t state = 0ULL;
+uint128_t oldState{};
 
 //------------------------------------------------------------------
 // Mocks
@@ -39,19 +39,17 @@ void setup()
 
     buttons = new ButtonMatrixInput(spec, false);
 
-    Serial.println("MASK:");
-    debugPrintBool(buttons->mask);
-    Serial.println("");
     Serial.println("-- GO --");
 }
 
 void loop()
 {
-    uint64_t newState = buttons->read(state);
-    if (state != newState)
+    uint128_t newState{};
+    buttons->read(newState);
+    if (oldState != newState)
     {
-        state = newState;
-        debugPrintBool(state);
+        oldState = newState;
+        debugPrintBool(newState.low);
         Serial.println("");
     }
     DELAY_MS(60);

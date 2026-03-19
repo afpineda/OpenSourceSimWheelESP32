@@ -19,8 +19,7 @@
 // Globals
 //------------------------------------------------------------------
 
-uint64_t globalState = 0;
-uint64_t mask;
+uint128_t globalState{};
 RotaryEncoderInput *rot1 = nullptr;
 RotaryEncoderInput *rot2 = nullptr;
 
@@ -28,12 +27,10 @@ RotaryEncoderInput *rot2 = nullptr;
 // Auxiliary
 //------------------------------------------------------------------
 
-void notifyInputEvent(uint64_t state)
+void notifyInputEvent(const uint128_t &state)
 {
-    uint64_t changes = globalState ^ state;
-    globalState = state;
     Serial.print("STATE : ");
-    debugPrintBool(state);
+    debugPrintBool(state.low);
     Serial.println("");
 }
 
@@ -50,29 +47,25 @@ void setup()
 
     rot1 = new RotaryEncoderInput(
         TEST_ROTARY_CLK,
-        TEST_ROTARY_DT, 5, 6, false);
+        TEST_ROTARY_DT, 0, 1, false);
     rot2 = new RotaryEncoderInput(
         TEST_ROTARY_ALPS_A,
-        TEST_ROTARY_ALPS_B, 0, 1, true);
+        TEST_ROTARY_ALPS_B, 5, 6, true);
 
-    mask = rot1->mask & rot2->mask;
-    Serial.print("MASK  : ");
-    debugPrintBool(mask);
-    Serial.println("");
     Serial.println("-- GO --");
 }
 
 void loop()
 {
-    uint64_t r1 = rot1->read(globalState);
-    uint64_t r2 = rot2->read(globalState);
-    uint64_t newState = (r1 | r2);
+    uint128_t newState{globalState};
+    rot1->read(newState);
+    rot2->read(newState);
     if (globalState != newState)
     {
         notifyInputEvent(newState);
         globalState = newState;
     }
-    else if (newState != 0)
+    else if (newState)
     {
         Serial.println("Pulse delay");
     }

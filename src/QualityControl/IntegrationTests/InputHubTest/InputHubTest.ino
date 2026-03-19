@@ -91,15 +91,14 @@ void internals::hid::begin(
     bool exclusive) {}
 
 void internals::hid::reportInput(
-    uint64_t inputsLow,
-    uint64_t inputsHigh,
+    const uint128_t &inputs,
     uint8_t POVstate,
     uint8_t leftAxis,
     uint8_t rightAxis,
     uint8_t clutchAxis)
 {
-    _inputsLow = inputsLow;
-    _inputsHigh = inputsHigh;
+    _inputsLow = inputs.low;
+    _inputsHigh = inputs.high;
     _POVstate = POVstate;
     _leftAxis = leftAxis;
     _rightAxis = rightAxis;

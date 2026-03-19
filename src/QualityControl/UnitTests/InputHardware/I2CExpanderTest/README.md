@@ -23,11 +23,9 @@ You have to manually wire/unwire them to/from the requested pin to close/open th
 
 1. Reset. Ignore output from the operating system itself.
 
-2. The latest 3 lines of output must match:
+2. The latest line of output must match:
 
    ```text
-   MASK:
-   1111111111111111111111111100000000110000000011000000001111111111
    -- GO --
    ```
 

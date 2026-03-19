@@ -42,7 +42,6 @@ Output through USB serial port at 115200 bauds.
 
    ```text
    -- READY --
-   MASK  : 1111111111111111111111111111111111111111111111111111111110011100
    -- GO --
    ```
 

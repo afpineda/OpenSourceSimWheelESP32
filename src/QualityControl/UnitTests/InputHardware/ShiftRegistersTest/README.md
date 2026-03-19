@@ -25,8 +25,6 @@ no matter which bitmap is assigned to them.
 
    ```text
    -- READY --
-   MASK:
-   1111111111111111111111111111111111111111111111111111111110000011
    -- GO --
    ```
 

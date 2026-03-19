@@ -19,7 +19,7 @@
 // Globals
 //------------------------------------------------------------------
 
-uint64_t state = 0ULL;
+uint128_t oldState{};
 I2CInput *pcf8574;
 I2CInput *mcp23017;
 
@@ -73,20 +73,18 @@ void setup()
         spec2,
         mcp23017FullAddress);
 
-    uint64_t mask = pcf8574->mask & mcp23017->mask;
-    Serial.println("MASK:");
-    debugPrintBool(mask);
-    Serial.println("");
     Serial.println("-- GO --");
 }
 
 void loop()
 {
-    uint64_t newState = pcf8574->read(state) | mcp23017->read(state);
-    if (state != newState)
+    uint128_t newState{};
+    pcf8574->read(newState);
+    mcp23017->read(newState);
+    if (oldState != newState)
     {
-        state = newState;
-        debugPrintBool(state);
+        oldState = newState;
+        debugPrintBool(newState.low);
         Serial.println("");
     }
     DELAY_MS(60);

@@ -20,7 +20,7 @@
 //------------------------------------------------------------------
 
 ShiftRegistersInput *buttons;
-uint64_t state = 0ULL;
+uint128_t state{};
 
 //------------------------------------------------------------------
 // Mocks
@@ -45,19 +45,16 @@ void setup()
         spec,
         SER);
 
-    Serial.println("MASK:");
-    debugPrintBool(buttons->mask);
-    Serial.println("");
     Serial.println("-- GO --");
 }
 
 void loop()
 {
-    uint64_t newState = buttons->read(state);
-    if (state != newState)
+    uint128_t oldState = state;
+    buttons->read(state);
+    if (oldState != state)
     {
-        state = newState;
-        debugPrintBool(state);
+        debugPrintBool(state.low);
         Serial.println("");
     }
     DELAY_MS(60);

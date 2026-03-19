@@ -26,8 +26,6 @@ Use this [test circuit](../../../Protoboards/MainTestBoard.diy):
 
    ```text
    -- READY --
-   MASK:
-   1111111111111111111111111111111111111111111111111111111100000011
    -- GO --
    ```
 
