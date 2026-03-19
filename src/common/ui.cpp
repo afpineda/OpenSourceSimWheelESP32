@@ -247,7 +247,11 @@ void ui::add(AbstractUserInterface *instance)
     if (FirmwareService::call::isRunning())
         throw std::runtime_error(
             "Unable to add a user interface instance while running");
-    addIfNotExists<AbstractUserInterface *>(instance, _ui_instances);
+    for (auto another_instance : _ui_instances)
+        if (another_instance == instance)
+            // Already added
+            return;
+    _ui_instances.push_back(instance);
 }
 
 //-------------------------------------------------------------------

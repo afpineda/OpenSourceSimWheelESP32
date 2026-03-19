@@ -38,7 +38,7 @@ namespace internals
              * @param collection Pins to reserve
              */
             template <typename GPIOtype>
-            void reserve(const std::vector<GPIOtype> &collection)
+            void reserve(const std::set<GPIOtype> &collection)
             {
                 for (auto item : collection)
                     item.reserve();
@@ -53,15 +53,17 @@ namespace internals
             {
                 OutputGPIOCollection selectors;
                 InputGPIOCollection inputs;
-                uint64_t previousInputNumbers = InputNumber::booked();
-                for (ButtonMatrix::const_iterator row = matrix.begin(); row != matrix.end(); row++)
+                uint128_t previousInputNumbers = InputNumber::booked();
+                for (ButtonMatrix::const_iterator row = matrix.cbegin();
+                     row != matrix.cend();
+                     row++)
                 {
                     OutputGPIO selectorPin = row->first;
-                    addIfNotExists<OutputGPIO>(selectorPin, selectors);
+                    selectors.insert(selectorPin);
                     for (std::map<InputGPIO, InputNumber>::const_iterator col = row->second.begin(); col != row->second.end(); col++)
                     {
                         InputGPIO inputPin = col->first;
-                        addIfNotExists<InputGPIO>(inputPin, inputs);
+                        inputs.insert(inputPin);
                         InputNumber inputNumber = col->second;
                         inputNumber.book();
                     }
@@ -82,7 +84,7 @@ namespace internals
             template <typename PinTags>
             void analogMultiplexer(const OutputGPIOCollection &selectors, const AnalogMultiplexerGroup<PinTags> chips)
             {
-                uint64_t previousInputNumbers = InputNumber::booked();
+                uint128_t previousInputNumbers = InputNumber::booked();
                 reserve<OutputGPIO>(selectors);
                 for (auto chip : chips)
                     chip.reserve_and_book();
@@ -104,7 +106,7 @@ namespace internals
                 InputGPIO inputPin,
                 const ShiftRegisterChain &chain)
             {
-                uint64_t previousInputNumbers = InputNumber::booked();
+                uint128_t previousInputNumbers = InputNumber::booked();
                 loadPin.reserve();
                 nextPin.reserve();
                 inputPin.reserve();
@@ -126,7 +128,7 @@ namespace internals
             template <typename PinTags>
             void GPIOExpander(const GPIOExpanderChip<PinTags> &chip)
             {
-                uint64_t previousInputNumbers = InputNumber::booked();
+                uint128_t previousInputNumbers = InputNumber::booked();
                 for (auto i = chip.begin(); i != chip.end(); i++)
                     (i->second).book();
                 if (previousInputNumbers == InputNumber::booked())
@@ -143,7 +145,7 @@ namespace internals
              */
             void rotaryEncoder(InputGPIO dtPin, InputGPIO clkPin, InputNumber cw, InputNumber ccw)
             {
-                uint64_t previousInputNumbers = InputNumber::booked();
+                uint128_t previousInputNumbers = InputNumber::booked();
                 dtPin.reserve();
                 clkPin.reserve();
                 cw.book();
@@ -172,31 +174,6 @@ namespace internals
                 inputNumber.book();
             }
 
-            /**
-             * @brief Validate a coded rotary switch
-             *
-             * @param spec Specification of input numbers attached to the rotary switch
-             * @param inputs Collection of input pins.
-             */
-            void codedRotarySwitch(const RotaryCodedSwitch &spec, const InputGPIOCollection &inputs)
-            {
-                uint8_t pinCount = inputs.size();
-                if ((pinCount < 2) || (pinCount > 8))
-                    throw std::runtime_error("Wrong count of input pins in a coded rotary switch");
-                reserve<InputGPIO>(inputs);
-                uint8_t maxIndex = (1 << pinCount); // = 2^pinCount
-                for (RotaryCodedSwitch::const_iterator i = spec.begin(); i != spec.end(); i++)
-                {
-                    if (i->first >= maxIndex)
-                        throw std::runtime_error(
-                            "Invalid position ()" +
-                            std::to_string(i->first) +
-                            ") in a coded rotary switch. Valid range is [0," +
-                            std::to_string(maxIndex) +
-                            ")");
-                    (i->second).book();
-                }
-            }
         } // namespace validate
     } // namespace inputs
 } // namespace internals

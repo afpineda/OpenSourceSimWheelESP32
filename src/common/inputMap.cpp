@@ -3,7 +3,8 @@
  *
  * @author Ángel Fernández Pineda. Madrid. Spain.
  * @date 2022-02-27
- * @brief Translates firmware-defined input numbers to user-defined input numbers.
+ * @brief Translates firmware-defined input numbers
+ *        to user-defined input numbers.
  *
  * @copyright Licensed under the EUPL
  *
@@ -31,10 +32,11 @@ struct DefaultMap
     uint8_t alt;
 };
 
-static std::array<uint8_t, 64> mapNoAlt;
-static std::array<uint8_t, 64> mapAlt;
+static std::array<uint8_t, 128> mapNoAlt;
+static std::array<uint8_t, 128> mapAlt;
 static std::vector<DefaultMap> defaultMap;
 static bool computeOptimal = false;
+static uint8_t max_firmware_in = 128;
 
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
@@ -53,11 +55,12 @@ class InputMapServiceProvider : public InputMapService
         uint8_t user_defined,
         uint8_t user_defined_alt) override
     {
-        if ((firmware_defined < 64) && (user_defined < 128) && (user_defined_alt < 128))
+        if ((firmware_defined < 128) &&
+            (user_defined < 128) &&
+            (user_defined_alt < 128))
         {
             mapNoAlt[firmware_defined] = user_defined;
             mapAlt[firmware_defined] = user_defined_alt;
-            // SaveSetting::notify(UserSetting::INPUT_MAP);
         }
     }
 
@@ -66,7 +69,7 @@ class InputMapServiceProvider : public InputMapService
         uint8_t &user_defined,
         uint8_t &user_defined_alt) override
     {
-        if (firmware_defined < 64)
+        if (firmware_defined < 128)
         {
             user_defined = mapNoAlt[firmware_defined];
             user_defined_alt = mapAlt[firmware_defined];
@@ -81,10 +84,10 @@ class InputMapServiceProvider : public InputMapService
     virtual void resetMap() override
     {
         // Create an absolute default map
-        for (uint8_t i = 0; i < 64; i++)
+        for (uint8_t i = 0; i < 128; i++)
         {
             mapNoAlt[i] = i;
-            mapAlt[i] = (i + 64);
+            mapAlt[i] = (i + 64) % 128;
         }
         // Override with custom defaults
         for (auto defMap : defaultMap)
@@ -101,37 +104,27 @@ class InputMapServiceProvider : public InputMapService
 
 void inputMapStart()
 {
-    InputMapService::call::resetMap();
-    LoadSetting::notify(UserSetting::INPUT_MAP);
-}
+    // Due to rotary coded switches
+    // the check for invalid firmware-defined input numbers
+    // is delayed to the OnStart event
+    for (auto defMap : defaultMap)
+        if (!InputNumber::booked(defMap.firmware))
+            throw std::runtime_error(
+                "The input number " +
+                std::to_string(defMap.firmware) +
+                " can not be mapped, since it is not assigned");
 
-//-------------------------------------------------------------------
+    // Compute the highest firmware-defined input number
+    for (
+        max_firmware_in = 128;
+        (max_firmware_in > 0) && !InputNumber::booked(max_firmware_in - 1);
+        max_firmware_in--)
+        ;
 
-void internals::inputMap::clear()
-{
-    for (uint8_t i = 0; i < 64; i++)
-    {
-        mapNoAlt[i] = i;
-        mapAlt[i] = (i + 64);
-    }
-    defaultMap.clear();
-}
-
-//-------------------------------------------------------------------
-
-void internals::inputMap::getReady()
-{
     if (computeOptimal)
     {
-        // Compute the highest firmware-defined input number
-        uint8_t max_firmware_in;
-        for (
-            max_firmware_in = 64;
-            (max_firmware_in > 0) && !InputNumber::booked(max_firmware_in - 1);
-            max_firmware_in--)
-            ;
-        // Automatically assign a new map
-        for (uint8_t i = 0; i < 64; i++)
+        // Automatically assign a default map
+        for (uint8_t i = 0; i < 128; i++)
             if (InputNumber::booked(i))
             {
                 // Do not overwrite other custom settings
@@ -142,16 +135,33 @@ void internals::inputMap::getReady()
                         found = true;
                         break;
                     }
-                if (!found)
-                    ::inputMap::set(i, i, i + max_firmware_in);
+                uint8_t optimal = max_firmware_in + i;
+                if (!found && (optimal < 128))
+                    ::inputMap::set(i, i, optimal);
             }
     }
-    for (auto defMap : defaultMap)
-        if (!InputNumber::booked(defMap.firmware))
-            throw std::runtime_error(
-                "The input number " +
-                std::to_string(defMap.firmware) +
-                " can not be mapped, since it is not assigned");
+
+    // Reset and load from flash memory
+    InputMapService::call::resetMap();
+    LoadSetting::notify(UserSetting::INPUT_MAP);
+}
+
+//-------------------------------------------------------------------
+
+void internals::inputMap::clear()
+{
+    for (uint8_t i = 0; i < 128; i++)
+    {
+        mapNoAlt[i] = i;
+        mapAlt[i] = (i + 64) % 128;
+    }
+    defaultMap.clear();
+}
+
+//-------------------------------------------------------------------
+
+void internals::inputMap::getReady()
+{
     InputMapService::inject(new InputMapServiceProvider());
     OnStart::subscribe(inputMapStart);
 }
@@ -160,22 +170,17 @@ void internals::inputMap::getReady()
 // Map
 //-------------------------------------------------------------------
 
-void internals::inputMap::map(
-    bool isAltModeEngaged,
-    uint64_t firmware_bitmap,
-    uint64_t &low,
-    uint64_t &high)
+void internals::inputMap::map(bool isAltModeEngaged, uint128_t &bitmap)
 {
-    high = 0ULL;
-    low = 0ULL;
-    for (uint8_t i = 0; i < 64; i++)
-        if (firmware_bitmap & (1ULL << i))
+    uint128_t firmware_bitmap = bitmap;
+    bitmap.low = 0ULL;
+    bitmap.high = 0ULL;
+    for (uint8_t i = 0; i < max_firmware_in; i++)
+        if (firmware_bitmap.bit(i))
         {
-            uint8_t user_input_number = (isAltModeEngaged) ? mapAlt[i] : mapNoAlt[i];
-            if (user_input_number < 64)
-                low |= (1ULL << user_input_number);
-            else
-                high |= (1ULL << (user_input_number - 64));
+            uint8_t user_input_number =
+                (isAltModeEngaged) ? mapAlt[i] : mapNoAlt[i];
+            bitmap.set_bit(user_input_number, true);
         }
 }
 
@@ -187,9 +192,14 @@ void internals::inputMap::map(
 
 void inputMap::set(
     InputNumber firmware_defined,
-    UserInputNumber user_defined,
-    UserInputNumber user_defined_alt_engaged)
+    InputNumber user_defined,
+    InputNumber user_defined_alt_engaged)
 {
+    if ((firmware_defined == UNSPECIFIED::VALUE) ||
+        (user_defined == UNSPECIFIED::VALUE) ||
+        (user_defined_alt_engaged == UNSPECIFIED::VALUE))
+        throw unknown_input_number("Input map");
+
     DefaultMap defMap;
     defMap.firmware = firmware_defined;
     defMap.noAlt = user_defined;

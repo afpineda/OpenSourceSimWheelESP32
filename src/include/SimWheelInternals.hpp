@@ -239,15 +239,10 @@ namespace internals
          *
          * @param isAltModeEngaged True if ALT mode is engaged,
          *                         false otherwise.
-         * @param firmware_bitmap Firmware-defined input bitmap
-         * @param low Least significant 64-bits of the user-defined map
-         * @param high Most significant 64-bits of the user-defined map
+         * @param[in,out] bitmap At call, firmware-defined input bitmap.
+         *                       At return, user-defined input bitmap.
          */
-        void map(
-            bool isAltModeEngaged,
-            uint64_t firmware_bitmap,
-            uint64_t &low,
-            uint64_t &high);
+        void map(bool isAltModeEngaged, uint128_t &bitmap);
     } // namespace inputMap
 
     namespace power
@@ -329,17 +324,19 @@ namespace internals
         /**
          * @brief Report HID inputs
          *
-         * @param[in] inputsLow State of input numbers 0 to 63
-         * @param[in] inputsHigh State of input numbers 64 to 127
-         * @param[in] POVstate State of the hat switch (POV or DPAD), this is, a button number
+         * @param[in] inputs State of input numbers
+         * @param[in] POVstate State of the hat switch (POV or DPAD),
+         *                     this is, a value
          *                     in the range 0 (no input) to 8 (up-left).
-         * @param[in] leftAxis Position of the left clutch, in the range 0-254.
-         * @param[in] rightAxis Position of the right clutch, in the range 0-254.
-         * @param[in] clutchAxis Position of the combined clutch, in the range 0-254.
+         * @param[in] leftAxis Position of the left clutch,
+         *                     in the range 0-254.
+         * @param[in] rightAxis Position of the right clutch,
+         *                      in the range 0-254.
+         * @param[in] clutchAxis Position of the combined clutch,
+         *                       in the range 0-254.
          */
         void reportInput(
-            uint64_t inputsLow,
-            uint64_t inputsHigh,
+            const uint128_t &inputs,
             uint8_t POVstate,
             uint8_t leftAxis,
             uint8_t rightAxis,
@@ -370,7 +367,10 @@ namespace internals
              * @param[in] len Size of @p buffer
              * @return uint16_t Count of bytes put into @p buffer
              */
-            uint16_t onGetFeature(uint8_t report_id, uint8_t *buffer, uint16_t len);
+            uint16_t onGetFeature(
+                uint8_t report_id,
+                uint8_t *buffer,
+                uint16_t len);
 
             /**
              * @brief Receive a feature report
@@ -379,7 +379,10 @@ namespace internals
              * @param[in] buffer Pointer to buffer that contains received data
              * @param[in] len Size of @p buffer
              */
-            void onSetFeature(uint8_t report_id, const uint8_t *buffer, uint16_t len);
+            void onSetFeature(
+                uint8_t report_id,
+                const uint8_t *buffer,
+                uint16_t len);
 
             /**
              * @brief Receive an output report
@@ -388,7 +391,10 @@ namespace internals
              * @param[in] buffer Pointer to buffer that contains received data
              * @param[in] len Size of @p buffer
              */
-            void onOutput(uint8_t report_id, const uint8_t *buffer, uint16_t len);
+            void onOutput(
+                uint8_t report_id,
+                const uint8_t *buffer,
+                uint16_t len);
 
             /**
              * @brief Resets data for the input report
@@ -401,11 +407,11 @@ namespace internals
             /**
              * @brief  Sets data for the input report
              *
-             * @param report Pointer to report buffer.
-             *               Size is defined by GAMEPAD_REPORT_SIZE.
-             * @param notifyConfigChanges True to notify changes in the device settings
-             * @param inputsLow State of inputs (low-order bytes)
-             * @param inputsHigh State of inputs (high-order bytes)
+             * @param[out] report Pointer to report buffer.
+             *                    Size is defined by GAMEPAD_REPORT_SIZE.
+             * @param notifyConfigChanges True to notify changes
+             *                            in the device settings
+             * @param inputs State of buttons
              * @param POVstate State of the DPAD (aka "point of view")
              * @param leftAxis State of the left axis
              * @param rightAxis State of the right axis
@@ -413,13 +419,12 @@ namespace internals
              */
             void onReportInput(
                 uint8_t *report,
-                bool &notifyConfigChanges,
-                uint64_t &inputsLow,
-                uint64_t &inputsHigh,
-                uint8_t &POVstate,
-                uint8_t &leftAxis,
-                uint8_t &rightAxis,
-                uint8_t &clutchAxis);
+                bool notifyConfigChanges,
+                const uint128_t &inputs,
+                uint8_t POVstate,
+                uint8_t leftAxis,
+                uint8_t rightAxis,
+                uint8_t clutchAxis);
 
             /**
              * @brief Convert a battery status to the data format

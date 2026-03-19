@@ -193,8 +193,11 @@ namespace internals
              * @param sda SDA pin for the I2C bus.
              * @param scl SCL pin for the I2C bus.
              * @param bus I2C bus to initialize.
-             * @param enableInternalPullup If true (default), the bus is pulled up using internal pullup resistors.
-             *                             If false, **external** pullup resistors must be in place as the internal ones are not enabled.
+             * @param enableInternalPullup If true (default), the bus is pulled
+             *                             up using internal pullup resistors.
+             *                             If false, **external** pullup
+             *                             resistors must be in place as the
+             *                             internal ones are not enabled.
              *                             Otherwise, the bus won't work.
              */
             void initialize(
@@ -242,7 +245,8 @@ namespace internals
              *
              * @note require() must be called first.
              *
-             * @param address7bits I2C address of a slave device in 7 bits format.
+             * @param address7bits I2C address of a slave device in
+             *                     7 bits format.
              * @param bus I2C bus.
              * @return true If the slave device is available and ready.
              * @return false If the slave device is not responding or
@@ -280,10 +284,12 @@ namespace internals
             /**
              * @brief Find the full address of a device
              *
-             * @param[in] fullAddressList A list of full addresses obtained from i2c::probe()
+             * @param[in] fullAddressList A list of full addresses
+             *                            obtained from i2c::probe()
              * @param[in] hardwareAddress A partial 7-bit address
              * @param[in] hardwareAddressMask A mask.
-             *                            Bits set to 1 will be taken from @p hardwareAddress.
+             *                            Bits set to 1 will be taken from
+             *                            @p hardwareAddress.
              *                            Bits set to 0 have to be found.
              *
              * @return 0xFF If no device was found matching
@@ -343,7 +349,8 @@ namespace internals
             /**
              * @brief Inject a sequence of fake ADC readings
              *
-             * @note On each call to getADCreading() an injected value is retrieved
+             * @note On each call to getADCreading() an injected
+             *       value is retrieved
              *       in strict order. After the last value is retrieved,
              *       the first one is retrieved again and so on.
              *
@@ -359,7 +366,10 @@ namespace internals
              * @param handler Routine
              * @param param Parameter to @p handler
              */
-            void enableISR(InputGPIO pin, ISRHandler handler, void *param = nullptr);
+            void enableISR(
+                InputGPIO pin,
+                ISRHandler handler,
+                void *param = nullptr);
 
         } // namespace gpio
     } // namespace hal

@@ -514,8 +514,7 @@ void internals::hid::reset()
 }
 
 void internals::hid::reportInput(
-    uint64_t inputsLow,
-    uint64_t inputsHigh,
+    const uint128_t &inputs,
     uint8_t POVstate,
     uint8_t leftAxis,
     uint8_t rightAxis,
@@ -527,8 +526,7 @@ void internals::hid::reportInput(
         internals::hid::common::onReportInput(
             report,
             notifyConfigChanges,
-            inputsLow,
-            inputsHigh,
+            inputs,
             POVstate,
             leftAxis,
             rightAxis,

@@ -42,24 +42,22 @@
 // Single button
 //-------------------------------------------------------------------
 
-DigitalButton::DigitalButton(InputGPIO pinNumber, InputNumber buttonNumber) : DigitalInput()
+DigitalButton::DigitalButton(
+    InputGPIO pinNumber,
+    InputNumber buttonNumber) : DigitalInput()
 {
     internals::hal::gpio::forInput(pinNumber, false, true);
     this->pinNumber = pinNumber;
-    this->bitmap = (uint64_t)buttonNumber;
-    this->mask = ~(this->bitmap);
+    this->inputNumber = buttonNumber;
 }
 
 //-------------------------------------------------------------------
 
-uint64_t DigitalButton::read(uint64_t lastState)
+void DigitalButton::read(uint128_t &state)
 {
     int reading = GPIO_GET_LEVEL(pinNumber);
-    if (reading)
-        // Pulled-up input
-        return 0ULL;
-    else
-        return bitmap;
+    // Note: using negative logic (pulled up)
+    state.set_bit(inputNumber, reading ? false : true);
 }
 
 //-------------------------------------------------------------------
@@ -70,7 +68,8 @@ uint64_t DigitalButton::read(uint64_t lastState)
 
 void RotaryEncoderInput::isrh(void *instance)
 {
-    static const uint8_t valid_code[] = {0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0};
+    static const uint8_t valid_code[] =
+        {0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0};
 
     // UBaseType_t lock = taskENTER_CRITICAL_FROM_ISR();
     UBaseType_t lock = portSET_INTERRUPT_MASK_FROM_ISR();
@@ -182,9 +181,8 @@ RotaryEncoderInput::RotaryEncoderInput(
     // Initialize properties
     this->clkPin = clkPin;
     this->dtPin = dtPin;
-    this->cwButtonBitmap = (uint64_t)cwButtonNumber;
-    this->ccwButtonBitmap = (uint64_t)ccwButtonNumber;
-    mask = ~((this->cwButtonBitmap) | (this->ccwButtonBitmap));
+    this->cwButton = cwButtonNumber;
+    this->ccwButton = ccwButtonNumber;
     sequence = 0;
     pressEventNotified = false;
     currentPulseWidth = 0;
@@ -236,39 +234,47 @@ RotaryEncoderInput::RotaryEncoderInput(
 
 // ----------------------------------------------------------------------------
 
-uint64_t RotaryEncoderInput::read(uint64_t lastState)
+void RotaryEncoderInput::read(uint128_t &state)
 {
     if (currentPulseWidth > 0)
     {
         currentPulseWidth--;
-        if (currentPulseWidth == 0)
+        if ((currentPulseWidth == 0) && (pressEventNotified))
         {
-            if (pressEventNotified)
-            {
-                pressEventNotified = false;
-                currentPulseWidth = pulseMultiplier;
-            }
-            return 0ULL;
+            // Move from "on" phase to "off" phase
+            pressEventNotified = false;
+            currentPulseWidth = pulseMultiplier;
         }
-        // "pulse" in progress
-        return lastState & ~mask;
+        if (pressEventNotified)
+        {
+            // "On" phase in progress
+            state.set_bit(cwButton, cwOrCcw);
+            state.set_bit(ccwButton, !cwOrCcw);
+        }
+        else
+        {
+            // "Off" phase in progress
+            state.set_bit(cwButton, false);
+            state.set_bit(ccwButton, false);
+        }
+        return;
     }
     else
     {
-        bool cwOrCcw;
         if (queue.dequeue(cwOrCcw))
         {
             // start a "pulse"
             pressEventNotified = true;
             currentPulseWidth = pulseMultiplier;
-            if (cwOrCcw)
-                return cwButtonBitmap;
-            else
-                return ccwButtonBitmap;
+            state.set_bit(cwButton, cwOrCcw);
+            state.set_bit(ccwButton, !cwOrCcw);
         }
         else
+        {
             // No input event
-            return 0ULL;
+            state.set_bit(cwButton, false);
+            state.set_bit(ccwButton, false);
+        }
     }
 }
 
@@ -287,37 +293,40 @@ ButtonMatrixInput::ButtonMatrixInput(
     // Compute mask and initialize GPIO pins
     for (auto row : this->matrix)
     {
-        internals::hal::gpio::forOutput(row.first, negativeLogic, negativeLogic);
+        internals::hal::gpio::forOutput(
+            row.first,
+            negativeLogic,
+            negativeLogic);
         for (auto col : row.second)
         {
-            internals::hal::gpio::forInput(col.first, !negativeLogic, negativeLogic);
-            addToMask((uint64_t)col.second);
+            internals::hal::gpio::forInput(
+                col.first,
+                !negativeLogic,
+                negativeLogic);
         }
     }
 }
 
 //-------------------------------------------------------------------
 
-uint64_t ButtonMatrixInput::read(uint64_t lastState)
+void ButtonMatrixInput::read(uint128_t &state)
 {
-    uint64_t state = 0ULL;
     for (auto row : matrix)
     {
         GPIO_SET_LEVEL(row.first, !negativeLogic);
-        // Wait for the signal to change from LOW to HIGH due to parasite capacitances.
+        // Wait for the signal to change from LOW to HIGH
+        // due to parasite capacitances.
         signal_change_delay(5);
         for (auto col : row.second)
         {
             int level = GPIO_GET_LEVEL((int)col.first);
-            if (level ^ negativeLogic)
-                state |= (uint64_t)col.second;
+            state.set_bit(col.second, (bool)(level ^ negativeLogic));
         }
         GPIO_SET_LEVEL(row.first, negativeLogic);
         // Wait for the signal to change from HIGH to LOW.
         // Otherwise, there will be a false reading at the next iteration.
         signal_change_delay(5);
     }
-    return state;
 }
 
 //-------------------------------------------------------------------
@@ -325,39 +334,41 @@ uint64_t ButtonMatrixInput::read(uint64_t lastState)
 //-------------------------------------------------------------------
 
 /**
- * @brief Create a bitmap array for a group
+ * @brief Get a vector of input numbers for a group
  *        of analog multiplexer chips
  *
  * @tparam PinTags Pin tags
  * @param selectorCount Count of selector pins
  * @param chips Group of analog multiplexer chips
- * @return uint64_t* A bitmap array
+ * @return ::std::vector<uint8_t> Input numbers
  */
 template <typename PinTags>
-uint64_t *createBitmap(
+::std::vector<uint8_t> getInputNumbers(
     uint8_t selectorCount,
     const AnalogMultiplexerGroup<PinTags> &chips)
 {
+    ::std::vector<uint8_t> result{};
     uint8_t inputCount = chips.size();
-
-    // Create bidimensional array for input bitmaps
     size_t arrayLength = (inputCount << selectorCount);
-    uint64_t *bitmap = new uint64_t[arrayLength];
-    std::memset(bitmap, 0, arrayLength * sizeof(uint64_t));
+    for (size_t i = 0; i < arrayLength; i++)
+        result.push_back(0xFF);
 
-    // Populate the array of input bitmaps
+    // Populate the vector
     for (size_t chipIndex = 0; chipIndex < inputCount; chipIndex++)
     {
         const auto &chip = chips[chipIndex];
         for (auto map_pair : chip)
         {
-            uint8_t chipPinIndex = static_cast<uint8_t>(map_pair.first); // first is PinTags
+            // Note:
+            // map_pair.first = PinTags
+            // map_pair.second = InputNumber
+            uint8_t chipPinIndex = static_cast<uint8_t>(map_pair.first);
             // NOTE: switchIndex = (chipIndex * 2^selectors.size) + chipPinIndex
             uint8_t switchIndex = (chipIndex << selectorCount) + chipPinIndex;
-            bitmap[switchIndex] = (uint64_t)(map_pair.second); // second is InputNumber
+            result[switchIndex] = (map_pair.second);
         }
     }
-    return bitmap;
+    return result;
 }
 
 //-------------------------------------------------------------------
@@ -371,9 +382,10 @@ uint64_t *createBitmap(
  * @return InputGPIOCollection Input pins
  */
 template <typename PinTags>
-InputGPIOCollection getInputPins(const AnalogMultiplexerGroup<PinTags> &chips)
+::std::vector<InputGPIO> getInputPins(
+    const AnalogMultiplexerGroup<PinTags> &chips)
 {
-    InputGPIOCollection inputs;
+    ::std::vector<InputGPIO> inputs;
     for (auto chip : chips)
         inputs.push_back(chip.getInputGPIO());
     return inputs;
@@ -381,19 +393,17 @@ InputGPIOCollection getInputPins(const AnalogMultiplexerGroup<PinTags> &chips)
 
 //-------------------------------------------------------------------
 
-void AnalogMultiplexerInput::initializeMux()
+void AnalogMultiplexerInput::initializeMux(
+    ::std::initializer_list<OutputGPIO> selectorPins,
+    const ::std::vector<InputGPIO> &inputPins)
 {
     // Initialize GPIO pins
-    for (auto pin : selectorPins)
+    this->selectorPins = selectorPins;
+    this->inputPins = inputPins;
+    for (auto pin : this->selectorPins)
         internals::hal::gpio::forOutput(pin, false, false);
-    for (auto pin : inputPins)
+    for (auto pin : this->inputPins)
         internals::hal::gpio::forInput(pin, false, true);
-
-    // Compute mask
-    // NOTE: switchCount = (2^selectorPins.size) * inputPins.size;
-    switchCount = (inputPins.size() << selectorPins.size());
-    for (size_t i = 0; i < switchCount; i++)
-        addToMask(bitmap[i]);
 }
 
 //-------------------------------------------------------------------
@@ -404,10 +414,10 @@ AnalogMultiplexerInput ::AnalogMultiplexerInput(
     OutputGPIO selectorPin3,
     const AnalogMultiplexerGroup<Mux8Pin> &chips)
 {
-    this->selectorPins = {selectorPin1, selectorPin2, selectorPin3};
-    this->inputPins = getInputPins(chips);
-    this->bitmap = createBitmap(selectorPins.size(), chips);
-    initializeMux();
+    initializeMux(
+        {selectorPin1, selectorPin2, selectorPin3},
+        getInputPins(chips));
+    this->inputNumber = getInputNumbers(selectorPins.size(), chips);
 }
 
 //-------------------------------------------------------------------
@@ -419,11 +429,10 @@ AnalogMultiplexerInput::AnalogMultiplexerInput(
     OutputGPIO selectorPin4,
     const AnalogMultiplexerGroup<Mux16Pin> &chips)
 {
-    this->selectorPins =
-        {selectorPin1, selectorPin2, selectorPin3, selectorPin4};
-    this->inputPins = getInputPins(chips);
-    this->bitmap = createBitmap(selectorPins.size(), chips);
-    initializeMux();
+    initializeMux(
+        {selectorPin1, selectorPin2, selectorPin3, selectorPin4},
+        getInputPins(chips));
+    this->inputNumber = getInputNumbers(selectorPins.size(), chips);
 }
 
 //-------------------------------------------------------------------
@@ -436,23 +445,26 @@ AnalogMultiplexerInput::AnalogMultiplexerInput(
     OutputGPIO selectorPin5,
     const AnalogMultiplexerGroup<Mux32Pin> &chips)
 {
-    this->selectorPins =
-        {selectorPin1, selectorPin2, selectorPin3, selectorPin4, selectorPin5};
-    this->inputPins = getInputPins(chips);
-    this->bitmap = createBitmap(selectorPins.size(), chips);
-    initializeMux();
+    initializeMux(
+        {selectorPin1, selectorPin2, selectorPin3, selectorPin4, selectorPin5},
+        getInputPins(chips));
+    this->inputNumber = getInputNumbers(selectorPins.size(), chips);
 }
 
 //-------------------------------------------------------------------
 
-uint64_t AnalogMultiplexerInput::read(uint64_t lastState)
+void AnalogMultiplexerInput::read(uint128_t &state)
 {
-    uint64_t state = 0ULL;
+    auto switchCount = inputNumber.size();
     for (uint8_t switchIndex = 0; switchIndex < switchCount; switchIndex++)
     {
         // Choose selector pins
-        for (uint8_t selPinIndex = 0; selPinIndex < selectorPins.size(); selPinIndex++)
-            GPIO_SET_LEVEL(selectorPins[selPinIndex], switchIndex & (1 << selPinIndex));
+        for (uint8_t selPinIndex = 0;
+             selPinIndex < selectorPins.size();
+             selPinIndex++)
+            GPIO_SET_LEVEL(
+                selectorPins[selPinIndex],
+                switchIndex & (1 << selPinIndex));
 
         // Wait for the signal to propagate.
         //
@@ -467,11 +479,9 @@ uint64_t AnalogMultiplexerInput::read(uint64_t lastState)
 
         uint8_t inputPinIndex = switchIndex >> selectorPins.size();
         int level = GPIO_GET_LEVEL(inputPins[inputPinIndex]);
-        if (!level)
-            // Negative logic
-            state = state | bitmap[switchIndex];
+        // Negative logic
+        state.set_bit(inputNumber[switchIndex], !level);
     };
-    return state;
 }
 
 //-------------------------------------------------------------------
@@ -509,19 +519,15 @@ PCF8574ButtonsInput::PCF8574ButtonsInput(
 {
     this->inputNumbers = inputNumbers;
 
-    // Compute mask
-    for (auto spec : inputNumbers)
-        addToMask((uint64_t)spec.second);
-
     // The PCF8574 does not have internal registers
     // Read GPIO registers in order to clear all interrupts
-    uint64_t dummy;
+    uint8_t dummy;
     getGPIOstate(dummy);
 }
 
 //-------------------------------------------------------------------
 
-bool PCF8574ButtonsInput::getGPIOstate(uint64_t &state)
+bool PCF8574ButtonsInput::getGPIOstate(uint8_t &state)
 {
     esp_err_t err = i2c_master_receive(
         I2C_SLAVE(device),
@@ -535,20 +541,19 @@ bool PCF8574ButtonsInput::getGPIOstate(uint64_t &state)
 
 //-------------------------------------------------------------------
 
-uint64_t PCF8574ButtonsInput::read(uint64_t lastState)
+void PCF8574ButtonsInput::read(uint128_t &state)
 {
-    uint64_t GPIOstate;
+    uint8_t GPIOstate;
     if (getGPIOstate(GPIOstate))
     {
-        uint64_t result = 0ULL;
         for (auto spec : inputNumbers)
         {
-            if (GPIOstate & (1ULL << (int)spec.first))
-                result |= (uint64_t)spec.second;
+            // Note:
+            // spec.first = pin number in the chip (0-7)
+            // spec.second = input number
+            state.set_bit(spec.second, GPIOstate & (1 << (int)spec.first));
         }
-        return result;
     }
-    return lastState & ~mask;
 }
 
 //-------------------------------------------------------------------
@@ -560,15 +565,10 @@ MCP23017ButtonsInput::MCP23017ButtonsInput(
     I2CBus bus) : I2CInput(address7Bits, bus, 1)
 {
     this->inputNumbers = inputNumbers;
-
-    // Compute mask
-    for (auto spec : inputNumbers)
-        addToMask((uint64_t)spec.second);
-
     configure();
 
     // Read GPIO registers in order to clear all interrupts
-    uint64_t dummy;
+    uint16_t dummy;
     getGPIOstate(dummy);
 }
 
@@ -635,9 +635,9 @@ void MCP23017ButtonsInput::configure()
 
 //-------------------------------------------------------------------
 
-bool MCP23017ButtonsInput::getGPIOstate(uint64_t &state)
+bool MCP23017ButtonsInput::getGPIOstate(uint16_t &state)
 {
-    state = 0ULL;
+    state = 0;
     static uint8_t cmd = MCP23017_GPIO;
     esp_err_t err = i2c_master_transmit_receive(
         I2C_SLAVE(device),
@@ -651,65 +651,23 @@ bool MCP23017ButtonsInput::getGPIOstate(uint64_t &state)
 
 //-------------------------------------------------------------------
 
-uint64_t MCP23017ButtonsInput::read(uint64_t lastState)
+void MCP23017ButtonsInput::read(uint128_t &state)
 {
-    uint64_t GPIOstate;
+    uint16_t GPIOstate;
     if (getGPIOstate(GPIOstate))
     {
-        uint64_t result = 0ULL;
         for (auto spec : inputNumbers)
         {
-            if (GPIOstate & (1ULL << (int)spec.first))
-                result |= (uint64_t)spec.second;
+            // Note:
+            // spec.first = pin number in the chip (0-15)
+            // spec.second = input number
+            state.set_bit(spec.second, GPIOstate & (1 << (int)spec.first));
         }
-        return result;
     }
-    return lastState & ~mask;
 }
 
 //-------------------------------------------------------------------
 // Shift registers
-//-------------------------------------------------------------------
-
-/**
- * @brief Create a bitmap array for a chain
- *        of PISO shift registers
- *
- * @param[in] chain Chain of shift registers
- * @param[in] SER_inputNumber Input number assigned to SER in the last chip
- * @param[out] switchCount Count of switches (or array length)
- * @return uint64_t* Bitmap
- */
-uint64_t *createBitmap(
-    const ShiftRegisterChain &chain,
-    InputNumber SER_inputNumber,
-    size_t &switchCount)
-{
-    // Compute switch count
-    switchCount = (8 * chain.size());
-    if (SER_inputNumber != UNSPECIFIED::VALUE)
-        switchCount++;
-
-    // Reserve memory for all input bitmaps
-    uint64_t *bitmap = new uint64_t[switchCount];
-    std::memset(bitmap, 0, switchCount * sizeof(uint64_t));
-
-    // Populate input bitmap array
-    for (size_t chipIndex = 0; chipIndex < chain.size(); chipIndex++)
-    {
-        auto &chip = chain[chipIndex];
-        for (auto map_pair : chip)
-        {
-            uint8_t chipPinIndex = static_cast<uint8_t>(map_pair.first); // first is SR8Pin
-            size_t arrayIndex = (chipIndex * 8) + static_cast<uint8_t>(chipPinIndex);
-            bitmap[arrayIndex] = (uint64_t)(map_pair.second); // second is InputNumber
-        }
-    }
-    if (SER_inputNumber != UNSPECIFIED::VALUE)
-        bitmap[switchCount - 1] = (uint64_t)SER_inputNumber;
-    return bitmap;
-}
-
 //-------------------------------------------------------------------
 
 ShiftRegistersInput::ShiftRegistersInput(
@@ -722,15 +680,40 @@ ShiftRegistersInput::ShiftRegistersInput(
     const bool nextHighToLowOrLowToHigh,
     const bool negativeLogic)
 {
+    // Initialize fields
     this->serialPin = inputPin;
     this->loadPin = loadPin;
     this->nextPin = nextPin;
     this->loadHighOrLow = loadHighOrLow;
     this->nextHighToLowOrLowToHigh = nextHighToLowOrLowToHigh;
     this->negativeLogic = negativeLogic;
-    this->bitmap = createBitmap(chain, SER_inputNumber, switchCount);
+
+    // Compute the count of switches in the chain
+    switchCount = (8 * chain.size());
+    if (SER_inputNumber != UNSPECIFIED::VALUE)
+        switchCount++;
+
+    // Initialize the vector of input numbers
     for (size_t i = 0; i < switchCount; i++)
-        addToMask(bitmap[i]);
+        inputNumber.push_back(0xFF);
+
+    // Compute the contents of the vector
+    for (size_t chipIndex = 0; chipIndex < chain.size(); chipIndex++)
+    {
+        auto &chip = chain[chipIndex];
+        for (auto map_pair : chip)
+        {
+            // Note:
+            // map_pair.first = SR8Pin
+            // map_pair.second = input number
+            size_t arrayIndex =
+                (chipIndex * 8) +
+                static_cast<uint8_t>(map_pair.first);
+            inputNumber[arrayIndex] = static_cast<uint8_t>(map_pair.second);
+        }
+    }
+    if (SER_inputNumber != UNSPECIFIED::VALUE)
+        inputNumber[switchCount - 1] = SER_inputNumber;
 
     // Initialize pins
     internals::hal::gpio::forOutput(loadPin, !loadHighOrLow, false);
@@ -740,10 +723,8 @@ ShiftRegistersInput::ShiftRegistersInput(
 
 //-------------------------------------------------------------------
 
-uint64_t ShiftRegistersInput::read(uint64_t lastState)
+void ShiftRegistersInput::read(uint128_t &state)
 {
-    uint64_t state = 0ULL;
-
     // Parallel load
     GPIO_SET_LEVEL(loadPin, loadHighOrLow);
     signal_change_delay(45);
@@ -753,72 +734,13 @@ uint64_t ShiftRegistersInput::read(uint64_t lastState)
     for (size_t switchIndex = 0; switchIndex < switchCount; switchIndex++)
     {
         int level = GPIO_GET_LEVEL(serialPin);
-        if (level ^ negativeLogic)
-            state = state | bitmap[switchIndex];
+        state.set_bit(inputNumber[switchIndex], (level ^ negativeLogic));
 
         // next
         GPIO_SET_LEVEL(nextPin, !nextHighToLowOrLowToHigh);
         signal_change_delay(45);
         GPIO_SET_LEVEL(nextPin, nextHighToLowOrLowToHigh);
     }
-    return state;
-}
-
-//-------------------------------------------------------------------
-// Coded rotary switch
-//-------------------------------------------------------------------
-
-RotaryCodedSwitchInput::RotaryCodedSwitchInput(
-    const RotaryCodedSwitch &spec,
-    const InputGPIOCollection &pins,
-    bool complementaryCode) : DigitalInput()
-{
-    // Copy parameters to private fields
-    inputPins = pins;
-
-    // Initialize input GPIO pins
-    for (auto pin : pins)
-        internals::hal::gpio::forInput(pin, !complementaryCode, complementaryCode);
-
-    // Initialize input bitmap
-    uint8_t positionCount = (1 << pins.size());
-    bitmap = (uint64_t *)malloc(sizeof(uint64_t) * positionCount);
-    for (int i = 0; i < positionCount; i++)
-        bitmap[i] = 0ULL;
-
-    // Copy the input specification to the input bitmap
-    for (auto pair : spec)
-    {
-        uint64_t inputBmp = (1ULL << pair.second);
-        addToMask(inputBmp);
-        uint8_t index;
-        if (complementaryCode)
-            index = ~(pair.first) & (positionCount - 1);
-        else
-            index = pair.first;
-        bitmap[index] = inputBmp;
-    }
-}
-
-//-------------------------------------------------------------------
-
-RotaryCodedSwitchInput::~RotaryCodedSwitchInput()
-{
-    if (bitmap != nullptr)
-        free(bitmap);
-}
-
-//-------------------------------------------------------------------
-
-uint64_t RotaryCodedSwitchInput::read(uint64_t lastState)
-{
-    uint8_t switchPosition = 0;
-    for (uint8_t pinIndex = 0; pinIndex < inputPins.size(); pinIndex++)
-    {
-        if (GPIO_GET_LEVEL(inputPins[pinIndex]))
-            switchPosition |= (1 << pinIndex);
-    }
-    return bitmap[switchPosition];
 }
 
 //-------------------------------------------------------------------
@@ -864,7 +786,12 @@ void AnalogClutchInput::read(uint8_t &value, bool &autocalibrated)
     if (minADCReading == maxADCReading)
         value = CLUTCH_NONE_VALUE;
     else
-        value = map_value(currentReading, minADCReading, maxADCReading, CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
+        value = map_value(
+            currentReading,
+            minADCReading,
+            maxADCReading,
+            CLUTCH_FULL_VALUE,
+            CLUTCH_NONE_VALUE);
     lastADCReading = currentReading;
 }
 

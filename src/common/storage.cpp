@@ -241,7 +241,9 @@ void loadInputMap(Preferences &prefs)
 {
     char key[32];
     uint8_t alt, noAlt;
-    for (uint8_t firmware_defined = 0; firmware_defined < 64; firmware_defined++)
+    for (uint8_t firmware_defined = 0;
+         firmware_defined < 128;
+         firmware_defined++)
     {
         snprintf(key, 32, K_INPUT_MAP_NO_ALT, firmware_defined);
         if (prefs.isKey(key))
@@ -261,7 +263,9 @@ void saveInputMap(Preferences &prefs)
 {
     char key[32];
     uint8_t alt, noAlt;
-    for (uint8_t firmware_defined = 0; firmware_defined < 64; firmware_defined++)
+    for (uint8_t firmware_defined = 0;
+        firmware_defined < 128;
+        firmware_defined++)
     {
         InputMapService::call::getMap(firmware_defined, noAlt, alt);
         if ((noAlt < 128) && (alt < 128))

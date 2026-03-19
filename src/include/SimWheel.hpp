@@ -184,66 +184,6 @@ namespace inputs
         const bool negativeLogic = true);
 
     /**
-     * @brief Add a binary coded rotary switch up to 8 positions
-     *
-     * @deprecated Use inputHub::codedSwitch::add() instead
-     *
-     * @param spec Specification of input numbers for each switch position
-     * @param pin0 Input pin for the least-significant bit
-     * @param pin1 Input pin
-     * @param pin2 Input pin for the most-significant bit
-     * @param complementaryCode Set to true if your rotary switch uses complementary binary code
-     */
-    void addRotaryCodedSwitch(
-        const RotaryCodedSwitch &spec,
-        InputGPIO pin0,
-        InputGPIO pin1,
-        InputGPIO pin2,
-        bool complementaryCode = true);
-
-    /**
-     * @brief Add a binary coded rotary switch up to 16 positions
-     *
-     * @deprecated Use inputHub::codedSwitch::add() instead
-     *
-     * @param spec Specification of input numbers for each switch position
-     * @param pin0 Input pin for the least-significant bit
-     * @param pin1 Input pin
-     * @param pin2 Input pin
-     * @param pin3 Input pin for the most-significant bit
-     * @param complementaryCode Set to true if your rotary switch uses complementary binary code
-     */
-    void addRotaryCodedSwitch(
-        const RotaryCodedSwitch &spec,
-        InputGPIO pin0,
-        InputGPIO pin1,
-        InputGPIO pin2,
-        InputGPIO pin3,
-        bool complementaryCode = true);
-
-    /**
-     * @brief Add a binary coded rotary switch up to 32 positions
-     *
-     * @deprecated Use inputHub::codedSwitch::add() instead
-     *
-     * @param spec Specification of input numbers for each switch position
-     * @param pin0 Input pin for the least-significant bit
-     * @param pin1 Input pin
-     * @param pin2 Input pin
-     * @param pin3 Input pin
-     * @param pin4 Input pin for the most-significant bit
-     * @param complementaryCode Set to true if your rotary switch uses complementary binary code
-     */
-    void addRotaryCodedSwitch(
-        const RotaryCodedSwitch &spec,
-        InputGPIO pin0,
-        InputGPIO pin1,
-        InputGPIO pin2,
-        InputGPIO pin3,
-        InputGPIO pin4,
-        bool complementaryCode = true);
-
-    /**
      * @brief Initialize an I2C bus to certain pins
      *
      * @note When external pull-up resistors are installed,
@@ -296,8 +236,10 @@ namespace inputHub
         /**
          * @brief Select two input numbers for clutch operation
          *
-         * @param leftInputNumber Input number assigned to the left clutch paddle
-         * @param rightInputNumber Input number assigned to the right clutch paddle
+         * @param leftInputNumber Input number assigned to the
+         *                        left clutch paddle
+         * @param rightInputNumber Input number assigned to the
+         *                         right clutch paddle
          */
         void inputs(
             InputNumber leftInputNumber,
@@ -317,13 +259,14 @@ namespace inputHub
         /**
          * @brief Set a combination of inputs to cycle the
          *        working mode of clutch paddles.
-         *        All inputs must be activated at the same time and none of the others.
+         *        All inputs must be activated at the same time
+         *        and none of the others.
          *
          * @note Make sure all inputs can be activated at the same time.
          *
          * @param inputNumbers Array of input numbers
          */
-        void cycleWorkingModeInputs(InputNumberCombination inputNumbers);
+        void cycleWorkingModeInputs(const InputNumberCombination &inputNumbers);
 
         /**
          * @brief Set a combination of inputs to command a
@@ -333,7 +276,8 @@ namespace inputHub
          *
          * @param inputNumbers Array of input numbers
          */
-        void cmdRecalibrateAxisInputs(InputNumberCombination inputNumbers);
+        void cmdRecalibrateAxisInputs(
+            const InputNumberCombination &inputNumbers);
 
     } // namespace Clutch
 
@@ -371,7 +315,7 @@ namespace inputHub
          *
          * @param inputNumbers Array of input numbers
          */
-        void cycleWorkingModeInputs(InputNumberCombination inputNumbers);
+        void cycleWorkingModeInputs(const InputNumberCombination &inputNumbers);
     } // namespace DPAD
 
     /**
@@ -386,7 +330,7 @@ namespace inputHub
          *
          * @param inputNumbers Array of input numbers
          */
-        void inputs(InputNumberCombination inputNumbers);
+        void inputs(const InputNumberCombination &inputNumbers);
 
         /**
          * @brief Set a combination of inputs to cycle the working mode of ALT buttons.
@@ -396,7 +340,7 @@ namespace inputHub
          *
          * @param inputNumbers Array of input numbers
          */
-        void cycleWorkingModeInputs(InputNumberCombination inputNumbers);
+        void cycleWorkingModeInputs(const InputNumberCombination &inputNumbers);
     } // namespace ALTButtons
 
     /**
@@ -414,7 +358,7 @@ namespace inputHub
          *
          * @param inputNumbers Array of input numbers
          */
-        void cycleWorkingModeInputs(InputNumberCombination inputNumbers);
+        void cycleWorkingModeInputs(const InputNumberCombination &inputNumbers);
     } // namespace SecurityLock
 
     /**
@@ -436,7 +380,7 @@ namespace inputHub
          */
         void set(
             InputNumber neutral,
-            InputNumberCombination combination =
+            const InputNumberCombination &combination =
                 {JOY_LSHIFT_PADDLE, JOY_RSHIFT_PADDLE});
     } // namespace neutral
 
@@ -458,7 +402,7 @@ namespace inputHub
             InputNumber bit1,
             InputNumber bit2,
             InputNumber bit4,
-            CodedSwitch8 spec);
+            const CodedSwitch8 &spec);
 
         /**
          * @brief Add a binary-coded switch up to 16 positions
@@ -474,7 +418,7 @@ namespace inputHub
             InputNumber bit2,
             InputNumber bit4,
             InputNumber bit8,
-            CodedSwitch16 spec);
+            const CodedSwitch16 &spec);
 
         /**
          * @brief Add a binary-coded switch up to 32 positions
@@ -492,7 +436,7 @@ namespace inputHub
             InputNumber bit4,
             InputNumber bit8,
             InputNumber bit16,
-            CodedSwitch32 spec);
+            const CodedSwitch32 &spec);
     } // namespace codedSwitch
 
 } // namespace inputHub
@@ -519,8 +463,8 @@ namespace inputMap
      */
     void set(
         InputNumber firmware_defined,
-        UserInputNumber user_defined,
-        UserInputNumber user_defined_alt_engaged);
+        InputNumber user_defined,
+        InputNumber user_defined_alt_engaged);
 
     /**
      * @brief Set a default mapping for an input number when alternate mode is engaged
@@ -533,11 +477,11 @@ namespace inputMap
      */
     inline void set(
         InputNumber firmware_defined,
-        UserInputNumber user_defined_alt_engaged)
+        InputNumber user_defined_alt_engaged)
     {
         inputMap::set(
             firmware_defined,
-            static_cast<UserInputNumber>(firmware_defined),
+            static_cast<InputNumber>(firmware_defined),
             user_defined_alt_engaged);
     }
 

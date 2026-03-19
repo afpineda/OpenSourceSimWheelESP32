@@ -163,7 +163,7 @@ protected:
      * @brief Read from a register
      *
      * @param regAddress Register address
-     * @param value Register value
+     * @param[out] value Register value
      * @return true On success
      * @return false On failure
      */
@@ -251,9 +251,12 @@ public:
      * @param battENPin Output GPIO to enable or disable the circuit.
      *                  Set to -1 (GPIO_NUM_NC) if the NPN-PNP pair is not used.
      * @param resistorToGND Impedance of the resistor connected to GND.
-     *                      Use any impedance unit, but the same as @p resistorToBattery
-     * @param resistorToBattery Impedance of the resistor connected to the battery positive pole.
-     *                          Use any impedance unit, but the same as @p resistorToGND .
+     *                      Use any impedance unit, but the same as
+     *                      @p resistorToBattery
+     * @param resistorToBattery Impedance of the resistor connected to
+     *                          the battery positive pole.
+     *                          Use any impedance unit,
+     *                          but the same as @p resistorToGND .
      *                          Must be lower than @p resistorToGND.
      */
     VoltageDividerMonitor(

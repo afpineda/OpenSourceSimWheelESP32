@@ -159,6 +159,18 @@ public:
     AnalogMultiplexerChip(InputGPIO inputPin)
         : std::map<PinTags, InputNumber>(), inputGPIO{inputPin} {}
 
+    /// @brief Copy constructor (default)
+    AnalogMultiplexerChip(const AnalogMultiplexerChip &) = default;
+
+    /// @brief Move constructor (default)
+    AnalogMultiplexerChip(AnalogMultiplexerChip &&) = default;
+
+    /// @brief Copy-assignment (default)
+    AnalogMultiplexerChip &operator=(const AnalogMultiplexerChip &) = default;
+
+    /// @brief Move-assignment (default)
+    AnalogMultiplexerChip &operator=(AnalogMultiplexerChip &&) = default;
+
     /**
      * @brief Reserve the input pin and book all input numbers
      *
@@ -312,13 +324,6 @@ typedef std::vector<ShiftRegisterChip> ShiftRegisterChain;
 //-------------------------------------------------------------------
 // Input specification: binary-coded switches
 //-------------------------------------------------------------------
-
-/**
- * @brief Rotary coded switch
- *
- * @deprecated Use CodedSwitch8, CodedSwitch16 or CodedSwitch32
- */
-typedef std::map<uint8_t, InputNumber> RotaryCodedSwitch;
 
 /**
  * @brief Rotary coded switch up to 8 positions

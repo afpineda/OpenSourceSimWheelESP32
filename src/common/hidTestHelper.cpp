@@ -365,9 +365,10 @@ void loop()
     }
     else
     {
-        uint64_t data = (1ULL << btnIndex);
+        uint128_t data{};
+        data.low = (1ULL << btnIndex);
+        data.high = data.low;
         internals::hid::reportInput(
-            data,
             data,
             POV,
             axis,

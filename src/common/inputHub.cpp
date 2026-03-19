@@ -17,8 +17,10 @@
 #include "SimWheelInternals.hpp"
 #include "InternalServices.hpp"
 #include "SimWheel.hpp"
+#include <vector>
 
 // #include <iostream> // For debug
+// using namespace std;
 
 //-------------------------------------------------------------------
 // Globals
@@ -26,25 +28,23 @@
 
 // Related to ALT buttons
 
-static uint64_t altBitmap = 0ULL;
+static uint128_t altBitmap{};
 
 // Related to clutch
 
 #define CALIBRATION_INCREMENT 3
-static uint64_t calibrateUpBitmap = 0ULL;
-static uint64_t calibrateDownBitmap = 0ULL;
-static uint64_t leftClutchBitmap = 0ULL;
-static uint64_t rightClutchBitmap = 0ULL;
-static uint64_t clutchInputMask = ~0ULL;
+static uint8_t calibrateUp{0xFF};
+static uint8_t calibrateDown{0xFF};
+static uint8_t leftClutch{0xFF};
+static uint8_t rightClutch{0xFF};
 
 // Related to wheel functions
 
-static uint64_t cycleALTWorkingModeBitmap = 0ULL;
-static uint64_t cycleClutchWorkingModeBitmap = 0ULL;
-static uint64_t cmdAxisAutocalibrationBitmap = 0ULL;
-// static uint64_t cmdBatteryRecalibrationBitmap = 0ULL;
-static uint64_t cycleDPADWorkingModeBitmap = 0ULL;
-static uint64_t cycleSecurityLockBitmap = 0ULL;
+static uint128_t cycleALTWorkingModeBitmap{};
+static uint128_t cycleClutchWorkingModeBitmap{};
+static uint128_t cmdAxisAutocalibrationBitmap{};
+static uint128_t cycleDPADWorkingModeBitmap{};
+static uint128_t cycleSecurityLockBitmap{};
 
 // Related to POV buttons
 
@@ -57,32 +57,62 @@ static uint64_t cycleSecurityLockBitmap = 0ULL;
 #define DPAD_DOWN_LEFT 6
 #define DPAD_LEFT 7
 #define DPAD_UP_LEFT 8
-static uint64_t dpadBitmap[9] = {0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL};
-static uint64_t dpadNegMask = 0ULL;
-static uint64_t dpadMask = ~0ULL;
+static uint8_t dpadInputNumbers[9] =
+    {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+static uint128_t dpadMask = uint128_t::neg();
 
 // Related to the neutral gear
 
 static bool neutralWasEngaged = false;
-static uint64_t neutralSwitchBitmap = 0ULL;
-static uint64_t neutralCombinationBitmap = 0ULL;
+static uint8_t neutralSwitch{0xFF};
+static uint128_t neutralCombinationBitmap{};
 
 // Related to coded switches
 
 struct CodedSwitch
 {
-    const InputNumber *decodedIN = nullptr;
-    size_t size;
-    InputNumber bit1 = UNSPECIFIED::VALUE;
-    InputNumber bit2 = UNSPECIFIED::VALUE;
-    InputNumber bit4 = UNSPECIFIED::VALUE;
-    InputNumber bit8 = UNSPECIFIED::VALUE;
-    InputNumber bit16 = UNSPECIFIED::VALUE;
-    uint64_t mask = ~0ULL;
-    uint64_t decodedMask = ~0ULL;
+    inline static uint128_t mask = uint128_t::neg();
+    inline static uint128_t decodedMask = uint128_t::neg();
+
+    uint8_t bit1;
+    uint8_t bit2;
+    uint8_t bit4;
+    uint8_t bit8;
+    uint8_t bit16;
+    ::std::vector<uint8_t> decodedIN{};
+
+    template <typename T>
+    CodedSwitch(
+        const T &source,
+        uint8_t b1,
+        uint8_t b2,
+        uint8_t b4,
+        uint8_t b8 = 0xFF,
+        uint8_t b16 = 0xFF) noexcept
+        : bit1{b1}, bit2{b2}, bit4{b4}, bit8{b8}, bit16{b16}, decodedIN{}
+    {
+        decodedIN.resize(source.size());
+        for (size_t i = 0; i < source.size(); i++)
+        {
+            decodedIN[i] = source[i];
+            decodedMask.set_bit(decodedIN[i], false);
+        }
+        mask.set_bit(bit1, false);
+        mask.set_bit(bit2, false);
+        mask.set_bit(bit4, false);
+        mask.set_bit(bit8, false);
+        mask.set_bit(bit16, false);
+    }
+
+    CodedSwitch(const CodedSwitch &) = default;
+    CodedSwitch(CodedSwitch &&) = default;
 };
 
 static std::vector<CodedSwitch> _codedSwitches;
+
+// Related to the input hub itself
+
+static uint128_t previousInputBitmap{};
 
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
@@ -98,11 +128,11 @@ void inputHub::clutch::inputs(
         (rightInputNumber == UNSPECIFIED::VALUE))
         throw invalid_input_number();
     if (leftInputNumber == rightInputNumber)
-        throw std::runtime_error("You can not assign the same input number for the left and right clutch paddles");
+        throw std::runtime_error(
+            "You can not assign the same input number for the left and right clutch paddles");
 
-    leftClutchBitmap = (uint64_t)leftInputNumber;
-    rightClutchBitmap = (uint64_t)rightInputNumber;
-    clutchInputMask = ~(leftClutchBitmap | rightClutchBitmap);
+    leftClutch = leftInputNumber;
+    rightClutch = rightInputNumber;
     if (DeviceCapabilities::hasFlag(DeviceCapability::CLUTCH_ANALOG))
     {
         leftInputNumber.book();
@@ -123,18 +153,20 @@ void inputHub::clutch::bitePointInputs(
         throw std::runtime_error(
             "You can not assign the same input number for increase and decrease bite point");
 
-    calibrateUpBitmap = (uint64_t)increase;
-    calibrateDownBitmap = (uint64_t)decrease;
+    calibrateUp = increase;
+    calibrateDown = decrease;
 }
 
-void inputHub::clutch::cycleWorkingModeInputs(InputNumberCombination inputNumbers)
+void inputHub::clutch::cycleWorkingModeInputs(
+    const InputNumberCombination &inputNumbers)
 {
-    cycleClutchWorkingModeBitmap = (uint64_t)inputNumbers;
+    cycleClutchWorkingModeBitmap = inputNumbers;
 }
 
-void inputHub::clutch::cmdRecalibrateAxisInputs(InputNumberCombination inputNumbers)
+void inputHub::clutch::cmdRecalibrateAxisInputs(
+    const InputNumberCombination &inputNumbers)
 {
-    cmdAxisAutocalibrationBitmap = (uint64_t)inputNumbers;
+    cmdAxisAutocalibrationBitmap = inputNumbers;
 }
 
 //-------------------------------------------------------------------
@@ -151,83 +183,81 @@ void inputHub::dpad::inputs(
         (padRightNumber == UNSPECIFIED::VALUE))
         throw invalid_input_number();
 
-    dpadBitmap[DPAD_UP] = (uint64_t)(padUpNumber);
-    dpadBitmap[DPAD_DOWN] = (uint64_t)(padDownNumber);
-    dpadBitmap[DPAD_LEFT] = (uint64_t)(padLeftNumber);
-    dpadBitmap[DPAD_RIGHT] = (uint64_t)(padRightNumber);
-    dpadBitmap[DPAD_UP_LEFT] = dpadBitmap[DPAD_UP] | dpadBitmap[DPAD_LEFT];
-    dpadBitmap[DPAD_UP_RIGHT] = dpadBitmap[DPAD_UP] | dpadBitmap[DPAD_RIGHT];
-    dpadBitmap[DPAD_DOWN_LEFT] = dpadBitmap[DPAD_DOWN] | dpadBitmap[DPAD_LEFT];
-    dpadBitmap[DPAD_DOWN_RIGHT] = dpadBitmap[DPAD_DOWN] | dpadBitmap[DPAD_RIGHT];
+    if ((padUpNumber == padDownNumber) ||
+        (padUpNumber == padLeftNumber) ||
+        (padUpNumber == padRightNumber) ||
+        (padDownNumber == padLeftNumber) ||
+        (padLeftNumber == padRightNumber))
+        throw std::runtime_error(
+            "You can not assign the same input number to two DPAD inputs");
 
-    dpadNegMask = 0ULL;
-    for (int n = 1; n < 9; n++)
-        dpadNegMask |= dpadBitmap[n];
-    dpadMask = ~dpadNegMask;
-    DeviceCapabilities::setFlag(DeviceCapability::DPAD, (dpadNegMask != 0ULL));
+    dpadInputNumbers[DPAD_UP] = padUpNumber;
+    dpadInputNumbers[DPAD_DOWN] = padDownNumber;
+    dpadInputNumbers[DPAD_LEFT] = padLeftNumber;
+    dpadInputNumbers[DPAD_RIGHT] = padRightNumber;
+    dpadMask.set_bit(padUpNumber, false);
+    dpadMask.set_bit(padDownNumber, false);
+    dpadMask.set_bit(padLeftNumber, false);
+    dpadMask.set_bit(padRightNumber, false);
+    DeviceCapabilities::setFlag(DeviceCapability::DPAD, true);
 }
 
-void inputHub::dpad::cycleWorkingModeInputs(InputNumberCombination inputNumbers)
+void inputHub::dpad::cycleWorkingModeInputs(
+    const InputNumberCombination &inputNumbers)
 {
-    cycleDPADWorkingModeBitmap = (uint64_t)(inputNumbers);
-}
-
-//-------------------------------------------------------------------
-
-void inputHub::altButtons::inputs(InputNumberCombination inputNumbers)
-{
-    altBitmap = (uint64_t)(inputNumbers);
-    DeviceCapabilities::setFlag(DeviceCapability::ALT, (altBitmap != 0ULL));
-}
-
-void inputHub::altButtons::cycleWorkingModeInputs(InputNumberCombination inputNumbers)
-{
-    cycleALTWorkingModeBitmap = (uint64_t)(inputNumbers);
+    cycleDPADWorkingModeBitmap = (inputNumbers);
 }
 
 //-------------------------------------------------------------------
 
-void inputHub::securityLock::cycleWorkingModeInputs(InputNumberCombination inputNumbers)
+void inputHub::altButtons::inputs(
+    const InputNumberCombination &inputNumbers)
 {
-    cycleSecurityLockBitmap = (uint64_t)(inputNumbers);
+    altBitmap = (inputNumbers);
+    DeviceCapabilities::setFlag(DeviceCapability::ALT, (bool)altBitmap);
+}
+
+void inputHub::altButtons::cycleWorkingModeInputs(
+    const InputNumberCombination &inputNumbers)
+{
+    cycleALTWorkingModeBitmap = (inputNumbers);
+}
+
+//-------------------------------------------------------------------
+
+void inputHub::securityLock::cycleWorkingModeInputs(
+    const InputNumberCombination &inputNumbers)
+{
+    cycleSecurityLockBitmap = (inputNumbers);
 }
 
 //-------------------------------------------------------------------
 
 void inputHub::neutralGear::set(
     InputNumber neutral,
-    InputNumberCombination combination)
+    const InputNumberCombination &combination)
 {
     if (combination.size() < 2)
         throw std::runtime_error(
             "For neutral gear, a combination of two or more hardware inputs is required");
     neutral.book();
-    neutralSwitchBitmap = (uint64_t)neutral;
-    neutralCombinationBitmap = (uint64_t)combination;
+    neutralSwitch = neutral;
+    neutralCombinationBitmap = combination;
 }
 
 //-------------------------------------------------------------------
 
-InputNumber *copyCodedSwitchSpec(InputNumber *source, size_t count)
-{
-    size_t size = sizeof(InputNumber) * count;
-    InputNumber *dest = static_cast<InputNumber *>(malloc(size));
-    if (dest == nullptr)
-        std::runtime_error("Not enough memory to create a coded switch");
-    memcpy(dest, source, size);
-    return dest;
-}
-
 void throw_repeated_input_number()
 {
-    throw std::runtime_error("input numbers used in all coded switches must be unique");
+    throw std::runtime_error(
+        "input numbers used in all coded switches must be unique");
 }
 
 void inputHub::codedSwitch::add(
     InputNumber bit1,
     InputNumber bit2,
     InputNumber bit4,
-    CodedSwitch8 spec)
+    const CodedSwitch8 &spec)
 {
     if ((bit1 == UNSPECIFIED::VALUE) ||
         (bit2 == UNSPECIFIED::VALUE) ||
@@ -239,18 +269,22 @@ void inputHub::codedSwitch::add(
 
     for (auto sw : _codedSwitches)
     {
-        if ((bit1 == sw.bit1) || (bit1 == sw.bit2) || (bit1 == sw.bit4) || (bit1 == sw.bit8) || (bit1 == sw.bit16) ||
-            (bit2 == sw.bit1) || (bit2 == sw.bit2) || (bit2 == sw.bit4) || (bit2 == sw.bit8) || (bit2 == sw.bit16) ||
-            (bit4 == sw.bit1) || (bit4 == sw.bit2) || (bit4 == sw.bit4) || (bit4 == sw.bit8) || (bit4 == sw.bit16))
+        if (((uint8_t)bit1 == sw.bit1) || ((uint8_t)bit1 == sw.bit2) ||
+            ((uint8_t)bit1 == sw.bit4) || ((uint8_t)bit1 == sw.bit8) ||
+            ((uint8_t)bit1 == sw.bit16) || ((uint8_t)bit2 == sw.bit1) ||
+            ((uint8_t)bit2 == sw.bit2) || ((uint8_t)bit2 == sw.bit4) ||
+            ((uint8_t)bit2 == sw.bit8) || ((uint8_t)bit2 == sw.bit16) ||
+            ((uint8_t)bit4 == sw.bit1) || ((uint8_t)bit4 == sw.bit2) ||
+            ((uint8_t)bit4 == sw.bit4) || ((uint8_t)bit4 == sw.bit8) ||
+            ((uint8_t)bit4 == sw.bit16))
             throw_repeated_input_number();
     }
 
-    CodedSwitch another;
-    another.bit1 = bit1;
-    another.bit2 = bit2;
-    another.bit4 = bit4;
-    another.size = spec.size();
-    another.decodedIN = copyCodedSwitchSpec(spec.data(), spec.size());
+    CodedSwitch another(
+        spec,
+        bit1,
+        bit2,
+        bit4);
     _codedSwitches.push_back(another);
 }
 
@@ -259,7 +293,7 @@ void inputHub::codedSwitch::add(
     InputNumber bit2,
     InputNumber bit4,
     InputNumber bit8,
-    CodedSwitch16 spec)
+    const CodedSwitch16 &spec)
 {
     if ((bit1 == UNSPECIFIED::VALUE) ||
         (bit2 == UNSPECIFIED::VALUE) ||
@@ -273,20 +307,25 @@ void inputHub::codedSwitch::add(
 
     for (auto sw : _codedSwitches)
     {
-        if ((bit1 == sw.bit1) || (bit1 == sw.bit2) || (bit1 == sw.bit4) || (bit1 == sw.bit8) || (bit1 == sw.bit16) ||
-            (bit2 == sw.bit1) || (bit2 == sw.bit2) || (bit2 == sw.bit4) || (bit2 == sw.bit8) || (bit2 == sw.bit16) ||
-            (bit4 == sw.bit1) || (bit4 == sw.bit2) || (bit4 == sw.bit4) || (bit4 == sw.bit8) || (bit4 == sw.bit16) ||
-            (bit8 == sw.bit1) || (bit8 == sw.bit2) || (bit8 == sw.bit4) || (bit8 == sw.bit8) || (bit8 == sw.bit16))
+        if (((uint8_t)bit1 == sw.bit1) || ((uint8_t)bit1 == sw.bit2) ||
+            ((uint8_t)bit1 == sw.bit4) || ((uint8_t)bit1 == sw.bit8) ||
+            ((uint8_t)bit1 == sw.bit16) || ((uint8_t)bit2 == sw.bit1) ||
+            ((uint8_t)bit2 == sw.bit2) || ((uint8_t)bit2 == sw.bit4) ||
+            ((uint8_t)bit2 == sw.bit8) || ((uint8_t)bit2 == sw.bit16) ||
+            ((uint8_t)bit4 == sw.bit1) || ((uint8_t)bit4 == sw.bit2) ||
+            ((uint8_t)bit4 == sw.bit4) || ((uint8_t)bit4 == sw.bit8) ||
+            ((uint8_t)bit4 == sw.bit16) || ((uint8_t)bit8 == sw.bit1) ||
+            ((uint8_t)bit8 == sw.bit2) || ((uint8_t)bit8 == sw.bit4) ||
+            ((uint8_t)bit8 == sw.bit8) || ((uint8_t)bit8 == sw.bit16))
             throw_repeated_input_number();
     }
 
-    CodedSwitch another;
-    another.bit1 = bit1;
-    another.bit2 = bit2;
-    another.bit4 = bit4;
-    another.bit8 = bit8;
-    another.size = spec.size();
-    another.decodedIN = copyCodedSwitchSpec(spec.data(), spec.size());
+    CodedSwitch another(
+        spec,
+        bit1,
+        bit2,
+        bit4,
+        bit8);
     _codedSwitches.push_back(another);
 }
 
@@ -296,7 +335,7 @@ void inputHub::codedSwitch::add(
     InputNumber bit4,
     InputNumber bit8,
     InputNumber bit16,
-    CodedSwitch32 spec)
+    const CodedSwitch32 &spec)
 {
     if ((bit1 == UNSPECIFIED::VALUE) ||
         (bit2 == UNSPECIFIED::VALUE) ||
@@ -312,22 +351,29 @@ void inputHub::codedSwitch::add(
 
     for (auto sw : _codedSwitches)
     {
-        if ((bit1 == sw.bit1) || (bit1 == sw.bit2) || (bit1 == sw.bit4) || (bit1 == sw.bit8) || (bit1 == sw.bit16) ||
-            (bit2 == sw.bit1) || (bit2 == sw.bit2) || (bit2 == sw.bit4) || (bit2 == sw.bit8) || (bit2 == sw.bit16) ||
-            (bit4 == sw.bit1) || (bit4 == sw.bit2) || (bit4 == sw.bit4) || (bit4 == sw.bit8) || (bit4 == sw.bit16) ||
-            (bit8 == sw.bit1) || (bit8 == sw.bit2) || (bit8 == sw.bit4) || (bit8 == sw.bit8) || (bit8 == sw.bit16) ||
-            (bit16 == sw.bit1) || (bit16 == sw.bit2) || (bit16 == sw.bit4) || (bit16 == sw.bit8) || (bit8 == sw.bit16))
+        if (((uint8_t)bit1 == sw.bit1) || ((uint8_t)bit1 == sw.bit2) ||
+            ((uint8_t)bit1 == sw.bit4) || ((uint8_t)bit1 == sw.bit8) ||
+            ((uint8_t)bit1 == sw.bit16) || ((uint8_t)bit2 == sw.bit1) ||
+            ((uint8_t)bit2 == sw.bit2) || ((uint8_t)bit2 == sw.bit4) ||
+            ((uint8_t)bit2 == sw.bit8) || ((uint8_t)bit2 == sw.bit16) ||
+            ((uint8_t)bit4 == sw.bit1) || ((uint8_t)bit4 == sw.bit2) ||
+            ((uint8_t)bit4 == sw.bit4) || ((uint8_t)bit4 == sw.bit8) ||
+            ((uint8_t)bit4 == sw.bit16) || ((uint8_t)bit8 == sw.bit1) ||
+            ((uint8_t)bit8 == sw.bit2) || ((uint8_t)bit8 == sw.bit4) ||
+            ((uint8_t)bit8 == sw.bit8) || ((uint8_t)bit8 == sw.bit16) ||
+            ((uint8_t)bit16 == sw.bit1) || ((uint8_t)bit16 == sw.bit2) ||
+            ((uint8_t)bit16 == sw.bit4) || ((uint8_t)bit16 == sw.bit8) ||
+            ((uint8_t)bit8 == sw.bit16))
             throw_repeated_input_number();
     }
 
-    CodedSwitch another;
-    another.bit1 = bit1;
-    another.bit2 = bit2;
-    another.bit4 = bit4;
-    another.bit8 = bit8;
-    another.bit16 = bit16;
-    another.size = spec.size();
-    another.decodedIN = copyCodedSwitchSpec(spec.data(), spec.size());
+    CodedSwitch another(
+        spec,
+        bit1,
+        bit2,
+        bit4,
+        bit8,
+        bit16);
     _codedSwitches.push_back(another);
 }
 
@@ -346,9 +392,12 @@ class InputHubServiceProvider : public InputHubService
 public:
     inline static bool securityLock = false;
     inline static uint8_t bitePoint = CLUTCH_NONE_VALUE;
-    inline static ClutchWorkingMode clutchWorkingMode = ClutchWorkingMode::CLUTCH;
-    inline static AltButtonsWorkingMode altButtonsWorkingMode = AltButtonsWorkingMode::ALT;
-    inline static DPadWorkingMode dpadWorkingMode = DPadWorkingMode::Navigation;
+    inline static ClutchWorkingMode clutchWorkingMode =
+        ClutchWorkingMode::CLUTCH;
+    inline static AltButtonsWorkingMode altButtonsWorkingMode =
+        AltButtonsWorkingMode::ALT;
+    inline static DPadWorkingMode dpadWorkingMode =
+        DPadWorkingMode::Navigation;
 
     virtual bool getSecurityLock() override
     {
@@ -489,17 +538,19 @@ public:
 // Get ready
 //-------------------------------------------------------------------
 
-void abortOnUnknownIN(uint64_t bitmap, std::string reason)
+void abortOnUnknownIN(uint8_t in, const std::string &reason)
 {
-    if (bitmap == 0ULL)
-        return;
-    uint64_t booked = InputNumber::booked();
-    for (uint8_t i = 0; i < 64; i++)
-    {
-        uint64_t toCheck = (1ULL << i);
-        if ((bitmap & toCheck) && ((booked & toCheck) == 0ULL))
-            throw unknown_input_number(reason);
-    }
+    if ((in < 128) && !InputNumber::booked(in))
+        throw unknown_input_number(reason);
+}
+
+void abortOnUnknownIN(
+    const uint128_t &bitmap,
+    const std::string &reason)
+{
+    uint128_t test = (bitmap ^ InputNumber::booked()) & bitmap;
+    if (test)
+        throw unknown_input_number(reason);
 }
 
 void inputHubStart()
@@ -513,53 +564,54 @@ void inputHubStart()
 
 void internals::inputHub::getReady()
 {
+    // Unbook coded input numbers (rotary coded switches)
     for (CodedSwitch &csw : _codedSwitches)
     {
-        abortOnUnknownIN((uint64_t)csw.bit1, "Coded switch");
-        abortOnUnknownIN((uint64_t)csw.bit2, "Coded switch");
-        abortOnUnknownIN((uint64_t)csw.bit4, "Coded switch");
-        abortOnUnknownIN((uint64_t)csw.bit8, "Coded switch");
-        abortOnUnknownIN((uint64_t)csw.bit16, "Coded switch");
-        csw.bit1.unbook();
-        csw.bit2.unbook();
-        csw.bit4.unbook();
-        csw.bit8.unbook();
-        csw.bit16.unbook();
-        csw.mask = (uint64_t)csw.bit1 | (uint64_t)csw.bit2 | (uint64_t)csw.bit4 |
-                   (uint64_t)csw.bit8 | (uint64_t)csw.bit16;
-        csw.mask = ~csw.mask;
-    }
-    for (CodedSwitch &csw : _codedSwitches)
-    {
-        csw.decodedMask = ~0ULL;
-        for (uint8_t i = 0; i < csw.size; i++)
-        {
-            csw.decodedIN[i].book();
-            csw.decodedMask &= ~(uint64_t)csw.decodedIN[i];
-        }
+        abortOnUnknownIN(csw.bit1, "Coded switch");
+        abortOnUnknownIN(csw.bit2, "Coded switch");
+        abortOnUnknownIN(csw.bit4, "Coded switch");
+        abortOnUnknownIN(csw.bit8, "Coded switch");
+        abortOnUnknownIN(csw.bit16, "Coded switch");
+        InputNumber::unbook(csw.bit1);
+        InputNumber::unbook(csw.bit2);
+        InputNumber::unbook(csw.bit4);
+        InputNumber::unbook(csw.bit8);
+        InputNumber::unbook(csw.bit16);
     }
 
-    abortOnUnknownIN(calibrateUpBitmap, "bite point (+) calibration");
-    abortOnUnknownIN(calibrateDownBitmap, "bite point (-) calibration");
+    // Book decoded input numbers (rotary coded switches)
+    for (CodedSwitch &csw : _codedSwitches)
+        for (uint8_t i = 0; i < csw.decodedIN.size(); i++)
+            InputNumber::book(csw.decodedIN[i]);
+
+    // Validate inputs for sim wheel functions
+    abortOnUnknownIN(calibrateUp, "bite point (+) calibration");
+    abortOnUnknownIN(calibrateDown, "bite point (-) calibration");
     abortOnUnknownIN(cycleClutchWorkingModeBitmap, "cycle clutch working mode");
     abortOnUnknownIN(cmdAxisAutocalibrationBitmap, "recalibrate axis");
     abortOnUnknownIN(neutralCombinationBitmap, "neutral gear");
     for (int n = 1; n < 9; n++)
-        abortOnUnknownIN(dpadBitmap[n], "dpad input numbers");
+        abortOnUnknownIN(dpadInputNumbers[n], "dpad input numbers");
     abortOnUnknownIN(cycleDPADWorkingModeBitmap, "cycle DPAD working mode");
     abortOnUnknownIN(altBitmap, "ALT buttons");
-    abortOnUnknownIN(cycleALTWorkingModeBitmap, "cycle ALT buttons working mode");
-    abortOnUnknownIN(cycleSecurityLockBitmap, "cycle security lock working mode");
+    abortOnUnknownIN(
+        cycleALTWorkingModeBitmap,
+        "cycle ALT buttons working mode");
+    abortOnUnknownIN(
+        cycleSecurityLockBitmap,
+        "cycle security lock working mode");
+
+    // Check for incoherent sim wheel functions
     if (DeviceCapabilities::hasFlag(DeviceCapability::CLUTCH_ANALOG))
     {
-        if (clutchInputMask == ~0ULL)
+        if (leftClutch > 127)
             throw std::runtime_error(
                 "You have analog clutch paddles, but you forgot to call inputHub::clutch::inputs()");
     }
     else
     {
-        abortOnUnknownIN(leftClutchBitmap, "left clutch paddle");
-        abortOnUnknownIN(rightClutchBitmap, "right clutch paddle");
+        abortOnUnknownIN(leftClutch, "left clutch paddle");
+        abortOnUnknownIN(rightClutch, "right clutch paddle");
         if (cmdAxisAutocalibrationBitmap)
             throw std::runtime_error(
                 "There are no analog clutch paddles, but you called cmdRecalibrateAxisInputs()");
@@ -567,19 +619,23 @@ void internals::inputHub::getReady()
     if (!DeviceCapabilities::hasFlag(DeviceCapability::CLUTCH_ANALOG) &&
         !DeviceCapabilities::hasFlag(DeviceCapability::CLUTCH_BUTTON))
     {
-        if (calibrateDownBitmap || calibrateUpBitmap)
+        if (calibrateUp < 128)
             throw std::runtime_error(
                 "There are no clutch paddles, but you called inputHub::clutch::bitePointInputs()");
         if (cycleClutchWorkingModeBitmap)
             throw std::runtime_error(
                 "There are no clutch paddles, but you called inputHub::clutch::cycleWorkingModeInputs()");
     }
-    if (!DeviceCapabilities::hasFlag(DeviceCapability::DPAD) && (cycleDPADWorkingModeBitmap != 0ULL))
+    if (!DeviceCapabilities::hasFlag(DeviceCapability::DPAD) &&
+        (cycleDPADWorkingModeBitmap))
         throw std::runtime_error(
             "There is no DPAD, but you called inputHub::dpad::cycleWorkingModeInputs()");
-    if (!DeviceCapabilities::hasFlag(DeviceCapability::ALT) && (cycleALTWorkingModeBitmap != 0ULL))
+    if (!DeviceCapabilities::hasFlag(DeviceCapability::ALT) &&
+        (cycleALTWorkingModeBitmap))
         throw std::runtime_error(
             "There are no ALT buttons, but you called inputHub::altButtons::cycleWorkingModeInputs()");
+
+    // Prepare to run
     InputHubService::inject(new InputHubServiceProvider());
     OnStart::subscribe(inputHubStart);
 }
@@ -593,79 +649,71 @@ void internals::inputHub::getReady()
  *
  * @example 0b111 -> 0b01000000
  */
-void inputHub_decode_bin_coded_switches(
-    uint64_t &globalState,
-    uint64_t &changes)
+void inputHub_decode_bin_coded_switches(uint128_t &globalState)
 {
-    if (_codedSwitches.size() == 0)
-        return;
+    uint128_t decoded_bitmap{};
     for (auto sw : _codedSwitches)
     {
         uint8_t positionIndex = 0;
-        if ((uint64_t)sw.bit1 & globalState)
+        if (globalState.bit(sw.bit1))
             positionIndex = 1;
-        if ((uint64_t)sw.bit2 & globalState)
+        if (globalState.bit(sw.bit2))
             positionIndex += 2;
-        if ((uint64_t)sw.bit4 & globalState)
+        if (globalState.bit(sw.bit4))
             positionIndex += 4;
-        if ((sw.size > 15) && ((uint64_t)sw.bit8 & globalState))
+        if ((sw.decodedIN.size() > 15) && globalState.bit(sw.bit8))
             positionIndex += 8;
-        if ((sw.size > 31) && ((uint64_t)sw.bit16 & globalState))
+        if ((sw.decodedIN.size() > 31) && globalState.bit(sw.bit16))
             positionIndex += 16;
 
-        // std::cout << "SW index: " << (int)positionIndex << std::endl;
-
-        uint64_t bitmap = (uint64_t)sw.decodedIN[positionIndex];
-        globalState &= sw.mask & sw.decodedMask;
-        globalState |= bitmap;
-        bool changed = (changes & ~sw.mask);
-        changes &= sw.mask & sw.decodedMask;
-        if (changed)
-            changed |= bitmap;
+        // Set decoded input
+        decoded_bitmap.set_bit(sw.decodedIN[positionIndex], true);
     }
+    globalState &= CodedSwitch::mask;
+    globalState |= decoded_bitmap;
 }
 
 //-------------------------------------------------------------------
 
 /**
- * @brief Executes user-requested commands in response to button press combinations
+ * @brief Executes user-requested commands in response to
+ *        button press combinations
  *
  * @return true If a command has been issued
  * @return false Otherwise
  */
 bool inputHub_commands_filter(
-    uint64_t globalState,
-    uint64_t changes)
+    const uint128_t &globalState,
+    const uint128_t &changes)
 {
     // Look for input events requesting a change in functionality
     // These input events never translate into a HID report
-    if ((changes & cycleALTWorkingModeBitmap) && (globalState == cycleALTWorkingModeBitmap))
+    if ((changes & cycleALTWorkingModeBitmap) &&
+        (globalState == cycleALTWorkingModeBitmap))
     {
         InputHubServiceProvider::cycleAltButtonsWorkingMode();
         return true;
     }
-    if ((changes & cycleClutchWorkingModeBitmap) && (globalState == cycleClutchWorkingModeBitmap))
+    if ((changes & cycleClutchWorkingModeBitmap) &&
+        (globalState == cycleClutchWorkingModeBitmap))
     {
         InputHubServiceProvider::cycleClutchWorkingMode();
         return true;
     }
-    if ((changes & cycleDPADWorkingModeBitmap) && (globalState == cycleDPADWorkingModeBitmap))
+    if ((changes & cycleDPADWorkingModeBitmap) &&
+        (globalState == cycleDPADWorkingModeBitmap))
     {
         InputHubServiceProvider::cycleDPadWorkingMode();
         return true;
     }
-    if ((changes & cmdAxisAutocalibrationBitmap) && (globalState == cmdAxisAutocalibrationBitmap))
+    if ((changes & cmdAxisAutocalibrationBitmap) &&
+        (globalState == cmdAxisAutocalibrationBitmap))
     {
         InputService::call::recalibrateAxes();
         return true;
     }
-    // Removed in version 7
-    // if ((changes & cmdBatteryRecalibrationBitmap) && (globalState == cmdBatteryRecalibrationBitmap))
-    // {
-    //     BatteryCalibrationService::call::restartAutoCalibration();
-    //     return true;
-    // }
-    if ((changes & cycleSecurityLockBitmap) && (globalState == cycleSecurityLockBitmap))
+    if ((changes & cycleSecurityLockBitmap) &&
+        (globalState == cycleSecurityLockBitmap))
     {
         InputHubServiceProvider::cycleSecurityLock();
         return true;
@@ -689,7 +737,9 @@ inline bool paddleIsReleased(uint8_t value)
  * @brief Executes bite point calibration from user input
  *
  */
-void inputHub_bitePointCalibration_filter(DecouplingEvent &input)
+void inputHub_bitePointCalibration_filter(
+    DecouplingEvent &input,
+    const uint128_t &changes)
 {
     bool isCalibrationInProgress = false;
     switch (InputHubServiceProvider::clutchWorkingMode)
@@ -721,14 +771,14 @@ void inputHub_bitePointCalibration_filter(DecouplingEvent &input)
     {
         // One and only one clutch paddle is pressed
         // Check for bite point calibration events
-        if ((calibrateUpBitmap & input.rawInputChanges) &&
-            (calibrateUpBitmap & input.rawInputBitmap))
+        if (changes.bit(calibrateUp) &&
+            input.rawInputBitmap.bit(calibrateUp))
             InputHubServiceProvider::increaseBitePoint();
-        else if ((calibrateDownBitmap & input.rawInputChanges) &&
-                 (calibrateDownBitmap & input.rawInputBitmap))
+        else if (changes.bit(calibrateDown) &&
+                 input.rawInputBitmap.bit(calibrateDown))
             InputHubServiceProvider::decreaseBitePoint();
-        input.rawInputBitmap &= (~(calibrateDownBitmap | calibrateUpBitmap));
-        input.rawInputChanges &= (~(calibrateDownBitmap | calibrateUpBitmap));
+        input.rawInputBitmap.set_bit(calibrateUp, false);
+        input.rawInputBitmap.set_bit(calibrateDown, false);
     }
 }
 
@@ -747,23 +797,19 @@ void inputHub_AxisButton_filter(DecouplingEvent &input)
         // Transform analog axis position into an input state
         if (input.leftAxisValue >= CLUTCH_3_4_VALUE)
         {
-            input.rawInputBitmap |= leftClutchBitmap;
-            input.rawInputChanges |= leftClutchBitmap;
+            input.rawInputBitmap.set_bit(leftClutch, true);
         }
         else if (input.leftAxisValue <= CLUTCH_1_4_VALUE)
         {
-            input.rawInputBitmap &= (~leftClutchBitmap);
-            input.rawInputChanges |= leftClutchBitmap;
+            input.rawInputBitmap.set_bit(leftClutch, false);
         }
         if (input.rightAxisValue >= CLUTCH_3_4_VALUE)
         {
-            input.rawInputBitmap |= rightClutchBitmap;
-            input.rawInputChanges |= rightClutchBitmap;
+            input.rawInputBitmap.set_bit(rightClutch, true);
         }
         else if (input.rightAxisValue <= CLUTCH_1_4_VALUE)
         {
-            input.rawInputBitmap &= (~rightClutchBitmap);
-            input.rawInputChanges |= rightClutchBitmap;
+            input.rawInputBitmap.set_bit(rightClutch, false);
         }
         input.leftAxisValue = CLUTCH_NONE_VALUE;
         input.rightAxisValue = CLUTCH_NONE_VALUE;
@@ -780,16 +826,16 @@ void inputHub_AxisButton_filter(DecouplingEvent &input)
         if (isAxisMode)
         {
             // Transform input state into an axis position
-            if (input.rawInputBitmap & leftClutchBitmap)
+            if (input.rawInputBitmap.bit(leftClutch))
                 input.leftAxisValue = CLUTCH_FULL_VALUE;
             else
                 input.leftAxisValue = CLUTCH_NONE_VALUE;
-            if (input.rawInputBitmap & rightClutchBitmap)
+            if (input.rawInputBitmap.bit(rightClutch))
                 input.rightAxisValue = CLUTCH_FULL_VALUE;
             else
                 input.rightAxisValue = CLUTCH_NONE_VALUE;
-            input.rawInputChanges = (input.rawInputChanges & clutchInputMask);
-            input.rawInputBitmap = (input.rawInputBitmap & clutchInputMask);
+            input.rawInputBitmap.set_bit(leftClutch, false);
+            input.rawInputBitmap.set_bit(rightClutch, false);
         }
     }
 }
@@ -824,7 +870,7 @@ void inputHub_combinedAxis_filter(
         break;
 
     case ClutchWorkingMode::LAUNCH_CONTROL_MASTER_LEFT:
-        if (rightAxis > CLUTCH_3_4_VALUE)
+        if (paddleIsPressed(rightAxis))
             clutchAxis = InputHubServiceProvider::bitePoint;
         else
             clutchAxis = CLUTCH_NONE_VALUE;
@@ -835,7 +881,7 @@ void inputHub_combinedAxis_filter(
         break;
 
     case ClutchWorkingMode::LAUNCH_CONTROL_MASTER_RIGHT:
-        if (leftAxis > CLUTCH_3_4_VALUE)
+        if (paddleIsPressed(leftAxis))
             clutchAxis = InputHubServiceProvider::bitePoint;
         else
             clutchAxis = CLUTCH_NONE_VALUE;
@@ -864,14 +910,14 @@ void inputHub_combinedAxis_filter(
  *
  */
 void inputHub_AltRequest_filter(
-    uint64_t &rawInputBitmap,
+    uint128_t &rawInputBitmap,
     uint8_t &leftAxis,
     uint8_t &rightAxis,
     bool &isAltRequested)
 {
     if (InputHubServiceProvider::altButtonsWorkingMode == AltButtonsWorkingMode::ALT)
     {
-        isAltRequested = (rawInputBitmap & altBitmap);
+        isAltRequested = (bool)(rawInputBitmap & altBitmap);
         rawInputBitmap &= ~altBitmap;
     }
     if (InputHubServiceProvider::clutchWorkingMode == ClutchWorkingMode::ALT)
@@ -880,41 +926,63 @@ void inputHub_AltRequest_filter(
             isAltRequested ||
             (leftAxis >= CLUTCH_DEFAULT_VALUE) ||
             (rightAxis >= CLUTCH_DEFAULT_VALUE) ||
-            (rawInputBitmap & leftClutchBitmap) ||
-            (rawInputBitmap & rightClutchBitmap);
+            rawInputBitmap.bit(leftClutch) ||
+            rawInputBitmap.bit(rightClutch);
         leftAxis = CLUTCH_NONE_VALUE;
         rightAxis = CLUTCH_NONE_VALUE;
-        rawInputBitmap &= clutchInputMask;
+        rawInputBitmap.set_bit(leftClutch, false);
+        rawInputBitmap.set_bit(rightClutch, false);
     }
 }
 
 //-------------------------------------------------------------------
 
 /**
- * @brief Transform DPAD input into navigational input depending on user preferences
+ * @brief Transform DPAD input into navigational input depending
+ *        on user preferences
  *
  */
 void inputHub_DPAD_filter(
-    uint64_t &rawInputBitmap,
+    uint128_t &rawInputBitmap,
     uint8_t &povInput)
 {
     povInput = DPAD_CENTERED;
     if (InputHubServiceProvider::dpadWorkingMode == DPadWorkingMode::Navigation)
     {
         // Map directional buttons to POV input as needed
-        uint64_t povState = rawInputBitmap & dpadNegMask;
+        bool up = rawInputBitmap.bit(dpadInputNumbers[DPAD_UP]) ||
+                  rawInputBitmap.bit(dpadInputNumbers[DPAD_UP_RIGHT]) ||
+                  rawInputBitmap.bit(dpadInputNumbers[DPAD_UP_LEFT]);
+        bool down = rawInputBitmap.bit(dpadInputNumbers[DPAD_DOWN]) ||
+                    rawInputBitmap.bit(dpadInputNumbers[DPAD_DOWN_RIGHT]) ||
+                    rawInputBitmap.bit(dpadInputNumbers[DPAD_DOWN_LEFT]);
+        bool left = rawInputBitmap.bit(dpadInputNumbers[DPAD_LEFT]) ||
+                    rawInputBitmap.bit(dpadInputNumbers[DPAD_UP_LEFT]) ||
+                    rawInputBitmap.bit(dpadInputNumbers[DPAD_DOWN_LEFT]);
+        bool right = rawInputBitmap.bit(dpadInputNumbers[DPAD_RIGHT]) ||
+                     rawInputBitmap.bit(dpadInputNumbers[DPAD_UP_RIGHT]) ||
+                     rawInputBitmap.bit(dpadInputNumbers[DPAD_DOWN_RIGHT]);
+        rawInputBitmap &= dpadMask;
 
-        if (povState)
-        {
-            uint8_t n = 1;
-            while ((povInput == DPAD_CENTERED) && (n < 9))
-            {
-                if (povState == dpadBitmap[n])
-                    povInput = n;
-                n++;
-            }
-        }
-        rawInputBitmap = rawInputBitmap & dpadMask;
+        if ((up && down) || (left && right))
+            // incompatible inputs: do nothing
+            return;
+        else if (up && left)
+            povInput = DPAD_UP_LEFT;
+        else if (up && right)
+            povInput = DPAD_UP_RIGHT;
+        else if (down && left)
+            povInput = DPAD_DOWN_LEFT;
+        else if (down && right)
+            povInput = DPAD_DOWN_RIGHT;
+        else if (up)
+            povInput = DPAD_UP;
+        else if (down)
+            povInput = DPAD_DOWN;
+        else if (left)
+            povInput = DPAD_LEFT;
+        else if (right)
+            povInput = DPAD_RIGHT;
     }
 }
 
@@ -922,12 +990,14 @@ void inputHub_DPAD_filter(
  * @brief Engage or disengage neutral gear
  *
  */
-void inputHub_neutralGear_filter(uint64_t &rawInputBitmap)
+void inputHub_neutralGear_filter(uint128_t &rawInputBitmap)
 {
-    if (neutralSwitchBitmap)
+    if (neutralSwitch < 128)
     {
-        bool combinationPressed = ((~rawInputBitmap & neutralCombinationBitmap) == 0ULL);
-        if (neutralWasEngaged && ((rawInputBitmap & neutralCombinationBitmap) == 0ULL))
+        bool combinationPressed =
+            (!(~rawInputBitmap & neutralCombinationBitmap));
+        if (neutralWasEngaged &&
+            (!(rawInputBitmap & neutralCombinationBitmap)))
             // all buttons in the combination are now released at the same time
             neutralWasEngaged = false;
         else if (!neutralWasEngaged && combinationPressed)
@@ -939,7 +1009,7 @@ void inputHub_neutralGear_filter(uint64_t &rawInputBitmap)
             rawInputBitmap &= ~neutralCombinationBitmap;
             if (combinationPressed)
                 // Add the "virtual" neutral gear button
-                rawInputBitmap |= neutralSwitchBitmap;
+                rawInputBitmap.set_bit(neutralSwitch, true);
         }
     }
 }
@@ -948,13 +1018,15 @@ void inputHub_neutralGear_filter(uint64_t &rawInputBitmap)
 
 void internals::inputHub::onRawInput(DecouplingEvent &input)
 {
-
     // Decode binary-coded switches when required
-    inputHub_decode_bin_coded_switches(input.rawInputBitmap, input.rawInputChanges);
+    inputHub_decode_bin_coded_switches(input.rawInputBitmap);
 
     // Step 1: Execute user commands if any
-    if (inputHub_commands_filter(input.rawInputBitmap, input.rawInputChanges))
+    if (inputHub_commands_filter(
+            input.rawInputBitmap,
+            input.rawInputBitmap ^ previousInputBitmap))
     {
+        previousInputBitmap = input.rawInputBitmap;
         internals::hid::reset();
         return;
     }
@@ -963,7 +1035,10 @@ void internals::inputHub::onRawInput(DecouplingEvent &input)
     inputHub_AxisButton_filter(input);
 
     // Step 3: bite point calibration
-    inputHub_bitePointCalibration_filter(input);
+    inputHub_bitePointCalibration_filter(
+        input,
+        input.rawInputBitmap ^ previousInputBitmap);
+    previousInputBitmap = input.rawInputBitmap;
 
     // Step 4: check if ALT mode is requested
     bool isALTRequested = false;
@@ -975,27 +1050,33 @@ void internals::inputHub::onRawInput(DecouplingEvent &input)
 
     // Step 5: compute F1-style clutch position
     uint8_t clutchAxis;
-    inputHub_combinedAxis_filter(input.leftAxisValue, input.rightAxisValue, clutchAxis);
+    inputHub_combinedAxis_filter(
+        input.leftAxisValue,
+        input.rightAxisValue,
+        clutchAxis);
 
     // Step 6: compute DPAD input
-    uint8_t povInput = DPAD_CENTERED;
-    if (!isALTRequested)
+    uint8_t povInput;
+    if (isALTRequested)
+        povInput = DPAD_CENTERED;
+    else
         inputHub_DPAD_filter(input.rawInputBitmap, povInput);
 
     // Step 7: compute neutral gear engagement
     inputHub_neutralGear_filter(input.rawInputBitmap);
 
     // Step 8: map raw input state into HID button state
-    uint64_t inputsLow, inputsHigh;
-    internals::inputMap::map(isALTRequested, input.rawInputBitmap, inputsLow, inputsHigh);
+    internals::inputMap::map(
+        isALTRequested,
+        input.rawInputBitmap);
 
     // Step 9: send HID report
     internals::hid::reportInput(
-        inputsLow,
-        inputsHigh,
+        input.rawInputBitmap,
         povInput,
         input.leftAxisValue,
-        input.rightAxisValue, clutchAxis);
+        input.rightAxisValue,
+        clutchAxis);
 }
 
 //-------------------------------------------------------------------

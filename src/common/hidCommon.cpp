@@ -41,7 +41,7 @@ static uint16_t _factoryVID = BLE_VENDOR_ID;
 static uint16_t _factoryPID = BLE_PRODUCT_ID;
 static Connectivity _connectivity = Connectivity::_DEFAULT;
 
-#define MAX_INPUT_NUMBER 63
+#define MAX_INPUT_NUMBER 127
 
 static std::string _deviceName = "ESP32SimWheel";
 static std::string _deviceManufacturer = "Mamandurrio";
@@ -516,30 +516,29 @@ void internals::hid::common::onReset(uint8_t *report)
 
 void internals::hid::common::onReportInput(
     uint8_t *report,
-    bool &notifyConfigChanges,
-    uint64_t &inputsLow,
-    uint64_t &inputsHigh,
-    uint8_t &POVstate,
-    uint8_t &leftAxis,
-    uint8_t &rightAxis,
-    uint8_t &clutchAxis)
+    bool notifyConfigChanges,
+    const uint128_t &inputs,
+    uint8_t POVstate,
+    uint8_t leftAxis,
+    uint8_t rightAxis,
+    uint8_t clutchAxis)
 {
-    report[0] = ((uint8_t *)&inputsLow)[0];
-    report[1] = ((uint8_t *)&inputsLow)[1];
-    report[2] = ((uint8_t *)&inputsLow)[2];
-    report[3] = ((uint8_t *)&inputsLow)[3];
-    report[4] = ((uint8_t *)&inputsLow)[4];
-    report[5] = ((uint8_t *)&inputsLow)[5];
-    report[6] = ((uint8_t *)&inputsLow)[6];
-    report[7] = ((uint8_t *)&inputsLow)[7];
-    report[8] = ((uint8_t *)&inputsHigh)[0];
-    report[9] = ((uint8_t *)&inputsHigh)[1];
-    report[10] = ((uint8_t *)&inputsHigh)[2];
-    report[11] = ((uint8_t *)&inputsHigh)[3];
-    report[12] = ((uint8_t *)&inputsHigh)[4];
-    report[13] = ((uint8_t *)&inputsHigh)[5];
-    report[14] = ((uint8_t *)&inputsHigh)[6];
-    report[15] = ((uint8_t *)&inputsHigh)[7];
+    report[0] = ((uint8_t *)&inputs.low)[0];
+    report[1] = ((uint8_t *)&inputs.low)[1];
+    report[2] = ((uint8_t *)&inputs.low)[2];
+    report[3] = ((uint8_t *)&inputs.low)[3];
+    report[4] = ((uint8_t *)&inputs.low)[4];
+    report[5] = ((uint8_t *)&inputs.low)[5];
+    report[6] = ((uint8_t *)&inputs.low)[6];
+    report[7] = ((uint8_t *)&inputs.low)[7];
+    report[8] = ((uint8_t *)&inputs.high)[0];
+    report[9] = ((uint8_t *)&inputs.high)[1];
+    report[10] = ((uint8_t *)&inputs.high)[2];
+    report[11] = ((uint8_t *)&inputs.high)[3];
+    report[12] = ((uint8_t *)&inputs.high)[4];
+    report[13] = ((uint8_t *)&inputs.high)[5];
+    report[14] = ((uint8_t *)&inputs.high)[6];
+    report[15] = ((uint8_t *)&inputs.high)[7];
     report[16] = (uint8_t)clutchAxis;
     report[17] = (uint8_t)leftAxis;
     report[18] = (uint8_t)rightAxis;

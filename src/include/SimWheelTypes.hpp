@@ -43,7 +43,7 @@
 #include <cstdint>
 #include <string>
 #include <stdexcept>
-#include <vector>
+#include <set>
 #include <initializer_list>
 #include <map>
 #include <algorithm>
@@ -62,7 +62,7 @@
 /**
  * @brief Exception for invalid input numbers
  *
- * @note Valid input numbers are in the range [0,63]
+ * @note Valid input numbers are in the range [0,127]
  */
 class invalid_input_number : public std::runtime_error
 {
@@ -76,7 +76,7 @@ public:
         : std::runtime_error(
               "The input number " +
               std::to_string(value) +
-              " is out of range [0,63]") {}
+              " is out of range [0,127]") {}
     /**
      * @brief Construct a new invalid input number object
      *        for unspecified input numbers
@@ -144,7 +144,7 @@ public:
      *
      * @param usage A message about how the input number was used
      */
-    unknown_input_number(std::string usage)
+    unknown_input_number(const std::string &usage)
         : std::runtime_error(
               "There is an input number not assigned to a hardware input. Usage: " +
               usage) {}
@@ -152,58 +152,9 @@ public:
     virtual ~unknown_input_number() noexcept {}
 };
 
-/**
- * @brief Exception for invalid user-defined input numbers
- *
- * @note Valid input numbers are in the range [0,127]
- */
-class invalid_user_input_number : public std::runtime_error
-{
-public:
-    /**
-     * @brief Construct a new invalid_input_number exception
-     *
-     * @param value Offending input number
-     */
-    invalid_user_input_number(uint8_t value)
-        : std::runtime_error(
-              "The user-defined input number " +
-              std::to_string(value) +
-              " is out of range [0,127]") {}
-    /**
-     * @brief Construct a new invalid input number object
-     *        for unspecified input numbers
-     *
-     */
-    invalid_user_input_number()
-        : std::runtime_error(
-              "Trying to use an unspecified input number.") {}
-
-    virtual ~invalid_user_input_number() noexcept {}
-};
-
 //-------------------------------------------------------------------
 // Utility functions
 //-------------------------------------------------------------------
-
-/**
- * @brief Add an item to a collection without duplicates
- *
- * @tparam T Item class
- * @param item Item to be added
- * @param vector Collection
- * @return true If added
- * @return false If already exists
- */
-template <typename T>
-bool addIfNotExists(T item, std::vector<T> &vector)
-{
-    for (size_t i = 0; i < vector.size(); i++)
-        if (vector.at(i) == item)
-            return false;
-    vector.push_back(item);
-    return true;
-}
 
 /**
  * @brief Equivalent to Arduino's map()
@@ -240,11 +191,248 @@ enum class UNSPECIFIED
 };
 
 //-------------------------------------------------------------------
+// Input Bitmap
+//-------------------------------------------------------------------
+
+// Note: fucking Arduino macro
+#undef bit
+
+/**
+ * @brief 128-bit integer
+ *
+ */
+struct uint128_t
+{
+    /// @brief Least significant unsigned long long
+    uint64_t low{0ULL};
+    /// @brief Most significant unsigned long long
+    uint64_t high{0ULL};
+
+    /// @brief Non-zero check
+    explicit constexpr operator bool()
+    {
+        return low || high;
+    }
+
+    /**
+     * @brief Check bit
+     *
+     * @param n Bit index
+     * @return true if the bit is set
+     * @return false if the bit is not set
+     */
+    constexpr bool bit(uint8_t n) const noexcept
+    {
+        if (n < 64)
+            return (1ULL << n) & low;
+        else if (n < 128)
+            return (1ULL << (n - 64) & high);
+        else
+            return false;
+    }
+
+    /**
+     * @brief Set or clear a single bit
+     *
+     * @param n Bit index
+     * @param value True to set, false to clear
+     */
+    constexpr void set_bit(uint8_t n, bool value = true) noexcept
+    {
+        if (n < 64)
+        {
+            if (value)
+                low |= (1ULL << n);
+            else
+                low &= ~(1ULL << n);
+        }
+        else if (n < 128)
+        {
+            n -= 64;
+            if (value)
+                high |= (1ULL << n);
+            else
+                high &= ~(1ULL << n);
+        }
+    }
+
+    /**
+     * @brief Compound bitwise OR
+     *
+     * @param rhs Right operand
+     * @return constexpr uint128_t& Reference to this instance
+     */
+    constexpr uint128_t &operator|=(const uint128_t &rhs) noexcept
+    {
+        low |= rhs.low;
+        high |= rhs.high;
+        return *this;
+    }
+
+    /**
+     * @brief Compound bitwise AND
+     *
+     * @param rhs Right operand
+     * @return constexpr uint128_t& Reference to this instance
+     */
+    constexpr uint128_t &operator&=(const uint128_t &rhs) noexcept
+    {
+        low &= rhs.low;
+        high &= rhs.high;
+        return *this;
+    }
+
+    /**
+     * @brief Compound bitwise XOR
+     *
+     * @param rhs Right operand
+     * @return constexpr uint128_t& Reference to this instance
+     */
+    constexpr uint128_t &operator^=(const uint128_t &rhs) noexcept
+    {
+        low ^= rhs.low;
+        high ^= rhs.high;
+        return *this;
+    }
+
+    /**
+     * @brief Get the bitmap that represents a number
+     *
+     * @param n Number
+     * @return constexpr uint128_t Bitmap
+     */
+    static constexpr uint128_t bitmap(uint8_t n) noexcept
+    {
+        if (n < 64)
+            return {
+                .low = (1ULL << n),
+                .high = 0ULL,
+            };
+        else if (n < 128)
+            return {
+                .low = 0ULL,
+                .high = (1ULL << (n - 64)),
+            };
+        else
+            return {};
+    }
+
+    /**
+     * @brief Get the bitwise negation of zero
+     *
+     * @return constexpr uint128_t Bitwise zero negation
+     */
+    static constexpr uint128_t neg() noexcept
+    {
+        return {
+            .low = ~0ULL,
+            .high = ~0ULL,
+        };
+    }
+};
+
+static_assert(
+    sizeof(uint128_t) == 16,
+    "Wrong size in the uint128_t data type. Check memory alignment.");
+
+inline constexpr uint128_t operator<<(
+    const uint128_t &source,
+    ::std::size_t n) noexcept
+{
+    if (n == 0)
+    {
+        return source;
+    }
+    else
+    {
+        uint128_t result;
+        if (n < 64)
+        {
+            result.low = (source.low << n);
+            result.high = (source.high << n) | (source.low >> (64 - n));
+        }
+        else
+        {
+            result.low = 0ULL;
+            result.high = source.low << (n - 64);
+        }
+        return result;
+    }
+}
+
+inline constexpr uint128_t operator>>(
+    const uint128_t &source,
+    ::std::size_t n) noexcept
+{
+    if (n == 0)
+    {
+        return source;
+    }
+    else
+    {
+        uint128_t result;
+        if (n < 64)
+        {
+            result.low = (source.low >> n) | (source.high << (64 - n));
+            result.high = (source.high >> n);
+        }
+        else
+        {
+            result.high = 0ULL;
+            result.low = source.high >> (n - 64);
+        }
+        return result;
+    }
+}
+
+inline constexpr uint128_t operator|(uint128_t a, uint128_t b) noexcept
+{
+    return {
+        .low = a.low | b.low,
+        .high = a.high | b.high,
+    };
+}
+
+inline constexpr uint128_t operator&(uint128_t a, uint128_t b) noexcept
+{
+    return {
+        .low = a.low & b.low,
+        .high = a.high & b.high,
+    };
+}
+
+inline constexpr uint128_t operator^(uint128_t a, uint128_t b) noexcept
+{
+    return {
+        .low = a.low ^ b.low,
+        .high = a.high ^ b.high,
+    };
+}
+
+inline constexpr uint128_t operator~(uint128_t a) noexcept
+{
+    return {
+        .low = ~(a.low),
+        .high = ~(a.high),
+    };
+}
+
+inline constexpr bool operator==(uint128_t a, uint128_t b) noexcept
+{
+    return (a.low == b.low) && (a.high == b.high);
+}
+
+inline constexpr bool operator!=(uint128_t a, uint128_t b)
+{
+    return (a.low != b.low) || (a.high != b.high);
+}
+
+//-------------------------------------------------------------------
 // Input numbers
 //-------------------------------------------------------------------
 
 /**
- * @brief Firmware-defined input numbers in the range [0,63] or
+ * @brief Firmware-defined input numbers in the range [0,127] or
  *        unspecified.
  *
  */
@@ -252,7 +440,7 @@ struct InputNumber
 {
 public:
     /// @brief Construct an unspecified input number
-    InputNumber()
+    constexpr InputNumber() noexcept
     {
         _value = 0xFF;
     }
@@ -260,11 +448,11 @@ public:
     /**
      * @brief Cast an integer to a input number
      *
-     * @param value Input number in the range [0,63]
+     * @param value Input number in the range [0,127]
      */
-    InputNumber(uint8_t value)
+    constexpr InputNumber(uint8_t value)
     {
-        if (value >= 64)
+        if (value >= 128)
             throw invalid_input_number(value);
         _value = value;
     }
@@ -274,32 +462,48 @@ public:
      *
      * @param value The unspecified value
      */
-    InputNumber(UNSPECIFIED value)
+    constexpr InputNumber(UNSPECIFIED value) noexcept
     {
         _value = 0xFF;
     }
 
     /**
-     * @brief Copy an input number
+     * @brief Copy constructor (default)
      *
      * @param number Input number to be copied
      */
-    InputNumber(const InputNumber &number)
-    {
-        _value = number._value;
-    }
+    constexpr InputNumber(const InputNumber &number) = default;
 
     /**
-     * @brief Typecast this input number to a 64-bit bitmap
+     * @brief Move constructor (default)
      *
-     * @return A bitmap
+     * @param number Input number to be moved
      */
-    explicit operator uint64_t() const
+    constexpr InputNumber(InputNumber &&number) = default;
+
+    /**
+     * @brief Copy-assignment (default)
+     *
+     * @param number Input number to be copied
+     * @return constexpr InputNumer&
+     */
+    constexpr InputNumber &operator=(const InputNumber &number) = default;
+
+    /**
+     * @brief Move-assignment (default)
+     *
+     * @param number Input number to be moved
+     */
+    constexpr InputNumber &operator=(InputNumber &&number) = default;
+
+    /**
+     * @brief Typecast to 128-bit bitmap
+     *
+     * @return uint128_t Bitmap
+     */
+    explicit constexpr operator uint128_t() const
     {
-        if (_value < 64)
-            return (1ULL << _value);
-        else
-            return 0ULL;
+        return uint128_t::bitmap(_value);
     }
 
     /**
@@ -307,12 +511,9 @@ public:
      *
      * @return uint8_t Input number
      */
-    operator uint8_t() const
+    constexpr operator uint8_t() const
     {
-        if (_value > 63)
-            throw std::bad_cast();
-        else
-            return _value;
+        return _value;
     }
 
     /**
@@ -322,7 +523,10 @@ public:
      * @return true If unspecified
      * @return false otherwise
      */
-    bool operator==(const UNSPECIFIED value) const { return (_value > 63); }
+    bool constexpr operator==(const UNSPECIFIED value) const
+    {
+        return (_value > 127);
+    }
 
     /**
      * @brief Check if this input number was specified
@@ -331,26 +535,36 @@ public:
      * @return true If specified
      * @return false otherwise
      */
-    bool operator!=(const UNSPECIFIED value) const { return (_value < 64); }
+    bool constexpr operator!=(const UNSPECIFIED value) const noexcept
+    {
+        return (_value < 128);
+    }
 
     /// @cond
 
-    inline bool operator==(const InputNumber value) const { return (_value == value._value); }
-    inline bool operator!=(const InputNumber value) const { return (_value != value._value); }
-    inline bool operator<(const InputNumber value) const { return (_value < value._value); }
-
-    constexpr InputNumber &operator=(const InputNumber &other)
+    inline constexpr bool operator==(const InputNumber value) const noexcept
     {
-        _value = other._value;
-        return *this;
+        return (_value == value._value);
     }
-
-    constexpr InputNumber &operator=(uint8_t value)
+    inline constexpr bool operator!=(const InputNumber value) const noexcept
     {
-        if (value >= 64)
-            throw invalid_input_number(value);
-        _value = value;
-        return *this;
+        return (_value != value._value);
+    }
+    inline constexpr bool operator<(const InputNumber value) const noexcept
+    {
+        return (_value < value._value);
+    }
+    inline constexpr bool operator<=(const InputNumber value) const noexcept
+    {
+        return (_value <= value._value);
+    }
+    inline constexpr bool operator>(const InputNumber value) const noexcept
+    {
+        return (_value > value._value);
+    }
+    inline constexpr bool operator>=(const InputNumber value) const noexcept
+    {
+        return (_value >= value._value);
     }
 
     /// @endcond
@@ -361,8 +575,7 @@ public:
      */
     void book() const
     {
-        if (_value < 64)
-            _registered |= (1ULL << _value);
+        _registered.set_bit(_value, true);
     }
 
     /**
@@ -371,8 +584,7 @@ public:
      */
     void unbook() const
     {
-        if (_value < 64)
-            _registered &= ~(1ULL << _value);
+        _registered.set_bit(_value, false);
     }
 
     /**
@@ -381,7 +593,7 @@ public:
      */
     static void bookAll()
     {
-        _registered = ~(0ULL);
+        _registered = uint128_t::neg();
     }
 
     /**
@@ -393,7 +605,7 @@ public:
      */
     static bool booked(InputNumber inputNumber)
     {
-        return _registered & (uint64_t)inputNumber;
+        return _registered.bit(inputNumber._value);
     }
 
     /**
@@ -405,86 +617,132 @@ public:
      */
     static bool booked(uint8_t inputNumber)
     {
-        // Avoid two implicit typecasts
-        if (inputNumber < 64)
-            return _registered & (1ULL << inputNumber);
-        else
-            return false;
+        return _registered.bit(inputNumber);
     }
 
     /**
      * @brief Get a bitmap of all booked input numbers
      *
-     * @return uint64_t A bitmap
+     * @return uint128_t A bitmap
      */
-    static uint64_t booked() { return _registered; }
+    static uint128_t booked() { return _registered; }
+
+    /**
+     * @brief Book an input number as in use
+     *
+     * @param inputNumber Input Number
+     */
+    static void unbook(uint8_t inputNumber)
+    {
+        _registered.set_bit(inputNumber, false);
+    }
+
+    /**
+     * @brief Unbook
+     *
+     * @param inputNumber Input number
+     */
+    static void book(uint8_t inputNumber)
+    {
+        _registered.set_bit(inputNumber, true);
+    }
 
 #if CD_CI
     static void clearBook()
     {
-        _registered = 0ULL;
+        _registered.low = 0ULL;
+        _registered.high = 0ULL;
     };
 #endif
 
 private:
     uint8_t _value;
-    inline static uint64_t _registered = 0ULL;
+    inline static uint128_t _registered{};
 };
 
 /**
  * @brief Combination of input numbers
  *
  */
-class InputNumberCombination : public std::vector<InputNumber>
+struct InputNumberCombination : public uint128_t
 {
-public:
-    /**
-     * @brief Typecast this InputNumber vector to a uint8_t vector
-     *
-     * @return std::vector<uint8_t>
-     */
-    operator std::vector<uint8_t>()
-    {
-        std::vector<uint8_t> result = {};
-        for (InputNumber inputNumber : *this)
-        {
-            if (inputNumber == UNSPECIFIED::VALUE)
-                throw invalid_input_number();
-            else
-                result.push_back((uint8_t)inputNumber);
-        }
-        return result;
-    }
+    /// @brief Create an empty combination of input numbers
+    constexpr InputNumberCombination() : uint128_t{} {};
 
     /**
-     * @brief Create a vector of input numbers from integer constants/variables
+     * @brief Create a combination of input numbers
      *
      * @param items List of values for initialization
      */
-    InputNumberCombination(std::initializer_list<uint8_t> items)
+    constexpr InputNumberCombination(
+        std::initializer_list<InputNumber> items) noexcept : uint128_t{}
     {
-        this->clear();
-        for (auto item = items.begin(); item != items.end(); ++item)
-        {
-            if (*item > 63)
-                throw invalid_input_number(*item);
-            else
-                this->push_back(static_cast<InputNumber>(*item));
-        }
+        for (auto n : items)
+            set_bit(n);
     }
 
     /**
-     * @brief Convert this vector to a single 64-bit bitmap
+     * @brief Create from a 128-bit bitmap
      *
-     * @return uint64_t A bitmap
+     * @param from Bitmap
      */
-    explicit operator uint64_t()
+    constexpr InputNumberCombination(const uint128_t &from)
+        : uint128_t{from} {};
+
+    /**
+     * @brief Create from a 128-bit bitmap
+     *
+     * @param from Bitmap
+     */
+    constexpr InputNumberCombination(uint128_t &&from)
+        : uint128_t{from} {};
+
+    /**
+     * @brief Get the count of input numbers in the combination
+     *
+     * @return constexpr uint8_t Count of input numbers
+     */
+    constexpr uint8_t size() const noexcept
     {
-        uint64_t bitmap = 0ULL;
-        for (size_t i = 0; i < this->size(); i++)
-            bitmap = bitmap | (uint64_t)this->at(i);
-        return bitmap;
+        uint8_t result = 0;
+        for (uint8_t i = 0; i < 128; i++)
+            if (bit(i))
+                result++;
+        return result;
     }
+
+    /// @brief Copy constructor (default)
+    constexpr InputNumberCombination(
+        const InputNumberCombination &) noexcept = default;
+
+    /// @brief Move constructor (default)
+    constexpr InputNumberCombination(
+        InputNumberCombination &&) noexcept = default;
+
+    /// @brief Copy-assignment (default)
+    constexpr InputNumberCombination &operator=(
+        const InputNumberCombination &) noexcept = default;
+
+    /// @brief Move-assignment (default)
+    constexpr InputNumberCombination &operator=(
+        InputNumberCombination &&) = default;
+
+    // NEEDED???
+    // /**
+    //  * @brief Typecast to vector
+    //  *
+    //  * @return std::vector<uint8_t> Vector of input numbers
+    //  */
+    // operator std::vector<uint8_t>()
+    // {
+    //     std::vector<uint8_t> result = {};
+    //     for (uint8_t n = 0; n < 128; n++)
+    //     {
+    //         if (bit(n))
+    //             result.push_back(n);
+    //     }
+    //     return result;
+    // }
 };
 
 // Well-known input numbers for PC game controllers
@@ -500,96 +758,6 @@ public:
 #define JOY_START 7             ///< Game pad start button
 #define JOY_LTHUMBSTICK_CLICK 8 ///< Game pad left thumb stick click button
 #define JOY_RTHUMBSTICK_CLICK 9 ///< Game pad right thumb stick click button
-
-//-------------------------------------------------------------------
-// User-defined input numbers
-//-------------------------------------------------------------------
-
-/**
- * @brief User-defined input numbers in the range [0,127]
- *
- */
-struct UserInputNumber
-{
-public:
-    /// @brief Construct an user-defined input number
-    UserInputNumber()
-    {
-        _value = 0;
-    }
-
-    /**
-     * @brief Cast an integer to a user-defined input number
-     *
-     * @param value Input number in the range [0,127]
-     */
-    UserInputNumber(uint8_t value)
-    {
-        if (value >= 128)
-            throw invalid_user_input_number(value);
-        _value = value;
-    }
-
-    /**
-     * @brief Copy a user-defined input number
-     *
-     * @param number Input number to be copied
-     */
-    UserInputNumber(const UserInputNumber &number)
-    {
-        _value = number._value;
-    }
-
-    /**
-     * @brief Get the most significant 64-bit bitmap
-     *
-     * @return A bitmask
-     */
-    uint64_t getHigh() const
-    {
-        if (_value < 64)
-            return (1ULL << _value);
-        else
-            return 0ULL;
-    }
-
-    /**
-     * @brief Get the least significant 64-bit bitmap
-     *
-     * @return A bitmask
-     */
-    uint64_t getLow() const
-    {
-        if (_value >= 64)
-            return 0ULL;
-        else
-            return (1ULL << _value);
-    }
-
-    /**
-     * @brief Typecast this input number to an unsigend int
-     *
-     * @return uint8_t Input number
-     */
-    operator uint8_t() const
-    {
-        if (_value > 127)
-            throw std::bad_cast();
-        else
-            return _value;
-    }
-
-    /// @cond
-
-    inline bool operator==(const UserInputNumber value) const { return (_value == value._value); }
-    inline bool operator!=(const UserInputNumber value) const { return (_value != value._value); }
-    inline bool operator<(const UserInputNumber value) const { return (_value < value._value); }
-
-    /// @endcond
-
-private:
-    uint8_t _value;
-};
 
 //-------------------------------------------------------------------
 // GPIO PINS
@@ -711,8 +879,10 @@ public:
     void reserve() const
     {
         abortIfUnspecified();
-        if ((_pin >= 0) && !addIfNotExists<int>(_pin, reservedPins))
+        if (reservedPins.find(_pin) != reservedPins.end())
             throw gpio_error(_pin, "Already in use");
+        else
+            reservedPins.insert(_pin);
     }
 
     /**
@@ -722,12 +892,7 @@ public:
     void grant() const
     {
         abortIfUnspecified();
-        if (_pin >= 0)
-            reservedPins.erase(
-                std::find(
-                    reservedPins.begin(),
-                    reservedPins.end(),
-                    _pin));
+        reservedPins.insert(_pin);
     }
 
     /**
@@ -749,7 +914,7 @@ public:
 #endif
 
 private:
-    inline static std::vector<int> reservedPins = {};
+    inline static ::std::set<int> reservedPins{};
 
 protected:
     /// @brief Assigned pin number
@@ -847,11 +1012,11 @@ public:
 //-------------------------------------------------------------------
 
 /// @brief Collection of GPIOs
-typedef std::vector<GPIO> GPIOCollection;
+typedef std::set<GPIO> GPIOCollection;
 /// @brief Collection of input GPIOs
-typedef std::vector<InputGPIO> InputGPIOCollection;
+typedef std::set<InputGPIO> InputGPIOCollection;
 /// @brief Collection of output GPIOs
-typedef std::vector<OutputGPIO> OutputGPIOCollection;
+typedef std::set<OutputGPIO> OutputGPIOCollection;
 
 //-------------------------------------------------------------------
 // I2C

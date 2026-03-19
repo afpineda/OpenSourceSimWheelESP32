@@ -17,6 +17,7 @@
 
 #include "InternalTypes.hpp" // For BitQueue
 #include "InputSpecification.hpp"
+#include <initializer_list>
 
 //-------------------------------------------------------------------
 // (Abstract) DigitalInput
@@ -31,37 +32,21 @@
 class DigitalInput
 {
 public:
-    /**
-     * @brief Input mask. For read-only.
-     *
-     */
-    uint64_t mask = ~0ULL;
-
-public:
     virtual ~DigitalInput() noexcept {}
 
     /**
      * @brief Read the current state of the inputs (pressed or released)
      *
-     * @warning This function must not set any bit outside of the
+     * @warning This function must not set or clear any bit outside of the
      *          input bitmask in the return value.
      *
-     * @param lastState State of the same inputs as recorded in the previous iteration.
-     *                  Whether the current state is unknown,
-     *                  @p lastState must be returned (properly masked).
-     *                  Must be set to zero at first call.
-     * @return uint64_t Current state of the inputs
-     *                  (a bit set to 1 means a pressed button).
+     * @param[in,out] state At call, state of all inputs
+     *                      as recorded in the previous iteration.
+     *                      Whether the current state is unknown,
+     *                      @p state must be kept untouched.
+     *                      At return, new state of the inputs.
      */
-    virtual uint64_t read(uint64_t lastState) = 0;
-
-protected:
-    /**
-     * @brief Add an input bitmap to the current mask
-     *
-     * @param bitmap Input bitmap
-     */
-    void addToMask(uint64_t bitmap) { mask &= ~bitmap; }
+    virtual void read(uint128_t &state) = 0;
 };
 
 //-------------------------------------------------------------------
@@ -78,7 +63,7 @@ protected:
     /// @brief Configured input pin
     InputGPIO pinNumber;
     /// @brief Input bitmap
-    uint64_t bitmap;
+    uint8_t inputNumber;
 
 public:
     /**
@@ -89,7 +74,7 @@ public:
      */
     DigitalButton(InputGPIO pinNumber, InputNumber buttonNumber);
 
-    virtual uint64_t read(uint64_t lastState) override;
+    virtual void read(uint128_t &state) override;
 };
 
 //-------------------------------------------------------------------
@@ -106,9 +91,10 @@ private:
     InputGPIO clkPin, dtPin; // pins
     uint8_t code;            // State of the decoding algorithm
     uint16_t sequence;       // Last sequence of states
-    uint64_t cwButtonBitmap;
-    uint64_t ccwButtonBitmap;
+    uint8_t cwButton;
+    uint8_t ccwButton;
     BitQueue queue;
+    bool cwOrCcw;
 
     // duration of the current "pulse" event in polling cycles
     uint8_t currentPulseWidth;
@@ -132,13 +118,17 @@ public:
     /**
      * @brief Construct a new Rotary Encoder Input object
      *
-     * @param[in] clkPin GPIO pin attached to the "CLK" (or "A") pin of the encoder.
-     * @param[in] dtPin GPIO pin attached to the "DT" (or "B") pin of the encoder.
-     * @param[in] cwButtonNumber A number for the "virtual button" of a clockwise rotation event.
-     * @param[in] ccwButtonNumber A number for the "virtual button" of a counter-clockwise rotation event.
-     *                           If not given, `cwButtonNumber`+1 is used.
-     * @param[in] useAlternateEncoding Set to true in order to use the signal encoding of
-     *                                 ALPS RKJX series of rotary encoders, and the alike.
+     * @param[in] clkPin GPIO pin attached to the "CLK" (or "A")
+     *                   pin of the encoder.
+     * @param[in] dtPin GPIO pin attached to the "DT" (or "B")
+     *                  pin of the encoder.
+     * @param[in] cwButtonNumber An input number for the
+     *                           clockwise rotation event.
+     * @param[in] ccwButtonNumber An input number for the
+     *                            counter-clockwise rotation event.
+     * @param[in] useAlternateEncoding Set to true in order to use the
+     *                                 signal encoding of ALPS RKJX series
+     *                                 of rotary encoders, and the alike.
      * @note Internal pullup resistors will be enabled when available.
      */
     RotaryEncoderInput(
@@ -158,7 +148,8 @@ public:
      */
     static bool setPulseMultiplier(uint8_t multiplier)
     {
-        if ((multiplier > 0) && (multiplier < 7) && (pulseMultiplier != multiplier))
+        if ((multiplier > 0) && (multiplier < 7) &&
+            (pulseMultiplier != multiplier))
         {
             pulseMultiplier = multiplier;
             return true;
@@ -166,7 +157,7 @@ public:
         return false;
     };
 
-    virtual uint64_t read(uint64_t lastState) override;
+    virtual void read(uint128_t &state) override;
 };
 
 //-------------------------------------------------------------------
@@ -196,7 +187,7 @@ public:
         const ButtonMatrix &matrix,
         bool negativeLogic = false);
 
-    virtual uint64_t read(uint64_t lastState) override;
+    virtual void read(uint128_t &state) override;
 };
 
 //-------------------------------------------------------------------
@@ -212,10 +203,9 @@ public:
 class AnalogMultiplexerInput : public DigitalInput
 {
 private:
-    OutputGPIOCollection selectorPins;
-    InputGPIOCollection inputPins;
-    const uint64_t *bitmap;
-    size_t switchCount;
+    ::std::vector<OutputGPIO> selectorPins{};
+    ::std::vector<InputGPIO> inputPins{};
+    ::std::vector<uint8_t> inputNumber{};
 
 public:
     /**
@@ -266,42 +256,12 @@ public:
         OutputGPIO selectorPin5,
         const AnalogMultiplexerGroup<Mux32Pin> &chips);
 
-    virtual uint64_t read(uint64_t lastState) override;
+    virtual void read(uint128_t &state) override;
 
 private:
-    void initializeMux();
-};
-
-//-------------------------------------------------------------------
-// Coded rotary switch
-//-------------------------------------------------------------------
-
-/**
- * @brief Class for coded rotary switches
- *
- */
-class RotaryCodedSwitchInput : public DigitalInput
-{
-private:
-    InputGPIOCollection inputPins;
-    uint64_t *bitmap = nullptr;
-    bool complementaryCode;
-
-public:
-    /**
-     * @brief Construct a new Rotary Coded Switch Input object
-     *
-     * @param spec Specification of input numbers assigned to switch positions
-     * @param pins Collection of input pins for the binary encoding
-     * @param complementaryCode If true, the input pins work in complementary binary encoding
-     */
-    RotaryCodedSwitchInput(
-        const RotaryCodedSwitch &spec,
-        const InputGPIOCollection &pins,
-        bool complementaryCode);
-    ~RotaryCodedSwitchInput();
-
-    virtual uint64_t read(uint64_t lastState) override;
+    void initializeMux(
+        ::std::initializer_list<OutputGPIO> selectorPins,
+        const ::std::vector<InputGPIO> &inputPins);
 };
 
 //-------------------------------------------------------------------
@@ -343,7 +303,7 @@ class PCF8574ButtonsInput : public I2CInput
 {
 private:
     PCF8574Expander inputNumbers;
-    bool getGPIOstate(uint64_t &state);
+    bool getGPIOstate(uint8_t &state);
 
 public:
     /**
@@ -358,7 +318,7 @@ public:
         uint8_t address7Bits,
         I2CBus bus = I2CBus::PRIMARY);
 
-    virtual uint64_t read(uint64_t lastState) override;
+    virtual void read(uint128_t &state) override;
 };
 
 /**
@@ -369,7 +329,7 @@ class MCP23017ButtonsInput : public I2CInput
 {
 private:
     MCP23017Expander inputNumbers;
-    bool getGPIOstate(uint64_t &state);
+    bool getGPIOstate(uint16_t &state);
     void configure();
 
 public:
@@ -385,7 +345,7 @@ public:
         uint8_t address7Bits,
         I2CBus bus = I2CBus::PRIMARY);
 
-    virtual uint64_t read(uint64_t lastState) override;
+    virtual void read(uint128_t &state) override;
 };
 
 //-------------------------------------------------------------------
@@ -403,7 +363,7 @@ private:
     InputGPIO serialPin;
     OutputGPIO loadPin;
     OutputGPIO nextPin;
-    const uint64_t *bitmap;
+    ::std::vector<uint8_t> inputNumber{};
     bool loadHighOrLow;
     bool nextHighToLowOrLowToHigh;
     bool negativeLogic;
@@ -418,13 +378,19 @@ public:
      * @param chain Chain of PISO shift registers
      * @param SER_inputNumber Input number assigned to the SER pin
      *                        in the last chip of the chain.
-     * @param loadHighOrLow If true, parallel inputs are loaded when `loadPin`is HIGH.
-     *                      If false, parallel inputs are loaded when `loadPin`is LOW.
-     * @param nextHighToLowOrLowToHigh If true, next bit is selected when an high-to-low
-     *                                 pulse is detected at `nextPin`. If false, next bit
-     *                                 is selected when a low-to-high pulse is detected.
-     * @param negativeLogic If true, all switches must be pulled down (the default),
-     *                      If false, all switches must be pulled up (positive logic).
+     * @param loadHighOrLow If true, parallel inputs are loaded
+     *                      when `loadPin`is HIGH.
+     *                      If false, parallel inputs are loaded
+     *                      when `loadPin`is LOW.
+     * @param nextHighToLowOrLowToHigh If true, next bit is selected when
+     *                                 an high-to-low pulse is detected
+     *                                 at `nextPin`. If false, next bit
+     *                                 is selected when a low-to-high pulse
+     *                                 is detected.
+     * @param negativeLogic If true, all switches must be
+     *                      pulled down (the default),
+     *                      If false, all switches must be
+     *                      pulled up (positive logic).
      */
     ShiftRegistersInput(
         OutputGPIO loadPin,
@@ -436,7 +402,7 @@ public:
         const bool nextHighToLowOrLowToHigh = false,
         const bool negativeLogic = true);
 
-    virtual uint64_t read(uint64_t lastState) override;
+    virtual void read(uint128_t &state) override;
 };
 
 //-------------------------------------------------------------------
@@ -541,9 +507,13 @@ public:
      */
     FakeDigitalInput(FakeInput *instance) { _instance = instance; }
 
-    virtual uint64_t read(uint64_t lastState) override
+    virtual void read(uint128_t &state) override
     {
-        return _instance->state;
+        // for (uint8_t i = 0; i < 128; i++)
+        //     if (!_instance.mask.bit(i))
+        //         state.set_bit(i, _instance.bit(i));
+        state = (state & _instance->mask) |
+                (_instance->state & ~(_instance->mask));
     }
 };
 

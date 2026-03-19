@@ -293,65 +293,6 @@ void inputs::add74HC165NChain(
 
 //-------------------------------------------------------------------
 
-void inputs::addRotaryCodedSwitch(
-    const RotaryCodedSwitch &spec,
-    InputGPIO pin0,
-    InputGPIO pin1,
-    InputGPIO pin2,
-    bool complementaryCode)
-{
-    InputGPIOCollection pins = {pin0, pin1, pin2};
-    internals::inputs::validate::codedRotarySwitch(spec, pins);
-#if !CD_CI
-    digitalInputsChain.push_front(
-        new RotaryCodedSwitchInput(
-            spec,
-            pins,
-            complementaryCode));
-#endif
-}
-
-void inputs::addRotaryCodedSwitch(
-    const RotaryCodedSwitch &spec,
-    InputGPIO pin0,
-    InputGPIO pin1,
-    InputGPIO pin2,
-    InputGPIO pin3,
-    bool complementaryCode)
-{
-    InputGPIOCollection pins = {pin0, pin1, pin2, pin3};
-    internals::inputs::validate::codedRotarySwitch(spec, pins);
-#if !CD_CI
-    digitalInputsChain.push_front(
-        new RotaryCodedSwitchInput(
-            spec,
-            pins,
-            complementaryCode));
-#endif
-}
-
-void inputs::addRotaryCodedSwitch(
-    const RotaryCodedSwitch &spec,
-    InputGPIO pin0,
-    InputGPIO pin1,
-    InputGPIO pin2,
-    InputGPIO pin3,
-    InputGPIO pin4,
-    bool complementaryCode)
-{
-    InputGPIOCollection pins = {pin0, pin1, pin2, pin3, pin4};
-    internals::inputs::validate::codedRotarySwitch(spec, pins);
-#if !CD_CI
-    digitalInputsChain.push_front(
-        new RotaryCodedSwitchInput(
-            spec,
-            pins,
-            complementaryCode));
-#endif
-}
-
-//-------------------------------------------------------------------
-
 void inputs::setAnalogClutchPaddles(
     ADC_GPIO leftClutchPin,
     ADC_GPIO rightClutchPin)
@@ -495,45 +436,44 @@ public:
 void inputPollingLoop(void *param)
 {
     // Initialize
-    DecouplingEvent currentState, previousState;
+    DecouplingEvent currentState{};
+    DecouplingEvent previousState{};
     bool leftAxisAutocalibrated = false;
     bool rightAxisAutocalibrated = false;
     bool stateChanged;
     uint16_t voidLoopCount = 0;
-    currentState.leftAxisValue = CLUTCH_NONE_VALUE;
-    currentState.rightAxisValue = CLUTCH_NONE_VALUE;
-    currentState.rawInputBitmap = 0ULL;
-    previousState = currentState;
     forceUpdate = true;
 
     // loop
     while (true)
     {
+        previousState = currentState;
         // Read digital inputs
-        currentState.rawInputBitmap = 0ULL;
         for (DigitalInput *input : digitalInputsChain)
-        {
-            // currentState.rawInputBitmap =
-            //     (currentState.rawInputBitmap & input->mask) |
-            //     input->read(previousState.rawInputBitmap);
-            currentState.rawInputBitmap |= input->read(previousState.rawInputBitmap);
-        }
-        currentState.rawInputChanges = currentState.rawInputBitmap ^ previousState.rawInputBitmap;
-        stateChanged = forceUpdate || (currentState.rawInputChanges);
+            input->read(currentState.rawInputBitmap);
+        stateChanged =
+            forceUpdate ||
+            (currentState.rawInputBitmap != previousState.rawInputBitmap);
         forceUpdate = false;
 
         // Read analog inputs
         if (leftAxis)
         {
             // Left clutch axis
-            leftAxis->read(currentState.leftAxisValue, leftAxisAutocalibrated);
+            leftAxis->read(
+                currentState.leftAxisValue,
+                leftAxisAutocalibrated);
             if (_reverseLeftAxis)
-                currentState.leftAxisValue = CLUTCH_FULL_VALUE - currentState.leftAxisValue;
+                currentState.leftAxisValue =
+                    CLUTCH_FULL_VALUE - currentState.leftAxisValue;
 
             // Right clutch axis
-            rightAxis->read(currentState.rightAxisValue, rightAxisAutocalibrated);
+            rightAxis->read(
+                currentState.rightAxisValue,
+                rightAxisAutocalibrated);
             if (_reverseRightAxis)
-                currentState.rightAxisValue = CLUTCH_FULL_VALUE - currentState.rightAxisValue;
+                currentState.rightAxisValue =
+                    CLUTCH_FULL_VALUE - currentState.rightAxisValue;
 
             if (leftAxisAutocalibrated || rightAxisAutocalibrated)
                 SaveSetting::notify(UserSetting::AXIS_CALIBRATION);
@@ -552,7 +492,6 @@ void inputPollingLoop(void *param)
         {
             // Push state into the decoupling queue
             internals::inputs::notifyInputEvent(currentState);
-            previousState = currentState;
             voidLoopCount = 0;
         }
         else

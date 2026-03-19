@@ -23,6 +23,7 @@
 #include <semaphore>
 #include <chrono>
 #include <optional>
+#include "SimWheelTypes.hpp" // For uint128_t
 
 #if !CD_CI
 /// @brief For tesing
@@ -48,9 +49,9 @@
 struct FakeInput
 {
     /// @brief Input bitmap
-    uint64_t state = 0ULL;
-    /// @brief Input bitmask
-    uint64_t mask = ~(0ULL);
+    uint128_t state{};
+    /// @brief Input mask
+    uint128_t mask = uint128_t::neg();
     /// @brief Left axis position
     uint8_t leftAxis = 0;
     /// @brief Right axis position
@@ -65,8 +66,7 @@ struct FakeInput
      */
     void press(uint8_t n)
     {
-        uint64_t bmp = (1ULL << n);
-        state = state | bmp;
+        state.set_bit(n, true);
     }
 
     /**
@@ -76,8 +76,7 @@ struct FakeInput
      */
     void release(uint8_t n)
     {
-        uint64_t bmp = (1ULL << n);
-        state = state & ~bmp;
+        state.set_bit(n, false);
     }
 
     /**
@@ -86,40 +85,11 @@ struct FakeInput
      */
     void clear()
     {
-        state = 0ULL;
+        state = {};
         leftAxis = 0;
         rightAxis = 0;
     }
-
-    FakeInput() {}
-    ~FakeInput() {}
 };
-
-//-------------------------------------------------------------------
-// Input bitmaps
-//-------------------------------------------------------------------
-
-/**
- * @brief Return a mask for a number of consecutive buttons (`count`)
- *        starting from `first`.
- *        A mask is a bit array where each bit determines
- *        if a button is to be used or not.
- *        1 means **not** used. 0 means in use.
- *        Masks are required to combine the state from multiple input bitmaps.
- *        For example, BITMASK(2,2) returns 0b(...)11110011 which means that
- *        buttons numbered 2 and 3 are in use.
- */
-#define BITMASK(count, first)                         \
-    ~(((1ULL << static_cast<uint64_t>(count)) - 1ULL) \
-      << static_cast<uint64_t>(first))
-
-/**
- * @brief Return the logical negation of a bit mask
- *
- */
-#define NBITMASK(count, first)                       \
-    (((1ULL << static_cast<uint64_t>(count)) - 1ULL) \
-     << static_cast<uint64_t>(first))
 
 //-------------------------------------------------------------------
 // Device capabilities
@@ -384,13 +354,11 @@ public:
 struct DecouplingEvent
 {
     /// @brief Input bitmap
-    uint64_t rawInputBitmap;
-    /// @brief Bitmap of changes from the previous event
-    uint64_t rawInputChanges;
+    uint128_t rawInputBitmap{};
     /// @brief Position of the left axis
-    uint8_t leftAxisValue;
+    uint8_t leftAxisValue{CLUTCH_NONE_VALUE};
     /// @brief Position of the right axis
-    uint8_t rightAxisValue;
+    uint8_t rightAxisValue{CLUTCH_NONE_VALUE};
 };
 
 /// @brief Queue size for decoupling events

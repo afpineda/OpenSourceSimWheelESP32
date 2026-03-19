@@ -267,7 +267,7 @@ void setDebugInputNumbers(ButtonMatrix &instance)
     instance[TEST_BTNMTX_ROW2][TEST_BTNMTX_COL1] = 7;
 }
 
-OutputGPIOCollection getDebugMuxSelectors()
+::std::vector<OutputGPIO> getDebugMuxSelectors()
 {
     return {TEST_AMTXER_SEL1, TEST_AMTXER_SEL2, TEST_AMTXER_SEL3};
 }
