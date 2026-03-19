@@ -135,8 +135,8 @@ void inputMapStart()
                         found = true;
                         break;
                     }
-                uint8_t optimal = max_firmware_in + i;
-                if (!found && (optimal < 128))
+                uint8_t optimal = (max_firmware_in + i) % 128;
+                if (!found)
                     ::inputMap::set(i, i, optimal);
             }
     }
