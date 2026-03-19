@@ -1,5 +1,10 @@
 # Change log (and release notes)
 
+## 7.10.3
+
+- The wrong connectivity choice in `Setup8.ino` has been fixed.
+- Fixed a bug that prevented the I2C probe from working properly.
+
 ## 7.10.2
 
 - Better screen layout in telemetry display via monochrome OLED,
