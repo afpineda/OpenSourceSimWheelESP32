@@ -335,6 +335,13 @@ static_assert(
     sizeof(uint128_t) == 16,
     "Wrong size in the uint128_t data type. Check memory alignment.");
 
+/**
+ * @brief Shift left
+ *
+ * @param source Bitmap
+ * @param n Count of bits to shift
+ * @return constexpr uint128_t Shifted bitmap
+ */
 inline constexpr uint128_t operator<<(
     const uint128_t &source,
     ::std::size_t n) noexcept
@@ -360,6 +367,13 @@ inline constexpr uint128_t operator<<(
     }
 }
 
+/**
+ * @brief Shift right
+ *
+ * @param source Bitmap
+ * @param n Count of bits to shift
+ * @return constexpr uint128_t Shifted bitmap
+ */
 inline constexpr uint128_t operator>>(
     const uint128_t &source,
     ::std::size_t n) noexcept
@@ -385,6 +399,13 @@ inline constexpr uint128_t operator>>(
     }
 }
 
+/**
+ * @brief Bitwise OR
+ *
+ * @param a Left operand
+ * @param b Right operand
+ * @return constexpr uint128_t Resulting bitmap
+ */
 inline constexpr uint128_t operator|(uint128_t a, uint128_t b) noexcept
 {
     return {
@@ -393,6 +414,13 @@ inline constexpr uint128_t operator|(uint128_t a, uint128_t b) noexcept
     };
 }
 
+/**
+ * @brief Bitwise AND
+ *
+ * @param a Left operand
+ * @param b Right operand
+ * @return constexpr uint128_t Resulting bitmap
+ */
 inline constexpr uint128_t operator&(uint128_t a, uint128_t b) noexcept
 {
     return {
@@ -401,6 +429,13 @@ inline constexpr uint128_t operator&(uint128_t a, uint128_t b) noexcept
     };
 }
 
+/**
+ * @brief Bitwise XOR
+ *
+ * @param a Left operand
+ * @param b Right operand
+ * @return constexpr uint128_t Resulting bitmap
+ */
 inline constexpr uint128_t operator^(uint128_t a, uint128_t b) noexcept
 {
     return {
@@ -409,6 +444,12 @@ inline constexpr uint128_t operator^(uint128_t a, uint128_t b) noexcept
     };
 }
 
+/**
+ * @brief Bitwise negation
+ *
+ * @param a Operand
+ * @return constexpr uint128_t Resulting bitmap
+ */
 inline constexpr uint128_t operator~(uint128_t a) noexcept
 {
     return {
@@ -417,11 +458,27 @@ inline constexpr uint128_t operator~(uint128_t a) noexcept
     };
 }
 
+/**
+ * @brief Check equality
+ *
+ * @param a Left operand
+ * @param b Right operand
+ * @return true If equal
+ * @return false If not equal
+ */
 inline constexpr bool operator==(uint128_t a, uint128_t b) noexcept
 {
     return (a.low == b.low) && (a.high == b.high);
 }
 
+/**
+ * @brief Check inequality
+ *
+ * @param a Left operand
+ * @param b Right operand
+ * @return true If not equal
+ * @return false If equal
+ */
 inline constexpr bool operator!=(uint128_t a, uint128_t b)
 {
     return (a.low != b.low) || (a.high != b.high);

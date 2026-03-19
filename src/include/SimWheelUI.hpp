@@ -125,6 +125,10 @@ private:
 // OLED UI 128x64
 //-----------------------------------------------------------------------------
 
+/**
+ * @brief Telemetry display via 128x64 monochrome OLED
+ *
+ */
 class OledTelemetry128x64 : public AbstractUserInterface
 {
 private:
