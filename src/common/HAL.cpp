@@ -88,8 +88,6 @@ bool internals::hal::i2c::probe(uint8_t address7bits, I2CBus bus)
             i2c_bus_handle[(int)(bus)],
             address7bits,
             pdMS_TO_TICKS(150));
-        if (err != ESP_ERR_TIMEOUT)
-            ESP_ERROR_CHECK(err);
         return (err == ESP_OK);
     }
     else
