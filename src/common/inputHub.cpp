@@ -19,8 +19,8 @@
 #include "SimWheel.hpp"
 #include <vector>
 
-// #include <iostream> // For debug
-// using namespace std;
+#include <iostream> // For debug
+using namespace std;
 
 //-------------------------------------------------------------------
 // Globals
@@ -45,6 +45,8 @@ static uint128_t cycleClutchWorkingModeBitmap{};
 static uint128_t cmdAxisAutocalibrationBitmap{};
 static uint128_t cycleDPADWorkingModeBitmap{};
 static uint128_t cycleSecurityLockBitmap{};
+static uint128_t routedInputBitmap{};
+static uint128_t routedInputBitmapNeg = uint128_t::neg();
 
 // Related to POV buttons
 
@@ -378,6 +380,14 @@ void inputHub::codedSwitch::add(
 }
 
 //-------------------------------------------------------------------
+
+void inputHub::routed::inputs(InputNumberCombination routedInputs)
+{
+    routedInputBitmap = routedInputs;
+    routedInputBitmapNeg = ~routedInputs;
+}
+
+//-------------------------------------------------------------------
 //-------------------------------------------------------------------
 // Internal API
 //-------------------------------------------------------------------
@@ -584,6 +594,14 @@ void internals::inputHub::getReady()
         for (uint8_t i = 0; i < csw.decodedIN.size(); i++)
             InputNumber::book(csw.decodedIN[i]);
 
+    // Unbook routed input numbers
+    for (uint8_t i = 0; i < 128; i++)
+        if (routedInputBitmap.bit(i))
+        {
+            abortOnUnknownIN(i, "routed input number");
+            InputNumber::unbook(i);
+        }
+
     // Validate inputs for sim wheel functions
     abortOnUnknownIN(calibrateUp, "bite point (+) calibration");
     abortOnUnknownIN(calibrateDown, "bite point (-) calibration");
@@ -717,6 +735,18 @@ bool inputHub_commands_filter(
     {
         InputHubServiceProvider::cycleSecurityLock();
         return true;
+    }
+    if ((changes & routedInputBitmap))
+    {
+        for (uint8_t input_number = 0; input_number < 128; input_number++)
+        {
+            if (routedInputBitmap.bit(input_number) &&
+                changes.bit(input_number) &&
+                !globalState.bit(input_number))
+            {
+                internals::ui::routeInput(input_number);
+            }
+        }
     }
     return false;
 }
@@ -1066,6 +1096,7 @@ void internals::inputHub::onRawInput(DecouplingEvent &input)
     inputHub_neutralGear_filter(input.rawInputBitmap);
 
     // Step 8: map raw input state into HID button state
+    input.rawInputBitmap &= routedInputBitmapNeg;
     internals::inputMap::map(
         isALTRequested,
         input.rawInputBitmap);

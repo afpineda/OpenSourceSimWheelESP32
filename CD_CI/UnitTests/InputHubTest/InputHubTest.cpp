@@ -45,6 +45,8 @@ using namespace std;
 #define LSHIFT 23
 #define RSHIFT 24
 #define NEUTRAL 25
+#define ROUTED1 26
+#define ROUTED2 27
 
 #define OTHER_MAP 126
 #define OTHER_MAP_ALT 30
@@ -80,6 +82,7 @@ uint128_t currentInputs{};
 uint8_t currentClutch = CLUTCH_NONE_VALUE;
 uint8_t currentLeftAxis = CLUTCH_NONE_VALUE;
 uint8_t currentRightAxis = CLUTCH_NONE_VALUE;
+uint8_t last_routed = 0xFF;
 
 void internals::hid::reset()
 {
@@ -104,7 +107,10 @@ void internals::hid::reportInput(
     currentState = currentALTEnabled ? inputs.high : inputs.low;
 }
 
-//------------------------------------------------------------------
+void internals::ui::routeInput(uint8_t inputNumber)
+{
+    last_routed = inputNumber;
+}
 
 void internals::inputMap::map(
     bool isAltModeEngaged,
@@ -168,7 +174,8 @@ void InputSimulator::release(uint8_t btnNumber)
 
 void InputSimulator::release()
 {
-    event.rawInputBitmap = {};
+    event.rawInputBitmap.low = 0ULL;
+    event.rawInputBitmap.high = 0ULL;
     send();
 }
 
@@ -808,6 +815,83 @@ void TG_neutralGear()
     assert<uint64_t>::equals("Lshift off + RShift off", 0ULL, currentInputs.low);
 }
 
+void TG_routedInput()
+{
+    // Note: Only button release events should be routed
+
+    // initialize
+    input.release();
+    last_routed = 0xFF;
+    assert<uint64_t>::equals("initialization", 0ULL, currentInputs.low);
+    assert<uint64_t>::equals("initialization", 0ULL, currentInputs.high);
+
+    // Simulate routed input
+    input.release();
+    input.push(ROUTED1);
+    assert(last_routed == 0xFF);
+    assert<uint64_t>::equals("ROUTED1 push", 0ULL, currentInputs.low);
+    input.release(ROUTED1);
+    assert(last_routed == ROUTED1);
+    assert<uint64_t>::equals("ROUTED1 release", 0ULL, currentInputs.low);
+
+    // Simulate non-routed input
+    input.release();
+    last_routed = 0xFF;
+    input.push(CMD);
+    assert(last_routed == 0xFF);
+    assert<uint64_t>::equals("CMD push", BITMAP(CMD), currentInputs.low);
+    input.release(CMD);
+    assert(last_routed == 0xFF);
+    assert<uint64_t>::equals("CMD release", 0ULL, currentInputs.low);
+
+    // Simulate simultaneous routed and non-routed input
+    input.release();
+    last_routed = 0xFF;
+    input.push(CMD);
+    input.push(ROUTED2);
+    assert(last_routed == 0xFF);
+    assert<uint64_t>::equals(
+        "ROUTED2+CMD push",
+        BITMAP(CMD),
+        currentInputs.low);
+    input.release(ROUTED2);
+    assert(last_routed == ROUTED2);
+    assert<uint64_t>::equals(
+        "ROUTED2+CMD push",
+        BITMAP(CMD),
+        currentInputs.low);
+    last_routed = 0xFF;
+    input.release();
+    assert(last_routed == 0xFF);
+
+     // Simulate two routed input events
+    input.release();
+    last_routed = 0xFF;
+    input.push(ROUTED1);
+    input.push(ROUTED2);
+    assert(last_routed == 0xFF);
+    assert<uint64_t>::equals(
+        "ROUTED1+ROUTED2 push",
+        0ULL,
+        currentInputs.low);
+    input.release(ROUTED2);
+    assert(last_routed == ROUTED2);
+    assert<uint64_t>::equals(
+        "ROUTED1 push + ROUTED2 release",
+        0ULL,
+        currentInputs.low);
+    input.release(ROUTED1);
+    assert<uint64_t>::equals(
+        "ROUTED1 release + ROUTED2 release",
+        0ULL,
+        currentInputs.low);
+    assert(last_routed == ROUTED1);
+
+    // Check that routed input numbers are not booked
+    assert(!InputNumber::booked(ROUTED1));
+    assert(!InputNumber::booked(ROUTED2));
+}
+
 //------------------------------------------------------------------
 //------------------------------------------------------------------
 // Entry point
@@ -830,6 +914,7 @@ int main()
     inputHub::clutch::bitePointInputs(UP, DOWN);
     inputHub::securityLock::cycleWorkingModeInputs(COMBINATION_SECURITY_LOCK);
     inputHub::neutralGear::set(NEUTRAL, {LSHIFT, RSHIFT});
+    inputHub::routed::inputs({ROUTED1, ROUTED2});
     internals::inputHub::getReady();
     OnStart();
 
@@ -897,6 +982,9 @@ int main()
 
     std::cout << ("- simulate neutral gear input -") << std::endl;
     TG_neutralGear();
+
+    std::cout << ("- simulate routed input -") << std::endl;
+    TG_routedInput();
 
     return 0;
 }

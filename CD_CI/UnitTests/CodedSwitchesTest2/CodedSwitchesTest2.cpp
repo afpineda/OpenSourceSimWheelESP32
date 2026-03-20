@@ -69,6 +69,8 @@ void internals::inputMap::map(
     // do nothing
 }
 
+void internals::ui::routeInput(uint8_t inputNumber) {}
+
 //------------------------------------------------------------------
 //------------------------------------------------------------------
 // Entry point

@@ -24,7 +24,7 @@
 // Event queue
 //-------------------------------------------------------------------
 
-#define EVENT_QUEUE_SIZE 32
+#define EVENT_QUEUE_SIZE 24
 
 struct EventQueue
 {
@@ -34,7 +34,7 @@ struct EventQueue
         ui = instance;
     }
 
-    void enqueue(uint8_t eventID)
+    void enqueue(uint8_t eventID, uint8_t data = 0)
     {
         uint8_t queueTailNext = queueTail;
         incQueuePointer(queueTailNext);
@@ -42,18 +42,20 @@ struct EventQueue
             // Queue is full
             queueTailNext = queueTail;
         eventBuffer[queueTailNext] = eventID;
+        dataBuffer[queueTailNext] = data;
         queueTail = queueTailNext;
         // assert(reader != nullptr);
         xTaskNotifyGive(reader);
     }
 
-    bool dequeue(uint8_t &eventID)
+    bool dequeue(uint8_t &eventID, uint8_t &data)
     {
         bool isNotEmpty = (queueHead != queueTail);
         if (isNotEmpty)
         {
             incQueuePointer(queueHead);
             eventID = eventBuffer[queueHead];
+            data = dataBuffer[queueHead];
         }
         return isNotEmpty;
     }
@@ -63,6 +65,7 @@ struct EventQueue
 
 private:
     uint8_t eventBuffer[EVENT_QUEUE_SIZE];
+    uint8_t dataBuffer[EVENT_QUEUE_SIZE];
     uint8_t queueHead = 0;
     uint8_t queueTail = 0;
     inline void incQueuePointer(uint8_t &pointer)
@@ -90,6 +93,7 @@ static std::latch *_shutdownLatch{nullptr};
 #define EVENT_BLE_DISCOVERING 3
 #define EVENT_LOW_BATTERY 4
 #define EVENT_SAVE_SETTINGS 5
+#define EVENT_ROUTED_INPUT 6
 #define EVENT_SHUTDOWN 255
 
 //-------------------------------------------------------------------
@@ -98,7 +102,6 @@ static std::latch *_shutdownLatch{nullptr};
 
 void notificationDaemonLoop(void *param)
 {
-
     EventQueue *eventQueue = (EventQueue *)param;
     assert(eventQueue != nullptr);
 
@@ -109,6 +112,7 @@ void notificationDaemonLoop(void *param)
     vTaskDelay(pdMS_TO_TICKS(200));
 
     uint8_t eventID;
+    uint8_t eventData;
     uint32_t lastFrameID = 0;
     bool telemetryReceived = false;
     TickType_t previousTelemetryTimestamp = 0;
@@ -117,9 +121,9 @@ void notificationDaemonLoop(void *param)
     TickType_t frameServerPeriod = portMAX_DELAY;
     if (eventQueue->ui->getMaxFPS() > 0)
         frameServerPeriod = pdMS_TO_TICKS(1000 / eventQueue->ui->getMaxFPS());
-    bool telemetryRequired = eventQueue->ui->requiresECUTelemetry |
-                             eventQueue->ui->requiresPowertrainTelemetry |
-                             eventQueue->ui->requiresGaugeTelemetry |
+    bool telemetryRequired = eventQueue->ui->requiresECUTelemetry ||
+                             eventQueue->ui->requiresPowertrainTelemetry ||
+                             eventQueue->ui->requiresGaugeTelemetry ||
                              eventQueue->ui->requiresRaceControlTelemetry;
 
     eventQueue->ui->onStart();
@@ -130,12 +134,12 @@ void notificationDaemonLoop(void *param)
         if (ulTaskNotifyTake(pdTRUE, frameServerPeriod))
         {
             // One or more events should be available
-            while (eventQueue->dequeue(eventID))
+
+            while (eventQueue->dequeue(eventID, eventData))
                 switch (eventID)
                 {
                 case EVENT_BITE_POINT:
-                    eventQueue->ui->onBitePoint(
-                        InputHubService::call::getBitePoint());
+                    eventQueue->ui->onBitePoint(eventData);
                     break;
                 case EVENT_BLE_DISCOVERING:
                     eventQueue->ui->onBLEdiscovering();
@@ -148,6 +152,9 @@ void notificationDaemonLoop(void *param)
                     break;
                 case EVENT_SAVE_SETTINGS:
                     eventQueue->ui->onSaveSettings();
+                    break;
+                case EVENT_ROUTED_INPUT:
+                    eventQueue->ui->onUserInput(eventData);
                     break;
                 case EVENT_SHUTDOWN:
                     eventQueue->ui->shutdown();
@@ -194,7 +201,7 @@ void notificationDaemonLoop(void *param)
 void notify_bitePoint(uint8_t bp)
 {
     for (auto q : _ui_queues)
-        q->enqueue(EVENT_BITE_POINT);
+        q->enqueue(EVENT_BITE_POINT, bp);
 }
 
 void notify_connected()
@@ -231,6 +238,12 @@ void notify_shutdown()
         // all UI threads
         _shutdownLatch->wait();
     }
+}
+
+void internals::ui::routeInput(uint8_t inputNumber)
+{
+    for (auto q : _ui_queues)
+        q->enqueue(EVENT_ROUTED_INPUT, inputNumber);
 }
 
 //-------------------------------------------------------------------

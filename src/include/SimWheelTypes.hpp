@@ -1450,6 +1450,13 @@ public:
     virtual void onSaveSettings() {};
 
     /**
+     * @brief Notify user input
+     *
+     * @param inputNumber Input number that was pressed
+     */
+    virtual void onUserInput(uint8_t inputNumber) {};
+
+    /**
      * @brief Cut power to the UI hardware.
      *
      * @note This is a command, not a notification.

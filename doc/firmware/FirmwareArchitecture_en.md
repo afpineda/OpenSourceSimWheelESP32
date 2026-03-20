@@ -217,6 +217,7 @@ classDiagram
     class hid {
       +reportInput()
     }
+    class ui
     class telemetry
     class pixels
     <<subsystem>> inputs
@@ -225,9 +226,11 @@ classDiagram
     <<subsystem>> telemetry
     <<subsystem>> pixels
     <<subsystem>> inputMap
+    <<subsystem>> ui
     <<abstract>> AnalogInput
     <<abstract>> DigitalInput
     inputHub <-- inputs: input events
+    ui <-- inputHub: routed input events
     inputs <-- DigitalInput: state of switches
     inputs <-- AnalogInput: axis position
     inputMap <-- inputHub : map input numbers (command)
@@ -236,7 +239,7 @@ classDiagram
     telemetry <-- hid: raw telemetry data
 ```
 
-[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNqFU01v4jAQ_SvWnLpaikBASayo0mp7aA-97LHKZUiGYCm2I38sUMR_X-ej1DRU60syb94bv5lJTlDokoBDUaO1TwIrgzJXLJwOYUI13tkY-aWw1tVLi8fwk6iEw3qEdwVesRlhz37DTj3K2E-t_uC-E9_96MFzrNiJMiIbarRx37Md1STJmWMMNuJA9dBJllm_sUfrSD4-XvV4IxOM3soFS7fgL3dfJ__j4TKmLMONdQYLF1KjgV9lx3O_TDe7vx964_2T0V9SH532mY4U1-DMOnTE9JbZvXDFjsb8yBFneBBhuNoKJ7SKqKGZTwetHc5kgHojyssNGcvuCi0lqnLYYrvmWMNZY3RB1lJ55b2fY0cNEt7HrESHLBRjQ9GBfNnIJ9_gPoJbHUygMqIE7oynCUgyEtsQuq8uB7cL5Bx4eC1pi752OeTqHGQNqjet5YfSaF_tgG-xtiHyTShOw391oZAqyfzWXjngq64C8BMcgC_m6-l6sUwWs1m6SJbzZALHgC6naTjJPH1IV-lqeZ7Ae3fjbJqsV-d_Rpk-Qg)
+[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNqFU8tu2zAQ_BWCpwR1DEl-qCaMAEVToD3k0t4KXdbS2iYgkQIftV3D_97Vww4VuYguFGdnlrNc7pnnukAueF6CtS8SdgaqTDH6WoRJVXtnQ-SLglLvfjR4CL_InXRQjvA2wSvUI-y737BzhzL2SaufcGjFD48deAkVe1kEZIO1Nu7_bC_DncMSK3TmFIK1PGLZ17VeW7-xJ-uwen4eVHwnQrbvxcjgPfjd2cPgBx5ulzaMXYtbr2FjnYHcEThqyiA67s2tA-unp75i0a0M_6C61u_lG4HYghntHRZ3mF2Olh2eJph14JDpLbMH6fI9jvmBd8HgKKk52kontQqodBkDK0ywiqDOiPLVBo1lD7muKlBF_yaaRzO0Xxudo7VUQei960NLJYno9qwAB4ySsT5pT7519I1v4BDAjY5PeIWmAlnQaLXvNuNuT4SMC_otcAu-dBnP1IWo4J3-dVI5F854nHBfUw7sh3EIfiuk0-aKUTd2ey62UFra1aB-a30TYEt97ce7WUiAqkDzVXvluJjHcSvi4syPXCTL6TxZJKtosUiXcRLFywk_cTFbTFdRGqereJbO0s_x6jLhf9tjommaEJKSaB4tV_OEBDvTlNwYuPwDL6JvAQ)
 
 ### Hardware inputs
 

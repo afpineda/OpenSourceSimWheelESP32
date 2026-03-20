@@ -171,6 +171,13 @@ namespace internals
          * @brief Prepare to run
          */
         void getReady();
+
+        /**
+         * @brief Route an input event to all UI instances
+         *
+         * @param inputNumber Input number
+         */
+        void routeInput(uint8_t inputNumber);
     } // namespace ui
 
     namespace inputs

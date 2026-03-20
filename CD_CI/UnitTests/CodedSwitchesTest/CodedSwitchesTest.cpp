@@ -56,7 +56,7 @@ void internals::hid::reportInput(
     currentLow = inputs.low;
 }
 
-//------------------------------------------------------------------
+void internals::ui::routeInput(uint8_t inputNumber) {}
 
 void internals::inputMap::map(
     bool isAltModeEngaged,

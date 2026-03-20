@@ -439,6 +439,29 @@ namespace inputHub
             const CodedSwitch32 &spec);
     } // namespace codedSwitch
 
+    /**
+     * @brief Support for routing of input events to the firmware itself
+     *
+     * @warning Routed input numbers can not be assigned to other functions
+     */
+    namespace routed
+    {
+        /**
+         * @brief Declare inputs that will be routed to the UI
+         *        frameservers
+         *
+         * @note Routed input events will never be
+         *       reported to the host computer
+         * @note Routing happens on input release
+         *
+         * @param routedInputs List of routed input numbers.
+         *                     Any of them will be routed to
+         *                     the UI frameservers
+         *
+         */
+        void inputs(InputNumberCombination routedInputs);
+    } // namespace routed
+
 } // namespace inputHub
 
 //-------------------------------------------------------------------

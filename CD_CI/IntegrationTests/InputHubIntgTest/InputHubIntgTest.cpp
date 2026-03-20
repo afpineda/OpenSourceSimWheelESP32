@@ -21,6 +21,8 @@
 #include <cassert>
 #include <iostream>
 
+using namespace std;
+
 //-------------------------------------------------------------------
 // Globals
 //-------------------------------------------------------------------
@@ -33,6 +35,7 @@
 #define BITE_POINT_DOWN 5
 #define ALT 6
 #define CYCLE 7
+#define ROUTED 8
 #define BUTTON1 30
 
 #define BMP(n) (1ULL << n)
@@ -40,21 +43,6 @@
 
 //-------------------------------------------------------------------
 // Mocks
-//-------------------------------------------------------------------
-
-// Force battery auto-calibration with a button combination
-// was removed
-
-// class BattCalMock : public BatteryCalibrationService
-// {
-// public:
-//     bool autocalibrationWitness = false;
-//     virtual void restartAutoCalibration() override
-//     {
-//         autocalibrationWitness = true;
-//     }
-// } battCalMock;
-
 //-------------------------------------------------------------------
 
 class InputMock : public InputService
@@ -74,6 +62,15 @@ uint8_t bitePointWitness = 0;
 void bitePointCallback(uint8_t value)
 {
     bitePointWitness = value;
+}
+
+//-------------------------------------------------------------------
+
+uint8_t last_routed = 0xFF;
+
+void internals::ui::routeInput(uint8_t inputNumber)
+{
+    last_routed = inputNumber;
 }
 
 //-------------------------------------------------------------------
@@ -149,6 +146,8 @@ void internals::hid::begin(
  */
 void TG_axis_recalibration()
 {
+    cout << "- Axis recalibration -" << endl;
+
     DecouplingEvent evt{};
     evt.rawInputBitmap.low = BMP(RECALIBRATE1);
     internals::inputHub::onRawInput(evt);
@@ -181,11 +180,13 @@ void TG_axis_recalibration()
 }
 
 /**
- * @brief Test the bite point event is triggered
+ * @brief Test that the bite point event is triggered
  *
  */
 void TG_bite_point()
 {
+    cout << "- Bite point calibration -" << endl;
+
     DecouplingEvent evt{};
     bitePointWitness = 0;
     InputHubService::call::setBitePoint(CLUTCH_DEFAULT_VALUE);
@@ -215,6 +216,8 @@ void TG_bite_point()
  */
 void TG_map()
 {
+    cout << "- Input mapping -" << endl;
+
     DecouplingEvent evt{};
     mapWitnessCount = 0;
     internals::inputHub::onRawInput(evt);
@@ -256,6 +259,8 @@ void TG_map()
  */
 void TG_hid()
 {
+    cout << "- HID input report -" << endl;
+
     reportWitness = 0;
     {
         DecouplingEvent evt{};
@@ -295,6 +300,26 @@ void TG_hid()
     }
 }
 
+/**
+ * @brief Check that ui is called
+ *
+ */
+void TG_ui()
+{
+    cout << "- UI event routing -" << endl;
+
+    last_routed = 0xFF;
+    DecouplingEvent evt{};
+    evt.rawInputBitmap.low = BMP(ROUTED);
+    DecouplingEvent empty{};
+    internals::inputHub::onRawInput(empty);
+    assert(last_routed = 0xFF);
+    internals::inputHub::onRawInput(evt);
+    assert(last_routed = 0xFF);
+    internals::inputHub::onRawInput(empty);
+    assert(last_routed = ROUTED);
+}
+
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
 // Entry point
@@ -321,6 +346,7 @@ int main()
     TG_bite_point();
     TG_map();
     TG_hid();
+    TG_ui();
 
     return 0;
 }
