@@ -350,13 +350,13 @@ public:
     virtual void reverseLeftAxis() override
     {
         _reverseLeftAxis = !_reverseLeftAxis;
-        SaveSetting::notify(UserSetting::AXIS_POLARITY);
+        SaveSetting(UserSetting::AXIS_POLARITY);
     }
 
     virtual void reverseRightAxis() override
     {
         _reverseRightAxis = !_reverseRightAxis;
-        SaveSetting::notify(UserSetting::AXIS_POLARITY);
+        SaveSetting(UserSetting::AXIS_POLARITY);
     }
 
     virtual void setRotaryPulseWidthMultiplier(
@@ -365,7 +365,7 @@ public:
     {
         RotaryEncoderInput::setPulseMultiplier((uint8_t)multiplier);
         if (save)
-            SaveSetting::notify(UserSetting::PULSE_WIDTH);
+            SaveSetting(UserSetting::PULSE_WIDTH);
     }
 
     virtual PulseWidthMultiplier getRotaryPulseWidthMultiplier() override
@@ -400,7 +400,7 @@ public:
             leftAxis->setCalibrationData(minLeft, maxLeft);
             rightAxis->setCalibrationData(minRight, maxRight);
             if (save)
-                SaveSetting::notify(UserSetting::AXIS_CALIBRATION);
+                SaveSetting(UserSetting::AXIS_CALIBRATION);
         }
     }
 
@@ -420,7 +420,7 @@ public:
         _reverseLeftAxis = leftAxisReversed;
         _reverseRightAxis = rightAxisReversed;
         if (save)
-            SaveSetting::notify(UserSetting::AXIS_POLARITY);
+            SaveSetting(UserSetting::AXIS_POLARITY);
     }
 
     virtual void update()
@@ -476,7 +476,7 @@ void inputPollingLoop(void *param)
                     CLUTCH_FULL_VALUE - currentState.rightAxisValue;
 
             if (leftAxisAutocalibrated || rightAxisAutocalibrated)
-                SaveSetting::notify(UserSetting::AXIS_CALIBRATION);
+                SaveSetting(UserSetting::AXIS_CALIBRATION);
 
             stateChanged =
                 stateChanged ||
@@ -542,11 +542,11 @@ void inputStart()
     if (!FirmwareService::call::isRunning())
     {
         if (DeviceCapabilities::hasFlag(DeviceCapability::ROTARY_ENCODERS))
-            LoadSetting::notify(UserSetting::PULSE_WIDTH);
+            LoadSetting(UserSetting::PULSE_WIDTH);
         if (leftAxis)
         {
-            LoadSetting::notify(UserSetting::AXIS_CALIBRATION);
-            LoadSetting::notify(UserSetting::AXIS_POLARITY);
+            LoadSetting(UserSetting::AXIS_CALIBRATION);
+            LoadSetting(UserSetting::AXIS_POLARITY);
         }
 
 #if !CD_CI
@@ -590,5 +590,5 @@ void inputStart()
 void internals::inputs::getReady()
 {
     InputService::inject<InputServiceProvider>(new InputServiceProvider());
-    OnStart::subscribe(inputStart);
+    OnStart.subscribe(inputStart);
 }

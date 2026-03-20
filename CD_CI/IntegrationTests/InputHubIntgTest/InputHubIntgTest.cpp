@@ -306,14 +306,14 @@ int main()
     InputService::inject(&inputMock);
     InputNumber::bookAll();
     DeviceCapabilities::setFlag(DeviceCapability::CLUTCH_ANALOG);
-    OnBitePoint::subscribe(bitePointCallback);
+    OnBitePoint.subscribe(bitePointCallback);
     inputHub::clutch::inputs(L_CLUTCH, R_CLUTCH);
     inputHub::clutch::cmdRecalibrateAxisInputs({RECALIBRATE1, RECALIBRATE2});
     inputHub::clutch::bitePointInputs(BITE_POINT_UP, BITE_POINT_DOWN);
     inputHub::clutch::cycleWorkingModeInputs({CYCLE});
     inputHub::altButtons::inputs({ALT});
     internals::inputHub::getReady();
-    OnStart::notify();
+    OnStart();
 
     assert<bool>::equals("Initial state", false, inputMock.recalibrateWitness);
 

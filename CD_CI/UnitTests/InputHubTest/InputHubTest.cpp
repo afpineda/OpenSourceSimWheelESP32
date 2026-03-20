@@ -831,7 +831,7 @@ int main()
     inputHub::securityLock::cycleWorkingModeInputs(COMBINATION_SECURITY_LOCK);
     inputHub::neutralGear::set(NEUTRAL, {LSHIFT, RSHIFT});
     internals::inputHub::getReady();
-    OnStart::notify();
+    OnStart();
 
     assert<uint64_t>::equals("state at start", 0ULL, currentState);
 

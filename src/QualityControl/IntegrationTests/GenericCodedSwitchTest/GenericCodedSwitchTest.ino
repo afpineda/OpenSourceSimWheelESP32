@@ -118,7 +118,7 @@ void setup()
         internals::inputHub::getReady();
         internals::hid::common::getReady();
         internals::inputMap::getReady();
-        OnStart::notify();
+        OnStart();
 
         Serial.println("-- GO --");
         for (uint8_t position = 0; position < 8; position++)

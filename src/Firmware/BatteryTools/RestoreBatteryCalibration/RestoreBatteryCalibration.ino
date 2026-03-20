@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 
 // [EN] Uncomment and paste your backup data after "="
-// [ES] Descomente y pegue sus datos de respaldo despues de "="
+// [ES] Descomente y pegue sus datos de respaldo después de "="
 
 // const uint16_t customCalibrationData[] =
 
@@ -34,7 +34,7 @@ void restoreCalibrationData()
             i,
             customCalibrationData[i],
             false);
-    SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+    SaveSetting(UserSetting::BATTERY_CALIBRATION_DATA);
 }
 
 // ----------------------------------------------------------------------------
@@ -46,7 +46,7 @@ void setup()
     Serial.begin(115200);
     internals::storage::getReady();
     internals::batteryCalibration::getReady();
-    OnStart::notify();
+    OnStart();
 
     // Check data array
     int len = sizeof(customCalibrationData) / sizeof(uint16_t);

@@ -43,7 +43,7 @@ class PowerServiceMock : public PowerService
 public:
     virtual void shutdown() override
     {
-        OnShutdown::notify();
+        OnShutdown();
     }
 };
 
@@ -174,15 +174,15 @@ void test3()
 int main()
 {
     PowerService::inject(new PowerServiceMock);
-    OnBatteryStatus::subscribe(get_current_battery_level);
-    OnLowBattery::subscribe(on_low_battery);
-    OnShutdown::subscribe(on_shutdown);
+    OnBatteryStatus.subscribe(get_current_battery_level);
+    OnLowBattery.subscribe(on_low_battery);
+    OnShutdown.subscribe(on_shutdown);
     internals::batteryMonitor::configureFakeMonitor(&currentStatus);
     batteryMonitor::setPeriod(1);
     batteryMonitor::setWarningSoC(10);
     batteryMonitor::setPowerOffSoC(4);
     internals::batteryMonitor::getReady();
-    OnStart::notify();
+    OnStart();
 
     test1();
     test2();

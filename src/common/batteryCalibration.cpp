@@ -69,7 +69,7 @@ class BatteryCalibrationProvider : public BatteryCalibrationService
     virtual void restartAutoCalibration() override
     {
         maxBatteryReadingEver = -1;
-        SaveSetting::notify(UserSetting::BATTERY_AUTO_CALIBRATION);
+        SaveSetting(UserSetting::BATTERY_AUTO_CALIBRATION);
     }
 
     virtual int getBatteryLevel(int reading) override
@@ -130,7 +130,7 @@ class BatteryCalibrationProvider : public BatteryCalibrationService
         else if (reading > maxBatteryReadingEver)
         {
             maxBatteryReadingEver = reading;
-            SaveSetting::notify(UserSetting::BATTERY_AUTO_CALIBRATION);
+            SaveSetting(UserSetting::BATTERY_AUTO_CALIBRATION);
         }
 
         if (maxBatteryReadingEver >= 0)
@@ -170,7 +170,7 @@ class BatteryCalibrationProvider : public BatteryCalibrationService
             totalBatterySamplesCount += data;
             batteryCalibrationQuantum[index] = data;
             if (save)
-                SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+                SaveSetting(UserSetting::BATTERY_CALIBRATION_DATA);
         }
     }
 
@@ -185,7 +185,7 @@ class BatteryCalibrationProvider : public BatteryCalibrationService
         {
             maxBatteryReadingEver = value;
             if (save)
-                SaveSetting::notify(UserSetting::BATTERY_AUTO_CALIBRATION);
+                SaveSetting(UserSetting::BATTERY_AUTO_CALIBRATION);
         }
     }
 };
@@ -198,7 +198,7 @@ class BatteryCalibrationProvider : public BatteryCalibrationService
 
 // void internals::batteryCalibration::save()
 // {
-//     SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+//     SaveSetting(UserSetting::BATTERY_CALIBRATION_DATA);
 // }
 
 //-------------------------------------------------------------------
@@ -233,8 +233,8 @@ void internals::batteryCalibration::addSample(int reading)
 void batteryCalibrationStart()
 {
     internals::batteryCalibration::clear();
-    LoadSetting::notify(UserSetting::BATTERY_AUTO_CALIBRATION);
-    LoadSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+    LoadSetting(UserSetting::BATTERY_AUTO_CALIBRATION);
+    LoadSetting(UserSetting::BATTERY_CALIBRATION_DATA);
     if (totalBatterySamplesCount > 0)
         DeviceCapabilities::setFlag(DeviceCapability::BATTERY_CALIBRATION_AVAILABLE);
 }
@@ -244,6 +244,6 @@ void internals::batteryCalibration::getReady()
     if (!FirmwareService::call::isRunning())
     {
         BatteryCalibrationService::inject(new BatteryCalibrationProvider());
-        OnStart::subscribe(batteryCalibrationStart);
+        OnStart.subscribe(batteryCalibrationStart);
     }
 }

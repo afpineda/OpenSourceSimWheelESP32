@@ -106,7 +106,7 @@ public:
         _customVID = customVID;
         _customPID = customPID;
         if (save)
-            SaveSetting::notify(UserSetting::CUSTOM_HARDWARE_ID);
+            SaveSetting(UserSetting::CUSTOM_HARDWARE_ID);
     }
 
 private:
@@ -138,7 +138,7 @@ void commonHidStart()
         else
         {
             // Load the custom hardware ID
-            LoadSetting::notify(UserSetting::CUSTOM_HARDWARE_ID);
+            LoadSetting(UserSetting::CUSTOM_HARDWARE_ID);
             HidService::call::getCustomHardwareID(customVID, customPID);
             if ((customVID == 0) && (customPID == 0))
             {
@@ -164,8 +164,8 @@ void commonHidStart()
 
 void internals::hid::common::getReady()
 {
-    OnStart::subscribe(commonHidStart);
-    OnBatteryStatus::subscribe(internals::hid::reportBatteryLevel);
+    OnStart.subscribe(commonHidStart);
+    OnBatteryStatus.subscribe(internals::hid::reportBatteryLevel);
     HidService::inject(new HidServiceProvider());
 }
 
@@ -307,7 +307,7 @@ void internals::hid::common::onSetFeature(
         if ((len > 3) && (buffer[3] == (uint8_t)SimpleCommand::CMD_SAVE_NOW))
         {
             // save settings now
-            SaveSetting::notify(UserSetting::ALL);
+            SaveSetting(UserSetting::ALL);
         }
         if ((len > 3) &&
             (buffer[3] == (uint8_t)SimpleCommand::CMD_REVERSE_LEFT_AXIS))

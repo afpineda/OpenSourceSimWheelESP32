@@ -131,7 +131,7 @@ void setup()
     ui::add(&test1);
     ui::add(&test2);
     internals::ui::getReady();
-    OnStart::notify();
+    OnStart();
 
     Serial.println("--GO--");
 
@@ -143,7 +143,7 @@ void setup()
     test2.reset();
 
     Serial.println("Check 2");
-    OnLowBattery::notify();
+    OnLowBattery();
     test1.checkEvent(LOW_BATT_MASK);
     test2.checkEvent(LOW_BATT_MASK);
     test2.checkTelemetryCount(0);
@@ -151,7 +151,7 @@ void setup()
     test2.reset();
 
     Serial.println("Check 3");
-    OnBitePoint::notify(100);
+    OnBitePoint(100);
     test1.checkEvent(BITE_POINT_MASK);
     test2.checkEvent(BITE_POINT_MASK);
     test1.reset();
@@ -169,23 +169,23 @@ void setup()
     test2.reset();
 
     Serial.println("Check 4");
-    OnConnected::notify();
-    OnDisconnected::notify();
-    OnSettingsSaved::notify();
+    OnConnected();
+    OnDisconnected();
+    OnSettingsSaved();
     test1.checkEvent(CONNECTED_MASK | DISCOVERING_MASK | SAVED_MASK);
     test2.checkEvent(CONNECTED_MASK | DISCOVERING_MASK | SAVED_MASK);
     test1.reset();
     test2.reset();
 
     Serial.println("Check 5");
-    OnShutdown::notify();
+    OnShutdown();
     test1.checkEvent(SHUTDOWN_MASK);
     test2.checkEvent(SHUTDOWN_MASK);
     test1.reset();
     test2.reset();
 
     Serial.println("Check 6");
-    OnLowBattery::notify(); // should do nothing
+    OnLowBattery(); // should do nothing
     test1.checkNoEvent();
     test1.checkNoEvent();
     Serial.println("--DONE--");

@@ -143,7 +143,7 @@ void inputMapStart()
 
     // Reset and load from flash memory
     InputMapService::call::resetMap();
-    LoadSetting::notify(UserSetting::INPUT_MAP);
+    LoadSetting(UserSetting::INPUT_MAP);
 }
 
 //-------------------------------------------------------------------
@@ -163,7 +163,7 @@ void internals::inputMap::clear()
 void internals::inputMap::getReady()
 {
     InputMapService::inject(new InputMapServiceProvider());
-    OnStart::subscribe(inputMapStart);
+    OnStart.subscribe(inputMapStart);
 }
 
 //-------------------------------------------------------------------

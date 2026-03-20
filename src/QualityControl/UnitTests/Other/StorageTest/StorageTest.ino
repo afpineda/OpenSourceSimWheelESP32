@@ -119,20 +119,20 @@ void TG_save()
 {
     setTestCaseForDelayedSettings();
     setTestCaseForNonDelayedSettings();
-    SaveSetting::notify(UserSetting::ALL);
+    SaveSetting(UserSetting::ALL);
 }
 
 void TG_saveDelayed()
 {
     setTestCaseForDelayedSettings();
-    SaveSetting::notify(UserSetting::AXIS_CALIBRATION);
-    SaveSetting::notify(UserSetting::AXIS_POLARITY);
-    SaveSetting::notify(UserSetting::PULSE_WIDTH);
-    SaveSetting::notify(UserSetting::ALT_WORKING_MODE);
-    SaveSetting::notify(UserSetting::BITE_POINT);
-    SaveSetting::notify(UserSetting::CLUTCH_WORKING_MODE);
-    SaveSetting::notify(UserSetting::DPAD_WORKING_MODE);
-    SaveSetting::notify(UserSetting::SECURITY_LOCK);
+    SaveSetting(UserSetting::AXIS_CALIBRATION);
+    SaveSetting(UserSetting::AXIS_POLARITY);
+    SaveSetting(UserSetting::PULSE_WIDTH);
+    SaveSetting(UserSetting::ALT_WORKING_MODE);
+    SaveSetting(UserSetting::BITE_POINT);
+    SaveSetting(UserSetting::CLUTCH_WORKING_MODE);
+    SaveSetting(UserSetting::DPAD_WORKING_MODE);
+    SaveSetting(UserSetting::SECURITY_LOCK);
     Serial.println("Save settings requested (there is a 20 seconds delay). Wait.");
 }
 
@@ -152,9 +152,9 @@ void setup()
         InputMapService::inject(new FakeInputMapService());
 
         internals::storage::getReady();
-        OnSettingsSaved::subscribe(saved);
-        OnStart::notify();
-        LoadSetting::notify(UserSetting::ALL);
+        OnSettingsSaved.subscribe(saved);
+        OnStart();
+        LoadSetting(UserSetting::ALL);
 
         Serial.println("All settings should be loaded.");
         Serial.println("-- Select test case --");

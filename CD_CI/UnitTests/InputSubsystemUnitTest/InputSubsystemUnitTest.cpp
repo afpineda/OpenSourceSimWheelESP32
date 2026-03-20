@@ -222,7 +222,7 @@ int main()
     internals::inputs::addFakeInput(primary);
     internals::inputs::addFakeInput(secondary);
     internals::inputs::getReady();
-    OnStart::notify();
+    OnStart();
     waitFor();
 
     test1();

@@ -86,7 +86,7 @@ int main()
     assert(!FirmwareService::call::isRunning());
 
     // Start subsystems
-    OnStart::subscribe(onStart);
+    OnStart.subscribe(onStart);
     firmware::run(customFirmware);
 
     // Check that all subsystems were initialized and started

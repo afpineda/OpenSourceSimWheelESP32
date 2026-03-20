@@ -325,12 +325,12 @@ void internals::ui::getReady()
         requiresGaugeTelemetry);
 
     // Subscribe to internal events
-    OnBitePoint::subscribe(notify_bitePoint);
-    OnConnected::subscribe(notify_connected);
-    OnDisconnected::subscribe(notify_BLEdiscovering);
-    OnLowBattery::subscribe(notify_lowBattery);
-    OnSettingsSaved::subscribe(notify_saved);
-    OnShutdown::subscribe(notify_shutdown);
+    OnBitePoint.subscribe(notify_bitePoint);
+    OnConnected.subscribe(notify_connected);
+    OnDisconnected.subscribe(notify_BLEdiscovering);
+    OnLowBattery.subscribe(notify_lowBattery);
+    OnSettingsSaved.subscribe(notify_saved);
+    OnShutdown.subscribe(notify_shutdown);
 
     // Inject the service class
     UIService::inject(new UIServiceProvider(max_fps));

@@ -398,7 +398,7 @@ void setup()
         internals::inputHub::getReady();
         internals::hid::common::getReady();
         internals::inputMap::getReady();
-        OnStart::notify();
+        OnStart();
 
         Serial.println("-- GO --");
 

@@ -145,7 +145,7 @@ NimBLECharacteristic *NimBLEHIDDeviceFix::getInputReport(uint8_t reportId)
 void startBLEAdvertising()
 {
     NimBLEDevice::startAdvertising();
-    OnDisconnected::notify();
+    OnDisconnected();
     if (autoPowerOffTimer != nullptr)
         esp_timer_start_once(
             autoPowerOffTimer,
@@ -180,7 +180,7 @@ public:
         // it will overwrite the stored subscription value
         // in the NimBLE stack configuration with an invalid value which
         // results in notifications/indications not being sent.
-        OnConnected::notify();
+        OnConnected();
     }
 
     // Fix Windows notifications not being sent on reconnection
@@ -203,7 +203,7 @@ public:
     //     // it will overwrite the stored subscription value
     //     // in the NimBLE stack configuration with an invalid value which
     //     // results in notifications/indications not being sent.
-    //     OnConnected::notify();
+    //     OnConnected();
     // }
 
     void onDisconnect(

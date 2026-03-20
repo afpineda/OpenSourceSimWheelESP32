@@ -460,7 +460,7 @@ void onStart()
 {
     ble_connected = false;
     usb_connected = false;
-    OnDisconnected::notify();
+    OnDisconnected();
     // Delay advertising a bit to have time to detect USB connection
     // vTaskDelay(pdMS_TO_TICKS(800));
     startBleAdvertising();
@@ -477,7 +477,7 @@ void onBleConnectionStatus(bool connected)
         if (current_connectivity == Connectivity::DUMMY)
         {
             current_connectivity = Connectivity::BLE;
-            OnConnected::notify();
+            OnConnected();
         }
     }
     else
@@ -492,7 +492,7 @@ void onBleConnectionStatus(bool connected)
         else // if (!usb_connected)
         {
             current_connectivity = Connectivity::DUMMY;
-            OnDisconnected::notify();
+            OnDisconnected();
             startBleAdvertising();
             start_shutdown_timer();
         }
@@ -512,7 +512,7 @@ void onUsbConnectionStatus(bool connected)
         if (current_connectivity == Connectivity::DUMMY)
         {
             current_connectivity = Connectivity::USB;
-            OnConnected::notify();
+            OnConnected();
         }
         else if (usb_priority) // && (current_connectivity==Connectivity::BLE)
         {
@@ -528,7 +528,7 @@ void onUsbConnectionStatus(bool connected)
         else
         {
             current_connectivity = Connectivity::DUMMY;
-            OnDisconnected::notify();
+            OnDisconnected();
             startBleAdvertising();
             start_shutdown_timer();
         }

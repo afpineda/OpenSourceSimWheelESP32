@@ -412,7 +412,7 @@ void autoSaveCallback(void *param)
         pendingSettingsToBeSaved &= ~(1ULL << (uint8_t)UserSetting::BATTERY_AUTO_CALIBRATION);
         // Notify the save event
         if (_pendingSettingsToBeSaved)
-            OnSettingsSaved::notify();
+            OnSettingsSaved();
     }
 }
 
@@ -528,7 +528,7 @@ void internals::storage::getReady()
         args.dispatch_method = ESP_TIMER_TASK;
         ESP_ERROR_CHECK(esp_timer_create(&args, &_autoSaveTimer));
 #endif
-        LoadSetting::subscribe(load_setting);
-        SaveSetting::subscribe(request_save_setting);
+        LoadSetting.subscribe(load_setting);
+        SaveSetting.subscribe(request_save_setting);
     }
 }

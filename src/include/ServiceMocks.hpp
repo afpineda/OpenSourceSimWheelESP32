@@ -50,7 +50,7 @@ public:
     {
         _multiplier = multiplier;
         if (save)
-            SaveSetting::notify(UserSetting::PULSE_WIDTH);
+            SaveSetting(UserSetting::PULSE_WIDTH);
     }
 
     virtual PulseWidthMultiplier getRotaryPulseWidthMultiplier() override
@@ -83,7 +83,7 @@ public:
         _minRight = minRight;
         _maxRight = maxRight;
         if (save)
-            SaveSetting::notify(UserSetting::AXIS_CALIBRATION);
+            SaveSetting(UserSetting::AXIS_CALIBRATION);
     }
 
     virtual void getAxisPolarity(
@@ -102,7 +102,7 @@ public:
         _leftAxisReversed = leftAxisReversed;
         _rightAxisReversed = rightAxisReversed;
         if (save)
-            SaveSetting::notify(UserSetting::AXIS_POLARITY);
+            SaveSetting(UserSetting::AXIS_POLARITY);
     }
 };
 
@@ -154,37 +154,37 @@ public:
     virtual void setBitePoint(uint8_t value, bool save) override
     {
         _bitePoint = value;
-        OnBitePoint::notify(value);
+        OnBitePoint(value);
         if (save)
-            SaveSetting::notify(UserSetting::BITE_POINT);
+            SaveSetting(UserSetting::BITE_POINT);
     }
 
     virtual void setClutchWorkingMode(ClutchWorkingMode mode, bool save) override
     {
         _clutchWorkingMode = mode;
         if (save)
-            SaveSetting::notify(UserSetting::CLUTCH_WORKING_MODE);
+            SaveSetting(UserSetting::CLUTCH_WORKING_MODE);
     }
 
     virtual void setAltButtonsWorkingMode(AltButtonsWorkingMode mode, bool save) override
     {
         _altButtonsWorkingMode = mode;
         if (save)
-            SaveSetting::notify(UserSetting::ALT_WORKING_MODE);
+            SaveSetting(UserSetting::ALT_WORKING_MODE);
     }
 
     virtual void setDPadWorkingMode(DPadWorkingMode mode, bool save) override
     {
         _dpadWorkingMode = mode;
         if (save)
-            SaveSetting::notify(UserSetting::DPAD_WORKING_MODE);
+            SaveSetting(UserSetting::DPAD_WORKING_MODE);
     }
 
     virtual void setSecurityLock(bool value, bool save) override
     {
         _securityLock = value;
         if (save)
-            SaveSetting::notify(UserSetting::SECURITY_LOCK);
+            SaveSetting(UserSetting::SECURITY_LOCK);
     }
 };
 
@@ -213,7 +213,7 @@ public:
         _customVID = customVID;
         _customPID = customPID;
         if (save)
-            SaveSetting::notify(UserSetting::CUSTOM_HARDWARE_ID);
+            SaveSetting(UserSetting::CUSTOM_HARDWARE_ID);
     }
 };
 
@@ -256,7 +256,7 @@ class FakeBatteryCalibration : public BatteryCalibrationService
         {
             _batteryCalibrationQuantum = data;
             if (save)
-                SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+                SaveSetting(UserSetting::BATTERY_CALIBRATION_DATA);
         }
     }
 
@@ -269,7 +269,7 @@ class FakeBatteryCalibration : public BatteryCalibrationService
     {
         _maxBatteryReadingEver = value;
         if (save)
-            SaveSetting::notify(UserSetting::BATTERY_AUTO_CALIBRATION);
+            SaveSetting(UserSetting::BATTERY_AUTO_CALIBRATION);
     }
 };
 

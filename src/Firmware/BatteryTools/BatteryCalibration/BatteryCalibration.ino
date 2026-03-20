@@ -89,7 +89,7 @@ void erasePreviousCalibrationData()
     uint8_t calCount = BatteryCalibrationService::call::getCalibrationDataCount();
     for (uint8_t i = 0; i < calCount; i++)
         BatteryCalibrationService::call::setCalibrationData(i, 0, false);
-    SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+    SaveSetting(UserSetting::BATTERY_CALIBRATION_DATA);
     DELAY_MS(200);
 
     Serial.println("===================================");
@@ -150,7 +150,7 @@ void setup()
         // Initialize required firmware subsystems
         internals::storage::getReady();
         internals::batteryCalibration::getReady();
-        OnStart::notify(); // Stored calibration data is loaded from flash memory here
+        OnStart(); // Stored calibration data is loaded from flash memory here
 
         // Look for previously stored calibration data
         Serial.print("Battery calibration data already stored: ");
@@ -176,7 +176,7 @@ void setup()
 
             hid::configure("Battery calibration", "Mamandurrio", false);
             internals::hid::common::getReady();
-            OnStart::notify();
+            OnStart();
             internals::batteryCalibration::clear();
 
             // Wait for BLE connection
@@ -210,7 +210,7 @@ void loop()
     if (isBatteryPresent())
     {
         internals::batteryCalibration::addSample(voltageDivider.lastBatteryReading);
-        SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+        SaveSetting(UserSetting::BATTERY_CALIBRATION_DATA);
         internals::hid::reset();
         reportBatteryLevel(fakeBatteryLevel);
         if (++fakeBatteryLevel > 100)

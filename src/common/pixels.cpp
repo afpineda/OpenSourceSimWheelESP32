@@ -124,7 +124,7 @@ void pixelsShutdown()
 
 void internals::pixels::getReady()
 {
-    OnShutdown::subscribe(pixelsShutdown);
+    OnShutdown.subscribe(pixelsShutdown);
 }
 
 //---------------------------------------------------------------

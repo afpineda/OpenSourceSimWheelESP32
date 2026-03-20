@@ -142,7 +142,7 @@ void setup()
   // Configure the power subsystem
   power::configureWakeUp(TEST_POWER_PIN);
   internals::power::getReady();
-  OnStart::notify();
+  OnStart();
 
   Serial.println("Please, wait...");
   delay(2000);

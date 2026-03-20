@@ -314,8 +314,8 @@ void setup()
     InputService::inject(&inputMock);
     BatteryCalibrationService::inject(&battCalMock);
     PowerService::inject(&powerMock);
-    OnConnected::subscribe(onConnectedCallback);
-    OnDisconnected::subscribe(onDisconnectedCallback);
+    OnConnected.subscribe(onConnectedCallback);
+    OnDisconnected.subscribe(onDisconnectedCallback);
 #if BLE_ONLY
     hid::connectivity(Connectivity::BLE);
 #elif USB_ONLY
@@ -330,7 +330,7 @@ void setup()
         TEST_HARDWARE_ID,
         TEST_HARDWARE_ID);
     internals::hid::common::getReady();
-    OnStart::notify();
+    OnStart();
 
     if (!internals::hid::supportsCustomHardwareID())
         debugPrintf("Actual VID / PID depends on DevKit (not BLE)\n");

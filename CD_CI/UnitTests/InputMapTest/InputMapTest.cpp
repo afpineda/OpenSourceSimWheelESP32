@@ -19,7 +19,7 @@ bool loaded = false;
 void reset()
 {
     InputMapService::reset();
-    OnStart::clearSubscriptions();
+    OnStart.clear();
     loaded = false;
     internals::inputMap::clear();
 }
@@ -43,7 +43,7 @@ void test1()
 
     reset();
     internals::inputMap::getReady();
-    OnStart::notify();
+    OnStart();
 
     assert((loaded) && "user map not loaded from storage");
     InputMapService::call::getMap(9, noAlt, alt);
@@ -69,7 +69,7 @@ void test2()
     inputMap::set(0, 1, 2);
     inputMap::set(64, 1, 2);
     internals::inputMap::getReady();
-    OnStart::notify();
+    OnStart();
 
     InputMapService::call::getMap(0, noAlt, alt);
     assert((noAlt == 1) && "custom firmware-defined map not respected (1)");
@@ -95,7 +95,7 @@ void test3()
 
     reset();
     internals::inputMap::getReady();
-    OnStart::notify();
+    OnStart();
 
     alt = noAlt = 0;
     InputMapService::call::setMap(200, 0, 1); // no exception should arise
@@ -136,7 +136,7 @@ void test4()
     inputMap::set(1, 64, 127);
     inputMap::set(2, 0, 1);
     internals::inputMap::getReady();
-    OnStart::notify();
+    OnStart();
 
     {
         uint128_t rawBitmap{};
@@ -252,7 +252,7 @@ void test5()
     inputMap::set(1, 32, 33);
     // start
     internals::inputMap::getReady();
-    OnStart::notify();
+    OnStart();
 
     // Override custom defaults
     InputMapService::call::setMap(1, 0, 0);
@@ -286,7 +286,7 @@ void test6()
     inputMap::setOptimal();
     inputMap::set(3, 20, 20);
     internals::inputMap::getReady();
-    OnStart::notify();
+    OnStart();
 
     // Test
     uint8_t alt, noAlt;
@@ -326,7 +326,7 @@ void test7()
     internals::inputMap::getReady();
     try
     {
-        OnStart::notify();
+        OnStart();
         assert(false && "Non-existing input number was successfully mapped");
     }
     catch (std::runtime_error)
@@ -336,7 +336,7 @@ void test7()
 
 int main()
 {
-    LoadSetting::subscribe(loadSettingsCallback);
+    LoadSetting.subscribe(loadSettingsCallback);
 
     InputNumber::bookAll();
 

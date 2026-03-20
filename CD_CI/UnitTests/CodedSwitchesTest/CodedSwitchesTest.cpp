@@ -198,7 +198,7 @@ int main()
     // Initialize the firmware code
     std::cout << ("- Initializing inputHub -") << std::endl;
     internals::inputHub::getReady();
-    OnStart::notify();
+    OnStart();
 
     // Check the booked input numbers
     std::cout << ("- Check input numbers -") << std::endl;

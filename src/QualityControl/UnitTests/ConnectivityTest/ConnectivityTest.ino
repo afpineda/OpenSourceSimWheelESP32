@@ -68,8 +68,8 @@ void setup()
     Serial.begin(115200);
     Serial.printf("--START--\n");
     InputNumber::bookAll();
-    OnConnected::subscribe(onConnectedCallback);
-    OnDisconnected::subscribe(onDisconnectedCallback);
+    OnConnected.subscribe(onConnectedCallback);
+    OnDisconnected.subscribe(onDisconnectedCallback);
 
     hid::connectivity(choose());
     Serial.printf("--GO--\n");
@@ -81,7 +81,7 @@ void setup()
         TEST_HARDWARE_ID,
         TEST_HARDWARE_ID);
     internals::hid::common::getReady();
-    OnStart::notify();
+    OnStart();
 }
 
 //------------------------------------------------------------------

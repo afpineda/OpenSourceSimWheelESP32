@@ -56,7 +56,7 @@ void firmware::run()
         internals::power::getReady();
         internals::pixels::getReady();
         internals::ui::getReady();
-        OnStart::notify();
+        OnStart();
         firmwareSetIsRunningState(true);
     }
 }

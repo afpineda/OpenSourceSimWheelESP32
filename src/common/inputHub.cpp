@@ -430,9 +430,9 @@ public:
         {
             bitePoint = value;
             InputService::call::update();
-            OnBitePoint::notify(value);
+            OnBitePoint(value);
             if (save)
-                SaveSetting::notify(UserSetting::BITE_POINT);
+                SaveSetting(UserSetting::BITE_POINT);
         }
     }
 
@@ -442,7 +442,7 @@ public:
         {
             clutchWorkingMode = mode;
             if (save)
-                SaveSetting::notify(UserSetting::CLUTCH_WORKING_MODE);
+                SaveSetting(UserSetting::CLUTCH_WORKING_MODE);
         }
     }
 
@@ -452,7 +452,7 @@ public:
         {
             altButtonsWorkingMode = mode;
             if (save)
-                SaveSetting::notify(UserSetting::ALT_WORKING_MODE);
+                SaveSetting(UserSetting::ALT_WORKING_MODE);
         }
     }
 
@@ -462,7 +462,7 @@ public:
         {
             dpadWorkingMode = mode;
             if (save)
-                SaveSetting::notify(UserSetting::DPAD_WORKING_MODE);
+                SaveSetting(UserSetting::DPAD_WORKING_MODE);
         }
     }
 
@@ -472,7 +472,7 @@ public:
         {
             securityLock = value;
             if (save)
-                SaveSetting::notify(UserSetting::SECURITY_LOCK);
+                SaveSetting(UserSetting::SECURITY_LOCK);
         }
     }
 
@@ -482,7 +482,7 @@ public:
         if (next > (uint8_t)ClutchWorkingMode::_MAX_VALUE)
             next = 0;
         clutchWorkingMode = (ClutchWorkingMode)next;
-        SaveSetting::notify(UserSetting::CLUTCH_WORKING_MODE);
+        SaveSetting(UserSetting::CLUTCH_WORKING_MODE);
     }
 
     static void cycleAltButtonsWorkingMode()
@@ -491,7 +491,7 @@ public:
         if (next > (uint8_t)AltButtonsWorkingMode::_MAX_VALUE)
             next = 0;
         altButtonsWorkingMode = (AltButtonsWorkingMode)next;
-        SaveSetting::notify(UserSetting::ALT_WORKING_MODE);
+        SaveSetting(UserSetting::ALT_WORKING_MODE);
     }
 
     static void cycleDPadWorkingMode()
@@ -500,13 +500,13 @@ public:
         if (next > (uint8_t)DPadWorkingMode::_MAX_VALUE)
             next = 0;
         dpadWorkingMode = (DPadWorkingMode)next;
-        SaveSetting::notify(UserSetting::DPAD_WORKING_MODE);
+        SaveSetting(UserSetting::DPAD_WORKING_MODE);
     }
 
     static void cycleSecurityLock()
     {
         securityLock = !securityLock;
-        SaveSetting::notify(UserSetting::SECURITY_LOCK);
+        SaveSetting(UserSetting::SECURITY_LOCK);
     }
 
     static void increaseBitePoint()
@@ -517,8 +517,8 @@ public:
         if (next > CLUTCH_FULL_VALUE)
             next = CLUTCH_FULL_VALUE;
         bitePoint = (uint8_t)next;
-        OnBitePoint::notify(bitePoint);
-        SaveSetting::notify(UserSetting::BITE_POINT);
+        OnBitePoint(bitePoint);
+        SaveSetting(UserSetting::BITE_POINT);
     }
 
     static void decreaseBitePoint()
@@ -529,8 +529,8 @@ public:
         if (prev < CLUTCH_NONE_VALUE)
             prev = CLUTCH_NONE_VALUE;
         bitePoint = (uint8_t)prev;
-        OnBitePoint::notify(bitePoint);
-        SaveSetting::notify(UserSetting::BITE_POINT);
+        OnBitePoint(bitePoint);
+        SaveSetting(UserSetting::BITE_POINT);
     }
 };
 
@@ -555,11 +555,11 @@ void abortOnUnknownIN(
 
 void inputHubStart()
 {
-    LoadSetting::notify(UserSetting::CLUTCH_WORKING_MODE);
-    LoadSetting::notify(UserSetting::BITE_POINT);
-    LoadSetting::notify(UserSetting::ALT_WORKING_MODE);
-    LoadSetting::notify(UserSetting::DPAD_WORKING_MODE);
-    LoadSetting::notify(UserSetting::SECURITY_LOCK);
+    LoadSetting(UserSetting::CLUTCH_WORKING_MODE);
+    LoadSetting(UserSetting::BITE_POINT);
+    LoadSetting(UserSetting::ALT_WORKING_MODE);
+    LoadSetting(UserSetting::DPAD_WORKING_MODE);
+    LoadSetting(UserSetting::SECURITY_LOCK);
 }
 
 void internals::inputHub::getReady()
@@ -637,7 +637,7 @@ void internals::inputHub::getReady()
 
     // Prepare to run
     InputHubService::inject(new InputHubServiceProvider());
-    OnStart::subscribe(inputHubStart);
+    OnStart.subscribe(inputHubStart);
 }
 
 //-------------------------------------------------------------------

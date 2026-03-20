@@ -222,20 +222,20 @@ public:
 void TG_Inputs()
 {
     // std::cout << "- Pulse width -" << std::endl;
-    SaveSetting::notify(UserSetting::PULSE_WIDTH);
+    SaveSetting(UserSetting::PULSE_WIDTH);
     assert((InputServiceMock::_pulseSaved) && "Pulse width not saved");
-    LoadSetting::notify(UserSetting::PULSE_WIDTH);
+    LoadSetting(UserSetting::PULSE_WIDTH);
     assert((InputServiceMock::_pulseLoaded) && "Pulse width not loaded");
 
     // std::cout << "- Axis calibration -" << std::endl;
-    SaveSetting::notify(UserSetting::AXIS_CALIBRATION);
+    SaveSetting(UserSetting::AXIS_CALIBRATION);
     assert((InputServiceMock::_axisCalSaved) && "Axis calibration not saved");
-    LoadSetting::notify(UserSetting::AXIS_CALIBRATION);
+    LoadSetting(UserSetting::AXIS_CALIBRATION);
     assert((InputServiceMock::_axisCalLoaded) && "Axis calibration not loaded");
 
-    SaveSetting::notify(UserSetting::AXIS_POLARITY);
+    SaveSetting(UserSetting::AXIS_POLARITY);
     assert((InputServiceMock::_polaritySaved) && "Axis polarity not saved");
-    LoadSetting::notify(UserSetting::AXIS_POLARITY);
+    LoadSetting(UserSetting::AXIS_POLARITY);
     assert((InputServiceMock::_polarityLoaded) && "Axis polarity not loaded");
 }
 
@@ -243,29 +243,29 @@ void TG_Inputs()
 
 void TG_InputHub()
 {
-    SaveSetting::notify(UserSetting::SECURITY_LOCK);
+    SaveSetting(UserSetting::SECURITY_LOCK);
     assert((InputHubMock::_secLockSaved) && "Sec lock not saved");
-    LoadSetting::notify(UserSetting::SECURITY_LOCK);
+    LoadSetting(UserSetting::SECURITY_LOCK);
     assert((InputHubMock::_secLockLoaded) && "Sec lock not loaded");
 
-    SaveSetting::notify(UserSetting::BITE_POINT);
+    SaveSetting(UserSetting::BITE_POINT);
     assert((InputHubMock::_bpSaved) && "Bite point not saved");
-    LoadSetting::notify(UserSetting::BITE_POINT);
+    LoadSetting(UserSetting::BITE_POINT);
     assert((InputHubMock::_bpLoaded) && "Bite point not loaded");
 
-    SaveSetting::notify(UserSetting::CLUTCH_WORKING_MODE);
+    SaveSetting(UserSetting::CLUTCH_WORKING_MODE);
     assert((InputHubMock::_clutchWMSaved) && "clutch wm not saved");
-    LoadSetting::notify(UserSetting::CLUTCH_WORKING_MODE);
+    LoadSetting(UserSetting::CLUTCH_WORKING_MODE);
     assert((InputHubMock::_clutchWMLoaded) && "clutch wm not loaded");
 
-    SaveSetting::notify(UserSetting::ALT_WORKING_MODE);
+    SaveSetting(UserSetting::ALT_WORKING_MODE);
     assert((InputHubMock::_altWMSaved) && "Alt wm not saved");
-    LoadSetting::notify(UserSetting::ALT_WORKING_MODE);
+    LoadSetting(UserSetting::ALT_WORKING_MODE);
     assert((InputHubMock::_altWMLoaded) && "Alt wm not loaded");
 
-    SaveSetting::notify(UserSetting::DPAD_WORKING_MODE);
+    SaveSetting(UserSetting::DPAD_WORKING_MODE);
     assert((InputHubMock::_dpadWMSaved) && "dpad wm not saved");
-    LoadSetting::notify(UserSetting::DPAD_WORKING_MODE);
+    LoadSetting(UserSetting::DPAD_WORKING_MODE);
     assert((InputHubMock::_dpadWMLoaded) && "dpad wm not loaded");
 }
 
@@ -273,9 +273,9 @@ void TG_InputHub()
 
 void TG_InputMap()
 {
-    SaveSetting::notify(UserSetting::INPUT_MAP);
+    SaveSetting(UserSetting::INPUT_MAP);
     assert((InputMapMock::_saved) && "Map not saved");
-    LoadSetting::notify(UserSetting::INPUT_MAP);
+    LoadSetting(UserSetting::INPUT_MAP);
     assert((InputMapMock::_loaded) && "Map not loaded");
 }
 
@@ -283,14 +283,14 @@ void TG_InputMap()
 
 void TG_BattCal()
 {
-    SaveSetting::notify(UserSetting::BATTERY_AUTO_CALIBRATION);
+    SaveSetting(UserSetting::BATTERY_AUTO_CALIBRATION);
     assert((BattCalMock::_autoParamSaved) && "Batt autocal not saved");
-    LoadSetting::notify(UserSetting::BATTERY_AUTO_CALIBRATION);
+    LoadSetting(UserSetting::BATTERY_AUTO_CALIBRATION);
     assert((BattCalMock::_autoParamLoaded) && "Batt autocal not loaded");
 
-    SaveSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+    SaveSetting(UserSetting::BATTERY_CALIBRATION_DATA);
     assert((BattCalMock::_calDataSaved) && "Batt data not saved");
-    LoadSetting::notify(UserSetting::BATTERY_CALIBRATION_DATA);
+    LoadSetting(UserSetting::BATTERY_CALIBRATION_DATA);
     assert((BattCalMock::_calDataLoaded) && "Batt data loaded");
 }
 
@@ -298,9 +298,9 @@ void TG_BattCal()
 
 void TG_Hid()
 {
-    SaveSetting::notify(UserSetting::CUSTOM_HARDWARE_ID);
+    SaveSetting(UserSetting::CUSTOM_HARDWARE_ID);
     assert((HidMock::_saved) && "Hardware id not saved");
-    LoadSetting::notify(UserSetting::CUSTOM_HARDWARE_ID);
+    LoadSetting(UserSetting::CUSTOM_HARDWARE_ID);
     assert((HidMock::_loaded) && "Hardware id not loaded");
 }
 
@@ -319,7 +319,7 @@ int main()
     HidService::inject(&hidMock);
 
     internals::storage::getReady();
-    OnStart::notify();
+    OnStart();
 
     TG_Inputs();
     TG_InputHub();

@@ -184,8 +184,8 @@ int main()
     int testnumber = 1;
     int v, l1, l2, l3, l4, l5;
     internals::batteryCalibration::getReady();
-    SaveSetting::subscribe(save_callback);
-    OnStart::notify();
+    SaveSetting.subscribe(save_callback);
+    OnStart();
 
     // Check that calibration data is properly cleared
     printTestHeader(testnumber++); // #1

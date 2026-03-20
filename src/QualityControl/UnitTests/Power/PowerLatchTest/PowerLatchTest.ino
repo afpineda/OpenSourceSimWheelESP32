@@ -32,7 +32,7 @@ void setup()
 
   power::configurePowerLatch(TEST_LATCH_PIN, TEST_LATCH_MODE, TEST_LATCH_DELAY);
   internals::power::getReady();
-  OnStart::notify();
+  OnStart();
 
   Serial.println("Going to power off in 20 seconds");
   for (int i = 20; i >= 0; i--)

@@ -86,7 +86,7 @@ BatteryStatus waitFor()
 void test1()
 {
     std::cout << "- test 1 (ADC value injection)-" << std::endl;
-    // NOTE: already called in main before OnStart::notify()
+    // NOTE: already called in main before OnStart()
     // otherwise it fails on linux.
     //   internals::hal::gpio::setFakeADCReading({2000});
 
@@ -166,7 +166,7 @@ void test5()
 int main()
 {
     BatteryCalibrationService::inject(new BatteryCalibrationMock());
-    OnBatteryStatus::subscribe(get_current_battery_level);
+    OnBatteryStatus.subscribe(get_current_battery_level);
     batteryMonitor::configure(TEST_RTC_GPIO1);
     hardware = static_cast<VoltageDividerMonitor *>(internals::batteryMonitor::getHardwareInstance());
     assert(hardware != nullptr);
@@ -174,7 +174,7 @@ int main()
     batteryMonitor::setPeriod(1);
     internals::batteryMonitor::getReady();
     internals::hal::gpio::setFakeADCReading({2000});
-    OnStart::notify();
+    OnStart();
     running = true;
 
     test1();

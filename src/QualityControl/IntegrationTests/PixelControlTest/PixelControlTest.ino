@@ -61,7 +61,7 @@ void setup()
         // Uncomment to test notifications involving battery SoC
         BatteryService::inject(new BatteryServiceMock());
 
-        OnStart::notify();
+        OnStart();
 
         Serial.println("-- GO --");
     }
@@ -82,13 +82,13 @@ void loop()
         if ((chr == 's') || (chr == 'S'))
         {
             Serial.println("SHUTDOWN");
-            OnShutdown::notify();
+            OnShutdown();
         }
         else
         {
-            OnLowBattery::notify();
-            OnBitePoint::notify(CLUTCH_DEFAULT_VALUE);
-            OnSettingsSaved::notify();
+            OnLowBattery();
+            OnBitePoint(CLUTCH_DEFAULT_VALUE);
+            OnSettingsSaved();
         }
     }
     delay(250);

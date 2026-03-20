@@ -171,7 +171,7 @@ public:
     virtual void shutdown() override
     {
         // Turn off peripherals
-        OnShutdown::notify();
+        OnShutdown();
         // try external latch circuit
         latchPowerOff();
         // if still up and running, enter deep sleep

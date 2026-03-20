@@ -23,18 +23,19 @@
 #include <semaphore>
 #include <chrono>
 #include <optional>
+#include <type_traits>
 #include "SimWheelTypes.hpp" // For uint128_t
 
 #if !CD_CI
-/// @brief For tesing
+/// @brief For testing
 #define PRIVATE private
 #include "esp_task_wdt.h" // For  esp_task_wdt_reset()
-/// @brief For tesing
+/// @brief For testing
 #define PROTECTED protected
 #else
-/// @brief For tesing
+/// @brief For testing
 #define PRIVATE public
-/// @brief For tesing
+/// @brief For testing
 #define PROTECTED public
 #endif
 
@@ -479,43 +480,6 @@ static_assert(
 //-------------------------------------------------------------------
 
 /**
- * @brief Available internal event types
- *
- */
-enum class InternalEventType : uint8_t
-{
-    /// @brief System startup
-    Start,
-    /// @brief Sytem shutdown
-    Shutdown,
-    /// @brief Discovery mode started
-    Disconnected,
-    /// @brief Device connected to a host computer
-    Connected,
-    /// @brief The bite point has changed
-    BitePoint,
-    /// @brief The clutch working mode has changed
-    ClutchWorkingMode,
-    /// @brief The ALT buttons working mode has changed
-    AltButtonsWorkingMode,
-    /// @brief The DPAD working mode has changed
-    DPadWorkingMode,
-    /// @brief User settings were saved
-    SettingsSaved,
-    /// @brief The pulse width multiplier has changed
-    PulseWidthMultiplier,
-    /// @brief The system is in a low battery state
-    ///        (repeated at timed intervals)
-    LowBattery,
-    /// @brief Request to save a user setting
-    SaveSetting,
-    /// @brief Request to load a user setting
-    LoadSetting,
-    /// @brief Change in battery status or battery level
-    NewBatteryStatus
-};
-
-/**
  * @brief User setting to be stored in flash memory
  *
  * @warning Must be in the range [0,63]
@@ -539,198 +503,249 @@ enum class UserSetting : uint8_t
     _MAX_VALUE = BATTERY_CALIBRATION_DATA
 };
 
+//------------------------------------------------------------------------------
+
 /**
- * @brief Subscribable events
+ * @brief Publish-subscribe event (forever subscribed)
  *
- * @note Callbacks may be called from any thread
+ * @warning Not thread safe. All subscribers must subscribe in the same thread.
+ *          Subscription must not take place while the event is dispatching
+ *          in another thread.
  *
- * @tparam eventType Type of internal event
- * @tparam _Args Callback argument types
+ * @author Ángel Fernández Pineda. Madrid. Spain. 2026.
+ *         https://github.com/afpineda/cpp-publish-subscribe-observable
+ *
+ * @copyright EUPL 1.2 License
+ *
+ * @tparam Args Callback argument types
  */
-template <InternalEventType eventType, typename... _Args>
-struct InternalEvent
+template <class... Args>
+class static_event
 {
-    /// @brief Callback prototype
-    typedef void (*Callback)(_Args...);
+public:
+    /// @brief This type
+    using type = static_event<Args...>;
+    /// @brief Callback type for subscribers
+    using callback_type = typename ::std::add_pointer<void(Args...)>::type;
 
     /**
-     * @brief Subscribe to this event
+     * @brief Subscribe forever
      *
-     * @note The subscribed callback may need to invoke
-     *       esp_task_wdt_reset()
-     *
-     * @param callback Event callback
+     * @param callback Callback function to be called on event dispatch
      */
-    static void subscribe(Callback callback)
+    void subscribe(callback_type callback) noexcept
     {
-        if (callback != nullptr)
-            _callbacks.push_back(callback);
+        if (!callback)
+            return;
+        _subscriptions.push_back(callback);
     }
 
     /**
-     * @brief Invoke all subscribed callbacks
+     * @brief Clear all subscriptions
      *
-     * @param __args Callback arguments
+     * @warning To be used exclusively in test units.
      */
-    static void notify(_Args... __args)
+    void clear() noexcept
     {
-        for (auto callback : _callbacks)
+        _subscriptions.clear();
+    }
+
+    /**
+     * @brief Dispatch event to all subscribed callbacks
+     *
+     * @param args Event data
+     */
+    void operator()(const Args &...args)
+    {
+        for (const auto &entry : _subscriptions)
         {
+            entry(args...);
 #if !CD_CI
             esp_task_wdt_reset();
 #endif
-            callback(std::forward<_Args>(__args)...);
         }
     }
 
+    /**
+     * @brief Dispatch event to all subscribed callbacks (const)
+     *
+     * @param args Event data
+     */
+    void operator()(const Args &...args) const
+    {
+        for (const auto &entry : _subscriptions)
+        {
+            entry(args...);
+#if !CD_CI
+            esp_task_wdt_reset();
+#endif
+        }
+    }
+
+    /**
+     * @brief Get the number of subscribed callbacks
+     *
+     * @return ::std::size_t Count of subscribed callbacks
+     */
+    ::std::size_t subscribed()
+    {
+        return _subscriptions.size();
+    }
+
+    /**
+     * @brief Move-assignment
+     *
+     * @param source Rvalue
+     * @return type& Reference to this instance
+     */
+    type &operator=(type &&source) noexcept
+    {
+        _subscriptions.swap(source._subscriptions);
+        return *this;
+    }
+
+    /**
+     * @brief Copy-assignment
+     *
+     * @param source Instance to be copied
+     * @return type& Reference to this instance
+     */
+    type &operator=(const type &source) noexcept
+    {
+        _subscriptions = source._subscriptions;
+        return *this;
+    }
+
+    /**
+     * @brief Default constructor
+     *
+     */
+    constexpr static_event() noexcept = default;
+
+    /**
+     * @brief Copy constructor
+     *
+     * @param source Instance to be copied
+     */
+    static_event(const type &source)
+    {
+        _subscriptions = source._subscriptions;
+    }
+
+    /**
+     * @brief Move constructor
+     *
+     * @param source Rvalue
+     */
+    static_event(type &&source)
+    {
+        _subscriptions.swap(source._subscriptions);
+    }
+
+    /**
+     * @brief Equality operator
+     *
+     * @note Mostly for testing purposes.
+     *
+     * @param other Instance to compare to
+     * @return true If equal
+     * @return false If not equal
+     */
+    constexpr bool operator==(const type &other) const noexcept
+    {
+        return (_subscriptions == other._subscriptions);
+    }
+
 private:
-    inline static std::vector<Callback> _callbacks = {};
-};
-
-/**
- * @brief Subscribable events requiring void handlers
- *
- * @tparam eventType Event type
- */
-template <InternalEventType eventType>
-struct InternalEvent<eventType, void>
-{
-    /// @brief Callback prototype
-    typedef void (*Callback)();
-
-    /**
-     * @brief Subscribe to this event
-     *
-     * @param callback Event callback
-     */
-    static void subscribe(Callback callback)
-    {
-        if (callback != nullptr)
-            _callbacks.push_back(callback);
-    }
-
-    /**
-     * @brief Invoke all subscribed callbacks
-     *
-     */
-    static void notify()
-    {
-        for (auto callback : _callbacks)
-            callback();
-    }
-
-    /**
-     * @brief Clear subscriptions (for testing)
-     *
-     */
-    static void clearSubscriptions()
-    {
-        _callbacks.clear();
-    }
-
-private:
-    inline static std::vector<Callback> _callbacks = {};
+    /// @brief List of subscription entries
+    ::std::vector<callback_type> _subscriptions{};
 };
 
 /**
  * @brief System startup
  * @note Notified only once.
  */
-typedef InternalEvent<InternalEventType::Start, void> OnStart;
+inline static_event<> OnStart;
 
 /**
  * @brief The system is about to shutdown.
  * @note Notified only once.
  */
-typedef InternalEvent<InternalEventType::Shutdown, void> OnShutdown;
+inline static_event<> OnShutdown;
 
 /**
  * @brief No host connection
  * @note Notified when this condition is detected, but not
  *       while it persists.
  */
-typedef InternalEvent<InternalEventType::Disconnected, void> OnDisconnected;
+inline static_event<> OnDisconnected;
 
 /**
  * @brief Host connection
  * @note Notified when this condition is detected.
  */
-typedef InternalEvent<InternalEventType::Connected, void> OnConnected;
+inline static_event<> OnConnected;
 
 /**
  * @brief New bite point
  * @note Notified when the clutch's bite point changes
  */
-typedef InternalEvent<InternalEventType::BitePoint, uint8_t> OnBitePoint;
+inline static_event<uint8_t> OnBitePoint;
 
 /**
  * @brief New clutch working mode
  * @note Notified when that working mode changes
  */
-typedef InternalEvent<InternalEventType::ClutchWorkingMode, ClutchWorkingMode>
-    OnClutchWorkingMode;
+inline static_event<ClutchWorkingMode> OnClutchWorkingMode;
 
 /**
  * @brief New ALT buttons working mode
  * @note Notified when that working mode changes
  */
-typedef InternalEvent<
-    InternalEventType::AltButtonsWorkingMode,
-    AltButtonsWorkingMode>
-    OnAltButtonsWorkingMode;
+inline static_event<AltButtonsWorkingMode> OnAltButtonsWorkingMode;
 
 /**
  * @brief New DPAD working mode
  * @note Notified when that working mode changes
  */
-typedef InternalEvent<InternalEventType::DPadWorkingMode, void>
-    OnDPadWorkingMode;
+inline static_event<> OnDPadWorkingMode;
 
 /**
  * @brief Save event
  * @note Notified when a user setting is saved to persistent storage
  */
-typedef InternalEvent<InternalEventType::SettingsSaved, void>
-    OnSettingsSaved;
+inline static_event<> OnSettingsSaved;
 
 /**
  * @brief New pulse width multiplier
  * @note Notified when changed
  */
-typedef InternalEvent<
-    InternalEventType::PulseWidthMultiplier,
-    PulseWidthMultiplier>
-    OnPulseWidthMultiplier;
+inline static_event<PulseWidthMultiplier> OnPulseWidthMultiplier;
 
 /**
  * @brief Notified when a low battery condition is detected
  * @note This event is notified at timed intervals while the condition persists.
  *
  */
-typedef InternalEvent<InternalEventType::LowBattery, void> OnLowBattery;
+inline static_event<> OnLowBattery;
 
 /**
  * @brief New battery level (state of charge) or battery status
  * @note Notified when the state of charge changes by 1% or more.
  */
-typedef InternalEvent<
-    InternalEventType::NewBatteryStatus,
-    const BatteryStatus &>
-    OnBatteryStatus;
+inline static_event<const BatteryStatus &> OnBatteryStatus;
 
 /**
  * @brief Request to load a user setting
  * @note Notified when a user setting must be loaded
  */
-typedef InternalEvent<InternalEventType::LoadSetting, UserSetting>
-    LoadSetting;
+inline static_event<UserSetting> LoadSetting;
 
 /**
  * @brief Request to save a user setting
  * @note Notified when a user setting must be saved to persistent storage
  */
-typedef InternalEvent<InternalEventType::SaveSetting, UserSetting>
-    SaveSetting;
+inline static_event<UserSetting> SaveSetting;
 
 //-------------------------------------------------------------------
 // Automatic shutdown

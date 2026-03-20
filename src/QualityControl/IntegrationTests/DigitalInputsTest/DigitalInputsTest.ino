@@ -57,7 +57,7 @@ void setup()
         false);
 
     internals::inputs::getReady();
-    OnStart::notify();
+    OnStart();
     Serial.println("-- GO --");
 }
 

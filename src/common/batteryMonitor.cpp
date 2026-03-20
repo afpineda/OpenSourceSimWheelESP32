@@ -174,7 +174,7 @@ void batteryMonitorDaemonLoop(void *arg)
         if (currentStatus != newBatteryStatus)
         {
             currentStatus = newBatteryStatus;
-            OnBatteryStatus::notify(newBatteryStatus);
+            OnBatteryStatus(newBatteryStatus);
         }
         if (newBatteryStatus.stateOfCharge.has_value())
         {
@@ -189,7 +189,7 @@ void batteryMonitorDaemonLoop(void *arg)
                 PowerService::call::shutdown();
             }
             else if (newSoC <= low_battery_soc)
-                OnLowBattery::notify();
+                OnLowBattery();
         }
 
         // Delay to next sample
@@ -206,7 +206,7 @@ void batteryMonitorStart()
     {
         BatteryStatus status;
         BatteryService::call::getStatus(status);
-        OnBatteryStatus::notify(status);
+        OnBatteryStatus(status);
         batteryMonitorhardware->onStart();
 #if !CD_CI
         TaskHandle_t batteryMonitorDaemon = nullptr;
@@ -243,7 +243,7 @@ void internals::batteryMonitor::getReady()
         BatteryService::inject(new BatteryServiceProvider());
         // Ensure there is a first reading available before the OnStart event
         batteryMonitorhardware->getStatus(currentStatus);
-        OnStart::subscribe(batteryMonitorStart);
+        OnStart.subscribe(batteryMonitorStart);
     }
 }
 

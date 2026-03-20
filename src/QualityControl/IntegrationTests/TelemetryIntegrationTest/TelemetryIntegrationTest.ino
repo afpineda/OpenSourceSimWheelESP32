@@ -81,7 +81,7 @@ void setup()
         // Uncomment to test notifications involving battery SoC
         BatteryService::inject(new BatteryServiceMock());
 
-        OnStart::notify();
+        OnStart();
 
         Serial.println("-- GO --");
     }

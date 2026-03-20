@@ -41,7 +41,7 @@ void test1()
     std::cout << "- Test 1 -" << std::endl;
     witness1 = 0;
     witness2 = 0;
-    OnStart::notify();
+    OnStart();
     assert((witness1==66) && "void_callback1() not called");
     assert((witness2==66) && "void_callback2() not called");
 }
@@ -51,7 +51,7 @@ void test2()
     std::cout << "- Test 2 -" << std::endl;
     witness1 = 0;
     witness2 = 0;
-    OnBitePoint::notify(99);
+    OnBitePoint(99);
     assert((witness1==99) && "int_callback1() not called");
     assert((witness2==99) && "int_callback2() not called");
 }
@@ -59,10 +59,10 @@ void test2()
 
 int main()
 {
-    OnStart::subscribe(void_callback1);
-    OnStart::subscribe(void_callback2);
-    OnBitePoint::subscribe(int_callback1);
-    OnBitePoint::subscribe(int_callback2);
+    OnStart.subscribe(void_callback1);
+    OnStart.subscribe(void_callback2);
+    OnBitePoint.subscribe(int_callback1);
+    OnBitePoint.subscribe(int_callback2);
 
     test1();
     test2();
