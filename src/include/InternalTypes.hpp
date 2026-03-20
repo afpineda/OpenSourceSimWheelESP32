@@ -51,7 +51,7 @@ struct FakeInput
     /// @brief Input bitmap
     uint128_t state{};
     /// @brief Input mask
-    uint128_t mask = uint128_t::neg();
+    uint128_t mask{};
     /// @brief Left axis position
     uint8_t leftAxis = 0;
     /// @brief Right axis position

@@ -512,8 +512,8 @@ public:
         // for (uint8_t i = 0; i < 128; i++)
         //     if (!_instance.mask.bit(i))
         //         state.set_bit(i, _instance.bit(i));
-        state = (state & ~_instance->mask) |
-                (_instance->state & (_instance->mask));
+        state = (state & (_instance->mask)) |
+                (_instance->state & ~(_instance->mask));
     }
 };
 

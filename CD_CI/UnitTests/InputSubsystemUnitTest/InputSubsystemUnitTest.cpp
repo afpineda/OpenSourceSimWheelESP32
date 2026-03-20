@@ -215,8 +215,10 @@ int main()
 {
     primary = new FakeInput();
     primary->mask.low = ~(0b0011);
+    primary->mask.high = ~0ULL;
     secondary = new FakeInput();
     secondary->mask.low = ~(0b1100);
+    secondary->mask.high = ~0ULL;
     internals::inputs::addFakeInput(primary);
     internals::inputs::addFakeInput(secondary);
     internals::inputs::getReady();
