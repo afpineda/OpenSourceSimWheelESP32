@@ -127,12 +127,12 @@ int main()
 
     // Check the booked input numbers
     std::cout << ("- Check input numbers -") << std::endl;
-    assert(!InputNumber::booked(A1) && "Input number A1 should be booked");
-    assert(!InputNumber::booked(A2) && "Input number A2 should be booked");
+    assert(!InputNumber::booked(A1) && "Input number A1 should NOT be booked");
+    assert(!InputNumber::booked(A2) && "Input number A2 should NOT be booked");
     assert(!InputNumber::booked(A4) && "Input number A4 should NOT be booked");
     assert(!InputNumber::booked(B1) && "Input number B1 should NOT be booked");
-    assert(!InputNumber::booked(B2) && "Input number B1 should NOT be booked");
-    assert(!InputNumber::booked(B4) && "Input number B1 should NOT be booked");
+    assert(!InputNumber::booked(B2) && "Input number B2 should NOT be booked");
+    assert(!InputNumber::booked(B4) && "Input number B4 should NOT be booked");
     assert(InputNumber::booked(TEST_IN) &&
            "Test input number should be booked");
 
