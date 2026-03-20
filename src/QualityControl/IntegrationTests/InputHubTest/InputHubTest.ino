@@ -39,6 +39,7 @@ FakeInput fakeInput;
 #define DPAD_RIGHT_IN 15
 #define DPAD_UP_IN 16
 #define DPAD_DOWN_IN 17
+#define ROUTED_IN 18
 
 #define WAIT_TICKS pdMS_TO_TICKS(120)
 
@@ -60,6 +61,7 @@ uint8_t _POVstate;
 uint8_t _leftAxis;
 uint8_t _rightAxis;
 uint8_t _clutchAxis;
+uint8_t _last_routed = 0xFF;
 
 //------------------------------------------------------------------
 // Mocks
@@ -103,6 +105,11 @@ void internals::hid::reportInput(
     _leftAxis = leftAxis;
     _rightAxis = rightAxis;
     _clutchAxis = clutchAxis;
+}
+
+void internals::ui::routeInput(uint8_t in)
+{
+    _last_routed = in;
 }
 
 //------------------------------------------------------------------
@@ -375,6 +382,23 @@ void TG_Dpad()
     checkDpad(DPAD_CENTERED_STATE, "DPAD center");
 }
 
+void TG_ui()
+{
+    fakeInput.clear();
+    _last_routed = 0xFF;
+    fakeInput.press(COMMAND_IN);
+    fakeInput.press(ROUTED_IN);
+    fakeInput.press(ALT_IN);
+    vTaskDelay(WAIT_TICKS);
+    fakeInput.release(ROUTED_IN);
+    vTaskDelay(WAIT_TICKS);
+    if (_last_routed != ROUTED_IN)
+    {
+        Serial.println("MISMATCH in routed input");
+        Serial.printf("Expected: %hhu, found: %hhu\n", ROUTED_IN, _last_routed);
+    }
+}
+
 //------------------------------------------------------------------
 // Arduino entry point
 //------------------------------------------------------------------
@@ -393,6 +417,7 @@ void setup()
         inputHub::clutch::bitePointInputs(CW_IN, CCW_IN);
         inputHub::dpad::inputs(DPAD_UP_IN, DPAD_DOWN_IN, DPAD_LEFT_IN, DPAD_RIGHT_IN);
         inputHub::dpad::cycleWorkingModeInputs({COMMAND_IN, CYCLE_DPAD_IN});
+        inputHub::routed::inputs({ROUTED_IN});
 
         internals::inputs::getReady();
         internals::inputHub::getReady();
@@ -410,6 +435,7 @@ void setup()
         TG_LaunchControlMode();
         TG_AltButton();
         TG_Dpad();
+        TG_ui();
     }
     catch (std::exception &e)
     {
