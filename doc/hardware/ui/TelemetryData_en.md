@@ -25,6 +25,27 @@ As a general rule, each telemetry display is represented by a C++ class.
 You enable the hardware by calling
 `ui::add<ClassName>( constructor parameters );`.
 
+## Input routing
+
+This feature allows a button press to be routed to the user interface,
+typically to select another dashboard.
+For this to work your custom firmware must meet two conditions:
+
+1. Place as many calls as you need to
+   `inputHub::route_to_ui::add()`.
+   Pass a valid input number as parameter.
+   This input number must be assigned to input hardware via
+   the `inputs::add*` API.
+   That input number is said to be *routed*.
+2. Where available, pass the routed input number to
+   the proper constructor parameter in `ui::add<ClassName>()`.
+
+> [!CAUTION]
+> Once an input number is routed,
+> it counts as **not assigned** to the input hardware.
+> So, you will get an error message if you try to use them in other
+> firmware features.
+
 ## How to design your own telemetry display
 
 If you have the skills,
@@ -64,12 +85,16 @@ Consider [contributing](../../../.github/CONTRIBUTING.md) to this project.
     to react to new telemetry data.
 13. Override `AbstractUserInterface::serveSingleFrame()`
     to handle the display hardware on a timed basis.
-14. Place the required `#include` directives in your sketch file.
-15. Create a single instance of your custom user interface class
+14. Override `AbstractUserInterface::onUserInput()`
+    to react to *routed* inputs.
+    This gets called on button release.
+15. Place the required `#include` directives in your sketch file.
+16. Create a single instance of your custom user interface class
     by calling `ui::add<YourClass>( constructor parameters );`.
 
-See [SimwheelUI.hpp](../../../src/include/SimWheelUI.hpp)
-and [SimWheelUI.cpp](../../../src/common/SimWheelUI.cpp)
+See [SimWheelUI.hpp](../../../src/include/SimWheelUI.hpp),
+[SimWheelUI.cpp](../../../src/common/SimWheelUI.cpp) and
+[SimWheelUI_gfx.cpp](../../../src/common/SimWheelUI_gfx.cpp)
 for examples.
 
 ### Available telemetry data

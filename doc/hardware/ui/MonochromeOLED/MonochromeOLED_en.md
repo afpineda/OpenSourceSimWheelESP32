@@ -35,7 +35,7 @@ OLED telemetry display is CPU and memory intensive.
 It **may perform poorly** for what a sim racer expects.
 **Be warned**.
 
-If you have GPIO expanders (for switches) in the primary I2c bus,
+If you have GPIO expanders (for switches) in the primary I2C bus,
 place your OLED screen in the secondary I2C bus to avoid performance problems.
 
 ## Hardware
@@ -93,6 +93,14 @@ display controllers. *SSD1306* was tested.
      This defaults to `true`.
      Set it to `false` if you think it might cause you to have epileptic fits
      or if you simply don't like it.
+   - *Routed* input number to choose the next dashboard.
+     Set to `UNSPECIFIED::VALUE` to disable this feature (the default).
+   - *Routed* input number to momentarily show the battery level.
+     It makes no sense if you don't have a battery monitor.
+     Set to `UNSPECIFIED::VALUE` to disable this feature (the default).
+
+Remember that *routed* inputs must be declared via
+`inputHub::route_to_ui::add()`.
 
 ### Example
 
