@@ -143,8 +143,9 @@ private:
 
     /// @brief Internal initialization
     /// @param nextDash Input number to cycle to the next dashboard
+    /// @param showBattery InputNumber to show the battery level
     /// @note Called from the constructor exclusively
-    void init(InputNumber nextDash);
+    void init(InputNumber nextDash, InputNumber showBattery);
 
     /// @brief Display the battery level into the screen
     /// @param value Battery level
@@ -175,12 +176,17 @@ public:
      *                 Set to UNSPECIFIED::VALUE to disable.
      *                 The input number must be routed by
      *                 inputHub::route_to_ui::add()
+     * @param showBattery InputNumber to show the battery level.
+     *                    Set to UNSPECIFIED::VALUE to disable.
+     *                    The input number must be routed by
+     *                    inputHub::route_to_ui::add()
      */
     OledTelemetry128x64(
         const OLEDParameters &params,
         I2CBus bus = I2CBus::SECONDARY,
         bool enableFlashing = true,
-        InputNumber nextDash = UNSPECIFIED::VALUE);
+        InputNumber nextDash = UNSPECIFIED::VALUE,
+        InputNumber showBattery = UNSPECIFIED::VALUE);
 
     /**
      * @brief Create an Oled Telemetry display (128x64)
@@ -189,13 +195,22 @@ public:
      * @param address7bits Full I2C address in 7 bit format
      * @param bus I2C bus
      * @param enableFlashing Whether to allow screen flashing or not
+     * @param nextDash Input number to cycle to the next dashboard.
+     *                 Set to UNSPECIFIED::VALUE to disable.
+     *                 The input number must be routed by
+     *                 inputHub::route_to_ui::add()
+     * @param showBattery InputNumber to show the battery level.
+     *                    Set to UNSPECIFIED::VALUE to disable.
+     *                    The input number must be routed by
+     *                    inputHub::route_to_ui::add()
      */
     OledTelemetry128x64(
         const OLEDParameters &params,
         uint8_t address7bits,
         I2CBus bus = I2CBus::SECONDARY,
         bool enableFlashing = true,
-        InputNumber nextDash = UNSPECIFIED::VALUE);
+        InputNumber nextDash = UNSPECIFIED::VALUE,
+        InputNumber showBattery = UNSPECIFIED::VALUE);
 
     virtual void onStart() override;
     virtual void onConnected() override;

@@ -50,6 +50,8 @@ struct OledTelemetry128x64::Implementation
     bool updated = false;
     /// @brief Input number to cycle dashboards
     uint8_t nextDash = 0xFF;
+    /// @brief Input number to show the battery level
+    uint8_t showBattery = 0xFF;
     /// @brief Current user-selected dashboard
     uint8_t currentDash = DASHBOARD_MAIN;
 }; // struct OledTelemetry128x64::Implementation
@@ -62,12 +64,13 @@ OledTelemetry128x64::OledTelemetry128x64(
     const OLEDParameters &params,
     I2CBus bus,
     bool enableFlashing,
-    InputNumber nextDash)
+    InputNumber nextDash,
+    InputNumber showBattery)
     : _impl{::std::make_unique<Implementation>()},
       _display(OLEDParameters::withResolution(128, 64, params), bus),
       _enableFlashing{enableFlashing}
 {
-    init(nextDash);
+    init(nextDash, showBattery);
 }
 
 OledTelemetry128x64::OledTelemetry128x64(
@@ -75,7 +78,8 @@ OledTelemetry128x64::OledTelemetry128x64(
     uint8_t address7bits,
     I2CBus bus,
     bool enableFlashing,
-    InputNumber nextDash)
+    InputNumber nextDash,
+    InputNumber showBattery)
     : _impl{::std::make_unique<Implementation>()},
       _display(
           OLEDParameters::withResolution(128, 64, params),
@@ -83,16 +87,17 @@ OledTelemetry128x64::OledTelemetry128x64(
           bus),
       _enableFlashing{enableFlashing}
 {
-    init(nextDash);
+    init(nextDash, showBattery);
 }
 
 //-----------------------------------------------------------------------------
 // Protected methods
 //-----------------------------------------------------------------------------
 
-void OledTelemetry128x64::init(InputNumber nextDash)
+void OledTelemetry128x64::init(InputNumber nextDash, InputNumber showBattery)
 {
     _impl->nextDash = nextDash;
+    _impl->showBattery = showBattery;
     _display.clear();
     requiresPowertrainTelemetry = true;
     requiresECUTelemetry = true;
@@ -324,6 +329,8 @@ void OledTelemetry128x64::onUserInput(uint8_t inputNumber)
         else
             _impl->currentDash = DASHBOARD_ALTERNATE;
     }
+    else if (inputNumber == _impl->showBattery)
+        onStart();
 }
 
 void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
