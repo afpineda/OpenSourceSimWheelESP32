@@ -21,6 +21,12 @@
 #include <HardwareSerial.h>
 
 //------------------------------------------------------------------
+// Globals
+//------------------------------------------------------------------
+
+#define ROUTED1 0
+
+//------------------------------------------------------------------
 // Mocks
 //------------------------------------------------------------------
 
@@ -73,7 +79,8 @@ void setup()
         oled_params.flip_horizontal = true;
         ui::add<OledTelemetry128x64>(
             oled_params,
-            I2CBus::SECONDARY);
+            I2CBus::SECONDARY,
+            ROUTED1);
 
         internals::hid::common::getReady();
         internals::ui::getReady();
@@ -96,4 +103,7 @@ void setup()
 
 void loop()
 {
+    int in = Serial.read();
+    if ((in == 'd') || (in == 'D'))
+        internals::ui::routeInput(ROUTED1);
 }

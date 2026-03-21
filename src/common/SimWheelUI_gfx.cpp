@@ -29,6 +29,9 @@
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 
+#define DASHBOARD_MAIN 0
+#define DASHBOARD_ALTERNATE 1
+
 struct OledTelemetry128x64::Implementation
 {
     /// @brief Frame buffer
@@ -45,6 +48,10 @@ struct OledTelemetry128x64::Implementation
     bool connected = false;
     /// @brief The frame buffer was updated and must be displayed
     bool updated = false;
+    /// @brief Input number to cycle dashboards
+    uint8_t nextDash = 0xFF;
+    /// @brief Current user-selected dashboard
+    uint8_t currentDash = DASHBOARD_MAIN;
 }; // struct OledTelemetry128x64::Implementation
 
 //-----------------------------------------------------------------------------
@@ -54,33 +61,43 @@ struct OledTelemetry128x64::Implementation
 OledTelemetry128x64::OledTelemetry128x64(
     const OLEDParameters &params,
     I2CBus bus,
-    bool enableFlashing)
+    bool enableFlashing,
+    InputNumber nextDash)
     : _impl{::std::make_unique<Implementation>()},
       _display(OLEDParameters::withResolution(128, 64, params), bus),
       _enableFlashing{enableFlashing}
 {
-    _display.clear();
-    requiresPowertrainTelemetry = true;
-    requiresECUTelemetry = true;
+    init(nextDash);
 }
 
 OledTelemetry128x64::OledTelemetry128x64(
     const OLEDParameters &params,
     uint8_t address7bits,
     I2CBus bus,
-    bool enableFlashing)
+    bool enableFlashing,
+    InputNumber nextDash)
     : _impl{::std::make_unique<Implementation>()},
-      _display(OLEDParameters::withResolution(128, 64, params), bus),
+      _display(
+          OLEDParameters::withResolution(128, 64, params),
+          address7bits,
+          bus),
       _enableFlashing{enableFlashing}
 {
-    _display.clear();
-    requiresPowertrainTelemetry = true;
-    requiresECUTelemetry = true;
+    init(nextDash);
 }
 
 //-----------------------------------------------------------------------------
 // Protected methods
 //-----------------------------------------------------------------------------
+
+void OledTelemetry128x64::init(InputNumber nextDash)
+{
+    _impl->nextDash = nextDash;
+    _display.clear();
+    requiresPowertrainTelemetry = true;
+    requiresECUTelemetry = true;
+    requiresGaugeTelemetry = (nextDash != UNSPECIFIED::VALUE);
+}
 
 void OledTelemetry128x64::display_battery_level(uint8_t value)
 {
@@ -99,74 +116,9 @@ void OledTelemetry128x64::display_battery_level(uint8_t value)
     _display.show(_impl->frame.getBuffer());
 }
 
-void OledTelemetry128x64::stopFlashing()
+void OledTelemetry128x64::draw_main_dashboard(
+    const TelemetryData *pTelemetryData)
 {
-    if (_impl->flash)
-    {
-        _impl->flash = false;
-        _display.inverse_display(false);
-    }
-}
-
-void OledTelemetry128x64::clearFrameBuffer()
-{
-    _impl->frame.fillScreen(0);
-    _impl->updated = true;
-}
-
-//-----------------------------------------------------------------------------
-// Notifications
-//-----------------------------------------------------------------------------
-
-void OledTelemetry128x64::onStart()
-{
-    stopFlashing();
-    BatteryStatus status;
-    BatteryService::call::getStatus(status);
-    if (BatteryService::call::hasBattery() &&
-        status.stateOfCharge.has_value())
-        display_battery_level(status.stateOfCharge.value());
-    else
-    {
-        _impl->frame.fillScreen(0);
-        _impl->frame.drawRoundRect(0, 0, 128, 64, 4, 0xFFFF);
-        _impl->frame.setTextSize(2);
-        _impl->frame.setTextColor(0xFF, 0);
-        _impl->frame.setCursor(10, 10);
-        _impl->frame.print("\x02 ESP32 \x02");
-        _impl->frame.setCursor(10, 30);
-        _impl->frame.print("sim wheel");
-        _display.show(_impl->frame.getBuffer());
-    }
-    DELAY_MS(2000);
-    clearFrameBuffer();
-}
-
-void OledTelemetry128x64::onConnected()
-{
-    stopFlashing();
-    _impl->connected = true;
-    clearFrameBuffer();
-}
-
-void OledTelemetry128x64::onBLEdiscovering()
-{
-    stopFlashing();
-    _impl->connected = false;
-    _impl->frame.fillScreen(0);
-    _impl->frame.drawRoundRect(0, 0, 128, 64, 4, 0xFFFF);
-    _impl->frame.setTextSize(2);
-    _impl->frame.setTextColor(0xFF, 0);
-    _impl->frame.setCursor(22, 24);
-    _impl->frame.print("(((\x07)))");
-    _impl->updated = true;
-}
-
-void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
-{
-    if (_impl->showBitePoint)
-        return;
-
     if (pTelemetryData)
     {
         // Determine flashing
@@ -268,8 +220,123 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
         _impl->frame.fillScreen(0);
         stopFlashing();
     }
+} // OledTelemetry128x64::draw_main_dashboard()
+
+void OledTelemetry128x64::draw_alt_dashboard(
+    const TelemetryData *pTelemetryData)
+{
+    if (pTelemetryData)
+    {
+        // Determine flashing
+        if (_impl->flash && !pTelemetryData->powertrain.shiftLight2)
+        {
+            // Stop flashing
+            _impl->flash = false;
+            _display.inverse_display(false);
+        }
+        else
+            _impl->flash = pTelemetryData->powertrain.shiftLight2;
+
+        // Clear the frame buffer
+        _impl->frame.fillScreen(0);
+
+        // TO DO:
+        // - Draw RPM and speed number
+        // - Draw gauges.relativeRemainingFuel
+        // - Others (to be determined)
+    }
+    else if (_impl->connected) // && !pTelemetryData
+    {
+        _impl->frame.fillScreen(0);
+        stopFlashing();
+    }
+} // void OledTelemetry128x64::draw_alt_dashboard()
+
+void OledTelemetry128x64::stopFlashing()
+{
+    if (_impl->flash)
+    {
+        _impl->flash = false;
+        _display.inverse_display(false);
+    }
+}
+
+void OledTelemetry128x64::clearFrameBuffer()
+{
+    _impl->frame.fillScreen(0);
     _impl->updated = true;
-} // OledTelemetry128x64::onTelemetryData()
+}
+
+//-----------------------------------------------------------------------------
+// Notifications
+//-----------------------------------------------------------------------------
+
+void OledTelemetry128x64::onStart()
+{
+    stopFlashing();
+    BatteryStatus status;
+    BatteryService::call::getStatus(status);
+    if (BatteryService::call::hasBattery() &&
+        status.stateOfCharge.has_value())
+        display_battery_level(status.stateOfCharge.value());
+    else
+    {
+        _impl->frame.fillScreen(0);
+        _impl->frame.drawRoundRect(0, 0, 128, 64, 4, 0xFFFF);
+        _impl->frame.setTextSize(2);
+        _impl->frame.setTextColor(0xFF, 0);
+        _impl->frame.setCursor(10, 10);
+        _impl->frame.print("\x02 ESP32 \x02");
+        _impl->frame.setCursor(10, 30);
+        _impl->frame.print("sim wheel");
+        _display.show(_impl->frame.getBuffer());
+    }
+    DELAY_MS(2000);
+    clearFrameBuffer();
+}
+
+void OledTelemetry128x64::onConnected()
+{
+    stopFlashing();
+    _impl->connected = true;
+    clearFrameBuffer();
+}
+
+void OledTelemetry128x64::onBLEdiscovering()
+{
+    stopFlashing();
+    _impl->connected = false;
+    _impl->frame.fillScreen(0);
+    _impl->frame.drawRoundRect(0, 0, 128, 64, 4, 0xFFFF);
+    _impl->frame.setTextSize(2);
+    _impl->frame.setTextColor(0xFF, 0);
+    _impl->frame.setCursor(22, 24);
+    _impl->frame.print("(((\x07)))");
+    _impl->updated = true;
+}
+
+void OledTelemetry128x64::onUserInput(uint8_t inputNumber)
+{
+    if (inputNumber == _impl->nextDash)
+    {
+        if (_impl->currentDash == DASHBOARD_ALTERNATE)
+            _impl->currentDash = DASHBOARD_MAIN;
+        else
+            _impl->currentDash = DASHBOARD_ALTERNATE;
+    }
+}
+
+void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
+{
+    if (_impl->showBitePoint)
+        return;
+
+    if (_impl->currentDash == DASHBOARD_MAIN)
+        draw_main_dashboard(pTelemetryData);
+    else
+        draw_alt_dashboard(pTelemetryData);
+    _impl->updated = true;
+}
 
 void OledTelemetry128x64::serveSingleFrame(uint32_t elapsedMs)
 {

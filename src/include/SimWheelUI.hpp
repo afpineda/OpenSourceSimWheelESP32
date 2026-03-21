@@ -141,9 +141,22 @@ private:
     /// @brief Whether to allow screen flashing or not
     bool _enableFlashing{true};
 
-    /// @brief Draw the battery level into the internal frame buffer
+    /// @brief Internal initialization
+    /// @param nextDash Input number to cycle to the next dashboard
+    /// @note Called from the constructor exclusively
+    void init(InputNumber nextDash);
+
+    /// @brief Display the battery level into the screen
     /// @param value Battery level
-    void display_battery_level(uint8_t value);
+    inline void display_battery_level(uint8_t value);
+
+    /// @brief Draw the main dashboard into the internal frame buffer
+    /// @param pTelemetryData Pointer to telemetry data (maybe null)
+    inline void draw_main_dashboard(const TelemetryData *pTelemetryData);
+
+    /// @brief Draw the alternate dashboard into the internal frame buffer
+    /// @param pTelemetryData Pointer to telemetry data (maybe null)
+    void draw_alt_dashboard(const TelemetryData *pTelemetryData);
 
     /// @brief Stop flashing
     void stopFlashing();
@@ -158,11 +171,16 @@ public:
      * @param params OLED hardware parameters
      * @param bus I2C bus
      * @param enableFlashing Whether to allow screen flashing or not
+     * @param nextDash Input number to cycle to the next dashboard.
+     *                 Set to UNSPECIFIED::VALUE to disable.
+     *                 The input number must be routed by
+     *                 inputHub::route_to_ui::add()
      */
     OledTelemetry128x64(
         const OLEDParameters &params,
         I2CBus bus = I2CBus::SECONDARY,
-        bool enableFlashing = true);
+        bool enableFlashing = true,
+        InputNumber nextDash = UNSPECIFIED::VALUE);
 
     /**
      * @brief Create an Oled Telemetry display (128x64)
@@ -176,7 +194,8 @@ public:
         const OLEDParameters &params,
         uint8_t address7bits,
         I2CBus bus = I2CBus::SECONDARY,
-        bool enableFlashing = true);
+        bool enableFlashing = true,
+        InputNumber nextDash = UNSPECIFIED::VALUE);
 
     virtual void onStart() override;
     virtual void onConnected() override;
@@ -186,6 +205,7 @@ public:
     virtual void onBitePoint(uint8_t bitePoint) override;
     virtual void onLowBattery() override;
     virtual void onSaveSettings() override;
+    virtual void onUserInput(uint8_t inputNumber) override;
     virtual void shutdown() override;
     virtual uint8_t getMaxFPS() override { return 30; }
     virtual uint16_t getStackSize() override { return 2560; }
