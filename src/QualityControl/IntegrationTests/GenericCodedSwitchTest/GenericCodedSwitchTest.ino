@@ -60,6 +60,8 @@ void internals::hid::reportInput(
     _inputsLow = inputs.low;
 }
 
+void internals::ui::routeInput(uint8_t in) {}
+
 //------------------------------------------------------------------
 // Auxiliary
 //------------------------------------------------------------------

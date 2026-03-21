@@ -914,7 +914,8 @@ int main()
     inputHub::clutch::bitePointInputs(UP, DOWN);
     inputHub::securityLock::cycleWorkingModeInputs(COMBINATION_SECURITY_LOCK);
     inputHub::neutralGear::set(NEUTRAL, {LSHIFT, RSHIFT});
-    inputHub::routed::inputs({ROUTED1, ROUTED2});
+    inputHub::route_to_ui::add(ROUTED1);
+    inputHub::route_to_ui::add(ROUTED2);
     internals::inputHub::getReady();
     OnStart();
 

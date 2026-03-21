@@ -19,8 +19,8 @@
 #include "SimWheel.hpp"
 #include <vector>
 
-#include <iostream> // For debug
-using namespace std;
+// #include <iostream> // For debug
+// using namespace std;
 
 //-------------------------------------------------------------------
 // Globals
@@ -153,7 +153,8 @@ void inputHub::clutch::bitePointInputs(
         throw invalid_input_number();
     if (increase == decrease)
         throw std::runtime_error(
-            "You can not assign the same input number for increase and decrease bite point");
+            "You can not assign the same input number "
+            "for increase and decrease bite point");
 
     calibrateUp = increase;
     calibrateDown = decrease;
@@ -241,7 +242,8 @@ void inputHub::neutralGear::set(
 {
     if (combination.size() < 2)
         throw std::runtime_error(
-            "For neutral gear, a combination of two or more hardware inputs is required");
+            "For neutral gear, a combination of "
+            "two or more hardware inputs is required");
     neutral.book();
     neutralSwitch = neutral;
     neutralCombinationBitmap = combination;
@@ -381,10 +383,10 @@ void inputHub::codedSwitch::add(
 
 //-------------------------------------------------------------------
 
-void inputHub::routed::inputs(InputNumberCombination routedInputs)
+void inputHub::route_to_ui::add(InputNumber inputNumber)
 {
-    routedInputBitmap = routedInputs;
-    routedInputBitmapNeg = ~routedInputs;
+    routedInputBitmap.set_bit(inputNumber, true);
+    routedInputBitmapNeg.set_bit(inputNumber, false);
 }
 
 //-------------------------------------------------------------------
@@ -446,7 +448,9 @@ public:
         }
     }
 
-    virtual void setClutchWorkingMode(ClutchWorkingMode mode, bool save) override
+    virtual void setClutchWorkingMode(
+        ClutchWorkingMode mode,
+        bool save) override
     {
         if (mode != clutchWorkingMode)
         {
@@ -456,7 +460,9 @@ public:
         }
     }
 
-    virtual void setAltButtonsWorkingMode(AltButtonsWorkingMode mode, bool save) override
+    virtual void setAltButtonsWorkingMode(
+        AltButtonsWorkingMode mode,
+        bool save) override
     {
         if (mode != altButtonsWorkingMode)
         {
@@ -624,7 +630,8 @@ void internals::inputHub::getReady()
     {
         if (leftClutch > 127)
             throw std::runtime_error(
-                "You have analog clutch paddles, but you forgot to call inputHub::clutch::inputs()");
+                "You have analog clutch paddles, "
+                "but you forgot to call inputHub::clutch::inputs()");
     }
     else
     {
@@ -632,26 +639,31 @@ void internals::inputHub::getReady()
         abortOnUnknownIN(rightClutch, "right clutch paddle");
         if (cmdAxisAutocalibrationBitmap)
             throw std::runtime_error(
-                "There are no analog clutch paddles, but you called cmdRecalibrateAxisInputs()");
+                "There are no analog clutch paddles, "
+                "but you called cmdRecalibrateAxisInputs()");
     }
     if (!DeviceCapabilities::hasFlag(DeviceCapability::CLUTCH_ANALOG) &&
         !DeviceCapabilities::hasFlag(DeviceCapability::CLUTCH_BUTTON))
     {
         if (calibrateUp < 128)
             throw std::runtime_error(
-                "There are no clutch paddles, but you called inputHub::clutch::bitePointInputs()");
+                "There are no clutch paddles, but you called "
+                "inputHub::clutch::bitePointInputs()");
         if (cycleClutchWorkingModeBitmap)
             throw std::runtime_error(
-                "There are no clutch paddles, but you called inputHub::clutch::cycleWorkingModeInputs()");
+                "There are no clutch paddles, but you called "
+                "inputHub::clutch::cycleWorkingModeInputs()");
     }
     if (!DeviceCapabilities::hasFlag(DeviceCapability::DPAD) &&
         (cycleDPADWorkingModeBitmap))
         throw std::runtime_error(
-            "There is no DPAD, but you called inputHub::dpad::cycleWorkingModeInputs()");
+            "There is no DPAD, but you called "
+            "inputHub::dpad::cycleWorkingModeInputs()");
     if (!DeviceCapabilities::hasFlag(DeviceCapability::ALT) &&
         (cycleALTWorkingModeBitmap))
         throw std::runtime_error(
-            "There are no ALT buttons, but you called inputHub::altButtons::cycleWorkingModeInputs()");
+            "There are no ALT buttons, but you called "
+            "inputHub::altButtons::cycleWorkingModeInputs()");
 
     // Prepare to run
     InputHubService::inject(new InputHubServiceProvider());
@@ -822,7 +834,8 @@ void inputHub_bitePointCalibration_filter(
 void inputHub_AxisButton_filter(DecouplingEvent &input)
 {
     if (DeviceCapabilities::hasFlag(DeviceCapability::CLUTCH_ANALOG) &&
-        (InputHubServiceProvider::clutchWorkingMode == ClutchWorkingMode::BUTTON))
+        (InputHubServiceProvider::clutchWorkingMode ==
+         ClutchWorkingMode::BUTTON))
     {
         // Transform analog axis position into an input state
         if (input.leftAxisValue >= CLUTCH_3_4_VALUE)
@@ -849,10 +862,14 @@ void inputHub_AxisButton_filter(DecouplingEvent &input)
     if (DeviceCapabilities::hasFlag(DeviceCapability::CLUTCH_BUTTON))
     {
         bool isAxisMode =
-            (InputHubServiceProvider::clutchWorkingMode == ClutchWorkingMode::AXIS) ||
-            (InputHubServiceProvider::clutchWorkingMode == ClutchWorkingMode::CLUTCH) ||
-            (InputHubServiceProvider::clutchWorkingMode == ClutchWorkingMode::LAUNCH_CONTROL_MASTER_LEFT) ||
-            (InputHubServiceProvider::clutchWorkingMode == ClutchWorkingMode::LAUNCH_CONTROL_MASTER_RIGHT);
+            (InputHubServiceProvider::clutchWorkingMode ==
+             ClutchWorkingMode::AXIS) ||
+            (InputHubServiceProvider::clutchWorkingMode ==
+             ClutchWorkingMode::CLUTCH) ||
+            (InputHubServiceProvider::clutchWorkingMode ==
+             ClutchWorkingMode::LAUNCH_CONTROL_MASTER_LEFT) ||
+            (InputHubServiceProvider::clutchWorkingMode ==
+             ClutchWorkingMode::LAUNCH_CONTROL_MASTER_RIGHT);
         if (isAxisMode)
         {
             // Transform input state into an axis position
@@ -945,7 +962,8 @@ void inputHub_AltRequest_filter(
     uint8_t &rightAxis,
     bool &isAltRequested)
 {
-    if (InputHubServiceProvider::altButtonsWorkingMode == AltButtonsWorkingMode::ALT)
+    if (InputHubServiceProvider::altButtonsWorkingMode ==
+        AltButtonsWorkingMode::ALT)
     {
         isAltRequested = (bool)(rawInputBitmap & altBitmap);
         rawInputBitmap &= ~altBitmap;

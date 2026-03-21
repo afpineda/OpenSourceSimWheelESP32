@@ -444,7 +444,7 @@ namespace inputHub
      *
      * @warning Routed input numbers can not be assigned to other functions
      */
-    namespace routed
+    namespace route_to_ui
     {
         /**
          * @brief Declare inputs that will be routed to the UI
@@ -452,16 +452,14 @@ namespace inputHub
          *
          * @note Routed input events will never be
          *       reported to the host computer
-         * @note Routing happens on input release
+         * @note Routing happens on the input release event
          *
-         * @param routedInputs List of routed input numbers.
-         *                     Any of them will be routed to
-         *                     the UI frameservers
+         * @param inputNumber An input number to be routed to UI frameservers.
+         *                    Must be assigned to the input hardware.
          *
          */
-        void inputs(InputNumberCombination routedInputs);
-    } // namespace routed
-
+        void add(InputNumber inputNumber);
+    } // namespace route_to_ui
 } // namespace inputHub
 
 //-------------------------------------------------------------------

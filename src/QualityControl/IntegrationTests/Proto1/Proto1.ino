@@ -41,6 +41,7 @@ void internals::batteryCalibration::getReady() {}
 void internals::batteryMonitor::getReady() {}
 void internals::power::getReady() {}
 void internals::ui::getReady() {}
+void internals::ui::routeInput(uint8_t in) {}
 
 //------------------------------------------------------------------
 // Arduino entry point

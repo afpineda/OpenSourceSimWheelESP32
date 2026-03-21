@@ -313,11 +313,11 @@ void TG_ui()
     evt.rawInputBitmap.low = BMP(ROUTED);
     DecouplingEvent empty{};
     internals::inputHub::onRawInput(empty);
-    assert(last_routed = 0xFF);
+    assert(last_routed == 0xFF);
     internals::inputHub::onRawInput(evt);
-    assert(last_routed = 0xFF);
+    assert(last_routed == 0xFF);
     internals::inputHub::onRawInput(empty);
-    assert(last_routed = ROUTED);
+    assert(last_routed == ROUTED);
 }
 
 //-------------------------------------------------------------------
@@ -337,6 +337,7 @@ int main()
     inputHub::clutch::bitePointInputs(BITE_POINT_UP, BITE_POINT_DOWN);
     inputHub::clutch::cycleWorkingModeInputs({CYCLE});
     inputHub::altButtons::inputs({ALT});
+    inputHub::route_to_ui::add(ROUTED);
     internals::inputHub::getReady();
     OnStart();
 

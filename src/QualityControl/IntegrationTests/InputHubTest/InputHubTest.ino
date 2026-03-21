@@ -417,7 +417,7 @@ void setup()
         inputHub::clutch::bitePointInputs(CW_IN, CCW_IN);
         inputHub::dpad::inputs(DPAD_UP_IN, DPAD_DOWN_IN, DPAD_LEFT_IN, DPAD_RIGHT_IN);
         inputHub::dpad::cycleWorkingModeInputs({COMMAND_IN, CYCLE_DPAD_IN});
-        inputHub::routed::inputs({ROUTED_IN});
+        inputHub::route_to_ui::add(ROUTED_IN);
 
         internals::inputs::getReady();
         internals::inputHub::getReady();
