@@ -93,10 +93,10 @@ display controllers. *SSD1306* was tested.
      This defaults to `true`.
      Set it to `false` if you think it might cause you to have epileptic fits
      or if you simply don't like it.
+   - Dashboard to show at first: one of the `OledDashboard`
+    [constants](../../../../src/include/SimWheelUI.hpp).
+     Pass `OledDashboard::_DEFAULT` to use the default dashboard.
    - *Routed* input number to choose the next dashboard.
-     Set to `UNSPECIFIED::VALUE` to disable this feature (the default).
-   - *Routed* input number to momentarily show the battery level.
-     It makes no sense if you don't have a battery monitor.
      Set to `UNSPECIFIED::VALUE` to disable this feature (the default).
 
 Remember that *routed* inputs must be declared via

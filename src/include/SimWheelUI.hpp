@@ -126,6 +126,23 @@ private:
 //-----------------------------------------------------------------------------
 
 /**
+ * @brief Available dashboards for monochrome OLED displays
+ *
+ */
+enum class OledDashboard : uint8_t
+{
+    /// @brief RPM bar, gear, TC, ABS, Low fuel, Pit limiter
+    STANDARD = 0,
+    /// @brief Dashboard not available yet
+    ALTERNATE,
+    /// @brief Current battery level
+    ///        (available only in battery-operated firmwares)
+    BATTERY,
+    /// @brief Default dashboard
+    _DEFAULT = STANDARD
+};
+
+/**
  * @brief Telemetry display via 128x64 monochrome OLED
  *
  */
@@ -143,13 +160,13 @@ private:
 
     /// @brief Internal initialization
     /// @param nextDash Input number to cycle to the next dashboard
-    /// @param showBattery InputNumber to show the battery level
+    /// @param initialDashboard Dashboard to show at first
     /// @note Called from the constructor exclusively
-    void init(InputNumber nextDash, InputNumber showBattery);
+    void init(InputNumber nextDash, OledDashboard initialDashboard);
 
-    /// @brief Display the battery level into the screen
+    /// @brief Display the battery level into the internal frame buffer
     /// @param value Battery level
-    inline void display_battery_level(uint8_t value);
+    inline void draw_battery_level();
 
     /// @brief Draw the main dashboard into the internal frame buffer
     /// @param pTelemetryData Pointer to telemetry data (maybe null)
@@ -172,21 +189,18 @@ public:
      * @param params OLED hardware parameters
      * @param bus I2C bus
      * @param enableFlashing Whether to allow screen flashing or not
+     * @param initialDashboard Dashboard to show at first
      * @param nextDash Input number to cycle to the next dashboard.
      *                 Set to UNSPECIFIED::VALUE to disable.
      *                 The input number must be routed by
      *                 inputHub::route_to_ui::add()
-     * @param showBattery InputNumber to show the battery level.
-     *                    Set to UNSPECIFIED::VALUE to disable.
-     *                    The input number must be routed by
-     *                    inputHub::route_to_ui::add()
      */
     OledTelemetry128x64(
         const OLEDParameters &params,
         I2CBus bus = I2CBus::SECONDARY,
         bool enableFlashing = true,
-        InputNumber nextDash = UNSPECIFIED::VALUE,
-        InputNumber showBattery = UNSPECIFIED::VALUE);
+        OledDashboard initialDashboard = OledDashboard::_DEFAULT,
+        InputNumber nextDash = UNSPECIFIED::VALUE);
 
     /**
      * @brief Create an Oled Telemetry display (128x64)
@@ -195,22 +209,19 @@ public:
      * @param address7bits Full I2C address in 7 bit format
      * @param bus I2C bus
      * @param enableFlashing Whether to allow screen flashing or not
+     * @param initialDashboard Dashboard to show at first
      * @param nextDash Input number to cycle to the next dashboard.
      *                 Set to UNSPECIFIED::VALUE to disable.
      *                 The input number must be routed by
      *                 inputHub::route_to_ui::add()
-     * @param showBattery InputNumber to show the battery level.
-     *                    Set to UNSPECIFIED::VALUE to disable.
-     *                    The input number must be routed by
-     *                    inputHub::route_to_ui::add()
      */
     OledTelemetry128x64(
         const OLEDParameters &params,
         uint8_t address7bits,
         I2CBus bus = I2CBus::SECONDARY,
         bool enableFlashing = true,
-        InputNumber nextDash = UNSPECIFIED::VALUE,
-        InputNumber showBattery = UNSPECIFIED::VALUE);
+        OledDashboard initialDashboard = OledDashboard::_DEFAULT,
+        InputNumber nextDash = UNSPECIFIED::VALUE);
 
     virtual void onStart() override;
     virtual void onConnected() override;

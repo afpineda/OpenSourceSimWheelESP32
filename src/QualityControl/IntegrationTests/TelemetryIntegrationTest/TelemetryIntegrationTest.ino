@@ -80,6 +80,8 @@ void setup()
         ui::add<OledTelemetry128x64>(
             oled_params,
             I2CBus::SECONDARY,
+            true,
+            OledDashboard::_DEFAULT,
             ROUTED1);
 
         internals::hid::common::getReady();

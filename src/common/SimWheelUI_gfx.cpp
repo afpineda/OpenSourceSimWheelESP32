@@ -29,8 +29,7 @@
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 
-#define DASHBOARD_MAIN 0
-#define DASHBOARD_ALTERNATE 1
+#define OLED_BATT_UPDATE_MS 15000
 
 struct OledTelemetry128x64::Implementation
 {
@@ -38,6 +37,8 @@ struct OledTelemetry128x64::Implementation
     GFXcanvas1 frame{128, 64};
     /// @brief Timer to hide the bite point bar
     uint32_t bitePointTimer = 0;
+    /// @brief Timer to update the battery dashboard
+    uint32_t batteryUpdateTimer = 0;
     /// @brief True if currently flashing
     bool flashing = false;
     /// @brief Show the bite point bar instead of the telemetry data
@@ -50,10 +51,8 @@ struct OledTelemetry128x64::Implementation
     bool updated = false;
     /// @brief Input number to cycle dashboards
     uint8_t nextDash = 0xFF;
-    /// @brief Input number to show the battery level
-    uint8_t showBattery = 0xFF;
     /// @brief Current user-selected dashboard
-    uint8_t currentDash = DASHBOARD_MAIN;
+    OledDashboard currentDash = OledDashboard::_DEFAULT;
 }; // struct OledTelemetry128x64::Implementation
 
 //-----------------------------------------------------------------------------
@@ -64,13 +63,13 @@ OledTelemetry128x64::OledTelemetry128x64(
     const OLEDParameters &params,
     I2CBus bus,
     bool enableFlashing,
-    InputNumber nextDash,
-    InputNumber showBattery)
+    OledDashboard initialDashboard,
+    InputNumber nextDash)
     : _impl{::std::make_unique<Implementation>()},
       _display(OLEDParameters::withResolution(128, 64, params), bus),
       _enableFlashing{enableFlashing}
 {
-    init(nextDash, showBattery);
+    init(nextDash, initialDashboard);
 }
 
 OledTelemetry128x64::OledTelemetry128x64(
@@ -78,8 +77,8 @@ OledTelemetry128x64::OledTelemetry128x64(
     uint8_t address7bits,
     I2CBus bus,
     bool enableFlashing,
-    InputNumber nextDash,
-    InputNumber showBattery)
+    OledDashboard initialDashboard,
+    InputNumber nextDash)
     : _impl{::std::make_unique<Implementation>()},
       _display(
           OLEDParameters::withResolution(128, 64, params),
@@ -87,38 +86,55 @@ OledTelemetry128x64::OledTelemetry128x64(
           bus),
       _enableFlashing{enableFlashing}
 {
-    init(nextDash, showBattery);
+    init(nextDash, initialDashboard);
 }
 
 //-----------------------------------------------------------------------------
 // Protected methods
 //-----------------------------------------------------------------------------
 
-void OledTelemetry128x64::init(InputNumber nextDash, InputNumber showBattery)
+void OledTelemetry128x64::init(
+    InputNumber nextDash,
+    OledDashboard initialDashboard)
 {
     _impl->nextDash = nextDash;
-    _impl->showBattery = showBattery;
+    _impl->currentDash = initialDashboard;
     _display.clear();
     requiresPowertrainTelemetry = true;
     requiresECUTelemetry = true;
     requiresGaugeTelemetry = (nextDash != UNSPECIFIED::VALUE);
 }
 
-void OledTelemetry128x64::display_battery_level(uint8_t value)
+void OledTelemetry128x64::draw_battery_level()
 {
+    BatteryStatus status;
+    BatteryService::call::getStatus(status);
+
+    // Draw a battery shape
     _impl->frame.fillScreen(0);
     _impl->frame.drawRoundRect(4, 16, 72, 32, 4, 0xFFFF);
     _impl->frame.drawRect(76, 24, 8, 16, 0xFFFF);
-    uint8_t w = map_value(value, 0, 100, 0, 72);
-    _impl->frame.fillRoundRect(4, 16, w, 32, 4, 0xFFFF);
     _impl->frame.setCursor(90, 25);
     _impl->frame.setTextSize(2);
     _impl->frame.setTextColor(0xFF, 0);
-    if (value < 100)
-        _impl->frame.printf("%2.2u%%", value);
+
+    if (status.stateOfCharge.has_value())
+    {
+        // Draw filled rectangle
+        uint8_t value = status.stateOfCharge.value();
+        uint8_t w = map_value(value, 0, 100, 0, 72);
+        _impl->frame.fillRoundRect(4, 16, w, 32, 4, 0xFFFF);
+        // Print battery charge
+        if (value < 100)
+            _impl->frame.printf("%2.2u%%", value);
+        else
+            _impl->frame.print("100");
+    }
     else
-        _impl->frame.print("100");
-    _display.show(_impl->frame.getBuffer());
+    {
+        // Print unknown percentage
+        _impl->frame.printf("???");
+    }
 }
 
 void OledTelemetry128x64::draw_main_dashboard(
@@ -279,13 +295,11 @@ void OledTelemetry128x64::clearFrameBuffer()
 void OledTelemetry128x64::onStart()
 {
     stopFlashing();
-    BatteryStatus status;
-    BatteryService::call::getStatus(status);
-    if (BatteryService::call::hasBattery() &&
-        status.stateOfCharge.has_value())
-        display_battery_level(status.stateOfCharge.value());
+    if (BatteryService::call::hasBattery())
+        draw_battery_level();
     else
     {
+        // Show welcome message
         _impl->frame.fillScreen(0);
         _impl->frame.drawRoundRect(0, 0, 128, 64, 4, 0xFFFF);
         _impl->frame.setTextSize(2);
@@ -294,8 +308,8 @@ void OledTelemetry128x64::onStart()
         _impl->frame.print("\x02 ESP32 \x02");
         _impl->frame.setCursor(10, 30);
         _impl->frame.print("sim wheel");
-        _display.show(_impl->frame.getBuffer());
     }
+    _display.show(_impl->frame.getBuffer());
     DELAY_MS(2000);
     clearFrameBuffer();
 }
@@ -324,13 +338,29 @@ void OledTelemetry128x64::onUserInput(uint8_t inputNumber)
 {
     if (inputNumber == _impl->nextDash)
     {
-        if (_impl->currentDash == DASHBOARD_ALTERNATE)
-            _impl->currentDash = DASHBOARD_MAIN;
-        else
-            _impl->currentDash = DASHBOARD_ALTERNATE;
+        stopFlashing();
+        switch (_impl->currentDash)
+        {
+        case OledDashboard::STANDARD:
+            _impl->currentDash = OledDashboard::ALTERNATE;
+            break;
+        case OledDashboard::ALTERNATE:
+            _impl->batteryUpdateTimer = OLED_BATT_UPDATE_MS;
+            if (BatteryService::call::hasBattery())
+                _impl->currentDash = OledDashboard::BATTERY;
+            else
+                _impl->currentDash = OledDashboard::STANDARD;
+            break;
+        case OledDashboard::BATTERY:
+            _impl->currentDash = OledDashboard::STANDARD;
+            break;
+        default:
+            // Should not enter here
+            _impl->currentDash = OledDashboard::_DEFAULT;
+            break;
+        }
+        clearFrameBuffer();
     }
-    else if (inputNumber == _impl->showBattery)
-        onStart();
 }
 
 void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
@@ -338,10 +368,17 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
     if (_impl->showBitePoint)
         return;
 
-    if (_impl->currentDash == DASHBOARD_MAIN)
+    switch (_impl->currentDash)
+    {
+    case OledDashboard::STANDARD:
         draw_main_dashboard(pTelemetryData);
-    else
+        break;
+    case OledDashboard::ALTERNATE:
         draw_alt_dashboard(pTelemetryData);
+        break;
+    default:
+        return;
+    }
     _impl->updated = true;
 }
 
@@ -352,6 +389,17 @@ void OledTelemetry128x64::serveSingleFrame(uint32_t elapsedMs)
     {
         clearFrameBuffer();
         _impl->showBitePoint = false;
+    }
+
+    if ((_impl->currentDash == OledDashboard::BATTERY) &&
+        (frameTimer(
+             _impl->batteryUpdateTimer,
+             elapsedMs,
+             OLED_BATT_UPDATE_MS) > 0))
+    {
+        _impl->batteryUpdateTimer = 0;
+        _impl->updated = true;
+        draw_battery_level();
     }
 
     if (_impl->updated)
