@@ -310,14 +310,22 @@ void internals::ui::getReady()
     uint8_t max_fps = 0;
     for (auto instance : _ui_instances)
     {
-        requiresPowertrainTelemetry |= instance->requiresPowertrainTelemetry;
-        requiresECUTelemetry |= instance->requiresECUTelemetry;
-        requiresRaceControlTelemetry |= instance->requiresRaceControlTelemetry;
-        requiresGaugeTelemetry |= instance->requiresGaugeTelemetry;
+        requiresPowertrainTelemetry =
+            requiresPowertrainTelemetry ||
+            instance->requiresPowertrainTelemetry;
+        requiresECUTelemetry =
+            requiresECUTelemetry ||
+            instance->requiresECUTelemetry;
+        requiresRaceControlTelemetry =
+            requiresRaceControlTelemetry ||
+            instance->requiresRaceControlTelemetry;
+        requiresGaugeTelemetry |=
+            requiresGaugeTelemetry ||
+            instance->requiresGaugeTelemetry;
         bool thisInstanceUsesTelemetry =
-            instance->requiresPowertrainTelemetry |
-            instance->requiresECUTelemetry |
-            instance->requiresRaceControlTelemetry |
+            instance->requiresPowertrainTelemetry ||
+            instance->requiresECUTelemetry ||
+            instance->requiresRaceControlTelemetry ||
             instance->requiresGaugeTelemetry;
         if (thisInstanceUsesTelemetry && (instance->getMaxFPS() > max_fps))
             max_fps = instance->getMaxFPS();
