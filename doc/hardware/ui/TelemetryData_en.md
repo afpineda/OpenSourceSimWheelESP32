@@ -45,6 +45,27 @@ For this to work your custom firmware must meet two conditions:
 > it counts as **not assigned** to the input hardware.
 > So, you will get an error message if you try to use them in other
 > firmware features.
+>
+> It does not work well with non-momentary switches.
+
+Example:
+
+```c++
+...
+inputs::addButton(GPIO_NUM_26, 120); // Assign 120 to input hardware
+inputHub::route_to_ui:add(120); // Route 120 to UI instances
+...
+OLEDParameters my_oled_params;
+...
+// Create UI instance
+ui::add<OledTelemetry128x64>(
+   my_oled_params,
+   I2CBus::SECONDARY,
+   true,
+   OledDashboard::_DEFAULT,
+   120); // Use 120 to select the next dashboard
+...
+```
 
 ## How to design your own telemetry display
 
