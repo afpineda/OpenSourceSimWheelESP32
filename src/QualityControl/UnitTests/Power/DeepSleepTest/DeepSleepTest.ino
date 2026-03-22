@@ -149,7 +149,7 @@ void setup()
   Serial.println("");
   Serial.println("Entering deep sleep mode");
   delay(1000);
-  PowerService::call::shutdown();
+  PowerService::call().shutdown();
 }
 
 void loop()

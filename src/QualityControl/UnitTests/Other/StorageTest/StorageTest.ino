@@ -34,44 +34,44 @@ void saved()
 
 void setTestCaseForDelayedSettings()
 {
-    InputService::call::setAxisCalibration(0, 1, 2, 3, false);
-    InputService::call::setAxisPolarity(false, true, false);
-    InputService::call::setRotaryPulseWidthMultiplier(PulseWidthMultiplier::X6, false);
-    InputHubService::call::setAltButtonsWorkingMode(AltButtonsWorkingMode::Regular, false);
-    InputHubService::call::setBitePoint(12, false);
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::LAUNCH_CONTROL_MASTER_LEFT, false);
-    InputHubService::call::setDPadWorkingMode(DPadWorkingMode::Regular, false);
-    InputHubService::call::setSecurityLock(true, false);
+    InputService::call().setAxisCalibration(0, 1, 2, 3, false);
+    InputService::call().setAxisPolarity(false, true, false);
+    InputService::call().setRotaryPulseWidthMultiplier(PulseWidthMultiplier::X6, false);
+    InputHubService::call().setAltButtonsWorkingMode(AltButtonsWorkingMode::Regular, false);
+    InputHubService::call().setBitePoint(12, false);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::LAUNCH_CONTROL_MASTER_LEFT, false);
+    InputHubService::call().setDPadWorkingMode(DPadWorkingMode::Regular, false);
+    InputHubService::call().setSecurityLock(true, false);
 }
 
 void checkTestCaseForDelayedSettings()
 {
     int a, b, c, d;
     Serial.println("Checking current settings against test case (delayed settings)");
-    InputService::call::getAxisCalibration(a, b, c, d);
+    InputService::call().getAxisCalibration(a, b, c, d);
     if ((a != 0) || (b != 1) || (c != 2) || (d != 3))
         Serial.printf("NO MATCH: axis calibration data (%d,%d,%d,%d)\n",
                       a, b, c, d);
     bool x, y;
-    InputService::call::getAxisPolarity(x, y);
+    InputService::call().getAxisPolarity(x, y);
     if (x || !y)
         Serial.println("NO MATCH: axis polarity");
-    auto pw = InputService::call::getRotaryPulseWidthMultiplier();
+    auto pw = InputService::call().getRotaryPulseWidthMultiplier();
     if (pw != PulseWidthMultiplier::X6)
         Serial.println("NO MATCH: pulse width");
-    auto alt_WM = InputHubService::call::getAltButtonsWorkingMode();
+    auto alt_WM = InputHubService::call().getAltButtonsWorkingMode();
     if (alt_WM != AltButtonsWorkingMode::Regular)
         Serial.println("NO MATCH: Alt buttons working mode");
-    auto bitePoint = InputHubService::call::getBitePoint();
+    auto bitePoint = InputHubService::call().getBitePoint();
     if (bitePoint != 12)
         Serial.printf("NO MATCH: Bite point (%hhu)\n", bitePoint);
-    auto clutch_WM = InputHubService::call::getClutchWorkingMode();
+    auto clutch_WM = InputHubService::call().getClutchWorkingMode();
     if (clutch_WM != ClutchWorkingMode::LAUNCH_CONTROL_MASTER_LEFT)
         Serial.println("NO MATCH: Clutch working mode");
-    auto dpad_WM = InputHubService::call::getDPadWorkingMode();
+    auto dpad_WM = InputHubService::call().getDPadWorkingMode();
     if (dpad_WM != DPadWorkingMode::Regular)
         Serial.println("NO MATCH: DPAD working mode");
-    x = InputHubService::call::getSecurityLock();
+    x = InputHubService::call().getSecurityLock();
     if (!x)
         Serial.println("NO MATCH: security lock");
     Serial.println("Done");
@@ -79,26 +79,26 @@ void checkTestCaseForDelayedSettings()
 
 void setTestCaseForNonDelayedSettings()
 {
-    InputMapService::call::setMap(64, 126, 125);
-    HidService::call::setCustomHardwareID(0xFEFE, 0xEFEF, false);
-    BatteryCalibrationService::call::setAutoCalibrationParameter(3999, false);
-    BatteryCalibrationService::call::setCalibrationData(0, 101, false);
+    InputMapService::call().setMap(64, 126, 125);
+    HidService::call().setCustomHardwareID(0xFEFE, 0xEFEF, false);
+    BatteryCalibrationService::call().setAutoCalibrationParameter(3999, false);
+    BatteryCalibrationService::call().setCalibrationData(0, 101, false);
 }
 
 void checkTestCaseForNonDelayedSettings()
 {
     uint8_t a, b;
     uint16_t x, y;
-    InputMapService::call::getMap(43, a, b);
+    InputMapService::call().getMap(43, a, b);
     if ((a != 126) || (b != 125))
         Serial.println("NO MATCH: input map");
-    HidService::call::getCustomHardwareID(x, y);
+    HidService::call().getCustomHardwareID(x, y);
     if ((x != 0xFEFE) || (y != 0xEFEF))
         Serial.println("NO MATCH: hardware ID");
-    int cal = BatteryCalibrationService::call::getAutoCalibrationParameter();
+    int cal = BatteryCalibrationService::call().getAutoCalibrationParameter();
     if (cal != 3999)
         Serial.println("NO MATCH: auto-calibration parameter");
-    cal = BatteryCalibrationService::call::getCalibrationData(0);
+    cal = BatteryCalibrationService::call().getCalibrationData(0);
     if (cal != 101)
         Serial.println("NO MATCH: calibration data");
     Serial.println("Done");

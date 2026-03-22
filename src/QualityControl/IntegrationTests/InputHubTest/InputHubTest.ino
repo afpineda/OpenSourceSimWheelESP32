@@ -187,8 +187,8 @@ void checkDpad(uint8_t POVstate, std::string msg)
 void TG_filteredInput()
 {
     fakeInput.clear();
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
-    InputHubService::call::setAltButtonsWorkingMode(AltButtonsWorkingMode::ALT);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
+    InputHubService::call().setAltButtonsWorkingMode(AltButtonsWorkingMode::ALT);
 
     fakeInput.clear();
     fakeInput.press(45);
@@ -212,37 +212,37 @@ void TG_filteredInput()
 void TG_ClutchMode()
 {
     fakeInput.clear();
-    InputHubService::call::setBitePoint(CLUTCH_DEFAULT_VALUE);
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
+    InputHubService::call().setBitePoint(CLUTCH_DEFAULT_VALUE);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
     uint8_t bp;
 
     fakeInput.leftAxis = CLUTCH_FULL_VALUE;
-    bp = InputHubService::call::getBitePoint();
+    bp = InputHubService::call().getBitePoint();
     checkAxes(0, 0, bp, "Left clutch paddle");
 
     fakeInput.leftAxis = 0;
     fakeInput.rightAxis = CLUTCH_FULL_VALUE;
     vTaskDelay(WAIT_TICKS);
-    bp = InputHubService::call::getBitePoint();
+    bp = InputHubService::call().getBitePoint();
     checkAxes(0, 0, bp, "Right clutch paddle");
 
     fakeInput.press(CW_IN);
     fakeInput.release(CW_IN);
     vTaskDelay(WAIT_TICKS);
-    bp = InputHubService::call::getBitePoint();
+    bp = InputHubService::call().getBitePoint();
     checkAxes(0, 0, bp, "Increase BP");
 
     fakeInput.press(CCW_IN);
     fakeInput.release(CCW_IN);
     vTaskDelay(WAIT_TICKS);
-    bp = InputHubService::call::getBitePoint();
+    bp = InputHubService::call().getBitePoint();
     checkAxes(0, 0, bp, "Decrease BP");
 }
 
 void TG_AxesMode()
 {
     fakeInput.clear();
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::AXIS);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::AXIS);
 
     fakeInput.leftAxis = 12;
     fakeInput.rightAxis = 132;
@@ -252,7 +252,7 @@ void TG_AxesMode()
 void TG_ClutchButtonsMode()
 {
     fakeInput.clear();
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::BUTTON);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::BUTTON);
 
     fakeInput.leftAxis = CLUTCH_1_4_VALUE;
     fakeInput.rightAxis = CLUTCH_1_4_VALUE;
@@ -273,8 +273,8 @@ void TG_ClutchButtonsMode()
 
 void TG_ClutchAltMode()
 {
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::ALT);
-    InputHubService::call::setAltButtonsWorkingMode(AltButtonsWorkingMode::Regular);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::ALT);
+    InputHubService::call().setAltButtonsWorkingMode(AltButtonsWorkingMode::Regular);
 
     fakeInput.clear();
     fakeInput.leftAxis = CLUTCH_3_4_VALUE;
@@ -294,8 +294,8 @@ void TG_ClutchAltMode()
 void TG_LaunchControlMode()
 {
     uint8_t bp;
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::LAUNCH_CONTROL_MASTER_LEFT);
-    InputHubService::call::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::LAUNCH_CONTROL_MASTER_LEFT);
+    InputHubService::call().setBitePoint(CLUTCH_DEFAULT_VALUE);
     fakeInput.clear();
     vTaskDelay(WAIT_TICKS);
 
@@ -303,7 +303,7 @@ void TG_LaunchControlMode()
     checkAxes(0, 0, 0, "Slave 1/4");
 
     fakeInput.rightAxis = CLUTCH_FULL_VALUE;
-    bp = InputHubService::call::getBitePoint();
+    bp = InputHubService::call().getBitePoint();
     checkAxes(0, 0, bp, "Slave 3/4");
 
     fakeInput.leftAxis = CLUTCH_1_4_VALUE;
@@ -320,14 +320,14 @@ void TG_LaunchControlMode()
     fakeInput.rightAxis = CLUTCH_FULL_VALUE;
     fakeInput.press(CW_IN);
     vTaskDelay(WAIT_TICKS);
-    bp = InputHubService::call::getBitePoint();
+    bp = InputHubService::call().getBitePoint();
     checkAxes(0, 0, bp, "Slave + bite point increase");
 }
 
 void TG_AltButton()
 {
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
-    InputHubService::call::setAltButtonsWorkingMode(AltButtonsWorkingMode::ALT);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
+    InputHubService::call().setAltButtonsWorkingMode(AltButtonsWorkingMode::ALT);
 
     fakeInput.clear();
     fakeInput.press(ALT_IN);
@@ -337,7 +337,7 @@ void TG_AltButton()
     fakeInput.release(ALT_IN);
     vTaskDelay(WAIT_TICKS);
 
-    InputHubService::call::setAltButtonsWorkingMode(AltButtonsWorkingMode::Regular);
+    InputHubService::call().setAltButtonsWorkingMode(AltButtonsWorkingMode::Regular);
 
     fakeInput.press(ALT_IN);
     fakeInput.press(45);
@@ -347,7 +347,7 @@ void TG_AltButton()
 void TG_Dpad()
 {
     fakeInput.clear();
-    InputHubService::call::setDPadWorkingMode(DPadWorkingMode::Navigation);
+    InputHubService::call().setDPadWorkingMode(DPadWorkingMode::Navigation);
 
     fakeInput.press(DPAD_UP_IN);
     checkDpad(DPAD_UP_STATE, "DPAD up");

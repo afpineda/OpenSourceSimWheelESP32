@@ -47,10 +47,10 @@ void dumpCalibrationData()
     Serial.print("{ ");
     for (
         uint8_t index = 0;
-        index < BatteryCalibrationService::call::getCalibrationDataCount();
+        index < BatteryCalibrationService::call().getCalibrationDataCount();
         index++)
     {
-        data = BatteryCalibrationService::call::getCalibrationData(index);
+        data = BatteryCalibrationService::call().getCalibrationData(index);
         if (index > 0)
             Serial.print(", ");
         Serial.print(data);
@@ -69,7 +69,7 @@ bool isBatteryAlreadyCalibrated()
 {
     // If getBatteryLevel() returns -1, there is no calibration data stored
     // in flash memory
-    return (BatteryCalibrationService::call::getBatteryLevel(4090) >= 0);
+    return (BatteryCalibrationService::call().getBatteryLevel(4090) >= 0);
 }
 
 void erasePreviousCalibrationData()
@@ -86,9 +86,9 @@ void erasePreviousCalibrationData()
     }
     Serial.println("Erasing calibration data...");
 
-    uint8_t calCount = BatteryCalibrationService::call::getCalibrationDataCount();
+    uint8_t calCount = BatteryCalibrationService::call().getCalibrationDataCount();
     for (uint8_t i = 0; i < calCount; i++)
-        BatteryCalibrationService::call::setCalibrationData(i, 0, false);
+        BatteryCalibrationService::call().setCalibrationData(i, 0, false);
     SaveSetting(UserSetting::BATTERY_CALIBRATION_DATA);
     DELAY_MS(200);
 

@@ -43,7 +43,7 @@ void setup()
   }
   Serial.println("");
   Serial.println("Power Off");
-  PowerService::call::shutdown();
+  PowerService::call().shutdown();
 }
 
 void loop()

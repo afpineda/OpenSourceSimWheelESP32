@@ -30,7 +30,7 @@ void restoreCalibrationData()
 {
     internals::batteryCalibration::clear();
     for (uint8_t i = 0; i < sizeof(customCalibrationData); i++)
-        BatteryCalibrationService::call::setCalibrationData(
+        BatteryCalibrationService::call().setCalibrationData(
             i,
             customCalibrationData[i],
             false);
@@ -50,7 +50,7 @@ void setup()
 
     // Check data array
     int len = sizeof(customCalibrationData) / sizeof(uint16_t);
-    if (len != BatteryCalibrationService::call::getCalibrationDataCount())
+    if (len != BatteryCalibrationService::call().getCalibrationDataCount())
     {
         Serial.println("[EN] ERROR: calibration data does not contain the expected 32 numbers");
         Serial.println("[ES] ERROR: los datos de calibracion no contienen los 32 numeros esperados");
