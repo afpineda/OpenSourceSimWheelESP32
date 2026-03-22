@@ -241,7 +241,7 @@ void batteryCalibrationStart()
 
 void internals::batteryCalibration::getReady()
 {
-    if (!FirmwareService::call::isRunning())
+    if (!FirmwareService::call().isRunning())
     {
         BatteryCalibrationService::inject(new BatteryCalibrationProvider());
         OnStart.subscribe(batteryCalibrationStart);

@@ -264,9 +264,9 @@ bool PixelControlNotification::renderBatteryLevel(
     bool colorGradientOrPercentage,
     uint32_t barColor)
 {
-    if (BatteryService::call::isBatteryPresent())
+    if (BatteryService::call().isBatteryPresent())
     {
-        int soc = BatteryService::call::getLastBatteryLevel();
+        int soc = BatteryService::call().getLastBatteryLevel();
         if (colorGradientOrPercentage)
         {
             // Color gradient

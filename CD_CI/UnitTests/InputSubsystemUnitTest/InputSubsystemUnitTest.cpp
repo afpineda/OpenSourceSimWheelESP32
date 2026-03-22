@@ -82,7 +82,7 @@ void internals::inputHub::onRawInput(DecouplingEvent &event)
 void test1()
 {
     std::cout << "- test 1 -" << std::endl;
-    InputService::call::update();
+    InputService::call().update();
     waitFor("1");
     binEquals("update (bitmap)", 0, receivedEvent.rawInputBitmap.low);
 }
@@ -170,7 +170,7 @@ void test6()
 {
     std::cout << "- test 6 -" << std::endl;
     reset();
-    InputService::call::setAxisPolarity(false, false, false);
+    InputService::call().setAxisPolarity(false, false, false);
 
     primary->leftAxis = 54;
     primary->rightAxis = 1;
@@ -178,12 +178,12 @@ void test6()
     assert<int>::equals("L axis", 54, receivedEvent.leftAxisValue);
     assert<int>::equals("R axis", 1, receivedEvent.rightAxisValue);
 
-    InputService::call::reverseLeftAxis();
+    InputService::call().reverseLeftAxis();
     waitFor("2");
     assert<int>::equals(
         "L axis reverse failed", 254 - 54, receivedEvent.leftAxisValue);
 
-    InputService::call::reverseRightAxis();
+    InputService::call().reverseRightAxis();
     waitFor("3");
     assert<int>::equals(
         "R axis reverse failed", 254 - 1, receivedEvent.rightAxisValue);
@@ -200,7 +200,7 @@ void test7()
     assert<size_t>::equals(
         "initial state", 0, primary->recalibrationRequestCount);
 
-    InputService::call::recalibrateAxes();
+    InputService::call().recalibrateAxes();
     assert<size_t>::equals(
         "recalibration", 2, primary->recalibrationRequestCount);
 }

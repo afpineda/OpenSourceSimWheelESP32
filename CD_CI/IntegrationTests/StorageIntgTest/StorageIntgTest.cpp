@@ -152,7 +152,7 @@ public:
         user_defined = 0;
         user_defined_alt = 0;
     }
-    virtual void resetMap() MOCK;
+    virtual void resetMap() {};
 } inputMapMock;
 
 //-------------------------------------------------------------------
@@ -165,7 +165,7 @@ public:
     inline static bool _autoParamSaved = false;
     inline static bool _autoParamLoaded = false;
 
-    virtual uint8_t getCalibrationDataCount() MOCK_R(1);
+    virtual uint8_t getCalibrationDataCount() { return (1); }
 
     virtual uint16_t getCalibrationData(uint8_t index)
     {

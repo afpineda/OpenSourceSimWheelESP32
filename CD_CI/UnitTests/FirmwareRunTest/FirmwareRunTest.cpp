@@ -83,7 +83,7 @@ int main()
     assert(!started);
 
     // Check that the firmware is not running
-    assert(!FirmwareService::call::isRunning());
+    assert(!FirmwareService::call().isRunning());
 
     // Start subsystems
     OnStart.subscribe(onStart);
@@ -104,7 +104,7 @@ int main()
     assert(started);
 
     // Check that the firmware is running
-    assert(FirmwareService::call::isRunning());
+    assert(FirmwareService::call().isRunning());
 
     return 0;
 }

@@ -44,7 +44,7 @@ void firmwareSetIsRunningState(bool state)
 
 void firmware::run()
 {
-    if (!FirmwareService::call::isRunning())
+    if (!FirmwareService::call().isRunning())
     {
         internals::storage::getReady();
         internals::hid::common::getReady();

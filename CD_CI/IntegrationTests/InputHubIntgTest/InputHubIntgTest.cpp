@@ -189,7 +189,7 @@ void TG_bite_point()
 
     DecouplingEvent evt{};
     bitePointWitness = 0;
-    InputHubService::call::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    InputHubService::call().setBitePoint(CLUTCH_DEFAULT_VALUE);
     assert<int>::equals("Bite point initial state and callback", CLUTCH_DEFAULT_VALUE, bitePointWitness);
 
     evt.leftAxisValue = 254;
@@ -200,7 +200,7 @@ void TG_bite_point()
     internals::inputHub::onRawInput(evt);
     assert<int>::more("Bite point up callback", CLUTCH_DEFAULT_VALUE, bitePointWitness);
 
-    InputHubService::call::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    InputHubService::call().setBitePoint(CLUTCH_DEFAULT_VALUE);
     evt.leftAxisValue = 254;
     evt.rightAxisValue = 0;
     evt.rawInputBitmap.low = BMP(BITE_POINT_DOWN); // Btn 5 press

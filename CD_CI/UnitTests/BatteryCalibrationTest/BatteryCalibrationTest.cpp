@@ -147,7 +147,7 @@ void checkCalibrationData()
 {
     for (int i = 0; i < TEST_DATA_COUNT; i++)
     {
-        int l = BatteryCalibrationService::call::getBatteryLevel(testReadings[i]);
+        int l = BatteryCalibrationService::call().getBatteryLevel(testReadings[i]);
         assert((l >= 0) && "Unexpected result from getBatteryLevel() with calibration data");
         assert<int>::almostEquals("Battery level mismatch", batteryLevel[i], l, 1);
     }
@@ -157,14 +157,14 @@ void checkCalibrationDataIsClear()
 {
     for (int i = 0; i < 4096; i++)
     {
-        int l = BatteryCalibrationService::call::getBatteryLevel(i);
+        int l = BatteryCalibrationService::call().getBatteryLevel(i);
         assert((l < 0) && "Unexpected result from getBatteryLevel() without calibration data");
     }
 }
 
 void checkAutoCalibration(int expected)
 {
-    int actual = BatteryCalibrationService::call::getAutoCalibrationParameter();
+    int actual = BatteryCalibrationService::call().getAutoCalibrationParameter();
     assert<int>::equals("Auto-calibration mismatch", expected, actual);
 }
 
@@ -207,51 +207,51 @@ int main()
 
     // Test out of range readings
     printTestHeader(testnumber++); // #4
-    v = BatteryCalibrationService::call::getBatteryLevel(-1000);
+    v = BatteryCalibrationService::call().getBatteryLevel(-1000);
     assert<int>::almostEquals("Check 1", 0, v, 1);
-    v = BatteryCalibrationService::call::getBatteryLevel(0);
+    v = BatteryCalibrationService::call().getBatteryLevel(0);
     assert<int>::almostEquals("Check 2", 0, v, 1);
-    v = BatteryCalibrationService::call::getBatteryLevel(5000);
+    v = BatteryCalibrationService::call().getBatteryLevel(5000);
     assert<int>::almostEquals("Check 3", 100, v, 1);
 
     // Test that calibration data is stored
     printTestHeader(testnumber++); // #5
     saved = false;
-    BatteryCalibrationService::call::setCalibrationData(0, 1, true);
+    BatteryCalibrationService::call().setCalibrationData(0, 1, true);
     assert<bool>::equals("Save data", true, saved);
     internals::batteryCalibration::clear();
 
     // Test autocalibration
     printTestHeader(testnumber++); // #6
-    BatteryCalibrationService::call::restartAutoCalibration();
-    v = BatteryCalibrationService::call::getAutoCalibrationParameter();
+    BatteryCalibrationService::call().restartAutoCalibration();
+    v = BatteryCalibrationService::call().getAutoCalibrationParameter();
     assert<int>::equals("Restart autocalibration algorithm", -1, v);
 
     // Out of range readings
     printTestHeader(testnumber++); // #7
-    v = BatteryCalibrationService::call::getBatteryLevelAutoCalibrated(-100);
+    v = BatteryCalibrationService::call().getBatteryLevelAutoCalibrated(-100);
     assert<int>::almostEquals("Check 1", 0, v, 1);
-    v = BatteryCalibrationService::call::getBatteryLevelAutoCalibrated(0);
+    v = BatteryCalibrationService::call().getBatteryLevelAutoCalibrated(0);
     assert<int>::almostEquals("Check 2", 0, v, 1);
-    v = BatteryCalibrationService::call::getBatteryLevelAutoCalibrated(7000);
+    v = BatteryCalibrationService::call().getBatteryLevelAutoCalibrated(7000);
     assert<int>::almostEquals("Check 3", 100, v, 1);
 
     // Autocalibration: increasing reading
     printTestHeader(testnumber++);                                             // #8
-    l1 = BatteryCalibrationService::call::getBatteryLevelAutoCalibrated(2551); // First autocalibration
+    l1 = BatteryCalibrationService::call().getBatteryLevelAutoCalibrated(2551); // First autocalibration
     checkAutoCalibration(2551);
     assert<int>::almostEquals("1st autocal", 100, l1, 1);
-    l2 = BatteryCalibrationService::call::getBatteryLevelAutoCalibrated(2371); // no autocalibration
+    l2 = BatteryCalibrationService::call().getBatteryLevelAutoCalibrated(2371); // no autocalibration
     checkAutoCalibration(2551);
     assert((l2 < 100) && "Unexpected l2");
 
     printTestHeader(testnumber++);                                             // #9
-    l3 = BatteryCalibrationService::call::getBatteryLevelAutoCalibrated(3000); // Second autocalibration
+    l3 = BatteryCalibrationService::call().getBatteryLevelAutoCalibrated(3000); // Second autocalibration
     checkAutoCalibration(3000);
     assert<int>::almostEquals("2nd autocal", 100, l3, 1);
-    l4 = BatteryCalibrationService::call::getBatteryLevelAutoCalibrated(2551); // no autocalibration
+    l4 = BatteryCalibrationService::call().getBatteryLevelAutoCalibrated(2551); // no autocalibration
     checkAutoCalibration(3000);
-    l5 = BatteryCalibrationService::call::getBatteryLevelAutoCalibrated(2371); // no autocalibration
+    l5 = BatteryCalibrationService::call().getBatteryLevelAutoCalibrated(2371); // no autocalibration
     checkAutoCalibration(3000);
     assert((l4 < 100) && "Unexpected l4");
     assert((l4 > l5) && "ERROR: l4<=l5");
@@ -261,7 +261,7 @@ int main()
     printTestHeader(testnumber++); // #10
     saved = false;
     internals::batteryCalibration::clear();
-    v = BatteryCalibrationService::call::getBatteryLevelAutoCalibrated(2371);
+    v = BatteryCalibrationService::call().getBatteryLevelAutoCalibrated(2371);
     assert<bool>::equals("Save data", true, saved);
 
     return 0;

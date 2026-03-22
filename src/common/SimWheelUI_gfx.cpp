@@ -108,7 +108,7 @@ void OledTelemetry128x64::init(
 void OledTelemetry128x64::draw_battery_level()
 {
     BatteryStatus status;
-    BatteryService::call::getStatus(status);
+    BatteryService::call().getStatus(status);
 
     // Draw a battery shape
     _impl->frame.fillScreen(0);
@@ -295,7 +295,7 @@ void OledTelemetry128x64::clearFrameBuffer()
 void OledTelemetry128x64::onStart()
 {
     stopFlashing();
-    if (BatteryService::call::hasBattery())
+    if (BatteryService::call().hasBattery())
         draw_battery_level();
     else
     {
@@ -346,7 +346,7 @@ void OledTelemetry128x64::onUserInput(uint8_t inputNumber)
             break;
         case OledDashboard::ALTERNATE:
             _impl->batteryUpdateTimer = OLED_BATT_UPDATE_MS;
-            if (BatteryService::call::hasBattery())
+            if (BatteryService::call().hasBattery())
                 _impl->currentDash = OledDashboard::BATTERY;
             else
                 _impl->currentDash = OledDashboard::STANDARD;

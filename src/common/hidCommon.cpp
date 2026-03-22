@@ -139,7 +139,7 @@ void commonHidStart()
         {
             // Load the custom hardware ID
             LoadSetting(UserSetting::CUSTOM_HARDWARE_ID);
-            HidService::call::getCustomHardwareID(customVID, customPID);
+            HidService::call().getCustomHardwareID(customVID, customPID);
             if ((customVID == 0) && (customPID == 0))
             {
                 // There is no custom hardware ID, use factory defaults
@@ -190,7 +190,7 @@ uint16_t internals::hid::common::onGetFeature(
 #if !CD_CI
         esp_efuse_mac_get_default(buffer + 8);
 #endif
-        buffer[16] = UIService::call::getMaxFPS();
+        buffer[16] = UIService::call().getMaxFPS();
         buffer[17] = internals::pixels::getCount(PixelGroup::GRP_TELEMETRY);
         buffer[18] = internals::pixels::getCount(PixelGroup::GRP_BUTTONS);
         buffer[19] = internals::pixels::getCount(PixelGroup::GRP_INDIVIDUAL);
@@ -198,13 +198,13 @@ uint16_t internals::hid::common::onGetFeature(
     }
     if ((report_id == RID_FEATURE_CONFIG) && (len >= CONFIG_REPORT_SIZE))
     {
-        buffer[0] = (uint8_t)InputHubService::call::getClutchWorkingMode();
-        buffer[1] = (uint8_t)InputHubService::call::getAltButtonsWorkingMode();
-        buffer[2] = (uint8_t)InputHubService::call::getBitePoint();
-        buffer[3] = (uint8_t)BatteryService::call::getLastBatteryLevel();
-        buffer[4] = (uint8_t)InputHubService::call::getDPadWorkingMode();
-        buffer[5] = (InputHubService::call::getSecurityLock()) ? 0xFF : 0x00;
-        buffer[6] = (uint8_t)InputService::call::getRotaryPulseWidthMultiplier();
+        buffer[0] = (uint8_t)InputHubService::call().getClutchWorkingMode();
+        buffer[1] = (uint8_t)InputHubService::call().getAltButtonsWorkingMode();
+        buffer[2] = (uint8_t)InputHubService::call().getBitePoint();
+        buffer[3] = (uint8_t)BatteryService::call().getLastBatteryLevel();
+        buffer[4] = (uint8_t)InputHubService::call().getDPadWorkingMode();
+        buffer[5] = (InputHubService::call().getSecurityLock()) ? 0xFF : 0x00;
+        buffer[6] = (uint8_t)InputService::call().getRotaryPulseWidthMultiplier();
         return CONFIG_REPORT_SIZE;
     }
     if ((report_id == RID_FEATURE_BUTTONS_MAP) &&
@@ -214,7 +214,7 @@ uint16_t internals::hid::common::onGetFeature(
         if ((selectedInput <= MAX_INPUT_NUMBER) &&
             InputNumber::booked(selectedInput))
         {
-            InputMapService::call::getMap(selectedInput, buffer[1], buffer[2]);
+            InputMapService::call().getMap(selectedInput, buffer[1], buffer[2]);
         }
         else
         {
@@ -231,7 +231,7 @@ uint16_t internals::hid::common::onGetFeature(
         if (hid::supportsCustomHardwareID())
         {
             uint16_t vid, pid;
-            HidService::call::getCustomHardwareID(vid, pid);
+            HidService::call().getCustomHardwareID(vid, pid);
             if ((vid == 0) && (pid == 0))
             {
                 vid = _factoryVID;
@@ -259,7 +259,7 @@ void internals::hid::common::onSetFeature(
     const uint8_t *buffer,
     uint16_t len)
 {
-    if ((InputHubService::call::getSecurityLock()) ||
+    if ((InputHubService::call().getSecurityLock()) ||
         (report_id == RID_FEATURE_CAPABILITIES))
         return;
     if (report_id == RID_FEATURE_CONFIG)
@@ -269,7 +269,7 @@ void internals::hid::common::onSetFeature(
             (buffer[0] <= (uint8_t)ClutchWorkingMode::_MAX_VALUE))
         {
             // clutch working mode
-            InputHubService::call::setClutchWorkingMode((ClutchWorkingMode)buffer[0]);
+            InputHubService::call().setClutchWorkingMode((ClutchWorkingMode)buffer[0]);
         }
         if ((len > 1) && (buffer[1] != 0xff))
         {
@@ -278,31 +278,31 @@ void internals::hid::common::onSetFeature(
                 (buffer[1] == 0)
                     ? AltButtonsWorkingMode::Regular
                     : AltButtonsWorkingMode::ALT;
-            InputHubService::call::setAltButtonsWorkingMode(cwm);
+            InputHubService::call().setAltButtonsWorkingMode(cwm);
         }
         if ((len > 2) && (buffer[2] <= CLUTCH_FULL_VALUE))
         // && ((uint8_t)buffer[2] >= CLUTCH_NONE_VALUE)
         {
             // Bite point
-            InputHubService::call::setBitePoint(buffer[2]);
+            InputHubService::call().setBitePoint(buffer[2]);
         }
         if ((len > 3) &&
             (buffer[3] == (uint8_t)SimpleCommand::CMD_AXIS_RECALIBRATE))
         {
             // Force analog axis recalibration
-            InputService::call::recalibrateAxes();
+            InputService::call().recalibrateAxes();
         }
         if ((len > 3) &&
             (buffer[3] == (uint8_t)SimpleCommand::CMD_BATT_RECALIBRATE))
         {
             // Restart auto calibration algorithm
-            BatteryCalibrationService::call::restartAutoCalibration();
+            BatteryCalibrationService::call().restartAutoCalibration();
         }
         if ((len > 3) &&
             (buffer[3] == (uint8_t)SimpleCommand::CMD_RESET_BUTTONS_MAP))
         {
             // Reset buttons map to factory defaults
-            InputMapService::call::resetMap();
+            InputMapService::call().resetMap();
         }
         if ((len > 3) && (buffer[3] == (uint8_t)SimpleCommand::CMD_SAVE_NOW))
         {
@@ -313,13 +313,13 @@ void internals::hid::common::onSetFeature(
             (buffer[3] == (uint8_t)SimpleCommand::CMD_REVERSE_LEFT_AXIS))
         {
             // change left axis polarity
-            InputService::call::reverseLeftAxis();
+            InputService::call().reverseLeftAxis();
         }
         if ((len > 3) &&
             (buffer[3] == (uint8_t)SimpleCommand::CMD_REVERSE_RIGHT_AXIS))
         {
             // change left axis polarity
-            InputService::call::reverseRightAxis();
+            InputService::call().reverseRightAxis();
         }
         if ((len > 3) &&
             (buffer[3] == (uint8_t)SimpleCommand::CMD_SHOW_PIXELS))
@@ -338,7 +338,7 @@ void internals::hid::common::onSetFeature(
         {
             // Set working mode of DPAD
             DPadWorkingMode mode = (buffer[4] == 0) ? DPadWorkingMode::Regular : DPadWorkingMode::Navigation;
-            InputHubService::call::setDPadWorkingMode(mode);
+            InputHubService::call().setDPadWorkingMode(mode);
         }
         // Note: byte index 5 is read-only
         if ((len > 6) &&
@@ -349,7 +349,7 @@ void internals::hid::common::onSetFeature(
                 (buffer[6] <= (uint8_t)PulseWidthMultiplier::_MAX_VALUE))
             {
                 PulseWidthMultiplier mult = static_cast<PulseWidthMultiplier>(buffer[6]);
-                InputService::call::setRotaryPulseWidthMultiplier(mult);
+                InputService::call().setRotaryPulseWidthMultiplier(mult);
             }
         }
     }
@@ -361,7 +361,7 @@ void internals::hid::common::onSetFeature(
             selectedInput = buffer[0];
             if ((buffer[1] <= MAX_INPUT_NUMBER) &&
                 (buffer[2] <= MAX_INPUT_NUMBER))
-                InputMapService::call::setMap(buffer[0], buffer[1], buffer[2]);
+                InputMapService::call().setMap(buffer[0], buffer[1], buffer[2]);
         }
     }
     else if ((report_id == RID_FEATURE_HARDWARE_ID) &&
@@ -380,7 +380,7 @@ void internals::hid::common::onSetFeature(
                 expected_code = (vid * pid) % 65536;
 
             if (control_code == expected_code)
-                HidService::call::setCustomHardwareID(vid, pid);
+                HidService::call().setCustomHardwareID(vid, pid);
         } // else ignore
     }
     else

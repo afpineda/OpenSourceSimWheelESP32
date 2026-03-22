@@ -96,14 +96,14 @@ void loadAxisCalibration(Preferences &prefs)
         maxLeft = prefs.getInt(K_AXIS_CAL_LEFT_MAX, DEFAULT_AXIS_CAL_MIN);
         minRight = prefs.getInt(K_AXIS_CAL_RIGHT_MIN, DEFAULT_AXIS_CAL_MAX);
         maxRight = prefs.getInt(K_AXIS_CAL_RIGHT_MAX, DEFAULT_AXIS_CAL_MAX);
-        InputService::call::setAxisCalibration(minLeft, maxLeft, minRight, maxRight, false);
+        InputService::call().setAxisCalibration(minLeft, maxLeft, minRight, maxRight, false);
     }
 }
 
 void saveAxisCalibration(Preferences &prefs)
 {
     int minLeft, maxLeft, minRight, maxRight;
-    if (!InputService::call::getAxisCalibration(minLeft, maxLeft, minRight, maxRight))
+    if (!InputService::call().getAxisCalibration(minLeft, maxLeft, minRight, maxRight))
         return;
     prefs.putInt(K_AXIS_CAL_LEFT_MIN, minLeft);
     prefs.putInt(K_AXIS_CAL_LEFT_MAX, maxLeft);
@@ -120,13 +120,13 @@ void loadPulseWidth(Preferences &prefs)
         uint8_t value = prefs.getUChar(K_PULSE_WIDTH, (uint8_t)PulseWidthMultiplier::_DEFAULT_VALUE);
         if ((value >= (uint8_t)PulseWidthMultiplier::X1) &&
             (value <= (uint8_t)PulseWidthMultiplier::_MAX_VALUE))
-            InputService::call::setRotaryPulseWidthMultiplier((PulseWidthMultiplier)value, false);
+            InputService::call().setRotaryPulseWidthMultiplier((PulseWidthMultiplier)value, false);
     }
 }
 
 void savePulseWidth(Preferences &prefs)
 {
-    uint8_t value = (uint8_t)InputService::call::getRotaryPulseWidthMultiplier();
+    uint8_t value = (uint8_t)InputService::call().getRotaryPulseWidthMultiplier();
     prefs.putUChar(K_PULSE_WIDTH, value);
 }
 
@@ -138,14 +138,14 @@ void loadAxisPolarity(Preferences &prefs)
     {
         bool left = prefs.getBool(K_AXIS_POLARITY_LEFT, false);
         bool right = prefs.getBool(K_AXIS_POLARITY_RIGHT, false);
-        InputService::call::setAxisPolarity(left, right, false);
+        InputService::call().setAxisPolarity(left, right, false);
     }
 }
 
 void saveAxisPolarity(Preferences &prefs)
 {
     bool left, right;
-    InputService::call::getAxisPolarity(left, right);
+    InputService::call().getAxisPolarity(left, right);
     prefs.putBool(K_AXIS_POLARITY_LEFT, left);
     prefs.putBool(K_AXIS_POLARITY_RIGHT, right);
 }
@@ -157,13 +157,13 @@ void loadSecurityLock(Preferences &prefs)
     if (prefs.isKey(K_SECURITY_LOCK))
     {
         bool value = prefs.getBool(K_SECURITY_LOCK, false);
-        InputHubService::call::setSecurityLock(value, false);
+        InputHubService::call().setSecurityLock(value, false);
     }
 }
 
 void saveSecurityLock(Preferences &prefs)
 {
-    prefs.putBool(K_SECURITY_LOCK, InputHubService::call::getSecurityLock());
+    prefs.putBool(K_SECURITY_LOCK, InputHubService::call().getSecurityLock());
 }
 
 //-------------------------------------------------------------------
@@ -174,13 +174,13 @@ void loadBitePoint(Preferences &prefs)
     {
         uint8_t value = prefs.getUChar(K_BITE_POINT, CLUTCH_DEFAULT_VALUE);
         if (value != CLUTCH_INVALID_VALUE)
-            InputHubService::call::setBitePoint(value, false);
+            InputHubService::call().setBitePoint(value, false);
     }
 }
 
 void saveBitePoint(Preferences &prefs)
 {
-    uint8_t value = InputHubService::call::getBitePoint();
+    uint8_t value = InputHubService::call().getBitePoint();
     prefs.putUChar(K_BITE_POINT, value);
 }
 
@@ -192,13 +192,13 @@ void loadClutchWorkingMode(Preferences &prefs)
     {
         uint8_t value = prefs.getUChar(K_CLUTCH_WORKING_MODE, (uint8_t)ClutchWorkingMode::_DEFAULT_VALUE);
         if (value <= (uint8_t)ClutchWorkingMode::_MAX_VALUE)
-            InputHubService::call::setClutchWorkingMode(static_cast<ClutchWorkingMode>(value), false);
+            InputHubService::call().setClutchWorkingMode(static_cast<ClutchWorkingMode>(value), false);
     }
 }
 
 void saveClutchWorkingMode(Preferences &prefs)
 {
-    prefs.putUChar(K_CLUTCH_WORKING_MODE, (uint8_t)InputHubService::call::getClutchWorkingMode());
+    prefs.putUChar(K_CLUTCH_WORKING_MODE, (uint8_t)InputHubService::call().getClutchWorkingMode());
 }
 
 //-------------------------------------------------------------------
@@ -209,13 +209,13 @@ void loadAltWorkingMode(Preferences &prefs)
     {
         uint8_t value = prefs.getUChar(K_ALT_WORKING_MODE, (uint8_t)AltButtonsWorkingMode::_DEFAULT_VALUE);
         if (value <= (uint8_t)AltButtonsWorkingMode::_MAX_VALUE)
-            InputHubService::call::setAltButtonsWorkingMode(static_cast<AltButtonsWorkingMode>(value), false);
+            InputHubService::call().setAltButtonsWorkingMode(static_cast<AltButtonsWorkingMode>(value), false);
     }
 }
 
 void saveAltWorkingMode(Preferences &prefs)
 {
-    prefs.putUChar(K_ALT_WORKING_MODE, (uint8_t)InputHubService::call::getAltButtonsWorkingMode());
+    prefs.putUChar(K_ALT_WORKING_MODE, (uint8_t)InputHubService::call().getAltButtonsWorkingMode());
 }
 
 //-------------------------------------------------------------------
@@ -226,13 +226,13 @@ void loadDpadWorkingMode(Preferences &prefs)
     {
         uint8_t value = prefs.getUChar(K_DPAD_WORKING_MODE, (uint8_t)DPadWorkingMode::_DEFAULT_VALUE);
         if (value <= (uint8_t)DPadWorkingMode::_MAX_VALUE)
-            InputHubService::call::setDPadWorkingMode(static_cast<DPadWorkingMode>(value), false);
+            InputHubService::call().setDPadWorkingMode(static_cast<DPadWorkingMode>(value), false);
     }
 }
 
 void saveDpadWorkingMode(Preferences &prefs)
 {
-    prefs.putUChar(K_DPAD_WORKING_MODE, (uint8_t)InputHubService::call::getDPadWorkingMode());
+    prefs.putUChar(K_DPAD_WORKING_MODE, (uint8_t)InputHubService::call().getDPadWorkingMode());
 }
 
 //-------------------------------------------------------------------
@@ -253,7 +253,7 @@ void loadInputMap(Preferences &prefs)
             if (prefs.isKey(key))
             {
                 alt = prefs.getUChar(key, 0xFF);
-                InputMapService::call::setMap(firmware_defined, noAlt, alt);
+                InputMapService::call().setMap(firmware_defined, noAlt, alt);
             }
         }
     }
@@ -267,7 +267,7 @@ void saveInputMap(Preferences &prefs)
         firmware_defined < 128;
         firmware_defined++)
     {
-        InputMapService::call::getMap(firmware_defined, noAlt, alt);
+        InputMapService::call().getMap(firmware_defined, noAlt, alt);
         if ((noAlt < 128) && (alt < 128))
         {
             snprintf(key, 32, K_INPUT_MAP_NO_ALT, firmware_defined);
@@ -287,14 +287,14 @@ void loadCustomHardwareID(Preferences &prefs)
         uint16_t vid, pid;
         vid = prefs.getUShort(K_CUSTOM_VID, 0);
         pid = prefs.getUShort(K_CUSTOM_PID, 0);
-        HidService::call::setCustomHardwareID(vid, pid, false);
+        HidService::call().setCustomHardwareID(vid, pid, false);
     }
 }
 
 void saveCustomHardwareID(Preferences &prefs)
 {
     uint16_t vid, pid;
-    HidService::call::getCustomHardwareID(vid, pid);
+    HidService::call().getCustomHardwareID(vid, pid);
     prefs.putUShort(K_CUSTOM_VID, vid);
     prefs.putUShort(K_CUSTOM_PID, pid);
 }
@@ -306,13 +306,13 @@ void loadBatteryAutoCalibration(Preferences &prefs)
     if (prefs.isKey(K_BATT_AUTO_CAL))
     {
         int val = prefs.getUShort(K_BATT_AUTO_CAL, -1);
-        BatteryCalibrationService::call::setAutoCalibrationParameter(val, false);
+        BatteryCalibrationService::call().setAutoCalibrationParameter(val, false);
     }
 }
 
 void saveBatteryAutoCalibration(Preferences &prefs)
 {
-    int val = BatteryCalibrationService::call::getAutoCalibrationParameter();
+    int val = BatteryCalibrationService::call().getAutoCalibrationParameter();
     prefs.putUShort(K_BATT_AUTO_CAL, val);
 }
 
@@ -324,13 +324,13 @@ void loadBatteryCalibrationData(Preferences &prefs)
     {
         size_t storedSize = prefs.getBytesLength(K_BATT_CALIBRATION_DATA);
         uint8_t expectedCount =
-            BatteryCalibrationService::call::getCalibrationDataCount();
+            BatteryCalibrationService::call().getCalibrationDataCount();
         if (storedSize == (expectedCount * sizeof(uint16_t)))
         {
             uint16_t loaded[expectedCount];
             prefs.getBytes(K_BATT_CALIBRATION_DATA, loaded, storedSize);
             for (uint8_t i = 0; i < expectedCount; i++)
-                BatteryCalibrationService::call::setCalibrationData(i, loaded[i], false);
+                BatteryCalibrationService::call().setCalibrationData(i, loaded[i], false);
         }
     }
 }
@@ -338,13 +338,13 @@ void loadBatteryCalibrationData(Preferences &prefs)
 void saveBatteryCalibrationData(Preferences &prefs)
 {
     uint8_t expectedCount =
-        BatteryCalibrationService::call::getCalibrationDataCount();
+        BatteryCalibrationService::call().getCalibrationDataCount();
     if (expectedCount > 0)
     {
         size_t storedSize = expectedCount * sizeof(uint16_t);
         uint16_t saved[expectedCount];
         for (uint8_t i = 0; i < expectedCount; i++)
-            saved[i] = BatteryCalibrationService::call::getCalibrationData(i);
+            saved[i] = BatteryCalibrationService::call().getCalibrationData(i);
         prefs.putBytes(K_BATT_CALIBRATION_DATA, saved, storedSize);
     }
 }
@@ -517,7 +517,7 @@ void internals::storage::getReady()
 #if !CD_CI
     if (_autoSaveTimer == nullptr)
 #else
-    if (!FirmwareService::call::isRunning())
+    if (!FirmwareService::call().isRunning())
 #endif
     {
 #if !CD_CI

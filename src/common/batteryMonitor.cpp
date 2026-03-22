@@ -47,7 +47,7 @@ static BatteryStatus currentStatus;
 
 static void abortIfStarted()
 {
-    if (FirmwareService::call::isRunning())
+    if (FirmwareService::call().isRunning())
         throw std::runtime_error("Battery monitor already started");
 }
 
@@ -186,7 +186,7 @@ void batteryMonitorDaemonLoop(void *arg)
                 // depletes, otherwise, it keeps
                 // draining current even if there is
                 // not enough voltage to turn it on.
-                PowerService::call::shutdown();
+                PowerService::call().shutdown();
             }
             else if (newSoC <= low_battery_soc)
                 OnLowBattery();
@@ -202,10 +202,10 @@ void batteryMonitorDaemonLoop(void *arg)
 
 void batteryMonitorStart()
 {
-    if ((!FirmwareService::call::isRunning()) && (batteryMonitorhardware != nullptr))
+    if ((!FirmwareService::call().isRunning()) && (batteryMonitorhardware != nullptr))
     {
         BatteryStatus status;
-        BatteryService::call::getStatus(status);
+        BatteryService::call().getStatus(status);
         OnBatteryStatus(status);
         batteryMonitorhardware->onStart();
 #if !CD_CI
@@ -238,7 +238,7 @@ void internals::batteryMonitor::configureForTesting()
 
 void internals::batteryMonitor::getReady()
 {
-    if ((!FirmwareService::call::isRunning()) && (batteryMonitorhardware != nullptr))
+    if ((!FirmwareService::call().isRunning()) && (batteryMonitorhardware != nullptr))
     {
         BatteryService::inject(new BatteryServiceProvider());
         // Ensure there is a first reading available before the OnStart event

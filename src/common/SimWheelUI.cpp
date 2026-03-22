@@ -67,8 +67,8 @@ SimpleShiftLight::~SimpleShiftLight()
 void SimpleShiftLight::onStart()
 {
     int soc;
-    if (BatteryService::call::hasBattery())
-        soc = BatteryService::call::getLastBatteryLevel();
+    if (BatteryService::call().hasBattery())
+        soc = BatteryService::call().getLastBatteryLevel();
     else
         soc = 100;
 
@@ -193,8 +193,8 @@ PCF8574RevLights::~PCF8574RevLights()
 void PCF8574RevLights::onStart()
 {
     int soc;
-    if (BatteryService::call::hasBattery())
-        soc = BatteryService::call::getLastBatteryLevel();
+    if (BatteryService::call().hasBattery())
+        soc = BatteryService::call().getLastBatteryLevel();
     else
         soc = 100;
 

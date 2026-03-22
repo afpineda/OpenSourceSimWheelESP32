@@ -28,15 +28,15 @@ int main()
     internals::hid::common::getReady();
     uint16_t vid, pid;
 
-    HidService::call::getCustomHardwareID(vid, pid);
+    HidService::call().getCustomHardwareID(vid, pid);
     assert(vid == 0);
     assert(pid == 0);
-    HidService::call::setCustomHardwareID(0x5050, 0xABAB);
-    HidService::call::getCustomHardwareID(vid, pid);
+    HidService::call().setCustomHardwareID(0x5050, 0xABAB);
+    HidService::call().getCustomHardwareID(vid, pid);
     assert(vid == 0x5050);
     assert(pid == 0xABAB);
-    HidService::call::setCustomHardwareID(0, 0);
-    HidService::call::getCustomHardwareID(vid, pid);
+    HidService::call().setCustomHardwareID(0, 0);
+    HidService::call().getCustomHardwareID(vid, pid);
     assert(vid == 0);
     assert(pid == 0);
 

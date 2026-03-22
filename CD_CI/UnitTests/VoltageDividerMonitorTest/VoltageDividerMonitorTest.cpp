@@ -115,7 +115,7 @@ void test3()
     internals::hal::gpio::setFakeADCReading({20});
 
     BatteryStatus status = waitFor();
-    BatteryService::call::getStatus(status);
+    BatteryService::call().getStatus(status);
     assert<bool>::equals("known charging state", true, status.isCharging.has_value());
     assert<bool>::equals("charging state", false, status.isCharging.value());
     assert<bool>::equals("known wired power state", true, status.usingExternalPower.has_value());
@@ -131,7 +131,7 @@ void test4()
     internals::hal::gpio::setFakeADCReading({3500, 3560, 3540, 3520});
 
     BatteryStatus status = waitFor();
-    BatteryService::call::getStatus(status);
+    BatteryService::call().getStatus(status);
     assert<bool>::equals("known charging state", true, status.isCharging.has_value());
     assert<bool>::equals("charging state", true, status.isCharging.value());
     assert<bool>::equals("known wired power state", true, status.usingExternalPower.has_value());
@@ -146,7 +146,7 @@ void test5()
     internals::hal::gpio::setFakeADCReading({2000, 2020, 1990, 2005});
 
     BatteryStatus status = waitFor();
-    BatteryService::call::getStatus(status);
+    BatteryService::call().getStatus(status);
     assert<bool>::equals("known charging state", true, status.isCharging.has_value());
     assert<bool>::equals("charging state", false, status.isCharging.value());
     assert<bool>::equals("known wired power state", false, status.usingExternalPower.has_value());

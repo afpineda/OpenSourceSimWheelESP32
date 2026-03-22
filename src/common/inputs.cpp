@@ -66,7 +66,7 @@ static bool forceUpdate;
 
 static void abortIfStarted()
 {
-    if (FirmwareService::call::isRunning())
+    if (FirmwareService::call().isRunning())
         throw std::runtime_error("Input service already started");
 }
 
@@ -539,7 +539,7 @@ inline void internals::inputs::notifyInputEvent(const DecouplingEvent &input)
 
 void inputStart()
 {
-    if (!FirmwareService::call::isRunning())
+    if (!FirmwareService::call().isRunning())
     {
         if (DeviceCapabilities::hasFlag(DeviceCapability::ROTARY_ENCODERS))
             LoadSetting(UserSetting::PULSE_WIDTH);
@@ -589,6 +589,6 @@ void inputStart()
 
 void internals::inputs::getReady()
 {
-    InputService::inject<InputServiceProvider>(new InputServiceProvider());
+    InputService::inject<InputServiceProvider>();
     OnStart.subscribe(inputStart);
 }

@@ -88,11 +88,6 @@ public:
         debugPrintf("*** POWER OFF ***\n");
         powerSim = false;
     }
-
-    struct call
-    {
-        VOID_SINGLETON_INVOKER(shutdown(), shutdown())
-    };
 } powerMock;
 
 //------------------------------------------------------------------

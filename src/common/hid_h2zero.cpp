@@ -366,7 +366,7 @@ void OutputReport::attachTo(
 
 void autoPowerOffCallback(void *unused)
 {
-    PowerService::call::shutdown();
+    PowerService::call().shutdown();
 }
 
 // ----------------------------------------------------------------------------

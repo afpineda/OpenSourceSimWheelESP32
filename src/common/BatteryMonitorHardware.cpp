@@ -294,13 +294,13 @@ int VoltageDividerMonitor::read()
 uint8_t VoltageDividerMonitor::readingToSoC(int reading)
 {
     int batteryLevel =
-        BatteryCalibrationService::call::getBatteryLevel(reading);
+        BatteryCalibrationService::call().getBatteryLevel(reading);
     if (batteryLevel < 0)
     {
         // Battery calibration is *not* available
         // fallback to auto-calibration algorithm
         batteryLevel =
-            BatteryCalibrationService::call::getBatteryLevelAutoCalibrated(
+            BatteryCalibrationService::call().getBatteryLevelAutoCalibrated(
                 reading);
     }
     return batteryLevel;

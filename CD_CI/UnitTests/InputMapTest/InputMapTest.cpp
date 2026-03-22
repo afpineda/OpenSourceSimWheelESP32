@@ -46,16 +46,16 @@ void test1()
     OnStart();
 
     assert((loaded) && "user map not loaded from storage");
-    InputMapService::call::getMap(9, noAlt, alt);
+    InputMapService::call().getMap(9, noAlt, alt);
     assert((noAlt == 9) && "default map not set (1)");
     assert((alt == 9 + 64) && "default map not set (2)");
-    InputMapService::call::getMap(63, noAlt, alt);
+    InputMapService::call().getMap(63, noAlt, alt);
     assert((noAlt == 63) && "default map not set (3)");
     assert((alt == 63 + 64) && "default map not set (4)");
-    InputMapService::call::getMap(64, noAlt, alt);
+    InputMapService::call().getMap(64, noAlt, alt);
     assert((noAlt == 64) && "default map not set (5)");
     assert((alt == 0) && "default map not set (6)");
-    InputMapService::call::getMap(127, noAlt, alt);
+    InputMapService::call().getMap(127, noAlt, alt);
     assert((noAlt == 127) && "default map not set (7)");
     assert((alt == 63) && "default map not set (8)");
 }
@@ -71,19 +71,19 @@ void test2()
     internals::inputMap::getReady();
     OnStart();
 
-    InputMapService::call::getMap(0, noAlt, alt);
+    InputMapService::call().getMap(0, noAlt, alt);
     assert((noAlt == 1) && "custom firmware-defined map not respected (1)");
     assert((alt == 2) && "custom firmware-defined map not respected (2)");
 
-    InputMapService::call::getMap(7, noAlt, alt);
+    InputMapService::call().getMap(7, noAlt, alt);
     assert((noAlt == 7) && "default map not set (1)");
     assert((alt == 7 + 64) && "default map not set (2)");
 
-    InputMapService::call::getMap(64, noAlt, alt);
+    InputMapService::call().getMap(64, noAlt, alt);
     assert((noAlt == 1) && "custom firmware-defined map not respected (3)");
     assert((alt == 2) && "custom firmware-defined map not respected (4)");
 
-    InputMapService::call::getMap(65, noAlt, alt);
+    InputMapService::call().getMap(65, noAlt, alt);
     assert((noAlt == 65) && "default map not set (3)");
     assert((alt == 1) && "default map not set (4)");
 }
@@ -98,27 +98,27 @@ void test3()
     OnStart();
 
     alt = noAlt = 0;
-    InputMapService::call::setMap(200, 0, 1); // no exception should arise
-    InputMapService::call::setMap(0, 128, 0);
-    InputMapService::call::getMap(0, noAlt, alt);
+    InputMapService::call().setMap(200, 0, 1); // no exception should arise
+    InputMapService::call().setMap(0, 128, 0);
+    InputMapService::call().getMap(0, noAlt, alt);
     assert((noAlt == 0) && "setMap failed (1)");
     assert((alt == 64) && "setMap failed (2)");
 
     alt = noAlt = 0;
-    InputMapService::call::setMap(0, 0, 220);
-    InputMapService::call::getMap(0, noAlt, alt);
+    InputMapService::call().setMap(0, 0, 220);
+    InputMapService::call().getMap(0, noAlt, alt);
     assert((noAlt == 0) && "setMap failed (3)");
     assert((alt == 64) && "setMap failed (4)");
 
     alt = noAlt = 0;
-    InputMapService::call::setMap(0, 63, 127);
-    InputMapService::call::getMap(0, noAlt, alt);
+    InputMapService::call().setMap(0, 63, 127);
+    InputMapService::call().getMap(0, noAlt, alt);
     assert((noAlt == 63) && "setMap failed (5)");
     assert((alt == 127) && "setMap failed (6)");
 
     alt = noAlt = 0;
-    InputMapService::call::setMap(127, 63, 127);
-    InputMapService::call::getMap(127, noAlt, alt);
+    InputMapService::call().setMap(127, 63, 127);
+    InputMapService::call().getMap(127, noAlt, alt);
     assert((noAlt == 63) && "setMap failed (7)");
     assert((alt == 127) && "setMap failed (8)");
 }
@@ -255,14 +255,14 @@ void test5()
     OnStart();
 
     // Override custom defaults
-    InputMapService::call::setMap(1, 0, 0);
+    InputMapService::call().setMap(1, 0, 0);
 
     // Restore custom defaults
-    InputMapService::call::resetMap();
-    InputMapService::call::getMap(1, noAlt, alt);
+    InputMapService::call().resetMap();
+    InputMapService::call().getMap(1, noAlt, alt);
     assert((noAlt == 32) && "Default map not restored (1)");
     assert((alt == 33) && "Default map not restored (2)");
-    InputMapService::call::getMap(0, noAlt, alt);
+    InputMapService::call().getMap(0, noAlt, alt);
     assert((noAlt == 0) && "Default map not restored (3)");
     assert((alt == 64) && "Default map not restored (4)");
 }
@@ -290,15 +290,15 @@ void test6()
 
     // Test
     uint8_t alt, noAlt;
-    InputMapService::call::getMap(0, noAlt, alt);
+    InputMapService::call().getMap(0, noAlt, alt);
     assert((noAlt == 0) && "Optimal not set (1)");
     assert((alt == 4) && "Optimal not set (2)");
 
-    InputMapService::call::getMap(2, noAlt, alt);
+    InputMapService::call().getMap(2, noAlt, alt);
     assert((noAlt == 2) && "Optimal not set (3)");
     assert((alt == 6) && "Optimal not set (4)");
 
-    InputMapService::call::getMap(3, noAlt, alt);
+    InputMapService::call().getMap(3, noAlt, alt);
     assert((noAlt == 20) && "Optimal did not respect user setting (1)");
     assert((alt == 20) && "Optimal did not respect user setting (2)");
 

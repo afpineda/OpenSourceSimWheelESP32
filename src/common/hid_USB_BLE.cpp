@@ -83,7 +83,7 @@ void onUsbConnectionStatus(bool connected);
 
 void autoPowerOffCallback(void *unused)
 {
-    PowerService::call::shutdown();
+    PowerService::call().shutdown();
 }
 
 inline void start_shutdown_timer() noexcept

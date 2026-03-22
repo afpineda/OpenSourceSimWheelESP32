@@ -441,7 +441,7 @@ public:
         if ((value < CLUTCH_INVALID_VALUE) && (value != bitePoint))
         {
             bitePoint = value;
-            InputService::call::update();
+            InputService::call().update();
             OnBitePoint(value);
             if (save)
                 SaveSetting(UserSetting::BITE_POINT);
@@ -739,7 +739,7 @@ bool inputHub_commands_filter(
     if ((changes & cmdAxisAutocalibrationBitmap) &&
         (globalState == cmdAxisAutocalibrationBitmap))
     {
-        InputService::call::recalibrateAxes();
+        InputService::call().recalibrateAxes();
         return true;
     }
     if ((changes & cycleSecurityLockBitmap) &&

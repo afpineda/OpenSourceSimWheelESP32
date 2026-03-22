@@ -231,8 +231,8 @@ void TG_altEngagement()
     // Send input for ALT engagement: clutch paddles in ALT mode and ALT buttons in ALT mode,
     // test that ALT is engaged
     input.release();
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::ALT);
-    InputHubService::call::setAltButtonsWorkingMode(AltButtonsWorkingMode::ALT);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::ALT);
+    InputHubService::call().setAltButtonsWorkingMode(AltButtonsWorkingMode::ALT);
     clutchPaddleType(true);
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
 
@@ -277,10 +277,10 @@ void TG_altEngagement()
 void TG_altInButtonsMode()
 {
     // Simulate ALT button usage while in "regular buttons" mode
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
     input.release();
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
-    InputHubService::call::setAltButtonsWorkingMode(AltButtonsWorkingMode::Regular);
+    InputHubService::call().setAltButtonsWorkingMode(AltButtonsWorkingMode::Regular);
     input.push(ALT_IN);
     assert<uint64_t>::equals("ALT push, buttons mode, low", ALT_B, currentInputs.low);
     assert<uint64_t>::equals("ALT push, buttons mode, high", 0ULL, currentInputs.high);
@@ -297,7 +297,7 @@ void TG_POV_validInput()
     // Simulate a single push of each DPAD direction,
     // test POV is detected,
     // test their input numbers are NOT detected.
-    InputHubService::call::setDPadWorkingMode(DPadWorkingMode::Navigation);
+    InputHubService::call().setDPadWorkingMode(DPadWorkingMode::Navigation);
     input.release();
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     pushAssertEqualsRelease(uint8_t, UP_B, "UP_B", 1, currentPOV);
@@ -320,7 +320,7 @@ void TG_POV_invalidInput()
     // Simulate impossible DPAD input,
     // test POV is NOT detected,
     // test their input numbers are NOT detected.
-    InputHubService::call::setDPadWorkingMode(DPadWorkingMode::Navigation);
+    InputHubService::call().setDPadWorkingMode(DPadWorkingMode::Navigation);
     input.release();
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     pushAssertEqualsRelease(uint8_t, UP_B | DOWN_B, "UP_B | DOWN_B", 0, currentPOV);
@@ -337,9 +337,9 @@ void TG_POV_whileAlt()
     // test ALT button is not detected,
     // test POV is NOT detected,
     // test DPAD input numbers ARE detected
-    InputHubService::call::setDPadWorkingMode(DPadWorkingMode::Navigation);
-    InputHubService::call::setAltButtonsWorkingMode(AltButtonsWorkingMode::ALT);
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
+    InputHubService::call().setDPadWorkingMode(DPadWorkingMode::Navigation);
+    InputHubService::call().setAltButtonsWorkingMode(AltButtonsWorkingMode::ALT);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
     input.release();
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     input.push(ALT_IN);
@@ -361,7 +361,7 @@ void TG_POV_ButtonsMode()
     // Simulate DPAD operation ,
     // test DPAD input numbers ARE detected,
     // test POV is not detected
-    InputHubService::call::setDPadWorkingMode(DPadWorkingMode::Regular);
+    InputHubService::call().setDPadWorkingMode(DPadWorkingMode::Regular);
     input.release();
     input.push(UP);
     assert<uint64_t>::equals("UP, bitmap", UP_B, currentInputs.low);
@@ -372,102 +372,102 @@ void TG_POV_ButtonsMode()
     input.release();
     assert<uint64_t>::equals("release, bitmap", 0ULL, currentInputs.low);
     assert<uint8_t>::equals("release, pov", 0, currentPOV);
-    InputHubService::call::setDPadWorkingMode(DPadWorkingMode::Navigation);
+    InputHubService::call().setDPadWorkingMode(DPadWorkingMode::Navigation);
 }
 
 void TG_cycleAlt()
 {
     // Cycle working mode of ALT buttons
-    InputHubService::call::setAltButtonsWorkingMode(AltButtonsWorkingMode::ALT);
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
+    InputHubService::call().setAltButtonsWorkingMode(AltButtonsWorkingMode::ALT);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
     pushAssertEqualsRelease(int,
                             BMP_CYCLE_ALT,
                             "Cycle alt 1",
                             (int)AltButtonsWorkingMode::Regular,
-                            (int)InputHubService::call::getAltButtonsWorkingMode());
+                            (int)InputHubService::call().getAltButtonsWorkingMode());
     pushAssertEqualsRelease(int,
                             BMP_CYCLE_ALT, "Cycle alt 2",
                             (int)AltButtonsWorkingMode::ALT,
-                            (int)InputHubService::call::getAltButtonsWorkingMode());
+                            (int)InputHubService::call().getAltButtonsWorkingMode());
 }
 
 void TG_cycleClutchWorkingMode()
 {
     // Cycle working mode of clutch paddles
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::LAUNCH_CONTROL_MASTER_RIGHT);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::LAUNCH_CONTROL_MASTER_RIGHT);
     pushAssertEqualsRelease(
         int,
         BMP_CYCLE_CLUTCH,
         "Cycle clutch 1",
         (int)ClutchWorkingMode::CLUTCH,
-        (int)InputHubService::call::getClutchWorkingMode());
+        (int)InputHubService::call().getClutchWorkingMode());
     pushAssertEqualsRelease(
         int,
         BMP_CYCLE_CLUTCH,
         "Cycle clutch 2",
         (int)ClutchWorkingMode::AXIS,
-        (int)InputHubService::call::getClutchWorkingMode());
+        (int)InputHubService::call().getClutchWorkingMode());
     pushAssertEqualsRelease(
         int,
         BMP_CYCLE_CLUTCH,
         "Cycle clutch 3",
         (int)ClutchWorkingMode::ALT,
-        (int)InputHubService::call::getClutchWorkingMode());
+        (int)InputHubService::call().getClutchWorkingMode());
     pushAssertEqualsRelease(
         int,
         BMP_CYCLE_CLUTCH,
         "Cycle clutch 4",
         (int)ClutchWorkingMode::BUTTON,
-        (int)InputHubService::call::getClutchWorkingMode());
+        (int)InputHubService::call().getClutchWorkingMode());
     pushAssertEqualsRelease(
         int,
         BMP_CYCLE_CLUTCH,
         "Cycle clutch 5",
         (int)ClutchWorkingMode::LAUNCH_CONTROL_MASTER_LEFT,
-        (int)InputHubService::call::getClutchWorkingMode());
+        (int)InputHubService::call().getClutchWorkingMode());
     pushAssertEqualsRelease(
         int,
         BMP_CYCLE_CLUTCH,
         "Cycle clutch 6",
         (int)ClutchWorkingMode::LAUNCH_CONTROL_MASTER_RIGHT,
-        (int)InputHubService::call::getClutchWorkingMode());
+        (int)InputHubService::call().getClutchWorkingMode());
 }
 
 void TG_cycleDPADWorkingMode()
 {
     // Cycle working mode of DPAD inputs
-    InputHubService::call::setDPadWorkingMode(DPadWorkingMode::Navigation);
+    InputHubService::call().setDPadWorkingMode(DPadWorkingMode::Navigation);
     pushAssertEqualsRelease(
         int,
         BMP_CYCLE_DPAD,
         "Cycle dpad 1",
         (int)DPadWorkingMode::Regular,
-        (int)InputHubService::call::getDPadWorkingMode());
+        (int)InputHubService::call().getDPadWorkingMode());
     pushAssertEqualsRelease(
         int,
         BMP_CYCLE_DPAD,
         "Cycle dpad 2",
         (int)DPadWorkingMode::Navigation,
-        (int)InputHubService::call::getDPadWorkingMode());
+        (int)InputHubService::call().getDPadWorkingMode());
     input.release();
-    InputHubService::call::setDPadWorkingMode(DPadWorkingMode::Navigation);
+    InputHubService::call().setDPadWorkingMode(DPadWorkingMode::Navigation);
 }
 
 void TG_nonMappedCombinations()
 {
     // Test that a button combination not mapped to a wheel command does
     // not trigger other wheel commands
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::BUTTON);
-    InputHubService::call::setAltButtonsWorkingMode(AltButtonsWorkingMode::ALT);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::BUTTON);
+    InputHubService::call().setAltButtonsWorkingMode(AltButtonsWorkingMode::ALT);
     input.pushSeveral(BMP_CYCLE_ALT | BMP_CYCLE_CLUTCH);
     assert<int>::equals(
         "CF_BUTTON",
         (int)ClutchWorkingMode::BUTTON,
-        (int)InputHubService::call::getClutchWorkingMode());
+        (int)InputHubService::call().getClutchWorkingMode());
     assert<int>::equals(
         "alt mode",
         (int)AltButtonsWorkingMode::ALT,
-        (int)InputHubService::call::getAltButtonsWorkingMode());
+        (int)InputHubService::call().getAltButtonsWorkingMode());
     input.release();
 }
 
@@ -476,34 +476,34 @@ void TG_bitePointCalibration()
     // Simulate inputs for bite point calibration,
     // test that bite point changes as expected
     uint8_t biteP;
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
-    InputHubService::call::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
+    InputHubService::call().setBitePoint(CLUTCH_DEFAULT_VALUE);
     clutchPaddleType(true);
     input.axis(CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
-    biteP = InputHubService::call::getBitePoint();
+    biteP = InputHubService::call().getBitePoint();
     input.push(UP);
     input.release(UP);
-    assert((InputHubService::call::getBitePoint() > biteP) && "Invalid bite point. Expected higher.");
-    biteP = InputHubService::call::getBitePoint();
+    assert((InputHubService::call().getBitePoint() > biteP) && "Invalid bite point. Expected higher.");
+    biteP = InputHubService::call().getBitePoint();
     input.push(DOWN);
     input.release(DOWN);
     input.push(DOWN);
     input.release(DOWN);
-    assert((InputHubService::call::getBitePoint() < biteP) && "Invalid bite point. Expected lower.");
+    assert((InputHubService::call().getBitePoint() < biteP) && "Invalid bite point. Expected lower.");
 
     /// Test that the bite point calibration is not triggered without paddle operation
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
-    biteP = InputHubService::call::getBitePoint();
+    biteP = InputHubService::call().getBitePoint();
     input.push(UP);
     input.release(UP);
-    assert((InputHubService::call::getBitePoint() == biteP) && "Invalid bite point. Expected no change since no clutch paddle is pressed");
+    assert((InputHubService::call().getBitePoint() == biteP) && "Invalid bite point. Expected no change since no clutch paddle is pressed");
 
     /// Test that the bite point calibration is not triggered when both paddles are pressed
     input.axis(CLUTCH_FULL_VALUE, CLUTCH_FULL_VALUE);
-    biteP = InputHubService::call::getBitePoint();
+    biteP = InputHubService::call().getBitePoint();
     input.push(UP);
     input.release(UP);
-    assert((InputHubService::call::getBitePoint() == biteP) && "Invalid bite point. Expected no change since both clutch paddles are pressed");
+    assert((InputHubService::call().getBitePoint() == biteP) && "Invalid bite point. Expected no change since both clutch paddles are pressed");
 }
 
 void TG_bitePointCalibrationInLaunchControl()
@@ -514,70 +514,70 @@ void TG_bitePointCalibrationInLaunchControl()
     /// --- Right paddle is master
     uint8_t biteP;
     clutchPaddleType(true);
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::LAUNCH_CONTROL_MASTER_RIGHT);
-    InputHubService::call::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::LAUNCH_CONTROL_MASTER_RIGHT);
+    InputHubService::call().setBitePoint(CLUTCH_DEFAULT_VALUE);
     input.axis(CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
-    biteP = InputHubService::call::getBitePoint();
+    biteP = InputHubService::call().getBitePoint();
     input.push(UP);
     input.release(UP);
-    assert((InputHubService::call::getBitePoint() > biteP) &&
+    assert((InputHubService::call().getBitePoint() > biteP) &&
            "Master=right. Invalid bite point. Expected higher");
-    biteP = InputHubService::call::getBitePoint();
+    biteP = InputHubService::call().getBitePoint();
     input.push(DOWN);
     input.release(DOWN);
     input.push(DOWN);
     input.release(DOWN);
-    assert((InputHubService::call::getBitePoint() < biteP) &&
+    assert((InputHubService::call().getBitePoint() < biteP) &&
            "Master=right. Invalid bite point. Expected lower");
 
     //// Test that the master paddle does not trigger bite point calibration
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
-    biteP = InputHubService::call::getBitePoint();
+    biteP = InputHubService::call().getBitePoint();
     input.push(UP);
     input.release(UP);
-    assert((InputHubService::call::getBitePoint() == biteP) &&
+    assert((InputHubService::call().getBitePoint() == biteP) &&
            "Master=right. Invalid bite point. Expected no change");
 
     /// --- Left paddle is master
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::LAUNCH_CONTROL_MASTER_LEFT);
-    InputHubService::call::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::LAUNCH_CONTROL_MASTER_LEFT);
+    InputHubService::call().setBitePoint(CLUTCH_DEFAULT_VALUE);
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
-    biteP = InputHubService::call::getBitePoint();
+    biteP = InputHubService::call().getBitePoint();
     input.push(UP);
     input.release(UP);
-    assert((InputHubService::call::getBitePoint() > biteP) &&
+    assert((InputHubService::call().getBitePoint() > biteP) &&
            "Master=left. Invalid bite point. Expected higher");
-    biteP = InputHubService::call::getBitePoint();
+    biteP = InputHubService::call().getBitePoint();
     input.push(DOWN);
     input.release(DOWN);
     input.push(DOWN);
     input.release(DOWN);
-    assert((InputHubService::call::getBitePoint() < biteP) &&
+    assert((InputHubService::call().getBitePoint() < biteP) &&
            "Master=left. Invalid bite point. Expected lower");
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
 
     //// Test that the master paddle does not trigger bite point calibration
     input.axis(CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
-    biteP = InputHubService::call::getBitePoint();
+    biteP = InputHubService::call().getBitePoint();
     input.push(UP);
     input.release(UP);
-    assert((InputHubService::call::getBitePoint() == biteP) &&
+    assert((InputHubService::call().getBitePoint() == biteP) &&
            "Master=left. Invalid bite point. Expected no change");
 
     /// Test that the bite point calibration is not triggered without paddle operation
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
-    biteP = InputHubService::call::getBitePoint();
+    biteP = InputHubService::call().getBitePoint();
     input.push(UP);
     input.release(UP);
-    assert((InputHubService::call::getBitePoint() == biteP) &&
+    assert((InputHubService::call().getBitePoint() == biteP) &&
            "Master=left. Invalid bite point. Expected no change since no clutch paddle is pressed");
 
     /// Test that the bite point calibration is not triggered when both paddles are pressed
     input.axis(CLUTCH_FULL_VALUE, CLUTCH_FULL_VALUE);
-    biteP = InputHubService::call::getBitePoint();
+    biteP = InputHubService::call().getBitePoint();
     input.push(UP);
     input.release(UP);
-    assert((InputHubService::call::getBitePoint() == biteP) &&
+    assert((InputHubService::call().getBitePoint() == biteP) &&
            "Master=left. Invalid bite point. Expected no change since both clutch paddles are pressed");
 }
 
@@ -585,18 +585,18 @@ void TG_dualClutch()
 {
     // Simulate clutch paddle operation,
     // Test computed clutch position
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
-    InputHubService::call::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
+    InputHubService::call().setBitePoint(CLUTCH_DEFAULT_VALUE);
     clutchPaddleType(true);
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     assert<uint8_t>::equals("dual clutch: 0,0", currentClutch, (uint8_t)CLUTCH_NONE_VALUE);
     input.axis(CLUTCH_FULL_VALUE, CLUTCH_FULL_VALUE);
     assert<uint8_t>::equals("dual clutch: FULL,FULL", currentClutch, (uint8_t)CLUTCH_FULL_VALUE);
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_FULL_VALUE);
-    assert<uint8_t>::almostEquals("dual clutch: 0,FULL", currentClutch, (uint8_t)InputHubService::call::getBitePoint(), 1);
-    InputHubService::call::setBitePoint(CLUTCH_3_4_VALUE);
+    assert<uint8_t>::almostEquals("dual clutch: 0,FULL", currentClutch, (uint8_t)InputHubService::call().getBitePoint(), 1);
+    InputHubService::call().setBitePoint(CLUTCH_3_4_VALUE);
     input.axis(CLUTCH_FULL_VALUE, CLUTCH_NONE_VALUE);
-    assert<uint8_t>::almostEquals("dual clutch: FULL,0", currentClutch, (uint8_t)InputHubService::call::getBitePoint(), 1);
+    assert<uint8_t>::almostEquals("dual clutch: FULL,0", currentClutch, (uint8_t)InputHubService::call().getBitePoint(), 1);
 }
 
 void TG_launchControl()
@@ -604,10 +604,10 @@ void TG_launchControl()
     // Simulate clutch paddle operation,
     // Test computed clutch position in launch control mode
     clutchPaddleType(true);
-    InputHubService::call::setBitePoint(CLUTCH_DEFAULT_VALUE);
+    InputHubService::call().setBitePoint(CLUTCH_DEFAULT_VALUE);
 
     /// --- Left paddle is master
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::LAUNCH_CONTROL_MASTER_LEFT);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::LAUNCH_CONTROL_MASTER_LEFT);
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     assert<uint8_t>::equals("Launch control master left: 0,0", currentClutch, (uint8_t)CLUTCH_NONE_VALUE);
     input.axis(CLUTCH_FULL_VALUE, CLUTCH_FULL_VALUE);
@@ -620,7 +620,7 @@ void TG_launchControl()
     assert<uint8_t>::equals("Launch control master left: 3/4,0", currentClutch, (uint8_t)CLUTCH_3_4_VALUE);
 
     /// --- Right paddle is master
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::LAUNCH_CONTROL_MASTER_RIGHT);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::LAUNCH_CONTROL_MASTER_RIGHT);
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     assert<uint8_t>::equals("Launch control master right: 0,0", currentClutch, (uint8_t)CLUTCH_NONE_VALUE);
     input.axis(CLUTCH_FULL_VALUE, CLUTCH_FULL_VALUE);
@@ -638,7 +638,7 @@ void TG_analogClutchInButtonsMode()
     // Simulate operation of analog clutch paddles in buttons mode,
     // test that analog axes are not detected
     // test that buttons are detected
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::BUTTON);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::BUTTON);
     clutchPaddleType(true);
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     assert<uint8_t>::equals("(1) clutch", (uint8_t)CLUTCH_NONE_VALUE, currentClutch);
@@ -667,7 +667,7 @@ void TG_digitalClutchInAxisMode()
     // Simulate operation of digital clutch paddles in axis mode,
     // test that analog axes are detected
     // test that buttons are not detected
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::AXIS);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::AXIS);
     clutchPaddleType(false);
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     input.release();
@@ -698,7 +698,7 @@ void TG_digitalClutchInButtonsMode()
     // Simulate operation of digital clutch paddles in buttons mode,
     // test that analog axes are not detected
     // test that buttons are detected
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::BUTTON);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::BUTTON);
     clutchPaddleType(false);
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     input.release();
@@ -726,7 +726,7 @@ void TG_analogClutchInAxisMode()
     // test that analog axes are detected,
     // test that combined clutch axis is not detected
     // test that buttons are not detected
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::AXIS);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::AXIS);
     clutchPaddleType(true);
     input.release();
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
@@ -745,42 +745,42 @@ void TG_repeatedCommand()
 {
     // Send input twice in a row without a real change in those inputs,
     // test that the corresponding command is not executed twice
-    InputHubService::call::setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
-    InputHubService::call::setAltButtonsWorkingMode(AltButtonsWorkingMode::ALT);
+    InputHubService::call().setClutchWorkingMode(ClutchWorkingMode::CLUTCH);
+    InputHubService::call().setAltButtonsWorkingMode(AltButtonsWorkingMode::ALT);
     input.axis(CLUTCH_NONE_VALUE, CLUTCH_NONE_VALUE);
     input.pushSeveral(BMP_CYCLE_ALT);
     assert<int>::equals(
         "Repeated input 1st",
         (int)AltButtonsWorkingMode::Regular,
-        (int)InputHubService::call::getAltButtonsWorkingMode());
+        (int)InputHubService::call().getAltButtonsWorkingMode());
     input.repeat();
     assert<int>::equals(
         "Repeated input 2nd",
         (int)AltButtonsWorkingMode::Regular,
-        (int)InputHubService::call::getAltButtonsWorkingMode());
+        (int)InputHubService::call().getAltButtonsWorkingMode());
     input.release();
 }
 
 void TG_securityLock()
 {
     // initialize
-    InputHubService::call::setSecurityLock(false);
-    assert<bool>::equals("lock 1-1", false, InputHubService::call::getSecurityLock());
+    InputHubService::call().setSecurityLock(false);
+    assert<bool>::equals("lock 1-1", false, InputHubService::call().getSecurityLock());
 
     // send input and check
     input.release();
     input.push(CMD);
-    assert<bool>::equals("lock 1-2", false, InputHubService::call::getSecurityLock());
+    assert<bool>::equals("lock 1-2", false, InputHubService::call().getSecurityLock());
     input.push(OTHER);
-    assert<bool>::equals("lock 1-3", false, InputHubService::call::getSecurityLock());
+    assert<bool>::equals("lock 1-3", false, InputHubService::call().getSecurityLock());
     input.push(UP);
-    assert<bool>::equals("lock 2", true, InputHubService::call::getSecurityLock());
+    assert<bool>::equals("lock 2", true, InputHubService::call().getSecurityLock());
     input.release();
     input.push(CMD);
     input.push(OTHER);
     input.push(UP);
     input.release();
-    assert<bool>::equals("lock 2", false, InputHubService::call::getSecurityLock());
+    assert<bool>::equals("lock 2", false, InputHubService::call().getSecurityLock());
 }
 
 void TG_neutralGear()

@@ -363,7 +363,7 @@ classDiagram
   However, the *ui* subsystem translates this event into a command
   for all user interface instances.
   To command a shutdown, the firmware needs to call
-  `PowerService::call::shutdown()`.
+  `PowerService::call().shutdown()`.
 
 - Connection/disconnection:
 

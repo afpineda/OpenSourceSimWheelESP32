@@ -257,7 +257,7 @@ void ui::add(AbstractUserInterface *instance)
     if (instance == nullptr)
         throw std::runtime_error(
             "User interface instance is null");
-    if (FirmwareService::call::isRunning())
+    if (FirmwareService::call().isRunning())
         throw std::runtime_error(
             "Unable to add a user interface instance while running");
     for (auto another_instance : _ui_instances)
@@ -298,7 +298,7 @@ private:
 
 void internals::ui::getReady()
 {
-    if ((_ui_instances.size() == 0) || FirmwareService::call::isRunning())
+    if ((_ui_instances.size() == 0) || FirmwareService::call().isRunning())
         // nothing to do here
         return;
 

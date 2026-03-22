@@ -18,63 +18,6 @@
 #include "InternalTypes.hpp"
 #include <cstdint>
 #include <type_traits>
-#include <cassert>
-#include <typeinfo>
-#include <vector>
-
-//-------------------------------------------------------------------
-// Global macros
-//-------------------------------------------------------------------
-
-/// @brief Macro to mark a mock implementation for void methods
-#define MOCK \
-    {        \
-    }
-
-/// @brief Macro to mark a mock implementation for non-void methods
-#define MOCK_R(value) \
-    {                 \
-        return value; \
-    }
-
-/// @brief Macro to declare an internal service class
-#define SERVICE(ClassName) \
-    ClassName:             \
-public                     \
-    DependencyManager<ClassName>
-
-/// @brief Macro to declare a void static method in a service class
-#define VOID_SINGLETON_INVOKER(Decl, Call) \
-    static void Decl                       \
-    {                                      \
-        getInstance()->Call;               \
-    }
-
-/// @brief Macro to declare a non-void static method in a service class
-#define SINGLETON_INVOKER(ReturnType, Decl, Call) \
-    static ReturnType Decl                        \
-    {                                             \
-        return getInstance()->Call;               \
-    }
-
-/// @brief Reserved for future use
-#define ALL_INVOKER(Decl, Call)             \
-    static void Decl                        \
-    {                                       \
-        auto instances = getAllInstances(); \
-        for (auto instance : instances)     \
-            instance->Call;                 \
-    }
-
-/// @brief Reserved for future use
-#define BOTH_INVOKER(Decl, Call)            \
-    static void Decl                        \
-    {                                       \
-        getInstance()->Call;                \
-        auto instances = getAllInstances(); \
-        for (auto instance : instances)     \
-            instance->Call;                 \
-    }
 
 //-------------------------------------------------------------------
 // Dependency manager
@@ -88,82 +31,75 @@ public                     \
 template <typename Service>
 struct DependencyManager
 {
-    /// @brief Type of the set of injected instances
-    typedef std::vector<Service *> InstanceSet;
-
     /**
-     * @brief Get a singleton instance of the service provider
+     * @brief Get the service provider implementing the service
      *
-     * @return Service* A pointer to the service provider.
-     *                  **Do not delete**.
+     * @return Service& Service provider
      */
-    static Service *getInstance()
+    static Service &call()
     {
-        if constexpr ((std::is_abstract<Service>::value) || (!std::is_default_constructible<Service>::value))
+        if constexpr (!::std::is_default_constructible<Service>::value)
         {
-            assert((_singleton != nullptr) && "Provider not injected to Service");
+            if (_singleton)
+                return *_singleton;
         }
         else
         {
-            if (_singleton == nullptr)
+            if (!_singleton)
                 _singleton = new Service();
+            return *_singleton;
         }
-        return _singleton;
+        throw ::std::runtime_error("Service provider not injected");
     }
 
     /**
-     * @brief Get all instances of the service provider
+     * @brief Inject a service provider
      *
-     * @return InstanceSet Vector of pointers to service providers.
-     *                     **Do not delete** them.
+     * @tparam Provider Service provider class
+     * @tparam _Args Constructor parameter types
+     * @param __args Constructor parameters
      */
-    static const InstanceSet getAllInstances() { return _instanceSet; }
+    template <class Provider, typename... _Args>
+    static void inject(_Args &&...__args)
+    {
+
+        static_assert(
+            std::is_base_of<Service, Provider>::value,
+            "Provider does not implement Service");
+        inject(new Provider(::std::forward<_Args>(__args)...));
+    }
 
     /**
-     * @brief Inject an instance of the service provider to the service interface
+     * @brief Inject a service provider
      *
-     * @tparam Provider Service interface
-     * @param instance Instance of a service provider
-     * @param multipleInstances When true, @p instance is retrieved with getAllInstances().
-     *                          When false, @p instance is retrieved with getInstance().
+     * @param provider Service provider instance. Must live forever.
      */
-    template <typename Provider>
-    static void inject(Provider *instance, bool multipleInstances = false)
+    static void inject(Service *provider)
     {
-        static_assert(std::is_base_of<Service, Provider>::value, "Provider is not derived from Service");
-        assert((instance != nullptr) && "A null provider is not allowed");
-        if (multipleInstances)
+        if (provider)
         {
-            _instanceSet.push_back(instance);
+            if (!_singleton)
+                _singleton = provider;
+            else
+                throw ::std::runtime_error(
+                    "Provider already injected to service");
         }
         else
-        {
-            assert((_singleton == nullptr) && "Provider already injected to service");
-            _singleton = instance;
-        }
+            throw ::std::runtime_error("A null provider is not allowed");
     }
 
     /**
-     * @brief Remove all injected service providers (for testing)
+     * @brief Remove the injected service provider (for testing)
      *
      * @warning For testing only. Do not call in production code.
+     *          May cause memory leaks.
      */
     static void reset()
     {
-        if (_singleton != nullptr)
-        {
-            delete _singleton;
-            _singleton = nullptr;
-        }
-        for (auto instance : _instanceSet)
-            delete instance;
-        _instanceSet.clear();
+        _singleton = nullptr;
     }
 
-    virtual ~DependencyManager() = default;
-
 private:
-    inline static InstanceSet _instanceSet = {};
     inline static Service *_singleton = nullptr;
 };
 
@@ -175,28 +111,28 @@ private:
  * @brief Input hardware services
  *
  */
-class SERVICE(InputService)
+class InputService : public DependencyManager<InputService>
 {
 public:
     /**
      * @brief Force auto-calibration of all axes (analog clutch paddles)
      *
      */
-    virtual void recalibrateAxes() MOCK;
+    virtual void recalibrateAxes() {}
 
     /**
      * @brief Change polarity of left axis (if any)
      *
      * @note Saved to flash memory without delay
      */
-    virtual void reverseLeftAxis() MOCK;
+    virtual void reverseLeftAxis() {}
 
     /**
      * @brief Change polarity of right axis (if any)
      *
      * @note Saved to flash memory without delay
      */
-    virtual void reverseRightAxis() MOCK;
+    virtual void reverseRightAxis() {}
 
     /**
      * @brief Multiply the pulse width of rotary encoders
@@ -205,17 +141,21 @@ public:
      * @param multiplier A pulse width multiplier greater than zero.
      *                   Valid values are between 1 and 6.
      *                   Invalid values are ignored.
+     * @param save True to save to flash memory
      */
     virtual void setRotaryPulseWidthMultiplier(
         PulseWidthMultiplier multiplier,
-        bool save) MOCK;
+        bool save = true) {}
 
     /**
      * @brief Get the current pulse width multiplier for rotary encoders
      *
      * @return PulseWidthMultiplier A pulse width multiplier greater than zero.
      */
-    virtual PulseWidthMultiplier getRotaryPulseWidthMultiplier() MOCK_R(PulseWidthMultiplier::X1);
+    virtual PulseWidthMultiplier getRotaryPulseWidthMultiplier()
+    {
+        return (PulseWidthMultiplier::X1);
+    }
 
     /**
      * @brief Get current axis calibration data
@@ -234,7 +174,7 @@ public:
         int &minLeft,
         int &maxLeft,
         int &minRight,
-        int &maxRight) MOCK_R(false);
+        int &maxRight) { return (false); }
 
     /**
      * @brief Set the Axis calibration data
@@ -252,7 +192,7 @@ public:
         int maxLeft,
         int minRight,
         int maxRight,
-        bool save) MOCK;
+        bool save = true) {}
 
     /**
      * @brief Get axes polarity
@@ -262,7 +202,7 @@ public:
      */
     virtual void getAxisPolarity(
         bool &leftAxisReversed,
-        bool &rightAxisReversed) MOCK;
+        bool &rightAxisReversed) {}
 
     /**
      * @brief Set axes polarity
@@ -274,65 +214,13 @@ public:
     virtual void setAxisPolarity(
         bool leftAxisReversed,
         bool rightAxisReversed,
-        bool save) MOCK;
+        bool save = true) {}
 
     /**
      * @brief Repeat last input event
      *
      */
-    virtual void update() MOCK;
-
-    /// @cond
-
-    struct call
-    {
-        VOID_SINGLETON_INVOKER(recalibrateAxes(), recalibrateAxes())
-        VOID_SINGLETON_INVOKER(reverseLeftAxis(), reverseLeftAxis())
-        VOID_SINGLETON_INVOKER(reverseRightAxis(), reverseRightAxis())
-        VOID_SINGLETON_INVOKER(
-            setRotaryPulseWidthMultiplier(PulseWidthMultiplier multiplier, bool save = true),
-            setRotaryPulseWidthMultiplier(multiplier, save))
-        SINGLETON_INVOKER(
-            PulseWidthMultiplier,
-            getRotaryPulseWidthMultiplier(),
-            getRotaryPulseWidthMultiplier())
-        SINGLETON_INVOKER(
-            bool,
-            getAxisCalibration(
-                int &minLeft,
-                int &maxLeft,
-                int &minRight,
-                int &maxRight),
-            getAxisCalibration(minLeft, maxLeft, minRight, maxRight))
-        VOID_SINGLETON_INVOKER(
-            setAxisCalibration(
-                int minLeft,
-                int maxLeft,
-                int minRight,
-                int maxRight,
-                bool save = true),
-            setAxisCalibration(minLeft, maxLeft, minRight, maxRight, save))
-        VOID_SINGLETON_INVOKER(
-            getAxisPolarity(
-                bool &leftAxisReversed,
-                bool &rightAxisReversed),
-            getAxisPolarity(
-                leftAxisReversed,
-                rightAxisReversed))
-        VOID_SINGLETON_INVOKER(
-            setAxisPolarity(
-                bool leftAxisReversed,
-                bool rightAxisReversed,
-                bool save = true),
-            setAxisPolarity(
-                leftAxisReversed,
-                rightAxisReversed,
-                save))
-        VOID_SINGLETON_INVOKER(update(), update());
-    };
-
-    /// @endcond
-
+    virtual void update() {}
 };
 
 //-------------------------------------------------------------------
@@ -343,47 +231,109 @@ public:
  * @brief Input Hub service
  *
  */
-class SERVICE(InputHubService)
+class InputHubService : public DependencyManager<InputHubService>
 {
 public:
-    virtual bool getSecurityLock() MOCK_R(false);
-    virtual uint8_t getBitePoint() MOCK_R(CLUTCH_DEFAULT_VALUE);
-    virtual ClutchWorkingMode getClutchWorkingMode() MOCK_R(ClutchWorkingMode::_DEFAULT_VALUE);
-    virtual AltButtonsWorkingMode getAltButtonsWorkingMode() MOCK_R(AltButtonsWorkingMode::_DEFAULT_VALUE);
-    virtual DPadWorkingMode getDPadWorkingMode() MOCK_R(DPadWorkingMode::_DEFAULT_VALUE);
-    virtual void setBitePoint(uint8_t value, bool save) MOCK;
-    virtual void setClutchWorkingMode(ClutchWorkingMode mode, bool save) MOCK;
-    virtual void setAltButtonsWorkingMode(AltButtonsWorkingMode mode, bool save) MOCK;
-    virtual void setDPadWorkingMode(DPadWorkingMode mode, bool save) MOCK;
-    virtual void setSecurityLock(bool value, bool save) MOCK;
-
-    /// @cond
-
-    struct call
+    /**
+     * @brief Get the status of the security lock
+     *
+     * @return true If locked
+     * @return false If not locked
+     */
+    virtual bool getSecurityLock()
     {
-        SINGLETON_INVOKER(bool, getSecurityLock(), getSecurityLock())
-        SINGLETON_INVOKER(uint8_t, getBitePoint(), getBitePoint())
-        SINGLETON_INVOKER(ClutchWorkingMode, getClutchWorkingMode(), getClutchWorkingMode())
-        SINGLETON_INVOKER(AltButtonsWorkingMode, getAltButtonsWorkingMode(), getAltButtonsWorkingMode())
-        SINGLETON_INVOKER(DPadWorkingMode, getDPadWorkingMode(), getDPadWorkingMode())
+        return (false);
+    }
 
-        VOID_SINGLETON_INVOKER(setBitePoint(uint8_t value, bool save = true), setBitePoint(value, save))
-        VOID_SINGLETON_INVOKER(
-            setClutchWorkingMode(ClutchWorkingMode mode, bool save = true),
-            setClutchWorkingMode(mode, save))
-        VOID_SINGLETON_INVOKER(
-            setAltButtonsWorkingMode(AltButtonsWorkingMode mode, bool save = true),
-            setAltButtonsWorkingMode(mode, save))
-        VOID_SINGLETON_INVOKER(
-            setDPadWorkingMode(DPadWorkingMode mode, bool save = true),
-            setDPadWorkingMode(mode, save))
-        VOID_SINGLETON_INVOKER(
-            setSecurityLock(bool value, bool save = true),
-            setSecurityLock(value, save))
-    };
+    /**
+     * @brief Get the clutch bite point
+     *
+     * @return uint8_t Bite point
+     */
+    virtual uint8_t getBitePoint()
+    {
+        return (CLUTCH_DEFAULT_VALUE);
+    }
 
-    /// @endcond
+    /**
+     * @brief Get the current clutch working mode
+     *
+     * @return ClutchWorkingMode Working mode
+     */
+    virtual ClutchWorkingMode getClutchWorkingMode()
+    {
+        return (ClutchWorkingMode::_DEFAULT_VALUE);
+    }
 
+    /**
+     * @brief Get the current working mode of ALT buttons
+     *
+     * @return AltButtonsWorkingMode Working mode
+     */
+    virtual AltButtonsWorkingMode getAltButtonsWorkingMode()
+    {
+        return (AltButtonsWorkingMode::_DEFAULT_VALUE);
+    }
+
+    /**
+     * @brief Get the current working mode of the directional pad
+     *
+     * @return DPadWorkingMode Working mode
+     */
+    virtual DPadWorkingMode getDPadWorkingMode()
+    {
+        return (DPadWorkingMode::_DEFAULT_VALUE);
+    }
+
+    /**
+     * @brief Set the clutch bite point
+     *
+     * @param value Bite point
+     * @param save True to save to flash memory
+     */
+    virtual void setBitePoint(uint8_t value, bool save = true)
+    {
+    }
+
+    /**
+     * @brief Set the clutch working mode
+     *
+     * @param mode Working mode
+     * @param save True to save to flash memory
+     */
+    virtual void setClutchWorkingMode(ClutchWorkingMode mode, bool save = true)
+    {
+    }
+
+    /**
+     * @brief Set the working mode of ALT buttons
+     *
+     * @param mode Working mode
+     * @param save True to save to flash memory
+     */
+    virtual void setAltButtonsWorkingMode(
+        AltButtonsWorkingMode mode,
+        bool save = true) {}
+
+    /**
+     * @brief Set the directional pad working mode
+     *
+     * @param mode Working mode
+     * @param save True to save to flash memory
+     */
+    virtual void setDPadWorkingMode(DPadWorkingMode mode, bool save = true)
+    {
+    }
+
+    /**
+     * @brief Set the status of the security lock
+     *
+     * @param value True to activate, false to deactivate
+     * @param save True to save to flash memory
+     */
+    virtual void setSecurityLock(bool value, bool save = true)
+    {
+    }
 };
 
 //-------------------------------------------------------------------
@@ -394,13 +344,32 @@ public:
  * @brief Input map service
  *
  */
-class SERVICE(InputMapService)
+class InputMapService : public DependencyManager<InputMapService>
 {
 public:
+    /**
+     * @brief Map a firmware-defined input number to user-defined
+     *
+     * @param firmware_defined Firmware-defined input number
+     * @param user_defined User-defined input number when alternate mode
+     *                     is NOT engaged
+     * @param user_defined_alt User-defined input number when alternate mode
+     *                         IS engaged
+     */
     virtual void setMap(
         uint8_t firmware_defined,
         uint8_t user_defined,
-        uint8_t user_defined_alt) MOCK;
+        uint8_t user_defined_alt) {}
+
+    /**
+     * @brief Get the current map Firmware-defined input number
+     *
+     * @param firmware_defined Firmware-defined input number
+     * @param[out] user_defined User-defined input number when alternate mode
+     *                          is NOT engaged
+     * @param[out] user_defined_alt User-defined input number when alternate
+     *                              mode IS engaged
+     */
     virtual void getMap(
         uint8_t firmware_defined,
         uint8_t &user_defined,
@@ -409,18 +378,12 @@ public:
         user_defined = firmware_defined;
         user_defined_alt = firmware_defined + 64;
     };
-    virtual void resetMap() MOCK;
 
-    struct call
-    {
-        VOID_SINGLETON_INVOKER(
-            setMap(uint8_t firmware_defined, uint8_t user_defined, uint8_t user_defined_alt),
-            setMap(firmware_defined, user_defined, user_defined_alt))
-        VOID_SINGLETON_INVOKER(
-            getMap(uint8_t firmware_defined, uint8_t &user_defined, uint8_t &user_defined_alt),
-            getMap(firmware_defined, user_defined, user_defined_alt))
-        VOID_SINGLETON_INVOKER(resetMap(), resetMap())
-    };
+    /**
+     * @brief Revert the input map to factory defaults
+     *
+     */
+    virtual void resetMap() {}
 };
 
 //-------------------------------------------------------------------
@@ -431,15 +394,11 @@ public:
  * @brief Power service
  *
  */
-class SERVICE(PowerService)
+class PowerService : public DependencyManager<PowerService>
 {
 public:
-    virtual void shutdown() MOCK;
-
-    struct call
-    {
-        VOID_SINGLETON_INVOKER(shutdown(), shutdown())
-    };
+    /// @brief Command a system shutdown
+    virtual void shutdown() {}
 };
 
 //-------------------------------------------------------------------
@@ -450,14 +409,15 @@ public:
  * @brief Battery service
  *
  */
-class SERVICE(BatteryService)
+class BatteryService : public DependencyManager<BatteryService>
 {
 public:
     /**
      * @brief Get the last known battery level (SoC)
      *
+     * @return int Battery level in the range [0,100]
      */
-    virtual int getLastBatteryLevel() MOCK_R(0);
+    virtual int getLastBatteryLevel() { return (0); }
 
     /**
      * @brief Check if the device can be powered by a battery
@@ -467,7 +427,7 @@ public:
      * @return true if this device can be powered by a battery
      * @return false if this device is always powered by a external power supply
      */
-    virtual bool hasBattery() MOCK_R(false);
+    virtual bool hasBattery() { return (false); }
 
     /**
      * @brief Check if the battery is detected
@@ -475,28 +435,22 @@ public:
      * @note If this method returns false, the battery level is unknown
      *
      * @return true if this device has a battery and was detected
-     * @return false if this device has no battery or the battery is not detected
+     * @return false if this device has no battery or the battery
+     *         is not detected
      *         (and the device is powered by a external power supply right now)
      *
      */
-    virtual bool isBatteryPresent() MOCK_R(false);
+    virtual bool isBatteryPresent()
+    {
+        return (false);
+    }
 
     /**
      * @brief Get the full battery status
      *
      * @param status Current battery status
      */
-    virtual void getStatus(BatteryStatus &status) MOCK;
-
-    struct call
-    {
-        SINGLETON_INVOKER(int, getLastBatteryLevel(), getLastBatteryLevel())
-        SINGLETON_INVOKER(bool, hasBattery(), hasBattery())
-        SINGLETON_INVOKER(bool, isBatteryPresent(), isBatteryPresent())
-        VOID_SINGLETON_INVOKER(
-            getStatus(BatteryStatus &status),
-            getStatus(status))
-    };
+    virtual void getStatus(BatteryStatus &status) {}
 };
 
 //-------------------------------------------------------------------
@@ -507,14 +461,17 @@ public:
  * @brief Battery calibration service
  *
  */
-class SERVICE(BatteryCalibrationService)
+class BatteryCalibrationService
+    : public DependencyManager<BatteryCalibrationService>
 {
 public:
     /**
      * @brief Restart autocalibration algorithm.
      *
      */
-    virtual void restartAutoCalibration() MOCK;
+    virtual void restartAutoCalibration()
+    {
+    }
 
     /**
      * @brief Get a percentage of battery charge based on calibration data.
@@ -523,7 +480,10 @@ public:
      * @return int -1 if the battery has not been calibrated. Otherwise,
      *             a percentage in the range 0%-100%.
      */
-    virtual int getBatteryLevel(int reading) MOCK_R(-1);
+    virtual int getBatteryLevel(int reading)
+    {
+        return (-1);
+    }
 
     /**
      * @brief Get a percentage of battery charge using auto-calibration.
@@ -533,18 +493,26 @@ public:
      *
      * @param reading An ADC reading of current battery(+) voltage
      *
-     * @return If auto-calibration is available, a percentage in the range 0%-100%.
-     *         Otherwise, zero.
+     * @return int If auto-calibration is available,
+     *             a percentage in the range 0%-100%.
+     *             Otherwise, zero.
      *
      * @note Based on https://blog.ampow.com/lipo-voltage-chart/
      */
-    virtual int getBatteryLevelAutoCalibrated(int reading) MOCK_R(0);
+    virtual int getBatteryLevelAutoCalibrated(int reading)
+    {
+        return (0);
+    }
 
     /**
      * @brief Get the count of calibration data items
      *
+     * @return uint8_t Number of calibration data items
      */
-    virtual uint8_t getCalibrationDataCount() MOCK_R(0);
+    virtual uint8_t getCalibrationDataCount()
+    {
+        return (0);
+    }
 
     /**
      * @brief Get calibration data
@@ -552,7 +520,10 @@ public:
      * @param index Index of the required datum
      * @return uint16_t Required datum
      */
-    virtual uint16_t getCalibrationData(uint8_t index) MOCK_R(0);
+    virtual uint16_t getCalibrationData(uint8_t index)
+    {
+        return (0);
+    }
 
     /**
      * @brief Set calibration data
@@ -561,14 +532,19 @@ public:
      * @param data Data to set
      * @param save True to save to persistent storage.
      */
-    virtual void setCalibrationData(uint8_t index, uint16_t data, bool save) MOCK;
+    virtual void setCalibrationData(
+        uint8_t index, uint16_t data,
+        bool save = true) {}
 
     /**
      * @brief Get the auto-calibration parameter
      *
      * @return int Auto-calibration parameter
      */
-    virtual int getAutoCalibrationParameter() MOCK_R(-1);
+    virtual int getAutoCalibrationParameter()
+    {
+        return (-1);
+    }
 
     /**
      * @brief Set the auto-calibration parameter
@@ -576,27 +552,9 @@ public:
      * @param value Value of the auto-calibration parameter
      * @param save True to save to persistent storage.
      */
-    virtual void setAutoCalibrationParameter(int value, bool save) MOCK;
-
-    /// @cond
-
-    struct call
+    virtual void setAutoCalibrationParameter(int value, bool save = true)
     {
-        VOID_SINGLETON_INVOKER(restartAutoCalibration(), restartAutoCalibration())
-        SINGLETON_INVOKER(int, getBatteryLevel(int reading), getBatteryLevel(reading))
-        SINGLETON_INVOKER(int, getBatteryLevelAutoCalibrated(int reading), getBatteryLevelAutoCalibrated(reading))
-        SINGLETON_INVOKER(uint8_t, getCalibrationDataCount(), getCalibrationDataCount())
-        SINGLETON_INVOKER(uint16_t, getCalibrationData(uint8_t index), getCalibrationData(index))
-        VOID_SINGLETON_INVOKER(
-            setCalibrationData(uint8_t index, uint16_t data, bool save = true),
-            setCalibrationData(index, data, save))
-        SINGLETON_INVOKER(int, getAutoCalibrationParameter(), getAutoCalibrationParameter())
-        VOID_SINGLETON_INVOKER(
-            setAutoCalibrationParameter(int value, bool save = true),
-            setAutoCalibrationParameter(value, save))
-    };
-
-    /// @endcond
+    }
 };
 
 //-------------------------------------------------------------------
@@ -607,7 +565,7 @@ public:
  * @brief HID service
  *
  */
-class SERVICE(HidService)
+class HidService : public DependencyManager<HidService>
 {
 public:
     /**
@@ -618,7 +576,7 @@ public:
      */
     virtual void getCustomHardwareID(
         uint16_t &customVID,
-        uint16_t &customPID) MOCK;
+        uint16_t &customPID) {}
 
     /**
      * @brief Set the user-defiend custom hardware ID
@@ -634,17 +592,7 @@ public:
     virtual void setCustomHardwareID(
         uint16_t customVID,
         uint16_t customPID,
-        bool save) MOCK;
-
-    struct call
-    {
-        VOID_SINGLETON_INVOKER(
-            getCustomHardwareID(uint16_t &customVID, uint16_t &customPID),
-            getCustomHardwareID(customVID, customPID))
-        VOID_SINGLETON_INVOKER(
-            setCustomHardwareID(uint16_t customVID, uint16_t customPID, bool save = true),
-            setCustomHardwareID(customVID, customPID, save))
-    };
+        bool save = true) {}
 };
 
 //-------------------------------------------------------------------
@@ -655,15 +603,18 @@ public:
  * @brief User interface service
  *
  */
-class SERVICE(UIService)
+class UIService : public DependencyManager<UIService>
 {
 public:
-    virtual uint8_t getMaxFPS() MOCK_R(0);
-
-    struct call
+    /**
+     * @brief Get the maximum frames per seconds value
+     *        required by UI instances
+     *
+     */
+    virtual uint8_t getMaxFPS()
     {
-        SINGLETON_INVOKER(uint8_t, getMaxFPS(), getMaxFPS())
-    };
+        return (0);
+    }
 };
 
 //-------------------------------------------------------------------
@@ -674,17 +625,18 @@ public:
  * @brief Global firmware service
  *
  */
-class SERVICE(FirmwareService)
+class FirmwareService : public DependencyManager<FirmwareService>
 {
     friend void firmwareSetIsRunningState(bool state);
 
 public:
-    virtual bool isRunning() MOCK_R(_is_running);
-
-    struct call
+    /// @brief Check if the firmware daemons are already running
+    /// @return true If running
+    /// @return false If not running
+    virtual bool isRunning()
     {
-        SINGLETON_INVOKER(bool, isRunning(), isRunning())
-    };
+        return (_is_running);
+    }
 
 private:
     inline static bool _is_running = false;

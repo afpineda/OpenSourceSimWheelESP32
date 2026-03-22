@@ -140,13 +140,13 @@ void test2()
     DELAY_MS(1500);
     waitFor("State of charge 33");
     assert<bool>::equals("state of charge (1)", 33,
-                         BatteryService::call::getLastBatteryLevel());
+                         BatteryService::call().getLastBatteryLevel());
 
     reset();
     DELAY_MS(1500);
     waitFor("State of charge unknown");
     assert<bool>::equals("state of charge (2)", 0,
-                         BatteryService::call::getLastBatteryLevel());
+                         BatteryService::call().getLastBatteryLevel());
 }
 
 void test3()
