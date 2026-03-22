@@ -1,5 +1,23 @@
 # Change log (and release notes)
 
+## 8.0.0
+
+- Despite the new major version,
+  all custom firmwares from version 7 should compile **without changes**.
+- Now, all input numbers are in the range [0,127].
+- The default input map works as before,
+  but the user-defined input number when alternate mode is engaged
+  is computed in modulo 128.
+- A new API allows to route certain input numbers to UI instances,
+  for example, to choose another dashboard.
+  Monochrome OLED displays take advantage of this new feature.
+- Major technical changes:
+  - Deprecated API functions have been removed,
+    including their test units.
+  - Dependency injection and publish-subscribe have been
+    reimplemented to remove unneeded complexity and for Doxygen
+    to work properly.
+
 ## 7.10.3
 
 - The wrong connectivity choice in `Setup8.ino` has been fixed.
