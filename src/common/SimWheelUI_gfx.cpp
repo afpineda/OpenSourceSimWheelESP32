@@ -248,6 +248,8 @@ void OledTelemetry128x64::draw_alt_dashboard(
 {
     if (pTelemetryData)
     {
+        uint8_t aux;
+
         // Determine flashing
         if (_impl->flash && !pTelemetryData->powertrain.shiftLight2)
         {
@@ -261,10 +263,97 @@ void OledTelemetry128x64::draw_alt_dashboard(
         // Clear the frame buffer
         _impl->frame.fillScreen(0);
 
-        // TO DO:
-        // - Draw RPM and speed number
-        // - Draw gauges.relativeRemainingFuel
-        // - Others (to be determined)
+        // Draw literals size 1
+        _impl->frame.setTextColor(0xFFFF);
+        _impl->frame.setTextSize(1);
+        _impl->frame.setCursor(0, 0);
+        _impl->frame.printf("Speed");
+        _impl->frame.setCursor(110, 0);
+        _impl->frame.printf("RPM");
+
+        // Draw pit limiter witness (size 1)
+        if (pTelemetryData->ecu.pitLimiter)
+            _impl->frame.drawChar(61, 0, 'P', 0xFF, 0, 1);
+
+        // Draw ABS (size1)
+        if (pTelemetryData->ecu.absEngaged)
+        {
+            _impl->frame.fillRect(0, 32, 21, 9, 0xFFFF);
+            aux = 0;
+        }
+        else
+            aux = 0xFF;
+        _impl->frame.setCursor(0, 33);
+        _impl->frame.setTextColor(aux, !aux);
+        _impl->frame.printf(
+            "ABS:%02hhu",
+            pTelemetryData->ecu.absLevel);
+
+        // Draw TC (size1)
+        if (pTelemetryData->ecu.tcEngaged)
+        {
+            _impl->frame.fillRect(0, 42, 14, 9, 0xFFFF);
+            aux = 0;
+        }
+        else
+            aux = 0xFF;
+        _impl->frame.setCursor(0, 43);
+        _impl->frame.setTextColor(aux, !aux);
+        _impl->frame.printf(
+            "TC:%02hhu",
+            pTelemetryData->ecu.tcLevel);
+
+        // Draw Fuel (size1)
+        if (pTelemetryData->ecu.lowFuelAlert)
+        {
+            _impl->frame.fillRect(48, 32, 8, 9, 0xFFFF);
+            aux = 0;
+        }
+        else
+            aux = 0xFF;
+        _impl->frame.setCursor(49, 33);
+        _impl->frame.setTextColor(aux, !aux);
+        _impl->frame.printf(
+            "F:%-3hhu",
+            pTelemetryData->gauges.relativeRemainingFuel);
+
+        // Draw brake bias (size1)
+        _impl->frame.setCursor(0, 53);
+        _impl->frame.setTextColor(0xFFFF, 0);
+        _impl->frame.printf(
+            "BB:%-3hhu",
+            pTelemetryData->ecu.brakeBias);
+
+        // Draw Speed size 2
+        _impl->frame.setTextSize(2);
+        // _impl->frame.setTextColor(0xFFFF);
+        _impl->frame.setCursor(0, 10);
+        _impl->frame.printf("%3hu", pTelemetryData->powertrain.speed);
+
+        // Draw RPM size 2
+        // _impl->frame.setTextSize(2);
+        // _impl->frame.setTextColor(0xFFFF);
+        _impl->frame.setCursor(68, 10);
+        _impl->frame.printf("%5hu", pTelemetryData->powertrain.rpm);
+
+        // Draw gear
+        if (pTelemetryData->powertrain.shiftLight1)
+        {
+            _impl->frame.fillRect(106, 38, 27, 28, 0xFFFF);
+            aux = 0;
+        }
+        else
+            aux = 0xFF;
+        _impl->frame.drawChar(
+            109,
+            40,
+            pTelemetryData->powertrain.gear,
+            aux,
+            !aux, 3);
+
+        // Draw frame lines
+        _impl->frame.writeFastHLine(0, 29, 128, 0xFF);
+        _impl->frame.writeFastVLine(45, 0, 64, 0xFF);
     }
     else if (_impl->connected) // && !pTelemetryData
     {
