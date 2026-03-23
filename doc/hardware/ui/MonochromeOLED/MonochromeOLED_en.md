@@ -6,15 +6,31 @@ as the firmware can not adapt the display to arbitrary resolutions.
 
 It will show the following information thanks to SimHub:
 
-- RPM bar.
-- Current gear.
-- Low fuel alert.
-- Pit limiter alert.
-- TC and ABS engagement alerts.
-- Current TC and ABS settings.
-- Current brake bias (BB).
+- Standard dashboard:
 
-![OLED display example](MonochromeOLED.jpg)
+  - RPM bar.
+  - Current gear.
+  - Low fuel alert.
+  - Pit limiter alert.
+  - TC and ABS engagement alerts.
+  - Current TC and ABS settings.
+  - Current brake bias (BB).
+
+  ![OLED display example](MonochromeOLED.jpg)
+
+- Alternate dashboard:
+
+  - Speed.
+  - RPM.
+  - Current gear.
+  - Pit limiter alert.
+  - Remaining fuel percentage (and low fuel alert).
+  - Current TC and ABS settings and engagement alerts.
+  - Current brake bias (BB).
+
+- Battery level dashboard (available only on battery-operated devices).
+
+Dashboard selection requires a *routed* input number.
 
 ## Requirements
 
