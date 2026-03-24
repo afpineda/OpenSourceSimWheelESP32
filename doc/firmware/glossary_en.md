@@ -3,9 +3,13 @@
 - **ADC**: Analog to Digital Converter.
 
 - **Alternate mode** (or "ALT mode"):
-  a function for certain buttons.
-  When enabled, other input numbers will be reported as `input number + 64` (configurable).
-  This duplicates the number of reported inputs in the _HID_ protocol.
+  a function for certain buttons and clutch paddles.
+  When engaged, events associated with _firmware-defined input numbers_
+  will be translated to _user-defined input numbers_ in an alternate way.
+  Thus, the number of logical buttons can be greater than the number of
+  physical buttons in the _system_.
+
+- **Battery level**: a synonym of _state of charge_.
 
 - **Bite point**:
   a certain value of the _clutch_ where the simulated car
@@ -17,9 +21,11 @@
 
 - **Button**: a momentary switch.
 
-- **Clutch**: a joystick/gamepad axis that simulates the position of a clutch pedal.
+- **Clutch**: a joystick/gamepad axis that simulates the position
+  of a clutch pedal.
 
-- **Daemon**: a perpetual task that runs an infinite loop in a background thread.
+- **Daemon**: a perpetual task that runs an infinite loop
+  in a background thread.
 
 - **Detent**: haptic user feedback in a rotary encoder.
 
@@ -29,7 +35,7 @@
   or a single lever that can move in two axis.
 
 - **Firmware-defined input number**:
-  an _Input number_ in the range [0,127].
+  an _Input number_ in the range [0,127] assigned to input hardware.
 
 - **Frame**: a graphic that fills the whole display.
 
@@ -58,7 +64,8 @@
 
 - **Input bitmap**:
   a 64-bits word where each bit represents the state of an input.
-  An input bitmap with a single bit set to 1 may be used to identify a single input.
+  An input bitmap with a single bit set to 1 may be used
+  to identify a single input.
 
 - **Input bitmask**:
   a 64-bits word that represents ignored inputs in a bitmap.
@@ -71,17 +78,23 @@
 - **Input hub**:
   a _subsystem_ that knows the state of every input at all times.
 
+- **Input map**:
+  The relationship between _firmware-defined input numbers_ and
+  _user-defined input numbers_.
+
 - **Input number**:
-  a non-negative number assigned to a hardware input.
+  a non-negative number assigned to a physical or logical button.
 
 - **LED strip**:
-  a circuit composed by _pixel drivers_ connected in series and having a single control wire.
+  a circuit composed by _pixel drivers_ connected in series
+  and having a single control wire.
 
 - **LiPo** (battery):
   Lithium-polymer battery.
 
 - **Notification**:
-  a condition or state change the user should be aware of, thanks to the _UI_ (if available).
+  a condition or state change the user should be aware of,
+  thanks to the _UI_ (if available).
 
 - **Paddle**:
   a momentary switch or a potentiometer shaped as a lever.
@@ -100,7 +113,8 @@
   display them all at once.
 
 - **Pixel driver**:
-  a very small device having a control chip and three LEDs (red, green and blue).
+  a very small device having a control chip and three LEDs
+  (red, green and blue).
 
 - **Pixel format**:
   the way pixel color data is organized for serial transmission.
@@ -115,6 +129,10 @@
 - **Quantum**:
   talking about battery charge,
   a counter of voltage samples that falls into a certain range.
+
+- **Routed input number**:
+  A _firmware-defined input number_ consumed by the _system_ itself,
+  so it can not be translated to a _user-defined input number_.
 
 - **Subsystem**:
   a piece of the _system_ that provides a certain behavior
@@ -133,4 +151,5 @@
 - **UI**: User Interface.
 
 - **User-defined input number**:
-  an _Input number_ in the range [0,127].
+  an _Input number_ in the range [0,127] assigned to a logical button
+  (in a HID gamepad).
