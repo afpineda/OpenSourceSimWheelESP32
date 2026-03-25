@@ -1743,9 +1743,19 @@ private:
 protected:
     // Singleton pattern
 
-    PixelControlNotification() : AbstractUserInterface() {}
+    /// @brief Initialize
+    PixelControlNotification();
 
     // For descendant classes
+
+    /// @brief Pixel vector for the telemetry group
+    ::std::vector<Pixel> telemetry_pixel{};
+
+    /// @brief Pixel vector for the backlit buttons group
+    ::std::vector<Pixel> backlit_button_pixel{};
+
+    /// @brief Pixel vector for the individual pixels group
+    ::std::vector<Pixel> individual_pixel{};
 
     /**
      * @brief Flag to indicate host connection
@@ -1757,30 +1767,22 @@ protected:
     bool notConnectedYet = true;
 
     /**
-     * @brief Create a vector of pixels suitable for a pixel group
-     *
-     * @param group Pixel group
-     * @param color Initial color for all pixels
-     * @return ::std::vector<Pixel> Pixel vector
-     */
-    static ::std::vector<Pixel> pixelVector(
-        PixelGroup group,
-        Pixel color = 0) noexcept;
-
-    /**
      * @brief Show pixels all at once in a specific group
      *
      * @param group Pixel group
-     * @param data Pixel data is in RGB format.
-     *             The size dependes on the number of pixels in the LED strip.
      */
-    static void show(
-        PixelGroup group,
-        const ::std::vector<Pixel> &data) noexcept;
+    void show(PixelGroup group) noexcept;
+
+    /**
+     * @brief Show pixels all at once in all groups
+     *
+     */
+    void show() noexcept;
 
     /**
      * @brief Show all pixels in black in all groups all at once
      *
+     * @note Does not overwrite pixel vector members
      */
     static void reset() noexcept;
 
@@ -1788,8 +1790,8 @@ protected:
      * @brief Get the count of pixels in a pixel group
      *
      * @param group Pixel group
-     * @return uin8_t The count of pixels or zero
-     *                if the group was not configured.
+     * @return uint8_t The count of pixels or zero
+     *                 if the group was not configured.
      */
     static uint8_t getPixelCount(PixelGroup group) noexcept;
 
@@ -1799,24 +1801,16 @@ protected:
      * @note Does nothing if there is no battery.
      *       Pixels are rendered, but not shown yet.
      *
-     * @param data Vector of pixels
-     * @param colorGradientOrPercentage If true, show SoC as a color
-     *                                  gradient from green to red
-     *                                  If false, show SoC
-     *                                  as a percentage bar
      * @param barColor Packed RGB color to use in the percentage bar.
      *
      * @return True if there is a battery.
      * @return False if there is no battery.
      */
-    // static bool renderBatteryLevel(
-    //     ::std::vector<Pixel> &data,
-    //     bool colorGradientOrPercentage,
-    //     uint32_t barColor = 0x00ACFA70);
+    bool renderBatteryLevel(uint32_t barColor = 0x00ACFA70);
 
 public:
     /**
-     * @brief Get the singleton instance
+     * @brief  Get the singleton instance
      *
      * @return PixelControlNotification* Singleton instance
      */

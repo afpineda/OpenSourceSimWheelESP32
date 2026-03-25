@@ -27,7 +27,6 @@
 
 static LEDStrip *led_strip[3] = {nullptr};
 #define DELAY_MS(ms) std::this_thread::sleep_for(std::chrono::milliseconds(ms))
-#define WAIT_MS std::chrono::milliseconds(80)
 #define INT(N) ((uint8_t)N)
 #define CEIL_DIV(dividend, divisor) (dividend + divisor - 1) / divisor
 
@@ -63,6 +62,11 @@ typedef ::std::lock_guard<std::recursive_mutex> PixelGuard;
 // A small task delay (and context swap) do the trick.
 // The following macro is defined for easy rework and
 // better semantics.
+//
+// DEVELOPMENT NOTE 2026/03/25:
+// The watchdog timer is already called when procesing
+// internal events (static_event<>), so the task
+// delay is not needed anymore.
 //---------------------------------------------------------------
 
 #define PREVENT_STARVATION vTaskDelay(10)
@@ -104,11 +108,12 @@ void pixelsShutdown()
     // Shutdown is mandatory.
     pixelMutex.lock();
     for (int i = 0; i < 3; i++)
-    {
-        led_strip[i]->clear();
-        delete led_strip[i];
-        led_strip[i] = nullptr;
-    }
+        if (led_strip[i])
+        {
+            led_strip[i]->clear();
+            delete led_strip[i];
+            led_strip[i] = nullptr;
+        }
     pixelMutex.unlock();
 }
 
@@ -154,6 +159,17 @@ void internals::pixels::show(
 //---------------------------------------------------------------
 //---------------------------------------------------------------
 
+PixelControlNotification::PixelControlNotification()
+    : AbstractUserInterface()
+{
+    telemetry_pixel.resize(
+        internals::pixels::getCount(PixelGroup::GRP_TELEMETRY));
+    backlit_button_pixel.resize(
+        internals::pixels::getCount(PixelGroup::GRP_BUTTONS));
+    individual_pixel.resize(
+        internals::pixels::getCount(PixelGroup::GRP_INDIVIDUAL));
+}
+
 //---------------------------------------------------------------
 // Protected methods available to descendant classes
 //---------------------------------------------------------------
@@ -163,66 +179,65 @@ uint8_t PixelControlNotification::getPixelCount(PixelGroup group) noexcept
     return internals::pixels::getCount(group);
 }
 
-void PixelControlNotification::show(
-    PixelGroup group,
-    const ::std::vector<Pixel> &data) noexcept
+void PixelControlNotification::show(PixelGroup group) noexcept
 {
     if (led_strip[INT(group)])
-        led_strip[INT(group)]->show(data);
+    {
+        if (group == PixelGroup::GRP_TELEMETRY)
+            led_strip[INT(group)]->show(telemetry_pixel);
+        else if (group == PixelGroup::GRP_BUTTONS)
+            led_strip[INT(group)]->show(backlit_button_pixel);
+        else
+            led_strip[INT(group)]->show(individual_pixel);
+    }
 }
 
-static ::std::vector<Pixel> PixelControlNotification::pixelVector(
-    PixelGroup group,
-    Pixel color) noexcept
+void PixelControlNotification::show() noexcept
 {
-    if (led_strip[INT(group)])
-        return led_strip[INT(group)]->pixelVector(color);
-    else
-        return PixelVector{};
+    if (led_strip[INT(PixelGroup::GRP_TELEMETRY)])
+        led_strip[INT(PixelGroup::GRP_TELEMETRY)]->show(telemetry_pixel);
+    if (led_strip[INT(PixelGroup::GRP_BUTTONS)])
+        led_strip[INT(PixelGroup::GRP_BUTTONS)]->show(backlit_button_pixel);
+    if (led_strip[INT(PixelGroup::GRP_INDIVIDUAL)])
+        led_strip[INT(PixelGroup::GRP_INDIVIDUAL)]->show(individual_pixel);
 }
 
-static void PixelControlNotification::reset() noexcept
+void PixelControlNotification::reset() noexcept
 {
     for (int i = 0; i < 3; i++)
         if (led_strip[i])
             led_strip[i]->clear();
 }
 
-// bool PixelControlNotification::renderBatteryLevel(
-//     ::std::vector<Pixel> &data,
-//     bool colorGradientOrPercentage,
-//     uint32_t barColor)
-// {
-//     if (BatteryService::call().isBatteryPresent())
-//     {
-//         int soc = BatteryService::call().getLastBatteryLevel();
-//         if (colorGradientOrPercentage)
-//         {
-//             // Color gradient
-//             Pixel p;
-//             p.green = (255 * soc) / 100;
-//             fill(data, p);
-//         }
-//         else
-//         {
-//             // Percentage bar
-//             uint8_t pixelCount = data.size();
-//             uint8_t litCount = (soc * pixelCount) / 100;
-//             if (litCount == 0)
-//                 // At least, one pixel must be shown, otherwise
-//                 // there is no SoC notification at all
-//                 litCount = 1;
-//             for (uint8_t pixelIndex = 0; pixelIndex < litCount; pixelIndex++)
-//                 data[pixelIndex] = barColor;
-//             for (uint8_t pixelIndex = litCount;
-//                  pixelIndex < pixelCount;
-//                  pixelIndex++)
-//                 data[pixelIndex] = 0;
-//         }
-//         return true;
-//     }
-//     return false;
-// }
+bool PixelControlNotification::renderBatteryLevel(uint32_t barColor)
+{
+    if (BatteryService::call().isBatteryPresent())
+    {
+        int soc = BatteryService::call().getLastBatteryLevel();
+
+        // Color gradient
+        Pixel p;
+        p.green = (255 * soc) / 100;
+        PixelVectorHelper::fill(backlit_button_pixel, p);
+        PixelVectorHelper::fill(individual_pixel, p);
+
+        // Percentage bar
+        uint8_t pixelCount = telemetry_pixel.size();
+        uint8_t litCount = (soc * pixelCount) / 100;
+        if (litCount == 0)
+            // At least, one pixel must be shown, otherwise
+            // there is no SoC notification at all
+            litCount = 1;
+        PixelVectorHelper::fill(telemetry_pixel, 0, litCount - 1, barColor);
+        PixelVectorHelper::fill(
+            telemetry_pixel,
+            litCount,
+            pixelCount - 1,
+            barColor);
+        return true;
+    }
+    return false;
+}
 
 //---------------------------------------------------------------
 // Inherited virtual method implementation
@@ -273,114 +288,88 @@ void PixelControlNotification::onSaveSettings()
 
 void PixelControlNotification::pixelControl_OnStart()
 {
-    // ::std::vector<Pixel> telemetry(getPixelCount(PixelGroup::GRP_TELEMETRY));
-    // if (renderBatteryLevel(telemetry, false))
-    // {
-    //     // Show battery level
-    //     show(PixelGroup::GRP_TELEMETRY, telemetry);
-    // }
-    // else
-    // {
-    //     // There is no battery
-    //     // All white
-    //     internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 85, 85, 85);
-    //     internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 85, 85, 85);
-    //     internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 85, 85, 85);
-    // }
-    // internals::pixels::show();
-    // DELAY_MS(1500);
+
+    if (!renderBatteryLevel())
+    {
+        // There is no battery
+        // All white
+        PixelVectorHelper::fill(telemetry_pixel, 0x858585);
+        PixelVectorHelper::fill(backlit_button_pixel, 0x858585);
+        PixelVectorHelper::fill(individual_pixel, 0x858585);
+    } // else battery level rendered in the pixel vector members
+    show();
+    DELAY_MS(1500);
 }
 
 void PixelControlNotification::pixelControl_OnBitePoint(uint8_t bitePoint)
 {
     if (notConnectedYet)
+    {
         // Ignore the bite point event if not connected yet.
         // On startup, a single bite point event is always triggered
         // from the storage subsystem.
         return;
+    }
 
-    PixelVector telemetry =
-        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_TELEMETRY));
-    PixelVector buttons =
-        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_BUTTONS));
-    PixelVector individual =
-        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_INDIVIDUAL));
-    uint8_t pixelCount = telemetry.size();
+    uint8_t pixelCount = telemetry_pixel.size();
     uint8_t litCount = CEIL_DIV(bitePoint * pixelCount, CLUTCH_FULL_VALUE);
-    for (int i = 0; i < litCount; i++)
-        telemetry[i] = 0x555500;
-    show(PixelGroup::GRP_TELEMETRY, telemetry);
-    show(PixelGroup::GRP_BUTTONS, buttons);
-    show(PixelGroup::GRP_INDIVIDUAL, individual);
+    PixelVectorHelper::fill(telemetry_pixel, 0, litCount - 1, 0x555500);
+    PixelVectorHelper::fill(telemetry_pixel, litCount, pixelCount - 1, 0);
+    PixelVectorHelper::fill(backlit_button_pixel, 0);
+    PixelVectorHelper::fill(individual_pixel, 0);
+
+    show();
     DELAY_MS(250);
 
     if (notConnectedYet)
         pixelControl_OnBLEdiscovering();
     else
     {
-        telemetry.fill(0);
-        show(PixelGroup::GRP_TELEMETRY, telemetry);
+        PixelVectorHelper::fill(telemetry_pixel, 0);
+        show(PixelGroup::GRP_TELEMETRY);
     }
 }
 
 void PixelControlNotification::pixelControl_OnConnected()
 {
-    internals::pixels::reset();
+    reset();
 }
 
 void PixelControlNotification::pixelControl_OnBLEdiscovering()
 {
     // All purple
-    PixelVector telemetry =
-        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_TELEMETRY,
-                                             0x550055));
-    PixelVector buttons =
-        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_BUTTONS,
-                                             0x550055));
-    PixelVector individual =
-        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_INDIVIDUAL,
-                                             0x550055));
-    show(PixelGroup::GRP_TELEMETRY, telemetry);
-    show(PixelGroup::GRP_BUTTONS, buttons);
-    show(PixelGroup::GRP_INDIVIDUAL, individual);
+    PixelVectorHelper::fill(telemetry_pixel, 0x550055);
+    PixelVectorHelper::fill(backlit_button_pixel, 0x550055);
+    PixelVectorHelper::fill(individual_pixel, 0x550055);
+    show();
     DELAY_MS(250);
 }
 
 void PixelControlNotification::pixelControl_OnLowBattery()
 {
     // Alternate pixels in blue and red
-    PixelVector telemetry =
-        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_TELEMETRY,
-                                             0x00001F));
-    PixelVector buttons =
-        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_BUTTONS,
-                                             0x00001F));
-    PixelVector individual =
-        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_INDIVIDUAL,
-                                             0x00001F));
-    for (int i = 0; i < telemetry.size(); i += 2)
-        telemetry[i] = 0x1F0000; // red;
-    for (int i = 0; i < buttons.size(); i += 2)
-        buttons[i] = 0x1F0000; // red;
-    for (int i = 0; i < individual.size(); i += 2)
-        individual[i] = 0x1F0000; // red;
+    PixelVectorHelper::fill(telemetry_pixel, 0x00001F);
+    PixelVectorHelper::fill(backlit_button_pixel, 0x00001F);
+    PixelVectorHelper::fill(individual_pixel, 0x00001F);
+    for (int i = 0; i < telemetry_pixel.size(); i += 2)
+        telemetry_pixel[i] = 0x1F0000; // red;
+    for (int i = 0; i < backlit_button_pixel.size(); i += 2)
+        backlit_button_pixel[i] = 0x1F0000; // red;
+    for (int i = 0; i < individual_pixel.size(); i += 2)
+        individual_pixel[i] = 0x1F0000; // red;
 
     // Show
-    show(PixelGroup::GRP_TELEMETRY, telemetry);
-    show(PixelGroup::GRP_BUTTONS, buttons);
-    show(PixelGroup::GRP_INDIVIDUAL, individual);
+    show();
 
     // Cool animation
     for (int animCount = 0; animCount < 5; animCount++)
     {
         DELAY_MS(200);
 
-        telemetry >> 1;
-        buttons >> 1;
-        individual >> 1;
-        show(PixelGroup::GRP_TELEMETRY, telemetry);
-        show(PixelGroup::GRP_BUTTONS, buttons);
-        show(PixelGroup::GRP_INDIVIDUAL, individual);
+        PixelVectorHelper::shift_right(telemetry_pixel, 1);
+        PixelVectorHelper::shift_right(backlit_button_pixel, 1);
+        PixelVectorHelper::shift_right(individual_pixel, 1);
+        show();
     }
     DELAY_MS(200);
 
@@ -393,18 +382,10 @@ void PixelControlNotification::pixelControl_OnLowBattery()
 void PixelControlNotification::pixelControl_OnSaveSettings()
 {
     // All green
-    PixelVector telemetry =
-        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_TELEMETRY,
-                                             0x001F00));
-    PixelVector buttons =
-        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_BUTTONS,
-                                             0x001F00));
-    PixelVector individual =
-        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_INDIVIDUAL,
-                                             0x001F00));
-    show(PixelGroup::GRP_TELEMETRY, telemetry);
-    show(PixelGroup::GRP_BUTTONS, buttons);
-    show(PixelGroup::GRP_INDIVIDUAL, individual);
+    PixelVectorHelper::fill(telemetry_pixel, 0x001F00);
+    PixelVectorHelper::fill(backlit_button_pixel, 0x001F00);
+    PixelVectorHelper::fill(individual_pixel, 0x001F00);
+    show();
     DELAY_MS(150);
 
     // All off
@@ -412,9 +393,7 @@ void PixelControlNotification::pixelControl_OnSaveSettings()
     DELAY_MS(150);
 
     // All green
-    show(PixelGroup::GRP_TELEMETRY, telemetry);
-    show(PixelGroup::GRP_BUTTONS, buttons);
-    show(PixelGroup::GRP_INDIVIDUAL, individual);
+    show();
     DELAY_MS(150);
 
     // All off

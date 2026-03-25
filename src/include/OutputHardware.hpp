@@ -94,9 +94,9 @@ public:
      */
     static void fill(
         vector_type &data,
-        const Pixel &color,
         size_type fromIndex,
-        size_type toIndex) noexcept;
+        size_type toIndex,
+        const Pixel &color) noexcept;
 
 }; // PixelVectorHelper
 

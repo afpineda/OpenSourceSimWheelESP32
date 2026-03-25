@@ -117,9 +117,9 @@ void PixelVectorHelper::fill(
 
 void PixelVectorHelper::fill(
     PixelVectorHelper::vector_type &data,
-    const Pixel &color,
     PixelVectorHelper::size_type fromIndex,
-    PixelVectorHelper::size_type toIndex) noexcept
+    PixelVectorHelper::size_type toIndex,
+    const Pixel &color) noexcept
 {
     if (fromIndex <= toIndex)
         for (size_type i = fromIndex;
@@ -129,7 +129,7 @@ void PixelVectorHelper::fill(
             data[i] = color;
         }
     else
-        PixelVectorHelper::fill(data, color, toIndex, fromIndex);
+        PixelVectorHelper::fill(data, toIndex, fromIndex, color);
 }
 
 // ----------------------------------------------------------------------------
@@ -389,18 +389,21 @@ LEDStrip &LEDStrip::operator=(LEDStrip &&other)
 
 void LEDStrip::show(const LEDStrip::pixel_vector_type &pixels)
 {
-    ESP_ERROR_CHECK(
-        rmt_transmit(
-            rmtHandle,
-            pixel_encoder_handle,
-            pixels.data(),
-            pixels.size() * sizeof(Pixel),
-            &rmt_transmit_config));
-    ESP_ERROR_CHECK(
-        rmt_tx_wait_all_done(
-            rmtHandle,
-            -1));
-    active_wait_ns(restTimeNs);
+    if (pixels.size())
+    {
+        ESP_ERROR_CHECK(
+            rmt_transmit(
+                rmtHandle,
+                pixel_encoder_handle,
+                pixels.data(),
+                pixels.size() * sizeof(Pixel),
+                &rmt_transmit_config));
+        ESP_ERROR_CHECK(
+            rmt_tx_wait_all_done(
+                rmtHandle,
+                -1));
+        active_wait_ns(restTimeNs);
+    }
 }
 
 // ----------------------------------------------------------------------------
