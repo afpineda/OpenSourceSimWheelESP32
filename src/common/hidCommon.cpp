@@ -23,7 +23,7 @@
 #if !CD_CI
 #include "esp_mac.h"
 #else
-#include <iostream> // For testing
+#include <iostream> // For debug
 #endif
 
 #include <string>
