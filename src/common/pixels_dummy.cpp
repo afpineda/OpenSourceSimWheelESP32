@@ -12,18 +12,25 @@
 #include "SimWheel.hpp"
 #include "SimWheelInternals.hpp"
 
+static std::recursive_mutex pixelMutex;
+
+void pixels::configure(
+    PixelGroup group,
+    OutputGPIO dataPin,
+    uint8_t pixelCount,
+    bool useLevelShift,
+    PixelDriver driver,
+    uint8_t globalBrightness,
+    bool reverse) {}
 void internals::pixels::getReady() {}
-void internals::pixels::set(PixelGroup group,
-                            uint8_t pixelIndex,
-                            uint8_t red,
-                            uint8_t green,
-                            uint8_t blue) {}
-void internals::pixels::setAll(PixelGroup group,
-                               uint8_t red,
-                               uint8_t green,
-                               uint8_t blue) {}
-void internals::pixels::shiftToNext(PixelGroup group) {}
-void internals::pixels::shiftToPrevious(PixelGroup group) {}
-void internals::pixels::show() {}
-void internals::pixels::reset() {}
 uint8_t internals::pixels::getCount(PixelGroup group) { return 16; }
+
+PixelGuard internals::pixels::acquire()
+{
+    return PixelGuard(pixelMutex);
+}
+
+void internals::pixels::show(
+    const ::std::vector<Pixel> &telemetry,
+    const ::std::vector<Pixel> &buttons,
+    const ::std::vector<Pixel> &individual) {}

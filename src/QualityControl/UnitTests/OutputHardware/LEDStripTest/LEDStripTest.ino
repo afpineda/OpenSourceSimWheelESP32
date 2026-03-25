@@ -36,54 +36,74 @@ void setup()
 
 void loop()
 {
-    Serial.println("Go red");
-    strip->pixelRangeRGB(0, LED_COUNT - 1, 255, 0, 0);
-    strip->show();
-    DELAY_MS(DEFAULT_DELAY);
-    Serial.println("Go green");
-    strip->pixelRangeRGB(0, LED_COUNT - 1, 0, 255, 0);
-    strip->show();
-    DELAY_MS(DEFAULT_DELAY);
-    Serial.println("Go blue");
-    strip->pixelRangeRGB(0, LED_COUNT - 1, 0, 0, 255);
-    strip->show();
-    DELAY_MS(DEFAULT_DELAY);
-    Serial.println("Go white");
-    strip->pixelRangeRGB(0, LED_COUNT - 1, 255, 255, 255);
-    strip->show();
-    DELAY_MS(DEFAULT_DELAY);
-    Serial.println("Go purple");
-    strip->pixelRangeRGB(0, LED_COUNT - 1, 128, 0, 128);
-    strip->show();
-    DELAY_MS(DEFAULT_DELAY);
-    Serial.println("Go orange");
-    strip->pixelRangeRGB(0, LED_COUNT - 1, 255, 65, 0);
-    strip->show();
-    DELAY_MS(DEFAULT_DELAY);
-    Serial.println("Go orange dimmer");
-    strip->pixelRangeRGB(0, LED_COUNT - 1, 64, 16, 0);
-    strip->show();
-    DELAY_MS(DEFAULT_DELAY);
-    Serial.println("Go off");
-    strip->clear();
-    strip->show();
-    DELAY_MS(DEFAULT_DELAY);
-    Serial.println("rainbow");
-    strip->pixelRGB(0, 0xEE82EE);
-    strip->pixelRGB(1, 0x4B0082);
-    strip->pixelRGB(2, 0x0000FF);
-    strip->pixelRGB(3, 0x008000);
-    strip->pixelRGB(4, 0xFFFF00);
-    strip->pixelRGB(5, 0xFFA500);
-    strip->pixelRGB(6, 0xFF0000);
-    strip->show();
-    DELAY_MS(DEFAULT_DELAY);
-    Serial.println("Shift to next");
-    strip->shiftToNext();
-    strip->show();
-    DELAY_MS(DEFAULT_DELAY);
-    Serial.println("Shift to previous");
-    strip->shiftToPrevious();
-    strip->show();
-    DELAY_MS(DEFAULT_DELAY);
+    {
+        Serial.println("Go red");
+        PixelVector v = strip->pixelVector(0xFF0000);
+        strip->show(v);
+        DELAY_MS(DEFAULT_DELAY);
+    }
+    {
+        Serial.println("Go green");
+        PixelVector v = strip->pixelVector(0x00FF00);
+        strip->show(v);
+        DELAY_MS(DEFAULT_DELAY);
+    }
+    {
+        Serial.println("Go blue");
+        PixelVector v = strip->pixelVector(0x0000FF);
+        strip->show(v);
+        DELAY_MS(DEFAULT_DELAY);
+    }
+    {
+        Serial.println("Go white");
+        PixelVector v = strip->pixelVector(0xFFFFFF);
+        strip->show(v);
+        DELAY_MS(DEFAULT_DELAY);
+    }
+    {
+        Serial.println("Go purple");
+        PixelVector v = strip->pixelVector(0x800080);
+        strip->show(v);
+        DELAY_MS(DEFAULT_DELAY);
+    }
+    {
+        Serial.println("Go orange");
+        PixelVector v = strip->pixelVector(0xFF4100);
+        strip->show(v);
+        DELAY_MS(DEFAULT_DELAY);
+    }
+    {
+        Serial.println("Go orange dimmer");
+        PixelVector v = strip->pixelVector(0x411000);
+        strip->show(v);
+        DELAY_MS(DEFAULT_DELAY);
+    }
+    {
+        Serial.println("Go off");
+        strip->clear();
+        DELAY_MS(DEFAULT_DELAY);
+    }
+    {
+        Serial.println("rainbow");
+        PixelVector v = strip->pixelVector();
+        v[0] = 0xEE82EE;
+        v[1] = 0x4B0082;
+        v[2] = 0x0000FF;
+        v[3] = 0x008000;
+        v[4] = 0xFFFF00;
+        v[5] = 0xFFA500;
+        v[6] = 0xFF0000;
+        strip->show(v);
+        DELAY_MS(DEFAULT_DELAY);
+
+        Serial.println("Shift to next");
+        v >> 1;
+        strip->show(v);
+        DELAY_MS(DEFAULT_DELAY);
+
+        Serial.println("Shift to previous");
+        v << 1;
+        strip->show(v);
+        DELAY_MS(DEFAULT_DELAY);
+    }
 }

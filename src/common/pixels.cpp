@@ -18,7 +18,6 @@
 #include "InternalServices.hpp"
 #include "OutputHardware.hpp"
 
-#include <mutex>
 #include <chrono>
 #include <thread>
 
@@ -43,14 +42,9 @@ static LEDStrip *pixelData[3] = {nullptr};
 // and xSemaphoreCreateRecursiveMutexStatic (FreeRTOS).
 // Current implementation uses std::recursive_mutex instead,
 // which seems bug-free.
-// Some macros are defined for easy rework in case the
-// mutex implementation has to change in the future.
 //---------------------------------------------------------------
 
 static std::recursive_mutex pixelMutex;
-#define CAN_TAKE_MUTEX pixelMutex.try_lock()
-#define TAKE_MUTEX pixelMutex.lock()
-#define GIVE_MUTEX pixelMutex.unlock()
 
 //---------------------------------------------------------------
 // The task watchdog timer issue
@@ -83,9 +77,9 @@ void pixels::configure(
     OutputGPIO dataPin,
     uint8_t pixelCount,
     bool useLevelShift,
-    PixelDriver pixelType,
-    PixelFormat pixelFormat,
-    uint8_t globalBrightness)
+    PixelDriver driver,
+    uint8_t globalBrightness,
+    bool reverse)
 {
     if (pixelData[INT(group)] != nullptr)
         throw std::runtime_error("A pixel group was configured twice");
@@ -93,8 +87,8 @@ void pixels::configure(
         dataPin,
         pixelCount,
         useLevelShift,
-        pixelType,
-        pixelFormat);
+        driver,
+        reverse);
     pixelData[INT(group)]->brightness(globalBrightness);
 }
 
@@ -106,18 +100,15 @@ void pixels::configure(
 
 void pixelsShutdown()
 {
-    // NOTE: no timeouts here.
     // Shutdown is mandatory.
-    TAKE_MUTEX;
+    pixelMutex.lock();
     for (int i = 0; i < 3; i++)
-        if (pixelData[i])
-        {
-            pixelData[i]->clear();
-            pixelData[i]->show();
-            delete pixelData[i];
-            pixelData[i] = nullptr;
-        }
-    GIVE_MUTEX;
+    {
+        pixelData[i]->clear();
+        delete pixelData[i];
+        pixelData[i] = nullptr;
+    }
+    pixelMutes.unlock();
 }
 
 //---------------------------------------------------------------
@@ -138,80 +129,28 @@ uint8_t internals::pixels::getCount(PixelGroup group)
 }
 
 //---------------------------------------------------------------
-// Pixel control
+
+PixelGuard internals::pixels::acquire()
+{
+    return PixelGuard(pixelMutex);
+}
+
 //---------------------------------------------------------------
 
-void internals::pixels::set(
-    PixelGroup group,
-    uint8_t pixelIndex,
-    uint8_t red,
-    uint8_t green,
-    uint8_t blue)
+void internals::pixels::show(
+    const ::std::vector<Pixel> &telemetry,
+    const ::std::vector<Pixel> &buttons,
+    const ::std::vector<Pixel> &individual)
 {
-    if (pixelData[INT(group)] && CAN_TAKE_MUTEX)
+    if (pixelMutex.try_lock())
     {
-        pixelData[INT(group)]->pixelRGB(pixelIndex, red, green, blue);
-        GIVE_MUTEX;
-    }
-}
-
-void internals::pixels::setAll(
-    PixelGroup group,
-    uint8_t red,
-    uint8_t green,
-    uint8_t blue)
-{
-    if (pixelData[INT(group)] && CAN_TAKE_MUTEX)
-    {
-        pixelData[INT(group)]->pixelRangeRGB(0, 255, red, green, blue);
-        GIVE_MUTEX;
-    }
-}
-
-void internals::pixels::shiftToNext(PixelGroup group)
-{
-    if (pixelData[INT(group)] && CAN_TAKE_MUTEX)
-    {
-        pixelData[INT(group)]->shiftToNext();
-        GIVE_MUTEX;
-    }
-}
-
-void internals::pixels::shiftToPrevious(PixelGroup group)
-{
-    if (pixelData[INT(group)] && CAN_TAKE_MUTEX)
-    {
-        pixelData[INT(group)]->shiftToPrevious();
-        GIVE_MUTEX;
-    }
-}
-
-void internals::pixels::reset()
-{
-    if (CAN_TAKE_MUTEX)
-    {
-        PREVENT_STARVATION;
-        for (int i = 0; i < 3; i++)
-            if (pixelData[i])
-            {
-                pixelData[i]->pixelRangeRGB(0, pixelData[i]->getPixelCount(), 0, 0, 0);
-                pixelData[i]->show();
-                PREVENT_STARVATION;
-            }
-        GIVE_MUTEX;
-    }
-}
-
-void internals::pixels::show()
-{
-    if (CAN_TAKE_MUTEX)
-    {
-        for (int i = 0; i < 3; i++)
-            if (pixelData[i])
-            {
-                pixelData[i]->show();
-            }
-        GIVE_MUTEX;
+        if (pixelData[PixelGroup::GRP_TELEMETRY])
+            pixelData[PixelGroup::GRP_TELEMETRY]->show(telemetry);
+        if (pixelData[PixelGroup::GRP_BUTTONS])
+            pixelData[PixelGroup::GRP_BUTTONS]->show(buttons);
+        if (pixelData[PixelGroup::GRP_INDIVIDUAL])
+            pixelData[PixelGroup::GRP_INDIVIDUAL]->show(individual);
+        pixelMutex.unlock();
     }
 }
 
@@ -228,35 +167,6 @@ void internals::pixels::show()
 uint8_t PixelControlNotification::getPixelCount(PixelGroup group)
 {
     return internals::pixels::getCount(group);
-}
-
-void PixelControlNotification::set(
-    PixelGroup group,
-    uint8_t pixelIndex,
-    uint8_t red,
-    uint8_t green,
-    uint8_t blue)
-{
-    internals::pixels::set(group, pixelIndex, red, green, blue);
-}
-
-void PixelControlNotification::setAll(
-    PixelGroup group,
-    uint8_t red,
-    uint8_t green,
-    uint8_t blue)
-{
-    internals::pixels::setAll(group, red, green, blue);
-}
-
-void PixelControlNotification::shiftToNext(PixelGroup group)
-{
-    internals::pixels::shiftToNext(group);
-}
-
-void PixelControlNotification::shiftToPrevious(PixelGroup group)
-{
-    internals::pixels::shiftToPrevious(group);
 }
 
 bool PixelControlNotification::renderBatteryLevel(
@@ -300,46 +210,40 @@ bool PixelControlNotification::renderBatteryLevel(
 void PixelControlNotification::onStart()
 {
     notConnectedYet = true;
-    TAKE_MUTEX;
+    auto guard = internals::pixels::acquire();
     pixelControl_OnStart();
-    GIVE_MUTEX;
 }
 
 void PixelControlNotification::onBitePoint(uint8_t bitePoint)
 {
-    TAKE_MUTEX;
+    auto guard = internals::pixels::acquire();
     pixelControl_OnBitePoint(bitePoint);
-    GIVE_MUTEX;
 }
 
 void PixelControlNotification::onConnected()
 {
     notConnectedYet = false;
-    TAKE_MUTEX;
+    auto guard = internals::pixels::acquire();
     pixelControl_OnConnected();
-    GIVE_MUTEX;
 }
 
 void PixelControlNotification::onBLEdiscovering()
 {
     notConnectedYet = true;
-    TAKE_MUTEX;
+    auto guard = internals::pixels::acquire();
     pixelControl_OnBLEdiscovering();
-    GIVE_MUTEX;
 }
 
 void PixelControlNotification::onLowBattery()
 {
-    TAKE_MUTEX;
+    auto guard = internals::pixels::acquire();
     pixelControl_OnLowBattery();
-    GIVE_MUTEX;
 }
 
 void PixelControlNotification::onSaveSettings()
 {
-    TAKE_MUTEX;
+    auto guard = internals::pixels::acquire();
     pixelControl_OnSaveSettings();
-    GIVE_MUTEX;
 }
 
 //---------------------------------------------------------------

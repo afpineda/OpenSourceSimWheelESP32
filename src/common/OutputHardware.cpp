@@ -23,6 +23,7 @@
 #include <cstring>             // For memset()
 #include "esp32-hal-log.h"     // For log_e()
 #include <utility>             // For std::swap()
+#include <numeric>             // std::gcd()
 
 //-------------------------------------------------------------------
 // GLOBALS
@@ -37,11 +38,98 @@
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
+// Pixel vector
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+void PixelVector::shift(
+    PixelVector::size_type from_index,
+    PixelVector::size_type to_index,
+    PixelVector::size_type shift)
+{
+    if (from_index >= size())
+        from_index = size() - 1;
+    if (to_index >= size())
+        to_index = size() - 1;
+    if (from_index > to_index)
+    {
+        // -- Shift down --
+        PixelVector::size_type n = from_index - to_index + 1;
+        shift = shift % n;
+        if (shift > 0)
+        {
+            PixelVector::size_type num_cycles = ::std::gcd(n, shift);
+            for (
+                PixelVector::size_type start = 0;
+                start < num_cycles;
+                ++start)
+            {
+                Pixel temp = ::std::move((*this)[start + to_index]);
+                PixelVector::size_type current = start;
+                while (true)
+                {
+                    PixelVector::size_type next_index = current + shift;
+                    if (next_index >= n)
+                        next_index -= n;
+                    if (next_index == start)
+                        break;
+                    (*this)[current + to_index] =
+                        ::std::move((*this)[next_index + to_index]);
+                    current = next_index;
+                }
+                (*this)[current + to_index] = ::std::move(temp);
+            }
+        }
+    }
+    else if (from_index < to_index)
+    {
+        // -- Shift up --
+        PixelVector::size_type n = to_index - from_index + 1;
+        PixelVector::size_type equivalent = (n - shift) % n;
+        PixelVector::shift(to_index, from_index, equivalent);
+    }
+}
+
+void PixelVector::operator<<(PixelVector::size_type count)
+{
+    if (size() > 1)
+        shift(size() - 1, 0, count);
+}
+
+void PixelVector::operator>>(PixelVector::size_type count)
+{
+    if (size() > 1)
+        shift(0, size() - 1, count);
+}
+
+void PixelVector::fill(const Pixel &color)
+{
+    for (size_type i = 0; i < this->size(); i++)
+        (*this)[i] = color;
+}
+
+void PixelVector::fill(
+    const Pixel &color,
+    PixelVector::size_type fromIndex,
+    PixelVector::size_type toIndex)
+{
+    if (fromIndex <= toIndex)
+        for (size_type i = fromIndex;
+             (i < this->size()) && (i <= toIndex);
+             i++)
+        {
+            (*this)[i] = color;
+        }
+    else
+        fill(color, toIndex, fromIndex);
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // LED strips
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-// LED Strips
 static const rmt_transmit_config_t rmt_transmit_config = {
     .loop_count = 0,
     .flags = {
@@ -50,317 +138,261 @@ static const rmt_transmit_config_t rmt_transmit_config = {
 
 // ----------------------------------------------------------------------------
 
+size_t LEDStrip::pixels_rmt_encoder(
+    const void *data,
+    size_t data_size,
+    size_t symbols_written,
+    size_t symbols_free,
+    rmt_symbol_word_t *symbols,
+    bool *done,
+    void *arg)
+{
+    size_t total_symbol_count = (data_size * symbols_per_byte);
+    if (symbols_written >= total_symbol_count)
+    {
+        // Transaction finished
+        *done = true;
+        return 0;
+    }
+    else
+    {
+        LEDStrip *instance = static_cast<LEDStrip *>(arg);
+        const Pixel *pixel_ptr = static_cast<const Pixel *>(data);
+        size_t previous_symbols_written = symbols_written;
+        size_t pixelIndex = (symbols_written / symbols_per_pixel);
+        if (instance->reversed)
+            pixelIndex = (data_size / 3) - (pixelIndex + 1);
+        while (
+            (symbols_free >= symbols_per_pixel) &&
+            (symbols_written < total_symbol_count))
+        {
+            uint8_t byte[3];
+            byte[0] =
+                (pixel_ptr[pixelIndex].byte0(instance->pixelFormat) *
+                 instance->brightnessWeight) >>
+                8;
+            byte[1] =
+                (pixel_ptr[pixelIndex].byte1(instance->pixelFormat) *
+                 instance->brightnessWeight) >>
+                8;
+            byte[2] =
+                (pixel_ptr[pixelIndex].byte2(instance->pixelFormat) *
+                 instance->brightnessWeight) >>
+                8;
+
+            for (size_t byteIndex = 0; byteIndex < 3; byteIndex++)
+            {
+                // Note: we write 8 bytes to symbols[] for each byte
+                int bitIndex = (symbols_per_byte - 1);
+                while ((bitIndex >= 0) && (bitIndex < symbols_per_byte))
+                {
+                    if ((1 << bitIndex) & byte[byteIndex])
+                    {
+                        // Bit 1
+                        symbols[0].duration0 =
+                            instance->byte_enc_config.bit1.duration0;
+                        symbols[0].duration1 =
+                            instance->byte_enc_config.bit1.duration1;
+                        symbols[0].level0 =
+                            instance->byte_enc_config.bit1.level0;
+                        symbols[0].level1 =
+                            instance->byte_enc_config.bit1.level1;
+                    }
+                    else
+                    {
+                        // Bit 0
+                        symbols[0].duration0 =
+                            instance->byte_enc_config.bit0.duration0;
+                        symbols[0].duration1 =
+                            instance->byte_enc_config.bit0.duration1;
+                        symbols[0].level0 =
+                            instance->byte_enc_config.bit0.level0;
+                        symbols[0].level1 =
+                            instance->byte_enc_config.bit0.level1;
+                    }
+                    symbols++;
+                    bitIndex -= 1;
+                }
+            }
+            symbols_written += symbols_per_pixel;
+            symbols_free -= symbols_per_pixel;
+            if (instance->reversed)
+                pixelIndex--;
+            else
+                pixelIndex++;
+        }
+        // Note: when the return value is 0,
+        // we ask for the rmt tx channel to free more buffer space
+        return symbols_written - previous_symbols_written;
+    }
+} // pixels_rmt_encoder()
+
+// ----------------------------------------------------------------------------
+
 LEDStrip::LEDStrip(
     OutputGPIO dataPin,
     uint8_t pixelCount,
     bool useLevelShift,
-    PixelDriver pixelType,
-    PixelFormat pixelFormat)
+    PixelDriver driver,
+    bool reverse_display)
 {
     // Check parameters
     dataPin.reserve();
     if (pixelCount == 0)
         throw std::runtime_error("LEDStrip: pixel count can not be zero");
 
-    // Compute pixel format when required
-    if (pixelFormat == PixelFormat::AUTO)
+    // Compute pixel format
+    switch (driver)
     {
-        switch (pixelType)
-        {
-        case PixelDriver::WS2811:
-        case PixelDriver::UCS1903:
-            pixelFormat = PixelFormat::RGB;
-            break;
-        default:
-            pixelFormat = PixelFormat::GRB;
-            break;
-        }
+    case PixelDriver::WS2811:
+    case PixelDriver::UCS1903:
+        pixelFormat = PixelFormat::RGB;
+        break;
+    default:
+        pixelFormat = PixelFormat::GRB;
+        break;
     }
 
-    // Configure RMT channel
+    // Configure the RMT channel
     rmt_tx_channel_config_t tx_config = {
         .gpio_num = AS_GPIO(dataPin),
         .clk_src = RMT_CLK_SRC_DEFAULT,
-        .resolution_hz = 10000000, // 10MHz resolution, 1 tick = 0.1us
-        .mem_block_symbols = 128,
+        .resolution_hz = clockResolutionHz,
+        .mem_block_symbols = 64, // Note: must be even
         .trans_queue_depth = 1,
         .intr_priority = 0,
-        .flags = {
+        .flags{
             .invert_out = 0,
             .with_dma = 1,
             .io_loop_back = 0,
-            .io_od_mode = 0,
-            .allow_pd = 0,
-            .init_level = 0,
-        }};
-    if (useLevelShift)
-        tx_config.flags.io_od_mode = 1;
-    rmtHandle = nullptr;
+            .io_od_mode = (useLevelShift) ? 1 : 0,
+            .allow_pd = 0}};
     esp_err_t err = rmt_new_tx_channel(&tx_config, &rmtHandle);
+    // Check if there is no DMA support and fall back to PIO
     if (err == ESP_ERR_NOT_SUPPORTED)
     {
         tx_config.flags.with_dma = 0;
         err = rmt_new_tx_channel(&tx_config, &rmtHandle);
     }
-    ESP_ERROR_CHECK_WITHOUT_ABORT(err);
-    if (!rmtHandle)
-        throw std::runtime_error("LEDStrip: rmt_new_tx_channel() failed");
+    ESP_ERROR_CHECK(err);
     ESP_ERROR_CHECK(rmt_enable(rmtHandle));
 
-    // Configure byte encoder
-    rmt_bytes_encoder_config_t byte_enc_config = {};
+    // Configure the byte encoder
+
+    // Note: all supported display drivers use the same bit alignment
+    // and bit levels
     byte_enc_config.bit0.level0 = 1;
     byte_enc_config.bit0.level1 = 0;
     byte_enc_config.bit1.level0 = 1;
     byte_enc_config.bit1.level1 = 0;
     byte_enc_config.flags.msb_first = 1;
-    switch (pixelType)
+
+    switch (driver)
     {
+        // Note: all values in nanoseconds
     case PixelDriver::WS2811:
-        byte_enc_config.bit0.duration0 = 5;
-        byte_enc_config.bit0.duration1 = 20;
-        byte_enc_config.bit1.duration0 = 12;
-        byte_enc_config.bit1.duration1 = 13;
+        byte_enc_config.bit0.duration0 = 500;
+        byte_enc_config.bit0.duration1 = 2000;
+        byte_enc_config.bit1.duration0 = 1200;
+        byte_enc_config.bit1.duration1 = 1300;
+        restTimeNs = 50000;
         break;
     case PixelDriver::WS2812:
     case PixelDriver::WS2815:
-        byte_enc_config.bit0.duration0 = 3;
-        byte_enc_config.bit0.duration1 = 9;
-        byte_enc_config.bit1.duration0 = 9;
-        byte_enc_config.bit1.duration1 = 3;
+        byte_enc_config.bit0.duration0 = 300;
+        byte_enc_config.bit0.duration1 = 900;
+        byte_enc_config.bit1.duration0 = 900;
+        byte_enc_config.bit1.duration1 = 300;
+        restTimeNs = 280000;
         break;
     case PixelDriver::SK6812:
-        byte_enc_config.bit0.duration0 = 3;
-        byte_enc_config.bit0.duration1 = 9;
-        byte_enc_config.bit1.duration0 = 6;
-        byte_enc_config.bit1.duration1 = 6;
+        byte_enc_config.bit0.duration0 = 300;
+        byte_enc_config.bit0.duration1 = 900;
+        byte_enc_config.bit1.duration0 = 600;
+        byte_enc_config.bit1.duration1 = 600;
+        restTimeNs = 80000;
         break;
     case PixelDriver::UCS1903:
-        byte_enc_config.bit0.duration0 = 4;
-        byte_enc_config.bit0.duration1 = 8;
-        byte_enc_config.bit1.duration0 = 8;
-        byte_enc_config.bit1.duration1 = 4;
+        byte_enc_config.bit0.duration0 = 500;
+        byte_enc_config.bit0.duration1 = 800;
+        byte_enc_config.bit1.duration0 = 800;
+        byte_enc_config.bit1.duration1 = 400;
+        restTimeNs = 24000;
         break;
-
     default:
-        // Should not enter here
+        // should not enter here
         throw std::runtime_error("Unknown pixel driver in LED strip");
         break;
     }
-    ESP_ERROR_CHECK(rmt_new_bytes_encoder(&byte_enc_config, &encHandle));
-    if (!encHandle)
-        throw std::runtime_error("LEDStrip: rmt_new_bytes_encoder() failed");
+    // Adapt to clock frequency
+    byte_enc_config.bit0.duration0 /= 100;
+    byte_enc_config.bit0.duration1 /= 100;
+    byte_enc_config.bit1.duration0 /= 100;
+    byte_enc_config.bit1.duration1 /= 100;
 
-    // Configure reset time (to show pixels)
-    switch (pixelType)
-    {
-    case PixelDriver::WS2811:
-        this->resetTimeNs = 50000; // 50 microseconds
-        break;
-    case PixelDriver::SK6812:
-        this->resetTimeNs = 80000; // 80 microseconds
-        break;
-    case PixelDriver::UCS1903:
-        this->resetTimeNs = 24000; // 24 microseconds
-        break;
-    default:
-        this->resetTimeNs = 280000; // 280 microseconds
-        break;
-    }
+    // Create encoder
+    rmt_simple_encoder_config_t cfg{
+        .callback = pixels_rmt_encoder,
+        .arg = (void *)this,
+        .min_chunk_size = symbols_per_pixel};
+    ESP_ERROR_CHECK(
+        rmt_new_simple_encoder(
+            &cfg,
+            &pixel_encoder_handle));
 
-    // Initialize instance
+    // Initialize other instance members
+    this->reversed = reversed;
     this->pixelCount = pixelCount;
-    this->pixelFormat = pixelFormat;
-    this->pixelData = new uint8_t[pixelCount * 3];
     clear();
 }
 
 LEDStrip::~LEDStrip()
 {
+    if (pixel_encoder_handle)
+        ESP_ERROR_CHECK(rmt_del_encoder(pixel_encoder_handle));
     if (rmtHandle)
     {
         ESP_ERROR_CHECK(rmt_disable(rmtHandle));
         ESP_ERROR_CHECK(rmt_del_channel(rmtHandle));
     }
-    if (encHandle)
-        ESP_ERROR_CHECK(rmt_del_encoder(encHandle));
-    if (pixelData)
-        delete pixelData;
+}
+
+LEDStrip::LEDStrip(LEDStrip &&other)
+{
+    *this = ::std::forward<LEDStrip>(other);
+}
+
+LEDStrip &LEDStrip::operator=(LEDStrip &&other)
+{
+    ::std::swap(rmtHandle, other.rmtHandle);
+    ::std::swap(pixel_encoder_handle, other.pixel_encoder_handle);
+    ::std::swap(byte_enc_config, other.byte_enc_config);
+    ::std::swap(pixelCount, other.pixelCount);
+    ::std::swap(pixelFormat, other.pixelFormat);
+    ::std::swap(brightnessWeight, other.brightnessWeight);
+    ::std::swap(restTimeNs, other.restTimeNs);
+    ::std::swap(reversed, other.reversed);
+    return *this;
 }
 
 //-----------------------------------------------------------------------------
 // LED strip: display
 //-----------------------------------------------------------------------------
 
-void LEDStrip::show()
+void LEDStrip::show(const ::std::vector<Pixel> &pixels)
 {
-    if (changed)
-    {
-        changed = false;
-        ESP_ERROR_CHECK(
-            rmt_transmit(
-                rmtHandle,
-                encHandle,
-                (const void *)pixelData,
-                pixelCount * 3,
-                &rmt_transmit_config));
-        ESP_ERROR_CHECK(
-            rmt_tx_wait_all_done(
-                rmtHandle,
-                -1));
-        active_wait_ns(resetTimeNs);
-        // internals::hal::gpio::wait_propagation(resetTimeNs);
-    }
-}
-
-//-----------------------------------------------------------------------------
-// LED Strip: Set pixel color
-//-----------------------------------------------------------------------------
-
-void LEDStrip::normalizeColor(uint8_t &r, uint8_t &g, uint8_t &b)
-{
-    // Normalize to a common brightness
-    if (brightnessWeight)
-    {
-        // Note: "">> 8" is equal to "/ 256"
-        r = (r * brightnessWeight) >> 8;
-        g = (g * brightnessWeight) >> 8;
-        b = (b * brightnessWeight) >> 8;
-    }
-}
-
-//-----------------------------------------------------------------------------
-
-void LEDStrip::rawPixelRGB(
-    uint8_t pixelIndex,
-    uint8_t redChannel,
-    uint8_t greenChannel,
-    uint8_t blueChannel)
-{
-    // Note: caller must check that pixelIndex is in range
-
-    size_t dataIndex = (pixelIndex * 3);
-    switch (pixelFormat)
-    {
-    case PixelFormat::BGR:
-        pixelData[dataIndex++] = blueChannel;
-        pixelData[dataIndex++] = greenChannel;
-        pixelData[dataIndex] = redChannel;
-        break;
-    case PixelFormat::BRG:
-        pixelData[dataIndex++] = blueChannel;
-        pixelData[dataIndex++] = redChannel;
-        pixelData[dataIndex] = greenChannel;
-        break;
-    case PixelFormat::GBR:
-        pixelData[dataIndex++] = greenChannel;
-        pixelData[dataIndex++] = blueChannel;
-        pixelData[dataIndex] = redChannel;
-        break;
-    case PixelFormat::GRB:
-        pixelData[dataIndex++] = greenChannel;
-        pixelData[dataIndex++] = redChannel;
-        pixelData[dataIndex] = blueChannel;
-        break;
-    case PixelFormat::RBG:
-        pixelData[dataIndex++] = redChannel;
-        pixelData[dataIndex++] = blueChannel;
-        pixelData[dataIndex] = greenChannel;
-        break;
-    case PixelFormat::RGB:
-        pixelData[dataIndex++] = redChannel;
-        pixelData[dataIndex++] = greenChannel;
-        pixelData[dataIndex] = blueChannel;
-        break;
-    default:
-        return;
-    }
-    changed = true;
-}
-
-//-----------------------------------------------------------------------------
-
-void LEDStrip::pixelRGB(
-    uint8_t pixelIndex,
-    uint8_t redChannel,
-    uint8_t greenChannel,
-    uint8_t blueChannel)
-{
-    if (pixelIndex < pixelCount)
-    {
-        normalizeColor(redChannel, greenChannel, blueChannel);
-        rawPixelRGB(pixelIndex, redChannel, greenChannel, blueChannel);
-    }
-}
-
-//-----------------------------------------------------------------------------
-
-void LEDStrip::pixelRangeRGB(
-    uint8_t fromPixelIndex,
-    uint8_t toPixelIndex,
-    uint8_t redChannel,
-    uint8_t greenChannel,
-    uint8_t blueChannel)
-{
-    normalizeColor(redChannel, greenChannel, blueChannel);
-    for (uint8_t i = fromPixelIndex; (i <= toPixelIndex) && (i < pixelCount); i++)
-        rawPixelRGB(i, redChannel, greenChannel, blueChannel);
-}
-
-//-----------------------------------------------------------------------------
-
-void LEDStrip::shiftToNext()
-{
-    if (pixelCount > 1)
-    {
-        size_t lastPixelIndex = pixelCount - 1;
-        uint8_t aux0 = pixelData[lastPixelIndex * 3];
-        uint8_t aux1 = pixelData[(lastPixelIndex * 3) + 1];
-        uint8_t aux2 = pixelData[(lastPixelIndex * 3) + 2];
-        for (size_t pixelIndex = lastPixelIndex; (pixelIndex > 0); pixelIndex--)
-        {
-            uint8_t byteIndex = pixelIndex * 3;
-            pixelData[byteIndex] = pixelData[byteIndex - 3];
-            pixelData[byteIndex + 1] = pixelData[byteIndex - 2];
-            pixelData[byteIndex + 2] = pixelData[byteIndex - 1];
-        }
-        pixelData[0] = aux0;
-        pixelData[1] = aux1;
-        pixelData[2] = aux2;
-        changed = true;
-    }
-}
-
-//-----------------------------------------------------------------------------
-
-void LEDStrip::shiftToPrevious()
-{
-    if (pixelCount > 1)
-    {
-        uint8_t aux0 = pixelData[0];
-        uint8_t aux1 = pixelData[1];
-        uint8_t aux2 = pixelData[2];
-        for (size_t pixelIndex = 1; pixelIndex < pixelCount; pixelIndex++)
-        {
-            uint8_t byteIndex = pixelIndex * 3;
-            pixelData[byteIndex - 3] = pixelData[byteIndex];
-            pixelData[byteIndex - 2] = pixelData[byteIndex + 1];
-            pixelData[byteIndex - 1] = pixelData[byteIndex + 2];
-        }
-        size_t lastByteIndex = (pixelCount - 1) * 3;
-        pixelData[lastByteIndex] = aux0;
-        pixelData[lastByteIndex + 1] = aux1;
-        pixelData[lastByteIndex + 2] = aux2;
-        changed = true;
-    }
-}
-
-//-----------------------------------------------------------------------------
-
-void LEDStrip::clear()
-{
-    std::memset((void *)pixelData, 0, pixelCount * 3);
-    changed = true;
+    ESP_ERROR_CHECK(
+        rmt_transmit(
+            rmtHandle,
+            pixel_encoder_handle,
+            pixels.data(),
+            pixels.size() * sizeof(Pixel),
+            &rmt_transmit_config));
+    ESP_ERROR_CHECK(
+        rmt_tx_wait_all_done(
+            rmtHandle,
+            -1));
+    active_wait_ns(restTimeNs);
 }
 
 // ----------------------------------------------------------------------------

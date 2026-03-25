@@ -25,6 +25,9 @@
 #endif
 
 #include <string>
+#include <cstring> // For memset
+#include <vector>
+#include <cassert>
 // #include <iostream> // For testing
 
 //-------------------------------------------------------------------
@@ -46,6 +49,11 @@ static Connectivity _connectivity = Connectivity::_DEFAULT;
 static std::string _deviceName = "ESP32SimWheel";
 static std::string _deviceManufacturer = "Mamandurrio";
 static bool _autoPowerOff = true;
+
+//-------------------------------------------------------------------
+
+// Pixel data indexed by pixel group
+::std::vector<Pixel> pixel_data[3]{{}, {}, {}};
 
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
@@ -115,6 +123,23 @@ private:
 };
 
 //-------------------------------------------------------------------
+// Auxiliary
+//-------------------------------------------------------------------
+
+void pixels_clear()
+{
+    for (uint8_t grp = 0; grp < 3; grp++)
+    {
+        for (::std::size_t i = 0; i < pixel_data[0].size(); i++)
+            pixel_data[grp][i] = 0;
+    }
+    internals::pixels::show(
+        pixel_data[0],
+        pixel_data[1],
+        pixel_data[2]);
+}
+
+//-------------------------------------------------------------------
 // Start
 //-------------------------------------------------------------------
 
@@ -149,6 +174,16 @@ void commonHidStart()
         }
     }
 
+    // Initialize pixel buffers
+    for (uint8_t grp = 0; grp < 3; grp++)
+    {
+        pixel_data[grp].reserve(
+            internals::pixels::getCount((PixelGroup)grp));
+        for (::std::size_t i = 0; i < pixel_data[grp].size(); i++)
+            pixel_data[grp][i] = 0;
+    }
+
+    // initialize HID implementation
     internals::hid::begin(
         _deviceName,
         _deviceManufacturer,
@@ -325,13 +360,16 @@ void internals::hid::common::onSetFeature(
             (buffer[3] == (uint8_t)SimpleCommand::CMD_SHOW_PIXELS))
         {
             // Show all pixels at once
-            internals::pixels::show();
+            internals::pixels::show(
+                pixel_data[0],
+                pixel_data[1],
+                pixel_data[2]);
         }
         if ((len > 3) &&
             (buffer[3] == (uint8_t)SimpleCommand::CMD_RESET_PIXELS))
         {
             // Turn off all pixels
-            internals::pixels::reset();
+            pixels_clear();
         }
         if ((len > 4) &&
             (buffer[4] != 0xff))
@@ -460,24 +498,27 @@ void internals::hid::common::onOutput(
     {
         if (buffer[0] == 0xFF)
         {
-            internals::pixels::show();
+            internals::pixels::show(
+                pixel_data[0],
+                pixel_data[1],
+                pixel_data[2]);
             return;
         }
         if (buffer[0] == 0xFE)
         {
-            internals::pixels::reset();
+            pixels_clear();
             return;
         }
         if (buffer[0] > (uint8_t)PixelGroup::GRP_INDIVIDUAL)
             // Invalid pixel group
             return;
-
-        internals::pixels::set(
-            (PixelGroup)buffer[0],
-            buffer[1],
-            buffer[4],
-            buffer[3],
-            buffer[2]);
+        ::std::size_t pixel_idx = buffer[1] * 3;
+        if (pixel_idx < pixel_data[buffer[0]].size())
+        {
+            pixel_data[buffer[0]][pixel_idx++] = buffer[2];
+            pixel_data[buffer[0]][pixel_idx++] = buffer[3];
+            pixel_data[buffer[0]][pixel_idx] = buffer[4];
+        }
         return;
     }
     telemetry::data.frameID = telemetry::data.frameID + 1;

@@ -18,8 +18,73 @@
 #include "SimWheelTypes.hpp"
 #include "driver/rmt_tx.h" // For rmt_channel_handle_t & rmt_encoder_handle_t
 #include <cstring>         // For memset()
-
+#include <vector>
 #include <initializer_list>
+
+//---------------------------------------------------------------
+// Pixel vector
+//---------------------------------------------------------------
+
+/**
+ * @brief Vector of pixels
+ *
+ */
+struct PixelVector : public ::std::vector<Pixel>
+{
+public:
+    /// @brief Size type of this vector
+    using size_type = typename ::std::vector<Pixel>::size_type;
+
+    /**
+     * @brief Shift the contents of the vector
+     *        up (right) or down (left)
+     *
+     * @note if @p from_index is greater than @p to_index,
+     *       contents are shifted down, otherwise,
+     *       contents are shifted up.
+     *
+     * @note The pixel that overflows in one end is reintroduced
+     *       in the other end
+     *
+     * @param from_index Index where shifting starts (inclusive)
+     * @param to_index Index where shifting ends (inclusive)
+     * @param shift Count of pixels to be shifted
+     */
+    void shift(size_type from_index, size_type to_index, size_type shift = 1);
+
+    /**
+     * @brief Shift down (or left) all pixels
+     *
+     * @param count Shift count
+     */
+    void operator<<(size_type count);
+
+    /**
+     * @brief Shift up (or right) all pixels
+     *
+     * @param count Shift count
+     */
+    void operator>>(size_type count);
+
+    /**
+     * @brief Fill the entire vector with a pixel color
+     *
+     * @param color Pixel color
+     */
+    void fill(const Pixel &color);
+
+    /**
+     * @brief Fill a segment with a pixel color
+     *
+     * @param color Pixel color
+     * @param fromIndex Segment start index (inclusive)
+     * @param toIndex Segment end index (inclusive)
+     */
+    void fill(const Pixel &color, size_type fromIndex, size_type toIndex);
+
+    // Do not hide constructors
+    using ::std::vector<Pixel>::vector;
+}; // PixelVector
 
 //---------------------------------------------------------------
 // Led strip encoder
@@ -33,34 +98,56 @@ class LEDStrip
 {
 public:
     /**
-     * @brief Create an LED strip object.
+     * @brief Create an LED strip
      *
-     * @param dataPin GPIO number attached to `Din` (data input).
-     * @param pixelCount Total count of pixels in the strip.
+     * @param dataPin GPIO number attached to `Din` (data input)
+     * @param pixelCount Total count of pixels in the strip
      * @param useLevelShift Set to `false` when using 3.3V logic.
      *                      Set to `true` when using the level
      *                      shifter in open-drain mode.
-     * @param pixelType Pixel driver.
-     * @param pixelFormat Format of color data (byte order).
-     *                    Set to `AUTO` for auto-detection.
+     * @param driver Pixel driver
+     * @param reverse_display True if the logical arrangement of the pixels
+     *                        is the inverse of their physical arrangement
      */
     LEDStrip(
         OutputGPIO dataPin,
         uint8_t pixelCount,
         bool useLevelShift,
-        PixelDriver pixelType = PixelDriver::WS2812,
-        PixelFormat pixelFormat = PixelFormat::AUTO);
-    ~LEDStrip();
+        PixelDriver driver = PixelDriver::WS2812,
+        bool reverse_display = false);
+
+    /// @brief Destructor
+    virtual ~LEDStrip();
 
     /**
-     * @brief Retrieve the pixel count in the strip.
+     * @brief Move constructor
      *
-     * @return uint8_t Pixel count.
+     * @param other Instance to be moved
+     */
+    LEDStrip(LEDStrip &&other);
+
+    /**
+     * @brief Move-assignment
+     *
+     * @param other Instance to be moved
+     */
+    LEDStrip &operator=(LEDStrip &&other);
+
+    /// @brief Copy constructor (deleted)
+    LEDStrip(const LEDStrip &other) = delete;
+
+    /// @brief Copy-assignment (deleted)
+    LEDStrip &operator=(const LEDStrip &other) = delete;
+
+    /**
+     * @brief Retrieve the pixel count in the strip
+     *
+     * @return uint8_t Pixel count
      */
     uint8_t getPixelCount() { return pixelCount; }
 
     /**
-     * @brief Set global LED brightness
+     * @brief Set the global brightness
      *
      * @param value Brightness.
      *              255 is the highest and
@@ -68,119 +155,84 @@ public:
      *
      * @note LEDs are very bright.
      *       Keep this value low for a comfortable experience.
-     *       Defaults to 15 (decimal).
+     *       Defaults to 127 (decimal).
      */
     void brightness(uint8_t value) { brightnessWeight = value + 1; }
 
-    // protected:
     /**
-     * @brief Turn off all LEDs
-     * @note Effective after show() is called.
+     * @brief Create a vector of pixels suitable for this LED strip
      *
+     * @param color Initial color for all pixels (defaults to black)
+     * @return PixelVector Pixel vector (ownership transferred to the caller)
      */
-    void clear();
-
-    /**
-     * @brief Set pixel color in RGB format
-     *
-     * @param pixelIndex Index of the pixel in the strip.
-     * @param redChannel Red component of the color.
-     * @param greenChannel Green component of the color.
-     * @param blueChannel Blue component of the color.
-     * @note Effective after show() is called.
-     */
-    void pixelRGB(
-        uint8_t pixelIndex,
-        uint8_t redChannel,
-        uint8_t greenChannel,
-        uint8_t blueChannel);
-
-    /**
-     * @brief Set color (in RGB format) to a range of pixels
-     *
-     * @param fromPixelIndex Index of the first pixel.
-     * @param toPixelIndex Index of the last pixel.
-     * @param redChannel Red component of the color.
-     * @param greenChannel Green component of the color.
-     * @param blueChannel Blue component of the color.
-     * @note Effective after show() is called.
-     */
-    void pixelRangeRGB(
-        uint8_t fromPixelIndex,
-        uint8_t toPixelIndex,
-        uint8_t redChannel,
-        uint8_t greenChannel,
-        uint8_t blueChannel);
-
-    /**
-     * @brief Set pixel color in RGB format
-     *
-     * @param pixelIndex Index of the pixel.
-     * @param packedRGB Pixel color in packet RGB format
-     */
-    void pixelRGB(
-        uint8_t pixelIndex,
-        uint32_t packedRGB)
+    PixelVector pixelVector(const Pixel &color = 0)
     {
-        pixelRGB(pixelIndex,
-                 (uint8_t)(packedRGB >> 16),
-                 (uint8_t)(packedRGB >> 8),
-                 (uint8_t)(packedRGB));
+        PixelVector result(pixelCount, color);
+        return result;
     }
 
     /**
-     * @brief Set color (in RGB format) to a range of pixels
+     * @brief Turn off all LEDs immediately
      *
-     * @param fromPixelIndex Index of the first pixel.
-     * @param toPixelIndex Index of the last pixel.
-     * @param packedRGB Pixel color in packet RGB format
      */
-    void pixelRangeRGB(
-        uint8_t fromPixelIndex,
-        uint8_t toPixelIndex,
-        uint32_t packedRGB)
+    void clear()
     {
-        pixelRangeRGB(fromPixelIndex,
-                      toPixelIndex,
-                      (uint8_t)(packedRGB >> 16),
-                      (uint8_t)(packedRGB >> 8),
-                      (uint8_t)(packedRGB));
+        show(pixelVector(0));
     }
 
     /**
-     * @brief Shift all pixel colors to the next pixel index
+     * @brief Show pixels all at once
      *
+     * @param pixels Pixel vector
      */
-    void shiftToNext();
-
-    /**
-     * @brief Shift all pixel colors to the previous pixel index
-     *
-     */
-    void shiftToPrevious();
-
-    /**
-     * @brief Show pixel colors.
-     *
-     */
-    void show();
+    void show(const ::std::vector<Pixel> &pixels);
 
 private:
-    uint8_t pixelCount;
-    uint8_t *pixelData;
-    PixelFormat pixelFormat;
-    rmt_channel_handle_t rmtHandle = nullptr;
-    rmt_encoder_handle_t encHandle = nullptr;
-    bool changed = false;
-    uint8_t brightnessWeight = 16;
-    uint32_t resetTimeNs = 280000;
+    /// @brief Clock resolution in hertz (1 tick=0.1 us=100ns)
+    static constexpr uint32_t clockResolutionHz = 10000000;
+    /// @brief RMT symbol count per encoded byte
+    static constexpr size_t symbols_per_byte = 8;
+    /// @brief RMT symbol count per pixel
+    static constexpr size_t symbols_per_pixel =
+        sizeof(Pixel) * symbols_per_byte;
 
-    void normalizeColor(uint8_t &r, uint8_t &g, uint8_t &b);
-    void rawPixelRGB(
-        uint8_t pixelIndex,
-        uint8_t redChannel,
-        uint8_t greenChannel,
-        uint8_t blueChannel);
+    /// @brief Transmission handle
+    rmt_channel_handle_t rmtHandle = nullptr;
+    /// @brief Pixel encoder handle
+    rmt_encoder_handle_t pixel_encoder_handle = nullptr;
+    /// @brief Byte encoder configuration for pixel display
+    rmt_bytes_encoder_config_t byte_enc_config{};
+    /// @brief Number of pixels in the LED strip
+    uint8_t pixelCount;
+    /// @brief Pixel format required by the pixel driver
+    PixelFormat pixelFormat;
+    /// @brief Global brightness correction factor in the range [1,256]
+    uint16_t brightnessWeight = 128;
+    /// @brief Rest time in the data pin for all pixels to show up
+    uint32_t restTimeNs = 280000;
+    /// @brief Reverse display or not
+    bool reversed = false;
+
+    /**
+     * @brief Encode pixel data and apply the brightness reduction factor
+     *
+     * @param data Pixel data in BGR format as stored in PixelVector
+     * @param data_size Pixel data size in bytes
+     * @param symbols_written Count of symbols previously written
+     * @param symbols_free Count of symbols available in the transmit buffer
+     * @param symbols Pointer to the transmit buffer
+     * @param done Pointer to end of transaction flag
+     * @param arg Pointer to the LEDStrip::Implementation instance
+     * @return size_t Symbols written
+     */
+    static size_t pixels_rmt_encoder(
+        const void *data,
+        size_t data_size,
+        size_t symbols_written,
+        size_t symbols_free,
+        rmt_symbol_word_t *symbols,
+        bool *done,
+        void *arg);
 };
 
 //---------------------------------------------------------------

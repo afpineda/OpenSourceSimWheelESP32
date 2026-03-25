@@ -16,14 +16,11 @@
 //-------------------------------------------------------------------
 
 #include <cstdint>
-#include <cassert>
-#include <array>
 #include <vector>
 #include <stdexcept>
-#include <semaphore>
-#include <chrono>
 #include <optional>
 #include <type_traits>
+#include <mutex>
 #include "SimWheelTypes.hpp" // For uint128_t
 
 #if !CD_CI
@@ -787,3 +784,13 @@ typedef enum
     CMD_RESET_PIXELS = 8,
     _MAX_VALUE = 8
 } SimpleCommand;
+
+//-------------------------------------------------------------------
+// Pixels
+//-------------------------------------------------------------------
+
+/**
+ * @brief Guard for exclusive access to pixels
+ *
+ */
+typedef ::std::lock_guard<std::recursive_mutex> PixelGuard;

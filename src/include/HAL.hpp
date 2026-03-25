@@ -21,6 +21,8 @@
 #if !CD_CI
 #include "driver/i2c_types.h"  // For I2C operation
 #include "driver/i2c_master.h" // For I2C operation
+#else
+#include <thread>
 #endif
 
 //-------------------------------------------------------------------

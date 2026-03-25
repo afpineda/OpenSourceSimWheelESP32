@@ -1173,28 +1173,6 @@ enum class PixelDriver
     UCS1903
 };
 
-/**
- * @brief Byte order of pixel data
- *
- */
-enum class PixelFormat
-{
-    ///  @brief Auto-detect based on pixel driver
-    AUTO = 0,
-    ///  @brief Red-green-blue
-    RGB,
-    ///  @brief Red-blue-green
-    RBG,
-    ///  @brief Green-red-blue
-    GRB,
-    ///  @brief Green-blue-red
-    GBR,
-    ///  @brief Blue-red-green
-    BRG,
-    ///  @brief Blue-green-red
-    BGR
-};
-
 //-------------------------------------------------------------------
 // Telemetry data
 //-------------------------------------------------------------------
@@ -1300,6 +1278,279 @@ typedef struct
 } TelemetryData;
 
 //-------------------------------------------------------------------
+// Pixel format
+//-------------------------------------------------------------------
+
+/**
+ * @brief Byte order of pixel data starting with the least significant byte
+ *
+ */
+enum class PixelFormat : unsigned char
+{
+    ///  @brief Red-green-blue
+    RGB = 0,
+    ///  @brief Red-blue-green
+    RBG,
+    ///  @brief Green-red-blue
+    GRB,
+    ///  @brief Green-blue-red
+    GBR,
+    ///  @brief Blue-red-green
+    BRG,
+    ///  @brief Blue-green-red
+    BGR
+};
+
+//-------------------------------------------------------------------
+// Pixels
+//-------------------------------------------------------------------
+
+/**
+ * @brief Pixel in 3-byte packed RGB format
+ *
+ */
+struct Pixel
+{
+    /// @brief Blue channel
+    uint8_t blue;
+    /// @brief Green channel
+    uint8_t green;
+    /// @brief Red channel
+    uint8_t red;
+
+    /**
+     * @brief Convert to packed RGB format
+     *
+     * @return uint32_t Packed RGB value
+     */
+    operator uint32_t() const noexcept
+    {
+        return (blue) | (green << 8) | (red << 16);
+    }
+
+    /**
+     * @brief Convert to packed RGB format
+     *
+     * @return int Packed RGB value
+     */
+    operator int() const noexcept
+    {
+        return (blue) | (green << 8) | (red << 16);
+    }
+
+    /**
+     * @brief Create from a packed RGB value
+     *
+     * @param packedRGB Packed RGB value
+     */
+    Pixel(uint32_t packedRGB) noexcept
+    {
+        red = packedRGB >> 16;
+        green = packedRGB >> 8;
+        blue = packedRGB;
+    }
+
+    /**
+     * @brief Create as a black pixel
+     *
+     */
+    Pixel() noexcept
+    {
+        red = 0;
+        green = 0;
+        blue = 0;
+    }
+
+    /// @brief Copy-constructor
+    /// @param source Instance to be copied
+    Pixel(const Pixel &source) = default;
+
+    /// @brief Move-constructor
+    /// @param source Instance transferring ownership
+    Pixel(Pixel &&source) = default;
+
+    /**
+     * @brief Assign a packed RGB color
+     *
+     * @param packedRGB Packed RGB value
+     * @return int Non-zero
+     */
+    Pixel &operator=(uint32_t packedRGB) noexcept
+    {
+        red = packedRGB >> 16;
+        green = packedRGB >> 8;
+        blue = packedRGB;
+        return *this;
+    }
+
+    /// @brief Copy-assignment
+    /// @param source Instance to be copied
+    /// @return This instance
+    Pixel &operator=(const Pixel &source) = default;
+
+    /// @brief Move-assignment
+    /// @param source Instance transferring ownership
+    /// @return This instance
+    Pixel &operator=(Pixel &&source) = default;
+
+    /**
+     * @brief Compare to a packed RGB color
+     *
+     * @param packedRGB Packed RGB value
+     * @return true If this pixel matches @p packedRGB
+     * @return false Otherwise
+     */
+    bool operator==(uint32_t packedRGB) const noexcept
+    {
+        return (packedRGB == static_cast<uint32_t>(*this));
+    }
+
+    /**
+     * @brief Compare to a packed RGB color
+     *
+     * @param packedRGB Packed RGB value
+     * @return true If this pixel matches @p packedRGB
+     * @return false Otherwise
+     */
+    bool operator==(int packedRGB) const noexcept
+    {
+        return (packedRGB == static_cast<int>(*this));
+    }
+
+    /**
+     * @brief Compare to another pixel
+     *
+     * @param other Other pixel
+     * @return true If this pixel matches @p other
+     * @return false Otherwise
+     */
+    bool operator==(const Pixel &other) const noexcept
+    {
+        return (red == other.red) &&
+               (blue == other.blue) &&
+               (green == other.green);
+    }
+
+    /**
+     * @brief Compare to a packed RGB color
+     *
+     * @param packedRGB Packed RGB value
+     * @return true If this pixel does not match @p packedRGB
+     * @return false Otherwise
+     */
+    bool operator!=(uint32_t packedRGB) const noexcept
+    {
+        return (packedRGB != static_cast<uint32_t>(*this));
+    }
+
+    /**
+     * @brief Compare to a packed RGB color
+     *
+     * @param packedRGB Packed RGB value
+     * @return true If this pixel does not match @p packedRGB
+     * @return false Otherwise
+     */
+    bool operator!=(int packedRGB) const noexcept
+    {
+        return (packedRGB != static_cast<int>(*this));
+    }
+
+    /**
+     * @brief Compare to another pixel
+     *
+     * @param other Other pixel
+     * @return true If this pixel does not match @p other
+     * @return false Otherwise
+     */
+    bool operator!=(const Pixel &other) const noexcept
+    {
+        return (red != other.red) ||
+               (blue != other.blue) ||
+               (green != other.green);
+    }
+
+    /**
+     * @brief Get the first color channel in a certain pixel format
+     *
+     * @param format Pixel format
+     * @return uint8_t Color channel
+     */
+    uint8_t byte0(PixelFormat format) const noexcept
+    {
+        switch (format)
+        {
+        case PixelFormat::BGR:
+            [[fallthrough]];
+        case PixelFormat::BRG:
+            return blue;
+        case PixelFormat::GBR:
+            [[fallthrough]];
+        case PixelFormat::GRB:
+            return green;
+        case PixelFormat::RBG:
+            [[fallthrough]];
+        case PixelFormat::RGB:
+            return red;
+        }
+        return 0;
+    }
+
+    /**
+     * @brief Get the second color channel in a certain pixel format
+     *
+     * @param format Pixel format
+     * @return uint8_t Color channel
+     */
+    uint8_t byte1(PixelFormat format) const noexcept
+    {
+        switch (format)
+        {
+        case PixelFormat::RBG:
+            [[fallthrough]];
+        case PixelFormat::GBR:
+            return blue;
+        case PixelFormat::BGR:
+            [[fallthrough]];
+        case PixelFormat::RGB:
+            return green;
+        case PixelFormat::BRG:
+            [[fallthrough]];
+        case PixelFormat::GRB:
+            return red;
+        }
+        return 0;
+    }
+
+    /**
+     * @brief Get the third color channel in a certain pixel format
+     *
+     * @param format Pixel format
+     * @return uint8_t Color channel
+     */
+    uint8_t byte2(PixelFormat format) const noexcept
+    {
+        switch (format)
+        {
+        case PixelFormat::GRB:
+            [[fallthrough]];
+        case PixelFormat::RGB:
+            return blue;
+        case PixelFormat::BRG:
+            [[fallthrough]];
+        case PixelFormat::RBG:
+            return green;
+        case PixelFormat::GBR:
+            [[fallthrough]];
+        case PixelFormat::BGR:
+            return red;
+        }
+        return 0;
+    }
+}; // Pixel
+
+static_assert(sizeof(Pixel) == 3);
+
+//-------------------------------------------------------------------
 // User interface
 //-------------------------------------------------------------------
 
@@ -1348,6 +1599,8 @@ public:
     AbstractUserInterface() = default;
     AbstractUserInterface(const AbstractUserInterface &) = delete;
     AbstractUserInterface &operator=(const AbstractUserInterface &) = delete;
+
+    virtual ~AbstractUserInterface() {}
 
 public:
     /**
@@ -1489,8 +1742,7 @@ private:
 protected:
     // Singleton pattern
 
-    PixelControlNotification() {}
-    virtual ~PixelControlNotification() {}
+    PixelControlNotification() : AbstractUserInterface() {}
 
     // For descendant classes
 
@@ -1512,51 +1764,36 @@ protected:
     uint8_t getPixelCount(PixelGroup group);
 
     /**
-     * @brief Set the color of a single pixel
+     * @brief Show pixels all at once
      *
-     * @note Not displayed immediately
-     * @note Non-existing pixels will be ignored
+     * @note If a parameter is nullptr, there is no display in that group
      *
-     * @param group The group to which the pixel is a member
-     * @param pixelIndex Index of the pixel in the LED strip
-     *                   (zero-based)
-     * @param red Red component of the pixel color
-     * @param green Green component of the pixel color
-     * @param blue Blue component of the pixel color
+     * @note Pixel data is in RGB format.
+     *       The size dependes on the number of pixels in the LED strip.
+     *
+     * @param telemetry Pixel data in the telemetry group
+     * @param backlit_buttons Pixel data in the buttons group
+     * @param individual Pixel data in the individual pixels group
      */
-    void set(PixelGroup group,
-             uint8_t pixelIndex,
-             uint8_t red,
-             uint8_t green,
-             uint8_t blue);
+    void show(
+        const uint8_t *telemetry,
+        const uint8_t *backlit_buttons,
+        const uint8_t *individual);
 
     /**
-     * @brief Set the color of all pixels in a group
+     * @brief Show pixels all at once in a specific group
      *
-     * @param group A group of pixels
-     * @param red Red component of the pixel color
-     * @param green Green component of the pixel color
-     * @param blue Blue component of the pixel color
+     * @param group Pixel group
+     * @param data Pixel data is in RGB format.
+     *             The size dependes on the number of pixels in the LED strip.
      */
-    void setAll(
-        PixelGroup group,
-        uint8_t red,
-        uint8_t green,
-        uint8_t blue);
-
-    /**
-     * @brief Shift all pixel colors to the next pixel index
-     *
-     * @param group A group of pixels
-     */
-    void shiftToNext(PixelGroup group);
-
-    /**
-     * @brief Shift all pixel colors to the previous pixel index
-     *
-     * @param group A group of pixels
-     */
-    void shiftToPrevious(PixelGroup group);
+    void show(PixelGroup group, const uint8_t *data)
+    {
+        show(
+            (group == PixelGroup::GRP_TELEMETRY) ? data : nullptr,
+            (group == PixelGroup::GRP_BUTTONS) ? data : nullptr,
+            (group == PixelGroup::GRP_INDIVIDUAL) ? data : nullptr);
+    }
 
     /**
      * @brief Macro to render the current battery SoC
@@ -1572,10 +1809,10 @@ protected:
      * @return True if there is a battery.
      * @return False if there is no battery.
      */
-    virtual bool renderBatteryLevel(
-        PixelGroup group,
-        bool colorGradientOrPercentage,
-        uint32_t barColor = 0x00ACFA70);
+    // virtual bool renderBatteryLevel(
+    //     PixelGroup group,
+    //     bool colorGradientOrPercentage,
+    //     uint32_t barColor = 0x00ACFA70);
 
 public:
     /**
@@ -1636,5 +1873,3 @@ public:
      */
     virtual void pixelControl_OnLowBattery();
 };
-
-//-------------------------------------------------------------------

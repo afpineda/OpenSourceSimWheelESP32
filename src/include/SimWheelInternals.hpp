@@ -99,65 +99,34 @@ namespace internals
         void getReady();
 
         /**
-         * @brief Set the color of a single pixel
+         * @brief Acquire exclusive access to the pixels
          *
-         * @note Not displayed immediately
-         * @note Non-existing pixels will be ignored
-         *
-         * @param group The group to which the pixel is a member
-         * @param pixelIndex Index of the pixel in the LED strip
-         *                   (zero-based)
-         * @param red Red component of the pixel color
-         * @param green Green component of the pixel color
-         * @param blue Blue component of the pixel color
+         * @return ::std::lock_guard Lock guard. Automatically released
+         *                           when the variable goes out of scope.
          */
-        void set(PixelGroup group,
-                 uint8_t pixelIndex,
-                 uint8_t red,
-                 uint8_t green,
-                 uint8_t blue);
+        PixelGuard acquire();
 
         /**
-         * @brief Set the color of all pixels in a group
+         * @brief Show pixel data in all groups
          *
-         * @param group A group of pixels
-         * @param red Red component of the pixel color
-         * @param green Green component of the pixel color
-         * @param blue Blue component of the pixel color
-         */
-        void setAll(PixelGroup group,
-                    uint8_t red,
-                    uint8_t green,
-                    uint8_t blue);
-
-        /**
-         * @brief Shift all pixel colors to the next pixel index
+         * @note if any parameter is nullptr,
+         *       there is no display in that group
          *
-         * @param group A group of pixels
-         */
-        void shiftToNext(PixelGroup group);
-
-        /**
-         * @brief Shift all pixel colors to the previous pixel index
+         * @note Pixel data is in RGB format
          *
-         * @param group A group of pixels
+         * @param telemetry Pixel data for the telemetry group
+         * @param buttons Pixel data for the backlit buttons group
+         * @param individual Pixel data for the individual pixels group
          */
-        void shiftToPrevious(PixelGroup group);
-
-        /**
-         * @brief Display all pixels in all groups at once
-         *
-         */
-        void show();
-
-        /**
-         * @brief Turn off all pixels in all groups
-         *
-         */
-        void reset();
+        void show(
+            const ::std::vector<Pixel> &telemetry,
+            const ::std::vector<Pixel> &buttons,
+            const ::std::vector<Pixel> &individual);
 
         /**
          * @brief Get the total number of pixels in a group
+         *
+         * @note Only available after the OnStart event
          *
          * @param group Group of pixels
          * @return byte Number of pixels in the given group
@@ -446,7 +415,3 @@ namespace internals
         } // namespace common
     } // namespace hid
 } // namespace internals
-
-//-------------------------------------------------------------------
-//
-//-------------------------------------------------------------------

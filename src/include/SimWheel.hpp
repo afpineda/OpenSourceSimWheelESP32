@@ -697,22 +697,22 @@ namespace pixels
      * @param useLevelShift Set to `false` when using 3.3V logic.
      *                      Set to `true` when using the level
      *                      shifter in open-drain mode.
-     * @param pixelType Pixel driver.
-     * @param pixelFormat Format of color data (byte order).
-     *                    Set to `AUTO` for auto-detection.
+     * @param driver Pixel driver.
      * @param globalBrightness Global brightness for all pixels.
      *                         By default, the maximum brightness.
-     *                         Set to 16 when using a 3.3V power supply
+     *                         Set to 127 when using a 3.3V power supply
      *                         with a non-3.3V LED strip and no level shifter.
+     * @param reverse Set to true if the physical arrangement of the pixels
+     *                is the inverse of their logical arrangement.
      */
     void configure(
         PixelGroup group,
         OutputGPIO dataPin,
         uint8_t pixelCount,
         bool useLevelShift,
-        PixelDriver pixelType = PixelDriver::WS2812,
-        PixelFormat pixelFormat = PixelFormat::AUTO,
-        uint8_t globalBrightness = 0xFF);
+        PixelDriver driver = PixelDriver::WS2812,
+        uint8_t globalBrightness = 0xFF,
+        bool reverse = false);
 } // namespace pixels
 
 //-------------------------------------------------------------------
