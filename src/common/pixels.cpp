@@ -45,6 +45,7 @@ static LEDStrip *pixelData[3] = {nullptr};
 //---------------------------------------------------------------
 
 static std::recursive_mutex pixelMutex;
+typedef ::std::lock_guard<std::recursive_mutex> PixelGuard;
 
 //---------------------------------------------------------------
 // The task watchdog timer issue
@@ -130,13 +131,6 @@ uint8_t internals::pixels::getCount(PixelGroup group)
 
 //---------------------------------------------------------------
 
-PixelGuard internals::pixels::acquire()
-{
-    return PixelGuard(pixelMutex);
-}
-
-//---------------------------------------------------------------
-
 void internals::pixels::show(
     const ::std::vector<Pixel> &telemetry,
     const ::std::vector<Pixel> &buttons,
@@ -210,39 +204,39 @@ bool PixelControlNotification::renderBatteryLevel(
 void PixelControlNotification::onStart()
 {
     notConnectedYet = true;
-    auto guard = internals::pixels::acquire();
+    PixelGuard guard(pixelMutex);
     pixelControl_OnStart();
 }
 
 void PixelControlNotification::onBitePoint(uint8_t bitePoint)
 {
-    auto guard = internals::pixels::acquire();
+    PixelGuard guard(pixelMutex);
     pixelControl_OnBitePoint(bitePoint);
 }
 
 void PixelControlNotification::onConnected()
 {
     notConnectedYet = false;
-    auto guard = internals::pixels::acquire();
+    PixelGuard guard(pixelMutex);
     pixelControl_OnConnected();
 }
 
 void PixelControlNotification::onBLEdiscovering()
 {
     notConnectedYet = true;
-    auto guard = internals::pixels::acquire();
+    PixelGuard guard(pixelMutex);
     pixelControl_OnBLEdiscovering();
 }
 
 void PixelControlNotification::onLowBattery()
 {
-    auto guard = internals::pixels::acquire();
+    PixelGuard guard(pixelMutex);
     pixelControl_OnLowBattery();
 }
 
 void PixelControlNotification::onSaveSettings()
 {
-    auto guard = internals::pixels::acquire();
+    PixelGuard guard(pixelMutex);
     pixelControl_OnSaveSettings();
 }
 

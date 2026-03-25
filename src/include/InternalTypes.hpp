@@ -784,13 +784,3 @@ typedef enum
     CMD_RESET_PIXELS = 8,
     _MAX_VALUE = 8
 } SimpleCommand;
-
-//-------------------------------------------------------------------
-// Pixels
-//-------------------------------------------------------------------
-
-/**
- * @brief Guard for exclusive access to pixels
- *
- */
-typedef ::std::lock_guard<std::recursive_mutex> PixelGuard;

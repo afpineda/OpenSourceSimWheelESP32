@@ -1787,7 +1787,7 @@ protected:
      * @param data Pixel data is in RGB format.
      *             The size dependes on the number of pixels in the LED strip.
      */
-    void show(PixelGroup group, const uint8_t *data)
+    inline void show(PixelGroup group, const uint8_t *data)
     {
         show(
             (group == PixelGroup::GRP_TELEMETRY) ? data : nullptr,

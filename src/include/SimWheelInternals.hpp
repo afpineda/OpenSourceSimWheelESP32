@@ -99,14 +99,6 @@ namespace internals
         void getReady();
 
         /**
-         * @brief Acquire exclusive access to the pixels
-         *
-         * @return ::std::lock_guard Lock guard. Automatically released
-         *                           when the variable goes out of scope.
-         */
-        PixelGuard acquire();
-
-        /**
          * @brief Show pixel data in all groups
          *
          * @note if any parameter is nullptr,

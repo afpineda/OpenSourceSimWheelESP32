@@ -48,11 +48,6 @@ uint8_t internals::pixels::getCount(PixelGroup group)
     return PIXEL_COUNT;
 }
 
-PixelGuard internals::pixels::acquire()
-{
-    return PixelGuard(pixelMutex);
-}
-
 //---------------------------------------------------------------
 
 void internals::pixels::show(
@@ -60,11 +55,9 @@ void internals::pixels::show(
     const ::std::vector<Pixel> &buttons,
     const ::std::vector<Pixel> &individual)
 {
-    if (pixelMutex.try_lock())
-    {
-        fake_telemetry = telemetry;
-        fake_buttons = buttons;
-        fake_individual = individual;
-        pixelMutex.unlock();
-    }
+    pixelMutex.lock();
+    fake_telemetry = telemetry;
+    fake_buttons = buttons;
+    fake_individual = individual;
+    pixelMutex.unlock();
 }

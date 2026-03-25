@@ -25,11 +25,6 @@ void pixels::configure(
 void internals::pixels::getReady() {}
 uint8_t internals::pixels::getCount(PixelGroup group) { return 16; }
 
-PixelGuard internals::pixels::acquire()
-{
-    return PixelGuard(pixelMutex);
-}
-
 void internals::pixels::show(
     const ::std::vector<Pixel> &telemetry,
     const ::std::vector<Pixel> &buttons,
