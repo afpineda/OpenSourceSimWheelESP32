@@ -1788,7 +1788,8 @@ protected:
      * @brief Get the count of pixels in a pixel group
      *
      * @param group Pixel group
-     * @return uin8_t The count of pixels or zero if the group was not configured.
+     * @return uin8_t The count of pixels or zero
+     *                if the group was not configured.
      */
     static uint8_t getPixelCount(PixelGroup group) noexcept;
 

@@ -26,17 +26,20 @@
 //---------------------------------------------------------------
 
 /**
- * @brief Vector of pixels
+ * @brief Helper class to wrap around pixel vectors
  *
  */
-struct PixelVector : public ::std::vector<Pixel>
+struct PixelVectorHelper
 {
 public:
     /// @brief Size type of this vector
     using size_type = typename ::std::vector<Pixel>::size_type;
 
+    /// @brief Type of the backing variable
+    using vector_type = typename ::std::vector<Pixel>;
+
     /**
-     * @brief Shift the contents of the vector
+     * @brief Shift the contents of a vector
      *        up (right) or down (left)
      *
      * @note if @p from_index is greater than @p to_index,
@@ -46,45 +49,56 @@ public:
      * @note The pixel that overflows in one end is reintroduced
      *       in the other end
      *
+     * @param[in,out] data Pixel vector
      * @param from_index Index where shifting starts (inclusive)
      * @param to_index Index where shifting ends (inclusive)
      * @param shift Count of pixels to be shifted
      */
-    void shift(size_type from_index, size_type to_index, size_type shift = 1);
+    static void shift(
+        vector_type &data,
+        size_type from_index,
+        size_type to_index,
+        size_type shift = 1);
 
     /**
-     * @brief Shift down (or left) all pixels
+     * @brief Shift left (or down)
      *
-     * @param count Shift count
+     * @param[in,out] data Pixel vector
+     * @param count Number of pixels to shift
      */
-    void operator<<(size_type count);
+    static void shift_left(vector_type &data, size_type count) noexcept;
 
     /**
-     * @brief Shift up (or right) all pixels
+     * @brief Shift right (or up)
      *
-     * @param count Shift count
+     * @param[in,out] data Pixel vector
+     * @param count Number of pixels to shift
      */
-    void operator>>(size_type count);
+    static void shift_right(vector_type &data, size_type count) noexcept;
 
     /**
      * @brief Fill the entire vector with a pixel color
      *
+     * @param[in,out] data Pixel vector
      * @param color Pixel color
      */
-    void fill(const Pixel &color);
+    static void fill(vector_type &data, const Pixel &color) noexcept;
 
     /**
      * @brief Fill a segment with a pixel color
      *
+     * @param[in,out] data Pixel vector
      * @param color Pixel color
      * @param fromIndex Segment start index (inclusive)
      * @param toIndex Segment end index (inclusive)
      */
-    void fill(const Pixel &color, size_type fromIndex, size_type toIndex);
+    static void fill(
+        vector_type &data,
+        const Pixel &color,
+        size_type fromIndex,
+        size_type toIndex) noexcept;
 
-    // Do not hide constructors
-    using ::std::vector<Pixel>::vector;
-}; // PixelVector
+}; // PixelVectorHelper
 
 //---------------------------------------------------------------
 // Led strip encoder
@@ -97,6 +111,9 @@ public:
 class LEDStrip
 {
 public:
+    /// @brief Pixel vector type
+    using pixel_vector_type = typename ::std::vector<Pixel>;
+
     /**
      * @brief Create an LED strip
      *
@@ -165,9 +182,9 @@ public:
      * @param color Initial color for all pixels (defaults to black)
      * @return PixelVector Pixel vector (ownership transferred to the caller)
      */
-    PixelVector pixelVector(const Pixel &color = 0)
+    pixel_vector_type pixelVector(const Pixel &color = 0)
     {
-        PixelVector result(pixelCount, color);
+        pixel_vector_type result(pixelCount, color);
         return result;
     }
 
@@ -185,7 +202,7 @@ public:
      *
      * @param pixels Pixel vector
      */
-    void show(const ::std::vector<Pixel> &pixels);
+    void show(const pixel_vector_type &pixels);
 
 private:
     /// @brief Clock resolution in hertz (1 tick=0.1 us=100ns)

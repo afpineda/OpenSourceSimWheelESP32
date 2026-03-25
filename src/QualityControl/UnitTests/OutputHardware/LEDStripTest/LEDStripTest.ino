@@ -38,43 +38,43 @@ void loop()
 {
     {
         Serial.println("Go red");
-        PixelVector v = strip->pixelVector(0xFF0000);
+        auto v = strip->pixelVector(0xFF0000);
         strip->show(v);
         DELAY_MS(DEFAULT_DELAY);
     }
     {
         Serial.println("Go green");
-        PixelVector v = strip->pixelVector(0x00FF00);
+        auto v = strip->pixelVector(0x00FF00);
         strip->show(v);
         DELAY_MS(DEFAULT_DELAY);
     }
     {
         Serial.println("Go blue");
-        PixelVector v = strip->pixelVector(0x0000FF);
+        auto v = strip->pixelVector(0x0000FF);
         strip->show(v);
         DELAY_MS(DEFAULT_DELAY);
     }
     {
         Serial.println("Go white");
-        PixelVector v = strip->pixelVector(0xFFFFFF);
+        auto v = strip->pixelVector(0xFFFFFF);
         strip->show(v);
         DELAY_MS(DEFAULT_DELAY);
     }
     {
         Serial.println("Go purple");
-        PixelVector v = strip->pixelVector(0x800080);
+        auto v = strip->pixelVector(0x800080);
         strip->show(v);
         DELAY_MS(DEFAULT_DELAY);
     }
     {
         Serial.println("Go orange");
-        PixelVector v = strip->pixelVector(0xFF4100);
+        auto v = strip->pixelVector(0xFF4100);
         strip->show(v);
         DELAY_MS(DEFAULT_DELAY);
     }
     {
         Serial.println("Go orange dimmer");
-        PixelVector v = strip->pixelVector(0x411000);
+        auto v = strip->pixelVector(0x411000);
         strip->show(v);
         DELAY_MS(DEFAULT_DELAY);
     }
@@ -85,7 +85,7 @@ void loop()
     }
     {
         Serial.println("rainbow");
-        PixelVector v = strip->pixelVector();
+        auto v = strip->pixelVector();
         v[0] = 0xEE82EE;
         v[1] = 0x4B0082;
         v[2] = 0x0000FF;
@@ -97,12 +97,12 @@ void loop()
         DELAY_MS(DEFAULT_DELAY);
 
         Serial.println("Shift to next");
-        v >> 1;
+        PixelVectorHelper::shift_right(v, 1);
         strip->show(v);
         DELAY_MS(DEFAULT_DELAY);
 
         Serial.println("Shift to previous");
-        v << 1;
+        PixelVectorHelper::shift_left(v, 1);
         strip->show(v);
         DELAY_MS(DEFAULT_DELAY);
     }
