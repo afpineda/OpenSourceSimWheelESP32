@@ -17,7 +17,11 @@
 #include "SimWheelInternals.hpp"
 #include "InternalServices.hpp"
 
-#include <iostream>
+#if CD_CI
+#include <iostream> // For debug
+#endif
+
+#include<cassert>
 
 //-------------------------------------------------------------------
 // Mocks

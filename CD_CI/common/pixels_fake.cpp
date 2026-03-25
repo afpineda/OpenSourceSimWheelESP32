@@ -12,44 +12,59 @@
 #include "SimWheel.hpp"
 #include "SimWheelInternals.hpp"
 
-uint32_t lastPixelColor = 0;
-PixelGroup lastPixelGroup = PixelGroup::GRP_TELEMETRY;
-bool shown = false;
-uint8_t lastPixelIndex = 0;
+static std::recursive_mutex pixelMutex;
+
+#define PIXEL_COUNT 16
+
+::std::vector<Pixel> fake_telemetry(PIXEL_COUNT);
+::std::vector<Pixel> fake_buttons(PIXEL_COUNT);
+::std::vector<Pixel> fake_individual(PIXEL_COUNT);
+
+::std::vector<Pixel> &fake_pixels(PixelGroup grp)
+{
+    if (grp == PixelGroup::GRP_INDIVIDUAL)
+        return fake_individual;
+    else if (grp == PixelGroup::GRP_BUTTONS)
+        return fake_buttons;
+    else
+        return fake_telemetry;
+}
+
+void pixels::configure(
+    PixelGroup group,
+    OutputGPIO dataPin,
+    uint8_t pixelCount,
+    bool useLevelShift,
+    PixelDriver driver,
+    uint8_t globalBrightness,
+    bool reverse)
+{
+}
 
 void internals::pixels::getReady() {}
-void internals::pixels::set(PixelGroup group,
-                            uint8_t pixelIndex,
-                            uint8_t red,
-                            uint8_t green,
-                            uint8_t blue)
+
+uint8_t internals::pixels::getCount(PixelGroup group)
 {
-    lastPixelGroup = group;
-    lastPixelColor = blue | (green << 8) | (red << 16);
-    lastPixelIndex = pixelIndex;
+    return PIXEL_COUNT;
 }
 
-void internals::pixels::setAll(PixelGroup group,
-                               uint8_t red,
-                               uint8_t green,
-                               uint8_t blue)
+PixelGuard internals::pixels::acquire()
 {
-    internals::pixels::set(group, 0, red, green, blue);
+    return PixelGuard(pixelMutex);
 }
 
-void internals::pixels::shiftToNext(PixelGroup group) {}
-void internals::pixels::shiftToPrevious(PixelGroup group) {}
-void internals::pixels::show()
-{
-    shown = true;
-}
+//---------------------------------------------------------------
 
-void internals::pixels::reset()
+void internals::pixels::show(
+    const ::std::vector<Pixel> &telemetry,
+    const ::std::vector<Pixel> &buttons,
+    const ::std::vector<Pixel> &individual)
 {
-    lastPixelColor = 0;
-    lastPixelGroup = PixelGroup::GRP_TELEMETRY;
-    shown = false;
-    lastPixelIndex = 0;
+    if (pixelMutex.try_lock())
+    {
+        fake_telemetry = telemetry;
+        fake_buttons = buttons;
+        fake_individual = individual;
+        pixelMutex.unlock();
+    }
 }
-
-uint8_t internals::pixels::getCount(PixelGroup group) { return 16; }

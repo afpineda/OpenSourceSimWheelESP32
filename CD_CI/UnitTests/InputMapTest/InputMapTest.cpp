@@ -13,6 +13,7 @@
 #include "SimWheelInternals.hpp"
 #include "InternalServices.hpp"
 #include <iostream>
+#include <cassert>
 
 bool loaded = false;
 

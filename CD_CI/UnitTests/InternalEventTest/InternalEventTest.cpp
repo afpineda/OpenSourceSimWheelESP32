@@ -10,7 +10,7 @@
  */
 
 #include "InternalTypes.hpp"
-
+#include <cassert>
 #include <iostream>
 
 uint8_t witness1 = 0;

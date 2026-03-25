@@ -22,13 +22,14 @@
 
 #if !CD_CI
 #include "esp_mac.h"
+#else
+#include <iostream> // For testing
 #endif
 
 #include <string>
 #include <cstring> // For memset
 #include <vector>
 #include <cassert>
-// #include <iostream> // For testing
 
 //-------------------------------------------------------------------
 // Globals
@@ -177,7 +178,7 @@ void commonHidStart()
     // Initialize pixel buffers
     for (uint8_t grp = 0; grp < 3; grp++)
     {
-        pixel_data[grp].reserve(
+        pixel_data[grp].resize(
             internals::pixels::getCount((PixelGroup)grp));
         for (::std::size_t i = 0; i < pixel_data[grp].size(); i++)
             pixel_data[grp][i] = 0;
@@ -496,8 +497,16 @@ void internals::hid::common::onOutput(
     }
     else if ((report_id == RID_OUTPUT_PIXEL) && (len >= PIXEL_REPORT_SIZE))
     {
+        // Note:
+        // buffer[0] = pixel group or command
+        // buffer[1] = pixel index
+        // buffer[2] = blue channel
+        // buffer[3] = green channel
+        // buffer[4] = red channel
+
         if (buffer[0] == 0xFF)
         {
+            // Show command
             internals::pixels::show(
                 pixel_data[0],
                 pixel_data[1],
@@ -506,18 +515,18 @@ void internals::hid::common::onOutput(
         }
         if (buffer[0] == 0xFE)
         {
+            // Reset command
             pixels_clear();
             return;
         }
         if (buffer[0] > (uint8_t)PixelGroup::GRP_INDIVIDUAL)
             // Invalid pixel group
             return;
-        ::std::size_t pixel_idx = buffer[1] * 3;
-        if (pixel_idx < pixel_data[buffer[0]].size())
+        if (buffer[1] < pixel_data[buffer[0]].size())
         {
-            pixel_data[buffer[0]][pixel_idx++] = buffer[2];
-            pixel_data[buffer[0]][pixel_idx++] = buffer[3];
-            pixel_data[buffer[0]][pixel_idx] = buffer[4];
+            pixel_data[buffer[0]][buffer[1]].blue = buffer[2];
+            pixel_data[buffer[0]][buffer[1]].green = buffer[3];
+            pixel_data[buffer[0]][buffer[1]].red = buffer[4];
         }
         return;
     }

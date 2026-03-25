@@ -27,10 +27,7 @@
 // Auxiliary
 //-------------------------------------------------------------------
 
-extern uint32_t lastPixelColor;
-extern PixelGroup lastPixelGroup;
-extern bool shown;
-extern uint8_t lastPixelIndex;
+extern ::std::vector<Pixel> &fake_pixels(PixelGroup grp);
 
 typedef struct __attribute__((packed))
 {
@@ -44,12 +41,15 @@ typedef struct __attribute__((packed))
 
 #define REPORT30BYTES(s) ((uint8_t *)&s)
 
-void assertPixel(std::string msg, PixelGroup grp, uint8_t index, uint32_t color, bool isShown = false)
+void assertPixel(
+    std::string msg,
+    PixelGroup grp,
+    uint8_t index,
+    uint32_t color)
 {
-    assert<uint8_t>::equals(msg + ": pixel group", (uint8_t)grp, (uint8_t)lastPixelGroup);
-    assert<uint8_t>::equals(msg + ": index", index, lastPixelIndex);
-    assert<bool>::equals(msg + ": shown", isShown, shown);
-    assert<uint32_t>::equals(msg + ": color", color, lastPixelColor);
+    ::std::vector<Pixel> &v = fake_pixels(grp);
+    uint32_t found = v[index];
+    assert<uint32_t>::equals(msg, color, found);
 }
 
 //-------------------------------------------------------------------
@@ -63,6 +63,8 @@ using namespace telemetry;
 int main()
 {
     assert((sizeof(Report30) == PIXEL_REPORT_SIZE) && "Test is outdated");
+    internals::hid::common::getReady();
+    OnStart();
 
     Report30 r30;
     r30.group = 0;
@@ -70,32 +72,48 @@ int main()
     r30.red = 0x01;
     r30.green = 0x02;
     r30.blue = 0x03;
-    internals::hid::common::onOutput(RID_OUTPUT_PIXEL, REPORT30BYTES(r30), sizeof(r30));
-    assertPixel("Pixel 1", PixelGroup::GRP_TELEMETRY, 1, 0x010203);
+    internals::hid::common::onOutput(
+        RID_OUTPUT_PIXEL,
+        REPORT30BYTES(r30),
+        sizeof(r30));
 
     r30.group = 1;
     r30.index = 2;
     r30.red = 0x02;
     r30.green = 0x03;
     r30.blue = 0x04;
-    internals::hid::common::onOutput(RID_OUTPUT_PIXEL, REPORT30BYTES(r30), sizeof(r30));
-    assertPixel("Pixel 2", PixelGroup::GRP_BUTTONS, 2, 0x020304);
+    internals::hid::common::onOutput(
+        RID_OUTPUT_PIXEL,
+        REPORT30BYTES(r30),
+        sizeof(r30));
 
     r30.group = 2;
     r30.index = 3;
     r30.red = 0x03;
     r30.green = 0x04;
     r30.blue = 0x05;
-    internals::hid::common::onOutput(RID_OUTPUT_PIXEL, REPORT30BYTES(r30), sizeof(r30));
+    internals::hid::common::onOutput(
+        RID_OUTPUT_PIXEL,
+        REPORT30BYTES(r30),
+        sizeof(r30));
+
+    r30.group = 0xFF; // show command
+    internals::hid::common::onOutput(
+        RID_OUTPUT_PIXEL,
+        REPORT30BYTES(r30),
+        sizeof(r30));
+    assertPixel("Pixel 1", PixelGroup::GRP_TELEMETRY, 1, 0x010203);
+    assertPixel("Pixel 2", PixelGroup::GRP_BUTTONS, 2, 0x020304);
     assertPixel("Pixel 3", PixelGroup::GRP_INDIVIDUAL, 3, 0x030405);
 
-    r30.group = 0xFF;
-    internals::hid::common::onOutput(RID_OUTPUT_PIXEL, REPORT30BYTES(r30), sizeof(r30));
-    assertPixel("Show pixels", PixelGroup::GRP_INDIVIDUAL, 3, 0x030405, true);
-
     r30.group = 0xFE;
-    internals::hid::common::onOutput(RID_OUTPUT_PIXEL, REPORT30BYTES(r30), sizeof(r30));
-    assertPixel("Reset", PixelGroup::GRP_TELEMETRY, 0, 0, false);
+    internals::hid::common::onOutput(
+        RID_OUTPUT_PIXEL,
+        REPORT30BYTES(r30),
+        sizeof(r30));
+    assertPixel("Pixel reset 1", PixelGroup::GRP_TELEMETRY, 1, 0);
+    assertPixel("Pixel reset 2", PixelGroup::GRP_BUTTONS, 2, 0);
+    assertPixel("Pixel reset 3", PixelGroup::GRP_INDIVIDUAL, 3, 0);
 
     return 0;
 }
