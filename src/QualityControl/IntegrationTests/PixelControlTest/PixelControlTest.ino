@@ -25,7 +25,7 @@
 
 // Uncomment to test notifications involving battery SoC
 
-class BatteryServiceMock: public BatteryService
+class BatteryServiceMock : public BatteryService
 {
 public:
     virtual int getLastBatteryLevel() override { return 25; }
@@ -49,8 +49,7 @@ void setup()
             8,
             TEST_LEVEL_SHIFTER,
             PixelDriver::WS2812,
-            PixelFormat::AUTO,
-            16);
+            127);
         ui::addPixelControlNotifications();
         hid::configure("PixelCtrlTest", "Mamandurrio", false);
 

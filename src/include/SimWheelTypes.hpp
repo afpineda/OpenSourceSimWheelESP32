@@ -44,6 +44,7 @@
 #include <string>
 #include <stdexcept>
 #include <set>
+#include <vector>
 #include <initializer_list>
 #include <map>
 #include <algorithm>
@@ -1756,29 +1757,15 @@ protected:
     bool notConnectedYet = true;
 
     /**
-     * @brief Get the count of pixels in a pixel group
+     * @brief Create a vector of pixels suitable for a pixel group
      *
      * @param group Pixel group
-     * @return uin8_t The count of pixels or zero if the group was not configured.
+     * @param color Initial color for all pixels
+     * @return ::std::vector<Pixel> Pixel vector
      */
-    uint8_t getPixelCount(PixelGroup group);
-
-    /**
-     * @brief Show pixels all at once
-     *
-     * @note If a parameter is nullptr, there is no display in that group
-     *
-     * @note Pixel data is in RGB format.
-     *       The size dependes on the number of pixels in the LED strip.
-     *
-     * @param telemetry Pixel data in the telemetry group
-     * @param backlit_buttons Pixel data in the buttons group
-     * @param individual Pixel data in the individual pixels group
-     */
-    void show(
-        const uint8_t *telemetry,
-        const uint8_t *backlit_buttons,
-        const uint8_t *individual);
+    static ::std::vector<Pixel> pixelVector(
+        PixelGroup group,
+        Pixel color = 0) noexcept;
 
     /**
      * @brief Show pixels all at once in a specific group
@@ -1787,13 +1774,23 @@ protected:
      * @param data Pixel data is in RGB format.
      *             The size dependes on the number of pixels in the LED strip.
      */
-    inline void show(PixelGroup group, const uint8_t *data)
-    {
-        show(
-            (group == PixelGroup::GRP_TELEMETRY) ? data : nullptr,
-            (group == PixelGroup::GRP_BUTTONS) ? data : nullptr,
-            (group == PixelGroup::GRP_INDIVIDUAL) ? data : nullptr);
-    }
+    static void show(
+        PixelGroup group,
+        const ::std::vector<Pixel> &data) noexcept;
+
+    /**
+     * @brief Show all pixels in black in all groups all at once
+     *
+     */
+    static void reset() noexcept;
+
+    /**
+     * @brief Get the count of pixels in a pixel group
+     *
+     * @param group Pixel group
+     * @return uin8_t The count of pixels or zero if the group was not configured.
+     */
+    static uint8_t getPixelCount(PixelGroup group) noexcept;
 
     /**
      * @brief Macro to render the current battery SoC
@@ -1801,16 +1798,18 @@ protected:
      * @note Does nothing if there is no battery.
      *       Pixels are rendered, but not shown yet.
      *
-     * @param group A group of pixels
-     * @param colorGradientOrPercentage If true, show SoC as a color gradient from green to red
-     *        If false, show SoC as a percentage bar
+     * @param data Vector of pixels
+     * @param colorGradientOrPercentage If true, show SoC as a color
+     *                                  gradient from green to red
+     *                                  If false, show SoC
+     *                                  as a percentage bar
      * @param barColor Packed RGB color to use in the percentage bar.
      *
      * @return True if there is a battery.
      * @return False if there is no battery.
      */
-    // virtual bool renderBatteryLevel(
-    //     PixelGroup group,
+    // static bool renderBatteryLevel(
+    //     ::std::vector<Pixel> &data,
     //     bool colorGradientOrPercentage,
     //     uint32_t barColor = 0x00ACFA70);
 

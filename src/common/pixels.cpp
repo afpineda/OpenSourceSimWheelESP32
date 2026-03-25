@@ -25,7 +25,7 @@
 // Globals
 //---------------------------------------------------------------
 
-static LEDStrip *pixelData[3] = {nullptr};
+static LEDStrip *led_strip[3] = {nullptr};
 #define DELAY_MS(ms) std::this_thread::sleep_for(std::chrono::milliseconds(ms))
 #define WAIT_MS std::chrono::milliseconds(80)
 #define INT(N) ((uint8_t)N)
@@ -82,15 +82,15 @@ void pixels::configure(
     uint8_t globalBrightness,
     bool reverse)
 {
-    if (pixelData[INT(group)] != nullptr)
+    if (led_strip[INT(group)] != nullptr)
         throw std::runtime_error("A pixel group was configured twice");
-    pixelData[INT(group)] = new LEDStrip(
+    led_strip[INT(group)] = new LEDStrip(
         dataPin,
         pixelCount,
         useLevelShift,
         driver,
         reverse);
-    pixelData[INT(group)]->brightness(globalBrightness);
+    led_strip[INT(group)]->brightness(globalBrightness);
 }
 
 //---------------------------------------------------------------
@@ -105,11 +105,11 @@ void pixelsShutdown()
     pixelMutex.lock();
     for (int i = 0; i < 3; i++)
     {
-        pixelData[i]->clear();
-        delete pixelData[i];
-        pixelData[i] = nullptr;
+        led_strip[i]->clear();
+        delete led_strip[i];
+        led_strip[i] = nullptr;
     }
-    pixelMutes.unlock();
+    pixelMutex.unlock();
 }
 
 //---------------------------------------------------------------
@@ -123,8 +123,8 @@ void internals::pixels::getReady()
 
 uint8_t internals::pixels::getCount(PixelGroup group)
 {
-    if (pixelData[INT(group)] != nullptr)
-        return pixelData[INT(group)]->getPixelCount();
+    if (led_strip[INT(group)])
+        return led_strip[INT(group)]->getPixelCount();
     else
         return 0;
 }
@@ -138,12 +138,12 @@ void internals::pixels::show(
 {
     if (pixelMutex.try_lock())
     {
-        if (pixelData[PixelGroup::GRP_TELEMETRY])
-            pixelData[PixelGroup::GRP_TELEMETRY]->show(telemetry);
-        if (pixelData[PixelGroup::GRP_BUTTONS])
-            pixelData[PixelGroup::GRP_BUTTONS]->show(buttons);
-        if (pixelData[PixelGroup::GRP_INDIVIDUAL])
-            pixelData[PixelGroup::GRP_INDIVIDUAL]->show(individual);
+        if (led_strip[INT(PixelGroup::GRP_TELEMETRY)])
+            led_strip[INT(PixelGroup::GRP_TELEMETRY)]->show(telemetry);
+        if (led_strip[INT(PixelGroup::GRP_BUTTONS)])
+            led_strip[INT(PixelGroup::GRP_BUTTONS)]->show(buttons);
+        if (led_strip[INT(PixelGroup::GRP_INDIVIDUAL)])
+            led_strip[INT(PixelGroup::GRP_INDIVIDUAL)]->show(individual);
         pixelMutex.unlock();
     }
 }
@@ -158,44 +158,71 @@ void internals::pixels::show(
 // Protected methods available to descendant classes
 //---------------------------------------------------------------
 
-uint8_t PixelControlNotification::getPixelCount(PixelGroup group)
+uint8_t PixelControlNotification::getPixelCount(PixelGroup group) noexcept
 {
     return internals::pixels::getCount(group);
 }
 
-bool PixelControlNotification::renderBatteryLevel(
+void PixelControlNotification::show(
     PixelGroup group,
-    bool colorGradientOrPercentage,
-    uint32_t barColor)
+    const ::std::vector<Pixel> &data) noexcept
 {
-    if (BatteryService::call().isBatteryPresent())
-    {
-        int soc = BatteryService::call().getLastBatteryLevel();
-        if (colorGradientOrPercentage)
-        {
-            // Color gradient
-            uint8_t green = (255 * soc) / 100;
-            internals::pixels::setAll(group, 255 - green, green, 0);
-        }
-        else
-        {
-            // Percentage bar
-            uint8_t pixelCount = internals::pixels::getCount(group);
-            uint8_t litCount = (soc * pixelCount) / 100;
-            if (litCount == 0)
-                // At least, one pixel must be shown, otherwise
-                // there is no SoC notification at all
-                litCount = 1;
-            uint8_t blue = barColor;
-            uint8_t green = (barColor >> 8);
-            uint8_t red = (barColor >> 16);
-            for (uint8_t pixelIndex = 0; pixelIndex < litCount; pixelIndex++)
-                internals::pixels::set(group, pixelIndex, red, green, blue);
-        }
-        return true;
-    }
-    return false;
+    if (led_strip[INT(group)])
+        led_strip[INT(group)]->show(data);
 }
+
+static ::std::vector<Pixel> PixelControlNotification::pixelVector(
+    PixelGroup group,
+    Pixel color) noexcept
+{
+    if (led_strip[INT(group)])
+        return led_strip[INT(group)]->pixelVector(color);
+    else
+        return PixelVector{};
+}
+
+static void PixelControlNotification::reset() noexcept
+{
+    for (int i = 0; i < 3; i++)
+        if (led_strip[i])
+            led_strip[i]->clear();
+}
+
+// bool PixelControlNotification::renderBatteryLevel(
+//     ::std::vector<Pixel> &data,
+//     bool colorGradientOrPercentage,
+//     uint32_t barColor)
+// {
+//     if (BatteryService::call().isBatteryPresent())
+//     {
+//         int soc = BatteryService::call().getLastBatteryLevel();
+//         if (colorGradientOrPercentage)
+//         {
+//             // Color gradient
+//             Pixel p;
+//             p.green = (255 * soc) / 100;
+//             fill(data, p);
+//         }
+//         else
+//         {
+//             // Percentage bar
+//             uint8_t pixelCount = data.size();
+//             uint8_t litCount = (soc * pixelCount) / 100;
+//             if (litCount == 0)
+//                 // At least, one pixel must be shown, otherwise
+//                 // there is no SoC notification at all
+//                 litCount = 1;
+//             for (uint8_t pixelIndex = 0; pixelIndex < litCount; pixelIndex++)
+//                 data[pixelIndex] = barColor;
+//             for (uint8_t pixelIndex = litCount;
+//                  pixelIndex < pixelCount;
+//                  pixelIndex++)
+//                 data[pixelIndex] = 0;
+//         }
+//         return true;
+//     }
+//     return false;
+// }
 
 //---------------------------------------------------------------
 // Inherited virtual method implementation
@@ -246,22 +273,22 @@ void PixelControlNotification::onSaveSettings()
 
 void PixelControlNotification::pixelControl_OnStart()
 {
-    if (renderBatteryLevel(PixelGroup::GRP_TELEMETRY, false))
-    {
-        // Show battery level
-        renderBatteryLevel(PixelGroup::GRP_BUTTONS, true);
-        renderBatteryLevel(PixelGroup::GRP_INDIVIDUAL, true);
-    }
-    else
-    {
-        // There is no battery
-        // All white
-        internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 85, 85, 85);
-        internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 85, 85, 85);
-        internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 85, 85, 85);
-    }
-    internals::pixels::show();
-    DELAY_MS(1500);
+    // ::std::vector<Pixel> telemetry(getPixelCount(PixelGroup::GRP_TELEMETRY));
+    // if (renderBatteryLevel(telemetry, false))
+    // {
+    //     // Show battery level
+    //     show(PixelGroup::GRP_TELEMETRY, telemetry);
+    // }
+    // else
+    // {
+    //     // There is no battery
+    //     // All white
+    //     internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 85, 85, 85);
+    //     internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 85, 85, 85);
+    //     internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 85, 85, 85);
+    // }
+    // internals::pixels::show();
+    // DELAY_MS(1500);
 }
 
 void PixelControlNotification::pixelControl_OnBitePoint(uint8_t bitePoint)
@@ -272,22 +299,27 @@ void PixelControlNotification::pixelControl_OnBitePoint(uint8_t bitePoint)
         // from the storage subsystem.
         return;
 
-    uint8_t pixelCount = internals::pixels::getCount(PixelGroup::GRP_TELEMETRY);
+    PixelVector telemetry =
+        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_TELEMETRY));
+    PixelVector buttons =
+        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_BUTTONS));
+    PixelVector individual =
+        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_INDIVIDUAL));
+    uint8_t pixelCount = telemetry.size();
     uint8_t litCount = CEIL_DIV(bitePoint * pixelCount, CLUTCH_FULL_VALUE);
-    internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 0, 0, 0);
-    internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 0, 0, 0);
-    internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 0, 0, 0);
     for (int i = 0; i < litCount; i++)
-        internals::pixels::set(PixelGroup::GRP_TELEMETRY, i, 85, 85, 0);
-    internals::pixels::show();
+        telemetry[i] = 0x555500;
+    show(PixelGroup::GRP_TELEMETRY, telemetry);
+    show(PixelGroup::GRP_BUTTONS, buttons);
+    show(PixelGroup::GRP_INDIVIDUAL, individual);
     DELAY_MS(250);
 
     if (notConnectedYet)
         pixelControl_OnBLEdiscovering();
     else
     {
-        internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 0, 0, 0);
-        internals::pixels::show();
+        telemetry.fill(0);
+        show(PixelGroup::GRP_TELEMETRY, telemetry);
     }
 }
 
@@ -299,64 +331,95 @@ void PixelControlNotification::pixelControl_OnConnected()
 void PixelControlNotification::pixelControl_OnBLEdiscovering()
 {
     // All purple
-    internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 85, 0, 85);
-    internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 85, 0, 85);
-    internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 85, 0, 85);
-    internals::pixels::show();
+    PixelVector telemetry =
+        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_TELEMETRY,
+                                             0x550055));
+    PixelVector buttons =
+        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_BUTTONS,
+                                             0x550055));
+    PixelVector individual =
+        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_INDIVIDUAL,
+                                             0x550055));
+    show(PixelGroup::GRP_TELEMETRY, telemetry);
+    show(PixelGroup::GRP_BUTTONS, buttons);
+    show(PixelGroup::GRP_INDIVIDUAL, individual);
     DELAY_MS(250);
 }
 
 void PixelControlNotification::pixelControl_OnLowBattery()
 {
     // Alternate pixels in blue and red
-    for (int group = 0; group < 3; group++)
-    {
-        uint8_t pixelCount = internals::pixels::getCount((PixelGroup)group);
-        for (int pixelIndex = 0; pixelIndex < pixelCount; pixelIndex = pixelIndex + 2)
-            internals::pixels::set((PixelGroup)group, pixelIndex, 127, 0, 0); // red
-        for (int pixelIndex = 1; pixelIndex < pixelCount; pixelIndex = pixelIndex + 2)
-            internals::pixels::set((PixelGroup)group, pixelIndex, 0, 0, 127); // blue
-    }
-    internals::pixels::show();
+    PixelVector telemetry =
+        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_TELEMETRY,
+                                             0x00001F));
+    PixelVector buttons =
+        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_BUTTONS,
+                                             0x00001F));
+    PixelVector individual =
+        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_INDIVIDUAL,
+                                             0x00001F));
+    for (int i = 0; i < telemetry.size(); i += 2)
+        telemetry[i] = 0x1F0000; // red;
+    for (int i = 0; i < buttons.size(); i += 2)
+        buttons[i] = 0x1F0000; // red;
+    for (int i = 0; i < individual.size(); i += 2)
+        individual[i] = 0x1F0000; // red;
+
+    // Show
+    show(PixelGroup::GRP_TELEMETRY, telemetry);
+    show(PixelGroup::GRP_BUTTONS, buttons);
+    show(PixelGroup::GRP_INDIVIDUAL, individual);
+
     // Cool animation
     for (int animCount = 0; animCount < 5; animCount++)
     {
         DELAY_MS(200);
-        internals::pixels::shiftToNext(PixelGroup::GRP_TELEMETRY);
-        internals::pixels::shiftToNext(PixelGroup::GRP_BUTTONS);
-        internals::pixels::shiftToNext(PixelGroup::GRP_INDIVIDUAL);
-        internals::pixels::show();
+
+        telemetry >> 1;
+        buttons >> 1;
+        individual >> 1;
+        show(PixelGroup::GRP_TELEMETRY, telemetry);
+        show(PixelGroup::GRP_BUTTONS, buttons);
+        show(PixelGroup::GRP_INDIVIDUAL, individual);
     }
     DELAY_MS(200);
 
     if (notConnectedYet)
         pixelControl_OnBLEdiscovering();
     else
-        internals::pixels::reset();
+        reset();
 }
 
 void PixelControlNotification::pixelControl_OnSaveSettings()
 {
     // All green
-    internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 0, 85, 0);
-    internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 0, 85, 0);
-    internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 0, 85, 0);
-    internals::pixels::show();
+    PixelVector telemetry =
+        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_TELEMETRY,
+                                             0x001F00));
+    PixelVector buttons =
+        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_BUTTONS,
+                                             0x001F00));
+    PixelVector individual =
+        static_cast<PixelVector>(pixelVector(PixelGroup::GRP_INDIVIDUAL,
+                                             0x001F00));
+    show(PixelGroup::GRP_TELEMETRY, telemetry);
+    show(PixelGroup::GRP_BUTTONS, buttons);
+    show(PixelGroup::GRP_INDIVIDUAL, individual);
     DELAY_MS(150);
-    // All off
-    internals::pixels::reset();
-    DELAY_MS(150);
-    // All green
-    internals::pixels::setAll(PixelGroup::GRP_TELEMETRY, 0, 85, 0);
-    internals::pixels::setAll(PixelGroup::GRP_BUTTONS, 0, 85, 0);
-    internals::pixels::setAll(PixelGroup::GRP_INDIVIDUAL, 0, 85, 0);
-    internals::pixels::show();
-    DELAY_MS(150);
-    // All off
-    internals::pixels::reset();
 
+    // All off
+    reset();
+    DELAY_MS(150);
+
+    // All green
+    show(PixelGroup::GRP_TELEMETRY, telemetry);
+    show(PixelGroup::GRP_BUTTONS, buttons);
+    show(PixelGroup::GRP_INDIVIDUAL, individual);
+    DELAY_MS(150);
+
+    // All off
     if (notConnectedYet)
         pixelControl_OnBLEdiscovering();
     else
-        internals::pixels::reset();
+        reset();
 }
