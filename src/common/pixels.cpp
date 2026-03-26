@@ -159,17 +159,6 @@ void internals::pixels::show(
 //---------------------------------------------------------------
 //---------------------------------------------------------------
 
-PixelControlNotification::PixelControlNotification()
-    : AbstractUserInterface()
-{
-    telemetry_pixel.resize(
-        internals::pixels::getCount(PixelGroup::GRP_TELEMETRY));
-    backlit_button_pixel.resize(
-        internals::pixels::getCount(PixelGroup::GRP_BUTTONS));
-    individual_pixel.resize(
-        internals::pixels::getCount(PixelGroup::GRP_INDIVIDUAL));
-}
-
 //---------------------------------------------------------------
 // Protected methods available to descendant classes
 //---------------------------------------------------------------
@@ -245,8 +234,14 @@ bool PixelControlNotification::renderBatteryLevel(uint32_t barColor)
 
 void PixelControlNotification::onStart()
 {
-    notConnectedYet = true;
     PixelGuard guard(pixelMutex);
+    telemetry_pixel.resize(
+        internals::pixels::getCount(PixelGroup::GRP_TELEMETRY));
+    backlit_button_pixel.resize(
+        internals::pixels::getCount(PixelGroup::GRP_BUTTONS));
+    individual_pixel.resize(
+        internals::pixels::getCount(PixelGroup::GRP_INDIVIDUAL));
+    notConnectedYet = true;
     pixelControl_OnStart();
 }
 

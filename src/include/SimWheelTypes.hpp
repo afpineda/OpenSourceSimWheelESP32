@@ -1744,7 +1744,7 @@ protected:
     // Singleton pattern
 
     /// @brief Initialize
-    PixelControlNotification();
+    PixelControlNotification() : AbstractUserInterface() {}
 
     // For descendant classes
 
