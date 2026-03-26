@@ -8,13 +8,20 @@
 
 - [Overview](./overview_en.md)
   - [Quick reference for supported hardware in this project](./hardware/SupportedHW_en.md)
+
 - [Required skills and tools](./skills_en.md)
+
 - [Input hardware suitable (or not) for a sim wheel/button box](./hardware/InputHW_en.md)
+
 - [Know your ESP32 DevKit board](./hardware/DevKits_en.md)
+
 - [Prepare the source code for compilation and uploading](./firmware/sourcesSetup_en.md)
+
 - [How to customize in order to build your own hardware and firmware setup](./hardware/subsystems/CustomizeHowto_en.md)
+
   - [Setting up connectivity (USB/BLE/both) - quick link](./hardware/subsystems/CustomizeHowto_en.md#connectivity)
-  - [Migrating your custom firmware to version 7 from a previous version](./migrate_to_v7.md)
+  - [Migrating your custom firmware to version 8 from version 7](./migrate_to_v8.md)
+
 - [Troubleshooting](./Troubleshooting_en.md)
 
 - Ready to deploy designs:
@@ -100,3 +107,4 @@ See [how to contribute](../.github/CONTRIBUTING.md).
 - Outdated migration guides:
   - [Migrating your custom firmware to version 4 from a previous version](./migrate_to_v4.md)
   - [Migrating your custom firmware to version 5 from a previous version](./migrate_to_v5.md)
+  - [Migrating your custom firmware to version 7 from a previous version](./migrate_to_v7.md)

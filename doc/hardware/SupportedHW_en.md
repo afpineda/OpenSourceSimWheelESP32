@@ -60,6 +60,8 @@ Any DevKit based on the ESP32 architecture having BLE and/or USB-OTG.
 - Monochrome OLED displays:
   - Having an SSD1306, SH1106 or SH1107 display controller.
   - Having 128x64 pixels (only).
+    Note that 132x64 display controllers are supported,
+    but having a 128x64 display panel.
 
 > [!NOTE]
 > The firmware is extensible to other telemetry displays,

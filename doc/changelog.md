@@ -2,8 +2,12 @@
 
 ## 8.0.0
 
-- Despite the new major version,
-  all custom firmwares from version 7 should compile **without changes**.
+- As usual, there is a
+  [migration guide](./migrate_to_v8.md)
+  available.
+- The `PixelFormat` parameter to `pixels::configure()` has been removed,
+  but another parameter has been added that allows to display pixels
+  in reverse order.
 - Now, all input numbers are in the range [0,127].
 - The default input map works as before,
   but the user-defined input number when alternate mode is engaged
@@ -22,6 +26,9 @@
     - Pixel data is not shared anymore between different threads.
     - A new custom RMT encoder applies global brightness and pixel format
       conversion on-the-fly.
+  - There is a new `uint128_t` type for input bitmaps.
+    This type allows to change specific bits
+    so there is no need for input masks.
 
 ## 7.10.3
 
