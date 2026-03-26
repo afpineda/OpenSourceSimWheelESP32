@@ -131,7 +131,7 @@ void pixels_clear()
 {
     for (uint8_t grp = 0; grp < 3; grp++)
     {
-        for (::std::size_t i = 0; i < pixel_data[0].size(); i++)
+        for (::std::size_t i = 0; i < pixel_data[grp].size(); i++)
             pixel_data[grp][i] = 0;
     }
     internals::pixels::show(
