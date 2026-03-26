@@ -12,8 +12,6 @@
 #include "SimWheel.hpp"
 #include "SimWheelInternals.hpp"
 
-static std::recursive_mutex pixelMutex;
-
 void pixels::configure(
     PixelGroup group,
     OutputGPIO dataPin,

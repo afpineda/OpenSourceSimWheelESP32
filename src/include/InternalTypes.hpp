@@ -17,10 +17,7 @@
 
 #include <cstdint>
 #include <vector>
-#include <stdexcept>
 #include <optional>
-#include <type_traits>
-#include <mutex>
 #include "SimWheelTypes.hpp" // For uint128_t
 
 #if !CD_CI

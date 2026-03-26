@@ -806,7 +806,7 @@ void OLED::show(const uint8_t *frame)
         for (uint8_t page = 0; page <= last_page; page++)
         {
             frame_pos = frame + (page * 8 * width_b);
-            uint row_count;
+            uint8_t row_count;
             if (page == last_page)
                 row_count = _params.screen_height - (last_page * 8);
             else

@@ -22,7 +22,6 @@
 #include <stdexcept>
 #include <vector>
 #include <map>
-#include <cstring> // For memset()
 #include <array>
 
 //-------------------------------------------------------------------

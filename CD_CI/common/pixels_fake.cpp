@@ -11,6 +11,7 @@
 
 #include "SimWheel.hpp"
 #include "SimWheelInternals.hpp"
+#include <mutex>
 
 static std::recursive_mutex pixelMutex;
 

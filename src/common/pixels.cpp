@@ -20,6 +20,7 @@
 
 #include <chrono>
 #include <thread>
+#include <mutex>
 
 //---------------------------------------------------------------
 // Globals
@@ -64,8 +65,7 @@ typedef ::std::lock_guard<std::recursive_mutex> PixelGuard;
 // better semantics.
 //
 // DEVELOPMENT NOTE 2026/03/25:
-// The watchdog timer is already called when procesing
-// internal events (static_event<>), so the task
+// The issue seems to be gone, so the task
 // delay is not needed anymore.
 //---------------------------------------------------------------
 

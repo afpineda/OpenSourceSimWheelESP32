@@ -17,7 +17,6 @@
 
 #include "SimWheelTypes.hpp"
 #include "driver/rmt_tx.h" // For rmt_channel_handle_t & rmt_encoder_handle_t
-#include <cstring>         // For memset()
 #include <vector>
 #include <initializer_list>
 
