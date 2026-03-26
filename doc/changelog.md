@@ -17,6 +17,11 @@
   - Dependency injection and publish-subscribe have been
     reimplemented to remove unneeded complexity and for Doxygen
     to work properly.
+  - Pixel control has been reimplemented to remove some inconsistent
+    behavior:
+    - Pixel data is not shared anymore between different threads.
+    - A new custom RMT encoder applies global brightness and pixel format
+      conversion on-the-fly.
 
 ## 7.10.3
 
