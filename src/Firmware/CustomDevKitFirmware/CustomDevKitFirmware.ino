@@ -119,6 +119,16 @@ std::string DEVICE_MANUFACTURER = "Me";
 #define LED_STRIP1_COUNT 8
 #define LED_STRIP2_COUNT 0
 
+// [EN] Set the physical layout of the LED strip:
+//      false = left-to-right
+//      true = right-to-left
+// [ES] Indique la disposición física de la tira LED:
+//      false = de izquierda a derecha
+//      true  = de derecha a izquierda
+
+#define LED_STRIP1_REVERSE false
+#define LED_STRIP2_REVERSE false
+
 /* -----------------------------------------------------------------
  >>>> [EN] BATTERY SETTINGS
  >>>> [ES] AJUSTES DE BATERÍA
@@ -160,8 +170,8 @@ void simWheelSetup()
         LED_STRIP1_COUNT,
         true,
         PixelDriver::WS2812,
-        PixelFormat::AUTO,
-        127);
+        127,
+        LED_STRIP1_REVERSE);
 #endif
 
 #if LED_STRIP2_COUNT > 0
@@ -171,8 +181,8 @@ void simWheelSetup()
         LED_STRIP2_COUNT,
         true,
         PixelDriver::WS2812,
-        PixelFormat::AUTO,
-        127);
+        127,
+        LED_STRIP2_REVERSE);
 #endif
 
 #if (LED_STRIP1_COUNT > 0) || (LED_STRIP2_COUNT > 0)

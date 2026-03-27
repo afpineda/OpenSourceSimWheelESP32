@@ -104,29 +104,21 @@ void onDisconnectedCallback()
 
 //------------------------------------------------------------------
 
-void internals::pixels::set(
-    PixelGroup group,
-    uint8_t pixelIndex,
-    uint8_t red,
-    uint8_t green,
-    uint8_t blue)
+void internals::pixels::show(
+    const ::std::vector<Pixel> &telemetry,
+    const ::std::vector<Pixel> &buttons,
+    const ::std::vector<Pixel> &individual)
 {
-    debugPrintf("pixels::set(%hhu,%hhu,%hhu,%hhu,%hhu)\n",
-                (uint8_t)group,
-                pixelIndex,
-                red,
-                green,
-                blue);
-}
-
-void internals::pixels::reset()
-{
-    debugPrintf("pixels::reset()\n");
-}
-
-void internals::pixels::show()
-{
-    debugPrintf("pixels::show()\n");
+    debugPrintf("internals::pixels::show({\n");
+    for (auto p : telemetry)
+        debugPrintf("%x,", (uint32_t)p);
+    debugPrintf("},{\n");
+    for (auto p : buttons)
+        debugPrintf("%x,", (uint32_t)p);
+    debugPrintf("},{\n");
+    for (auto p : individual)
+        debugPrintf("%x,", (uint32_t)p);
+    debugPrintf("})\n");
 }
 
 uint8_t internals::pixels::getCount(PixelGroup group)

@@ -44,7 +44,6 @@ void customFirmware()
         8,
         TEST_LEVEL_SHIFTER,
         PixelDriver::WS2812,
-        PixelFormat::AUTO,
         16);
     ui::addPixelControlNotifications();
     ui::add<SimpleShiftLight>(TEST_SIMPLE_SHIFT_LIGHT_PIN);

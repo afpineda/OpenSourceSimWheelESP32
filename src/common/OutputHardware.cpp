@@ -273,7 +273,7 @@ LEDStrip::LEDStrip(
             .invert_out = 0,
             .with_dma = 1,
             .io_loop_back = 0,
-            .io_od_mode = (useLevelShift) ? 1 : 0,
+            .io_od_mode = (useLevelShift) ? 1u : 0u,
             .allow_pd = 0}};
     esp_err_t err = rmt_new_tx_channel(&tx_config, &rmtHandle);
     // Check if there is no DMA support and fall back to PIO

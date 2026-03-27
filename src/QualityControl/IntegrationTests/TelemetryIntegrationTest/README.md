@@ -2,7 +2,8 @@
 
 ## Purpose and summary
 
-To test that telemetry data is received and parsed correctly by the HID implementation,
+To test that telemetry data is received and
+parsed correctly by the HID implementation,
 then properly displayed by the frame server.
 
 ## Hardware setup
@@ -50,6 +51,8 @@ We are using pre-recorded telemetry data found in the
 3. Check that shown telemetry data is coherent.
    In doubt, open the `available properties` menu in SimHub.
    Search for a property to display the value sent.
+4. At any time, type "d" into the serial monitor.
+   Check that the OLED display shows another dashboard.
 
 The pre-recorded telemetry data must reflect the following car behavior:
 
