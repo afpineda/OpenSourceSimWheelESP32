@@ -411,7 +411,7 @@ void autoSaveCallback(void *param)
         // pendingSettingsToBeSaved &= ~(1ULL << (uint8_t)UserSetting::AXIS_CALIBRATION);
         pendingSettingsToBeSaved &= ~(1ULL << (uint8_t)UserSetting::BATTERY_AUTO_CALIBRATION);
         // Notify the save event
-        if (_pendingSettingsToBeSaved)
+        if (pendingSettingsToBeSaved)
             OnSettingsSaved();
     }
 }
