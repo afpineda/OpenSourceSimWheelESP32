@@ -29,6 +29,7 @@
   - There is a new `uint128_t` type for input bitmaps.
     This type allows to change specific bits
     so there is no need for input masks.
+- Fixed a bug that prevented the `onSaveSettings` notification from working.
 
 ## 7.10.3
 
