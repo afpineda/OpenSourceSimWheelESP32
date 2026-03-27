@@ -16,6 +16,7 @@
 #include "SimWheel.hpp"
 #include "SimWheelInternals.hpp"
 #include "InternalServices.hpp"
+#include "freertos/FreeRTOS.h"
 
 #include <vector>
 #include <latch>

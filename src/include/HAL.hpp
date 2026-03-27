@@ -21,6 +21,7 @@
 #if !CD_CI
 #include "driver/i2c_types.h"  // For I2C operation
 #include "driver/i2c_master.h" // For I2C operation
+#include "freertos/FreeRTOS.h" // For pdMS_TO_TICKS
 #else
 #include <thread>
 #endif

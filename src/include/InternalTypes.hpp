@@ -23,7 +23,6 @@
 #if !CD_CI
 /// @brief For testing
 #define PRIVATE private
-#include "esp_task_wdt.h" // For  esp_task_wdt_reset()
 /// @brief For testing
 #define PROTECTED protected
 #else
@@ -554,9 +553,6 @@ public:
         for (const auto &entry : _subscriptions)
         {
             entry(args...);
-#if !CD_CI
-            esp_task_wdt_reset();
-#endif
         }
     }
 
@@ -570,9 +566,6 @@ public:
         for (const auto &entry : _subscriptions)
         {
             entry(args...);
-#if !CD_CI
-            esp_task_wdt_reset();
-#endif
         }
     }
 
