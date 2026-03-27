@@ -1,6 +1,6 @@
 # Firmware (software) architecture
 
-The *system* have been broken down into several *subsystems*:
+The *system* has been broken down into several *subsystems*:
 
 - `batteryCalibration`:
   Everything related to battery profiling.
@@ -176,7 +176,7 @@ Three kinds of dependency injections are found in this project:
   - Publish-subscribe events:
 
     An "event" class decouples the caller from the callee.
-    The caller triggers the event (static method `notify()`) which,
+    The caller triggers the event (function call operator `()`) which,
     in turn, runs a number of subscribed callbacks unknown to the caller.
     This pattern removes static dependencies completely
     and there is almost no performance penalty.
@@ -387,7 +387,7 @@ sequenceDiagram
   participant any
   participant storage
   participant timer
-  any ->> storage: SaveSettings::notify(userSetting) [callback]
+  any ->> storage: SaveSettings(userSetting) [callback]
   storage ->> storage: remember this setting is to be stored
 
   alt is delayed
@@ -401,7 +401,7 @@ sequenceDiagram
   end
 ```
 
-[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNplUjFuwzAM_AqhqUWTD2jI1I6dsrXuwMiMI1SWXIkyYAT5eynZTuF0k0535PHEqzKhJaVVop9M3tCrxS5i33iAASNbYwf0DOinRyhxiNjRI8y2p1hAkcD-cFh5Go440pGYre-S1j6wPU9POVFcwGf4NOjcCc33VymwCLdFIvXUnygCX2yCNCtBjhzgRJVHbeOrAcfloSWHU8EAtjWr01Ixsfif3ysG-03LgoVcCeRrHRfCAMEDjRSnu4mtg4duLyUPDWVA6EQgXVAypDhaQ2AcpjRramwi2P8ZMDlGKokvjUZ0mf7Pc-cnCXpxq3ZKBurRtvLH1wI2ii-SYaO0HFs6Y3bcqMbfhIqZw3HyRmmOmXYqDy3yuhJb8K210m7FYsjdRekzuiQ32YOPEPr7nSr3fV60um-3X6lH3Co)
+[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNplUsuS0zAQ_BXVnKBwUrEdxxsd9gIcOeUG5qDIs44KWQp6pDCp_Dsj5bHlcJNa09M9rTmDtD0CB4-_IxqJX5QYnBg7w9hRuKCkOgoTmDDTM-SDdWLAZzioEV0CicIWr6_3Os524oQ7DEGZwX-IHt3t8pH9kELrvZC_fibijTAnOxxx3KNj4aA881cmo2OwbI-5DvvOZGEd0kOPWkwJY2zeMztMHX0g39f3jLHFTDJhNuYCNLmPtvbIrGF4Qjc9TMwdPKl9SjlwlgZkAxFIRVB26E5KIpNaeH_l5LiIsHg3IKNzmJK-CZ2Ejvj_PI96TwHf3EIBNNAoVE9_e05gB-FAGXbA6djjm4g6dNCZC5WKGOxuMhJ4cBELiMdehPsqzMGvvSK5O-ZsHA7A34T2dKP__27tg4C59Nt1v_KaEYG8oftsownAm0wBfoY_wKvNcl011XbVNO2mrFblpoAJeN0st6u2bLdl3dbtS7m9FPA3i6yWbUVIW61fynq9KesCBpfmTeqXf-zs9D4)
 
 ## Load settings
 
@@ -409,7 +409,7 @@ sequenceDiagram
 sequenceDiagram
   participant any
   participant storage
-  any ->>+ storage: LoadSettings::notify(userSetting) [callback]
+  any ->>+ storage: LoadSettings(userSetting) [callback]
     storage ->> storage: Check if the requested setting is stored
     alt is stored
       storage ->> storage: load setting
@@ -418,7 +418,7 @@ sequenceDiagram
   deactivate storage
 ```
 
-[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNp1kU1OAzEMha9iZQWiXCAS3QA7WHUHw8Iknpmo-RkSp2hU9e4kmQ6ICnbJy_Pn5_goVNAkpEj0kckrejA4RHSdB5gwslFmQs-Afr6UEoeIA1W5vMLtdnuzahKeAuodMRs_JCl9YNPPVzlRPIvX8KrQ2ndU-7dKgLW0cn4w9yOpPZgeeCSINWJi0pAWCJjUrKQXBFq-lP7h2hJvpfxlLANJqAGbiSJ8Gh4B45Ad1dHxQHc92kRLMfnWThMqNgdkWmFiIxxFh0aXLz5WTyfKKI46IctRU4_Zcic6fypWzBx2s1dCcsy0EXnShXXeyG_xUZvSYdViyMMoZEu0EWU7LyG47zs17_Oy57bu0xdaGq72)
+[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNp1UU1TgzAQ_SuZPemInQIFSmbspXrTU2-Kh5VsaaYQakiqtdP_bgJFR0dvycv72uwRylYQcOjo1ZIq6VZipbEpFGM71EaWcofKMFSH31BnWo0Vedi9suvF4mrEOLtvUazIGKmq7sJ2pM-XS_ZUYl2_YLl99ko2Srz-W77cULllcs3Mhpj21TpDgnWDCZNdTyUxWGBtfkP_-Nau1ujyF9ENwpkv2JNIszdpNgx1ZRvyI-OebtZYdzSISfVxgrA0co-GRjMIoCHdoBTua4-eU4AbpaECuDsKWqOtTQGFOjkqWtOuDqoEbrSlAOxOOK_zJn6Cd0K6hBHTra02wPtGAbitPLbtl4B66sOw3n7LTuAak162VhngSS8BfoR34FE6mUVJlE-TJEvDaBqmARyAx8kkn2ZhlodxFmfzMD8F8NGHTCdZ5JAsms3DeJaGcQCV9vP69NMnnWXHCg)
 
 ## About digital inputs and input events
 
@@ -426,7 +426,7 @@ Every hardware input is assigned a single number starting from 0 and up to 127.
 
 The state of an input is represented by a single bit,
 1 meaning a pressed button, 0 meaning a released button.
-So, the combined state of all inputs is represented as a 127-bit word,
+So, the combined state of all inputs is represented as a 128-bit word,
 where the n-th bit represents the n-th input number.
 This is called an *input bitmap*.
 Least significant bit is numbered as zero.
@@ -467,7 +467,7 @@ Each `DigitalInput` instance must behave in this way:
 
 - If the hardware state is unknown, it must keep the input state "as is".
 - If the hardware state is known, it must set or clear each individual
-  bit corresponding to the assigned input numbers (see below)
+  bit corresponding to the assigned input numbers
   in the input state.
 - It must not set or clear any other bit in the input state.
 
@@ -482,7 +482,7 @@ If there is no user-defined map, it defaults to the following rule:
 
 ```text
 if (alt mode engaged) then
-   HID button number = (raw input number + 64) modulus 128
+   HID button number = (raw input number + 64) modulo 128
 else
    HID button number = raw input number
 ```
