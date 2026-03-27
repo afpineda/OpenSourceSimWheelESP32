@@ -108,4 +108,6 @@ void loop()
     int in = Serial.read();
     if ((in == 'd') || (in == 'D'))
         internals::ui::routeInput(ROUTED1);
+     if ((in == 's') || (in == 'S'))
+        OnSettingsSaved();
 }

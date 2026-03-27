@@ -306,7 +306,7 @@ void OledTelemetry128x64::draw_alt_dashboard(
         // Draw Fuel (size1)
         if (pTelemetryData->ecu.lowFuelAlert)
         {
-            _impl->frame.fillRect(48, 32, 8, 9, 0xFFFF);
+            _impl->frame.fillRect(48, 32, 33, 9, 0xFFFF);
             aux = 0;
         }
         else
@@ -314,14 +314,14 @@ void OledTelemetry128x64::draw_alt_dashboard(
         _impl->frame.setCursor(49, 33);
         _impl->frame.setTextColor(aux, !aux);
         _impl->frame.printf(
-            "F:%-3hhu",
+            "FUEL:%-3hhu%%",
             pTelemetryData->gauges.relativeRemainingFuel);
 
         // Draw brake bias (size1)
         _impl->frame.setCursor(0, 53);
         _impl->frame.setTextColor(0xFFFF, 0);
         _impl->frame.printf(
-            "BB:%-3hhu",
+            "BB:%-3hhu%%",
             pTelemetryData->ecu.brakeBias);
 
         // Draw Speed size 2
