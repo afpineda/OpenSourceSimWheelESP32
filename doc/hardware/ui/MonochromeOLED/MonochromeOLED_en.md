@@ -16,7 +16,7 @@ It will show the following information thanks to SimHub:
   - Current TC and ABS settings.
   - Current brake bias (BB).
 
-  ![OLED display example](MonochromeOLED.jpg)
+  ![OLED main dashboard](./MonochromeOLED.jpg)
 
 - Alternate dashboard:
 
@@ -28,9 +28,17 @@ It will show the following information thanks to SimHub:
   - Current TC and ABS settings and engagement alerts.
   - Current brake bias (BB).
 
+  ![OLED alternate dashboard](./OLED_alt_dash.jpg)
+
 - Battery level dashboard (available only on battery-operated devices).
 
+  ![OLED battery dashboard](./OLED_dash_battery.jpg)
+
 Dashboard selection requires a *routed* input number.
+
+> 🙏
+> Sorry for the low quality of the pictures.
+> It looks nice in live.
 
 ## Requirements
 
