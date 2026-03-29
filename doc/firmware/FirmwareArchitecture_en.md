@@ -191,7 +191,7 @@ Three kinds of dependency injections are found in this project:
      However, other dependencies are not injected yet,
      thus can not be called.
      For this reason, they typically subscribe to the `OnStart` event.
-  4. `firmware::run()` triggers `OnStart::notify()`.
+  4. `firmware::run()` triggers `OnStart()`.
   5. Each `OnStart` callback is executed.
      At this point, all dependencies are available to them.
      Each subsystem performs initialization and
