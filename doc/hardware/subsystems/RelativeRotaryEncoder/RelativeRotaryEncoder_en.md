@@ -4,7 +4,8 @@
 
 ## Purpose
 
-The purpose of this subsystem is to provide one or more relative rotary encoders as inputs to the system.
+The purpose of this subsystem is to provide one or more
+relative rotary encoders as inputs to the system.
 Since a funky switch is a kind of rotary encoder,
 this subsystem also applies to them.
 However, **only rotation is part of this subsystem**.
@@ -28,7 +29,8 @@ this is the wiring of a rotary encoder:
 - Bare bone and funky switch type:
 
   - There are two pins labeled `GND`.
-    The one located between `A` (or `CLK`) and `B` (or `DT`) must be wired to `GND` pin at the board.
+    The one located between `A` (or `CLK`) and `B` (or `DT`)
+    must be wired to `GND` pin at the board.
     The other one, sometimes labeled `SW GND`, is not related to this subsystem.
   - Pin labeled `CLK`, `ENCODER_A` or `A` must be wired to any
     input-capable GPIO pin **with internal pull-up resistors**.
@@ -38,10 +40,12 @@ this is the wiring of a rotary encoder:
     Otherwise, a external pull-up resistor must be placed.
 
 > [!IMPORTANT]
-> ALPS funky switches exposes both `ENCODER_A` and `A` pins (the same for `ENCODER_B` and `B`).
+> ALPS funky switches exposes both `ENCODER_A` and `A` pins
+> (the same for `ENCODER_B` and `B`).
 > Do not confuse them.
 > Only `ENCODER_A` and `ENCODER_B` are related to this subsystem,
-> while `A` and `B` are related to the [switches subsystem](../Switches/Switches_en.md).
+> while `A` and `B` are related to the
+> [switches subsystem](../Switches/Switches_en.md).
 
 ## Signal encoding
 
@@ -59,10 +63,11 @@ Customization takes place at file [CustomSetup.ino](../../../../src/Firmware/Cus
 
 You must assign two **different** "input numbers" to each rotary encoder,
 one for clockwise rotation and another for counter-clockwise rotation.
-Valid input numbers are in the range of 0 to 63 (inclusive).
+Valid input numbers are in the range of 0 to 127 (inclusive).
 The **firmware will not boot** if an invalid input number is detected.
 
-Edit the body of `simWheelSetup()` and place a call to `inputs::addRotaryEncoder()` for each rotary encoder as shown below.
+Edit the body of `simWheelSetup()` and place a call
+to `inputs::addRotaryEncoder()` for each rotary encoder as shown below.
 
 - First parameter is the GPIO assigned to `CLK` or `A`.
 - Second parameter is the GPIO assigned to `DT` or `B`.
