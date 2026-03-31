@@ -1007,7 +1007,7 @@ WARN_LOGFILE           =
 
 INPUT                  = ../src/include \
                          ./hardware/subsystems/ \
-                         ./migrate_to_v7.md
+                         ./migrate_to_v8.md
 
 # This tag can be used to specify the character encoding of the source files
 # that Doxygen parses. Internally Doxygen uses the UTF-8 encoding. Doxygen uses
