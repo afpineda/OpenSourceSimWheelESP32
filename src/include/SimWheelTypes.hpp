@@ -1171,7 +1171,9 @@ enum class PixelDriver
     /// @brief SK6812 driver
     SK6812,
     /// @brief UCS1903 driver
-    UCS1903
+    UCS1903,
+    /// @brief APA106 driver
+    APA106
 };
 
 //-------------------------------------------------------------------

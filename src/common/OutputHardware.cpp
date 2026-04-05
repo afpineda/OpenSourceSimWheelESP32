@@ -254,6 +254,7 @@ LEDStrip::LEDStrip(
     {
     case PixelDriver::WS2811:
     case PixelDriver::UCS1903:
+    case PixelDriver::APA106:
         pixelFormat = PixelFormat::RGB;
         break;
     default:
@@ -326,6 +327,13 @@ LEDStrip::LEDStrip(
         byte_enc_config.bit1.duration0 = 800;
         byte_enc_config.bit1.duration1 = 400;
         restTimeNs = 24000;
+        break;
+    case PixelDriver::APA106:
+        byte_enc_config.bit0.duration0 = 350;
+        byte_enc_config.bit0.duration1 = 1360;
+        byte_enc_config.bit1.duration0 = 1360;
+        byte_enc_config.bit1.duration1 = 350;
+        restTimeNs = 50000;
         break;
     default:
         // should not enter here

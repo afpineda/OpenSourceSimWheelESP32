@@ -116,6 +116,8 @@ This project supports the following:
   drivers. *Note*: not tested.
 - [UCS1903](https://www.led-stuebchen.de/download/UCS1903_English.pdf)
   drivers. *Note*: not tested.
+- [APA106](./hardware/esp32reference/APA-106.pdf)
+  drivers. *Note*: not tested.
 
 > [!NOTE]
 > The popular RGB LED strips based on the **WS2812B** driver require
