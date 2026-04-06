@@ -1,5 +1,9 @@
 # Change log (and release notes)
 
+## 8.1.0
+
+- Support for the APA106 pixel driver in RGB LED strips.
+
 ## 8.0.0
 
 - As usual, there is a

@@ -55,7 +55,7 @@ Any DevKit based on the ESP32 architecture having BLE and/or USB-OTG.
     but depending on the available power supply.
 - RGB LED strips:
   - Having a pixel driver in these families:
-    WS2811, WS2812, WS2815, SK6812 or UCS1903.
+    WS2811, WS2812, WS2815, SK6812, UCS1903 or APA106.
   - Any power voltage.
 - Monochrome OLED displays:
   - Having an SSD1306, SH1106 or SH1107 display controller.
