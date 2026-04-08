@@ -21,6 +21,8 @@ This project provides open hardware and software for a sim-racing wheel or butto
   button matrices, multiplexed switches, GPIO expanders, shift registers,
   rotary encoders, funky switches...
 
+- 🔘 Up to **128 switches/buttons**.
+
 - 🧑‍🍳 Easy to adapt to your needs:
   a range of off-the-shelf electronics designs are available
   to cover a wide range of applications,
@@ -115,6 +117,8 @@ o una caja de botones con las siguientes características:
   expansores de GPIO, registros de desplazamiento,
   codificadores rotativos, funky switches...
 
+- 🔘 Hasta **128 interruptores/botones**.
+
 - 🧑‍🍳 Fácil de adaptar a sus necesidades:
   Se dispone de una gama de diseños electrónicos listos
   para usar que cubren diversas aplicaciones,
@@ -180,7 +184,8 @@ o una caja de botones con las siguientes características:
 
 - 👷‍♀️Ingeniería software según el estado de la cuestión (nada de código de aficionado).
 
-- 🛤️ **Diseños de circuitos integrados** incluyendo una **placa de de desarrollo con todo-en-uno**
+- 🛤️ **Diseños de circuitos integrados** incluyendo una
+  **placa de desarrollo con todo-en-uno**
   (ESP32-S3) y módulos auxiliares baratos para los interruptores.
 
 Existe una [aplicación auxiliar](https://github.com/afpineda/SimWheelESP32Config) para las preferencias de usuario,

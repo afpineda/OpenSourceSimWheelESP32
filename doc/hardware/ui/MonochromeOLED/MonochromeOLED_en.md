@@ -81,6 +81,8 @@ display controllers. *SSD1306* was tested.
 > [!NOTE]
 > Many 128x64 screens use a 132x64 display controller.
 
+Only OLED displays in the **I2C interface** are supported.
+
 ## Firmware customization
 
 1. Hardware setup.
