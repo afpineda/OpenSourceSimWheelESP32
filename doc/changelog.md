@@ -1,5 +1,12 @@
 # Change log (and release notes)
 
+## 8.2.0
+
+- Support for two-axis analog joysticks in the role of a directional pad.
+- There is a new non-automated test unit for this hardware,
+  but there is no integration test.
+- Documentation updates.
+
 ## 8.1.0
 
 - Support for the APA106 pixel driver in RGB LED strips.
