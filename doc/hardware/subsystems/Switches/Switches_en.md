@@ -15,6 +15,7 @@ including (when required):
 - Rotary coded switches.
   Now they can be attached to **any** supported input hardware.
   Instructions below.
+- Two-axis analog joysticks in the role of directional pads.
 
 And also **potentiometers** as digital clutch paddles,
 in case you are short of GPIO pins.
@@ -31,6 +32,7 @@ There are several, non-exclusive, **implementation** choices:
   **The best option and recommended way to go** thanks to its minimal cost,
   size, pin expenditure, and overall simplicity.
 - Single switch (or button) attached to a single pin.
+- Analog joystick attached to two ADC pins.
 
 Take a look at the article on
 [input hardware](../../InputHW_en.md)
@@ -457,6 +459,24 @@ Attach the other terminal to `GND`.
 An internal pull-up resistor is required since we are using negative logic.
 If not available, add an external pull-up resistor.
 
+## Implementation of an analog joystick attached to two ADC pins
+
+There is no circuit involved here, just wiring.
+
+- There is one terminal for the horizontal axis and
+  another for the vertical axis.
+  You must wire them to two separate ADC-capable GPIO pins.
+  Each axis is a potentiometer.
+  The firmware assumes those potentiometers to be linear.
+- There are two terminal for the power supply usually tagged as `5V` and `GND`.
+  Despite being tagged as `5V`, you must wire that terminal to `3V3`.
+  **Never wire the analog joystick to a power supply higher than 3V3**.
+- If your joysticks features a built-in push button you have one or two
+  additional terminals.
+  If you have two, attach them to the input circuitry as any other switch.
+  If you have just one terminal, the push button is already pulled up
+  and it works in negative logic.
+
 ## Firmware customization
 
 Customization takes place at the body of `simWheelSetup()` inside
@@ -841,3 +861,40 @@ void simWheelSetup()
 
 Where `sw.at(7) = 17;` means the input number `17` is assigned
 to the position index `7` in the rotary switch.
+
+### Two-axis analog joysticks
+
+Analog joysticks in this project play the role of directional pads.
+The joystick position is translated into on/off switches for the
+"up", "down", "left" and "right" directions.
+Just the same as a directional pad or funky switch.
+
+Place a call to `inputs::addJoystick()` with the following parameters
+(from left to right):
+
+1. ADC-capable pin for the horizontal axis.
+2. ADC-capable pin for the vertical axis.
+3. Input number for "up".
+4. Input number for "down".
+5. Input number for "left".
+6. Input number for "right".
+7. Optionally, center position in the horizontal axis, in the range [0,255].
+8. Optionally, center position in the vertical axis, in the range [0,255].
+9. Optionally, dead zone around the center position in the horizontal axis,
+   in the range [0,127]. Values close to 0 and 127 will not work properly.
+10. Optionally, dead zone around the center position in the vertical axis,
+    in the range [0,127]. Values close to 0 and 127 will not work properly.
+11. Reverse polarity of the horizontal axis.
+    Set to `true` to swap the up and down positions.
+12. Reverse polarity of the vertical axis.
+    Set to `true` to swap the left and right positions.
+
+The default values for the optional parameters should work in most cases.
+Change them if the joystick drifts.
+Use the "reverse polarity" parameters if the joystick is physically mounted
+upside-down.
+
+> [!TIP]
+> If you plan to use an analog joystick for navigational input,
+> you must place another call to `inputHub::dpad::inputs()`
+> (more details later).

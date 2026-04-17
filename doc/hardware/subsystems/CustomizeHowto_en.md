@@ -27,8 +27,9 @@ Follow the links to get a detailed description of each subsystem:
 - [Relative rotary encoder subsystem](./RelativeRotaryEncoder/RelativeRotaryEncoder_en.md):
   provides input from rotation of rotary encoders.
 - [Switches subsystem](./Switches/Switches_en.md):
-  provides input from normally-open switches (push buttons, paddles, etc.)
-  and potentiometers (as on/off inputs, only).
+  provides input from normally-open switches (push buttons, paddles, etc),
+  potentiometers (as on/off inputs, only) and
+  two-axis analog joysticks in the role of directional pads.
 - [Analog clutch subsystem](./AnalogClutchPaddles/AnalogClutchPaddles_en.md):
   provides input from two potentiometers attached to clutch paddles
   as analog axes.
@@ -119,7 +120,7 @@ Then, there are a few steps:
 A DPAD is optional.
 Despite this function is designed for funky switches and directional pads,
 it may be assigned to *any* input,
-including rotary encoders and push buttons.
+including rotary encoders, two-axis analog joysticks and push buttons.
 Place a call to `inputHub::dpad::inputs()`:
 
 - 1st parameter is the input number for the "up" button

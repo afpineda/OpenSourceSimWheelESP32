@@ -25,6 +25,7 @@ Any DevKit based on the ESP32 architecture having BLE and/or USB-OTG.
 - **Unipolar** ratiometric linear HE sensors
   (working as a potentiometer).
 - 4-way directional pads or sticks.
+- Two-axis analog joysticks.
 
 > [!NOTE]
 > Unlisted input devices should work if they behave as another supported device.

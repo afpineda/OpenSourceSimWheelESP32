@@ -258,13 +258,14 @@ classDiagram
     DigitalInput <|-- ShiftRegistersInput
     DigitalInput <|-- RotaryEncoderInput
     DigitalInput <|-- DigitalButton
+    DigitalInput <|-- AnalogJoystickInput
     DigitalInput <|-- I2CInput
     I2CInput     <|-- PCF8574ButtonsInput
     I2CInput     <|-- MCP23017ButtonsInput
     AnalogInput  <|-- AnalogClutchInput
 ```
 
-[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNp9kl9PwjAUxb_Kcn3ROEnZBh2LLzrQ8EAk8Gb20mxlNBkt6W4TEPfdLR0Y0LC-tD39nf45twfIVcEhgbxidT0WrNRsk0nPNqd40yCdyq3BQyt63l3J8X0-_aiRIb9_aOXm0jIWpUBWXdseNWfFH_wS9J6_n568V4Oo5IyhFjsn3wJfJKtUOTMVim3Fd1x30su1WOGCl6JGrutOdKGQ6f1EHmPp3vSktFe-BZ3ja9fPM5eIW5-nb_GARu0mdSc6S-dBSPr0P9uGccIv4kkrg_na6eDDhusNE4WttStKBrjmG55BYocFXzGbZQaZbCzKDKrlXuaQoDbcB7MtbLFPv-NanBQClT5rWplyDcmKVbWdbZn8VOrXwB06O_23Y2cNXNqcU2UkQkKdBZID7CAZjnokosNR0A9pP4iHPuwhCWnQI3EQjcIBGUVRQBsfvtwRpBfTASEkIv0opjanyIdSH597PLz5AX3n7tA)
+[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNp9kl1PwjAUhv_KcrzROMg-GIXFGx1oMFkkcGd202xlNG7t0p0mIO6_WzYwoHG9afv2eXtOT88BUpkxCCEtaF3POM0VLRNhmdEq1sKLFqLSeOhEy7rJGb4sF281UmS3d53cXFpmPOdIi2vbvWI0-4VfgtbD12BgPWlEKWKKiu9a-T_wUdBC5rEukFcF2zHVS6-3fIMrlvMamap70ZVEqvZzcSxL_6UnpUu5P89Xua-Rpx-9950r3Z2fd23x2vNl9DwJyKiLV_eicbT0fMclf9kunxN-kWFUaEy3FyDYUDJVUp6Z5mh_MQHcspIlEJplxjbUFD-BRDQGpRrlei9SCFFpZoOuMtMdp3a6FucZR6nOmpI630K4oUVtdhUV71L-GFiLxqcGPU7GwIT5mEhqgRAGrQXCA-wg9MbDkRd4UycIyNj1HHdswx5CPxhOHeKSqesTn0zcaWPDZxvEGRLPKMQbTVx_NHZ9G3J1fO8xevMNJyX_dQ)
 
 ### Battery monitoring hardware
 

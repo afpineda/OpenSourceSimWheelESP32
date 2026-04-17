@@ -179,9 +179,19 @@ as only half of the output voltage corresponds to the detection of one pole of t
 
 They are just 4 (sometimes 8) push buttons arranged as a cross.
 Note that one and only one of them can be closed at a time, or none of them.
-Do not confuse 4-way joysticks with 2-axis joysticks,
-the later are just two potentiometers that drain current at all times (not suitable for this project).
+Do not confuse 4-way joysticks with two-axis joysticks.
 DPADs are supported by this project.
+
+## Two-axis (analog) joysticks
+
+A two-axis joystick is the physical combination of two potentiometers
+(or hall-effect sensors) into a single device able to detect the stick position
+in the horizontal and vertical axes.
+Note that they drain current at all times,
+thus they are not recommended for battery-based systems.
+In a sim-wheel, two-axis joysticks usually play the same role
+as directional pads.
+This project supports them in this role.
 
 ## Funky switches
 
