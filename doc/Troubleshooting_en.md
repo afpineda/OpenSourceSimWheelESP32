@@ -182,6 +182,7 @@ The following error messages are self-describing:
 - *inputs::setAnalogClutchPaddles() called twice*
 - *Unable to add a user interface instance while running*
 - *Useless rotary encoder: same input numbers for clockwise and counter-clockwise*
+- *inputs::addJoystick() is using the same pin for both axes*
 
 ### Internal error messages
 

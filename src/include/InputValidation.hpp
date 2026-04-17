@@ -38,7 +38,7 @@ namespace internals
              * @param collection Pins to reserve
              */
             template <typename GPIOtype>
-            void reserve(const std::set<GPIOtype> &collection)
+            inline void reserve(const std::set<GPIOtype> &collection)
             {
                 for (auto item : collection)
                     item.reserve();
@@ -49,7 +49,7 @@ namespace internals
              *
              * @param matrix Button matrix to validate
              */
-            void buttonMatrix(const ButtonMatrix &matrix)
+            inline void buttonMatrix(const ButtonMatrix &matrix)
             {
                 OutputGPIOCollection selectors;
                 InputGPIOCollection inputs;
@@ -82,7 +82,7 @@ namespace internals
              * @param chips Collections of chips
              */
             template <typename PinTags>
-            void analogMultiplexer(const OutputGPIOCollection &selectors, const AnalogMultiplexerGroup<PinTags> chips)
+            inline void analogMultiplexer(const OutputGPIOCollection &selectors, const AnalogMultiplexerGroup<PinTags> chips)
             {
                 uint128_t previousInputNumbers = InputNumber::booked();
                 reserve<OutputGPIO>(selectors);
@@ -100,7 +100,7 @@ namespace internals
              * @param inputPin Input GPIO pin
              * @param chain Collection of chips
              */
-            void shiftRegisterChain(
+            inline void shiftRegisterChain(
                 OutputGPIO loadPin,
                 OutputGPIO nextPin,
                 InputGPIO inputPin,
@@ -126,7 +126,7 @@ namespace internals
              * @param chip Chip instance
              */
             template <typename PinTags>
-            void GPIOExpander(const GPIOExpanderChip<PinTags> &chip)
+            inline void GPIOExpander(const GPIOExpanderChip<PinTags> &chip)
             {
                 uint128_t previousInputNumbers = InputNumber::booked();
                 for (auto i = chip.begin(); i != chip.end(); i++)
@@ -143,7 +143,11 @@ namespace internals
              * @param cw Input number for clockwise rotation
              * @param ccw Input number for counter-clockwise rotation
              */
-            void rotaryEncoder(InputGPIO dtPin, InputGPIO clkPin, InputNumber cw, InputNumber ccw)
+            inline void rotaryEncoder(
+                InputGPIO dtPin,
+                InputGPIO clkPin,
+                InputNumber cw,
+                InputNumber ccw)
             {
                 uint128_t previousInputNumbers = InputNumber::booked();
                 dtPin.reserve();
@@ -166,12 +170,41 @@ namespace internals
              * @param pin Input pin
              * @param inputNumber Input number
              */
-            void button(InputGPIO pin, InputNumber inputNumber)
+            inline void button(InputGPIO pin, InputNumber inputNumber)
             {
                 pin.reserve();
                 if (inputNumber == UNSPECIFIED::VALUE)
                     throw empty_input_number_set("single button");
                 inputNumber.book();
+            }
+
+            /**
+             * @brief Validate a joystick
+             *
+             * @param xAxisPin ADC-capable pin for the horizontal axis
+             * @param yAxisPin ADC-capable pin for the vertical axis
+             * @param up Input number assigned to the "up" direction
+             * @param down Input number assigned to the "down" direction
+             * @param left Input number assigned to the "left" direction
+             * @param right Input number assigned to the "right" direction
+             */
+            inline void joystick(
+                ADC_GPIO xAxisPin,
+                ADC_GPIO yAxisPin,
+                InputNumber up,
+                InputNumber down,
+                InputNumber left,
+                InputNumber right)
+            {
+                if (xAxisPin == yAxisPin)
+                    throw std::runtime_error(
+                        "inputs::addJoystick() is using the same pin for both axes");
+                xAxisPin.reserve();
+                yAxisPin.reserve();
+                up.book();
+                down.book();
+                left.book();
+                right.book();
             }
 
         } // namespace validate

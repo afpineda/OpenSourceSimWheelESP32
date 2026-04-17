@@ -486,6 +486,72 @@ public:
     void read(uint8_t &value, bool &autoCalibrated) override;
 };
 
+/**
+ * @brief Analog joystick as directional input
+ *
+ * @note Despite using an analog device, input is reported as digital
+ *
+ */
+class AnalogJoystickInput : public DigitalInput
+{
+protected:
+    ADC_GPIO xAxisPin;
+    ADC_GPIO yAxisPin;
+    uint8_t up;
+    uint8_t down;
+    uint8_t left;
+    uint8_t right;
+    int upAdcReading;
+    int downAdcReading;
+    int leftAdcReading;
+    int rightAdcReading;
+    bool xAxisReverse;
+    bool AxisReverse;
+
+public:
+    /**
+     * @brief Construct a new Analog Joystick Input object
+     *
+     * @param xAxisPin ADC-capable pin for the horizontal axis
+     * @param yAxisPin ADC-capable pin for the vertical axis
+     * @param up Input number assigned to the "up" direction
+     * @param down Input number assigned to the "down" direction
+     * @param left Input number assigned to the "left" direction
+     * @param right Input number assigned to the "right" direction
+     * @param xCenter Center position of the horizontal axis in the
+     *                [0,255] range
+     * @param yCenter Center position of the vertical axis in the
+     *                [0,255] range
+     * @param xDeadZone A dead zone in the range [0,127]
+     *                  for the horizontal axis.
+     *                  Extreme values will not work properly.
+     *                  Out of range values will be trimmed to 127.
+     * @param yDeadZone A dead zone in the range [0,127]
+     *                  for the vertical axis.
+     *                  Extreme values will not work properly.
+     *                  Out of range values will be trimmed to 127.
+     * @param xAxisReverse If true, the lower reading means pushed right
+     *                     If false, the lower reading means pushed left
+     * @param yAxisReverse If true, the lower reading means pushed down
+     *                     If false, the lower reading means pushed up
+     */
+    AnalogJoystickInput(
+        ADC_GPIO xAxisPin,
+        ADC_GPIO yAxisPin,
+        InputNumber up,
+        InputNumber down,
+        InputNumber left,
+        InputNumber right,
+        uint8_t xCenter = 127,
+        uint8_t yCenter = 127,
+        uint8_t xDeadZone = 63,
+        uint8_t yDeadZone = 63,
+        bool xAxisReverse = false,
+        bool yAxisReverse = false);
+
+    virtual void read(uint128_t &state) override;
+};
+
 //-------------------------------------------------------------------
 // Fake input hardware for testing
 //-------------------------------------------------------------------

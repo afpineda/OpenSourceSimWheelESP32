@@ -215,6 +215,52 @@ namespace inputs
         ADC_GPIO leftClutchPin,
         ADC_GPIO rightClutchPin);
 
+    /**
+     * @brief Add an analog joystick as an 8-way input device
+     *
+     * @note A joystick is composed by two potentiometers or HE sensors:
+     *       one in the X axis and another in the Y axis.
+     *
+     * @warning If you pretend to use a joystick for navigational input,
+     *          you must also call inputHub::dpad::inputs()
+     *
+     * @param xAxisPin ADC-capable pin for the horizontal axis
+     * @param yAxisPin ADC-capable pin for the vertical axis
+     * @param up Input number assigned to the "up" direction
+     * @param down Input number assigned to the "down" direction
+     * @param left Input number assigned to the "left" direction
+     * @param right Input number assigned to the "right" direction
+     * @param xCenter Center position of the horizontal axis in the
+     *                [0,255] range
+     * @param yCenter Center position of the vertical axis in the
+     *                [0,255] range
+     * @param xDeadZone A dead zone in the range [0,127]
+     *                  for the horizontal axis.
+     *                  Extreme values will not work properly.
+     *                  Out of range values will be trimmed to 127.
+     * @param yDeadZone A dead zone in the range [0,127]
+     *                  for the vertical axis.
+     *                  Extreme values will not work properly.
+     *                  Out of range values will be trimmed to 127.
+     * @param xAxisReverse If true, the lower reading means pushed right
+     *                     If false, the lower reading means pushed left
+     * @param yAxisReverse If true, the lower reading means pushed down
+     *                     If false, the lower reading means pushed up
+     */
+    void addJoystick(
+        ADC_GPIO xAxisPin,
+        ADC_GPIO yAxisPin,
+        InputNumber up,
+        InputNumber down,
+        InputNumber left,
+        InputNumber right,
+        uint8_t xCenter = 127,
+        uint8_t yCenter = 127,
+        uint8_t xDeadZone = 63,
+        uint8_t yDeadZone = 63,
+        bool xAxisReverse = false,
+        bool yAxisReverse = false);
+
 } // namespace inputs
 
 //-------------------------------------------------------------------

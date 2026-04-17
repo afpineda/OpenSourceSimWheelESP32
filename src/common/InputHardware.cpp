@@ -812,3 +812,71 @@ void AnalogClutchInput::setCalibrationData(int minReading, int maxReading)
     minADCReading = minReading;
     maxADCReading = maxReading;
 }
+
+//-------------------------------------------------------------------
+// Analog joystick
+//-------------------------------------------------------------------
+
+AnalogJoystickInput::AnalogJoystickInput(
+    ADC_GPIO xAxisPin,
+    ADC_GPIO yAxisPin,
+    InputNumber up,
+    InputNumber down,
+    InputNumber left,
+    InputNumber right,
+    uint8_t xCenter,
+    uint8_t yCenter,
+    uint8_t xDeadZone,
+    uint8_t yDeadZone,
+    bool xAxisReverse,
+    bool yAxisReverse)
+{
+    // Assign attributes
+    this->xAxisPin = xAxisPin;
+    this->yAxisPin = yAxisPin;
+    if (xAxisReverse)
+    {
+        this->left = right;
+        this->right = left;
+    }
+    else
+    {
+        this->left = left;
+        this->right = right;
+    }
+    if (yAxisReverse)
+    {
+        this->up = down;
+        this->down = up;
+    }
+    else
+    {
+        this->up = up;
+        this->down = down;
+    }
+    this->up = up;
+    this->down = down;
+
+    // Precompute minimum/maximum ADC readings for each axis
+    if (xDeadZone > 127)
+        xDeadZone = 127;
+    if (yDeadZone > 127)
+        yDeadZone = 127;
+    upAdcReading = yCenter - yDeadZone;
+    downAdcReading = yCenter + yDeadZone;
+    leftAdcReading = xCenter - xDeadZone;
+    rightAdcReading = xCenter + xDeadZone;
+}
+
+void AnalogJoystickInput::read(uint128_t &state)
+{
+    // read ADC and remove 4 bits of noise
+    int x = internals::hal::gpio::getADCreading(xAxisPin, 2) >> 4;
+    int y = internals::hal::gpio::getADCreading(yAxisPin, 2) >> 4;
+
+    // Report
+    state.set_bit(up, (y <= upAdcReading));
+    state.set_bit(down, (y >= downAdcReading));
+    state.set_bit(left, (x <= leftAdcReading));
+    state.set_bit(right, (x >= rightAdcReading));
+}

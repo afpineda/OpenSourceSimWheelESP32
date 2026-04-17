@@ -254,6 +254,50 @@ void ButtonTest()
     }
 }
 
+void JoystickTest()
+{
+    std::cout << "- Joystick -" << std::endl;
+    GPIO::clearReservations();
+    InputNumber::clearBook();
+
+    validate::joystick(10, 11, 0, 1, 2, 3);
+    checkReservation(10, "Failed reservation GPIO 10");
+    checkReservation(11, "Failed reservation GPIO 11");
+    assert((InputNumber::booked().low == 0b1111) && "Wrong booked I.N.");
+
+    GPIO::clearReservations();
+    InputNumber::clearBook();
+    try
+    {
+        validate::joystick(10, 10, 0, 1, 2, 3);
+        assert(false && "The same pin accepted for both axes");
+    }
+    catch (std::runtime_error)
+    {
+    }
+
+    GPIO::clearReservations();
+    InputNumber::clearBook();
+    GPIO reserved = 10;
+    reserved.reserve();
+    try
+    {
+        validate::joystick(10, 11, 0, 1, 2, 3);
+        assert(false && "Reserved GPIO pin accepted as x axis");
+    }
+    catch (std::runtime_error)
+    {
+    }
+    try
+    {
+        validate::joystick(11, 10, 0, 1, 2, 3);
+        assert(false && "Reserved GPIO pin accepted as y axis");
+    }
+    catch (std::runtime_error)
+    {
+    }
+}
+
 int main()
 {
     BtnMtxTest();
@@ -262,6 +306,7 @@ int main()
     GPIOExpanderTest();
     RotaryEncoderTest();
     ButtonTest();
+    JoystickTest();
 
     return 0;
 }

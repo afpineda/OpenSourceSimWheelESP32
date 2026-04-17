@@ -309,6 +309,48 @@ void inputs::setAnalogClutchPaddles(
 
 //-------------------------------------------------------------------
 
+void inputs::addJoystick(
+    ADC_GPIO xAxisPin,
+    ADC_GPIO yAxisPin,
+    InputNumber up,
+    InputNumber down,
+    InputNumber left,
+    InputNumber right,
+    uint8_t xCenter,
+    uint8_t yCenter,
+    uint8_t xDeadZone,
+    uint8_t yDeadZone,
+    bool xAxisReverse,
+    bool yAxisReverse)
+{
+    abortIfStarted();
+    internals::inputs::validate::joystick(
+        xAxisPin,
+        yAxisPin,
+        up,
+        down,
+        left,
+        right);
+#if !CD_CI
+    digitalInputsChain.push_front(
+        new AnalogJoystickInput(
+            xAxisPin,
+            yAxisPin,
+            up,
+            down,
+            left,
+            right,
+            xCenter,
+            yCenter,
+            xDeadZone,
+            yDeadZone,
+            xAxisReverse,
+            yAxisReverse));
+#endif
+}
+
+//-------------------------------------------------------------------
+
 void inputs::initializeI2C(GPIO sclPin,
                            GPIO sdaPin,
                            I2CBus bus,
