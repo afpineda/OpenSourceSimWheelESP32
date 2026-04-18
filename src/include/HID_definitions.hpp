@@ -42,6 +42,8 @@
 #define RID_OUTPUT_RACE_CONTROL 0x16 // 22 dec
 /// @brief Gauges report ID
 #define RID_OUTPUT_GAUGES 0x17 // 23 dec
+/// @brief Wheels report ID
+#define RID_OUTPUT_WHEELS 0x18 // 24 dec
 /// @brief Pixel control report ID
 #define RID_OUTPUT_PIXEL 0x1E // 30 dec
 
@@ -67,6 +69,8 @@
 #define RACE_CONTROL_REPORT_SIZE 11
 /// @brief Gauges report size
 #define GAUGES_REPORT_SIZE 12
+/// @brief Wheels report size
+#define WHEELS_REPORT_SIZE 28
 /// @brief Pixel control report size
 #define PIXEL_REPORT_SIZE 6
 
@@ -250,6 +254,13 @@ static const uint8_t hid_descriptor[] = {
     0x85, RID_OUTPUT_GAUGES,  // REPORT ID
     0x75, 0x08,               // Report Size (8)
     0x95, GAUGES_REPORT_SIZE, // Report count
+    0x91, 0x22,               // OUTPUT (Data,var,abs,Nprf)
+
+    // ___ WHEELS (OUTPUT) REPORT ___
+    0x09, 0x00,               // USAGE (undefined)
+    0x85, RID_OUTPUT_WHEELS,  // REPORT ID
+    0x75, 0x08,               // Report Size (8)
+    0x95, WHEELS_REPORT_SIZE, // Report count
     0x91, 0x22,               // OUTPUT (Data,var,abs,Nprf)
 
     // ___ PIXEL CONTROL (OUTPUT) REPORT ___

@@ -1278,6 +1278,22 @@ typedef struct
         /// @brief Remaining fuel in user-defined units (litres or gallons)
         uint16_t absoluteRemainingFuel = 0;
     } gauges;
+    /**
+     * @brief Wheel telemetry
+     *
+     * @note Array order is front-left, front-right, rear-left and rear-right
+     */
+    struct
+    {
+        /// @brief Tire temperatures in user-defined units
+        uint16_t tireTemp[4];
+        /// @brief Tire pressures in user-defined units
+        float tirePressure[4];
+        /// @brief Brake temperatures in user-defined units
+        uint16_t brakeTemp[4];
+        /// @brief Tire wear percentages in the range [0,100]
+        uint8_t wearPercentage[4];
+    } wheels;
 } TelemetryData;
 
 //-------------------------------------------------------------------

@@ -495,6 +495,21 @@ void internals::hid::common::onOutput(
         telemetry::data.gauges.absoluteRemainingFuel =
             *((uint16_t *)(buffer + 10));
     }
+    else if ((report_id == RID_OUTPUT_WHEELS) && (len >= WHEELS_REPORT_SIZE))
+    {
+        for (uint8_t wheel_index = 0; wheel_index < 4; wheel_index++)
+        {
+            telemetry::data.wheels.tireTemp[wheel_index] =
+                ((uint16_t *)buffer)[wheel_index];
+            telemetry::data.wheels.tirePressure[wheel_index] =
+                static_cast<float>(
+                    ((uint16_t *)(buffer + 8))[wheel_index] / 100.0);
+            telemetry::data.wheels.brakeTemp[wheel_index] =
+                ((uint16_t *)(buffer + 16))[wheel_index];
+            telemetry::data.wheels.wearPercentage[wheel_index] =
+                buffer[wheel_index + 24];
+        }
+    }
     else if ((report_id == RID_OUTPUT_PIXEL) && (len >= PIXEL_REPORT_SIZE))
     {
         // Note:

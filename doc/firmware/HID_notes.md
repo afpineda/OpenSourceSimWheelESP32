@@ -497,7 +497,7 @@ Tire pressures will be interpreted as fixed-point numbers with two decimals.
 > [!NOTE]
 > This data is not time-critical.
 > The host computer should send this data at a **very low rate**
-> ignoring the "MaxFPS" parameter.
+> (less than 1 FPS) ignoring the "MaxFPS" parameter.
 > For example, once each five seconds.
 
 ## Data format of report ID 30 (Pixel control)

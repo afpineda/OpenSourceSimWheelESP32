@@ -117,7 +117,9 @@ enum class DeviceCapability : uint8_t
     TELEMETRY_GAUGES = 9,
     /// @brief Has one or more rotary encoders
     ROTARY_ENCODERS = 10,
-    _MAX_VALUE = ROTARY_ENCODERS
+    /// @brief Able to display wheel telemetry data
+    TELEMETRY_WHEELS = 11,
+    _MAX_VALUE = TELEMETRY_WHEELS
 };
 
 /**

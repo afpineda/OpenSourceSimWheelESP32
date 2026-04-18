@@ -31,6 +31,12 @@ uint8_t report20[] = {0x4b, 0x5e, 0x06, 0x63, 0x01, 0x00, 0x01, 0x00, 0x40, 0x01
 uint8_t report21[] = {0x00, 0x02, 0xff, 0x00, 0x01, 0x00, 0x07, 0x40, 0xfe};
 uint8_t report22[] = {0x01, 0x00, 0x02, 0x00, 0x03, 0x00, 0x04, 0xe2, 0x09, 0x6c, 0x02};
 uint8_t report23[] = {0x56, 0x71, 0x00, 0xb0, 0x04, 0x5e, 0x27, 0xbf, 0x04, 0x01, 0x74, 0x00};
+uint8_t report24[] = {
+    70, 0, 71, 0, 72, 0, 73, 0,                     // tire temps (70-73)
+    0xA6, 0x09, 0xA6, 0x09, 0xA6, 0x09, 0xA6, 0x09, // tire pressures (24.70)
+    0x40, 0x01, 0x41, 0x01, 0x42, 0x01, 0x43, 0x01, // brake temps (320-323)
+    50, 51, 52, 53                                  // wear percentages
+};
 
 #define BYTES(s) ((uint8_t *)&s)
 #define AS_UINT16(s) *((uint16_t *)(s))
@@ -53,6 +59,7 @@ int main()
     assert((sizeof(report21) == ECU_REPORT_SIZE) && "Test is outdated");
     assert((sizeof(report22) == RACE_CONTROL_REPORT_SIZE) && "Test is outdated");
     assert((sizeof(report23) == GAUGES_REPORT_SIZE) && "Test is outdated");
+    assert((sizeof(report24) == WHEELS_REPORT_SIZE) && "Test is outdated");
 
     // Report 20
     std::cout << "- Report 20 (powertrain) -" << std::endl;
@@ -102,6 +109,25 @@ int main()
     assert(data.gauges.oilTemperature == 1215);
     assert(data.gauges.relativeRemainingFuel == 1);
     assert(data.gauges.absoluteRemainingFuel == 116);
+
+    // Report 24
+    std::cout << "- Report 24 (wheels) -" << std::endl;
+    internals::hid::common::onOutput(
+        RID_OUTPUT_WHEELS,
+        report24,
+        sizeof(report24));
+    for (uint8_t wheel_index = 0; wheel_index < 4; wheel_index++)
+    {
+        std::cout << "  Wheel index " << (int)wheel_index << std::endl;
+        assert(data.wheels.tireTemp[wheel_index] == 70 + wheel_index);
+        assert<float>::almostEquals(
+            "tire pressure",
+            24.7,
+            data.wheels.tirePressure[wheel_index],
+            0.01);
+        assert(data.wheels.brakeTemp[wheel_index] == 320 + wheel_index);
+        assert(data.wheels.wearPercentage[wheel_index] == 50 + wheel_index);
+    }
 
     return 0;
 }
