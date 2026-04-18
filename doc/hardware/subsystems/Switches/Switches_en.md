@@ -879,15 +879,21 @@ Place a call to `inputs::addJoystick()` with the following parameters
 5. Input number for "left".
 6. Input number for "right".
 7. Optionally, center position in the horizontal axis, in the range [0,255].
+   Defaults to 127.
 8. Optionally, center position in the vertical axis, in the range [0,255].
+   Defaults to 127.
 9. Optionally, dead zone around the center position in the horizontal axis,
    in the range [0,127]. Values close to 0 and 127 will not work properly.
+   Defaults to 63.
 10. Optionally, dead zone around the center position in the vertical axis,
     in the range [0,127]. Values close to 0 and 127 will not work properly.
-11. Reverse polarity of the horizontal axis.
+    Defaults to 63.
+11. Optionally, reverse polarity of the horizontal axis.
     Set to `true` to swap the up and down positions.
-12. Reverse polarity of the vertical axis.
+    Defaults to `false`.
+12. Optionally, reverse polarity of the vertical axis.
     Set to `true` to swap the left and right positions.
+    Defaults to `false`.
 
 The default values for the optional parameters should work in most cases.
 Change them if the joystick drifts.
