@@ -684,6 +684,7 @@ void internals::hid::begin(
         OutputReport::attachTo(hidDevice, RID_OUTPUT_ECU);
         OutputReport::attachTo(hidDevice, RID_OUTPUT_RACE_CONTROL);
         OutputReport::attachTo(hidDevice, RID_OUTPUT_GAUGES);
+        OutputReport::attachTo(hidDevice, RID_OUTPUT_WHEELS);
         OutputReport::attachTo(hidDevice, RID_OUTPUT_PIXEL);
 
         // Configure BLE advertising

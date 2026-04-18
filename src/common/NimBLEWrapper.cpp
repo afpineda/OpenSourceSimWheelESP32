@@ -964,6 +964,7 @@ const ble_gatt_svc_def BLEHIDService::definition()
     chr_set[index++] = ecu_report.definition();
     chr_set[index++] = race_control_report.definition();
     chr_set[index++] = gauges_report.definition();
+    chr_set[index++] = wheels_report.definition();
     chr_set[index++] = pixel_report.definition();
     chr_set[index] = EMPTY_ble_gatt_chr_def;
     assert(

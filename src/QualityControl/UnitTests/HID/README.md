@@ -213,8 +213,10 @@ That is the subject of another automated test.
 15. Click on `Set Report`.
 16. Enter `17` at field `ReportID`.
 17. Click on `Set Report`.
-18. Enter `1E` at field `ReportID`.
+18. Enter `18` at field `ReportID`.
 19. Click on `Set Report`.
+20. Enter `1E` at field `ReportID`.
+21. Click on `Set Report`.
 
 ### Reconnect
 

@@ -15,7 +15,7 @@
 // Conditional compilation
 //------------------------------------------------------------------------------
 
-#include <sdkconfig.h> // For conditional compilation
+#include <sdkconfig.h>           // For conditional compilation
 #include "SimWheelInternals.hpp" // BatteryStatusChrData
 
 #if CONFIG_NIMBLE_ENABLED
@@ -44,7 +44,7 @@
 // Constants
 //------------------------------------------------------------------------------
 
-#define NIMBLE_HID_REPORT_COUNT 10
+#define NIMBLE_HID_REPORT_COUNT 11
 
 #define EMPTY_ble_gatt_cpfd { \
     .format = 0,              \
@@ -786,6 +786,9 @@ struct BLEHIDService
     inline static OutputReportChr gauges_report{
         RID_OUTPUT_GAUGES,
         GAUGES_REPORT_SIZE};
+    inline static OutputReportChr wheels_report{
+        RID_OUTPUT_WHEELS,
+        WHEELS_REPORT_SIZE};
     inline static OutputReportChr pixel_report{
         RID_OUTPUT_PIXEL,
         PIXEL_REPORT_SIZE};

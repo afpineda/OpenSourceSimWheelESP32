@@ -174,6 +174,11 @@ void checkAndPrintTelemetryData()
                     telemetry::data.gauges.oilTemperature,
                     telemetry::data.gauges.relativeRemainingFuel,
                     telemetry::data.gauges.absoluteRemainingFuel);
+        debugPrintf("wheels[top-left]: %hu %.2f %hu %hhu\n",
+                    telemetry::data.wheels.tireTemp[0],
+                    telemetry::data.wheels.tirePressure[0],
+                    telemetry::data.wheels.brakeTemp[0],
+                    telemetry::data.wheels.wearPercentage[0]);
     }
 }
 
