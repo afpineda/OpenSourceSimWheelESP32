@@ -1612,6 +1612,8 @@ public:
     bool requiresRaceControlTelemetry = false;
     /// @brief Set to true to receive and use telemetry data for gauges
     bool requiresGaugeTelemetry = false;
+    /// @brief Set to true to receive and use wheel telemetry data
+    bool requiresWheelsTelemetry = false;
 
     // Non copyable
 
