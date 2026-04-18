@@ -128,7 +128,7 @@
 /// @brief Major version of the data exchange protocol
 #define DATA_MAJOR_VERSION 1
 /// @brief Minor version of the data exchange protocol
-#define DATA_MINOR_VERSION 6
+#define DATA_MINOR_VERSION 7
 
 //-------------------------------------------------------------------
 // Magic number, do not change
