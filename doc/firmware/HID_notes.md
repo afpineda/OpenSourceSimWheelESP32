@@ -55,6 +55,7 @@ This project make use of a number of HID reports:
 |    21     | Output  | Telemetry data / ECU              |
 |    22     | Output  | Telemetry data / Race control     |
 |    23     | Output  | Telemetry data / Gauges           |
+|    24     | Output  | Telemetry data / Wheels           |
 |    30     | Output  | Pixel control                     |
 
 Note that feature reports are both read and write.
@@ -466,6 +467,38 @@ The following fields will be interpreted as fixed-point numbers with two decimal
 - Oil pressure.
 
 For example, the value 113 in `oil pressure` means 1.13 pressure units.
+
+## Data format of report ID 24 (Telemetry / Wheels )
+
+| Byte index | Size  | Field                       | Data type          | Data version | Related SimHub property (DataCorePlugin.GameData) |
+| :--------: | :---: | --------------------------- | ------------------ | ------------ | ------------------------------------------------- |
+|     0      |   2   | Front-left tire temp.       | uint16             | 1.7          | TyreTemperatureFrontLeft                          |
+|     2      |   2   | Front-right tire temp.      | uint16             | 1.7          | TyreTemperatureFrontRight                         |
+|     4      |   2   | Rear-left tire temp.        | uint16             | 1.7          | TyreTemperatureRearLeft                           |
+|     6      |   2   | Rear-right tire temp.       | uint16             | 1.7          | TyreTemperatureRearRight                          |
+|     8      |   2   | Front-left tire pressure    | uint16 fixed point | 1.7          | TyrePressureFrontLeft                             |
+|     10     |   2   | Front-right tire pressure   | uint16 fixed point | 1.7          | TyrePressureFrontRight                            |
+|     12     |   2   | Rear-left tire pressure     | uint16 fixed point | 1.7          | TyrePressureRearLeft                              |
+|     14     |   2   | Rear-right tire pressure    | uint16 fixed point | 1.7          | TyrePressureRearRight                             |
+|     16     |   2   | Front-left brake temp.      | uint16             | 1.7          | BrakesTemperatureFrontLeft                        |
+|     18     |   2   | Front-right brake temp.     | uint16             | 1.7          | BrakesTemperatureFrontRight                       |
+|     20     |   2   | Rear-left brake temp.       | uint16             | 1.7          | BrakesTemperatureRearLeft                         |
+|     22     |   2   | Rear-right brake temp.      | uint16             | 1.7          | BrakesTemperatureRearRight                        |
+|     24     |   1   | Front-left wear percentage  | uint8              | 1.7          | TyreWearFrontLeft                                 |
+|     25     |   1   | Front-right wear percentage | uint8              | 1.7          | TyreWearFrontRight                                |
+|     26     |   1   | Rear-left wear percentage   | uint8              | 1.7          | TyreWearRearLeft                                  |
+|     27     |   1   | Rear-right wear percentage  | uint8              | 1.7          | TyreWearRearRight                                 |
+
+All absolute values are expressed in user-selected units.
+All percentages should be in the range [0,100].
+
+Tire pressures will be interpreted as fixed-point numbers with two decimals.
+
+> [!NOTE]
+> This data is not time-critical.
+> The host computer should send this data at a **very low rate**
+> ignoring the "MaxFPS" parameter.
+> For example, once each five seconds.
 
 ## Data format of report ID 30 (Pixel control)
 
