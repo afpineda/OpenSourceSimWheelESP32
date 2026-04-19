@@ -133,11 +133,15 @@ enum class OledDashboard : uint8_t
 {
     /// @brief RPM bar, gear, TC, ABS, Low fuel, Pit limiter
     STANDARD = 0,
-    /// @brief Dashboard not available yet
+    /// @brief RPM, speed, gear, ABS, TC, brake balance, fuel, pit limiter
     ALTERNATE,
     /// @brief Current battery level
     ///        (available only in battery-operated firmwares)
     BATTERY,
+    /// @brief Tire/brake temperature dashboard
+    TIRE_TEMP,
+    /// @brief Tire pressure/wear dashboard
+    TIRE_PRESSURE,
     /// @brief Default dashboard
     _DEFAULT = STANDARD
 };
@@ -175,6 +179,14 @@ private:
     /// @brief Draw the alternate dashboard into the internal frame buffer
     /// @param pTelemetryData Pointer to telemetry data (maybe null)
     void draw_alt_dashboard(const TelemetryData *pTelemetryData);
+
+    /// @brief Draw the tire/brake temperature dashboard
+    /// @param pTelemetryData Pointer to telemetry data (maybe null)
+    void draw_tire_temp_dashboard(const TelemetryData *pTelemetryData);
+
+    /// @brief Draw the tire pressure/wear dashboard
+    /// @param pTelemetryData Pointer to telemetry data (maybe null)
+    void draw_tire_pressure_dashboard(const TelemetryData *pTelemetryData);
 
     /// @brief Stop flashing
     void stopFlashing();

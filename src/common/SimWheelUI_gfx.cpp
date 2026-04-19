@@ -102,7 +102,13 @@ void OledTelemetry128x64::init(
     _display.clear();
     requiresPowertrainTelemetry = true;
     requiresECUTelemetry = true;
-    requiresGaugeTelemetry = (nextDash != UNSPECIFIED::VALUE);
+    requiresGaugeTelemetry =
+        (nextDash != UNSPECIFIED::VALUE) ||
+        (initialDashboard == OledDashboard::ALTERNATE);
+    requiresWheelTelemetry =
+        (nextDash != UNSPECIFIED::VALUE) ||
+        (initialDashboard == OledDashboard::TIRE_TEMP) ||
+        (initialDashboard == OledDashboard::TIRE_PRESSURE);
 }
 
 void OledTelemetry128x64::draw_battery_level()
@@ -362,6 +368,104 @@ void OledTelemetry128x64::draw_alt_dashboard(
     }
 } // void OledTelemetry128x64::draw_alt_dashboard()
 
+void OledTelemetry128x64::draw_tire_temp_dashboard(
+    const TelemetryData *pTelemetryData)
+{
+    stopFlashing();
+    if (pTelemetryData)
+    {
+        _impl->frame.fillScreen(0);
+        // Draw frame
+        _impl->frame.drawFastVLine(63, 0, 64, 0xFFFF);
+        _impl->frame.drawFastHLine(0, 36, 128, 0xFFFF);
+        _impl->frame.fillRect(0, 0, 128, 8, 0xFFFF);
+        _impl->frame.setTextSize(1);
+        _impl->frame.setTextColor(0);
+        _impl->frame.setCursor(1, 0);
+        _impl->frame.print("Temperature");
+        _impl->frame.setTextColor(0xFFFF);
+
+        // Draw tire temps
+        _impl->frame.setTextSize(2);
+        _impl->frame.setCursor(0, 11);
+        _impl->frame.printf("%3hu", pTelemetryData->wheels.tireTemp[0]);
+        _impl->frame.setCursor(65, 11);
+        _impl->frame.printf("%3hu", pTelemetryData->wheels.tireTemp[1]);
+        _impl->frame.setCursor(0, 39);
+        _impl->frame.printf("%3hu", pTelemetryData->wheels.tireTemp[2]);
+        _impl->frame.setCursor(65, 39);
+        _impl->frame.printf("%3hu", pTelemetryData->wheels.tireTemp[3]);
+
+        // Draw brake temps
+        _impl->frame.setTextSize(1);
+        _impl->frame.setCursor(32, 28);
+        _impl->frame.printf("B:%hu", pTelemetryData->wheels.brakeTemp[0]);
+        _impl->frame.setCursor(65 + 32, 28);
+        _impl->frame.printf("B:%hu", pTelemetryData->wheels.brakeTemp[1]);
+        _impl->frame.setCursor(32, 56);
+        _impl->frame.printf("B:%hu", pTelemetryData->wheels.brakeTemp[2]);
+        _impl->frame.setCursor(65 + 32, 56);
+        _impl->frame.printf("B:%hu", pTelemetryData->wheels.brakeTemp[3]);
+    }
+    else if (_impl->connected) // && !pTelemetryData
+    {
+        _impl->frame.fillScreen(0);
+    }
+} // void OledTelemetry128x64::draw_tire_temp_dashboard()
+
+void OledTelemetry128x64::draw_tire_pressure_dashboard(
+    const TelemetryData *pTelemetryData)
+{
+    stopFlashing();
+    if (pTelemetryData)
+    {
+        _impl->frame.fillScreen(0);
+        // Draw frame
+        _impl->frame.drawFastVLine(63, 0, 64, 0xFFFF);
+        _impl->frame.drawFastHLine(0, 36, 128, 0xFFFF);
+        _impl->frame.fillRect(0, 0, 128, 8, 0xFFFF);
+        _impl->frame.setTextSize(1);
+        _impl->frame.setTextColor(0);
+        _impl->frame.setCursor(1, 0);
+        _impl->frame.print("Pressure/wear");
+        _impl->frame.setTextColor(0xFFFF);
+
+        // Draw tire pressure
+        _impl->frame.setTextSize(2);
+        _impl->frame.setCursor(0, 11);
+        _impl->frame.printf("%-2.1f", pTelemetryData->wheels.tirePressure[0]);
+        _impl->frame.setCursor(65, 11);
+        _impl->frame.printf("%-2.1f", pTelemetryData->wheels.tirePressure[1]);
+        _impl->frame.setCursor(0, 39);
+        _impl->frame.printf("%-2.1f", pTelemetryData->wheels.tirePressure[2]);
+        _impl->frame.setCursor(65, 39);
+        _impl->frame.printf("%-2.1f", pTelemetryData->wheels.tirePressure[3]);
+
+        // Draw tire wear
+        _impl->frame.setTextSize(1);
+        _impl->frame.setCursor(40, 28);
+        _impl->frame.printf(
+            "%3hhu%%",
+            pTelemetryData->wheels.wearPercentage[0]);
+        _impl->frame.setCursor(65 + 39, 28);
+        _impl->frame.printf(
+            "%3hhu%%",
+            pTelemetryData->wheels.wearPercentage[1]);
+        _impl->frame.setCursor(32, 56);
+        _impl->frame.printf(
+            "%3hhu%%",
+            pTelemetryData->wheels.wearPercentage[2]);
+        _impl->frame.setCursor(65 + 39, 56);
+        _impl->frame.printf(
+            "%3hhu%%",
+            pTelemetryData->wheels.wearPercentage[3]);
+    }
+    else if (_impl->connected) // && !pTelemetryData
+    {
+        _impl->frame.fillScreen(0);
+    }
+} // void OledTelemetry128x64::draw_tire_pressure_dashboard()
+
 void OledTelemetry128x64::stopFlashing()
 {
     if (_impl->flash)
@@ -438,9 +542,15 @@ void OledTelemetry128x64::onUserInput(uint8_t inputNumber)
             if (BatteryService::call().hasBattery())
                 _impl->currentDash = OledDashboard::BATTERY;
             else
-                _impl->currentDash = OledDashboard::STANDARD;
+                _impl->currentDash = OledDashboard::TIRE_TEMP;
             break;
         case OledDashboard::BATTERY:
+            _impl->currentDash = OledDashboard::TIRE_TEMP;
+            break;
+        case OledDashboard::TIRE_TEMP:
+            _impl->currentDash = OledDashboard::TIRE_PRESSURE;
+            break;
+        case OledDashboard::TIRE_PRESSURE:
             _impl->currentDash = OledDashboard::STANDARD;
             break;
         default:
@@ -464,6 +574,12 @@ void OledTelemetry128x64::onTelemetryData(const TelemetryData *pTelemetryData)
         break;
     case OledDashboard::ALTERNATE:
         draw_alt_dashboard(pTelemetryData);
+        break;
+    case OledDashboard::TIRE_TEMP:
+        draw_tire_temp_dashboard(pTelemetryData);
+        break;
+    case OledDashboard::TIRE_PRESSURE:
+        draw_tire_pressure_dashboard(pTelemetryData);
         break;
     default:
         return;

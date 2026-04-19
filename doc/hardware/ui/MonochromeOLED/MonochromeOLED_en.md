@@ -34,6 +34,14 @@ It will show the following information thanks to SimHub:
 
   ![OLED battery dashboard](./OLED_dash_battery.jpg)
 
+- Tire/brake temperature:
+
+  ![OLED temperature dashboard](./OLED_temperature_dash.jpg)
+
+- Tire pressure and wear:
+
+  ![OLED temperature dashboard](./OLED_pressure_dash.jpg)
+
 Dashboard selection requires a *routed* input number.
 
 > 🙏

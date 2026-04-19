@@ -1613,7 +1613,7 @@ public:
     /// @brief Set to true to receive and use telemetry data for gauges
     bool requiresGaugeTelemetry = false;
     /// @brief Set to true to receive and use wheel telemetry data
-    bool requiresWheelsTelemetry = false;
+    bool requiresWheelTelemetry = false;
 
     // Non copyable
 
