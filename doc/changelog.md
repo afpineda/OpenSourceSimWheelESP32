@@ -1,5 +1,14 @@
 # Change log (and release notes)
 
+## 8.3.0
+
+- In coordination with the *SimHub plugin*,
+  a new HID report has been implemented to collect new telemetry data:
+  tire temperature, pressure, and wear, as well as brake disc temperature.
+- Two new dashboards are available for OLED telemetry displays
+  to show that information.
+- The *SimHub plugin* must be updated to work with this firmware version.
+
 ## 8.2.0
 
 - Support for two-axis analog joysticks in the role of a directional pad.
