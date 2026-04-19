@@ -308,7 +308,7 @@ void internals::ui::getReady()
     bool requiresECUTelemetry = false;
     bool requiresRaceControlTelemetry = false;
     bool requiresGaugeTelemetry = false;
-    bool requiresWheelsTelemetry = false;
+    bool requiresWheelTelemetry = false;
     uint8_t max_fps = 0;
     for (auto instance : _ui_instances)
     {
@@ -324,15 +324,15 @@ void internals::ui::getReady()
         requiresGaugeTelemetry |=
             requiresGaugeTelemetry ||
             instance->requiresGaugeTelemetry;
-        requiresWheelsTelemetry |=
-            requiresWheelsTelemetry ||
-            instance->requiresWheelsTelemetry;
+        requiresWheelTelemetry |=
+            requiresWheelTelemetry ||
+            instance->requiresWheelTelemetry;
         bool thisInstanceUsesTelemetry =
             instance->requiresPowertrainTelemetry ||
             instance->requiresECUTelemetry ||
             instance->requiresRaceControlTelemetry ||
             instance->requiresGaugeTelemetry ||
-            instance->requiresWheelsTelemetry;
+            instance->requiresWheelTelemetry;
         if (thisInstanceUsesTelemetry && (instance->getMaxFPS() > max_fps))
             max_fps = instance->getMaxFPS();
     }
@@ -352,7 +352,7 @@ void internals::ui::getReady()
         requiresGaugeTelemetry);
     DeviceCapabilities::setFlag(
         DeviceCapability::TELEMETRY_WHEELS,
-        requiresWheelsTelemetry);
+        requiresWheelTelemetry);
 
     // Subscribe to internal events
     OnBitePoint.subscribe(notify_bitePoint);
