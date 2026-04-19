@@ -699,7 +699,7 @@ void internals::hid::begin(
 
         // Start services
         hidDevice->startServices();
-        hidDevice->setBatteryLevel(0);
+        hidDevice->setBatteryLevel(100);
         // Initialize the battery status to 100% charge and wired.
         // Otherwise, non-battery-operated firmwares may cause
         // a low battery warning in the hosting PC
