@@ -257,7 +257,7 @@ void customFirmware()
 {
 
 #ifdef WAKE_UP_PIN
-    power::configureWakeUp(ROT1A);
+    power::configureWakeUp(WAKE_UP_PIN);
 #endif
 
     simWheelSetup();
