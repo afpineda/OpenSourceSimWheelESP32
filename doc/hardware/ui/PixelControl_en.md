@@ -87,12 +87,11 @@ you can customize them:
    - `pixelControl_OnBLEdiscovering()`
    - `pixelControl_OnLowBattery()`
    - `pixelControl_OnSaveSettings()`
-3. Use the following inherited methods to display custom colors:
-   - `set()`
-   - `setAll()`
-   - `shiftToNext()`
-   - `shiftToPrevious()`
-   - `show()`
+3. To display pixels:
+   - Use the inherited `telemetry_pixel`, `backlit_button_pixel`
+     and/or `individual_pixel` vectors to set pixel colors.
+   - Use the inherited method `show()` to show all pixels at once in
+     a pixel group or in all groups.
 4. Create a new instance of your custom class (never to be destroyed).
 5. Pass a single instance to `ui::add()` or create one on-the-fly
    using the syntax `ui::add<YourClassName>( constructor parameters )`.
