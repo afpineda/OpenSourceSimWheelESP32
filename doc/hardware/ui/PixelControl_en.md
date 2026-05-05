@@ -29,7 +29,7 @@ Place up to three calls to `pixels::configure()` with the following parameters
    The default and recommended value is 255 (maximum brightness).
    Do not set to zero (no brightness).
 7. **Reverse display** (optional).
-   Set to true if tour LED strip is physically mounted right-to-left
+   Set to true if your LED strip is physically mounted right-to-left
    instead of left-to-right.
 
 ## Brightness workaround
@@ -95,5 +95,6 @@ you can customize them:
 4. Create a new instance of your custom class (never to be destroyed).
 5. Pass a single instance to `ui::add()` or create one on-the-fly
    using the syntax `ui::add<YourClassName>( constructor parameters )`.
+   Do not call `ui::addPixelControlNotifications()`.
 
 As an example, see the implementation of [PixelControlNotification](../../../src/common/pixels.cpp).
