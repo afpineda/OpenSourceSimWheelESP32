@@ -55,7 +55,7 @@
 - **HID reports**:
   data sent to a computer (or received from) using the standard HID protocol.
 
-- **I2C**
+- **I2C**:
   inter-integrated circuit, an standard serial bus.
 
 - **Input**:
@@ -63,12 +63,12 @@
   For example: momentary switches and rotary encoders.
 
 - **Input bitmap**:
-  a 64-bits word where each bit represents the state of an input.
+  a 128-bit word where each bit represents the state of an input.
   An input bitmap with a single bit set to 1 may be used
   to identify a single input.
 
 - **Input bitmask**:
-  a 64-bits word that represents ignored inputs in a bitmap.
+  a 128-bit word that represents ignored inputs in a bitmap.
 
 - **Input event**:
   any user action that the _system_ must be aware of.

@@ -117,11 +117,11 @@ This project supports the following:
 - [UCS1903](https://www.led-stuebchen.de/download/UCS1903_English.pdf)
   drivers. *Note*: not tested.
 - [APA106](./hardware/esp32reference/APA-106.pdf)
-  drivers. *Note*: not tested.
+  drivers.
 
 > [!NOTE]
 > The popular RGB LED strips based on the **WS2812B** driver require
 > a 5V power supply and a level shifter.
 > However, I made it work with the
-> [brightness workaround](./hardware/ui/PixelControl_en.md)
+> [brightness workaround](./hardware/ui/PixelControl_en.md#Brightness_workaround),
 > no level shifter and a 3.3V power supply.

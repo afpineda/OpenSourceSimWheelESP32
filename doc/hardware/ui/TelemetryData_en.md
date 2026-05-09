@@ -124,9 +124,10 @@ for examples.
 The `TelemetryData` type defined in
 [SimWheelTypes.hpp](../../../src/include/SimWheelTypes.hpp)
 describes the whole set of telemetry data.
-It is divided into four groups:
+It is divided into several groups:
 
 - Powertrain
 - ECU (Electronic Control Unit)
 - Race control
 - Gauges
+- Wheels
