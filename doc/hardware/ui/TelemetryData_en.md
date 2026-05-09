@@ -93,16 +93,20 @@ Consider [contributing](../../../.github/CONTRIBUTING.md) to this project.
    - `requiresECUTelemetry`
    - `requiresRaceControlTelemetry`
    - `requiresGaugeTelemetry`
+   - `requiresWheelTelemetry`
 9. When using the I2C bus, in the class constructor
    place a call to `internals::hal::i2c::require()` to ensure the
    bus is initialized.
 10. Override `AbstractUserInterface::getMaxFPS()` to
     announce your device capabilities to the *frameserver*.
+    This method should return a non-zero value.
 11. Override `AbstractUserInterface::getStackSize()` to
     announce the required stack size (in bytes).
     If you get "stack canary" or "dual exception" errors,
     increase the stack size.
     Do not set too high, since memory is limited.
+    Disable error logs to (dramatically) reduce the
+    chances of stack overflow.
 12. Override `AbstractUserInterface::onTelemetryData()`
     to react to new telemetry data.
 13. Override `AbstractUserInterface::serveSingleFrame()`
