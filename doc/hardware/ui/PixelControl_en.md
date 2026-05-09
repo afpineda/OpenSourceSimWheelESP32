@@ -23,7 +23,7 @@ Place up to three calls to `pixels::configure()` with the following parameters
       is in place).
 5. **Pixel driver** (optional).
    The valid values are found in the `PixelDriver` enumeration:
-   `WS2811`, `WS2812` (default), `WS2815`, `SK6812` or `UCS1903`.
+   `WS2811`, `WS2812` (default), `WS2815`, `SK6812` , `UCS1903` or `APA106`.
 6. **Global brightness** (optional).
    A brightness for all pixels.
    The default and recommended value is 255 (maximum brightness).
@@ -35,8 +35,10 @@ Place up to three calls to `pixels::configure()` with the following parameters
 ## Brightness workaround
 
 If a 5V power supply is required but not available for the LED strip,
-use a 3.3V power supply, no level shifter and set the global brightness to **128** or lower.
-This is **not optimal** as some colors will be approximate, but it works pretty well.
+use a 3.3V power supply, no level shifter and set
+the global brightness to **128** or lower.
+This is **not optimal** as some colors will be approximate,
+but it works pretty well.
 
 ## Example
 
@@ -63,11 +65,13 @@ Events are notified in this way:
   - If there is no battery or the state of charge is unknown,
     all the LEDs light up white.
   - If there is a battery, the state of charge is shown as follows:
-    - Telemetry group: the length of a light-blue bar reflects the battery level.
+    - Telemetry group: the length of a light-blue bar
+      reflects the battery level.
     - Other groups: a color gradient reflects the battery level in all pixels,
       bright green for 100%, bright red for 0%.
 
-- *BLE advertising*: all the LEDs light up purple until the host computer is connected.
+- *BLE advertising*: all the LEDs light up purple until
+  the host computer is connected.
 - *Connection*: all the LEDs will go out.
 - *Low battery*: all the LEDs will show a red and blue animation for one second.
 - *Bite point calibration*:
@@ -97,4 +101,5 @@ you can customize them:
    using the syntax `ui::add<YourClassName>( constructor parameters )`.
    Do not call `ui::addPixelControlNotifications()`.
 
-As an example, see the implementation of [PixelControlNotification](../../../src/common/pixels.cpp).
+As an example, see the implementation of
+[PixelControlNotification](../../../src/common/pixels.cpp).
