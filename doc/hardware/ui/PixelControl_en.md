@@ -46,7 +46,7 @@ but it works pretty well.
   // 8 pixels for telemetry display in GPIO #8 working in 3.3V logic
   pixels::configure(PixelGroup::GRP_TELEMETRY, GPIO_NUM_8, 8 , false);
   // 6 pixels for individual display in GPIO #18 working in 5V logic
-  pixels::configure(PixelGroup::GRP_INDIVIDUAL, GPIO_NUM_18, 6 , true, PixelDriver::WS2815, PixelFormat::BGR);
+  pixels::configure(PixelGroup::GRP_INDIVIDUAL, GPIO_NUM_18, 6 , true, PixelDriver::WS2815, 127);
 ```
 
 ## Event notifications
