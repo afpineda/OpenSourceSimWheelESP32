@@ -854,8 +854,6 @@ AnalogJoystickInput::AnalogJoystickInput(
         this->up = up;
         this->down = down;
     }
-    this->up = up;
-    this->down = down;
 
     // Precompute minimum/maximum ADC readings for each axis
     if (xDeadZone > 127)
