@@ -54,6 +54,12 @@ Dashboard selection requires a *routed* input number.
   [Adafruit GFX library](https://docs.arduino.cc/libraries/adafruit-gfx-library/)
   in Arduino IDE.
 
+  > ⚠️ Warning ⚠️
+  >
+  > Sometimes the [Adafruit NeoPixel library](https://github.com/adafruit/Adafruit_NeoPixel)
+  > conflicts with the GFX Library deriving in a weird linker error.
+  > In such a case, uninstall the NeoPixel library from Arduino IDE.
+
 - Add `SimWheelUI_gfx.cpp` (**case-sensitive**)
   to the "includes.txt" file in your sketch folder.
   Run the [source code setup procedure](../../../firmware/sourcesSetup_en.md)
