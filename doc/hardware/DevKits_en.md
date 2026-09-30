@@ -247,7 +247,7 @@ More information:
 
 More information:
 
-- [Pin-out](https://www.studiopieters.nl/esp32-c3-pinout/)
+- [Pin-out](https://esp32pins.com/boards/esp32-c3/)
 - [C3-DevKit-C](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32c3/esp32-c3-devkitc-02/index.html).
 
 ## Uploading firmware to your DevKit board

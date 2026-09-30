@@ -47,7 +47,7 @@ You may use them, but they are not recommended for battery-based systems.
   All you need is wiring.
 - *Programable RGB backlit switches*: this project support them via RGB LED strips.
   You could build a LED strip using RGB+IC switches.
-  See the [ZLS67-ZLS70](https://www.shanpu.com.tw/en/product/series/ZLS67-ZLS70)
+  See the [ZLS67-ZLS70](https://www.shanpu.com.tw/en/product/tags/5/ZLS67-ZLS70)
   series of RGB+IC switches from the Taiwanese manufacturer *Shanpu*.
 
 ## Incremental Rotary Encoders

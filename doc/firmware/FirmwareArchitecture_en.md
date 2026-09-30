@@ -732,7 +732,7 @@ Battery voltage is not enough for accurate SOC.
 If calibration data is not available,
 a rough estimation is provided based on LiPo batteries
 characterization data taken from here:
-[https://blog.ampow.com/lipo-voltage-chart/](https://blog.ampow.com/lipo-voltage-chart/).
+https://blog.ampow.com/lipo-voltage-chart/ (link not available anymore).
 However, actual battery voltages may not match the characterization data due to:
 
 1) inaccurate ADC readings,

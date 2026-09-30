@@ -106,11 +106,11 @@ This project supports the following:
 
 - [WS2811](https://www.alldatasheet.com/datasheet-pdf/pdf/1132633/WORLDSEMI/WS2811.html)
   drivers. *Note*: not tested.
-- The [WS2812 family](http://world-semi.com/ws2812-family/), including:
+- The [WS2812 family](https://www.world-semi.com/products/ws2812.html), including:
   [WS2812](https://www.alldatasheet.com/datasheet-pdf/pdf/1134521/WORLDSEMI/WS2812.html)
   and
   [WS2812B](https://www.alldatasheet.com/datasheet-pdf/pdf/1179113/WORLDSEMI/WS2812B.html)
-- The [WS2815 family](http://world-semi.com/ws2815-family/).
+- The [WS2815 family](https://www.world-semi.com/products/ws2815.html).
   *Note*: not tested.
 - [SK6812](https://cdn-shop.adafruit.com/product-files/1138/SK6812%20LED%20datasheet%20.pdf)
   drivers. *Note*: not tested.

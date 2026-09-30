@@ -163,7 +163,7 @@ A "fuel gauge" (not to be taken literally) is a specialized chip
 for accurate state of charge measurement.
 
 This project supports the popular
-[MAX1704x](https://www.analog.com/en/parametricsearch/12979#/p0=max1704)
+[MAX1704x](https://www.analog.com/en/search.html?query=max1704)
 family of fuel gauges made by Maxim/Analog Devices.
 As long as those chips accept the same set of commands over the I2C connection,
 the firmware will work with them.
@@ -171,7 +171,7 @@ the firmware will work with them.
 Note that those chips are not sold in through-hole packaging,
 so **you should buy a pre-made module** instead,
 or a DevKit featuring a compatible built-in fuel gauge.
-Make sure the choosen module is **compatible with 3.3V boards**,
+Make sure the chosen module is **compatible with 3.3V boards**,
 otherwise it will damage your board.
 
 **There is no reverse polarity protection**.

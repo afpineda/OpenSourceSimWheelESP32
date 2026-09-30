@@ -19,7 +19,7 @@ The purpose is to enable an implementation.
 Other known implementations:
 
 - [Zephir](https://docs.zephyrproject.org/apidoc/latest/group__bt__bas.html)
-- [Nordic SDK](https://developer.nordicsemi.com/nRF5_SDK/nRF51_SDK_v4.x.x/doc/html/group__ble__sdk__srv__bas.html)
+- [Nordic SDK](https://www.nordicsemi.com/Products/Development-software/nRF5-SDK)
 - [Microcontrollerslab.com](https://microcontrollerslab.com/esp32-ble-server-gatt-service-battery-level-indication/)
 - [Circuitdigest](https://circuitdigest.com/microcontroller-projects/esp32-ble-server-how-to-use-gatt-services-for-battery-level-indication)
 

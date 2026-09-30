@@ -52,9 +52,9 @@ It is recommended to select an antenna that meets the following requirements:
 - 50 ohm impedance.
 - The maximum gain should not exceed 2.33 dBi.
 
-You can find them in the
-[Adafruit store](https://www.adafruit.com/product/5445),
-AliExpress or other retailers.
+Check the
+[Adafruit store](https://www.adafruit.com),
+AliExpress and other retailers.
 
 ## Power supply
 
