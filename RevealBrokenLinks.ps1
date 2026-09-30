@@ -1,7 +1,8 @@
 ﻿<############################################################################
 
 .SYNOPSYS
-    Reveal broken links in markdown files (to local files only)
+    Reveal broken links in markdown files to local files and,
+    optionally, to external http(s) resources.
 
 .AUTHOR
     Angel Fernandez Pineda. Madrid. Spain. 2025.
@@ -9,13 +10,24 @@
 .LICENSE
     Licensed under the EUPL
 
+.PARAM RootPath
+    Path to scan recursively for markdown files.
+
+.PARAM ExternalLinks
+    Whether to check or not external links to http/https resources.
+    It takes long.
+    Reported broken links must be checked manually
+    as this is not 100% accurate.
+    Do not use in the CD/CI pipeline.
+
 #############################################################################>
 
 # parameters
 
 param (
     [Parameter(HelpMessage = "Path to project root")]
-    [string]$RootPath = $null
+    [string]$RootPath = $null,
+    [switch]$ExternalLinks
 )
 
 if ($RootPath.Length -eq 0) {
@@ -25,6 +37,7 @@ if ($RootPath.Length -eq 0) {
 
 $_link_regexp = "\[.+?\]\((?<link>[^\(\)]+?)[\)|#]"
 $_link_pattern = [Regex]::new($_link_regexp)
+$_http_regexp = "http[s]?:\/\/.+"
 
 <#############################################################################
 # Auxiliary functions
@@ -41,7 +54,10 @@ function Get-Hyperlinks {
         $pattern_matches = $_link_pattern.Matches($line)
         foreach ($match in $pattern_matches) {
             $link = $match.Groups[1].Value
-            if (($link -notlike "http*") -and ($link -notlike "#*")) {
+            if ($link -match $_http_regexp) {
+                if ($ExternalLinks) { $link }
+            }
+            elseif ($link -notlike "#*") {
                 if ([System.IO.Path]::IsPathRooted($link)) {
                     $link
                 }
@@ -53,6 +69,41 @@ function Get-Hyperlinks {
     }
 }
 
+function Get-UrlStatusCode {
+    param (
+        [Parameter(Mandatory)]
+        [string] $Url
+    )
+    try {
+        (Invoke-WebRequest -Uri $Url -UseBasicParsing -DisableKeepAlive -TimeoutSec 5).StatusCode
+    }
+    catch [Net.WebException] {
+        if ($_.Exception.Status -eq "ConnectionClosed") {
+            return 200
+        }
+        else {
+            [int]$_.Exception.Response.StatusCode
+        }
+    }
+}
+
+function Test-Hyperlink {
+    param (
+        [Parameter(Mandatory)]
+        [string]$link
+    )
+    if ($link -match $_http_regexp) {
+        # External link
+        $status = Get-UrlStatusCode $link
+        return ($status -ge 200) -and `
+        (($status -lt 400) -or ($status -eq 401) -or ($status -eq 403))
+    }
+    else {
+        # Internal link
+        return Test-Path $link
+    }
+}
+
 <#############################################################################
 # MAIN
 #############################################################################>
@@ -60,13 +111,14 @@ function Get-Hyperlinks {
 Write-Host "🛈 " -ForegroundColor Green -NoNewline
 Write-Host "Looking for broken links in markdown files" -ForegroundColor Cyan
 
+
 $candidates = Get-ChildItem -LiteralPath $RootPath -filter "*.md" -Recurse
 $error_count = 0
 foreach ($markdown in $candidates) {
     $links = Get-Hyperlinks $markdown
     $showFile = $true
     foreach ($link in $links) {
-        $found = Test-Path $link
+        $found = Test-Hyperlink $link
         if (-not $found) {
             if ($showFile) {
                 Write-Host "In file " -NoNewline -ForegroundColor Green
