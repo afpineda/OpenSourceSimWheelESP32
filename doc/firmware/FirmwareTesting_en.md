@@ -51,3 +51,13 @@ However, integration tests must be run in a particular order provided by the
 
 Before testing, source files must be set up by following the
 [source code setup procedure](./sourcesSetup_en.md).
+
+## Notes
+
+In case you want to test a pre-release version
+of the `espressif/arduino-esp32` core,
+the following URL must be added to the "additional boards manager URLs"
+(File > Preferences) in Arduino IDE
+(do not substitute the previous ones):
+
+https://espressif.github.io/arduino-esp32/package_esp32_dev_index.json
