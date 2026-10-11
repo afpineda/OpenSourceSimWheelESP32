@@ -227,23 +227,22 @@ void onNimBLEOutputReport(
 
 #if CONFIG_BLUEDROID_ENABLED && !CONFIG_NIMBLE_ENABLED
 
-#include <BLEDevice.h>
-#include <BLEUtils.h>
-#include <BLEServer.h>
-#include <BLEHIDDevice.h>
+#include <BLE.h>
+#include "server/BLEServer.h"
+#include "security/BLESecurity.h"
+#include "types/BLEProperty.h"
+#include "hid/BLEHIDDevice.h"
+#include "advertising/BLEAdvertising.h"
+#include "advertising/BLEAdvertisementData.h"
 #include "HIDTypes.h"
-#include "HIDKeyboardTypes.h"
 #include "sdkconfig.h"
-#include "esp_gap_ble_api.h"
-#include <map>
+#include <vector>
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-class BLEHIDDeviceFix;
-static BLEHIDDeviceFix *hidDevice = nullptr;
-static BLECharacteristic *inputGamePad = nullptr;
-static BLECharacteristic *battStatusChr = nullptr;
-static BLEServer *pServer = nullptr;
+static BLEHIDDevice *hidDevice = nullptr;
+static BLECharacteristic inputGamePad;
+static BLECharacteristic battStatusChr;
 static constexpr uint16_t serialNumberChrUuid = BLE_SERIAL_NUMBER_CHR_UUID;
 static constexpr uint16_t batteryStatusChrUuid = BLE_BATTERY_STATUS_CHR_UUID;
 
@@ -254,158 +253,152 @@ static constexpr uint16_t batteryStatusChrUuid = BLE_BATTERY_STATUS_CHR_UUID;
 // Notifications get randomly disabled in the input report.
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-class BLEHIDDeviceFix : public BLEHIDDevice
-{
-public:
-    BLECharacteristic *inputReport(uint8_t reportID)
-    {
-        BLECharacteristic *inputReportCharacteristic =
-            hidService()->createCharacteristic(
-                (uint16_t)0x2a4d, BLECharacteristic::PROPERTY_READ |
-                                      BLECharacteristic::PROPERTY_NOTIFY);
-        BLEDescriptor *inputReportDescriptor =
-            new BLEDescriptor(BLEUUID((uint16_t)0x2908));
-        BLE2902 *p2902 = new BLE2902();
-        inputReportCharacteristic->setAccessPermissions(
-            ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
-        inputReportDescriptor->setAccessPermissions(
-            ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
-        p2902->setAccessPermissions(
-            ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
-        p2902->setNotifications(true);
-        p2902->setIndications(true);
+// class BLEHIDDeviceFix : public BLEHIDDevice
+// {
+// public:
+//     BLECharacteristic *inputReport(uint8_t reportID)
+//     {
+//         BLECharacteristic *inputReportCharacteristic =
+//             hidService()->createCharacteristic(
+//                 (uint16_t)0x2a4d, BLECharacteristic::PROPERTY_READ |
+//                                       BLECharacteristic::PROPERTY_NOTIFY);
+//         BLEDescriptor *inputReportDescriptor =
+//             new BLEDescriptor(BLEUUID((uint16_t)0x2908));
+//         BLE2902 *p2902 = new BLE2902();
+//         inputReportCharacteristic->setAccessPermissions(
+//             ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
+//         inputReportDescriptor->setAccessPermissions(
+//             ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
+//         p2902->setAccessPermissions(
+//             ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
+//         p2902->setNotifications(true);
+//         p2902->setIndications(true);
 
-        uint8_t desc1_val[] = {reportID, 0x01};
-        inputReportDescriptor->setValue((uint8_t *)desc1_val, 2);
-        inputReportCharacteristic->addDescriptor(p2902);
-        inputReportCharacteristic->addDescriptor(inputReportDescriptor);
+//         uint8_t desc1_val[] = {reportID, 0x01};
+//         inputReportDescriptor->setValue((uint8_t *)desc1_val, 2);
+//         inputReportCharacteristic->addDescriptor(p2902);
+//         inputReportCharacteristic->addDescriptor(inputReportDescriptor);
 
-        return inputReportCharacteristic;
-    }
+//         return inputReportCharacteristic;
+//     }
 
-    BLEHIDDeviceFix(BLEServer *pServer) : BLEHIDDevice(pServer) {}
-};
+//     BLEHIDDeviceFix(BLEServer *pServer) : BLEHIDDevice(pServer) {}
+// };
 
 uint16_t byteswap(uint16_t value)
 {
     return (value >> 8) | (value << 8);
 }
 
-class BleConnectionStatus : public BLEServerCallbacks
+void bdroidConnectHandler(
+    const BLEServer &server,
+    const BLEConnInfo &conn)
 {
-public:
-    void onConnect(BLEServer *pServer) override
-    {
-        onBleConnectionStatus(true);
-    };
+    onBleConnectionStatus(true);
+}
 
-    void onDisconnect(BLEServer *pServer) override
-    {
-        onBleConnectionStatus(false);
-    };
-
-} connectionStatus;
+void bdroidDisconnectHandler(
+    const BLEServer &server,
+    const BLEConnInfo &conn,
+    uint8_t reason)
+{
+    onBleConnectionStatus(false);
+}
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// HID FEATURE REQUEST callbacks
+// HID output/feature report callbacks
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-class FeatureReport : public BLECharacteristicCallbacks
+/**
+ * @brief Utility class template to create HID output/feature reports
+ *
+ * @tparam reportID Report identifier
+ * @tparam reportSize Size of this report. Not required for output reports.
+ * @tparam isOutput True for an output report, false for a feature report
+ */
+template <uint8_t reportID, uint16_t reportSize = 0, bool isOutput = true>
+struct HIDReport
 {
-public:
-    void onWrite(BLECharacteristic *pCharacteristic) override;
-    void onRead(BLECharacteristic *pCharacteristic) override;
-    FeatureReport(uint8_t RID, uint16_t size);
-    static void attachTo(
-        BLEHIDDeviceFix *hidDevice,
-        uint8_t RID,
-        uint16_t size);
-
-private:
-    uint8_t _reportID;
-    uint16_t _reportSize;
-};
-
-// RECEIVE DATA
-void FeatureReport::onWrite(BLECharacteristic *pCharacteristic)
-{
-    size_t size = pCharacteristic->getValue().length();
-    const uint8_t *data = pCharacteristic->getData();
-    internals::hid::common::onSetFeature(_reportID, data, size);
-}
-
-// SEND REQUESTED DATA
-void FeatureReport::onRead(BLECharacteristic *pCharacteristic)
-{
-    uint8_t data[_reportSize];
-    internals::hid::common::onGetFeature(_reportID, data, _reportSize);
-    pCharacteristic->setValue(data, _reportSize);
-}
-
-// Constructor
-FeatureReport::FeatureReport(uint8_t RID, uint16_t size)
-{
-    _reportID = RID;
-    _reportSize = size;
-}
-
-// Attach to HID device
-void FeatureReport::attachTo(
-    BLEHIDDeviceFix *hidDevice,
-    uint8_t RID,
-    uint16_t size)
-{
-    BLECharacteristic *reportCharacteristic = hidDevice->featureReport(RID);
-    if (!reportCharacteristic)
+    /**
+     * @brief Called when the client writes the report
+     *
+     * @param chr BLE characteristic
+     * @param conn Connection information
+     */
+    static void writeHandler(
+        const BLECharacteristic &chr,
+        const BLEConnInfo &conn)
     {
-        log_e("Unable to create HID report characteristics");
-        abort();
+        size_t size;
+        const uint8_t *data = chr.getValue(&size);
+        if constexpr (isOutput)
+        {
+            if (current_connectivity == Connectivity::BLE)
+            {
+                internals::hid::common::onOutput(
+                    reportID,
+                    data,
+                    (uint16_t)size);
+            }
+        }
+        else
+        {
+            internals::hid::common::onSetFeature(
+                reportID,
+                data,
+                (uint16_t)size);
+        }
     }
-    reportCharacteristic->setCallbacks(new FeatureReport(RID, size));
-}
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// HID OUTPUT REPORT callbacks
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-class OutputReport : public BLECharacteristicCallbacks
-{
-public:
-    void onWrite(BLECharacteristic *pCharacteristic) override;
-    OutputReport(uint8_t RID);
-    static void attachTo(BLEHIDDeviceFix *hidDevice, uint8_t RID);
-
-private:
-    uint8_t _reportID;
-};
-
-OutputReport::OutputReport(uint8_t RID)
-{
-    _reportID = RID;
-}
-
-// RECEIVE DATA
-void OutputReport::onWrite(BLECharacteristic *pCharacteristic)
-{
-    if (current_connectivity == Connectivity::BLE)
+    /**
+     * @brief Called when the client reads the (feature) report
+     *
+     * @param chr BLE characteristic
+     * @param conn Connection information
+     */
+    static void readHandler(
+        const BLECharacteristic &chr,
+        const BLEConnInfo &conn)
     {
-        size_t size = pCharacteristic->getValue().length();
-        const uint8_t *data = pCharacteristic->getData();
-        internals::hid::common::onOutput(_reportID, data, size);
+        if constexpr (!isOutput)
+        {
+            uint8_t data[reportSize];
+            internals::hid::common::onGetFeature(
+                reportID,
+                data,
+                reportSize);
+            // Workaround for the stupid API requiring "const"
+            BLECharacteristic writableChr = chr;
+            writableChr.setValue((const uint8_t *)data, (size_t)reportSize);
+        }
     }
-}
 
-// Attach to HID device
-void OutputReport::attachTo(BLEHIDDeviceFix *hidDevice, uint8_t RID)
-{
-    BLECharacteristic *reportCharacteristic = hidDevice->outputReport(RID);
-    if (!reportCharacteristic)
+    /**
+     * @brief Attach the report to a HID device
+     *
+     * @param hidDevice Pointer to HID device
+     */
+    static void attachTo(BLEHIDDevice *hidDevice)
     {
-        log_e("Unable to create HID report characteristics");
-        abort();
+        assert(hidDevice);
+        BLECharacteristic chr;
+        if constexpr (isOutput)
+            chr = hidDevice->outputReport(reportID);
+        else
+            chr = hidDevice->featureReport(reportID);
+        if (chr)
+        {
+            chr.onWrite(writeHandler);
+            if constexpr (!isOutput)
+                chr.onRead(readHandler);
+        }
+        else
+        {
+            log_e("Unable to create HID report characteristic");
+            abort();
+        }
     }
-    reportCharacteristic->setCallbacks(new OutputReport(RID));
-}
+}; // HIDReport
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -425,7 +418,7 @@ inline void startBleAdvertising()
         BLEAdvertising::start();
 #elif CONFIG_BLUEDROID_ENABLED
     if (hidDevice != nullptr)
-        BLEDevice::startAdvertising();
+        BLE.startAdvertising();
 #endif
 }
 
@@ -436,7 +429,7 @@ inline void stopBleAdvertising()
         BLEAdvertising::stop();
 #elif CONFIG_BLUEDROID_ENABLED
     if (hidDevice != nullptr)
-        BLEDevice::stopAdvertising();
+        BLE.stopAdvertising();
 #endif
 }
 
@@ -446,12 +439,12 @@ inline void dropBLEconnection()
     if (BLEDevice::initialized())
         BLEAdvertising::disconnect();
 #elif CONFIG_BLUEDROID_ENABLED
-    if (pServer != nullptr)
+    auto bdroidServer = BLE.createServer();
+    if (bdroidServer)
     {
-        std::map<uint16_t, conn_status_t> devices =
-            pServer->getPeerDevices(false);
-        for (auto device : devices)
-            pServer->disconnect(device.first);
+        auto conns = bdroidServer.getConnections();
+        for (auto connection : conns)
+            bdroidServer.disconnect(connection.getHandle());
     }
 #endif
 }
@@ -600,25 +593,27 @@ void internals::hid::begin(
     if ((hidDevice == nullptr) && ble_enable)
     {
         // Stack initialization
-        BLEDevice::init(String(deviceName.c_str()));
-        BLEDevice::setMTU(BLE_MTU_SIZE);
-        pServer = BLEDevice::createServer();
-        pServer->advertiseOnDisconnect(false);
-        pServer->setCallbacks(&connectionStatus);
-        BLESecurity *pSecurity = new BLESecurity();
-        pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_MITM_BOND);
-        pSecurity->setInitEncryptionKey(
-            ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
+        String arduinoStrDeviceName = String(deviceName.c_str());
+        BLE.begin(arduinoStrDeviceName);
+        BLE.setMTU(BLE_MTU_SIZE);
+        // TODO: set PHY
+        BLEServer bdroidServer = BLE.createServer();
+        bdroidServer.advertiseOnDisconnect(false);
+        bdroidServer.onConnect(bdroidConnectHandler);
+        bdroidServer.onDisconnect(bdroidDisconnectHandler);
+        BLESecurity sec = BLE.getSecurity();
+        sec.setAuthenticationMode(true, false, false);
+        sec.setInitiatorKeys(
+            BLESecurity::KeyDist::EncKey |
+            BLESecurity::KeyDist::IdKey);
 
         // HID initialization
-        hidDevice = new BLEHIDDeviceFix(pServer);
-        if (!hidDevice)
+        hidDevice = new BLEHIDDevice(bdroidServer);
+        if (!(*hidDevice))
             throw std::runtime_error("Unable to create HID device");
-
-        hidDevice->manufacturer()->setValue(
-            // Workaround for bug in
-            // `hidDevice->manufacturer(deviceManufacturer)`
-            String(deviceManufacturer.c_str()));
+        hidDevice->manufacturer().setValue(
+            (const uint8_t *)deviceManufacturer.c_str(),
+            deviceManufacturer.length());
 
         // Note: Workaround for bug in ESP-Arduino as of version 3.0.3
         uint16_t debugged_vid = byteswap(vendorID);
@@ -636,70 +631,85 @@ void internals::hid::begin(
         uint64_t serialNumber;
         if (esp_efuse_mac_get_default((uint8_t *)(&serialNumber)) == ESP_OK)
         {
-            BLEService *deviceInfo = hidDevice->deviceInfo();
+            BLEService deviceInfo = hidDevice->deviceInfoService();
             if (deviceInfo)
             {
-                BLECharacteristic *serialNumChr =
-                    deviceInfo->getCharacteristic(serialNumberChrUuid);
-                if (!serialNumChr)
+                BLECharacteristic serialNumChr =
+                    deviceInfo.getCharacteristic(serialNumberChrUuid);
+                if (serialNumChr)
                     serialNumChr =
-                        deviceInfo->createCharacteristic(
+                        deviceInfo.createCharacteristic(
                             serialNumberChrUuid,
-                            BLECharacteristic::PROPERTY_READ);
+                            BLEProperty::Read,
+                            BLEPermission::ReadOpen);
                 if (serialNumChr)
                 {
                     char serialAsStr[9];
                     memset(serialAsStr, 0, 9);
                     snprintf(serialAsStr, 9, "%08llX", serialNumber);
-                    serialNumChr->setValue(serialAsStr);
+                    serialNumChr.setValue((const uint8_t *)serialAsStr, 8);
                 }
             }
         }
 
         // Expand the battery service with a
         // "battery level status" characteristic
-        BLEService *battService = hidDevice->batteryService();
+        BLEService battService = hidDevice->batteryService();
         assert(battService && "BLE: hidDevice->batteryService() failed");
-        battStatusChr = battService->createCharacteristic(
+        battStatusChr = battService.createCharacteristic(
             batteryStatusChrUuid,
-            BLECharacteristic::PROPERTY_READ |
-                BLECharacteristic::PROPERTY_NOTIFY);
+            BLEProperty::Read | BLEProperty::Notify,
+            BLEPermission::ReadOpen);
         assert(battStatusChr &&
                "BLE: Unable to create the battery level status characteristic");
-        BLE2902 *p2902 = new BLE2902();
-        p2902->setNotifications(true);
-        battStatusChr->addDescriptor(p2902);
+        // BLE2902 *p2902 = new BLE2902();
+        // p2902->setNotifications(true);
+        // battStatusChr->addDescriptor(p2902);
 
-        // Create HID reports
+        // Create feature reports
         inputGamePad = hidDevice->inputReport(RID_INPUT_GAMEPAD);
-        FeatureReport::attachTo(
-            hidDevice, RID_FEATURE_CAPABILITIES, CAPABILITIES_REPORT_SIZE);
-        FeatureReport::attachTo(
-            hidDevice, RID_FEATURE_CONFIG, CONFIG_REPORT_SIZE);
-        FeatureReport::attachTo(
-            hidDevice, RID_FEATURE_BUTTONS_MAP, BUTTONS_MAP_REPORT_SIZE);
-        FeatureReport::attachTo(
-            hidDevice, RID_FEATURE_HARDWARE_ID, HARDWARE_ID_REPORT_SIZE);
-        OutputReport::attachTo(hidDevice, RID_OUTPUT_POWERTRAIN);
-        OutputReport::attachTo(hidDevice, RID_OUTPUT_ECU);
-        OutputReport::attachTo(hidDevice, RID_OUTPUT_RACE_CONTROL);
-        OutputReport::attachTo(hidDevice, RID_OUTPUT_GAUGES);
-        OutputReport::attachTo(hidDevice, RID_OUTPUT_WHEELS);
-        OutputReport::attachTo(hidDevice, RID_OUTPUT_PIXEL);
+
+        HIDReport<RID_FEATURE_CAPABILITIES, CAPABILITIES_REPORT_SIZE, false>::
+            attachTo(hidDevice);
+        HIDReport<RID_FEATURE_CONFIG, CONFIG_REPORT_SIZE, false>::
+            attachTo(hidDevice);
+        HIDReport<RID_FEATURE_BUTTONS_MAP, BUTTONS_MAP_REPORT_SIZE, false>::
+            attachTo(hidDevice);
+        HIDReport<RID_FEATURE_HARDWARE_ID, HARDWARE_ID_REPORT_SIZE, false>::
+            attachTo(hidDevice);
+
+        // Create output reports
+        HIDReport<RID_OUTPUT_POWERTRAIN>::attachTo(hidDevice);
+        HIDReport<RID_OUTPUT_ECU>::attachTo(hidDevice);
+        HIDReport<RID_OUTPUT_RACE_CONTROL>::attachTo(hidDevice);
+        HIDReport<RID_OUTPUT_GAUGES>::attachTo(hidDevice);
+        HIDReport<RID_OUTPUT_WHEELS>::attachTo(hidDevice);
+        HIDReport<RID_OUTPUT_PIXEL>::attachTo(hidDevice);
 
         // Configure BLE advertising
-        BLEAdvertising *pAdvertising = pServer->getAdvertising();
-        pAdvertising->setAppearance(HID_GAMEPAD);
-        pAdvertising->setScanResponse(true);
-        pAdvertising->setMinPreferred(0x06);
-        pAdvertising->setMinPreferred(0x12);
-        pAdvertising->addServiceUUID(hidDevice->hidService()->getUUID());
-        pAdvertising->addServiceUUID(hidDevice->batteryService()->getUUID());
-        pAdvertising->addServiceUUID(hidDevice->deviceInfo()->getUUID());
+        // The device name is not advertised, but is available in the scan data
+        BLEAdvertising advertising = bdroidServer.getAdvertising();
+        assert(advertising);
+        advertising.clearServiceUUIDs();
+        advertising.setName(""); // Hope this clears the device name
+        advertising.setAppearance(BLE_APPEARANCE_HID_GAMEPAD);
+        advertising.setScanResponse(true);
+        advertising.setMinPreferred(0x06);
+        advertising.setMinPreferred(0x12);
+        advertising.addServiceUUID(hidDevice->hidService().getUUID());
+        advertising.addServiceUUID(hidDevice->batteryService().getUUID());
+        advertising.addServiceUUID(hidDevice->deviceInfoService().getUUID());
+        BLEAdvertisementData scanResponse;
+        scanResponse.setName(
+            arduinoStrDeviceName,
+            (arduinoStrDeviceName.length() <= 31) // Max payload is 31 octets
+        );
+        advertising.setScanResponseData(scanResponse);
 
         // Start services
-        hidDevice->startServices();
+        bdroidServer.start();
         hidDevice->setBatteryLevel(100);
+
         // Initialize the battery status to 100% charge and wired.
         // Otherwise, non-battery-operated firmwares may cause
         // a low battery warning in the hosting PC
@@ -755,8 +765,8 @@ void internals::hid::reset()
 #elif CONFIG_BLUEDROID_ENABLED
     if (current_connectivity == Connectivity::BLE)
     {
-        inputGamePad->setValue(inputReportData, GAMEPAD_REPORT_SIZE);
-        inputGamePad->notify();
+        inputGamePad.setValue(inputReportData, GAMEPAD_REPORT_SIZE);
+        inputGamePad.notify();
     }
 #endif // CONFIG_BLUEDROID_ENABLED
 #if USB_AVAILABLE
@@ -789,8 +799,8 @@ void internals::hid::reportInput(
 #elif CONFIG_BLUEDROID_ENABLED
     if (current_connectivity == Connectivity::BLE)
     {
-        inputGamePad->setValue(inputReportData, GAMEPAD_REPORT_SIZE);
-        inputGamePad->notify(true);
+        inputGamePad.setValue(inputReportData, GAMEPAD_REPORT_SIZE);
+        inputGamePad.notify();
     }
 #endif // CONFIG_BLUEDROID_ENABLED
 #if USB_AVAILABLE
@@ -815,10 +825,10 @@ void internals::hid::reportBatteryLevel(const BatteryStatus &status)
         // -- Battery level status characteristic
         BatteryStatusChrData result =
             internals::hid::common::toBleBatteryStatus(status);
-        battStatusChr->setValue(
+        battStatusChr.setValue(
             (const uint8_t *)(&result),
             sizeof(result));
-        battStatusChr->notify();
+        battStatusChr.notify();
 
         // -- Battery level characteristic
         hidDevice->setBatteryLevel(result.battery_level);
