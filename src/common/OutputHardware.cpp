@@ -19,6 +19,7 @@
 
 #include "OutputHardware.hpp"
 #include "HAL.hpp"
+#include "driver/gpio.h"       // for gpio_od_enable()/disable()
 #include "freertos/FreeRTOS.h" // for vTaskDelay()
 #include <cstring>             // For memset()
 #include "esp32-hal-log.h"     // For log_e()
@@ -273,9 +274,15 @@ LEDStrip::LEDStrip(
         .flags{
             .invert_out = 0,
             .with_dma = 1,
+            .allow_pd = 0,
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(6, 0, 0)
             .io_loop_back = 0,
             .io_od_mode = (useLevelShift) ? 1u : 0u,
-            .allow_pd = 0}};
+#endif
+            .init_level = 0,
+        },
+    };
+
     esp_err_t err = rmt_new_tx_channel(&tx_config, &rmtHandle);
     // Check if there is no DMA support and fall back to PIO
     if (err == ESP_ERR_NOT_SUPPORTED)
@@ -284,6 +291,12 @@ LEDStrip::LEDStrip(
         err = rmt_new_tx_channel(&tx_config, &rmtHandle);
     }
     ESP_ERROR_CHECK(err);
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(6, 0, 0)
+    if (useLevelShift)
+        ESP_ERROR_CHECK(gpio_od_enable(AS_GPIO(dataPin)));
+    else
+        ESP_ERROR_CHECK(gpio_od_disable(AS_GPIO(dataPin)));
+#endif
     ESP_ERROR_CHECK(rmt_enable(rmtHandle));
 
     // Configure the byte encoder
@@ -772,7 +785,7 @@ void OLED::locate(uint8_t x, uint8_t page)
             0x00,
             // Set column : higher 4 bits
             static_cast<uint8_t>((x >> 4) | 0x10),
-        };
+    };
     write(transmit_buffer, sizeof(transmit_buffer));
 }
 
