@@ -13,26 +13,28 @@
  */
 
 //------------------------------------------------------------------------------
-// Conditional compilation
+// Globals
 //------------------------------------------------------------------------------
 
-#define NDEBUG // Comment out while debugging
-
-#include "NimBLEWrapper.hpp"
-
-#if CONFIG_NIMBLE_ENABLED
+// #define NDEBUG // Comment out while debugging
 
 //------------------------------------------------------------------------------
 // Imports
 //------------------------------------------------------------------------------
 
+#include "NimBLEWrapper.hpp"
+
 #include <cstring>
 #include <algorithm>
 #include <cassert>
 
-#include "esp_mac.h"                     // esp_efuse_mac_get_default()
-#include "nvs_flash.h"                   // nvs_flash_init()
-#include "esp_bt.h"                      // BT controller
+#include "esp_mac.h"   // esp_efuse_mac_get_default()
+#include "nvs_flash.h" // nvs_flash_init()
+#include "esp_bt.h"    // BT controller
+
+#if CONFIG_NIMBLE_ENABLED
+// Using NimBLE from the Arduino-ESP32 core
+
 #include "nimble/nimble_port.h"          // nimble_port_init() and others
 #include "nimble/nimble_port_freertos.h" // nimble_port_freertos_init()
 #include "host/ble_hs.h"                 // ble_hs_cfg global variable
@@ -42,6 +44,25 @@
 #include "services/gatt/ble_svc_gatt.h"  // GATT server
 #include "os/os_mbuf.h"                  // Attribute values
 #include "host/ble_hs_mbuf.h"            // Attribute values
+
+#else
+// Using NimBLE from the h2zero/NimBLE Arduino library ("pure" ESP32 boards)
+
+#include "nimble/porting/nimble/include/nimble/nimble_port.h"                    // nimble_port_init() and others
+#include "nimble/porting/npl/freertos/include/nimble/nimble_port_freertos.h"     // nimble_port_freertos_init()
+#include "nimble/nimble/host/include/host/ble_hs.h"                              // ble_hs_cfg global variable
+#include "nimble/nimble/host/util/include/host/util/util.h"                      // BT address configuration
+#include "nimble/nimble/host/services/gap/include/services/gap/ble_svc_gap.h"    // ble_svc_gap_device_name_set()
+#include "nimble/nimble/host/include/host/ble_hs_adv.h"                          // Aadvertising
+#include "nimble/nimble/host/services/gatt/include/services/gatt/ble_svc_gatt.h" // GATT server
+#include "nimble/porting/nimble/include/os/os_mbuf.h"                            // Attribute values
+#include "nimble/nimble/host/include/host/ble_hs_mbuf.h"                         // Attribute values
+
+// #include "nimble/esp_port/esp-hci/include/esp_nimble_hci.h"                      // For esp_nimble_hci_init()
+// #include "esp_bt.h"                                                              // For esp_bt_controller_*()
+#include "esp32-hal-bt.h"
+
+#endif // CONFIG_NIMBLE_ENABLED
 
 // Note: not included in any header file (a mystery to me)
 extern "C" void ble_store_config_init(void);
@@ -414,7 +435,7 @@ int BLEDesc2908::onRead(os_mbuf *buffer)
         {
             _report_id,
             (uint8_t)_report_type,
-        };
+    };
     ApiResult rc = os_mbuf_append(
         buffer,
         data,
@@ -982,5 +1003,3 @@ void BLEHIDService::init()
     // Nothing to do here.
     // Reserved for future use.
 }
-
-#endif // CONFIG_NIMBLE_ENABLED

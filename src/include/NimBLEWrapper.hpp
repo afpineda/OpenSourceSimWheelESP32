@@ -17,8 +17,7 @@
 
 #include <sdkconfig.h>           // For conditional compilation
 #include "SimWheelInternals.hpp" // BatteryStatusChrData
-
-#if CONFIG_NIMBLE_ENABLED
+#include "HID_definitions.hpp"   // For some constants
 
 //------------------------------------------------------------------------------
 // Imports
@@ -30,15 +29,32 @@
 #include <initializer_list>
 #include <type_traits>
 
+#include "esp32-hal-log.h" // Logging
+
+#if CONFIG_NIMBLE_ENABLED
+// Using NimBLE from the Arduino-ESP32 core
+
 #include "host/ble_att.h"  // ATT layer
 #include "host/ble_gatt.h" // GATT layer
 #include "host/ble_uuid.h" // UUIDs
 #include "host/ble_gap.h"  // GAP layer
-#include "host/ble_gap.h"  // GAP layer
 #include "os/os_mbuf.h"    // Attribute buffers
-#include "esp32-hal-log.h" // Logging
 
-#include "HID_definitions.hpp"
+#else
+// Using NimBLE from the h2zero/NimBLE Arduino library ("pure" ESP32 boards)
+
+// This forces Arduino IDE to compile the library
+// even if we are not using any function from it
+#include "NimBLECppVersion.h"
+#define H2ZERO_NIMBLE_AVAILABLE 1
+
+#include "nimble/nimble/host/include/host/ble_att.h"  // ATT layer
+#include "nimble/nimble/host/include/host/ble_gatt.h" // GATT layer
+#include "nimble/nimble/host/include/host/ble_uuid.h" // UUIDs
+#include "nimble/nimble/host/include/host/ble_gap.h"  // GAP layer
+#include "nimble/porting/nimble/include/os/os_mbuf.h" // Attribute buffers
+
+#endif // CONFIG_NIMBLE_ENABLED
 
 //------------------------------------------------------------------------------
 // Constants
@@ -697,7 +713,6 @@ struct HIDReportMapChr : BLECharacteristic, BLEReadCallback
 // TO-DO
 // - Consider return BLE_ATT_ERR_VALUE_NOT_ALLOWED on write attempts
 //   as "boot mode" does not make sense in this device
-// - Check if this characteristic is mandatory or not
 
 /// @brief HID protocol mode characteristic
 struct HIDProtocolModeChr : BLECharacteristic, BLEReadCallback, BLEWriteCallback
@@ -826,5 +841,3 @@ private:
         ble_gatt_access_ctxt *ctxt,
         void *arg);
 };
-
-#endif // CONFIG_NIMBLE_ENABLED
