@@ -46,7 +46,7 @@ If your board does not have USB-TO-UART port:
 
 > [!IMPORTANT]
 > You can not have USB serial output and USB HID at the same time,
-> so you this procedure will be limited when testing USB connectivity.
+> so this procedure will be limited when testing USB connectivity.
 
 - To test USB connectivity you will be "blind",
   configure Arduino IDE in this way:
@@ -82,7 +82,7 @@ Smartphone (BLE implementation only):
   unpair it first (delete from the Bluetooth control panel).
 - Before pairing, wait for the `*** DISCOVERING ***`
   notification at the serial monitor.
-- It will be shown as "h2zeroImplTest", "BLEimplTest", USBimplTest" or
+- It will be shown as "BLEimplTest", USBimplTest" or
   "CombinedHIDImplTest" (depending on the test sketch).
 
 ## Procedure and expected output
