@@ -66,10 +66,29 @@
   boards exposes a slightly different power management API than other ESP32 boards.
   The firmware has been updated, but not tested.
   Deep sleep mode may not work properly in battery-operated setups on these boards.
-- Device not working after a firmware upgrade. This issue is caused by an operating system cache. Fix:
+
+- Device not working after a firmware upgrade.
+
+  This issue is **usually** caused by an operating system cache. Fix:
+
   - BLE devices: remove from the Bluetooth control panel then pair again.
   - USB devices: remove from the device manager then reboot your computer.
     Ensure the operating system is detecting your device as new hardware.
+
+  Less frequently, but possibly, the issue is caused by
+  incompatible bonding information stored in the flash memory of your DevKit
+  (BLE only).
+  Fix:
+
+  - Go to Arduino IDE, "Tools" menu.
+  - Set "Erase all flash before sketch upload" to "Enabled".
+  - Upload your firmware again.
+  - Once done, set "Erase all flash before sketch upload" to "Disabled"
+    (don't forget this).
+
+  Unfortunately, this will also remove your user settings and battery
+  calibration data (if any).
+
 - Device not discoverable in **Windows 11 version 25H2** (BLE only).
   It seems this issue is caused by a bug in this version.
   There are two viable workarounds:
