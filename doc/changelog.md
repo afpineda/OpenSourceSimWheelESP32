@@ -8,13 +8,17 @@
   in the CD/CI chain.
 - The `h2zero/NimBLE` library is mandatory again,
   but **for "pure" ESP32 boards only**.
-  This project does not use code in that library **anymore**,
-  but the underlying *NimBLE* code.
+  This project does not use code from that library **anymore**,
+  but the underlying *NimBLE* code from the Apache/MyNewt project.
   The library is required because *NimBLE* is not included in the
   Arduino-ESP32 core for these boards (but is included for the others).
   The file `hid_h2zero.cpp` has been removed as well as the concerned
   unit test. For backwards-compatibility, the `MakeSymLinks` scripts
-  will automatically rename that file.
+  will automatically substitute that filename when found in the
+  `includes.txt` file.
+- Code depending on the BLE library from the Arduino-ESP32 core has been
+  also removed. This effectively removes any dependency with the
+  Bluedroid stack, which is out of maintenance.
 
 ## 8.3.0
 
