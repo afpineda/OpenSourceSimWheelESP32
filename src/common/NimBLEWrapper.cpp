@@ -40,7 +40,7 @@
 #include "host/ble_hs.h"                 // ble_hs_cfg global variable
 #include "host/util/util.h"              // BT address configuration
 #include "services/gap/ble_svc_gap.h"    // ble_svc_gap_device_name_set()
-#include "host/ble_hs_adv.h"             // Aadvertising
+#include "host/ble_hs_adv.h"             // Advertising
 #include "services/gatt/ble_svc_gatt.h"  // GATT server
 #include "os/os_mbuf.h"                  // Attribute values
 #include "host/ble_hs_mbuf.h"            // Attribute values
@@ -48,19 +48,17 @@
 #else
 // Using NimBLE from the h2zero/NimBLE Arduino library ("pure" ESP32 boards)
 
-#include "nimble/porting/nimble/include/nimble/nimble_port.h"                    // nimble_port_init() and others
-#include "nimble/porting/npl/freertos/include/nimble/nimble_port_freertos.h"     // nimble_port_freertos_init()
-#include "nimble/nimble/host/include/host/ble_hs.h"                              // ble_hs_cfg global variable
-#include "nimble/nimble/host/util/include/host/util/util.h"                      // BT address configuration
-#include "nimble/nimble/host/services/gap/include/services/gap/ble_svc_gap.h"    // ble_svc_gap_device_name_set()
-#include "nimble/nimble/host/include/host/ble_hs_adv.h"                          // Aadvertising
-#include "nimble/nimble/host/services/gatt/include/services/gatt/ble_svc_gatt.h" // GATT server
-#include "nimble/porting/nimble/include/os/os_mbuf.h"                            // Attribute values
-#include "nimble/nimble/host/include/host/ble_hs_mbuf.h"                         // Attribute values
+#include "nimble/porting/nimble/include/nimble/nimble_port.h"
+#include "nimble/porting/npl/freertos/include/nimble/nimble_port_freertos.h"
+#include "nimble/nimble/host/include/host/ble_hs.h"
+#include "nimble/nimble/host/util/include/host/util/util.h"
+#include "nimble/nimble/host/services/gap/include/services/gap/ble_svc_gap.h"
+#include "nimble/nimble/host/include/host/ble_hs_adv.h"
+#include "nimble/nimble/host/services/gatt/include/services/gatt/ble_svc_gatt.h"
+#include "nimble/porting/nimble/include/os/os_mbuf.h"
+#include "nimble/nimble/host/include/host/ble_hs_mbuf.h"
 
-// #include "nimble/esp_port/esp-hci/include/esp_nimble_hci.h"                      // For esp_nimble_hci_init()
-// #include "esp_bt.h"                                                              // For esp_bt_controller_*()
-#include "esp32-hal-bt.h"
+#include "nimble/esp_port/esp-hci/include/esp_nimble_hci.h" // For esp_nimble_hci_init()
 
 #endif // CONFIG_NIMBLE_ENABLED
 
@@ -326,6 +324,23 @@ void BLEDevice::init(const std::string &deviceName)
     ESP_ERROR_CHECK(ret);
 
     // Initialize the NIMBLE stack
+
+#if CONFIG_IDF_TARGET_ESP32
+    esp_bt_controller_mem_release(ESP_BT_MODE_CLASSIC_BT);
+#endif
+
+#if H2ZERO_NIMBLE_AVAILABLE
+    esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
+    bt_cfg.mode = ESP_BT_MODE_BLE;
+    bt_cfg.ble_max_conn = CONFIG_BT_NIMBLE_MAX_CONNECTIONS;
+    ESP_ERROR_CHECK(esp_bt_controller_init(&bt_cfg));
+    ESP_ERROR_CHECK(esp_bt_controller_enable(ESP_BT_MODE_BLE));
+#endif
+
+#if CONFIG_BT_NIMBLE_LEGACY_VHCI_ENABLE
+    ESP_ERROR_CHECK(esp_nimble_hci_init());
+#endif
+
     ESP_ERROR_CHECK(nimble_port_init());
 
     // Initialize the NimBLE host configuration:
