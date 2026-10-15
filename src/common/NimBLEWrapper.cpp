@@ -44,6 +44,7 @@
 #include "services/gatt/ble_svc_gatt.h"  // GATT server
 #include "os/os_mbuf.h"                  // Attribute values
 #include "host/ble_hs_mbuf.h"            // Attribute values
+#include "esp_nimble_hci.h"              // For esp_nimble_hci_init()
 
 #else
 // Using NimBLE from the h2zero/NimBLE Arduino library ("pure" ESP32 boards)
@@ -57,8 +58,7 @@
 #include "nimble/nimble/host/services/gatt/include/services/gatt/ble_svc_gatt.h"
 #include "nimble/porting/nimble/include/os/os_mbuf.h"
 #include "nimble/nimble/host/include/host/ble_hs_mbuf.h"
-
-#include "nimble/esp_port/esp-hci/include/esp_nimble_hci.h" // For esp_nimble_hci_init()
+#include "nimble/esp_port/esp-hci/include/esp_nimble_hci.h"
 
 #endif // CONFIG_NIMBLE_ENABLED
 
@@ -330,15 +330,25 @@ void BLEDevice::init(const std::string &deviceName)
 #endif
 
 #if H2ZERO_NIMBLE_AVAILABLE
+
     esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
+
+#if CONFIG_IDF_TARGET_ESP32
     bt_cfg.mode = ESP_BT_MODE_BLE;
-    bt_cfg.ble_max_conn = CONFIG_BT_NIMBLE_MAX_CONNECTIONS;
+    bt_cfg.ble_max_conn = 1;
+#else
+    // The compiler should not enter here
+    #error You are using an Arduino-ESP32 core without NimBLE support. Please, update.
+#endif // CONFIG_IDF_TARGET_ESP32
+
     ESP_ERROR_CHECK(esp_bt_controller_init(&bt_cfg));
     ESP_ERROR_CHECK(esp_bt_controller_enable(ESP_BT_MODE_BLE));
+
 #if CONFIG_BT_NIMBLE_LEGACY_VHCI_ENABLE
     ESP_ERROR_CHECK(esp_nimble_hci_init());
 #endif
-#endif
+
+#endif // H2ZERO_NIMBLE_AVAILABLE
 
     ESP_ERROR_CHECK(nimble_port_init());
 
