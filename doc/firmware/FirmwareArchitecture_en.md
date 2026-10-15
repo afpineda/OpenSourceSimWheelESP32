@@ -861,7 +861,7 @@ The *hid* namespace is in charge of that.
 
 - The Battery Service specification mandates to report a 0% battery level
   if the state of charge is unknown.
-  This rule was not respected in previous versions of this project.
+  This rule was not respected in old versions of this project.
 
 - The Battery Service must be initialized to 100% battery level
   (and wired status). Otherwise,
@@ -880,6 +880,18 @@ The *hid* namespace is in charge of that.
 - The *NimBLE* stack handles 0x2902 descriptors automatically and transparently,
   but the *Bluedroid* stack requires those descriptor to be
   explicitly created in code.
+
+- After version 8.3.0 (not including),
+  all dependencies with 3rd-party BLE wrappers
+  (`h2zero/NimBLE` and the `espressif/arduino-esp32` core)
+  has been removed in favor of a custom BLE wrapper (see `NimBLEWrapper.hpp`),
+  which is based on the underlying `MyNewt/NimBLE` API.
+  However, this API is not included in the Arduino-ESP32 core
+  when targeting "pure" ESP32 boards.
+  In this case, and only in this case, the project requires `h2zero/NimBLE`
+  just to access the underlying NimBLE API.
+  The Bluedroid stack was definitely discarded.
+  Note that Bluedroid itself is no longer maintained as of Android 12.
 
 ## Concurrency
 
