@@ -1,5 +1,21 @@
 # Change log (and release notes)
 
+## Upcoming
+
+- Small bug and errata fixes.
+- The `RevealBrokenLinks.ps1` script now works on external links on demand.
+  The results are not 100% accurate, so this feature is not used
+  in the CD/CI chain.
+- The `h2zero/NimBLE` library is mandatory again,
+  but **for "pure" ESP32 boards only**.
+  This project does not use code in that library **anymore**,
+  but the underlying *NimBLE* code.
+  The library is required because *NimBLE* is not included in the
+  Arduino-ESP32 core for these boards (but is included for the others).
+  The file `hid_h2zero.cpp` has been removed as well as the concerned
+  unit test. For backwards-compatibility, the `MakeSymLinks` scripts
+  will automatically rename that file.
+
 ## 8.3.0
 
 - In coordination with the *SimHub plugin*,
