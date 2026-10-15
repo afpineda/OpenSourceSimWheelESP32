@@ -394,16 +394,6 @@ namespace internals
                 uint8_t rightAxis,
                 uint8_t clutchAxis);
 
-            /**
-             * @brief Convert a battery status to the data format
-             *        required by the BAS specification (BLE only)
-             *
-             * @param status Battery status
-             * @return BatteryStatusChrData Converted battery status
-             */
-            BatteryStatusChrData toBleBatteryStatus(
-                const BatteryStatus &status);
-
         } // namespace common
     } // namespace hid
 } // namespace internals
