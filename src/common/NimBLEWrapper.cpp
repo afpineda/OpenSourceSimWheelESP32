@@ -32,6 +32,14 @@
 #include "nvs_flash.h" // nvs_flash_init()
 #include "esp_bt.h"    // BT controller
 
+#if __has_include("esp32-hal-alloc-ble-mem.h")
+// Important note:
+// Arduino-ESP32 will free BLE memory if it thinks that BLE is not in use.
+// To prevent this, the following header MUST be included.
+// `__attribute__((constructor))` will do the rest to mark BLE as in use.
+#include "esp32-hal-alloc-ble-mem.h"
+#endif
+
 #if CONFIG_NIMBLE_ENABLED
 // Using NimBLE from the Arduino-ESP32 core
 
@@ -279,7 +287,7 @@ void BLEAdvertising::init()
         .appearance_is_present = 1,
     };
     rc = ble_gap_adv_set_fields(&adv_fields);
-    assert(rc);
+    rc.abort_if("ble_gap_adv_set_fields() failed");
 
     // Configure scan response data:
     // - Device name
@@ -338,7 +346,7 @@ void BLEDevice::init(const std::string &deviceName)
     bt_cfg.ble_max_conn = 1;
 #else
     // The compiler should not enter here
-    #error You are using an Arduino-ESP32 core without NimBLE support. Please, update.
+#error You are using an Arduino-ESP32 core without NimBLE support. Please, update.
 #endif // CONFIG_IDF_TARGET_ESP32
 
     ESP_ERROR_CHECK(esp_bt_controller_init(&bt_cfg));
