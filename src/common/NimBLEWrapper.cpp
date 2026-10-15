@@ -335,10 +335,9 @@ void BLEDevice::init(const std::string &deviceName)
     bt_cfg.ble_max_conn = CONFIG_BT_NIMBLE_MAX_CONNECTIONS;
     ESP_ERROR_CHECK(esp_bt_controller_init(&bt_cfg));
     ESP_ERROR_CHECK(esp_bt_controller_enable(ESP_BT_MODE_BLE));
-#endif
-
 #if CONFIG_BT_NIMBLE_LEGACY_VHCI_ENABLE
     ESP_ERROR_CHECK(esp_nimble_hci_init());
+#endif
 #endif
 
     ESP_ERROR_CHECK(nimble_port_init());
