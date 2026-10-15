@@ -10,9 +10,6 @@ To test that:
 This procedure is the same for USB and BLE connectivity,
 however, a different sketch may be needed:
 
-- To test the BLE implementation based on h2zero's wrapper (NimBLE):
-  [h2zeroImplTest.ino](./h2zeroImplTest/h2zeroImplTest.ino)
-
 - To test BLE-only connectivity on boards not having USB-TO-UART port:
   [BLEimplTest.ino](./BLEimplTest/BLEimplTest.ino)
 

@@ -170,11 +170,10 @@ function Rename-OldIncludes {
     process {
         if ($original.Equals("hid_ESPBLE.cpp") -or `
                 $original.Equals("hid_BLE.cpp") -or `
-                $original.Equals("hid_USB.cpp")) {
+                $original.Equals("hid_USB.cpp") -or `
+                $original.Equals("hid_h2zero.cpp") -or `
+                $original.Equals("hid_NimBLE.cpp")) {
             "hid_USB_BLE.cpp"
-        }
-        elseif ($original.Equals("hid_NimBLE.cpp")) {
-            "hid_h2zero.cpp"
         }
         else {
             $original

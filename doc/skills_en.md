@@ -13,29 +13,32 @@ Indispensable:
   This project has been successfully tested with **version 3.3.4**.
   Any versión prior to 3.3.0 will not work.
 
+May be needed:
+
 - [Powershell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.2).
   Already installed in Windows. Not strictly needed in Linux or Mac.
-
-> [!IMPORTANT]
-> This project is not guaranteed to work with untested version dependencies.
-> When troubleshooting, check this first.
-
-May be needed:
 
 - [ESP32 drivers](http://esp32.net/usb-uart/) on Windows.
   A tutorial: [Installing drivers for the ESP32](https://www.bromleysat.com/installing-drivers-for-the-esp32/).
   Depending on what DevKit board you choose, a different driver may be needed.
   Check all information available from the manufacturer.
 
-- [Arduino library](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries):
+- [Arduino libraries](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries):
+
   - [h2zero/NimBLE-Arduino](https://www.arduino.cc/reference/en/libraries/nimble-arduino/).
     This project has been successfully tested with **version 2.3.7**.
     Any version prior to version 2.2.0 will not work.
-    This optional library is a caution against bugs.
-    How to use it will be explained later.
+    **Required only for "pure" ESP32 DevKit boards**.
+
   - [Adafruit GFX](https://docs.arduino.cc/libraries/adafruit-gfx-library/).
-    Required only for telemetry display via OLED hardware.
     This project has been successfully tested with **version 1.12.5**.
+    **Required only for telemetry display via OLED hardware**.
+
+> [!WARNING]
+> This project is not guaranteed to work with untested versions
+> of these dependencies.
+> When troubleshooting, check this first.
+>
 
 Recommended:
 
@@ -57,13 +60,16 @@ Recommended:
     that this app may miss some rotation events from rotary encoders
     due to its own polling interval (not a firmware's fault).
 
-- [Visual Studio Code](https://code.visualstudio.com/), as an alternative to Arduino IDE.
+- [Visual Studio Code](https://code.visualstudio.com/),
+  as an alternative to Arduino IDE.
   Requires [Arduino Community Edition for VSCode](https://marketplace.visualstudio.com/items?itemName=vscode-arduino.vscode-arduino-community).
   Installable from VSCode itself.
   **Note**: The official Arduino extension was deprecated.
 
-- SimpleHIDWrite.exe: available at [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm).
-  There is a modern clone here: [benbaker76/SimpleHIDWrite](https://github.com/benbaker76/SimpleHIDWrite/tree/master/BIN).
+- SimpleHIDWrite.exe: available at
+  [http://janaxelson.com/hidpage.htm](http://janaxelson.com/hidpage.htm).
+  There is a modern clone here:
+  [benbaker76/SimpleHIDWrite](https://github.com/benbaker76/SimpleHIDWrite/tree/master/BIN).
   This tool is used in this project to test custom HID reports.
 
 - PCB design tools:

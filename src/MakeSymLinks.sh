@@ -48,11 +48,8 @@ get_required_links() {
         line=$(echo "$line" | sed 's/\r//;s/^[[:space:]]*//;s/[[:space:]]*$//')
         if [[ -n "$line" ]]; then
             # Rename old includes for backwards compatibility
-            if [ "$line" = "hid_ESPBLE.cpp" ] || [ "$line" = "hid_BLE.cpp" ] || [ "$line" = "hid_USB.cpp" ]; then
+            if [ "$line" = "hid_ESPBLE.cpp" ] || [ "$line" = "hid_BLE.cpp" ] || [ "$line" = "hid_USB.cpp" ] || [ "$line" = "hid_h2zero.cpp" ] || [ "$line" = "hid_NimBLE.cpp" ]; then
                 line="hid_USB_BLE.cpp"
-            fi
-            if [ "$line" = "hid_NimBLE.cpp" ]; then
-                line="hid_h2zero.cpp"
             fi
             # Check if the user forgot to include some files
             if [ "$line" = "NimBLEWrapper.cpp" ]; then

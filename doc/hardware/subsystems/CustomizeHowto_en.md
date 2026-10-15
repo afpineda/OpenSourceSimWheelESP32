@@ -359,12 +359,9 @@ as parameter.
   - Your simulator may detect each interface as a different device
     despite having the same VID, PID and serial number.
   - The interface connected first has priority and will not be forced
-    to disconnect:
-
-    - This should prevent your simulator from going crazy
-      when the USB cable is plugged in.
-    - If your next-door neighbor connects to your device via BLE,
-      they won't hijack it (as long as you keep the USB cable plugged in).
+    to disconnect.
+    This should prevent your simulator from going crazy
+    when the USB cable is plugged in.
 
   - The firmware will silently fall back to the second connected interface
     when the first is disconnected.
@@ -380,34 +377,6 @@ as parameter.
 > [!TIP]
 > See ["Changing your device's display name (Windows only) or Hardware ID"](../../RenameDeviceWin_en.md)
 > for additional customization regarding connectivity.
-
-#### BLE Connectivity using h2zero's wrapper
-
-BLE connectivity is also available via the *NimBLE* wrapper from
-[h2zero](https://github.com/h2zero).
-You must install the
-[h2zero/NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino)
-library in this case.
-This choice will be removed after *ESP32-Arduino*
-version 4.0.0 is released.
-USB connectivity does not work within this choice.
-
-> [!NOTE]
-> This option is intended as a workaround for "pure" ESP32 boards
-> having issues with BLE connectivity.
-
-In order to use this:
-
-- Edit the file **"includes.txt"** at your sketch folder.
-  It contains a list of filenames.
-  Locate and the file name `hid_USB_BLE.cpp`
-  and replace with `hid_h2zero.cpp`
-  **Those file names are case-sensitive**.
-
-- Do not confuse those with "hidCommon.cpp".
-  Do not touch that line.
-- Run the [sources setup procedure](../../firmware/sourcesSetup_en.md) again.
-  **This is mandatory**.
 
 ### Security lock
 

@@ -15,14 +15,14 @@
 // Conditional compilation
 //------------------------------------------------------------------------------
 
-#include <sdkconfig.h>           // For conditional compilation
-#include "SimWheelInternals.hpp" // BatteryStatusChrData
-#include "HID_definitions.hpp"   // For some constants
+#include <sdkconfig.h> // For conditional compilation
 
 //------------------------------------------------------------------------------
 // Imports
 //------------------------------------------------------------------------------
 
+#include "SimWheelInternals.hpp" // BatteryStatusChrData
+#include "HID_definitions.hpp"   // For some constants
 #include <cstdint>
 #include <string>
 #include <functional>
@@ -45,7 +45,10 @@
 
 // This forces Arduino IDE to compile the library
 // even if we are not using any function from it
-#include "NimBLECppVersion.h"
+namespace h2zero
+{
+#include "NimBLELog.h"
+}
 #define H2ZERO_NIMBLE_AVAILABLE 1
 
 #include "nimble/nimble/host/include/host/ble_att.h"  // ATT layer
