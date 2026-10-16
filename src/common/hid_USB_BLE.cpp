@@ -217,6 +217,77 @@ void onNimBLEOutputReport(
     if (current_connectivity == Connectivity::BLE)
         internals::hid::common::onOutput(report_id, buffer, len);
 }
+
+/**
+ * @brief Convert a battery status to the data format
+ *        required by the BAS specification (BLE only)
+ *
+ * @param status Battery status
+ * @return BatteryStatusChrData Converted battery status
+ */
+BatteryStatusChrData toBleBatteryStatus(
+    const BatteryStatus &status)
+{
+    BatteryStatusChrData result{};
+    // Battery presence
+    if (status.isBatteryPresent.value_or(false))
+        result.ps_battery_present = 1;
+
+    // Wired power
+    if (status.usingExternalPower.has_value())
+    {
+        if (status.usingExternalPower.value())
+            result.ps_wired_ext_power = 1; // = yes
+        else
+            result.ps_wired_ext_power = 0; // = no
+    }
+    else
+        result.ps_wired_ext_power = 2; // = unknown
+
+    // Charging status
+    if (status.isBatteryPresent.value_or(false) &&
+        status.isCharging.has_value())
+    {
+        result.ps_battery_charge_state =
+            (status.isCharging.value())
+                ? 1  // = charging
+                : 2; // = discharging (active)
+    }
+    else
+        result.ps_battery_charge_state = 0; // = unknown
+
+    // Battery level
+    // (must be identical to the value of the battery level characteristic)
+    if (!status.stateOfCharge.has_value() &&
+        status.isCharging.value_or(false))
+    {
+        // If the state of charge is unknown but the battery is charging,
+        // we report a non-zero state of charge to avoid unnecessary
+        // low battery warnings in the host computer.
+        // This is a design choice not conforming to the BLE standard.
+        result.battery_level = status.stateOfCharge.value_or(66);
+    }
+    else
+        result.battery_level = status.stateOfCharge.value_or(0);
+    if (result.battery_level > 100)
+        result.battery_level = 100;
+
+    // Battery charge level (summarized)
+    if (status.stateOfCharge.has_value())
+    {
+        if (result.battery_level < 8)
+            result.ps_battery_charge_level = 3; // = critical
+        else if (result.battery_level < 15)
+            result.ps_battery_charge_level = 2; // = low
+        else
+            result.ps_battery_charge_level = 1; // = good
+    }
+    else
+        result.ps_battery_charge_level = 0; // = unknown
+
+    return result;
+}
+
 #endif // BLE_AVAILABLE
 
 // ----------------------------------------------------------------------------
@@ -472,8 +543,7 @@ void internals::hid::reportInput(
 void internals::hid::reportBatteryLevel(const BatteryStatus &status)
 {
 #if BLE_AVAILABLE
-    BatteryStatusChrData result =
-        internals::hid::common::toBleBatteryStatus(status);
+    BatteryStatusChrData result = toBleBatteryStatus(status);
     BLEBatteryService::batteryStatus.set(result);
     BLEBatteryService::batteryLevel.set(result.battery_level);
 #endif // BLE_AVAILABLE

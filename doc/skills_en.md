@@ -6,10 +6,12 @@ Indispensable:
 
 - [Arduino IDE](https://www.arduino.cc/en/software).
   Choose a stable release and follow instructions.
-  This project has been successfully compiled with **version 2.3.7**.
+  This project has been successfully compiled with **version 2.3.10**.
 
 - Official [Arduino-ESP32 support package](https://docs.espressif.com/projects/arduino-esp32/en/latest/getting_started.html).
-  Follow [this link](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html) for installation instructions.
+  Follow
+  [this link](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html)
+  for installation instructions.
   This project has been successfully tested with **version 3.3.4**.
   Any versión prior to 3.3.0 will not work.
 
@@ -26,7 +28,7 @@ May be needed:
 - [Arduino libraries](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries):
 
   - [h2zero/NimBLE-Arduino](https://www.arduino.cc/reference/en/libraries/nimble-arduino/).
-    This project has been successfully tested with **version 2.3.7**.
+    This project has been successfully tested with **version 2.5.1**.
     Any version prior to version 2.2.0 will not work.
     **Required only for "pure" ESP32 DevKit boards**.
 

@@ -124,12 +124,13 @@ thus not requiring a translation unit.
 | BatteryMonitorHardware.cpp | Battery management hardware design                                                        |
 | firmware.cpp               | Firmware initialization                                                                   |
 | HAL.cpp                    | Underlying ESP-IDF API                                                                    |
-| hid_«implementation».cpp   | Underlying HID stack or wrapper                                                           |
+| hid_USB_BLE.cpp            | Underlying HID stack or wrapper                                                           |
 | hidCommon.cpp              | Features available through the companion app or SimHub (see note)                         |
 | InputHardware.cpp          | Input hardware design                                                                     |
 | inputHub.cpp               | Device operation through specific button press combinations                               |
 | inputMap.cpp               | Firmware-defined or user-defined input numbers                                            |
 | inputs.cpp                 | Input hardware settings                                                                   |
+| NimBLEWrapper.cpp          | Underlying MyNewt/NimBLE API                                                              |
 | OutputHardware.cpp         | Output hardware design                                                                    |
 | pixels.cpp                 | Pixel control capabilities or available UI notifications                                  |
 | power.cpp                  | Underlying power management capabilities                                                  |
@@ -138,13 +139,6 @@ thus not requiring a translation unit.
 | storage.cpp                | User settings that require long-term storage                                              |
 | telemetry.cpp              | Telemetry data                                                                            |
 | ui.cpp                     | Support for custom user interfaces                                                        |
-
-Note:
-
-- Exceptionally, `hidCommon.cpp` includes common code related to
-  BLE connectivity.
-  This breaks the principle of single responsibility but is
-  required to factorize code.
 
 ## Approach to dependency injection
 
@@ -322,6 +316,56 @@ classDiagram
 
 [Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNp9k7Fu3DAMhl-F0JSgbh7AyNYWaIdb0q3wwpOYs1BLFCgqThDcu1e-s1uf69aLberjz18U9W4sOzKtsQPm_NnjSTB0EepziYCPqWiG92vs_NfS13JcFgE-cHzC8dsUv7vfyei9W8FCiUX_TR9RleTtwNEry66FGfmEgz8Kque4iyUeSVaVc1_U8Rg3Za_Y48PDZLSFhYKqqj4QF4U7yyFgdPfbjFuzt8lWvHqLwwLBQC80bLXmTk9iS2dbELLz3gjwlfJ_ki6et3wDmRRSGTLB6J32TUVeSPJGLs96Ow1daWdFUcCi_NGuCBxOXLfYh11304TMGgAtjCw_fTxBqHNX7R19dZrYR22A1K7yDpj-1LZFhKJeVyBgMo0JJAG9q8N7OdnOaE-BOtPWT0fPWAbtTBfPFZ0sf3-L1rQqhRpTkqsdmsf9NvjFTQe4xITLqTftM9YGNiZh_MEcfv_ThT3MN2h6nX8BATIdXw)
 
+## External dependencies
+
+When targeting "pure" ESP32 boards:
+
+```mermaid
+flowchart TD
+  project["This project"]
+  esp_idf["ESP-IDF"]
+
+  subgraph core ["Espressif/Arduino-ESP32 (core)"]
+    storage["Preferences library"]
+  end
+
+  subgraph h2zero ["h2zero/NimBLE"]
+    h2zero_wrapper["BLE wrapper (not used)"]
+    nimble["Apache/MyNewt NimBLE"]
+
+    h2zero_wrapper --> nimble
+  end
+
+  project --> storage
+  project --> nimble
+  project --> esp_idf
+
+  core --> esp_idf
+  h2zero --> esp_idf
+```
+
+When targeting other boards:
+
+```mermaid
+flowchart TD
+  project["This project"]
+
+  subgraph core ["Espressif/Arduino-ESP32 (core)"]
+    USB["USB Library"]
+    storage["Preferences library"]
+  end
+
+  subgraph esp_idf["ESP-IDF"]
+    nimble["Apache/MyNewt NimBLE"]
+  end
+
+  project --> USB
+  project --> storage
+  project --> esp_idf
+
+  core --> esp_idf
+```
+
 ## Event system
 
 - Initialization and load/save settings:
@@ -381,7 +425,9 @@ classDiagram
 
   [Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNqFkctqw0AMRX9FaO3QvRehkHTXUmh2ZSDIM3IsmIeZB20w_vfaDm5S-tJKVxzBvdKAOhjGGlsb3nRHMcPji_Iw1bPfBe9ZZzb3A6SOeq4hZTJSHIwrs5ek_8WKHHt5Z5uuRB-DThVYatjWoLAI3MEFUrjudWJgswEfsrTnqdvemvodufX0LctMp9IkHaVZ1PZq76dQf_FYoePoSMx0wWHeVpg7dqxwzmS4pWKzQuXHCaWSw-HsNdY5Fq6w9IYy74VOkdzX4YORHOI6i6GcOqxbsmlSPfnXENyn5oV9urxx-eb4AeOSno0)
 
-## Save settings
+## Storage of user settings in flash memory
+
+### Save settings
 
 ```mermaid
 sequenceDiagram
@@ -404,7 +450,7 @@ sequenceDiagram
 
 [Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNplUsuS0zAQ_BXVnKBwUrEdxxsd9gIcOeUG5qDIs44KWQp6pDCp_Dsj5bHlcJNa09M9rTmDtD0CB4-_IxqJX5QYnBg7w9hRuKCkOgoTmDDTM-SDdWLAZzioEV0CicIWr6_3Os524oQ7DEGZwX-IHt3t8pH9kELrvZC_fibijTAnOxxx3KNj4aA881cmo2OwbI-5DvvOZGEd0kOPWkwJY2zeMztMHX0g39f3jLHFTDJhNuYCNLmPtvbIrGF4Qjc9TMwdPKl9SjlwlgZkAxFIRVB26E5KIpNaeH_l5LiIsHg3IKNzmJK-CZ2Ejvj_PI96TwHf3EIBNNAoVE9_e05gB-FAGXbA6djjm4g6dNCZC5WKGOxuMhJ4cBELiMdehPsqzMGvvSK5O-ZsHA7A34T2dKP__27tg4C59Nt1v_KaEYG8oftsownAm0wBfoY_wKvNcl011XbVNO2mrFblpoAJeN0st6u2bLdl3dbtS7m9FPA3i6yWbUVIW61fynq9KesCBpfmTeqXf-zs9D4)
 
-## Load settings
+### Load settings
 
 ```mermaid
 sequenceDiagram
