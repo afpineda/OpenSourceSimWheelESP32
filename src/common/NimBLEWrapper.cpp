@@ -18,6 +18,16 @@
 
 // #define NDEBUG // Comment out while debugging
 
+
+// NOTE for testers and developers:
+//
+// On each version of the Arduino-ESP32 core, the bonding information
+// stored in your DevKit's flash memory may become obsolete and incompatible.
+// There is no clue about that.
+// In case you run into unexpected "bugs" such as inability to pair the device
+// or disconnection just after connection,
+// **clear the flash memory** before uploading the sketch again.
+
 //------------------------------------------------------------------------------
 // Imports
 //------------------------------------------------------------------------------
