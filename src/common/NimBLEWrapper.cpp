@@ -52,7 +52,6 @@
 #include "services/gatt/ble_svc_gatt.h"  // GATT server
 #include "os/os_mbuf.h"                  // Attribute values
 #include "host/ble_hs_mbuf.h"            // Attribute values
-#include "esp_nimble_hci.h"              // For esp_nimble_hci_init()
 
 #else
 // Using NimBLE from the h2zero/NimBLE Arduino library ("pure" ESP32 boards)
@@ -121,6 +120,15 @@ void BLEAdvertising::start()
 {
     assert(BLEDevice::ready);
     assert(!_connected);
+#if CONFIG_BT_NIMBLE_EXT_ADV
+    constexpr uint8_t advertising_instance = 0;
+    if (!ble_gap_ext_adv_active(advertising_instance))
+    {
+        BLEAdvertising::init();
+        ApiResult rc = ble_gap_ext_adv_start(advertising_instance, 0, 0);
+        rc.abort_if("ble_gap_ext_adv_start() failed");
+    }
+#else
     if (!ble_gap_adv_active())
     {
         // Don't know why we have to initialize
@@ -137,11 +145,16 @@ void BLEAdvertising::start()
                 nullptr);
         rc.abort_if("ble_gap_adv_start() failed");
     }
+#endif
 };
 
 void BLEAdvertising::stop() noexcept
 {
+#if CONFIG_BT_NIMBLE_EXT_ADV
+    ApiResult rc = ble_gap_ext_adv_stop(0);
+#else
     ApiResult rc = ble_gap_adv_stop();
+#endif
     if (rc != BLE_HS_EALREADY)
         rc.log_if("ble_gap_adv_stop() failed");
 }
@@ -261,6 +274,108 @@ int BLEAdvertising::ble_gap_event_fn(ble_gap_event *event, void *arg)
 
 void BLEAdvertising::init()
 {
+#if CONFIG_BT_NIMBLE_EXT_ADV
+    // Cores based on ESP-IDF 6.x have extended advertising enabled,
+    // so "legacy" advertising is not supported.
+
+    constexpr uint8_t advertising_instance = 0;
+
+    // Configure a connectable and scannable legacy PDU through the extended
+    // advertising API. Connectable extended PDUs cannot also be scannable.
+    const ble_gap_ext_adv_params adv_params{
+        .connectable = 1,
+        .scannable = 1,
+        .legacy_pdu = 1,
+        .itvl_min = 0,
+        .itvl_max = 0,
+        .channel_map = 0,
+        .own_addr_type = BLEDevice::address_type,
+        .filter_policy = 0,
+        .primary_phy = BLE_HCI_LE_PHY_1M,
+        .secondary_phy = BLE_HCI_LE_PHY_1M,
+        .tx_power = 127,
+        .sid = 0,
+    };
+    ApiResult rc = ble_gap_ext_adv_configure(
+        advertising_instance,
+        &adv_params,
+        nullptr,
+        ble_gap_event_fn,
+        nullptr);
+    rc.abort_if("ble_gap_ext_adv_configure() failed");
+
+    // Advertise flags, appearance, and the three service UUIDs.
+    static const ble_uuid16_t service_uuid_list[]{
+        BLEBatteryService::uuid,
+        BLEDeviceInfoService::uuid,
+        BLEHIDService::uuid,
+    };
+    static constexpr const uint8_t service_uuid_list_size =
+        sizeof(service_uuid_list) / sizeof(ble_uuid16_t);
+    uint8_t adv_data[3 + 2 + (2 * service_uuid_list_size) + 4];
+    size_t adv_data_size = 0;
+    adv_data[adv_data_size++] = 2;
+    adv_data[adv_data_size++] = BLE_HS_ADV_TYPE_FLAGS;
+    adv_data[adv_data_size++] =
+        BLE_HS_ADV_F_DISC_GEN | BLE_HS_ADV_F_BREDR_UNSUP;
+    adv_data[adv_data_size++] = 1 + (2 * service_uuid_list_size);
+    adv_data[adv_data_size++] = BLE_HS_ADV_TYPE_COMP_UUIDS16;
+    for (const ble_uuid16_t &uuid : service_uuid_list)
+    {
+        adv_data[adv_data_size++] = uuid.value & 0xFF;
+        adv_data[adv_data_size++] = uuid.value >> 8;
+    }
+    adv_data[adv_data_size++] = 3;
+    adv_data[adv_data_size++] = BLE_HS_ADV_TYPE_APPEARANCE;
+    adv_data[adv_data_size++] = BLE_APPEARANCE_GAMEPAD & 0xFF;
+    adv_data[adv_data_size++] = BLE_APPEARANCE_GAMEPAD >> 8;
+
+    os_mbuf *adv_buffer = ble_hs_mbuf_from_flat(adv_data, adv_data_size);
+    if (!adv_buffer)
+    {
+        rc = BLE_HS_ENOMEM;
+        rc.abort_if("Advertising data allocation failed");
+    }
+    rc = ble_gap_ext_adv_set_data(advertising_instance, adv_buffer);
+    rc.abort_if("ble_gap_ext_adv_set_data() failed");
+
+    // Configure scan response data with the device name.
+    const char *device_name = ble_svc_gap_device_name();
+    assert(device_name);
+    const size_t device_name_size = strlen(device_name);
+    if (device_name_size > 0)
+    {
+        uint8_t scan_rsp_data[BLE_HS_ADV_MAX_SZ]{};
+        const uint8_t name_size = ::std::min<uint8_t>(
+            device_name_size,
+            BLE_HS_ADV_MAX_FIELD_SZ);
+        scan_rsp_data[0] = name_size + 1;
+        scan_rsp_data[1] =
+            (name_size == device_name_size)
+                ? BLE_HS_ADV_TYPE_COMP_NAME
+                : BLE_HS_ADV_TYPE_INCOMP_NAME;
+        memcpy(scan_rsp_data + 2, device_name, name_size);
+
+        os_mbuf *scan_rsp_buffer =
+            ble_hs_mbuf_from_flat(scan_rsp_data, name_size + 2);
+        if (!scan_rsp_buffer)
+        {
+            rc = BLE_HS_ENOMEM;
+            rc.abort_if("Scan response data allocation failed");
+        }
+        rc = ble_gap_ext_adv_rsp_set_data(
+            advertising_instance,
+            scan_rsp_buffer);
+        rc.abort_if("ble_gap_ext_adv_rsp_set_data() failed");
+        log_i(
+            "BLE: Device name '%s' added to scan response",
+            device_name);
+    }
+    else
+        log_i("BLE: Device name is empty (not advertised)");
+#else
+    // Cores based on ESP-IDF up to 5.5 support "legacy" advertising
+
     ApiResult rc;
 
     // Configure data to include in subsequent advertisements.
@@ -310,6 +425,7 @@ void BLEAdvertising::init()
     }
     else
         log_i("BLE: Device name is empty (not advertised)");
+#endif // CONFIG_BT_NIMBLE_EXT_ADV
 }
 
 #pragma GCC diagnostic pop
