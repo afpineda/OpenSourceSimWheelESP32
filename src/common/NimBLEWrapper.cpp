@@ -261,6 +261,7 @@ int BLEAdvertising::ble_gap_event_fn(ble_gap_event *event, void *arg)
         log_i("GAP event: new PHY: rx=%d, tx=%d",
               event->phy_updated.rx_phy,
               event->phy_updated.tx_phy);
+        break;
     default:
         log_d("GAP event: %d", event->type);
         break;
@@ -274,14 +275,19 @@ int BLEAdvertising::ble_gap_event_fn(ble_gap_event *event, void *arg)
 
 void BLEAdvertising::init()
 {
+    // For reference:
+    // There are two incompatible advertising methods in BLE:
+    // "legacy" and "extended".
+    // The programmer can not choose as it depends
+    // on the Arduino-ESP32 build options.
 #if CONFIG_BT_NIMBLE_EXT_ADV
     // Cores based on ESP-IDF 6.x have extended advertising enabled,
     // so "legacy" advertising is not supported.
 
     constexpr uint8_t advertising_instance = 0;
 
-    // Configure a connectable and scannable legacy PDU through the extended
-    // advertising API. Connectable extended PDUs cannot also be scannable.
+    // Configure a connectable and scannable legacy PDU.
+    // This combination is mandatory in our case.
     const ble_gap_ext_adv_params adv_params{
         .connectable = 1,
         .scannable = 1,
@@ -304,7 +310,20 @@ void BLEAdvertising::init()
         nullptr);
     rc.abort_if("ble_gap_ext_adv_configure() failed");
 
-    // Advertise flags, appearance, and the three service UUIDs.
+    // For reference:
+    // Advertised data is a sequence of items consisting on
+    // - A header signaling the nature of the payload (1 byte)
+    // - Item length/size (1 byte)
+    // - Payload (variable size)
+
+    // Advertised data:
+    // - flags
+    // - BLE appearance
+    // - HID service UUID
+    // - Battery service UUID
+    // - Device Information service UUID
+
+    // Build the advertised data in a simple array (adv_data)
     static const ble_uuid16_t service_uuid_list[]{
         BLEBatteryService::uuid,
         BLEDeviceInfoService::uuid,
@@ -330,12 +349,18 @@ void BLEAdvertising::init()
     adv_data[adv_data_size++] = BLE_APPEARANCE_GAMEPAD & 0xFF;
     adv_data[adv_data_size++] = BLE_APPEARANCE_GAMEPAD >> 8;
 
+    // Build the os_mbuf structure from the advertised data
+    // as required by the NimBLE API
     os_mbuf *adv_buffer = ble_hs_mbuf_from_flat(adv_data, adv_data_size);
     if (!adv_buffer)
     {
+        // Convert the null pointer result to an API result
+        // to help in debugging
         rc = BLE_HS_ENOMEM;
         rc.abort_if("Advertising data allocation failed");
     }
+
+    // Set the advertisement payload
     rc = ble_gap_ext_adv_set_data(advertising_instance, adv_buffer);
     rc.abort_if("ble_gap_ext_adv_set_data() failed");
 
