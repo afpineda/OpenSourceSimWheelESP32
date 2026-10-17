@@ -34,6 +34,8 @@
 
 #include "NimBLEWrapper.hpp"
 
+#ifdef CONFIG_BT_ENABLED
+
 #include <cstring>
 #include <algorithm>
 #include <cassert>
@@ -1186,3 +1188,5 @@ void BLEHIDService::init()
     // Nothing to do here.
     // Reserved for future use.
 }
+
+#endif // CONFIG_BT_ENABLED

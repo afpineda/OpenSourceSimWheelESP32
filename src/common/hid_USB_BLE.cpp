@@ -44,7 +44,7 @@
 #endif
 
 #if !BLE_AVAILABLE && !USB_AVAILABLE
-#error Your board does not support BLE nor USB
+#error NNo support for either BLE or USB-OTG. Check Arduino IDE board config.
 #endif
 
 // This is the current interface being used,

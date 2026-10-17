@@ -17,6 +17,8 @@
 
 #include <sdkconfig.h> // For conditional compilation
 
+#ifdef CONFIG_BT_ENABLED
+
 //------------------------------------------------------------------------------
 // Imports
 //------------------------------------------------------------------------------
@@ -844,3 +846,5 @@ private:
         ble_gatt_access_ctxt *ctxt,
         void *arg);
 };
+
+#endif // CONFIG_BT_ENABLED
