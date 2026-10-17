@@ -344,6 +344,8 @@ flowchart TD
   h2zero --> esp_idf
 ```
 
+[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNptUUtPwzAM_iuRT0Nat7XdswekwYaEBAgJTlCEstZdg9qkclLtpf130q1jBXaL_b1sZweRihECSDK1ilJOhr3OQgolYwWpL4zMewivqdCnMoSPI4y6-BRxYuH5y7NzP7urkSOqy8WSeJGySBGyiqQLQq1F0p1SXAqpHCvzPdaqCFc_rlZpFPElWskzYYKEMkLNMrEgTptzuowvhKXeFklVccdX90nkNw_zhvux_7my9ALJEi3M6oq1pDKs1Bg355EiX2TVONOCRyl2HzdPuDLsl_Nld-Y417X8wtD1PQ-keuf_QFPd7NfHP7sdzvwHOc3T7EMbliRiCAyV2IYcKedVCbuKH4JJMccQAvskjMu1E6lMUQih3FtpweWbUvlJTapcphAkPNO2KouYG5wJbv_iTLE7I92qUhoIBgcHCHawhsAbe53RuOf7E7_XH05c16IbCHy3Mxi6rjcZjvxJf-z6-zZsD5m9zng02H8Ds2vkuA)
+
 When targeting other boards:
 
 ```mermaid
@@ -365,6 +367,8 @@ flowchart TD
 
   core --> esp_idf
 ```
+
+[Render this diagram at mermaid.live](https://mermaid.live/view#pako:eNptkF9rwjAUxb9KuE8bWLWtf2ofBjodDNwQdC9bxojtbZvRNuWmRZ343Ze6ijLNQ8jN-d2Tc7OHQIUIPkSp2gSJoJKtppx4zlhB6huD8oPDKpH6VHL4rOU_RFfrmESRsEARMkPOdEGotYw6YwormStrtly4Drurgfuml5n1tpwY3OxsLtckaHeh6VKRiNHoC8IICfMANUv_cZiHN4KgLr5kGNVRlgvrefp04ZvLbJ3WtuNCBAl2XnavuCnZq8wm89lt32ZoZlkPdeTryybrtdAEOVsdv-hCgRbEJEPwS6qwBRlSJuoS9jXNoUwwQw6-ORKG1dYKVKqIA88PprUQ-btS2ambVBUn4Eci1aaqilCUOJXC_MkZMYMhPaoqL8HvHx3A38MWfMdz2kOv67ojt9sbjGzbqDvwXbvdH9i2MxoM3VHPs91DC36Ob3bb3rB_-AXM7LuQ)
 
 ## Event system
 
