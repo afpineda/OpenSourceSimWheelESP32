@@ -19,6 +19,11 @@
 - Code depending on the BLE library from the Arduino-ESP32 core has been
   also removed. This effectively removes any dependency with the
   Bluedroid stack, which is out of maintenance.
+- ⚠️ IMPORTANT NOTE ⚠️:
+  This release may require you to clean the BLE bonding information stored
+  in your DevKit. To achieve this, you must **erase the flash memory**
+  on the first upload (only). See the
+  ["Known issues"](./Index_en.md#known-issues) section.
 
 ## 8.3.0
 
