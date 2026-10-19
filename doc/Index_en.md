@@ -2,7 +2,9 @@
 
 > [!NOTE]
 > Reading this documentation carefully from start to finish
-> will save you a lot of time and effort.
+> will save you a lot of time and effort,
+> but you can skip the "Contributing", "Firmware documentation" and
+> "Other" sections.
 
 ## Build manual and electronics
 
