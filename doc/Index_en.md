@@ -94,8 +94,12 @@
 - Device not discoverable in **Windows 11 version 25H2** (BLE only).
   It seems this issue is caused by a bug in this version.
   There are two viable workarounds:
+
   - Go to Settings > System > Recovery > Fix problems using Windows Update >
     Reinstall now.
+
+    This will just install a "boot safe" release of the patch.
+
   - [Uninstall the update](https://pureinfotech.com/uninstall-windows-11-25h2/#uninstall_windows11_25h2_windowsupdate).
     Unfortunately, Windows 11 will reinstall again the 25H2 version later.
     There are ways to pin Windows to an older version. Search online.
