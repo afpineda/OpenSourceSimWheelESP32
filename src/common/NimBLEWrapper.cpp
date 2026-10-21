@@ -18,7 +18,6 @@
 
 // #define NDEBUG // Comment out while debugging
 
-
 // NOTE for testers and developers:
 //
 // On each version of the Arduino-ESP32 core, the bonding information
@@ -191,17 +190,20 @@ int BLEAdvertising::ble_gap_event_fn(ble_gap_event *event, void *arg)
     switch (event->type)
     {
     case BLE_GAP_EVENT_CONNECT:
-        log_i("GAP event: connection");
+        log_i("GAP event: connection with status %d", event->connect.status);
         // Notes:
         // - A successful connection event does not mean the link is established
         // - if the connection attempt fails, advertising is stopped.
         //   We repeat the onConnectionStatus event to give a chance
         //   to start advertising again.
+        // - event->connect.status is zero on success
         if ((event->connect.status) && (onConnectionStatus))
             onConnectionStatus(false);
         break;
     case BLE_GAP_EVENT_DISCONNECT:
-        log_i("GAP event: disconnection");
+        log_i(
+            "GAP event: disconnection with reason %u",
+            event->disconnect.reason);
         _connected = false;
         _conn_handle = BLE_HS_CONN_HANDLE_NONE;
         if (onConnectionStatus)
@@ -220,7 +222,9 @@ int BLEAdvertising::ble_gap_event_fn(ble_gap_event *event, void *arg)
         log_d("GAP event: advertising complete");
         break;
     case BLE_GAP_EVENT_ENC_CHANGE:
-        log_d("GAP event: BLE_GAP_EVENT_ENC_CHANGE");
+        log_d(
+            "GAP event: BLE_GAP_EVENT_ENC_CHANGE. Status %u",
+            event->enc_change.status);
         break;
     case BLE_GAP_EVENT_PASSKEY_ACTION:
         log_d("GAP event: BLE_GAP_EVENT_PASSKEY_ACTION");
@@ -257,18 +261,28 @@ int BLEAdvertising::ble_gap_event_fn(ble_gap_event *event, void *arg)
         }
         break;
     case BLE_GAP_EVENT_REPEAT_PAIRING:
-        log_i("GAP event: repeat pairing");
+    {
+        log_i(
+            "GAP event: repeat pairing (handle %u)",
+            event->repeat_pairing.conn_handle);
         // Delete the old bond
-        ble_gap_conn_desc conn_info;
+        ble_gap_conn_desc conn_info{};
         if (ble_gap_conn_find(
                 event->repeat_pairing.conn_handle,
                 &conn_info) == 0)
         {
-            log_i("Deleting old bond");
-            ble_store_util_delete_peer(&conn_info.peer_id_addr);
+            if (ble_store_util_delete_peer(&conn_info.peer_id_addr))
+            {
+                log_i("Unable to delete old bond");
+                return BLE_GAP_REPEAT_PAIRING_IGNORE;
+            };
+            log_i("Old bond deleted");
+            // continue with the pairing protocol
+            return BLE_GAP_REPEAT_PAIRING_RETRY;
         }
-        // continue with the pairing protocol
-        return BLE_GAP_REPEAT_PAIRING_RETRY;
+        // The connection handle is unknown
+        return BLE_GAP_REPEAT_PAIRING_IGNORE;
+    }
     case BLE_GAP_EVENT_PHY_UPDATE_COMPLETE:
         log_i("GAP event: new PHY: rx=%d, tx=%d",
               event->phy_updated.rx_phy,
