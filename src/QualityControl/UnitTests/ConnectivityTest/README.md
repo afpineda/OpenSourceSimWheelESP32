@@ -1,8 +1,8 @@
-# Unit test: game pad
+# Unit test: connectivity
 
 ## Purpose and summary
 
-To test that every connectivity options behaves as expected
+To test that every connectivity option behaves as expected
 regarding advertising, connection and disconnection events.
 
 ## Hardware setup
