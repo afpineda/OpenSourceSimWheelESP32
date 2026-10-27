@@ -65,7 +65,6 @@ void customFirmware()
         DEVICE_NAME,
         DEVICE_MANUFACTURER,
         false);
-    firmware::run();
 }
 
 //------------------------------------------------------------------
