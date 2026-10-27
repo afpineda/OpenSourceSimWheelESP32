@@ -271,16 +271,24 @@ LEDStrip::LEDStrip(
         .mem_block_symbols = 64, // Note: must be even
         .trans_queue_depth = 1,
         .intr_priority = 0,
+        // Note: respect field order
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(6, 0, 0)
+        .flags{
+            .invert_out = 0,
+            .with_dma = 1,
+            .io_loop_back = 0,
+            .io_od_mode = (useLevelShift) ? 1u : 0u,
+            .allow_pd = 0,
+            .init_level = 0,
+        }
+#else
         .flags{
             .invert_out = 0,
             .with_dma = 1,
             .allow_pd = 0,
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(6, 0, 0)
-            .io_loop_back = 0,
-            .io_od_mode = (useLevelShift) ? 1u : 0u,
+            .init_level = 1,
+        }
 #endif
-            .init_level = 0,
-        },
     };
 
     esp_err_t err = rmt_new_tx_channel(&tx_config, &rmtHandle);
