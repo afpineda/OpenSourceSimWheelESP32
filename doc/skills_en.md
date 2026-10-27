@@ -12,7 +12,7 @@ Indispensable:
   Follow
   [this link](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html)
   for installation instructions.
-  This project has been successfully tested with **version 3.3.4**.
+  This project has been successfully tested with **version 3.3.12**.
   Any versión prior to 3.3.0 will not work.
 
 May be needed:
@@ -28,7 +28,7 @@ May be needed:
 - [Arduino libraries](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries):
 
   - [h2zero/NimBLE-Arduino](https://www.arduino.cc/reference/en/libraries/nimble-arduino/).
-    This project has been successfully tested with **version 2.5.1**.
+    This project has been successfully tested with **version 2.5.2**.
     Any version prior to version 2.2.0 will not work.
     **Required only for "pure" ESP32 DevKit boards**.
 

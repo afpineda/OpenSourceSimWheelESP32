@@ -17,8 +17,8 @@ $arduino_cli = "arduino-cli"
 # Dependency declaration
 #############################################################################>
 
-$esp_core_version = "3.3.4"
-$nimble_version = "2.5.1"
+$esp_core_version = "3.3.12"
+$nimble_version = "2.5.2"
 $gfx_version = "1.12.5"
 
 <#############################################################################
