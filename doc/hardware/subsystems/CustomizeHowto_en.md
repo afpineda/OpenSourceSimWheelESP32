@@ -304,6 +304,13 @@ This project provides several connectivity choices:
 
 - Bluetooth Low Energy (BLE).
 
+  > ℹ️ Note ℹ️
+  >
+  > The [h2zero/NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino)
+  > library must be installed in Arduino IDE if your DevKit is a
+  > "pure" ESP32.
+  > Other boards, like the ESP32-S3, do not require this library.
+
 - Universal Serial Bus (USB).
 
   > ⚠️ Warning ⚠️
