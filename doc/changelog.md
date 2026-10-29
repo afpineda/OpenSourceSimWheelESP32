@@ -1,8 +1,8 @@
 # Change log (and release notes)
 
-## Upcoming
+## 8.3.1
 
-- Small bug and errata fixes.
+- Small bug and errata fixes. No new features.
 - The `RevealBrokenLinks.ps1` script now works on external links on demand.
   The results are not 100% accurate, so this feature is not used
   in the CD/CI chain.
@@ -24,6 +24,10 @@
   in your DevKit. To achieve this, you must **erase the flash memory**
   on the first upload (only). See the
   ["Known issues"](./Index_en.md#known-issues) section.
+- External dependencies updated and tested:
+  - Arduino-ESP32 support package (core): version **3.3.12**
+  - NimBLE-Arduino: version **2.5.2**.
+  - Arduino IDE version **2.3.10**.
 
 ## 8.3.0
 
