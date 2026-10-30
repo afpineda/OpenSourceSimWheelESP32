@@ -657,6 +657,14 @@ There are two possible patterns to this end:
   to do all the painting.
   `AbstractUserInterface::serveSingleFrame()` does nothing.
 
+##### Timers
+
+Do not use OS timers for display.
+`AbstractUserInterface::frameTimer()` provides very lightweight timers
+to be used in `AbstractUserInterface::serveSingleFrame()`
+with millisecond resolution.
+Initialize them to zero.
+
 ### BatteryMonitor
 
 This subsystem is in charge of interfacing the underlying hardware
@@ -782,12 +790,13 @@ Battery voltage is not enough for accurate SOC.
 If calibration data is not available,
 a rough estimation is provided based on LiPo batteries
 characterization data taken from here:
-https://blog.ampow.com/lipo-voltage-chart/ (link not available anymore).
+[https://blog.ampow.com/lipo-voltage-chart/](https://web.archive.org/web/20220417164742/https://blog.ampow.com/lipo-voltage-chart/)
+(original link not available anymore).
 However, actual battery voltages may not match the characterization data due to:
 
 1) inaccurate ADC readings,
 2) voltage drop due to the involved transistors (if any) and
-3) unexpected impedances at the voltage divider.
+3) unexpected resistor values at the voltage divider.
 
 For this reason, the highest voltage ever read is taken as an auto-calibration parameter.
 The expected voltage reading is mapped linearly to the absolute maximum voltage ever read.
