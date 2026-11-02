@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project>
   <fileVersion>
-    <major>4</major>
-    <minor>37</minor>
+    <major>5</major>
+    <minor>6</minor>
     <build>0</build>
   </fileVersion>
   <title>PISO shift register inputs</title>
@@ -473,6 +473,7 @@
       <length value="53.34" unit="mm"/>
       <width value="38.1" unit="mm"/>
       <mode>TwoPoints</mode>
+      <boardUndersideDisplay>NONE</boardUndersideDisplay>
       <spacing value="0.1" unit="in"/>
       <padColor hex="da8a67"/>
     </diylc.boards.PerfBoard>
@@ -496,6 +497,7 @@
       <length value="53.34" unit="mm"/>
       <width value="38.1" unit="mm"/>
       <mode>TwoPoints</mode>
+      <boardUndersideDisplay>NONE</boardUndersideDisplay>
       <spacing value="0.1" unit="in"/>
       <padColor hex="da8a67"/>
     </diylc.boards.PerfBoard>
@@ -504,8 +506,8 @@
       <alpha>102</alpha>
       <value></value>
       <controlPoints>
-        <point x="3.4" y="1.6999999999999995"/>
-        <point x="5.9" y="0.6"/>
+        <point x="5.9" y="1.6999999999999995"/>
+        <point x="3.4" y="0.6"/>
       </controlPoints>
       <firstPoint x="3.4" y="0.6"/>
       <secondPoint x="5.9" y="1.6999999999999995"/>
@@ -513,12 +515,13 @@
       <borderColor hex="ada47d"/>
       <coordinateColor hex="b6b6b6"/>
       <xType>Letters</xType>
-      <coordinateOrigin>Bottom_Left</coordinateOrigin>
+      <coordinateOrigin>Bottom_Right</coordinateOrigin>
       <coordinateDisplay>Both_Sides</coordinateDisplay>
       <yType>Numbers</yType>
       <length value="53.34" unit="mm"/>
       <width value="38.1" unit="mm"/>
       <mode>TwoPoints</mode>
+      <boardUndersideDisplay>NONE</boardUndersideDisplay>
       <spacing value="0.1" unit="in"/>
       <padColor hex="da8a67"/>
     </diylc.boards.PerfBoard>
@@ -542,6 +545,7 @@
       <length value="63.5" unit="mm"/>
       <width value="27.939999999999984" unit="mm"/>
       <mode>TwoPoints</mode>
+      <boardUndersideDisplay>NONE</boardUndersideDisplay>
       <spacing value="0.1" unit="in"/>
       <padColor hex="da8a67"/>
     </diylc.boards.PerfBoard>
@@ -2187,489 +2191,597 @@
     </diylc.connectivity.CopperTrace>
     <diylc.connectivity.SolderPad>
       <name>Pad22</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.4" y="3.7"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad34</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.4" y="3.8"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad35</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.9" y="3.8"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad36</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.9" y="3.7"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad37</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.9" y="3.2"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad38</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.9" y="3.1"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad39</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.5" y="3.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad40</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.8" y="3.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad41</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.1" y="3.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad42</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.9" y="3.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad43</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.8" y="3.7"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad44</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.9" y="3.2"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad45</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.9" y="3.1"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad46</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.6" y="3.8"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad47</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.6" y="3.7"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad48</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.7" y="3.2"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad49</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.7" y="3.3"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad50</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.8" y="3.2"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad51</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.7" y="3.8"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad52</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.7" y="3.7"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad53</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.8" y="3.1"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad55</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.8" y="3.2"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad56</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.4" y="3.1"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad57</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.4" y="3.2"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad58</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.5" y="3.1"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad59</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.5" y="3.2"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad60</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.7" y="3.1"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad61</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.7" y="3.2"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad62</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.5" y="3.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad63</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.6" y="3.3"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad64</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.6" y="3.1"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad65</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.6" y="3.2"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad66</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.8" y="3.3"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad67</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.8" y="3.4"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad68</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.8" y="3.5"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad69</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.8" y="3.6"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad70</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.9" y="3.6"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad71</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.9" y="3.5"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad72</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.9" y="3.4"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad73</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.9" y="3.3"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad74</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.8" y="3.3"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad75</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.8" y="3.4"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad76</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.8" y="3.5"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad77</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.8" y="3.6"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad78</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.9" y="3.7"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad79</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.9" y="3.8"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad80</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.7" y="3.7"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad81</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="1.7" y="3.8"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad82</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.8" y="3.8"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad83</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.8" y="3.7"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad84</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="0.7" y="3.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad85</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.1" y="3.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad86</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.5" y="3.7"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad87</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="2.5" y="3.8"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.semiconductors.DIL__IC>
       <name>IC1</name>
@@ -6652,489 +6764,597 @@
     </diylc.connectivity.CopperTrace>
     <diylc.connectivity.SolderPad>
       <name>Pad1</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.0" y="1.5"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad2</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.0" y="1.6"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad3</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.5" y="1.6"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad4</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.5" y="1.5"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad5</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.5" y="1.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad6</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.5" y="0.9"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad7</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.9" y="0.8"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad8</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.6" y="0.8"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad9</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.3" y="0.8"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad10</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.5" y="0.8"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad11</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.6" y="1.5"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad12</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.5" y="1.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad13</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.5" y="0.9"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad14</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.8" y="1.6"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad15</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.8" y="1.5"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad16</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.7" y="1.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad17</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.7" y="1.1"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad18</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.6" y="1.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad19</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.7" y="1.6"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad20</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.7" y="1.5"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad21</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.6" y="0.9"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad23</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.6" y="1.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad24</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.0" y="0.9"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad25</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.0" y="1.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad26</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.9" y="0.9"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad27</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.9" y="1.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad28</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.7" y="0.9"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad29</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.7" y="1.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad30</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.9" y="0.8"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad31</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.8" y="1.1"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad32</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.8" y="0.9"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad33</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.8" y="1.0"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad54</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.6" y="1.1"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad88</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.6" y="1.2"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad89</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.6" y="1.3"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad90</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.6" y="1.4"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad91</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.5" y="1.4"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad92</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.5" y="1.3"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad93</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.5" y="1.2"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad94</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.5" y="1.1"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad95</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.6" y="1.1"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad96</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.6" y="1.2"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad97</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.6" y="1.3"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad98</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.6" y="1.4"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad99</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.5" y="1.5"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad100</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.5" y="1.6"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad101</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.7" y="1.5"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad102</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.7" y="1.6"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad103</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.6" y="1.6"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad104</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.6" y="1.5"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad105</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="5.7" y="0.8"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad106</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="4.3" y="0.8"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad107</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.9" y="1.5"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.connectivity.SolderPad>
       <name>Pad108</name>
+      <alpha>127</alpha>
       <size value="0.09" unit="in"/>
       <color hex="000000"/>
       <point x="3.9" y="1.6"/>
       <type>ROUND</type>
       <holeSize value="0.8" unit="mm"/>
       <layer>_1</layer>
+      <holeType>NTPH</holeType>
     </diylc.connectivity.SolderPad>
     <diylc.electromechanical.PinHeader>
       <name>PH17</name>
@@ -7172,18 +7392,6 @@
       <style>SOLID</style>
       <thickness value="1.0" unit="px"/>
       <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
       <arrowStart>false</arrowStart>
       <arrowEnd>false</arrowEnd>
     </diylc.connectivity.Line>
@@ -7208,18 +7416,6 @@
       <style>SOLID</style>
       <thickness value="1.0" unit="px"/>
       <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
       <arrowStart>false</arrowStart>
       <arrowEnd>false</arrowEnd>
     </diylc.connectivity.Line>
@@ -7244,18 +7440,6 @@
       <style>SOLID</style>
       <thickness value="1.0" unit="px"/>
       <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
       <arrowStart>false</arrowStart>
       <arrowEnd>false</arrowEnd>
     </diylc.connectivity.Line>
@@ -7280,18 +7464,6 @@
       <style>SOLID</style>
       <thickness value="1.0" unit="px"/>
       <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
       <arrowStart>false</arrowStart>
       <arrowEnd>false</arrowEnd>
     </diylc.connectivity.Line>
@@ -7316,18 +7488,6 @@
       <style>SOLID</style>
       <thickness value="1.0" unit="px"/>
       <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
       <arrowStart>false</arrowStart>
       <arrowEnd>false</arrowEnd>
     </diylc.connectivity.Line>
@@ -7352,18 +7512,6 @@
       <style>SOLID</style>
       <thickness value="1.0" unit="px"/>
       <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
       <arrowStart>false</arrowStart>
       <arrowEnd>false</arrowEnd>
     </diylc.connectivity.Line>
@@ -7388,18 +7536,6 @@
       <style>SOLID</style>
       <thickness value="1.0" unit="px"/>
       <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
       <arrowStart>false</arrowStart>
       <arrowEnd>false</arrowEnd>
     </diylc.connectivity.Line>
@@ -7424,18 +7560,6 @@
       <style>SOLID</style>
       <thickness value="1.0" unit="px"/>
       <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
       <arrowStart>false</arrowStart>
       <arrowEnd>false</arrowEnd>
     </diylc.connectivity.Line>
@@ -7460,18 +7584,6 @@
       <style>SOLID</style>
       <thickness value="1.0" unit="px"/>
       <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
       <arrowStart>false</arrowStart>
       <arrowEnd>false</arrowEnd>
     </diylc.connectivity.Line>
@@ -7496,18 +7608,6 @@
       <style>SOLID</style>
       <thickness value="1.0" unit="px"/>
       <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
       <arrowStart>false</arrowStart>
       <arrowEnd>false</arrowEnd>
     </diylc.connectivity.Line>
@@ -7532,18 +7632,6 @@
       <style>SOLID</style>
       <thickness value="1.0" unit="px"/>
       <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
       <arrowStart>false</arrowStart>
       <arrowEnd>false</arrowEnd>
     </diylc.connectivity.Line>
@@ -8722,18 +8810,6 @@
       <style>SOLID</style>
       <thickness value="1.0" unit="px"/>
       <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
       <arrowStart>false</arrowStart>
       <arrowEnd>false</arrowEnd>
     </diylc.connectivity.Line>
@@ -8758,18 +8834,6 @@
       <style>SOLID</style>
       <thickness value="1.0" unit="px"/>
       <arrowSize value="5.0" unit="px"/>
-      <arrowTx serialization="custom">
-        <java.awt.geom.AffineTransform>
-          <default>
-            <m00>1.0</m00>
-            <m01>0.0</m01>
-            <m02>0.0</m02>
-            <m10>0.0</m10>
-            <m11>1.0</m11>
-            <m12>0.0</m12>
-          </default>
-        </java.awt.geom.AffineTransform>
-      </arrowTx>
       <arrowStart>false</arrowStart>
       <arrowEnd>false</arrowEnd>
     </diylc.connectivity.Line>
@@ -8999,118 +9063,118 @@
       <null/>
     </set>
     <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[45]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[44]"/>
-      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[3]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[36]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[43]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[35]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[40]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[39]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[36]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[37]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[35]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[33]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[3]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[42]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[44]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[43]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[45]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[34]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[46]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[41]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[38]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[42]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[48]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[47]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[37]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[40]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[33]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[48]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[38]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[41]"/>
     </set>
     <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[80]"/>
-      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[5]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[89]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[91]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[82]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[87]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[85]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[83]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[5]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[78]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[81]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[84]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[77]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[92]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[86]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[91]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[90]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[89]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[79]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[80]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[88]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[92]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[83]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[77]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[84]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[86]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[79]"/>
     </set>
     <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[14]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[10]"/>
-      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[16]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[7]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[9]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[6]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[13]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[12]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[15]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[9]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[10]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[14]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[6]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[3]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[4]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[13]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[2]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[11]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[15]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[3]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[5]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[4]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[8]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[16]"/>
     </set>
     <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[100]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[108]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[106]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[96]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[105]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[103]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[104]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[108]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[94]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[93]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[101]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[97]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[106]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[6]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[100]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[99]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[102]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[107]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[94]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[95]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[97]"/>
-      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[6]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[104]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[103]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[101]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[105]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[98]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[107]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[95]"/>
     </set>
     <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[28]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[19]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[23]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[18]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[24]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[17]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[27]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[21]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[29]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[30]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[20]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[32]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[26]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[22]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[31]"/>
-      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[23]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[25]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[32]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[30]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[19]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[24]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[17]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[2]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[20]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[29]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[28]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[27]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[31]"/>
     </set>
     <set>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[63]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[57]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[64]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[49]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[54]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[55]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[51]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[59]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[52]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[58]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[64]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[56]"/>
-      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[4]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[50]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[59]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[53]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[62]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[54]"/>
-      <diylc.misc.Label reference="../../../components/diylc.misc.Label[60]"/>
+      <diylc.semiconductors.DIL__IC reference="../../../components/diylc.semiconductors.DIL__IC[4]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[52]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[57]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[63]"/>
       <diylc.misc.Label reference="../../../components/diylc.misc.Label[61]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[60]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[49]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[58]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[51]"/>
+      <diylc.misc.Label reference="../../../components/diylc.misc.Label[50]"/>
     </set>
   </groups>
   <lockedLayers/>
