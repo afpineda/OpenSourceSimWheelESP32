@@ -686,10 +686,10 @@ but it does not require any pull resistor.
      tag in the last chip in the chain.
      Pass `UNSPECIFIED::VALUE` (the default)
      if there is no switch attached to `SER`.
-   - Optionally, `false` if your switches uses positive logic (pulled up).
+   - Optionally, `false` if your switches uses positive logic (pulled down).
      Such a hardware design is not in this project,
      but this option allows you to recycle hardware from another project.
-     This parameter is `true` by default (pulled down).
+     This parameter is `true` by default (pulled up).
 
 For example:
 
