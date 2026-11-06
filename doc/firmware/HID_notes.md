@@ -237,7 +237,7 @@ This is a security precaution to stop unauthorized configuration modifications c
 Read/write (unless locked).
 Write FF (hexadecimal) to ignore this field.
 
-Valid values are in the range from `1` to `6` (inclusive).
+Valid values are in the range from `1` to `16` (inclusive).
 Invalid values are ignored.
 Valid values are saved to flash memory without delay.
 

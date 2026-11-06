@@ -73,7 +73,7 @@ void loop()
     if (Serial.available())
     {
         int key = Serial.read();
-        if ((key >= '1') && (key <= '6'))
+        if ((key >= '1') && (key <= '9'))
         {
             RotaryEncoderInput::setPulseMultiplier(key - '1' + 1);
             Serial.printf(

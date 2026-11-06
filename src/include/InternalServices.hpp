@@ -138,9 +138,7 @@ public:
      * @brief Multiply the pulse width of rotary encoders
      *
      * @note Valid values are saved to flash memory without delay.
-     * @param multiplier A pulse width multiplier greater than zero.
-     *                   Valid values are between 1 and 6.
-     *                   Invalid values are ignored.
+     * @param multiplier A pulse width multiplier.
      * @param save True to save to flash memory
      */
     virtual void setRotaryPulseWidthMultiplier(
@@ -154,7 +152,7 @@ public:
      */
     virtual PulseWidthMultiplier getRotaryPulseWidthMultiplier()
     {
-        return (PulseWidthMultiplier::X1);
+        return (PulseWidthMultiplier::_DEFAULT_VALUE);
     }
 
     /**

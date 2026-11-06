@@ -1184,7 +1184,7 @@ enum class PixelDriver
  * @brief Telemetry data
  *
  */
-typedef struct
+struct TelemetryData
 {
     /**
      * @brief Identifies a telemetry frame. For internal use. Do not overwrite.
@@ -1294,7 +1294,7 @@ typedef struct
         /// @brief Tire wear percentages in the range [0,100]
         uint8_t wearPercentage[4];
     } wheels;
-} TelemetryData;
+};
 
 //-------------------------------------------------------------------
 // Pixel format

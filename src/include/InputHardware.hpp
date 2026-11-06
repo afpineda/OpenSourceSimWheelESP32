@@ -148,7 +148,9 @@ public:
      */
     static bool setPulseMultiplier(uint8_t multiplier)
     {
-        if ((multiplier > 0) && (multiplier < 7) &&
+        if ((multiplier >= static_cast<uint8_t>(PulseWidthMultiplier::X1)) &&
+            (multiplier <=
+             static_cast<uint8_t>(PulseWidthMultiplier::_MAX_VALUE)) &&
             (pulseMultiplier != multiplier))
         {
             pulseMultiplier = multiplier;

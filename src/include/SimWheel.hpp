@@ -261,6 +261,16 @@ namespace inputs
         bool xAxisReverse = false,
         bool yAxisReverse = false);
 
+    /**
+     * @brief Set the polling interval
+     *
+     * @param intervalMs Polling interval in milliseconds.
+     *                   Minimum value is 5 ms.
+     *                   Maximum value is 70 ms.
+     *                   Invalid values will be ignored.
+     */
+    void setPollingIntervalMs(unsigned int intervalMs);
+
 } // namespace inputs
 
 //-------------------------------------------------------------------

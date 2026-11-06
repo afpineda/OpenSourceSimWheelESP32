@@ -571,6 +571,49 @@ Let's suppose this sequence of events:
 Once both shift paddles are released,
 they will be reported as buttons 1 and 2 again.
 
+### Polling interval
+
+The input hardware is polled at timed intervals
+watching for state changes. The default is 30 milliseconds.
+To customize this interval,
+place a call to `inputs::setPollingIntervalMs()` and pass the desired
+polling interval in milliseconds as argument.
+The valid values are in the range from 5 milliseconds to 70 milliseconds
+(both included).
+Out of range values will be ignored.
+For Example:
+
+```c
+void simWheelSetup()
+{
+   ...
+   inputs::setPollingIntervalMs(15);
+   ...
+}
+```
+
+But ⚠️ **take the following into account** ⚠️:
+
+- Values below 20 milliseconds may not filter out mechanical bouncing.
+  Not recommended.
+  Mechanical bouncing depends on switch type and age.
+  Look for a datasheet.
+
+- Very low values may cause thread starvation and lower the system performance.
+
+- However, values below 30 ms will increase system sensitiveness to
+  very short button clicks.
+
+- Button clicks may go undetected when using values higher than 50 ms.
+
+- However, high values may increase the performance of the output hardware
+  (pixel/telemetry display) if you have it.
+  The CPU is less stressed.
+
+- Rotary encoders are also affected by this parameter.
+  If you lower the polling interval, you may need to increase the "pulse width"
+  using the companion app.
+
 ## Build your design into a perfboard
 
 Some of the circuit designs may show very small resistors

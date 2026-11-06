@@ -49,10 +49,15 @@ static bool _reverseLeftAxis = false;
 static bool _reverseRightAxis = false;
 
 // Polling daemon
-#define DEBOUNCE_MS 30
+#define DEFAULT_POLLING_INTERVAL_MS 30
+#define MIN_POLLING_INTERVAL_MS 5
+#define MAX_POLLING_INTERVAL_MS 70
+#define MAX_VOID_TIME_MS 15000
+static unsigned int polling_interval_ms = DEFAULT_POLLING_INTERVAL_MS;
+static unsigned int max_void_loop_count =
+    (MAX_VOID_TIME_MS / DEFAULT_POLLING_INTERVAL_MS);
 #define POLLING_TASK_STACK_SIZE (2 * 1024) + 512
 static bool forceUpdate;
-#define MAX_VOID_LOOP_COUNT (15000 / DEBOUNCE_MS)
 
 // Hub daemon
 #define HUB_STACK_SIZE 4 * 1024
@@ -133,7 +138,11 @@ void inputs::addRotaryEncoder(
     bool useAlternateEncoding)
 {
     abortIfStarted();
-    internals::inputs::validate::rotaryEncoder(dtPin, clkPin, cwInputNumber, ccwInputNumber);
+    internals::inputs::validate::rotaryEncoder(
+        dtPin,
+        clkPin,
+        cwInputNumber,
+        ccwInputNumber);
 #if !CD_CI
     digitalInputsChain.push_front(
         new RotaryEncoderInput(
@@ -299,7 +308,8 @@ void inputs::setAnalogClutchPaddles(
 {
     abortIfStarted();
     if (leftAxis != nullptr)
-        throw std::runtime_error("inputs::setAnalogClutchPaddles() called twice");
+        throw std::runtime_error(
+            "inputs::setAnalogClutchPaddles() called twice");
     DeviceCapabilities::setFlag(DeviceCapability::CLUTCH_ANALOG);
 #if !CD_CI
     leftAxis = new AnalogClutchInput(leftClutchPin);
@@ -530,7 +540,7 @@ void inputPollingLoop(void *param)
         // prevent device inactivity which may cause
         // disconnection by the host computer for power savings
         // on USB HID implementations
-        if (stateChanged || (voidLoopCount > MAX_VOID_LOOP_COUNT))
+        if (stateChanged || (voidLoopCount > max_void_loop_count))
         {
             // Push state into the decoupling queue
             internals::inputs::notifyInputEvent(currentState);
@@ -540,7 +550,19 @@ void inputPollingLoop(void *param)
             voidLoopCount++;
 
         // wait for the next sampling interval
-        DELAY_MS(DEBOUNCE_MS * 2);
+        DELAY_MS(polling_interval_ms);
+    }
+}
+
+//-----------------------------------------------------------------------------
+
+void inputs::setPollingIntervalMs(unsigned int intervalMs)
+{
+    if ((intervalMs >= MIN_POLLING_INTERVAL_MS) &&
+        (intervalMs <= MAX_POLLING_INTERVAL_MS))
+    {
+        polling_interval_ms = intervalMs;
+        max_void_loop_count = MAX_VOID_TIME_MS / polling_interval_ms;
     }
 }
 
@@ -600,7 +622,13 @@ void inputStart()
 
         TaskHandle_t task = nullptr;
         // Create and run the input hub
-        xTaskCreate(hubLoop, "hub", HUB_STACK_SIZE, (void *)nullptr, INPUT_TASK_PRIORITY, &task);
+        xTaskCreate(
+            hubLoop,
+            "hub",
+            HUB_STACK_SIZE,
+            (void *)nullptr,
+            INPUT_TASK_PRIORITY,
+            &task);
         if (task == nullptr)
             throw std::runtime_error("Unable to create inputHub task");
 

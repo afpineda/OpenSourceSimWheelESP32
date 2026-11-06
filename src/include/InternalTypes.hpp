@@ -239,8 +239,18 @@ enum class PulseWidthMultiplier : uint8_t
     X4,
     X5,
     X6,
-    _MAX_VALUE = X6,
-    _DEFAULT_VALUE = X2
+    X7,
+    X8,
+    X9,
+    X10,
+    X11,
+    X12,
+    X13,
+    X14,
+    X15,
+    X16,
+    _MAX_VALUE = X16,
+    _DEFAULT_VALUE = X4
 };
 
 //-------------------------------------------------------------------
@@ -704,12 +714,6 @@ inline static_event<> OnDPadWorkingMode;
  * @note Notified when a user setting is saved to persistent storage
  */
 inline static_event<> OnSettingsSaved;
-
-/**
- * @brief New pulse width multiplier
- * @note Notified when changed
- */
-inline static_event<PulseWidthMultiplier> OnPulseWidthMultiplier;
 
 /**
  * @brief Notified when a low battery condition is detected
