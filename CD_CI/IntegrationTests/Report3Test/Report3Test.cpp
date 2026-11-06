@@ -172,7 +172,7 @@ public:
 // Auxiliary
 //-------------------------------------------------------------------
 
-typedef struct __attribute__((packed))
+struct __attribute__((packed)) Report3
 {
     uint8_t cp_wm = 0xFF;
     uint8_t alt_wm = 0xFF;
@@ -181,7 +181,9 @@ typedef struct __attribute__((packed))
     uint8_t dpad_wm = 0xFF;
     uint8_t secLock = 0xFF;
     uint8_t pulseWidth = 0xFF;
-} Report3;
+};
+
+static_assert(sizeof(Report3)==7);
 
 #define REPORT3BYTES(s) ((uint8_t *)&s)
 

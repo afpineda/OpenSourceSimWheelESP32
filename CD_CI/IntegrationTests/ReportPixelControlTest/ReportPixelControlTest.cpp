@@ -29,7 +29,7 @@
 
 extern ::std::vector<Pixel> &fake_pixels(PixelGroup grp);
 
-typedef struct __attribute__((packed))
+struct __attribute__((packed)) Report30
 {
     uint8_t group = 0;
     uint8_t index = 0;
@@ -37,7 +37,9 @@ typedef struct __attribute__((packed))
     uint8_t green = 0;
     uint8_t red = 0;
     uint8_t reserved = 0;
-} Report30;
+};
+
+static_assert(sizeof(Report30)==6);
 
 #define REPORT30BYTES(s) ((uint8_t *)&s)
 

@@ -20,7 +20,8 @@
 #include "HAL.hpp"
 #include "cd_ci_assertions.hpp"
 #include <iostream>
-#include <semaphore>
+#include <mutex>
+#include <condition_variable>
 #include <chrono>
 
 //------------------------------------------------------------------
@@ -32,7 +33,9 @@ int receivedBatteryLevel;
 bool lowBattWitness = false;
 bool shutdownWitness = false;
 unsigned int lowBattCounter = 0;
-std::counting_semaphore<1> received{1};
+bool received = false;
+::std::mutex receive_mutex;
+::std::condition_variable receive_cv;
 
 //------------------------------------------------------------------
 // MOCKS
@@ -64,11 +67,16 @@ void reset()
 
 void waitFor(std::string message = "")
 {
-    if (!received.try_acquire_for(std::chrono::milliseconds(2000)))
+    ::std::unique_lock lock(receive_mutex);
+    if (!receive_cv.wait_for(
+            lock,
+            std::chrono::milliseconds(2000),
+            [] { return received; }))
     {
         std::cout << "Input event not received at: " << message << std::endl;
         assert(false && "Input event not received");
     }
+    received = false;
 }
 
 //------------------------------------------------------------------
@@ -79,20 +87,23 @@ void get_current_battery_level(const BatteryStatus &status)
 {
     // std::cout << "get_current_battery_level" << std::endl;
     receivedBatteryLevel = status.stateOfCharge.value_or(0);
-    received.release();
+    received = true;
+    receive_cv.notify_one();
 }
 
 void on_low_battery()
 {
     lowBattWitness = true;
     lowBattCounter++;
-    received.release();
+    received = true;
+    receive_cv.notify_one();
 }
 
 void on_shutdown()
 {
     shutdownWitness = true;
-    received.release();
+    received = true;
+    receive_cv.notify_one();
 }
 
 //------------------------------------------------------------------

@@ -25,12 +25,14 @@
 // Auxiliary
 //-------------------------------------------------------------------
 
-typedef struct __attribute__((packed))
+struct __attribute__((packed)) Report5
 {
     uint16_t vid = 0xFFFF;
     uint16_t pid = 0xFFFF;
     uint16_t cc = 0xFFFF;
-} Report5;
+} ;
+
+static_assert(sizeof(Report5)==6);
 
 #define REPORT5BYTES(s) ((uint8_t *)&s)
 extern void commonHidStart();

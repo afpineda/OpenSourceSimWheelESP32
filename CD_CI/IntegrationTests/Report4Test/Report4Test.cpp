@@ -24,12 +24,14 @@
 // Auxiliary
 //-------------------------------------------------------------------
 
-typedef struct __attribute__((packed))
+struct __attribute__((packed)) Report4
 {
     uint8_t fw = 0xFF;
     uint8_t noAlt = 0xFF;
     uint8_t alt = 0xFF;
-} Report4;
+};
+
+static_assert(sizeof(Report4)==3);
 
 #define REPORT4BYTES(s) ((uint8_t *)&s)
 
@@ -112,17 +114,17 @@ int main()
         ((received.fw == 20) && (received.alt == 20) && (received.noAlt == 80)) &&
         "map should be set");
 
-     // Select a valid input id, then read
-     received.fw = 0xFF;
-     received.alt = 99;
-     received.noAlt = 99;
-     r4.fw = 33;
-     r4.alt = 0xFE;
-     r4.noAlt = 0xFA;
-     internals::hid::common::onSetFeature(RID_FEATURE_BUTTONS_MAP, REPORT4BYTES(r4), sizeof(Report4));
-     assert((selectedInput == 33) && "Input should be selected (3)");
-     internals::hid::common::onGetFeature(RID_FEATURE_BUTTONS_MAP, REPORT4BYTES(r4), sizeof(Report4));
-     assert(
+    // Select a valid input id, then read
+    received.fw = 0xFF;
+    received.alt = 99;
+    received.noAlt = 99;
+    r4.fw = 33;
+    r4.alt = 0xFE;
+    r4.noAlt = 0xFA;
+    internals::hid::common::onSetFeature(RID_FEATURE_BUTTONS_MAP, REPORT4BYTES(r4), sizeof(Report4));
+    assert((selectedInput == 33) && "Input should be selected (3)");
+    internals::hid::common::onGetFeature(RID_FEATURE_BUTTONS_MAP, REPORT4BYTES(r4), sizeof(Report4));
+    assert(
         ((received.fw == 33) && (received.alt == 99) && (received.noAlt == 99)) &&
         "map not retrieved");
 
