@@ -33,7 +33,6 @@ Some interesting DevKit boards for this project are:
     DevKit board features a built-in "fuel gauge",
     which is supported by this project.
     Unfortunately, that board is for surface-mounting only.
-- [Adafruit Feather 32u4 Bluefruit LE](https://www.adafruit.com/product/2829).
 - [Wemos boards](https://www.wemos.cc/). *Note*:
   - The "D32" series are also known as "Lolin32" and
     found by that name at many retailers.
@@ -41,12 +40,12 @@ Some interesting DevKit boards for this project are:
     However, very cheap clones are still sold at some retailers.
   - "S3 mini" is a very interesting board
     if you don't need built-in battery support.
-- [Sparkfun Thing Plus](https://www.sparkfun.com/products/17381).
 - [Some LilyGO boards](http://www.lilygo.cc/)
   even if their built-in display is not used.
   - "T7 S3" is a very interesting board, close to "Wemos S3 mini",
     but features built-in battery support
     (credits to user [@WallK](https://github.com/WallK) for pointing this out).
+- [ESP32-S3 SuperMini](https://www.espboards.dev/esp32/esp32-s3-super-mini/).
 
 You need to balance two key aspects: **size and pin availability**.
 The larger the board, the higher the count of available pins,
