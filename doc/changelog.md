@@ -1,12 +1,30 @@
 # Change log (and release notes)
 
+## 8.4.0
+
+- A new API call allows to customize the polling interval
+  (`inputs::setPollingIntervalMs()`).
+  There are a few pros and cons.
+  See
+  [Customize_howto.md](./hardware/subsystems/CustomizeHowto_en.md#polling-interval)
+  for instructions.
+  The polling interval determines how often the firmware
+  checks for changes in the status of the input hardware.
+- The *default* polling interval is 30 milliseconds now.
+  It was 60 milliseconds before.
+- The "pulse width" for rotary encoders can be adjusted up to x16 now.
+  The default is x4.
+  The companion app already supported this (no need to update).
+- There is a new additional circuit design using shift registers that removes
+  pull-up resistors.
+
 ## 8.3.1
 
 - Small bug and errata fixes. No new features.
 - The `RevealBrokenLinks.ps1` script now works on external links on demand.
   The results are not 100% accurate, so this feature is not used
   in the CD/CI chain.
-- The `h2zero/NimBLE` library is mandatory again,
+- The `h2zero/NimBLE-Arduino` library is mandatory again,
   but **for "pure" ESP32 boards only**.
   This project does not use code from that library **anymore**,
   but the underlying *NimBLE* code from the Apache/MyNewt project.

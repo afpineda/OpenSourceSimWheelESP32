@@ -819,12 +819,13 @@ See the [HID notes](./HID_notes.md) for more details.
 ### Event processing
 
 Input events are captured in the **Input poll daemon**:
-it checks the state of all inputs every 50 ms (more or less).
+it checks the state of all inputs every 30 ms (more or less).
 This period is short enough not to miss any event,
 but long enough to prevent other threads from starvation.
 It also plays a critical role in debouncing
 (bouncing occurs during the subsequent 30 milliseconds, more or less,
 after a mechanical switch is activated).
+The polling interval is a customizable parameter.
 
 Event processing takes long, so later input events would be missed
 while processing sooner ones.
