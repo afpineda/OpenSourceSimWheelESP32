@@ -15,8 +15,6 @@
 - The "pulse width" for rotary encoders can be adjusted up to x16 now.
   The default is x4.
   The companion app already supported this (no need to update).
-- There is a new additional circuit design using shift registers that removes
-  pull-up resistors.
 
 ## 8.3.1
 

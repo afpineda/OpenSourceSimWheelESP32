@@ -298,10 +298,8 @@ This implementation is based on the widely available
 [74HC165N](../../esp32reference/SN74HC165_datasheet.pdf)
 *parallel-in-serial-out* shift register of 8 bits.
 
-The following circuit designs provide **25 inputs using just 3 pins**,
+The following circuit design provides **25 inputs using just 3 pins**,
 which should be enough for most steering wheels.
-
-### Using a pullup resistor for each switch
 
 ![Shift register based design](./ShiftRegister.png)
 
@@ -320,48 +318,10 @@ Needed parts (not counting input hardware like push buttons):
 - Resistors (any impedance from 1K-ohms to 10K-ohms): x25.
 - Thin wire.
 
-#### External wiring for the shift registers using pullup resistors
+### External wiring for the shift registers
 
 Just the same as for analog multiplexers.
 See above.
-
-### Using a dedicated common pole for all switches
-
-This design is simpler but draws current at all times,
-so it is not recommended for battery-operated devices.
-
-![Shift register based design](./ShiftRegisterSimplified.png)
-
-Open this [circuit layout](./ShiftRegisterSimplified.diy) using
-[DIY Layout Creator](https://github.com/bancika/diy-layout-creator).
-Hit `CTRL+5` to obtain a clear view of the back traces.
-
-Needed parts (not counting input hardware like push buttons):
-
-- Standard-sized perfboard 24x10 holes.
-- 74HC165N shift registers: x3.
-- Dupond pin headers (male or female): x52.
-- Resistors (any tolerance):
-  - 500 ohm to 1K-ohm (but no more): x1
-  - 10K-ohm: x1.
-- Thin wire.
-
-Stick to the designed resistor values.
-Otherwise it won't work.
-
-#### External wiring for the shift registers using a common pole
-
-- There are many redundant `3V3` and `GND` headers.
-  Wire one of each to the DevKit (or powerboost module)
-  and use the others as you wish.
-  As a suggestion, use them for the clutch paddles.
-
-- One terminal of each switch is wired to `COM`
-  and the other to a blue pin header.
-  There are many redundant `COM` pin headers (gray-colored) for
-  this purpose, but you can also chain them to a single pin.
-  In such a case, you may substitute the 16 pin gray header with a single pin.
-  **Do not confuse** `COM` with `GND`.
 
 ## GPIO expanders implementation
 
